@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         .Where(p => p.IsSpatiallyVarying))
                                                               .Select(p => p.SpatiallyVaryingName).ToList());
 
-                ModelDefinition.SelectSpatialOperations(spatialDataItems, TracerDefinitions, spatVarSedPropNames);
+                ModelDefinition.SelectSpatialOperations(SpatialData.DataItems.ToList(), TracerDefinitions, spatVarSedPropNames);
             }
 
             InitializeAreaDataColumns();

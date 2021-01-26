@@ -667,7 +667,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     continue;
                 }
 
-                UnstructuredGridCoverage bathymetry = fmModel.Bathymetry;
+                UnstructuredGridCoverage bathymetry = fmModel.SpatialData.Bathymetry;
 
                 var viewContext = (project.ViewContextManager as GuiContextManager)?
                                   .GetViewContext(typeof(ProjectItemMapView), fmModel) as ProjectItemMapViewContext;

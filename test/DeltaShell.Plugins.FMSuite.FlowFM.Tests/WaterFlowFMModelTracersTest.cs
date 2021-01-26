@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.TracerDefinitions.Add("substance_1");
             model.TracerDefinitions.Add("substance_2");
 
-            Assert.AreEqual(2, model.InitialTracers.Count());
+            Assert.AreEqual(2, model.SpatialData.InitialTracers.Count());
 
             //add tracer bc
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.TracerDefinitions.RemoveAt(1);
 
-            Assert.AreEqual(1, model.InitialTracers.Count());
+            Assert.AreEqual(1, model.SpatialData.InitialTracers.Count());
             Assert.IsEmpty(
                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                      .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.TracerDefinitions.Clear();
 
-            Assert.IsEmpty(model.InitialTracers.ToList());
+            Assert.IsEmpty(model.SpatialData.InitialTracers.ToList());
             Assert.IsEmpty(
                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                      .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             timeSeries[model.StopTime] = 140.0;
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
                 flowBoundaryCondition);
-            IDataItem dataItem = model.AllDataItems.First(di => ReferenceEquals(di.Value, model.InitialTracers.ElementAt(0)));
+            IDataItem dataItem = model.AllDataItems.First(di => ReferenceEquals(di.Value, model.SpatialData.InitialTracers.ElementAt(0)));
             SpatialOperationSetValueConverter valueConverter =
                 SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem);
             var overwriteValueOperation = new SetValueOperation
@@ -157,8 +157,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 "substance_1"
             }, newModel.TracerDefinitions);
-            Assert.AreEqual(1, newModel.InitialTracers.Count());
-            IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.InitialTracers.ElementAt(0));
+            Assert.AreEqual(1, newModel.SpatialData.InitialTracers.Count());
+            IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(0));
             Assert.IsNotNull(newDataItem);
             Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
             var setValueOperation =
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 flowBoundaryCondition);
 
             // add init tracer
-            IDataItem dataItem = model.AllDataItems.First(di => ReferenceEquals(di.Value, model.InitialTracers.ElementAt(0)));
+            IDataItem dataItem = model.AllDataItems.First(di => ReferenceEquals(di.Value, model.SpatialData.InitialTracers.ElementAt(0)));
             SpatialOperationSetValueConverter valueConverter =
                 SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem);
             var overwriteValueOperation = new SetValueOperation
@@ -244,8 +244,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 120.0,
                 140.0
             }, boundaryCondition.GetDataAtPoint(0).GetValues<double>());
-            Assert.AreEqual(1, newModel.InitialTracers.Count());
-            IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.InitialTracers.ElementAt(0));
+            Assert.AreEqual(1, newModel.SpatialData.InitialTracers.Count());
+            IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(0));
             Assert.IsNotNull(newDataItem);
             Assert.IsNotNull(newDataItem);
             Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
@@ -283,7 +283,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 flowBoundaryCondition);
 
             // add init tracer
-            IDataItem dataItem = model.AllDataItems.First(di => ReferenceEquals(di.Value, model.InitialTracers.ElementAt(1)));
+            IDataItem dataItem = model.AllDataItems.First(di => ReferenceEquals(di.Value, model.SpatialData.InitialTracers.ElementAt(1)));
             SpatialOperationSetValueConverter valueConverter =
                 SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem);
             var overwriteValueOperation = new SetValueOperation
@@ -337,8 +337,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 120.0,
                 140.0
             }, boundaryCondition.GetDataAtPoint(0).GetValues<double>());
-            Assert.AreEqual(2, newModel.InitialTracers.Count());
-            IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.InitialTracers.ElementAt(1));
+            Assert.AreEqual(2, newModel.SpatialData.InitialTracers.Count());
+            IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(1));
             Assert.IsNotNull(newDataItem);
             Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
             var setValueOperation =

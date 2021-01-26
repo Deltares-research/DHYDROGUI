@@ -174,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     project.RootFolder.Add(model);
 
                     // check subscribers
-                    int eventsBefore = TestReferenceHelper.FindEventSubscriptions(model.Bathymetry, true);
+                    int eventsBefore = TestReferenceHelper.FindEventSubscriptions(model.SpatialData.Bathymetry, true);
 
                     // open & close central map
                     gui.CommandHandler.OpenView(model, typeof(ProjectItemMapView)); //open central map
@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     Assert.IsNull(gui.DocumentViews.ActiveView);
 
                     // check event subscribers
-                    int eventsAfter = TestReferenceHelper.FindEventSubscriptions(model.Bathymetry, true);
+                    int eventsAfter = TestReferenceHelper.FindEventSubscriptions(model.SpatialData.Bathymetry, true);
 
                     Assert.AreEqual(eventsBefore, eventsAfter, "#events bathymetry coverage");
                 };

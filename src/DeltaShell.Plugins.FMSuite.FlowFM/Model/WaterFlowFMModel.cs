@@ -88,9 +88,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             SynchronizeModelDefinitions();
 
+            SpatialData = new SpatialData(this);
+
             Grid = new UnstructuredGrid();
 
-            AddSpatialDataItems();
             SetSpatialCoverages();
             RenameSubFilesIfApplicable();
 
@@ -128,6 +129,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         #region Implementation of IWaterFlowFMModel
+
+        public ISpatialData SpatialData { get; }
 
         public bool DisableFlowNodeRenumbering { get; set; }
 
@@ -202,57 +205,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             });
         }
 
-        private void AddToInitialCoverages(IList<UnstructuredGridCellCoverage> initialCoverages, string spatiallyVaryingName)
-        {
-            if (initialCoverages == null)
-            {
-                return;
-            }
-
-            IDataItem t = DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingName);
-            if (t == null)
-            {
-                UnstructuredGridCellCoverage unstructuredGridCellCoverage =
-                    CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
-                initialCoverages.Add(unstructuredGridCellCoverage);
-            }
-            else
-            {
-                var unstrGridCellCoverage = t.Value as UnstructuredGridCellCoverage;
-                if (unstrGridCellCoverage == null)
-                {
-                    t.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
-                    initialCoverages.Add((UnstructuredGridCellCoverage) t.Value);
-                    /* DELFT3DFM-1077 
-                     * Apparently the spatial operation is not being executed after being added (which should be)
-                     * We can force it here.
-                     */
-                    var spOperationSet = t.ValueConverter as SpatialOperationSetValueConverter;
-                    if (spOperationSet != null)
-                    {
-                        spOperationSet.SpatialOperationSet.Execute();
-                    }
-                }
-                else
-                {
-                    unstrGridCellCoverage.Grid = Grid;
-                    if (!initialCoverages.Contains(unstrGridCellCoverage))
-                    {
-                        initialCoverages.Add(unstrGridCellCoverage);
-                    }
-                }
-            }
-        }
+        // private void AddToInitialCoverages(IList<UnstructuredGridCellCoverage> initialCoverages, string spatiallyVaryingName)
+        // {
+        //     if (initialCoverages == null)
+        //     {
+        //         return;
+        //     }
+        //
+        //     IDataItem t = DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingName);
+        //     if (t == null)
+        //     {
+        //         UnstructuredGridCellCoverage unstructuredGridCellCoverage =
+        //             CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
+        //         initialCoverages.Add(unstructuredGridCellCoverage);
+        //     }
+        //     else
+        //     {
+        //         var unstrGridCellCoverage = t.Value as UnstructuredGridCellCoverage;
+        //         if (unstrGridCellCoverage == null)
+        //         {
+        //             t.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
+        //             initialCoverages.Add((UnstructuredGridCellCoverage) t.Value);
+        //             /* DELFT3DFM-1077 
+        //              * Apparently the spatial operation is not being executed after being added (which should be)
+        //              * We can force it here.
+        //              */
+        //             var spOperationSet = t.ValueConverter as SpatialOperationSetValueConverter;
+        //             if (spOperationSet != null)
+        //             {
+        //                 spOperationSet.SpatialOperationSet.Execute();
+        //             }
+        //         }
+        //         else
+        //         {
+        //             unstrGridCellCoverage.Grid = Grid;
+        //             if (!initialCoverages.Contains(unstrGridCellCoverage))
+        //             {
+        //                 initialCoverages.Add(unstrGridCellCoverage);
+        //             }
+        //         }
+        //     }
+        // }
 
         private void AddToInitialFractions(string spatiallyVaryingName)
         {
-            if (spatialDataItems.Select(d => d.Name).Contains(spatiallyVaryingName))
-            {
-                return;
-            }
-
-            IDataItem di = AddEmptyDataItem<UnstructuredGridCellCoverage>(spatiallyVaryingName);
-            di.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
+            SpatialData.AddFraction(CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid));
         }
 
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)

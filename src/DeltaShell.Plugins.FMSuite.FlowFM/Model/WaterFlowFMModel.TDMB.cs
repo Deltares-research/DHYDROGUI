@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             get
             {
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(spatialDataItems);
+                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(SpatialData.DataItems);
             }
         }
 
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 yield return windField;
             }
 
-            foreach (var spatialDataItem in spatialDataItems)
+            foreach (var spatialDataItem in SpatialData.DataItems)
             {
                 yield return spatialDataItem;
             }

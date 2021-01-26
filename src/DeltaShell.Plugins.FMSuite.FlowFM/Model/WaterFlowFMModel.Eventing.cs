@@ -129,14 +129,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void OnTracerAdded(string name)
         {
-            IDataItem dataItem = AddEmptyDataItem<UnstructuredGridCellCoverage>(name);
-            dataItem.Value = CreateUnstructuredGridCellCoverage(name, Grid);
+            SpatialData.AddTracer(CreateUnstructuredGridCellCoverage(name, Grid));
         }
 
         private void OnTracerRemoved(string name)
         {
-            IDataItem dataItem = DataItems.GetByName(name);
-            DataItems.Remove(dataItem);
+            SpatialData.RemoveTracer(name);
 
             foreach (BoundaryConditionSet set in BoundaryConditionSets)
             {
@@ -182,14 +180,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             List<string> activeSpatiallyVarying = fraction.GetAllActiveSpatiallyVaryingPropertyNames();
             List<string> spatiallyVarying = fraction.GetAllSpatiallyVaryingPropertyNames();
 
-            spatialDataItems.RemoveAllWhere(fr => spatiallyVarying.Contains(fr.Name) &&
-                                                  !activeSpatiallyVarying.Contains(fr.Name));
+            foreach (string name in spatiallyVarying.Except(activeSpatiallyVarying))
+            {
+                SpatialData.RemoveFraction(name);
+            }
 
             foreach (string layerName in activeSpatiallyVarying)
             {
                 AddToInitialFractions(layerName);
             }
-       
+
             fraction.CompileAndSetVisibilityAndIfEnabled();
             fraction.SetTransportFormulaInCurrentSedimentType();
         }
@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
             else
             {
-                spatialDataItems.RemoveAllWhere(tr => tr.Name.Equals(prop.SpatiallyVaryingName));
+                SpatialData.RemoveFraction(prop.SpatiallyVaryingName);
             }
         }
 
@@ -229,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     sedimentFraction.SetTransportFormulaInCurrentSedimentType();
                     SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Add(sedimentFraction.Name));
 
-                    if (InitialFractions == null || BoundaryConditionSets == null)
+                    if (BoundaryConditionSets == null)
                     {
                         break;
                     }
@@ -241,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 case NotifyCollectionChangedAction.Remove:
                     // sync the initial fractions
                     List<string> layersToRemove = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
-                    spatialDataItems.RemoveAllWhere(ifs => layersToRemove.Contains(ifs.Name));
+                    layersToRemove.ForEach(SpatialData.RemoveFraction);
                     RemoveSedimentFractionFromBoundaryConditionSets(name);
 
                     SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Remove(sedimentFraction.Name));

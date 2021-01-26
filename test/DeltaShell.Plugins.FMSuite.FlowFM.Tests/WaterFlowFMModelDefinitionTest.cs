@@ -940,7 +940,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // retrieve value converter for InitialWaterLevel dataitem
             SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                model.AllDataItems.First(d=>d.Value == model.InitialWaterLevel), model.InitialWaterLevel.Name);
+                model.AllDataItems.First(d => d.Value == model.SpatialData.InitialWaterLevel), model.SpatialData.InitialWaterLevel.Name);
 
             // Generate samples to add
             var samples = new AddSamplesOperation(false);
@@ -992,7 +992,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // assert that the incomplete spatial operation has not been added
             Assert.AreEqual(3, mduSpatialOperations.Count);
-            Assert.IsFalse(mduSpatialOperations.Any(o => o.Key == model.InitialWaterLevel.Name));
+            Assert.IsFalse(mduSpatialOperations.Any(o => o.Key == model.SpatialData.InitialWaterLevel.Name));
 
             // create an interpolate operation using the samples added earlier
             var interpolateOperation = new InterpolateOperation();
@@ -1004,7 +1004,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // assert that the complete spatial operation has now been added
             Assert.AreEqual(4, mduSpatialOperations.Count);
-            Assert.IsTrue(mduSpatialOperations.Any(o => o.Key == model.InitialWaterLevel.Name));
+            Assert.IsTrue(mduSpatialOperations.Any(o => o.Key == model.SpatialData.InitialWaterLevel.Name));
         }
 
         [Test]
@@ -1052,14 +1052,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ImportFromMdu(mduPath);
 
             // Set values in coverage
-            model.Viscosity.SetValues(new[]
+            model.SpatialData.Viscosity.SetValues(new[]
             {
                 500.0
             });
 
             // create a spatial operation set on bathymetry
             SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                model.AllDataItems.First(d => d.Value == model.Viscosity), model.Viscosity.Name);
+                model.AllDataItems.First(d => d.Value == model.SpatialData.Viscosity), model.SpatialData.Viscosity.Name);
 
             // add an unsupported operation (erase for example)
             var polygons = new[]
@@ -1083,12 +1083,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
-            IList<ISpatialOperation> viscosityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.Viscosity.Name).Value;
+            IList<ISpatialOperation> viscosityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.SpatialData.Viscosity.Name).Value;
 
             Assert.AreEqual(1, viscosityOperations.Count);
             Assert.IsTrue(viscosityOperations[0] is AddSamplesOperation);
 
-            IList<ISpatialOperation> salinityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.InitialSalinity.Name).Value;
+            IList<ISpatialOperation> salinityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.SpatialData.InitialSalinity.Name).Value;
 
             Assert.AreEqual(2, salinityOperations.Count);
             Assert.IsTrue(salinityOperations[0] is SetValueOperation);

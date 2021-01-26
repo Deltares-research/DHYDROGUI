@@ -239,7 +239,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 string dataItemName = spatialOperation.Key;
                 IList<ISpatialOperation> spatialOperationList = spatialOperation.Value;
-                IDataItem dataItem = spatialDataItems.FirstOrDefault(di => di.Name == dataItemName);
+                IDataItem dataItem = SpatialData.DataItems.FirstOrDefault(di => di.Name == dataItemName);
 
                 if (!spatialOperationList.Any())
                 {

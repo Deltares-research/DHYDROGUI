@@ -569,11 +569,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Assert.IsTrue(gui.DocumentViewsResolver.OpenViewForData(model, typeof(ProjectItemMapView)));
                 var mapView = gui.DocumentViews.ActiveView as ProjectItemMapView;
-                mapView.SetSpatialOperationLayer(mapView.MapView.GetLayerForData(model.Bathymetry), true);
+                mapView.SetSpatialOperationLayer(mapView.MapView.GetLayerForData(model.SpatialData.Bathymetry), true);
                 sharpMapGisGuiPlugin.FocusSpatialOperationView();
 
                 SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                    model.GetDataItemByValue(model.Bathymetry));
+                    model.GetDataItemByValue(model.SpatialData.Bathymetry));
 
                 Assert.IsNotNull(valueConverter.SpatialOperationSet);
 
