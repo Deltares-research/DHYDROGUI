@@ -454,9 +454,6 @@
     <Resource Include="Resources\hurricane2.png" />
     <Resource Include="Resources\grid_2d.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Api\TempImpl\" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
