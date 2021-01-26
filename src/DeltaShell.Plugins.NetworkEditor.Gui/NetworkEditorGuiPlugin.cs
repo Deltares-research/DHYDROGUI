@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
@@ -155,13 +155,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 }
             };
 
-            yield return new ViewInfo<IStructure, AreaStructureView>()
+            yield return new ViewInfo<IStructureObject, AreaStructureView>()
             {
                 Description = "Structure Editor"
             };
 
-            yield return CreateAreaStructureCollectionViewInfo<Pump2D>(HydroAreaLayerNames.PumpsPluralName);
-            yield return CreateAreaStructureCollectionViewInfo<Weir2D>(HydroAreaLayerNames.WeirsPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Pump>(HydroAreaLayerNames.PumpsPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Structure>(HydroAreaLayerNames.WeirsPluralName);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.LandBoundaries);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryPoints);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryAreas);
@@ -285,7 +285,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             return viewInfo;
         }
 
-        private ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView> CreateAreaStructureCollectionViewInfo<T>(string name) where T : IStructure
+        private ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView> CreateAreaStructureCollectionViewInfo<T>(string name) where T : IStructureObject
         {
             return new ViewInfo<IEventedList<T>, ILayer, VectorLayerAttributeTableView>
             {
@@ -397,16 +397,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        private static void ConfigureAreaFeatureRowCreation<T>(VectorLayerAttributeTableView view) where T : IStructure
+        private static void ConfigureAreaFeatureRowCreation<T>(VectorLayerAttributeTableView view) where T : IStructureObject
         {
-            if (typeof(T) == typeof(IWeir))
+            if (typeof(T) == typeof(Structure))
             {
-                view.SetCreateFeatureRowFunction(feature => new FMWeirPropertiesRow((IWeir) feature));
+                view.SetCreateFeatureRowFunction(feature => new FMWeirPropertiesRow((Structure) feature));
             }
 
-            if (typeof(T) == typeof(IPump))
+            if (typeof(T) == typeof(Pump))
             {
-                view.SetCreateFeatureRowFunction(feature => new FMPumpPropertiesRow((IPump) feature));
+                view.SetCreateFeatureRowFunction(feature => new FMPumpPropertiesRow((Pump) feature));
             }
         }
 

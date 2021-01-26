@@ -8,6 +8,7 @@ using System.Resources;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -152,8 +153,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new FeatureProjectTreeViewNodePresenter<FixedWeir>(HydroAreaLayerNames.FixedWeirsPluralName, Properties.Resources.fixedweir) {GuiPlugin = this};
             yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroAreaLayerNames.ObservationPointsPluralName, Properties.Resources.Observation) {GuiPlugin = this};
             yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroAreaLayerNames.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<Pump2D>(HydroAreaLayerNames.PumpsPluralName, Properties.Resources.Pump) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<Weir2D>(HydroAreaLayerNames.WeirsPluralName, Properties.Resources.Weir) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<Pump>(HydroAreaLayerNames.PumpsPluralName, Properties.Resources.Pump) {GuiPlugin = this};
+            yield return new FeatureProjectTreeViewNodePresenter<Structure>(HydroAreaLayerNames.WeirsPluralName, Properties.Resources.Weir) {GuiPlugin = this};
             yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroAreaLayerNames.EmbankmentsPluralName, Properties.Resources.Embankment) {GuiPlugin = this};
             yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroAreaLayerNames.BridgePillarsPluralName, Properties.Resources.BridgeSmall) {GuiPlugin = this};
         }
@@ -206,7 +207,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return new ViewInfo<WaterFlowFMModel, WaterFlowFMFileStructureView> {Description = "File tree"};
 
-            // Todo : think about a weir that is shared between 2 FM models -> Show a dialog to choose model ??
             yield return new ViewInfo<FixedWeir, IModelFeatureCoordinateData, ModelFeatureCoordinateDataView>
             {
                 Description = "Data for feature",
@@ -436,8 +436,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<FixedWeir, FixedWeir>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ThinDam2D, ThinDam2D>>();
-            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IWeir, Feature2D>>();
-            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<IPump, Feature2D>>();
+            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<Structure, Feature2D>>();
+            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<Pump, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<SourceAndSink, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<BoundaryConditionSet, Feature2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<BridgePillar, BridgePillar>>();
@@ -466,7 +466,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
-            yield return new PropertyInfo<IWeir, FMWeirProperties> {AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w))};
+            yield return new PropertyInfo<Structure, FMWeirProperties> {AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w))};
         }
 
         public override void OnActiveViewChanged(IView view)
