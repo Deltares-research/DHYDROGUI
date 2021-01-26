@@ -239,7 +239,6 @@
     <Compile Include="Forms\GridProperties\FeatureCoveragePropertiesTest.cs" />
     <Compile Include="Forms\GridProperties\HydroRegionPropertiesTest.cs" />
     <Compile Include="Gui\Converters\EmptyDoubleValueConverterTest.cs" />
-    <Compile Include="Forms\StructureFeatureView\FMWeirViewTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\StructureViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatedWeirViewModelTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModelTest.cs" />
