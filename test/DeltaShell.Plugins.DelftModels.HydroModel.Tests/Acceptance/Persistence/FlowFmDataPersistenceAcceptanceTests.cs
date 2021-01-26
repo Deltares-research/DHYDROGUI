@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory, string acceptanceModelFileName)
         {
             var flowFmResultFiles = Directory.GetFiles(Path.Combine(secondSaveProjectPath + "_data", acceptanceModelFileName));
-            var flowFmReferenceFiles = Directory.GetFiles(flowFmReferenceFileDirectory);
+            var flowFmReferenceFiles = Directory.GetFiles(Path.Combine(flowFmReferenceFileDirectory, acceptanceModelFileName));
 
             FlowFmFileComparer.Compare(flowFmReferenceFiles, flowFmResultFiles, tempDirectory);
         }

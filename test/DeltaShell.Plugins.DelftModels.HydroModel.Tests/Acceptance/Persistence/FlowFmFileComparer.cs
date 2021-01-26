@@ -68,24 +68,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             foreach (var fileName in allFileNames)
             {
                 var linesToIgnore = new string[] { };
-                
-                var expectedFlowFmFile = expectedFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
-                if (expectedFlowFmFile == null)
+
+                string expectedFlowFmFile = expectedFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
+                string actualFlowFmFile = actualFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
+
+                if (!FileNameIsEqual(fileName, expectedFlowFmFile, actualFlowFmFile, ref overallErrorMessage))
                 {
                     identical = false;
-
-                    overallErrorMessage += $"The actual FlowFM file collection contains a file with name '{fileName}'; this file is not part of the expected collection of FlowFm files.{Environment.NewLine}{VerticalLine}";
-
-                    continue;
-                }
-
-                var actualFlowFmFile = actualFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
-                if (actualFlowFmFile == null)
-                {
-                    identical = false;
-
-                    overallErrorMessage += $"The expected FlowFM file collection contains a file with name '{fileName}'; this file is not part of the actual collection of FlowFm files.{Environment.NewLine}{VerticalLine}";
-
                     continue;
                 }
 
@@ -110,36 +99,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                         break;
                     }
                 }
-                //scrambled ini file compare... currently only doing it for csloc..
-                if (Path.GetFileNameWithoutExtension(expectedFlowFmFile)
-                    .Equals("crsloc", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, CrossSectionRegion.IniHeader, LocationRegion.Id.Key);
-                }
-                if (Path.GetFileNameWithoutExtension(expectedFlowFmFile)
-                    .Equals("crsdef", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    linesToIgnore = new[] {"    xCoordinates", "    yCoordinates", "    zCoordinates"};
-                    SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, DefinitionPropertySettings.Header, DefinitionPropertySettings.Id.Key);
-                }
-                //scrambled ini file compare... currently only doing it for _bnd.ext..
-                if (Path.GetFileNameWithoutExtension(expectedFlowFmFile)
-                    .EndsWith("_bnd", StringComparison.InvariantCultureIgnoreCase) && Path.GetExtension(expectedFlowFmFile).Equals(".ext", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var readCategories = new DelftIniReader().ReadDelftIniFile(expectedFlowFmFile);
-                    var delftIniBoundaryCategories = readCategories.Where(c => c.Name.Equals(DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(BoundaryRegion.NodeId.Key));
-                    var delftIniLateralCategories = readCategories.Where(c => c.Name.Equals(BoundaryRegion.LateralHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)).ThenBy(c => c.ReadProperty<string>(LocationRegion.Name.Key)).ToArray();
-                    //ok... there is something funky with the nodeId location... for now we remove
-                    delftIniLateralCategories.Where(c=> c.Properties.Any(p => p.Name.Equals(BoundaryRegion.NodeId.Key))).ForEach(c => c.RemoveProperty(c.Properties.First(p =>p.Name.Equals(BoundaryRegion.NodeId.Key))));
-                    new DelftIniWriter().WriteDelftIniFile(delftIniBoundaryCategories.Concat(delftIniLateralCategories), expectedFlowFmFile);
 
-                    readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
-                    delftIniBoundaryCategories = readCategories.Where(c => c.Name.Equals(DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(BoundaryRegion.NodeId.Key));
-                    //ok... there is something funky with the nodeId location... for now we remove
-                    delftIniLateralCategories = readCategories.Where(c => c.Name.Equals(BoundaryRegion.LateralHeader, StringComparison.InvariantCultureIgnoreCase)).OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key)).ThenBy(c => c.ReadProperty<string>(LocationRegion.Name.Key)).ToArray();
-                    delftIniLateralCategories.Where(c => c.Properties.Any(p => p.Name.Equals(BoundaryRegion.NodeId.Key))).ForEach(c => c.RemoveProperty(c.Properties.First(p => p.Name.Equals(BoundaryRegion.NodeId.Key))));
-                    new DelftIniWriter().WriteDelftIniFile(delftIniBoundaryCategories.Concat(delftIniLateralCategories), actualFlowFmFile);
-                }
+                SortScrambledFiles(expectedFlowFmFile, actualFlowFmFile);
+
                 identical = CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out var errorMessage) && identical;
 
                 if (!string.IsNullOrEmpty(errorMessage))
@@ -152,6 +114,64 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             {
                 Assert.Fail(overallErrorMessage);
             }
+        }
+
+        private static bool FileNameIsEqual(string fileName, string expectedFlowFmFile, string actualFlowFmFile, ref string overallErrorMessage)
+        {
+            if (expectedFlowFmFile == null)
+            {
+                overallErrorMessage += $"The actual FlowFM file collection contains a file with name '{fileName}'; this file is not part of the expected collection of FlowFm files.{Environment.NewLine}{VerticalLine}";
+
+                return false;
+            }
+
+            if (actualFlowFmFile == null)
+            {
+                overallErrorMessage += $"The expected FlowFM file collection contains a file with name '{fileName}'; this file is not part of the actual collection of FlowFm files.{Environment.NewLine}{VerticalLine}";
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private static void SortScrambledFiles(string expectedFlowFmFile, string actualFlowFmFile)
+        {
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(expectedFlowFmFile);
+
+            if (fileNameWithoutExtension.Equals("crsloc", StringComparison.InvariantCultureIgnoreCase))
+            {
+                SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, CrossSectionRegion.IniHeader, LocationRegion.Id.Key);
+            }
+
+            if (fileNameWithoutExtension.Equals("crsdef", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //linesToIgnore = new[] { "    xCoordinates", "    yCoordinates", "    zCoordinates" };
+                SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, DefinitionPropertySettings.Header, DefinitionPropertySettings.Id.Key);
+            }
+
+            string fileExtension = Path.GetExtension(expectedFlowFmFile);
+            if (fileNameWithoutExtension.EndsWith("_bnd", StringComparison.InvariantCultureIgnoreCase) 
+                && fileExtension.Equals(".ext", StringComparison.InvariantCultureIgnoreCase))
+            {
+                SortBoundaryAndLateralCategories(expectedFlowFmFile);
+                SortBoundaryAndLateralCategories(actualFlowFmFile);
+            }
+        }
+
+        private static void SortBoundaryAndLateralCategories(string fileName)
+        {
+            var expectedReadCategories = new DelftIniReader().ReadDelftIniFile(fileName);
+
+            var expectedBoundaryCategories = expectedReadCategories.Where(c => c.Name.Equals(DeltaShell.NGHS.IO.FileWriters.Boundary.BoundaryRegion.BcBoundaryHeader, StringComparison.InvariantCultureIgnoreCase))
+                                                                   .OrderBy(c => c.ReadProperty<string>(BoundaryRegion.NodeId.Key));
+
+            var expectedLateralCategories = expectedReadCategories.Where(c => c.Name.Equals(BoundaryRegion.LateralHeader, StringComparison.InvariantCultureIgnoreCase))
+                                                                  .OrderBy(c => c.ReadProperty<string>(LocationRegion.Id.Key))
+                                                                  .ThenBy(c => c.ReadProperty<string>(LocationRegion.Name.Key))
+                                                                  .ToArray();
+
+            new DelftIniWriter().WriteDelftIniFile(expectedBoundaryCategories.Concat(expectedLateralCategories), fileName);
         }
 
         private static void SortFmIniFile(string expectedFlowFmFile, string actualFlowFmFile, string iniHeader, string idKey)
