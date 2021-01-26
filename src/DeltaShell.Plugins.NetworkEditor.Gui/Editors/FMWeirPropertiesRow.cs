@@ -90,6 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
         /// </summary>
         [DynamicReadOnly]
         [DisplayName(GuiParameterNames.CrestWidth + " [m]")]
+        [DisplayFormat("0.00")]
         public string CrestWidth
         {
             get => weir.CrestWidth.ToString("0.00", CultureInfo.CurrentCulture);
@@ -104,23 +105,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
         {
             get => weir.CrestWidth > 0;
             set => weir.CrestWidth = value ? weir.Geometry.Length : 0.0;
-        }
-
-        /// <summary>
-        /// Gets or sets the lateral contraction.
-        /// </summary>
-        [DisplayName("Lateral contraction coefficient")]
-        [DisplayFormat("0.00")]
-        public double LateralContraction
-        {
-            get => Weir?.Formula is SimpleWeirFormula f ? f.LateralContraction : 0.0;
-            set
-            {
-                if (Weir?.Formula is SimpleWeirFormula f)
-                {
-                    f.LateralContraction = value;
-                }
-            }
         }
 
         [Browsable(false)]
