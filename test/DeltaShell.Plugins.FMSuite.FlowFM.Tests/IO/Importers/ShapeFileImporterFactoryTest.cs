@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -23,8 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void WhenShapeFileImporterFactoryConstructNewShapeFileImporterIsCalled_ThenNoExceptionIsThrownAndANewShapeFileImporterIsCreated()
         {
-            ShapeFileImporter<ILineString, Weir2D> importer = null;
-            Assert.DoesNotThrow(() => { importer = ShapeFileImporterFactory.Construct<ILineString, Weir2D>(); },
+            ShapeFileImporter<ILineString, IStructure> importer = null;
+            Assert.DoesNotThrow(() => { importer = ShapeFileImporterFactory.Construct<ILineString, IStructure>(); },
                                 "Expected no error to be thrown when constructing a new ShapeFileImporter.");
 
             Assert.That(importer, Is.Not.Null, "Expected a valid ShapeFileImporter to have been created.");
@@ -227,14 +228,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // Given
             const double expectedCrestWidth = 10.0;
-            var dstArg = new Weir2D() {CrestWidth = -10.0};
+            var dstArg = new Structure() {CrestWidth = -10.0};
 
             var srcArg = MockRepository.GenerateStrictMock<IFeature>();
             srcArg.Expect(a => a.Attributes)
                   .Return(new DictionaryFeatureAttributeCollection() {{"CrestWidth", expectedCrestWidth}})
                   .Repeat.Any();
 
-            var targetsArg = new List<Weir2D>();
+            var targetsArg = new List<IStructure>();
 
             // When
             ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCrestWidth(srcArg, dstArg, targetsArg);
@@ -255,14 +256,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // Given
             const double expectedCrestWidth = 10.0;
-            var dstArg = new Weir2D() {CrestWidth = expectedCrestWidth};
+            var dstArg = new Structure() {CrestWidth = expectedCrestWidth};
 
             var srcArg = MockRepository.GenerateStrictMock<IFeature>();
             srcArg.Expect(a => a.Attributes)
                   .Return(new DictionaryFeatureAttributeCollection() {})
                   .Repeat.Any();
 
-            var targetsArg = new List<Weir2D>();
+            var targetsArg = new List<IStructure>();
 
             // When
             ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCrestWidth(srcArg, dstArg, targetsArg);
@@ -283,14 +284,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // Given
             const double expectedCrestLevel = 10.0;
-            var dstArg = new Weir2D() {CrestLevel = -10.0};
+            var dstArg = new Structure() {CrestLevel = -10.0};
 
             var srcArg = MockRepository.GenerateStrictMock<IFeature>();
             srcArg.Expect(a => a.Attributes)
                   .Return(new DictionaryFeatureAttributeCollection() {{"CrestLevel", expectedCrestLevel}})
                   .Repeat.Any();
 
-            var targetsArg = new List<Weir2D>();
+            var targetsArg = new List<IStructure>();
 
             // When
             ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCrestLevel(srcArg, dstArg, targetsArg);
@@ -311,14 +312,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // Given
             const double expectedCrestLevel = 10.0;
-            var dstArg = new Weir2D() {CrestLevel = expectedCrestLevel};
+            var dstArg = new Structure() {CrestLevel = expectedCrestLevel};
 
             var srcArg = MockRepository.GenerateStrictMock<IFeature>();
             srcArg.Expect(a => a.Attributes)
                   .Return(new DictionaryFeatureAttributeCollection() {})
                   .Repeat.Any();
 
-            var targetsArg = new List<Weir2D>();
+            var targetsArg = new List<IStructure>();
 
             // When
             ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCrestLevel(srcArg, dstArg, targetsArg);
@@ -338,23 +339,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void GivenAnIFeatureWithoutAFormulaNameAndATargetFeature_WhenTryAddWeirFormulaIsExecuted_ThenTargetFeatureWeirFormulaNameIsUnchanged()
         {
             // Given
-            var dstArg = new Weir2D();
-            IWeirFormula formula = dstArg.WeirFormula;
+            var dstArg = new Structure();
+            IWeirFormula formula = dstArg.Formula;
 
             var srcArg = MockRepository.GenerateStrictMock<IFeature>();
             srcArg.Expect(a => a.Attributes)
                   .Return(new DictionaryFeatureAttributeCollection() {})
                   .Repeat.Any();
 
-            var targetsArg = new List<Weir2D>();
+            var targetsArg = new List<IStructure>();
 
             // When
             ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddWeirFormula(srcArg, dstArg, targetsArg);
 
             // Then
-            Assert.That(dstArg.WeirFormula, Is.Not.Null,
+            Assert.That(dstArg.Formula, Is.Not.Null,
                         "Expected a weir formula not to be null:");
-            Assert.That(dstArg.WeirFormula, Is.SameAs(formula),
+            Assert.That(dstArg.Formula, Is.SameAs(formula),
                         "Expected no change in the weir formula updating with action:");
         }
 
@@ -369,14 +370,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // Given
             const double expectedCapacity = 10.0;
-            var dstArg = new Pump2D() {Capacity = -10.0};
+            var dstArg = new Pump() {Capacity = -10.0};
 
             var srcArg = MockRepository.GenerateStrictMock<IFeature>();
             srcArg.Expect(a => a.Attributes)
                   .Return(new DictionaryFeatureAttributeCollection() {{"Capacity", expectedCapacity}})
                   .Repeat.Any();
 
-            var targetsArg = new List<Pump2D>();
+            var targetsArg = new List<IPump>();
 
             // When
             ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCapacity(srcArg, dstArg, targetsArg);
@@ -397,14 +398,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // Given
             const double expectedCapacity = 10.0;
-            var dstArg = new Pump2D() {Capacity = expectedCapacity};
+            var dstArg = new Pump() {Capacity = expectedCapacity};
 
             var srcArg = MockRepository.GenerateStrictMock<IFeature>();
             srcArg.Expect(a => a.Attributes)
                   .Return(new DictionaryFeatureAttributeCollection() {})
                   .Repeat.Any();
 
-            var targetsArg = new List<Pump2D>();
+            var targetsArg = new List<IPump>();
 
             // When
             ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCapacity(srcArg, dstArg, targetsArg);
@@ -427,22 +428,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                                                                                                                                                                Type expectedType)
         {
             // Given
-            var dstArg = new Weir2D() {WeirFormula = null};
+            var dstArg = new Structure() {Formula = null};
 
             var srcArg = MockRepository.GenerateStrictMock<IFeature>();
             srcArg.Expect(a => a.Attributes)
                   .Return(new DictionaryFeatureAttributeCollection() {{"FormulaName", formulaName}})
                   .Repeat.Any();
 
-            var targetsArg = new List<Weir2D>();
+            var targetsArg = new List<IStructure>();
 
             // When
             ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddWeirFormula(srcArg, dstArg, targetsArg);
 
             // Then
-            Assert.That(dstArg.WeirFormula, Is.Not.Null,
+            Assert.That(dstArg.Formula, Is.Not.Null,
                         "Expected a weir formula to be set after the action has been executed:");
-            Assert.That(dstArg.WeirFormula, Is.TypeOf(expectedType),
+            Assert.That(dstArg.Formula, Is.TypeOf(expectedType),
                         "Expected a different weir formula type after updating with action:");
         }
     }

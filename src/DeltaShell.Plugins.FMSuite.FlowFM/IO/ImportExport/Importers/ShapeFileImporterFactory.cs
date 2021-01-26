@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
@@ -131,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             public static void TryAddCrestWidth<TFeature2D>(IFeature srcFeature,
                                                             TFeature2D targetFeature,
                                                             IEnumerable<TFeature2D> _)
-                where TFeature2D : Weir2D
+                where TFeature2D : IStructure
             {
                 if (TryGetValue(srcFeature, "CrestWidth", out double crestWidth))
                 {
@@ -160,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             public static void TryAddCrestLevel<TFeature2D>(IFeature srcFeature,
                                                             TFeature2D targetFeature,
                                                             IEnumerable<TFeature2D> _)
-                where TFeature2D : Weir2D
+                where TFeature2D : IStructure
             {
                 if (TryGetValue(srcFeature, "CrestLevel", out double crestLevel))
                 {
@@ -190,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             public static void TryAddWeirFormula<TFeature2D>(IFeature srcFeature,
                                                              TFeature2D targetFeature,
                                                              IEnumerable<TFeature2D> _)
-                where TFeature2D : Weir2D
+                where TFeature2D : IStructure
             {
                 if (!TryGetValue(srcFeature, "FormulaName", out string formulaName))
                 {
@@ -200,13 +201,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 switch (formulaName)
                 {
                     case "Simple weir (Weir)":
-                        targetFeature.WeirFormula = new SimpleWeirFormula();
+                        targetFeature.Formula = new SimpleWeirFormula();
                         break;
                     case "Gated weir (Orifice)":
-                        targetFeature.WeirFormula = new GatedWeirFormula(true);
+                        targetFeature.Formula = new GatedWeirFormula(true);
                         break;
                     case "General structure":
-                        targetFeature.WeirFormula = new GeneralStructureWeirFormula();
+                        targetFeature.Formula = new GeneralStructureWeirFormula();
                         break;
                 }
             }
@@ -232,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             public static void TryAddCapacity<TFeature2D>(IFeature srcFeature,
                                                           TFeature2D targetFeature,
                                                           IEnumerable<TFeature2D> _)
-                where TFeature2D : Pump2D
+                where TFeature2D : IPump
             {
                 if (TryGetValue(srcFeature, "Capacity", out double capacity))
                 {
