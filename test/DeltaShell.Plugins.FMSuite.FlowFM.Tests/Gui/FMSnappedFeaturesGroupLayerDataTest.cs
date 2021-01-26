@@ -30,6 +30,7 @@ using SharpMap.Layers;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
+    [Parallelizable(ParallelScope.None)]
     public class FMSnappedFeaturesGroupLayerDataTest
     {
         [Test]
