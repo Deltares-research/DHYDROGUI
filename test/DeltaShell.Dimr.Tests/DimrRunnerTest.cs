@@ -66,6 +66,7 @@ namespace DeltaShell.Dimr.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void OnInitialize_WhenThereIsAFileExceptionForCleaningTheWorkingDirectory_ShouldNotRemoveThisException()
         {
             // Arrange
@@ -80,7 +81,7 @@ namespace DeltaShell.Dimr.Tests
                 File.WriteAllText(exceptionFilePath, "test");
                 string shouldBeRemovedFilePath = Path.Combine(tempDir.Path, "test2.txt");
                 File.WriteAllText(shouldBeRemovedFilePath, "test");
-                dimrModel.FileExceptionsCleaningWorkingDirectory.Returns(new List<string> {exceptionFilePath});
+                dimrModel.IgnoredFilePathsWhenCleaningWorkingDirectory.Returns(new HashSet<string> {exceptionFilePath});
                 dimrModel.Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
                 var dimrRunner = new DimrRunner(dimrModel, dimrApiFactory);
 

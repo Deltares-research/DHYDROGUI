@@ -180,54 +180,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    var item = removedOrAddedItem as FlowBoundaryCondition;
-                    if (item != null)
-                    {
-                        boundaryConditions.Add(item);
-                    }
-                    else
-                    {
-                        var set = removedOrAddedItem as BoundaryConditionSet;
-                        if (set != null)
-                        {
-                            foreach (
-                                FlowBoundaryCondition flowBoundaryCondition in
-                                set.BoundaryConditions.OfType<FlowBoundaryCondition>())
-                            {
-                                boundaryConditions.Add(flowBoundaryCondition);
-                            }
-                        }
-                    }
-
+                    HandleAdd(removedOrAddedItem);
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    var condition = removedOrAddedItem as FlowBoundaryCondition;
-                    if (condition != null)
-                    {
-                        boundaryConditions.Remove(condition);
-                    }
-                    else
-                    {
-                        var set = removedOrAddedItem as BoundaryConditionSet;
-                        if (set != null)
-                        {
-                            foreach (
-                                FlowBoundaryCondition flowBoundaryCondition in
-                                set.BoundaryConditions.OfType<FlowBoundaryCondition>())
-                            {
-                                boundaryConditions.Remove(flowBoundaryCondition);
-                            }
-                        }
-                    }
-
+                    HandleRemove(removedOrAddedItem);
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    if (removedOrAddedItem is FlowBoundaryCondition || removedOrAddedItem is BoundaryConditionSet)
-                    {
-                        throw new NotImplementedException("Replacing boundary conditions is not supported");
-                    }
-
+                    HandleReplace(e);
                     break;
+            }
+        }
+
+        private void HandleAdd(object removedOrAddedItem)
+        {
+            var item = removedOrAddedItem as FlowBoundaryCondition;
+            if (item != null)
+            {
+                boundaryConditions.Add(item);
+            }
+            else
+            {
+                var set = removedOrAddedItem as BoundaryConditionSet;
+                if (set != null)
+                {
+                    foreach (FlowBoundaryCondition flowBoundaryCondition in set.BoundaryConditions.OfType<FlowBoundaryCondition>())
+                    {
+                        boundaryConditions.Add(flowBoundaryCondition);
+                    }
+                }
+            }
+        }
+
+        private void HandleRemove(object removedOrAddedItem)
+        {
+            var condition = removedOrAddedItem as FlowBoundaryCondition;
+            if (condition != null)
+            {
+                boundaryConditions.Remove(condition);
+            }
+            else
+            {
+                var set = removedOrAddedItem as BoundaryConditionSet;
+                if (set != null)
+                {
+                    foreach (FlowBoundaryCondition flowBoundaryCondition in set.BoundaryConditions.OfType<FlowBoundaryCondition>())
+                    {
+                        boundaryConditions.Remove(flowBoundaryCondition);
+                    }
+                }
+            }
+        }
+        
+        private void HandleReplace(NotifyCollectionChangedEventArgs e)
+        {
+            foreach (object oldItem in e.OldItems)
+            {
+                HandleRemove(oldItem);
+            }
+
+            foreach (object newItem in e.NewItems)
+            {
+                HandleAdd(newItem);
             }
         }
     }

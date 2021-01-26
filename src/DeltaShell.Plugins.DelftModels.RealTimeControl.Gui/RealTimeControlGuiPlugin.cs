@@ -221,7 +221,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return new ControlGroupNodePresenter(this);
             yield return new RealTimeControlInputRestartFileNodePresenter(this);
             yield return new RealTimeControlOutputRestartFileNodePresenter(this);
-            yield return new ReadOnlyOutputTextDocumentNodePresenter();
             yield return new OutputTreeFolderNodePresenter();
         }
 
@@ -234,13 +233,33 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [InvokeRequired]
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
-            if (!(sender is RealTimeControlModel) || e.NewStatus != ActivityStatus.Failed)
+            if (sender is IModel model && e.NewStatus == ActivityStatus.Initializing)
             {
-                return;
+                CloseRtcModelOutput(model);
             }
 
-            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+            if (sender is RealTimeControlModel && e.NewStatus == ActivityStatus.Failed)
+            {
+                Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+            }
         }
+
+        private void CloseRtcModelOutput(IModel model)
+        {
+            switch (model)
+            {
+                case RealTimeControlModel rtcModel:
+                    CloseOutputFileViews(rtcModel);
+                    break;
+                case ICompositeActivity compositeActivity:
+                    compositeActivity.Activities.OfType<RealTimeControlModel>()
+                                     .ForEach(CloseOutputFileViews);
+                    break;
+            }
+        }
+
+        private void CloseOutputFileViews(RealTimeControlModel model) => 
+            model.OutputDocuments.ForEach(Gui.CommandHandler.RemoveAllViewsForItem);
 
         private void InitializeComponent()
         {

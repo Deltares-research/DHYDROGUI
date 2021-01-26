@@ -62,6 +62,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             "time",
             BcmFileFlowBoundaryDataBuilder.BedLevelAtBound
         }, 23)]
+        [TestCase(@"BcmFiles\MorphologyBedLevelPrescribedDifferentOrder.bcm", new[]
+        {
+            "time",
+            BcmFileFlowBoundaryDataBuilder.BedLevelAtBound
+        }, 23)]
         [TestCase(@"BcmFiles\MorphologyBedLevelChangePrescribed.bcm", new[]
         {
             "time",
