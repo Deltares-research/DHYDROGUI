@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers;
@@ -14,14 +14,12 @@ using SharpMap.Rendering;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class PumpsLayerProviderTest : FeaturesLayerProviderTest<Pump2D>
+    public class PumpsLayerProviderTest : FeaturesLayerProviderTest<Pump>
     {
         protected override void AssertLayerProviderSpecificSettings(VectorLayer vectorLayer)
         {
-            var pump = vectorLayer.FeatureEditor.CreateNewFeature(vectorLayer) as Pump2D;
+            var pump = vectorLayer.FeatureEditor.CreateNewFeature(vectorLayer) as IPump;
             Assert.IsNotNull(pump);
-            Assert.That(pump.CanBeTimedependent, Is.True);
-
             Assert.That(vectorLayer.CustomRenderers.Single(), Is.TypeOf<ArrowLineStringAdornerRenderer>());
         }
 
@@ -33,15 +31,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
         protected override HydroArea CreateHydroArea()
         {
             var hydroArea = new HydroArea();
-            hydroArea.Pumps.Add(new Pump2D());
-            hydroArea.Pumps.Add(new Pump2D());
+            hydroArea.Pumps.Add(new Pump());
+            hydroArea.Pumps.Add(new Pump());
 
             return hydroArea;
         }
 
-        protected override IEventedList<Pump2D> GetStructureCollection(HydroArea hydroArea)
+        protected override IEventedList<Pump> GetStructureCollection(HydroArea hydroArea)
         {
-            return hydroArea.Pumps;
+            return new EventedList<Pump>(hydroArea.Pumps.Cast<Pump>());
         }
 
         protected override Color ExpectedVectorStyleLineColor()

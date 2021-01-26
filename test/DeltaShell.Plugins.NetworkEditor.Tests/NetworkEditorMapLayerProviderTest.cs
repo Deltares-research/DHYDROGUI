@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
@@ -86,14 +86,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var area = new HydroArea();
 
-            var pump2DFeature = new Pump2D
+            var pump2DFeature = new Pump
             {
                 Capacity = 2.0,
-                StartDelivery = 0.0,
-                StopDelivery = 0.0,
-                StartSuction = 0.001,
-                StopSuction = 0.0,
-                DirectionIsPositive = true,
                 Name = "pump2D01",
                 Geometry = new LineString(new[]
                 {
@@ -119,7 +114,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var area = new HydroArea();
 
-            var gate2DFeature = new Weir2D
+            var gate2DFeature = new Structure
             {
                 Name = "Gate2D01",
                 Geometry = new LineString(new[]
@@ -146,7 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var area = new HydroArea();
 
-            var weir2DFeature = new Weir2D
+            var weir2DFeature = new Structure
             {
                 Name = "weir2D01",
                 Geometry = new LineString(new[]
