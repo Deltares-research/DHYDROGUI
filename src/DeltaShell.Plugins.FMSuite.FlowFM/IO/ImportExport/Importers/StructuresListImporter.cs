@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
@@ -22,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
     public class StructuresListImporter : MapFeaturesImporterBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(StructuresListImporter));
+        private static readonly ILog log = LogManager.GetLogger(typeof(StructuresListImporter));
 
         public StructuresListImporter(StructuresListType type)
         {
@@ -90,8 +89,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                         yield return typeof(IEventedList<IPump>);
                         break;
                     case StructuresListType.Weirs:
-                        yield return typeof(IList<IWeir>);
-                        yield return typeof(IEventedList<IWeir>);
+                        yield return typeof(IList<IStructure>);
+                        yield return typeof(IEventedList<IStructure>);
                         break;
                 }
             }
@@ -111,13 +110,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         {
             if (string.IsNullOrEmpty(path))
             {
-                Log.ErrorFormat("No file was presented to import from.");
+                log.ErrorFormat("No file was presented to import from.");
                 return null;
             }
 
             if (target == null)
             {
-                Log.ErrorFormat(
+                log.ErrorFormat(
                     "No target was presented to import to (requires a Flexible Mesh Water Flow model or Area.");
                 return null;
             }
@@ -130,30 +129,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 StructureSchema = model.ModelDefinition.StructureSchema,
                 ReferenceDate = (DateTime) model.ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value
             };
-            IEnumerable<IStructure> structures;
+            IEnumerable<IStructureObject> structures;
             try
             {
                 structures = structuresFile.Read(path);
             }
-            catch (Exception e)
-            {
-                if (e is ArgumentException || e is FileNotFoundException || e is DirectoryNotFoundException ||
-                    e is IOException || e is FormatException || e is OverflowException)
+            catch (Exception e) when (e is ArgumentException || 
+                                      e is FileNotFoundException || 
+                                      e is DirectoryNotFoundException ||
+                                      e is IOException || 
+                                      e is FormatException || 
+                                      e is OverflowException)
                 {
-                    Log.Error(
+                    log.Error(
                         "An error occurred while importing structures file, import stopped; Cause: ", e);
                     return null;
                 }
-
-                // Unexpected exception, let it bubble:
-                throw;
-            }
 
             InsertStructures(structures, list);
             return target;
         }
 
-        private void InsertStructures(IEnumerable<IStructure> structures, IList list)
+        private void InsertStructures(IEnumerable<IStructureObject> structures, 
+                                      IList list)
         {
             var count = 0;
             switch (Type)
@@ -162,18 +160,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                     InsertStructure<IPump>(structures, list, ref count);
                     break;
                 case StructuresListType.Weirs:
-                    InsertStructure<IWeir>(structures, list, ref count);
+                    InsertStructure<IStructure>(structures, list, ref count);
                     break;
             }
 
-            Log.InfoFormat("Read {0} {1}.", count, GetStructuresName());
+            log.InfoFormat("Read {0} {1}.", count, GetStructuresName());
         }
 
         [InvokeRequired]
-        private static void InsertStructure<TFeat>(IEnumerable<IStructure> structures, IList list, ref int count)
+        private static void InsertStructure<TFeat>(IEnumerable<IStructureObject> structures, IList list, ref int count)
             where TFeat : INameable
         {
-            foreach (IStructure structure in structures.Where(s => s is TFeat))
+            foreach (IStructureObject structure in structures.Where(s => s is TFeat))
             {
                 var replaced = false;
                 for (var i = 0; i < list.Count; ++i)
