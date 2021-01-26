@@ -108,12 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
         }
 
-        private void InitializeOutputData()
-        {
-            RestartOutput = new EventedList<RestartFile>();
-            OutputDocuments = new EventedList<ReadOnlyTextFileData>();
-        }
-
         public virtual RealTimeControlOutputFileFunctionStore OutputFileFunctionStore
         {
             get => outputFileFunctionStore;
@@ -176,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     return;
                 }
-                
+
                 writeRestart = value;
                 MarkOutputOutOfSync();
             }
@@ -196,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
 
                 restartInput = value;
-                
+
                 MarkOutputOutOfSync();
             }
         }
@@ -213,19 +207,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public override bool CanRun => false;
 
-        //HOW can we overcome this duplication?
         [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
             get => TimeProvider?.StartTime ?? base.StartTime;
             set
             {
+                if (base.StartTime == value)
+                {
+                    return;
+                }
+
                 if (TimeProvider != null)
                 {
                     TimeProvider.StartTime = value;
                 }
 
-                // This base model setting is made to make the base logic right
                 base.StartTime = value;
                 MarkOutputOutOfSync();
             }
@@ -237,12 +234,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.StopTime ?? base.StopTime;
             set
             {
+                if (base.StopTime == value)
+                {
+                    return;
+                }
+
                 if (TimeProvider != null)
                 {
                     TimeProvider.StopTime = value;
                 }
 
-                // This base model setting is made to make the base logic right
                 base.StopTime = value;
                 MarkOutputOutOfSync();
             }
@@ -254,12 +255,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.TimeStep ?? base.TimeStep;
             set
             {
+                if (base.TimeStep == value)
+                {
+                    return;
+                }
+
                 if (TimeProvider != null)
                 {
                     TimeProvider.TimeStep = value;
                 }
 
-                // This base model setting is made to make the base logic right
                 base.TimeStep = value;
                 MarkOutputOutOfSync();
             }
@@ -564,6 +569,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             disposed = true;
         }
 
+        private void InitializeOutputData()
+        {
+            RestartOutput = new EventedList<RestartFile>();
+            OutputDocuments = new EventedList<ReadOnlyTextFileData>();
+        }
+
         // This is no edit action...
         private void ResubscribeToOwner()
         {
@@ -699,7 +710,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                             controlGroupDataItem.Children.Clear();
                             DataItems.Remove(controlGroupDataItem);
-                            
+
                             SuspendClearOutputOnInputChange = false;
                         }
 
@@ -1051,8 +1062,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             var logHandler = new LogHandler("Reconnecting output documents", Log);
             OutputDocuments.AddRange(outputDocumentFilePaths
-                                                            .Select(p => ReadTextDocument(p, logHandler))
-                                                            .Where(x => x != null));
+                                     .Select(p => ReadTextDocument(p, logHandler))
+                                     .Where(x => x != null));
             logHandler.LogReport();
         }
 
@@ -1062,14 +1073,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             try
             {
-                return new ReadOnlyTextFileData(textFileInfo.Name, 
-                                                File.ReadAllText(textFileInfo.FullName), 
+                return new ReadOnlyTextFileData(textFileInfo.Name,
+                                                File.ReadAllText(textFileInfo.FullName),
                                                 GetReadOnlyTextFileDataType(textFileInfo));
             }
             catch (Exception e)
             {
-                logHandler.ReportErrorFormat("Error while reading {0}: {1}", 
-                                             textFileInfo.FullName, 
+                logHandler.ReportErrorFormat("Error while reading {0}: {1}",
+                                             textFileInfo.FullName,
                                              e.Message);
             }
 
@@ -1204,7 +1215,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             MarkDirty();
         }
 
-        public virtual ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory => 
+        public virtual ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory =>
             new HashSet<string>();
 
         #endregion
