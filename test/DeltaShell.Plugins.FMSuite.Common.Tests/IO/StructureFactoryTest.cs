@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -124,9 +126,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             IPump pump = StructureFactory.CreatePump(structure, dummyPath, new DateTime());
             Assert.AreEqual("pump01", pump.Name);
-            Assert.IsTrue(pump.CanBeTimedependent);
-            Assert.IsNull(pump.LongName);
-            Assert.IsNull(pump.Branch);
             Assert.AreEqual(new Point(680, 360), pump.Geometry);
             Assert.IsFalse(pump.UseCapacityTimeSeries);
             Assert.AreEqual(2.0, pump.Capacity);
@@ -137,7 +136,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void CreatePumpWithCapacityTimeSeriesTest()
         {
+            // Setup
             var structure = new Structure2D("pump");
+
             structure.AddProperty(KnownStructureProperties.Type, typeof(string), "pump");
             structure.AddProperty(KnownStructureProperties.Name, typeof(string), "pump05");
             structure.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
@@ -145,11 +146,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
+            // Call
             IPump pump = StructureFactory.CreatePump(structure, dummyPath, new DateTime(2013, 1, 1));
+
+            // Assert
             Assert.AreEqual("pump05", pump.Name);
-            Assert.IsTrue(pump.CanBeTimedependent);
-            Assert.IsNull(pump.LongName);
-            Assert.IsNull(pump.Branch);
             Assert.AreEqual(new LineString(new[]
             {
                 new Coordinate(1, 2),
@@ -179,53 +180,55 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenTypeIsWeir()
         {
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            IStructure result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
-            Assert.IsTrue(result is IWeir);
+            IStructureObject result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            Assert.IsTrue(result is IStructure);
         }
 
         [Test]
         public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenWeirFormulaIsAGeneralStructureWeirFormula()
         {
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            IStructure result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
-            Assert.IsTrue(result is IWeir);
+            IStructureObject result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            Assert.IsTrue(result is IStructure);
 
-            var weir = (Weir) result;
-            Assert.That(weir.WeirFormula is GeneralStructureWeirFormula);
+            var weir = (IStructure) result;
+            Assert.That(weir.Formula is GeneralStructureWeirFormula);
         }
 
+        public static IEnumerable<TestCaseData> GetKnownGeneralStructureProperties() =>
+            Enum.GetValues(typeof(KnownGeneralStructureProperties))
+                .Cast<KnownGeneralStructureProperties>()
+                .Where(x => x != KnownGeneralStructureProperties.GateOpeningHorizontalDirection)
+                .Select(x => new TestCaseData(x));
+
         [Test]
-        public void GivenGeneralStructureAsStructure2DWithKnownPropertyUnequalToZero_WhenCreatingStructure_ThenWeirAdaptsProperty()
+        [TestCaseSource(nameof(GetKnownGeneralStructureProperties))]
+        public void GivenGeneralStructureAsStructure2DWithKnownPropertyUnequalToZero_WhenCreatingStructure_ThenWeirAdaptsProperty(KnownGeneralStructureProperties property)
         {
-            Array knownProperties = Enum.GetValues(typeof(KnownGeneralStructureProperties));
-            foreach (object knownProperty in knownProperties)
+            // Setup
+            var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
+
+            if (property == KnownGeneralStructureProperties.GateOpeningWidth ||
+                property == KnownGeneralStructureProperties.GateLowerEdgeLevel ||
+                property == KnownGeneralStructureProperties.CrestLevel)
             {
-                var property = (KnownGeneralStructureProperties) knownProperty;
-
-                var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-
-                if (property == KnownGeneralStructureProperties.GateOpeningWidth ||
-                    property == KnownGeneralStructureProperties.GateLowerEdgeLevel ||
-                    property == KnownGeneralStructureProperties.CrestLevel)
-                {
-                    generalStructure.AddProperty(property.GetDescription(), typeof(Steerable), "12.34");
-                }
-                else if (property == KnownGeneralStructureProperties.GateOpeningHorizontalDirection)
-                {
-                    continue;
-                }
-                else
-                {
-                    generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
-                }
-
-                IStructure resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
-                var weir = resultingStructure as Weir;
-                Assert.NotNull(weir);
-
-                Dictionary<KnownGeneralStructureProperties, object> weirFormulaValueDictionary = ConstructWeirFormulaValueDictionary(weir);
-                Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), property.GetDescription());
+                generalStructure.AddProperty(property.GetDescription(), typeof(Steerable), "12.34");
             }
+            else
+            {
+                generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
+            }
+
+            // Call
+            IStructureObject resultingStructure = 
+                StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+
+            // Assert
+            var weir = resultingStructure as IStructure;
+            Assert.That(weir, Is.Not.Null);
+
+            Dictionary<KnownGeneralStructureProperties, object> weirFormulaValueDictionary = ConstructWeirFormulaValueDictionary(weir);
+            Assert.That(weirFormulaValueDictionary[property], Is.EqualTo(12.34), property.GetDescription());
         }
 
         [Test]
@@ -234,18 +237,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
             generalStructure.AddProperty(KnownGeneralStructureProperties.ExtraResistance.GetDescription(), typeof(double), "0.0");
 
-            IStructure resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
-            var weir = resultingStructure as Weir;
+            IStructureObject resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            var weir = resultingStructure as IStructure;
             Assert.NotNull(weir);
 
-            var weirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+            var weirFormula = weir.Formula as GeneralStructureWeirFormula;
             Assert.NotNull(weirFormula);
             Assert.IsFalse(weirFormula.UseExtraResistance);
         }
 
-        private static Dictionary<KnownGeneralStructureProperties, object> ConstructWeirFormulaValueDictionary(IWeir weir)
+        private static Dictionary<KnownGeneralStructureProperties, object> ConstructWeirFormulaValueDictionary(IStructure weir)
         {
-            var weirFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+            var weirFormula = weir.Formula as GeneralStructureWeirFormula;
             Assert.NotNull(weirFormula);
 
             var dictionary = new Dictionary<KnownGeneralStructureProperties, object>
@@ -302,18 +305,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            IWeir weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime());
+            IStructure weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime());
             Assert.AreEqual("Weir_down", weir.Name);
-            Assert.IsTrue(weir.CanBeTimedependent);
-            Assert.IsNull(weir.LongName);
-            Assert.IsNull(weir.Branch);
             Assert.AreEqual(new Point(680, 360), weir.Geometry);
             Assert.IsFalse(weir.UseCrestLevelTimeSeries);
             Assert.AreEqual(2.0, weir.CrestLevel);
             Assert.AreEqual(double.NaN, weir.CrestWidth);
             Assert.AreEqual(0, weir.CrestLevelTimeSeries.Time.Values.Count);
-            Assert.IsInstanceOf<SimpleWeirFormula>(weir.WeirFormula);
-            var simpleWeirFormula = (SimpleWeirFormula) weir.WeirFormula;
+            Assert.IsInstanceOf<SimpleWeirFormula>(weir.Formula);
+            var simpleWeirFormula = (SimpleWeirFormula) weir.Formula;
             Assert.AreEqual(0.7, simpleWeirFormula.LateralContraction);
         }
 
@@ -331,19 +331,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            IWeir weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime(2013, 1, 1));
+            IStructure weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime(2013, 1, 1));
             Assert.AreEqual("Weir_moving", weir.Name);
-            Assert.IsTrue(weir.CanBeTimedependent);
-            Assert.IsNull(weir.LongName);
-            Assert.IsNull(weir.Branch);
             Assert.AreEqual(new Point(680, 360), weir.Geometry);
             Assert.AreEqual(23.5, weir.CrestWidth);
             Assert.IsTrue(weir.UseCrestLevelTimeSeries);
             Assert.AreEqual(2, weir.CrestLevelTimeSeries.Time.Values.Count);
             Assert.AreEqual(5.6, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
             Assert.AreEqual(11.12, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 1, 2, 0)]);
-            Assert.IsInstanceOf<SimpleWeirFormula>(weir.WeirFormula);
-            var simpleWeirFormula = (SimpleWeirFormula) weir.WeirFormula;
+            Assert.IsInstanceOf<SimpleWeirFormula>(weir.Formula);
+            var simpleWeirFormula = (SimpleWeirFormula) weir.Formula;
             Assert.AreEqual(0.7, simpleWeirFormula.LateralContraction);
         }
 
@@ -371,14 +368,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            IWeir gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime());
-            var gateWeirFormula = gate.WeirFormula as IGatedWeirFormula;
+            IStructure gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime());
+            var gateWeirFormula = gate.Formula as IGatedWeirFormula;
 
             Assert.NotNull(gateWeirFormula);
 
             Assert.AreEqual("Gate01", gate.Name);
-            Assert.IsNull(gate.LongName);
-            Assert.IsNull(gate.Branch);
             Assert.AreEqual(new Point(500, 360), gate.Geometry);
             Assert.IsFalse(gate.UseCrestLevelTimeSeries);
             Assert.AreEqual(2.0, gate.CrestLevel);
@@ -417,13 +412,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            IWeir gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime(2013, 1, 1));
-            var gateWeirFormula = gate.WeirFormula as IGatedWeirFormula;
+            IStructure gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime(2013, 1, 1));
+            var gateWeirFormula = gate.Formula as IGatedWeirFormula;
 
             Assert.NotNull(gateWeirFormula);
             Assert.AreEqual("Gate02", gate.Name);
-            Assert.IsNull(gate.LongName);
-            Assert.IsNull(gate.Branch);
             Assert.AreEqual(new LineString(new[]
                             {
                                 new Coordinate(1, 2),
@@ -470,7 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Structure2D simpleWeirPrecursor = ComposeSimpleWeir(isConstCrestLevel);
 
             // When
-            IStructure result = StructureFactory.CreateStructure(simpleWeirPrecursor, structuresPath, refDate);
+            IStructureObject result = StructureFactory.CreateStructure(simpleWeirPrecursor, structuresPath, refDate);
 
             // Then
             VerifySimpleWeir(result, isConstCrestLevel);
@@ -500,7 +493,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                                               isConstHorizontalOpeningWidth);
 
             // When
-            IStructure result = StructureFactory.CreateStructure(gatedWeirPrecursor, structuresPath, refDate);
+            IStructureObject result = StructureFactory.CreateStructure(gatedWeirPrecursor, structuresPath, refDate);
 
             // Then
             VerifyGatedWeir(result, isConstCrestLevel, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
@@ -558,7 +551,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                                                             isConstHorizontalOpeningWidth);
 
             // When
-            IStructure result = StructureFactory.CreateStructure(generalStructurePrecursor, structuresPath, refDate);
+            IStructureObject result = StructureFactory.CreateStructure(generalStructurePrecursor, structuresPath, refDate);
 
             // Then
             VerifyGeneralStructure(result, isConstCrestLevel, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
@@ -707,42 +700,42 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         #region VerifyStructure
 
-        private void VerifySimpleWeir(IStructure structure, bool isConstCrestLevel)
+        private void VerifySimpleWeir(IStructureObject structure, bool isConstCrestLevel)
         {
-            var weir = structure as Weir2D;
+            var weir = structure as IStructure;
 
             VerifyCommon(weir, isConstCrestLevel);
 
             // Verify SimpleWeir
-            Assert.That(weir.WeirFormula, Is.Not.Null, "Expected a weir formula:");
-            var weirFormula = weir.WeirFormula as SimpleWeirFormula;
+            Assert.That(weir.Formula, Is.Not.Null, "Expected a weir formula:");
+            var weirFormula = weir.Formula as SimpleWeirFormula;
             Assert.That(weirFormula, Is.Not.Null, "Expected the weir formula to be a simple weir");
             Assert.That(weirFormula.LateralContraction, Is.EqualTo(constValLookUpTable[KnownStructureProperties.LateralContractionCoefficient]));
         }
 
-        private void VerifyGatedWeir(IStructure structure,
+        private void VerifyGatedWeir(IStructureObject structure,
                                      bool isConstCrestLevel,
                                      bool isConstLowerEdgeLevel,
                                      bool isConstHorizontalOpeningWidth)
         {
-            var weir = structure as Weir2D;
+            var weir = structure as IStructure;
 
             VerifyCommon(weir, isConstCrestLevel);
             VerifyGated(weir, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
         }
 
-        private void VerifyGeneralStructure(IStructure structure,
+        private void VerifyGeneralStructure(IStructureObject structure,
                                             bool isConstCrestLevel,
                                             bool isConstLowerEdgeLevel,
                                             bool isConstHorizontalOpeningWidth)
         {
-            var weir = structure as Weir2D;
+            var weir = structure as IStructure;
 
             VerifyCommon(weir, isConstCrestLevel);
             VerifyGated(weir, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
 
             // Verify GeneralStructure
-            var generalStructureFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+            var generalStructureFormula = weir.Formula as GeneralStructureWeirFormula;
             Assert.That(generalStructureFormula, Is.Not.Null, "Expected the weir formula to be a general structure:");
 
             Assert.That(generalStructureFormula.WidthLeftSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Width.GetDescription()]));
@@ -772,7 +765,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.That(generalStructureFormula.ExtraResistance, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.ExtraResistance.GetDescription()]));
         }
 
-        private void VerifyCommon(IWeir weir, bool isConstCrestLevel)
+        private void VerifyCommon(IStructure weir, bool isConstCrestLevel)
         {
             Assert.That(weir, Is.Not.Null, "Expected the structure to not be null");
 
@@ -794,10 +787,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.That(weir.CrestWidth, Is.EqualTo(constValLookUpTable[KnownStructureProperties.CrestWidth]), "Expected a different crest width:");
         }
 
-        private void VerifyGated(IWeir weir, bool isConstLowerEdgeLevel, bool isConstHorizontalOpeningWidth)
+        private void VerifyGated(IStructure weir, bool isConstLowerEdgeLevel, bool isConstHorizontalOpeningWidth)
         {
-            Assert.That(weir.WeirFormula, Is.Not.Null, "Expected a weir formula:");
-            var weirFormula = weir.WeirFormula as IGatedWeirFormula;
+            Assert.That(weir.Formula, Is.Not.Null, "Expected a weir formula:");
+            var weirFormula = weir.Formula as IGatedWeirFormula;
             Assert.That(weirFormula, Is.Not.Null, "Expected the weir formula to be a gated weir");
 
             if (isConstLowerEdgeLevel)
