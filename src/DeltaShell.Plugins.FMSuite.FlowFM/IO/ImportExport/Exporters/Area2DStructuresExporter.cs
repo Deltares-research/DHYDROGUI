@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
@@ -18,11 +19,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 {
     public class Area2DStructuresExporter : IFileExporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(Area2DStructuresExporter));
+        private static readonly ILog log = LogManager.GetLogger(typeof(Area2DStructuresExporter));
 
         public Func<HydroArea, WaterFlowFMModel> GetModelForArea { get; set; }
-
-        #region IFileExporter
 
         public string Name => "2D structures";
 
@@ -30,17 +29,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
         public string Description => string.Empty;
 
+        public IEnumerable<Type> SourceTypes()
+        {
+            yield return typeof(HydroArea);
+        }
+
+        public string FileFilter => $"Structures file|*{FileConstants.IniFileExtension}";
+
+        [ExcludeFromCodeCoverage]
+        public Bitmap Icon => Resources.StructureFeatureSmall;
+
+        public bool CanExportFor(object item) => true;
+
+
         public bool Export(object item, string path)
         {
             if (string.IsNullOrEmpty(path))
             {
-                Log.ErrorFormat("No file destination given.");
+                log.ErrorFormat("No file destination given.");
                 return false;
             }
 
             if (item == null)
             {
-                Log.ErrorFormat(
+                log.ErrorFormat(
                     "No target was presented to export from (requires a Flexible Mesh Water Flow model or Area.");
                 return false;
             }
@@ -60,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                 {
                     if (targetHydroArea.Parent != null)
                     {
-                        Log.ErrorFormat("Cannot export structures from an integrated model (yet).");
+                        log.ErrorFormat("Cannot export structures from an integrated model (yet).");
                     }
 
                     return false;
@@ -74,46 +86,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             };
             try
             {
-                IEnumerable<IStructure> structures =
-                    targetHydroArea.Weirs.Cast<IStructure>().Concat(targetHydroArea.Pumps);
+                IEnumerable<IStructureObject> structures =
+                    targetHydroArea.Weirs.Cast<IStructureObject>()
+                                   .Concat(targetHydroArea.Pumps);
                 structuresFile.Write(path, structures);
-                //TODO
-                Log.InfoFormat("Written {0} structures (Pumps: {1}; Weir structures: {2};).",
+                
+                log.InfoFormat("Written {0} structures (Pumps: {1}; Weir structures: {2};).",
                                targetHydroArea.Pumps.Count + targetHydroArea.Weirs.Count,
                                targetHydroArea.Pumps.Count,
                                targetHydroArea.Weirs.Count);
                 return true;
             }
-            catch (Exception e)
+            catch (Exception e) when (e is ArgumentException || 
+                                      e is UnauthorizedAccessException || 
+                                      e is DirectoryNotFoundException ||
+                                      e is PathTooLongException || 
+                                      e is IOException || 
+                                      e is SecurityException)
             {
-                if (e is ArgumentException || e is UnauthorizedAccessException || e is DirectoryNotFoundException ||
-                    e is PathTooLongException || e is IOException || e is SecurityException)
-                {
-                    Log.Error("An error occurred while exporting structures, export stopped; Cause: ",
-                              e);
-                    return false;
-                }
-
-                // Unexpected exception, let it bubble:
-                throw;
+                log.Error("An error occurred while exporting structures, export stopped; Cause: ",
+                          e);
+                return false;
             }
         }
-
-        public IEnumerable<Type> SourceTypes()
-        {
-            yield return typeof(HydroArea);
-        }
-
-        public string FileFilter => $"Structures file|*{FileConstants.IniFileExtension}";
-
-        [ExcludeFromCodeCoverage]
-        public Bitmap Icon => Resources.StructureFeatureSmall;
-
-        public bool CanExportFor(object item)
-        {
-            return true;
-        }
-
-        #endregion
     }
 }
