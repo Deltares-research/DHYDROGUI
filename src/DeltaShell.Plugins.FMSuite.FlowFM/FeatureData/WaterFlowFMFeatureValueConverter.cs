@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Utils;
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             // temporary fix for DELFT3DFM-1302 (this should be done in Dimr)
             if (featureCategory == "weirs" && parameterName == "crest_level")
             {
-                var weir = (Weir) feature;
+                var weir = (Structure) feature;
                 if (!weir.UseCrestLevelTimeSeries)
                 {
                     return weir.CrestLevel;
