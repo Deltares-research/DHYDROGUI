@@ -16,7 +16,6 @@ namespace DelftTools.Hydro.Helpers
         /// <returns></returns>
         public static CrossSectionDefinitionYZ ConvertToYz(CrossSectionDefinitionXYZ source)
         {
-            //var csWidth = source.Width;
             var result = new CrossSectionDefinitionYZ();
             foreach (var row in source.XYZDataTable)
             {

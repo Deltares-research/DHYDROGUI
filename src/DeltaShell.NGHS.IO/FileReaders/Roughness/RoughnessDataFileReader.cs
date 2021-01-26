@@ -212,10 +212,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
         private static RoughnessSection ReadRoughnessSection(INetwork network, IList<RoughnessSection> roughnessSections, IDelftIniCategory contentSection, bool isCalibratedRoughness)
         {
             var sectionId = contentSection.ReadProperty<string>(RoughnessDataRegion.SectionId.Key);
-            //var isReversed = contentSection.ReadProperty<bool>(RoughnessDataRegion.FlowDirection.Key);
             var isReversed = false;
-            //var interpolationType = (InterpolationType)contentSection.ReadProperty<int>(RoughnessDataRegion.Interpolate.Key);
-
+            
             RoughnessType globalType = RoughnessType.Chezy;
             RoughnessSection roughnessSection;
             double? globalValue = null;
@@ -242,11 +240,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                 }
 
                 roughnessSection.RoughnessNetworkCoverage.Clear();
-
-                /*
-                 need to check if ths works with FM!!
-                globalType = FrictionTypeConverter.ConvertToRoughnessFrictionType(contentSection.ReadProperty<Friction>(RoughnessDataRegion.GlobalType.Key));
-                globalValue = contentSection.ReadProperty<double>(RoughnessDataRegion.GlobalValue.Key);*/
             }
             else
             {
@@ -293,7 +286,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             if (firstNWCArgument == null)
                 throw new FileReadingException(Resources.RoughnessDataFileReader_ReadRoughnessSection_While_creating_the_roughnes_section_from_the_roughness_file_the_fisrt_argument_of_the_roughness_network_coverage_is_not_created__used_to_set_the_interpolation_type);
             
-            //firstNWCArgument.InterpolationType = interpolationType;
             if (globalValue.HasValue)
                 roughnessSection.SetDefaults(globalType, globalValue.Value);
 

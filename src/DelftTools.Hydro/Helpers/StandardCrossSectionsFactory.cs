@@ -301,7 +301,6 @@ namespace DelftTools.Hydro.Helpers
                     SINHA = Math.Sqrt((1 - COSHA)*(1 + COSHA));
                 }
 
-                //double AT = a;
                 double AB = z1*SINHA;
                 double AB2 = AB + AB;
                 double Z4 = Math.Sqrt((Z3 - AB)*(Z3 + AB));

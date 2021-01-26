@@ -26,8 +26,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
             IList<DelftIniCategory> cslCategories = new List<DelftIniCategory>();
             if (File.Exists(cslFilename))
             {
-                //throw new FileReadingException(string.Format("Could not read file {0} properly, it doesn't exist.",cslFilename));
-
                 cslCategories = new DelftIniReader().ReadDelftIniFile(cslFilename);
             }
             IList<DelftIniCategory> csIniLocations = new List<DelftIniCategory>();
@@ -88,8 +86,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 {
                     try
                     {
-
-
                         var crossSectionLocationInfos = csIniLocations.Where(location =>
                         {
                             var crossSectionLocationDefinitionId =
@@ -113,9 +109,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                             continue;
                         }
 
-                        //throw new CrossSectionReadingException(string.Format("The read cross section definition '{0}' has no location in the provided location file: {1}",crossSectionDefinition.Name, cslFilename));
-
-
+                        
                         var crossSectionLocationInfo = crossSectionLocationInfos.Length > 1
                             ? crossSectionLocationInfos
                                   .FirstOrDefault(cslInfo =>
@@ -140,22 +134,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                                 crossSectionDefinition.Name));
                             continue;
                         }
-
-                        /*
-                        if (sharedNotConnectedCrossSectionDefinitions.Contains(crossSectionDefinition)
-                            || !csIniLocations.Any(loc => loc.ReadProperty<string>(LocationRegion.Definition.Key)
-                                                              .Equals(crossSectionDefinition.Name,
-                                                                  StringComparison.InvariantCultureIgnoreCase)
-                                                          && loc.ReadProperty<string>(LocationRegion.Id.Key)
-                                                              .Equals(crossSectionDefinition.Name,
-                                                                  StringComparison.InvariantCultureIgnoreCase))
-                        )
-                        {
-                            network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
-                        }
-                        else
-                        {
-                        */
 
                         var isSharedCrossSection = crossSectionLocationInfos.Length > 1;
                         var crossSectionDefinitionName = crossSectionDefinition.Name;
@@ -218,8 +196,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                                     }
                                     else
                                     {
-                                        //var crossSectionDefinitionProxy = new CrossSectionDefinitionProxy(definition);
-                                        //crossSectionDefinitionProxy.ShiftLevel(locationShift);
                                         crossSection = network.AddCrossSection(sectionLocationInfo, locationOtherId, definition, false);
                                         definition.Name = crossSectionDefinitionName; // stupid thing
                                         crossSection.UseSharedDefinition(definition);

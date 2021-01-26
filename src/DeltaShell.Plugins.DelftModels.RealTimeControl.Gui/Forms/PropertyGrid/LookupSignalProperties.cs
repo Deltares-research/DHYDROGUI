@@ -77,28 +77,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             }
         }
 
-        /// <summary>
-        /// Update the column name for better user readability
-        /// add an extra [o] to avoid dupliclate names: crestlevel may set crestlevel
-        /// </summary>
-        //private void UpdateFunctionComponentName()
-        //{
-        //    if (data.RuleBases.Count == 1)
-        //    {
-        //        var rulebase = data.RuleBases[0];
-
-        //        if (output.IsConnected)
-        //        {
-        //            SetVariableName(data.Function.Components[0], output.ParameterName + " [o]");
-        //        }
-
-        //        return;
-        //    }
-
-        //    SetVariableName(data.Function.Components[0], "<output undefined>");
-        //}
-
-
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [ResourcesCategory(typeof(Resources), "Category_Table")]
         [ResourcesDisplayName(typeof(Resources), "Table_DisplayName")]
@@ -108,8 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             get
             {
                 UpdateFunctionArgumentName(); //OMFG!!
-                //UpdateFunctionComponentName();
-
+                
                 return data.Function;
             }
             set { data.Function = value; }

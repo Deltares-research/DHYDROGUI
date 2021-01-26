@@ -69,7 +69,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             {
                 vertices.Add(new Coordinate(yvalues[i], zvalues[i]));
             }
-            Shape = new LineString(vertices.ToArray()); // endGeometry;
+            Shape = new LineString(vertices.ToArray());
         }
         
         public virtual bool IsRectangle

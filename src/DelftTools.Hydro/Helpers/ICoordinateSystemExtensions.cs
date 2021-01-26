@@ -24,8 +24,6 @@ namespace DelftTools.Hydro.Helpers
             if (sourceCoordinateSystem.Dimension!= destinationCoordinateSystem.Dimension) return false;
             if (sourceCoordinateSystem.DefaultEnvelope!= destinationCoordinateSystem.DefaultEnvelope) return false;
             
-            //if (sourceCoordinateSystem.XML != destinationCoordinateSystem.XML) return false;
-
             return true;
         }
     }

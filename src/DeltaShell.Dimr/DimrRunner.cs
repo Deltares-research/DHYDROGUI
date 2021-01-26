@@ -96,7 +96,6 @@ namespace DeltaShell.Dimr
         public void OnProgressChanged()
         {
             if (dimrApi != null) dimrApi.ProcessMessages();
-            //base.OnProgressChanged();
         }
 
         public void OnExecute()
@@ -208,7 +207,7 @@ namespace DeltaShell.Dimr
                 inputFile = dimrModel.InputFile
             };
             dimrConfig.component = new[] { component };
-            //XmlValidate(dimrConfig.Serialize());
+            
             dimrConfig.SaveToFile(dimrFile);
             return dimrFile;
         }
@@ -288,8 +287,7 @@ namespace DeltaShell.Dimr
         {
             var orgSuspendClearOutputOnInputChange = model.SuspendClearOutputOnInputChange;
             model.SuspendClearOutputOnInputChange = true;
-            //log.Info(KernelVersions);
-
+            
             var validationReport = model.Validate();
             if (validationReport != null && validationReport.Severity() == ValidationSeverity.Error)
             {

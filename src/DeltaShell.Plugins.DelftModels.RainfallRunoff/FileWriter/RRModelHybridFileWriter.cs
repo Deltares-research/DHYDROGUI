@@ -654,12 +654,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                     return "'14' nt 56 ObID '3B_WWTP'";
                 case NodeType.Openwater:
                     return "'21' nt 67 ObID 'OW_PRECIP'";
-            /*
-            TODO: Openwater catchments are not fully / incorrectly implemented, see issue: SOBEK3-784
-            According to documentation:
-                case NodeType.Openwater:
-                    return "'4' nt 67 ObID 'OW_PRECIP'";
-            */
+            //TODO: Openwater catchments are not fully / incorrectly implemented, see issue: SOBEK3-784
                 case NodeType.Sacramento:
                     return "'16' nt 54 ObID '3B_SACRAMENTO'";
                 case NodeType.Hbv:

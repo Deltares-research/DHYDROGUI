@@ -159,15 +159,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #region General Structure Elements
         public static readonly ConfigurationSetting Upstream1Width = new ConfigurationSetting(key: "upstream1Width", description: "");
         public static readonly ConfigurationSetting Upstream2Width = new ConfigurationSetting(key: "upstream2Width", description: "");
-        //public static readonly ConfigurationSetting WidthCenter = new ConfigurationSetting(key: "crestWidth", description: "");
         public static readonly ConfigurationSetting Downstream1Width = new ConfigurationSetting(key: "downstream1Width", description: "");
         public static readonly ConfigurationSetting Downstream2Width = new ConfigurationSetting(key: "downstream2Width", description: "");
         public static readonly ConfigurationSetting Upstream1Level = new ConfigurationSetting(key: "upstream1Level", description: "");
         public static readonly ConfigurationSetting Upstream2Level = new ConfigurationSetting(key: "upstream2Level", description: "");
-        //public static readonly ConfigurationSetting LevelCenter = new ConfigurationSetting(key: "crestLevel", description: "");
         public static readonly ConfigurationSetting Downstream1Level = new ConfigurationSetting(key: "downstream1Level", description: "");
         public static readonly ConfigurationSetting Downstream2Level = new ConfigurationSetting(key: "downstream2Level", description: "");
-        //public static readonly ConfigurationSetting GateHeight = new ConfigurationSetting(key: "gateLowerEdgeLevel", description: "Gate lower edge level (m AD)");
         public static readonly ConfigurationSetting PosFreeGateFlowCoeff = new ConfigurationSetting(key: "posFreeGateFlowCoeff", description: "Positive free gate flow (-)");
         public static readonly ConfigurationSetting PosDrownGateFlowCoeff = new ConfigurationSetting(key: "posDrownGateFlowCoeff", description: "Positive drowned gate flow (-)");
         public static readonly ConfigurationSetting PosFreeWeirFlowCoeff = new ConfigurationSetting(key: "posFreeWeirFlowCoeff", description: "Positive free weir flow (-)");

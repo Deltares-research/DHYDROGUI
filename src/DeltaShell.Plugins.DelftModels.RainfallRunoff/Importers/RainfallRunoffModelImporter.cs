@@ -299,44 +299,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
         /// <param name="linksource"></param>
         private void SetLinks(IHydroObject linksource)
         {
-            /*
-            foreach (var link in lstLinksOrderedByFromNode.Where(l => l.NodeFromId == linksource.Name))
-            {
-                if (
-                    linksource.Links.FirstOrDefault(l => Equals(linksource, l.Source) && l.Target.Name == link.NodeToId) !=
-                    null)
-                {
-                    continue; //already exists
-                }
-
-                if (dictionaryWWTP.ContainsKey(link.NodeToId))
-                {
-                    Link(linksource, dictionaryWWTP[link.NodeToId], link.Id);
-                    continue;
-                }
-
-                if (dictionaryRRBoundaries != null && dictionaryRRBoundaries.ContainsKey(link.NodeToId))
-                {
-                    Link(linksource, dictionaryRRBoundaries[link.NodeToId], link.Id);
-                    continue;
-                }
-
-                if (dictionaryBoundaries != null && dictionaryBoundaries.ContainsKey(link.NodeToId))
-                {
-                    Link(linksource, dictionaryBoundaries[link.NodeToId], link.Id);
-                    continue;
-                }
-
-                if (dictionaryLateralSources != null && dictionaryLateralSources.ContainsKey(link.NodeToId))
-                {
-                    Link(linksource, dictionaryLateralSources[link.NodeToId], link.Id);
-                    continue;
-                }
-
-                log.ErrorFormat(
-                    "Destination '{0}' of link '{1}' from '{2}' has not been found (or cannot be linked to).",
-                    link.NodeToId, linksource.Name, link.NodeFromId);
-            }*/
         }
 
         private void Link(IHydroObject source, IHydroObject target, string linkId)

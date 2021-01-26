@@ -457,7 +457,7 @@ namespace DelftTools.Hydro.Helpers
         /// Switches the direction of the branch
         /// </summary>
         /// <param name="branch"></param>
-        public static void ReverseBranch(IBranch branch) // TODO: move to NetworkHelper ... 
+        public static void ReverseBranch(IBranch branch)
         {
             var branchReverseAction = new BranchReverseAction(branch);
             branch.Network.BeginEdit(branchReverseAction);
@@ -475,7 +475,7 @@ namespace DelftTools.Hydro.Helpers
             {
                 vertices.Add(new Coordinate(branch.Geometry.Coordinates[i].X, branch.Geometry.Coordinates[i].Y));
             }
-            branch.Geometry = new LineString(vertices.ToArray()); // endGeometry;
+            branch.Geometry = new LineString(vertices.ToArray());
 
             ReverseBranchBranchFeatures(branch);
 
@@ -527,8 +527,6 @@ namespace DelftTools.Hydro.Helpers
         /// <param name="checkIfNewNameIsNeeded"></param>
         public static string GetUniqueFeatureName(IHydroRegion region, IFeature feature, bool checkIfNewNameIsNeeded = false)
         {
-            //return feature.GetEntityType().Name;
-
             var featureName = feature.GetEntityType().Name;
             if (region == null) return featureName;
 
@@ -564,8 +562,6 @@ namespace DelftTools.Hydro.Helpers
             }
 
             return uniqueName;
-            
-            //return NetworkHelper.GetUniqueName(featureName + "{0:D3}", region.AllHydroObjects.Where(f => f != feature), featureName);
         }
 
         public static void AddStructureToComposite(ICompositeBranchStructure compositeBranchStructure, IStructure1D structure)

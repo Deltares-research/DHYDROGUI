@@ -26,8 +26,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 }
                 catch
                 {
-                    //Debugger.Launch();
-                    //gulp
+                    // ignored because process will be killed (thus all resources will be released)
                 }
             }
             

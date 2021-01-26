@@ -523,7 +523,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 return;
             }
 
-            string functionName = modelParameter.Name; // +" [" + modelParameter.Unit.Symbol + "]";
+            string functionName = modelParameter.Name; 
 
             if (modelParameter.ElementSet == ElementSet.BoundaryElmSet ||
                 modelParameter.ElementSet == ElementSet.LinkElmSet ||
@@ -534,7 +534,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                                                                   modelParameter.Unit, true, Basin?.CoordinateSystem);
                 coverage.IsEditable = false;
                 coverage.Components[0].NoDataValue = double.NaN;
-                //AddDataItem(coverage, DataItemRole.Output, coverage.Name);
                 if(!OutputDataItems.Any(odi => odi.Tag.Equals(coverage.Name, StringComparison.InvariantCultureIgnoreCase)))
                     OutputDataItems.Add(new DataItem(coverage, DataItemRole.Output, coverage.Name));
             }
@@ -550,7 +549,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                                                                     modelParameter.Unit, true, Basin?.CoordinateSystem);
                 coverage.IsEditable = false;
                 coverage.Components[0].NoDataValue = double.NaN;
-                //AddDataItem(coverage, DataItemRole.Output, coverage.Name);
+                
                 if (!OutputDataItems.Any(odi => odi.Tag.Equals(coverage.Name, StringComparison.InvariantCultureIgnoreCase)))
                     OutputDataItems.Add(new DataItem(coverage, DataItemRole.Output, coverage.Name));
             }
@@ -561,7 +560,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 timeSeries.IsEditable = false;
                 timeSeries.Components.Add(new Variable<double>(modelParameter.Name, modelParameter.Unit));
                 timeSeries.Components[0].NoDataValue = double.NaN;
-                //AddDataItem(timeSeries, DataItemRole.Output, timeSeries.Name);
+                
                 if (!OutputDataItems.Any(odi => odi.Tag.Equals(timeSeries.Name, StringComparison.InvariantCultureIgnoreCase)))
                     OutputDataItems.Add(new DataItem(timeSeries, DataItemRole.Output, timeSeries.Name));
             }

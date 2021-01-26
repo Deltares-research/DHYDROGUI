@@ -97,11 +97,9 @@ namespace DelftTools.Hydro.Structures
                     throw new NotImplementedException();
 
                 case NotifyCollectionChangedAction.Remove:
-                    //structure.ParentStructure = null;
                     break;
 
                 case NotifyCollectionChangedAction.Add:
-                    //structure.ParentStructure = this;
                     break;
             }
             Count = structures.Count;
@@ -147,7 +145,7 @@ namespace DelftTools.Hydro.Structures
             // Check for emptyness
             // Check for overlapping weirs
             var weirs = structure.Structures.Where(s => s is IWeir).OrderBy(w => ((IWeir)w).OffsetY);
-            //IWeir previousWeir = null;
+
             foreach (IWeir weir in weirs)
             {
                 var result = weir.Validate();
@@ -155,13 +153,6 @@ namespace DelftTools.Hydro.Structures
                 {
                     exceptions.Add(new ValidationException(string.Format("{0}:{1}", weir.Name, result.ValidationException.Message), result.ValidationException));
                 }
-
-                //if ((previousWeir != null) && (weir.OffsetY < previousWeir.CrestWidth + previousWeir.OffsetY))
-                //{
-                //    var exception = new ValidationException(string.Format("Two overlapping weirs in structure {0} at indices {1} and {2}.", structure.Name, index - 1, index));
-                //    exceptions.Add(exception);
-                //}
-                //previousWeir = weir;
             }
 
             var gates = structure.Structures.OfType<IGate>();

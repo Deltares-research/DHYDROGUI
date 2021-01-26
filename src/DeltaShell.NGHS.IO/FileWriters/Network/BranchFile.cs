@@ -45,11 +45,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 iniCategory.AddProperty(NetworkRegion.BranchType, GetBranchType(branch));
                 iniCategory.AddProperty(NetworkRegion.IsLengthCustom, branch.IsLengthCustom);
                 
-                /*
-                 var sewerConnection = branch as ISewerConnection;
-                var waterType = (int) (sewerConnection?.WaterType ?? SewerConnectionWaterType.None);
-                iniCategory.AddProperty(NetworkRegion.BranchWaterType, waterType);
-                */
                 var sewerConnection = branch as ISewerConnection;
                 if (sewerConnection == null)
                 {

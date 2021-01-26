@@ -26,8 +26,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 
         public static readonly ConfigurationSetting FlowWidths = new ConfigurationSetting(key: "flowWidths", description: "Flow widths at levels. (m)", format: "F5");
         public static readonly ConfigurationSetting TotalWidths = new ConfigurationSetting(key: "totalWidths", description: "Total widths at levels. (m)", format: "F5");
-        //public static readonly ConfigurationSetting StorageWidths = new ConfigurationSetting(key: "storageWidths", description: "Storage widths at levels. (m)");
-
+        
         public static readonly ConfigurationSetting GroundlayerUsed = new ConfigurationSetting(key: "GroundLayerUsed", description: "Flag for ground layer (0=None, <>0=Yes)");
         public static readonly ConfigurationSetting Groundlayer = new ConfigurationSetting(key: "GroundLayer", description: "Thickness of ground layer (m))");
         

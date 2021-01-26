@@ -33,8 +33,7 @@ namespace DelftTools.Hydro
             if (sourceModel.Region != null && hmodel != null)
             {
                 // Replace the region of the integrated model by the one in the source model. 
-                //var soucemodelRegions = sourceModel.Region.AllRegions.Where(r => !(r is HydroRegion)).ToArray();
-
+                
                 var hydroRegions = hmodel.Region.SubRegions;
                 var regionsToReplace = sourceModel.Region is HydroRegion hydroRegion
                     ? hydroRegion.SubRegions.ToArray()

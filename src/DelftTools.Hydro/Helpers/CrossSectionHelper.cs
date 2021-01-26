@@ -62,50 +62,6 @@ namespace DelftTools.Hydro.Helpers
             return CurrentConveyanceCalculator.GetConveyance(crossSection);
         }
 
-
-        /// <summary>
-        /// Updates the processed data (depth: width) based on the available y-z values;
-        /// </summary>
-        /// <param name="crossSectionDefinition"></param>
-
-        /// <summary>
-        /// Sets a default geometry for the cross section. The default geometry is a linestring geometry 
-        /// perpendicular to the branch. 
-        /// </summary>
-        /// <param name="crossSectionDefinition"></param>
-        /// <param name="defaultLength"></param>
-        /// The default length of the generated linestring geometry. Since this can be different for each network 
-        /// it is not a setting of the CrossSectionService
-//        public static void SetDefaultGeometry(ICrossSectionDefinition crossSectionDefinition, double defaultLength)
-//        {
-//            UpdateDefaultGeometry(crossSectionDefinition, defaultLength);
-//        }
-
-        ///<summary>
-        /// Sets a default geometry for the cross section. The default geometry is a linestring geometry 
-        /// perpendicular to the branch. 
-        ///</summary>
-        ///<param name="crossSectionDefinition"></param>
-        ///<param name="defaultLength"></param>
-        ///<exception cref="ArgumentException"></exception>
-//        public static void UpdateDefaultGeometry(ICrossSectionDefinition crossSectionDefinition, double defaultLength)
-//        {
-//            /*if (null == crossSection.Branch)
-//            {
-//                throw new ArgumentException("The default geometry can only be set for cross section that are connected to a branch.");
-//            }
-//
-//            var mapChainage = NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage);
-//            crossSection.Geometry = ComputeDefaultCrossSectionGeometry(crossSection.Branch.Geometry, mapChainage, defaultLength, crossSection.Thalweg, crossSection.Left);*/
-//        }
-
-        //public static void ComputeDefaultCrossSectionGeometry(IGeometry branchGeometry, IGeometry crossSectionGeometry, double chainage, double length,
-        //    double thalwegOffset)
-        //{
-        //    ComputeDefaultCrossSectionGeometry(branchGeometry, crossSectionGeometry, chainage, length, length/2, thalWayOffset);
-        //}
-
-
         /// <summary>
         /// Sets a default geometry for the cross section. The default geometry is a linestring geometry 
         /// perpendicular to the branch. 
@@ -121,7 +77,6 @@ namespace DelftTools.Hydro.Helpers
         public static IGeometry ComputeDefaultCrossSectionGeometry(IGeometry branchGeometry, double mapChainage,
             double length, double thalWeg, double thalwegOffset)
         {
-            //Log.InfoFormat("UpdateDefaultGeometry chainage {0}", chainge);
             Coordinate coordinate;
             double angle;
 
@@ -236,8 +191,6 @@ namespace DelftTools.Hydro.Helpers
             }
 
             List<Coordinate> vertices = new List<Coordinate>();
-            //double xLength = Math.Abs(yzCoordinates[yzCoordinates.Count - 1].X - yzCoordinates[0].X);
-            //double thalwegOffset = xLength/4;// 2;
             for (int i=0; i<yzCoordinates.Count; i++)
             {
                 Coordinate yzCoordinate = yzCoordinates[i];
@@ -378,12 +331,6 @@ namespace DelftTools.Hydro.Helpers
         {
             var crossSection1 = new CrossSection(new CrossSectionDefinitionXYZ("crs1"));
 
-            //crossSection1.Definition.DefinitionData[0.0] = new[] {0.0, 1, 0.001f};
-            //crossSection1.Definition.DefinitionData[100.0] = new[] {0.0, 1, 0.001f};
-            //crossSection1.Definition.DefinitionData[150.0] = new[] {depth, 1, 0.001f};
-            //crossSection1.Definition.DefinitionData[300.0] = new[] {depth, 1, 0.001f};
-            //crossSection1.Definition.DefinitionData[350.0] = new[] {0.0, 1, 0.001f};
-            //crossSection1.Definition.DefinitionData[500.0] = new[] {0.0, 1, 0.001f};
             NetworkHelper.AddBranchFeatureToBranch(crossSection1, branch1, chainage);
             double surfaceLevel = bedLevel+10.0;
             var yzCoordinates = new List<Coordinate>

@@ -6,11 +6,6 @@ namespace DelftTools.Hydro
 {
     public interface IModelMerge : IModel
     {
-        /*/// <summary>
-        /// The name of the model
-        /// </summary>
-        string Name { get; }*/
-
         /// <summary>
         /// Validates if you can validate a merge into this model with another model
         /// </summary>

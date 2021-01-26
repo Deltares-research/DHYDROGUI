@@ -24,8 +24,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
             if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
             var categories = new DelftIniReader().ReadDelftIniFile(filename);
             if (categories.Count == 0) return;
-                //throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty", filename));
-
+            
             IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();  
 
             IList<LocationPropertyValues> locationPropertyValuesList = new List<LocationPropertyValues>();

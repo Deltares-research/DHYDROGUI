@@ -175,7 +175,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
         private void SetMeteoDataView()
         {
             ClearDataOfExistingViews();
-            //functionView = null;
             stationsListEditor.Visible = false;
 
             var seriesType = meteoData.DataAggregationType == MeteoDataAggregationType.Cumulative

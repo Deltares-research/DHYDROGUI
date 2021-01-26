@@ -67,8 +67,6 @@ namespace DelftTools.Hydro.Helpers
 
         private bool BranchesEqual(IBranch primaryBranch, IBranch secondaryBranch)
         {
-            //if (!Equals(primaryBranch.Name, secondaryBranch.Name)) return false;
-            //if (!Equals(primaryBranch.Description, secondaryBranch.Description)) return false;
             if (!Equals(primaryBranch.Length, secondaryBranch.Length)) return false;
 
             // Compare nodes
@@ -93,7 +91,6 @@ namespace DelftTools.Hydro.Helpers
 
         private bool NodesEqual(INode primaryNode, INode secondaryNode)
         {
-            //if (!Equals(primaryNode.Name, secondaryNode.Name)) return false;
             if (!Equals(primaryNode.Geometry.Coordinate.X, secondaryNode.Geometry.Coordinate.X)) return false;
             if (!Equals(primaryNode.Geometry.Coordinate.Y, secondaryNode.Geometry.Coordinate.Y)) return false;
             return true;

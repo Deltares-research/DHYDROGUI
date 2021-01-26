@@ -85,7 +85,6 @@ namespace DelftTools.Hydro.CrossSections
             {
                 Definition.Name = name;
             }
-            //Definition.CopyFrom(((ICrossSection) source).Definition);
         }
 
         [Obsolete("Should only be used by NHibernate")]

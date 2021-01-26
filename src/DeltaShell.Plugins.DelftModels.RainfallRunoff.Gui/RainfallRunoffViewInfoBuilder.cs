@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 {
     public static class RainfallRunoffViewInfoBuilder
     {
-        private static System.Tuple<RainfallRunoffModel, IEnumerable<IDataRowProvider>> multipleDataEditorData = new System.Tuple<RainfallRunoffModel, IEnumerable<IDataRowProvider>>(null, null);//Enumerable.Empty<IDataRowProvider>();
+        private static System.Tuple<RainfallRunoffModel, IEnumerable<IDataRowProvider>> multipleDataEditorData = new System.Tuple<RainfallRunoffModel, IEnumerable<IDataRowProvider>>(null, null);
 
         public static IEnumerable<ViewInfo> BuildViewInfoObjects(RainfallRunoffGuiPlugin rainfallRunoffGuiPlugin)
         {

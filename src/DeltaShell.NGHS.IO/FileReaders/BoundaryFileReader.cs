@@ -48,7 +48,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         if (manHoleName == null) continue;
                         waterFlowModel1DBoundaryNodeData = model1DBoundaryNodeDatas.FirstOrDefault(bc => bc.Feature.Name == manHoleName);
                         if (waterFlowModel1DBoundaryNodeData == null)
-                            continue; //throw new BoundaryConditionReadingException(string.Format("Node ({0}) where the boundary condition should be put on is not available in the model",name));
+                            continue; 
                     }
 
                     if (waterFlowModel1DBoundaryNodeData.Node is Manhole manhole)
@@ -106,7 +106,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     var name = lateralCategory.ReadProperty<string>(BoundaryRegion.Name.Key);
                     var waterFlowModel1DLateralSourceData = model1DLateralSourceDatas.FirstOrDefault<Model1DLateralSourceData>(ls => ls.Feature.Name == name);
                     if (waterFlowModel1DLateralSourceData == null)
-                        continue;//throw new LateralDischargeReadingException(string.Format("Node ({0}) where the lateral discharge should be put on is not available in the model", name));
+                        continue;
 
                     ReadLateralSource(waterFlowModel1DLateralSourceData, lateralCategory);
                 }
@@ -142,22 +142,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         {
                             case BoundaryRegion.QuantityStrings.WindSpeed:
                             {
-                                /*
-                                InitializeFunctionArguments(boundaryCategory, Wind);
-                                var functionValues = ConvertStringsToDoubles(boundaryCategory.Table[1]);
-                                Wind.Velocity.SetValues(functionValues);
-                                */
                                 break;
-                                
                             }
 
                             case BoundaryRegion.QuantityStrings.WindDirection:
                             {
-                                /*
-                                InitializeFunctionArguments(boundaryCategory, Wind);
-                                var functionValues = ConvertStringsToDoubles(boundaryCategory.Table[1]);
-                                Wind.Direction.SetValues(functionValues);
-                                */
                                 break;
                             }
                         }

@@ -20,7 +20,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var pump = hydroObject as Pump;
             if (pump == null) return IniCategory;
 
-            //var direction = (pump.DirectionIsPositive ? (int)pump.ControlDirection : -1 * (int)pump.ControlDirection);
             IniCategory.AddProperty(StructureRegion.Orientation.Key, pump.DirectionIsPositive ? "positive" : "negative", StructureRegion.Orientation.Description);
             string direction = string.Empty;
 

@@ -235,7 +235,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         public static Disposable1DMeshGeometry CreateDisposable1DMeshGeometry(this IDiscretization discretization)
         {
 
-
             var locations = discretization.Locations.Values.ToArray();
             var locationCount = locations.Length;
 
@@ -298,7 +297,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.NodeLongNames[i] = location.LongName ?? "";
             }
 
-            //var locationIdLookup = locations.ToIndexDictionary();
             var edgeNodeIndex = 0;
             for (int i = 0; i < edgeCount; i++)
             {
@@ -347,7 +345,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[0] = locationIdLookup[firstLocation];
                 else
                 {
-                    //Log.Error($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}");
                     indices[0] = -1;
                 }
             }
@@ -375,7 +372,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[1] = locationIdLookup[firstLocation];
                 else
                 {
-                    //Log.Error($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}");
                     indices[1] = -1;
                 }
             }
@@ -635,7 +631,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 var toNodeId = networkGeometry.NodeIds[networkGeometry.NodesTo[i]];
                 var fromNodeId = networkGeometry.NodeIds[networkGeometry.NodesFrom[i]];
 
-                // var type = networkGeometry.BranchTypes[i];
                 // todo: find out what to do with branch type from file.
                 // Currently the branch type from the properties is used
                 var branch = GetBranch(propertiesLookup, networkGeometry.BranchIds[i]);

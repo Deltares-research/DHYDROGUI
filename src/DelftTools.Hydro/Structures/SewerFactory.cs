@@ -164,12 +164,7 @@ namespace DelftTools.Hydro.Structures
             var connection = new SewerConnection
             {
                 Source = manhole,
-                Target = manhole,
-                /*Geometry = new LineString(new[]
-                {
-                    manhole.Geometry.Coordinate,
-                    manhole.Geometry.Coordinate
-                })*/
+                Target = manhole
             };
 
             return connection;

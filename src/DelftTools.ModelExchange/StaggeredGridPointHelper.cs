@@ -20,8 +20,6 @@ namespace DelftTools.ModelExchange
             int indexOfDash = locationId.LastIndexOf(GridPointDelimeter);
             if (indexOfDash > -1)
             {
-                // parse location id;
-                // locationId = "branch1_100.0"
                 string branchName = locationId.Substring(0, indexOfDash);
 
                 double offset;

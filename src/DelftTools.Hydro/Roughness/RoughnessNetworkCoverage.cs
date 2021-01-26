@@ -78,7 +78,7 @@ namespace DelftTools.Hydro.Roughness
             {
                 throw new ArgumentException("SetValues only supports 1 filter");
             }
-            // currentRoughness = EvaluateRoughnessType(networkLocation);
+
             // In the first implementation it was thought that only one RoughnessType was allowed per branch 
             // but this not true for YZ cross sections. They are completely unrelated and can ony be 
             // interpolated as block. Chech should be done when initializing ModelApi.

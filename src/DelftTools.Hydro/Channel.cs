@@ -122,8 +122,6 @@ namespace DelftTools.Hydro
         {
             get { return (IHydroNetwork) Network; }
         }
-
-        //public string Description { get; set; }
         
         #endregion
 

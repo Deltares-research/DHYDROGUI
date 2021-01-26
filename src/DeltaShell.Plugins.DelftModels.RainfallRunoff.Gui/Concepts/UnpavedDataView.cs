@@ -42,7 +42,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             areaDictionaryEditor.TotalAreaLabel = "Total area crops";
             cropAreaController = new AreaDictionaryEditorController<UnpavedEnums.CropType>(areaDictionaryEditor);
             unpavedTabControl.SelectedIndexChanged += UnpavedTabControlSelectedTabChanged;
-            //IsCapsimUsed = false;
         }
 
 

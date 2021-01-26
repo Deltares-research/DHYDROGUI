@@ -18,7 +18,6 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             get
             {
                 return CrossSectionStandardShapeType.InvertedEgg;
-                //throw new NotImplementedException("Not implemented yet. Wait for closed cross-sections");
             }
         }
 

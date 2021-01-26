@@ -181,9 +181,6 @@ namespace DelftTools.Hydro.CrossSections
             }
 
             // default (YZ & XYZ)
-
-            //minY = 0.0;
-            //maxY = definition.FlowWidth();
             var coordinates = definition.FlowProfile.ToList();
             minY = coordinates.Min(c => c.X);//lang verhaal waarom het x is en niet y...
             maxY = coordinates.Max(c => c.X);

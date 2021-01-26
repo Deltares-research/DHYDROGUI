@@ -122,9 +122,7 @@ namespace DelftTools.Hydro
         {
             var copyFrom = (Catchment) source;
 
-            // Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null;
             copyFrom.IsGeometryDerivedFromAreaSize = IsGeometryDerivedFromAreaSize;
-            // copyFrom.Name = Name;
             copyFrom.Attributes = (IFeatureAttributeCollection) Attributes.Clone();
             copyFrom.Basin = Basin;
             copyFrom.Description = Description;

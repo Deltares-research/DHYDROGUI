@@ -222,7 +222,6 @@ namespace DeltaShell.Dimr
                 var result = DimrApiWrapper.initialize(xmlFile);
                 if (result != 0)
                 {
-                    //throw new Exception("dimr returned error code " + result);
                     return result;
                 }
                 DimrApiWrapper.get_start_time(ref tStart);

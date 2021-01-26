@@ -159,13 +159,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
         internal static void AddFeaturesToFeatureCoverage(IFeatureCoverage featureCoverage, IList features)
         {
             featureCoverage.Features = new EventedList<IFeature>(features.OfType<IFeature>());
-            //featureCoverage.Clear();
-/*            if (features.Count > 0)
-            {
-                
-                featureCoverage.Arguments[1].FixedSize = features.Count;
-                featureCoverage.Arguments[1].SetValues(features);
-            }*/
         }
 
         private void FillOutputCoveragesWithFeatures(EngineParameter modelParameter, ITimeBasedFunction coverage)

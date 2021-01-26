@@ -25,9 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
 
             var importButton = new ToolStripMenuItem("Import...", null, OnImportClicked) {Tag = nodeData};
             contextMenu.Items.Add(importButton);
-            //contextMenu.Items.Add(new ToolStripSeparator());
-            //BuildConceptSwitchContextMenu(contextMenu);
-
+            
             return new MenuItemContextMenuStripAdapter(contextMenu);
         }
 
@@ -38,36 +36,5 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
             GuiPlugin.Gui.Selection = model;
             GuiPlugin.Gui.CommandHandler.ImportToGuiSelection();
         }
-
-//        private void BuildConceptSwitchContextMenu(ContextMenuStrip contextMenu)
-//        {
-//            var subItem = new ToolStripMenuItem("Switch Unschematized to");
-//            contextMenu.Items.Add(subItem);
-//
-//            IEnumerable<RainfallRunoffConceptsEnum> concepts =
-//                Enum.GetValues(typeof (RainfallRunoffConceptsEnum)).OfType<RainfallRunoffConceptsEnum>().Where(
-//                    v => v != RainfallRunoffConceptsEnum.NotSchematized);
-//
-//            TypeConverter typeConverter = TypeDescriptor.GetConverter(typeof (RainfallRunoffConceptsEnum));
-//                //use nice string if available
-//
-//            foreach (RainfallRunoffConceptsEnum concept in concepts)
-//            {
-//                string conceptName = typeConverter.ConvertToString(concept);
-//                var toolStripButton = new ToolStripMenuItem(conceptName, null, OnConceptSwitchClicked) {Tag = concept};
-//                subItem.DropDownItems.Add(toolStripButton);
-//            }
-//        }
-//        private void OnConceptSwitchClicked(object sender, EventArgs args)
-//        {
-//            var targetConcept = (RainfallRunoffConceptsEnum) ((ToolStripItem) sender).Tag;
-//            object selection = GuiPlugin.Gui.Selection;
-//
-//            var folder = selection as CatchmentModelDataTreeFolder;
-//            if (folder != null)
-//            {
-//                throw new NotImplementedException("todo");
-//            }
-//        }
     }
 }

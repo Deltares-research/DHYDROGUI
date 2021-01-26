@@ -29,7 +29,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         protected override bool RemoveNodeData(object parentNodeData, ControlGroup nodeData)
         {
-            //base.RemoveNodeData(nodeData);
             var node = TreeView.GetNodeByTag(nodeData);
             var controlGroupsNode = node.Parent;
             var model = (RealTimeControlModel)controlGroupsNode.Parent.Parent.Tag;

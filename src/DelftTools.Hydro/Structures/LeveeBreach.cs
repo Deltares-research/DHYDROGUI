@@ -51,12 +51,6 @@ namespace DelftTools.Hydro.Structures
             {
                 breachLocationX = value;
                 isLocationSet = true;
-                /*if (BreachLocation != null && Geometry != null && 
-                    !GeometryHelper.PointIsOnLineBetweenPreviousAndNext(
-                        Geometry.Coordinates.First(),
-                        BreachLocation.Coordinate,
-                        Geometry.Coordinates.Last()))
-                    log.Warn($"breach location is not set on levee");*/
             }
         }
 
@@ -67,13 +61,6 @@ namespace DelftTools.Hydro.Structures
             {
                 breachLocationY = value;
                 isLocationSet = true;
-                /*if (BreachLocation != null && Geometry != null && 
-                    !GeometryHelper.PointIsOnLineBetweenPreviousAndNext(
-                        Geometry.Coordinates.First(),
-                        BreachLocation.Coordinate, 
-                        Geometry.Coordinates.Last()))
-                    log.Warn($"breach location is not set on levee");*/
-
             }
         }
 

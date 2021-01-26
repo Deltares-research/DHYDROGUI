@@ -185,7 +185,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             var models = Data as ValidateMergeModelObjects;
             if (models == null)
                 return;
-            //models.DestinationFlowModel1D.Merge(models.SourceFlowModel1D);
+            
             if (OnMerge(models.DestinationModel, models.SourceModel))
                 label2.Text = "Merge successful";
         }

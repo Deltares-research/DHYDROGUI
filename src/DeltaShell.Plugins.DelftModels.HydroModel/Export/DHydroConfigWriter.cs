@@ -199,7 +199,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                         }
                     }
                     /*** Generate a new coupler and add to list ***/
-                    var modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(sourceModel, targetModel, wrapperSource as CompositeActivity, wrapperTarget as CompositeActivity);// new DimrConfigModelCoupler(sourceModel, targetModel, wrapperSource as CompositeActivity, wrapperTarget as CompositeActivity);
+                    var modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(sourceModel, targetModel, wrapperSource as CompositeActivity, wrapperTarget as CompositeActivity);
                     if (!modelCoupler.CoupleInfos.Any()) continue;
                     var name = modelCoupler.Name;
                     var n = modelCouplers.Count(mc => mc.Name.StartsWith(name));

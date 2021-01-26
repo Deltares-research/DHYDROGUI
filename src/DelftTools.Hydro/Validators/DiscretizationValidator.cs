@@ -76,17 +76,7 @@ namespace DelftTools.Hydro.Validators
         }
         private static IEnumerable<ValidationReport> ValidateIds(IDiscretization networkDiscretization)
         {
-            var reports = new List<ValidationReport>();
-
-            //FM1D2D-636
-            // var issues = ValidationHelper.ValidateDuplicateNames(networkDiscretization.Locations.Values.Cast<INameable>(),
-            //     "grid points", networkDiscretization, ValidationSeverity.Warning);
-            // if (issues.Any())
-            // {
-            //     reports.Add(new ValidationReport("General", issues));
-            // }
-
-            return reports;
+            return new List<ValidationReport>();
         }
 
         private static IEnumerable<IBranch> GetBranchesWithoutGridSegments(IDiscretization networkDiscretization)

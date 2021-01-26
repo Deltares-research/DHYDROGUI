@@ -20,7 +20,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
 
         public const string BranchPropertiesIniHeader = "Branch";
         //do not use this branchid but the one of the base classs SpatialDataRegion!!
-        //public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "branchId", description: "The name of the branch");
 
         public static readonly ConfigurationSetting RoughnessType = new ConfigurationSetting(key: "frictionType",
             description: "Type of roughness definition, possible values: Chezy = 1, Manning = 4, Nikuradse = 5, Strickler = 6, WhiteColebrook = 7, BosBijkerk = 9");
@@ -35,10 +34,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
 
         public const string DefinitionIniHeader = "Definition";
         //Use the one of the base classs SpatialDataRegion!!
-        //public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "");
-        //public static readonly ConfigurationSetting Value = new ConfigurationSetting(key: "value", description: "");
         public static readonly ConfigurationSetting Values = new ConfigurationSetting(key: "frictionValues", description: "", format:"F5");
-
-        
     }
 }

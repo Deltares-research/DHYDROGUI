@@ -47,7 +47,7 @@ namespace DelftTools.Hydro
                 case Friction.DeBosBijkerk:
                     return RoughnessType.DeBosBijkerk;
                 default:
-                    return RoughnessType.Chezy;//throw new InvalidOperationException();
+                    return RoughnessType.Chezy;
             }
         }
 
@@ -85,7 +85,7 @@ namespace DelftTools.Hydro
                 case Friction.WhiteColebrook:
                     return BridgeFrictionType.WhiteColebrook;
                 default:
-                    return BridgeFrictionType.Chezy;//throw new InvalidOperationException();
+                    return BridgeFrictionType.Chezy;
             }
         }
 
@@ -122,7 +122,7 @@ namespace DelftTools.Hydro
                 case Friction.WhiteColebrook:
                     return CulvertFrictionType.WhiteColebrook;
                 default:
-                    return CulvertFrictionType.Chezy;//throw new InvalidOperationException();
+                    return CulvertFrictionType.Chezy;
             }
         }
     }

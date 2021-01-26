@@ -430,7 +430,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
 
                 RefreshDefaultModelWorkflows();
-                //SetDefaultActivityName((IActivity)e.Item);
                 CurrentWorkflow = Workflows.FirstOrDefault();
             }
         }

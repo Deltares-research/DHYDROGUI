@@ -117,11 +117,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 sw.WriteLine(HeaderFormatPrecipitation);
 
                 // Write the meteo stations. 
-                //sw.WriteLine("* Number of meteo stations: ");
                 sw.WriteLine("*Aantal stations");
                 sw.WriteLine(meteoStationNames.Count);
                 sw.WriteLine("*Namen van stations");
-                //sw.WriteLine("* Names of meteo stations: "); 
                 foreach (string meteoStationName in meteoStationNames)
                     sw.WriteLine("'" + meteoStationName + "'");
                 

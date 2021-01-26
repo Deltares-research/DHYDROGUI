@@ -79,12 +79,6 @@ namespace DelftTools.ModelExchange.Queries
             IEnumerable<AggregationResult> results = GetAllBy(
                 result => result.ExchangeType == ExchangeType.Output && result.ParameterId == parameterId && result.LocationId == locationId);
 
-            // todo: activate this code when the WaterFlowModel1D support multiple aggreation output options
-//            if (qualifierId != null)
-//            {
-//                results = results.Where(result => result.AggregationType == qualifierId);
-//            }
-
             return results.SingleOrDefault(result => result.ExchangeType == ExchangeType.Output);
         }
 

@@ -49,7 +49,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
         {
             public const string Yz = "yz";
             public const string Xyz = "xyz";
-            //public const string Zw = "tabulated";
             public const string Zw = "zwRiver"; 
             public const string Zw_Template = "zw"; 
             public const string Standard = "standard";
