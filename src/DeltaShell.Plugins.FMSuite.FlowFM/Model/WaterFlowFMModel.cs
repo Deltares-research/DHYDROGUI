@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow;
@@ -148,20 +149,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return KnownFeatureCategories.Pumps;
             }
 
-            if (feature is IWeir weir)
+            if (feature is IStructure weir)
             {
-                IWeirFormula weirFormula = weir.WeirFormula;
-                if (weirFormula is GeneralStructureWeirFormula)
+                IWeirFormula weirFormula = weir.Formula;
+                switch (weirFormula)
                 {
-                    return KnownFeatureCategories.GeneralStructures;
+                    case GeneralStructureWeirFormula _:
+                        return KnownFeatureCategories.GeneralStructures;
+                    case GatedWeirFormula _:
+                        return KnownFeatureCategories.Gates;
+                    default:
+                        return KnownFeatureCategories.Weirs;
                 }
-
-                if (weirFormula is GatedWeirFormula)
-                {
-                    return KnownFeatureCategories.Gates;
-                }
-
-                return KnownFeatureCategories.Weirs;
             }
 
             if (Area.ObservationPoints.Contains(feature))

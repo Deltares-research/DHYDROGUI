@@ -687,7 +687,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }).ToList();
             model.StopTime = model.StartTime.AddMinutes(15);
 
-            Assert.IsTrue(model.Area.Weirs.Where(w => w.WeirFormula is GatedWeirFormula).ToList().Count > 0);
+            Assert.IsTrue(model.Area.Weirs.Where(w => w.Formula is GatedWeirFormula).ToList().Count > 0);
 
             app.Project.RootFolder.Add(model);
 

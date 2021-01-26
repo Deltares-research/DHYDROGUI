@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -725,7 +726,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 groupableFeature.UpdateGroupName(this);
             }
 
-            bool inputSender = removedOrAddedItem is Pump2D || removedOrAddedItem is Weir2D;
+            bool inputSender = removedOrAddedItem is IPump || 
+                               removedOrAddedItem is IStructure;
             bool outputSender = removedOrAddedItem is ObservationCrossSection2D ||
                                 removedOrAddedItem is GroupableFeature2DPoint;
 
@@ -761,7 +763,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is IWeir weir && e.PropertyName == nameof(Weir.WeirFormula))
+            if (sender is IStructure weir && 
+                e.PropertyName == nameof(IStructure.Formula))
             {
                 bool isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
                 UpdateAreaDataItems(weir, isInputSender);

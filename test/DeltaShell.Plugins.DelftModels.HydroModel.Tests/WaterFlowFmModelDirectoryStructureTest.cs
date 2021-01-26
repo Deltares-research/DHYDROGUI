@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
@@ -1874,25 +1875,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
         }
 
-        private GroupablePointFeature CreateDryPoints()
-        {
-            return new GroupablePointFeature
+        private GroupablePointFeature CreateDryPoints() =>
+            new GroupablePointFeature
             {
                 GroupName = "DryPoints",
                 Geometry = new Point(new Coordinate(0, 100))
             };
-        }
 
-        private GroupableFeature2DPoint CreateObservationPoint()
-        {
-            return new GroupableFeature2DPoint
+        private static GroupableFeature2DPoint CreateObservationPoint() =>
+            new GroupableFeature2DPoint
             {
                 Geometry = new Point(5, 5),
                 Name = "ObservationPoint"
             };
-        }
 
-        private Weir2D CreateWeir()
+        private static Structure CreateWeir()
         {
             Coordinate[] lineString =
             {
@@ -1900,15 +1897,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 new Coordinate(8, 8)
             };
 
-            return new Weir2D
+            return new Structure
             {
                 Name = "Weir",
-                WeirFormula = new SimpleWeirFormula(),
+                Formula = new SimpleWeirFormula(),
                 Geometry = new LineString(lineString)
             };
         }
 
-        private FixedWeir CreateFixedWeir()
+        private static FixedWeir CreateFixedWeir()
         {
             Coordinate[] lineString =
             {
@@ -1923,7 +1920,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
         }
 
-        private ObservationCrossSection2D CreateObservationCrossSection()
+        private static ObservationCrossSection2D CreateObservationCrossSection()
         {
             Coordinate[] lineString =
             {

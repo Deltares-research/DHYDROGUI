@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -27,10 +27,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             var fmModel = new WaterFlowFMModel();
             const string gateName = "structure01";
-            var gate = new Weir2D
+            var gate = new Structure
             {
                 Name = gateName,
-                WeirFormula = new GatedWeirFormula()
+                Formula = new GatedWeirFormula()
             };
             fmModel.Area.Weirs.Add(gate);
 
@@ -101,10 +101,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             // Given
             var fmModel = new WaterFlowFMModel();
-            var gate = new Weir2D
+            var gate = new Structure
             {
                 Name = "structure01",
-                WeirFormula = new GatedWeirFormula()
+                Formula = new GatedWeirFormula()
             };
             fmModel.Area.Weirs.Add(gate);
 
@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
-        private static void AssertDataItemIsGate(IDataItem dataItem, Weir2D gate)
+        private static void AssertDataItemIsGate(IDataItem dataItem, Structure gate)
         {
             const string messageDifferentFeatureInDataItem = "The retrieved dataItem is not correct, since the features are not the same";
             const string messageDifferentParameterInDataItem = "The retrieved dataItem is not correct, since the parameters are not the same";
