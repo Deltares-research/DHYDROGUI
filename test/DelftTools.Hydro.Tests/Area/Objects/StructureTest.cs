@@ -1,5 +1,7 @@
 ﻿using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Data;
 using GeoAPI.Extensions.Feature;
@@ -25,14 +27,14 @@ namespace DelftTools.Hydro.Tests.Area.Objects
 
             Assert.That(structure.Name, Is.EqualTo("Structure"));
 
-            Assert.That(structure.Formula, Is.Null);
-            Assert.That(structure.FormulaName, Is.Null);
+            Assert.That(structure.Formula, Is.InstanceOf<SimpleWeirFormula>());
+            Assert.That(structure.FormulaName, Is.EqualTo("Simple weir (Weir)"));
 
             Assert.That(structure.CrestLevelTimeSeries, Is.Not.Null);
             Assert.That(structure.UseCrestLevelTimeSeries, Is.False);
             Assert.That(structure.IsDefaultGroup, Is.False);
             Assert.That(structure.CrestLevel, Is.EqualTo(0.0));
-            Assert.That(structure.CrestWidth, Is.EqualTo(0.0));
+            Assert.That(structure.CrestWidth, Is.EqualTo(double.NaN));
         }
 
         [Test]
@@ -67,6 +69,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects
             // Assert
             var clonedStructure = clonedStructureObject as Structure;
             Assert.That(clonedStructure, Is.Not.Null);
+            Assert.That(clonedStructureObject, Is.Not.SameAs(structure));
 
             Assert.That(clonedStructure.GroupName, Is.EqualTo(structure.GroupName));
             Assert.That(clonedStructure.Name, Is.EqualTo(structure.Name));
@@ -82,6 +85,86 @@ namespace DelftTools.Hydro.Tests.Area.Objects
 
             Assert.That(clonedStructure.CrestLevelTimeSeries, Is.Not.Null);
             Assert.That(clonedStructure.CrestLevelTimeSeries, Is.Not.SameAs(structure.CrestLevelTimeSeries));
+        }
+
+        [Test]
+        public void Clone_PropertyNull_DoesNotThrowException()
+        {
+            // Setup
+            var structure = new Structure()
+            {
+                Geometry = null,
+                Attributes = null,
+                Formula = null,
+            };
+
+            // Call
+            var clonedStructure = (IStructure) structure.Clone();
+
+            // Assert
+            Assert.That(clonedStructure, Is.Not.Null);
+            Assert.That(clonedStructure, Is.Not.SameAs(structure));
+
+            Assert.That(clonedStructure.Attributes, Is.Null);
+            Assert.That(clonedStructure.Geometry, Is.Null);
+            Assert.That(clonedStructure.Formula, Is.Null);
+        }
+
+        [Test]
+        [TestCase("SomeName", "SomeName")]
+        [TestCase( null, "Unnamed Structure")]
+        public void ToString_ExpectedResults(string inputName, string expectedResult)
+        {
+            // Setup
+            var structure = new Structure() {Name = inputName};
+
+            // Call
+            var result = structure.ToString();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedResult));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAStructureWithAGeneralStructure_WhenCrestLevelIsSet_ThenTheGeneralStructurePropertyAndStructurePropertyAreUpdatedCorrectly()
+        {
+            // Setup
+            var formula = new GeneralStructureWeirFormula();
+            var structure = new Structure {Formula = formula};
+            const double crestLevel = 123.456;
+
+            // Call
+            structure.CrestLevel = crestLevel;
+
+            // Assert
+            Assert.That(structure.CrestLevel, Is.EqualTo(crestLevel));
+            Assert.That(formula.BedLevelStructureCentre, Is.EqualTo(crestLevel));
+
+            // Set formula to null to ensure we query the value on the Structure.
+            structure.Formula = null;
+            Assert.That(structure.CrestLevel, Is.EqualTo(crestLevel));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void GivenAStructureWithAGeneralStructure_WhenCrestWidthIsSet_ThenTheGeneralStructurePropertyAndStructurePropertyAreUpdatedCorrectly()
+        {
+            // Setup
+            var formula = new GeneralStructureWeirFormula();
+            var structure = new Structure {Formula = formula};
+            const double crestWidth = 123.456;
+
+            // Call
+            structure.CrestWidth = crestWidth;
+
+            // Assert
+            Assert.That(structure.CrestWidth, Is.EqualTo(crestWidth));
+            Assert.That(formula.WidthStructureCentre, Is.EqualTo(crestWidth));
+
+            // Set formula to null to ensure we query the value on the Structure.
+            structure.Formula = null;
+            Assert.That(structure.CrestWidth, Is.EqualTo(crestWidth));
         }
     }
 }

@@ -12,9 +12,9 @@ namespace DelftTools.Hydro.Area.Objects
     /// <summary>
     /// <see cref="Structure"/> defines a single structure.
     /// </summary>
-    /// <seealso cref="Utils.Data.Unique{long}" />
+    /// <seealso cref="Unique{T}" />
     /// <seealso cref="IStructure" />
-    [Entity]
+    [Entity(FireOnCollectionChange = false)]
     public sealed class Structure : Unique<long>, IStructure
     {
         private string groupName;
@@ -22,11 +22,20 @@ namespace DelftTools.Hydro.Area.Objects
         private double crestLevel;
 
         /// <summary>
-        /// Creates a new <see cref="Structure"/>.
+        /// Creates a new <see cref="Structure"/> with default values.
         /// </summary>
         public Structure() : this(HydroTimeSeriesFactory.CreateTimeSeries(GuiParameterNames.CrestLevel,
-                                                                          GuiParameterNames.CrestLevel, 
-                                                                          "m AD")) { }
+                                                                          GuiParameterNames.CrestLevel,
+                                                                          "m AD"))
+        {
+            Formula = new SimpleWeirFormula()
+            {
+                DischargeCoefficient = 1.0,
+                LateralContraction = 1.0,
+            };
+
+            CrestWidth = double.NaN;
+        }
 
         private Structure(TimeSeries crestLevelTimeSeries)
         {
@@ -84,11 +93,10 @@ namespace DelftTools.Hydro.Area.Objects
 
                 if (Formula is GeneralStructureWeirFormula formula)
                 {
-                    formula.WidthStructureCentre = value;
+                    formula.BedLevelStructureCentre = value;
                 }
             }
         }
-
         
         public TimeSeries CrestLevelTimeSeries { get; }
 
@@ -97,15 +105,23 @@ namespace DelftTools.Hydro.Area.Objects
             return new Structure((TimeSeries) CrestLevelTimeSeries.Clone())
             {
                 GroupName = GroupName,
-                Geometry = (IGeometry) Geometry.Clone(),
-                Attributes = (IFeatureAttributeCollection) Attributes.Clone(),
+                Geometry = (IGeometry) Geometry?.Clone(),
+                Attributes = (IFeatureAttributeCollection) Attributes?.Clone(),
                 Name = Name,
                 IsDefaultGroup = IsDefaultGroup,
-                Formula = (IWeirFormula) Formula.Clone(),
+                Formula = (IWeirFormula) Formula?.Clone(),
                 CrestWidth = CrestWidth,
                 CrestLevel = CrestLevel,
                 UseCrestLevelTimeSeries = UseCrestLevelTimeSeries,
             };
         }
+
+        // As part of WaterFlowFMModel.Eventing.GetDataItemListForFeature
+        // uses the `feature.ToString()` method to generate a name. In order
+        // to ensure the name does not get overwritten, we need to overwrite
+        // the `ToString` method to return the Name. This is legacy behaviour 
+        // from the previous Weir implementation unfortunately.
+        public override string ToString() => 
+            !string.IsNullOrEmpty(Name) ? Name : "Unnamed Structure";
     }
 }
