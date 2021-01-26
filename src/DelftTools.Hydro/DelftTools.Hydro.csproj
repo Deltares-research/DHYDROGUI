@@ -173,7 +173,6 @@
     <Compile Include="HydroAreaLayerNames.cs" />
     <Compile Include="IGroupableFeature.cs" />
     <Compile Include="ILongNameable.cs" />
-    <Compile Include="IStructure.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Structures\BridgePillar.cs" />
     <Compile Include="Structures\CrestShape.cs" />
@@ -201,17 +200,11 @@
     </Compile>
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\GateOpeningDirection.cs" />
-    <Compile Include="Structures\IPump.cs" />
-    <Compile Include="Structures\IWeir.cs" />
     <Compile Include="Structures\IWeirFormula.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownGeneralStructureProperties.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownStructureProperties.cs" />
     <Compile Include="Structures\GuiParameterNames.cs" />
-    <Compile Include="Structures\Pump.cs" />
-    <Compile Include="Structures\Pump2D.cs" />
     <Compile Include="Structures\PumpControlDirection.cs" />
-    <Compile Include="Structures\Weir.cs" />
-    <Compile Include="Structures\Weir2D.cs" />
     <Compile Include="Structures\WeirFormula\GatedWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\IGatedWeirFormula.cs" />

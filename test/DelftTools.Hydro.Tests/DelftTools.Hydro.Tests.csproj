@@ -48,9 +48,7 @@
     <Compile Include="NameableFeatureComparerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Structures\BridgePillarTest.cs" />
-    <Compile Include="Structures\PumpTest.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormulaTest.cs" />
-    <Compile Include="Structures\WeirTest.cs" />
     <Compile Include="TestClassSetup.cs" />
   </ItemGroup>
   <ItemGroup>
