@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
     [TestFixture]
-    [Category("Build.Acceptance.SaveLoad.FlowFM")]
+    [Category("Build.Acceptance.SaveLoad.mdu")]
     [Category(TestCategory.Slow)]
     [Category(TestCategory.WindowsForms)]
     public class FlowFmDataPersistenceAcceptanceTests
