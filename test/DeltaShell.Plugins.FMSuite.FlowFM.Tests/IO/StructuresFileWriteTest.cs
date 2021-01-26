@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
@@ -25,11 +24,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         public void StructuresFileWriteGeneralStructureGivesExpectedResultTest()
         {
-            var structs = new List<IStructure>();
+            var structs = new List<IStructureObject>();
 
-            var generalStructureWeir = new Weir("weir01")
+            var generalStructureWeir = new Structure()
             {
-                WeirFormula = new GeneralStructureWeirFormula
+                Name = "weir01",
+                Formula = new GeneralStructureWeirFormula
                 {
                     WidthLeftSideOfStructure = 1.0,
                     WidthStructureLeftSide = 2.0,
@@ -59,10 +59,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
             structs.Add(generalStructureWeir);
 
-            var simpleWeir = new Weir2D("weir02", true)
+            var simpleWeir = new Structure()
             {
+                Name = "weir02",
                 CrestWidth = 5.0,
-                WeirFormula = new SimpleWeirFormula()
+                Formula = new SimpleWeirFormula()
             };
             structs.Add(simpleWeir);
 
@@ -140,13 +141,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             StructuresFile structuresFile = GetStructuresFile();
 
             // - simple weir with an empty crest width
-            var simpleWeir = new Weir2D("Its weir-d")
+            var simpleWeir = new Structure()
             {
-                WeirFormula = new SimpleWeirFormula(),
+                Name = "Its weir-d",
+                Formula = new SimpleWeirFormula(),
                 CrestWidth = double.NaN
             };
 
-            var structures = new List<IStructure>() {simpleWeir};
+            var structures = new List<IStructureObject>() {simpleWeir};
 
             // When | Then
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
@@ -177,13 +179,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             StructuresFile structuresFile = GetStructuresFile();
 
             // - simple weir with an empty crest width
-            var gatedWeir = new Weir2D("Its weir-d")
+            var gatedWeir = new Structure()
             {
-                WeirFormula = new GatedWeirFormula(true),
+                Name = "Its weir-d",
+                Formula = new GatedWeirFormula(true),
                 CrestWidth = double.NaN
             };
 
-            var structures = new List<IStructure>() {gatedWeir};
+            var structures = new List<IStructureObject>() {gatedWeir};
 
             // When | Then
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
@@ -223,13 +226,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 WidthStructureRightSide = double.NaN
             };
 
-            var generalWeir = new Weir2D("Weir-d salute")
+            var generalWeir = new Structure()
             {
-                WeirFormula = generalStructureFormula,
+                Name = "Weir-d salute",
+                Formula = generalStructureFormula,
                 CrestWidth = double.NaN
             };
 
-            var structures = new List<IStructure>() {generalWeir};
+            var structures = new List<IStructureObject>() {generalWeir};
 
             // When | Then
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>

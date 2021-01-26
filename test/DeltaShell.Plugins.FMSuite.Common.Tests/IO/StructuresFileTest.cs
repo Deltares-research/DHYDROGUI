@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -20,7 +20,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
-using StructureType = DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures.StructureType;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
@@ -334,16 +333,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 UseLowerEdgeLevelTimeSeries = false,
                 LowerEdgeLevel = 70
             };
-            var initialGeneralStructure = new Weir("gs01", true)
+            var initialGeneralStructure = new Structure()
             {
+                Name = "gs01",
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(4, 5),
                     new Coordinate(6, 7)
                 }),
-                WeirFormula = initialFormula
+                Formula = initialFormula
             };
-            var structures = new IStructure[]
+            var structures = new IStructureObject[]
             {
                 initialGeneralStructure
             };
@@ -354,19 +354,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             };
 
             structuresFile.Write(iniFilePath, structures);
-            IList<IStructure> readResult = structuresFile.Read(iniFilePath);
+            IList<IStructureObject> readResult = structuresFile.Read(iniFilePath);
             Assert.That(readResult.Count, Is.EqualTo(1));
 
-            var resultingGeneralStructure = readResult.FirstOrDefault() as Weir;
+            var resultingGeneralStructure = readResult.FirstOrDefault() as IStructure;
             Assert.IsNotNull(resultingGeneralStructure);
-            var resultingFormula = resultingGeneralStructure.WeirFormula as GeneralStructureWeirFormula;
+            var resultingFormula = resultingGeneralStructure.Formula as GeneralStructureWeirFormula;
             Assert.IsNotNull(resultingFormula);
 
-            bool weirPropertiesAreEqual = initialGeneralStructure.CanBeTimedependent == resultingGeneralStructure.CanBeTimedependent &&
-                                          initialGeneralStructure.IsGated == resultingGeneralStructure.IsGated &&
-                                          initialGeneralStructure.IsRectangle == resultingGeneralStructure.IsRectangle &&
-                                          initialGeneralStructure.SpecifyCrestLevelAndWidthOnWeir == resultingGeneralStructure.SpecifyCrestLevelAndWidthOnWeir &&
-                                          initialGeneralStructure.FormulaName == resultingGeneralStructure.FormulaName;
+            bool weirPropertiesAreEqual = initialGeneralStructure.FormulaName == resultingGeneralStructure.Formula.Name;
 
             bool formulasAreEqual = initialFormula.Name == resultingFormula.Name &&
                                     initialFormula.PositiveContractionCoefficient == resultingFormula.PositiveContractionCoefficient &&
@@ -428,12 +424,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var structuresFile = new StructuresFile {StructureSchema = schema};
                 string writePath = Path.Combine(tempDir, "structures.ini");
 
-                var pump = new Pump2D("TestStructure", true) {Capacity = 20.0};
-
-                Pump2D[] structures = new[]
+                var pump = new Pump()
                 {
-                    pump
+                    Name = "TestStructure",
+                    Capacity = 20.0
                 };
+
+                IPump[] structures = { pump };
 
                 // When
                 structuresFile.Write(writePath, structures);
@@ -465,7 +462,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var structuresFile = new StructuresFile {StructureSchema = schema};
 
                 // When
-                IList<IStructure> structures = structuresFile.Read(structuresFilePath);
+                IList<IStructureObject> structures = structuresFile.Read(structuresFilePath);
                 structuresFile.Write(structuresFilePath, structures);
 
                 // Then
@@ -486,10 +483,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var structuresFile = new StructuresFile {StructureSchema = schema};
 
                 // When
-                IList<IStructure> structures = structuresFile.Read(structuresFilePath);
+                IList<IStructureObject> structures = structuresFile.Read(structuresFilePath);
 
                 // Then
-                Weir2D weir = ValidatedWeir(structures);
+                IStructure weir = ValidatedWeir(structures);
                 ValidateCommonWeirProperties(weir, "simple_weir");
             });
         }
@@ -507,10 +504,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var structuresFile = new StructuresFile {StructureSchema = new WaterFlowFMModelDefinition().StructureSchema};
 
                 // When
-                IList<IStructure> structures = structuresFile.Read(structuresFilePath);
+                IList<IStructureObject> structures = structuresFile.Read(structuresFilePath);
 
                 // Then
-                Weir2D weir = ValidatedWeir(structures);
+                IStructure weir = ValidatedWeir(structures);
                 ValidateGatedWeirFormulaProperties(weir, "gated_weir");
             });
         }
@@ -528,10 +525,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var structuresFile = new StructuresFile {StructureSchema = new WaterFlowFMModelDefinition().StructureSchema};
 
                 // When
-                IList<IStructure> structures = structuresFile.Read(structuresFilePath);
+                IList<IStructureObject> structures = structuresFile.Read(structuresFilePath);
 
                 // Then
-                Weir2D weir = ValidatedWeir(structures);
+                IStructure weir = ValidatedWeir(structures);
                 ValidateGeneralWeirFormulaProperties(weir, "general_structure");
             });
         }
@@ -558,16 +555,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
 
                 // When
-                IList<IStructure> structures = structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath,
-                                                                                                       copyOfIniInTempFilePath);
+                IList<IStructureObject> structures = 
+                    structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath,
+                                                                            copyOfIniInTempFilePath);
 
                 // Then
                 Assert.AreEqual(1, structures.Count, "The ini file for the structures is not correctly read");
 
-                var generalStructure = structures[0] as Weir2D;
+                var generalStructure = structures[0] as IStructure;
                 Assert.IsNotNull(generalStructure, "The ini file for the structures is not correctly read");
 
-                var weirFormula = generalStructure.WeirFormula as GeneralStructureWeirFormula;
+                var weirFormula = generalStructure.Formula as GeneralStructureWeirFormula;
                 Assert.IsNotNull(weirFormula, "The ini file for the structures is not correctly read");
 
                 Assert.IsTrue(generalStructure.UseCrestLevelTimeSeries, "The tim file for the crest level is not correctly read");
@@ -605,7 +603,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
 
                 // When
-                IList<IStructure> structures = null;
+                IList<IStructureObject> structures = null;
 
                 IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
                     () => structures = structureFile.ReadStructuresFileRelativeToReferenceFile(copyOfIniInTempFilePath,
@@ -631,7 +629,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 string copyOfIniInTempFilePath = copiesInTempFilePaths[0];
 
                 // When
-                IList<IStructure> structures = null;
+                IList<IStructureObject> structures = null;
 
                 IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(
                     () => structures = structureFile.Read(copyOfIniInTempFilePath));
@@ -653,18 +651,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var structuresFile = new StructuresFile {StructureSchema = schema};
                 string writePath = Path.Combine(tempDir, "structures.ini");
 
-                var weir = new Weir2D("TestStructure", true)
+                var weir = new Structure()
                 {
-                    WeirFormula = new SimpleWeirFormula(),
+                    Name = "TestStructure",
+                    Formula = new SimpleWeirFormula(),
                     CrestWidth = 20.0,
                     CrestLevel = 10.0,
                     UseCrestLevelTimeSeries = useCrestLevelTimeSeries
                 };
 
-                Weir2D[] structures = new[]
-                {
-                    weir
-                };
+                IStructure[] structures = {weir};
 
                 // When
                 structuresFile.Write(writePath, structures);
@@ -720,9 +716,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var structuresFile = new StructuresFile {StructureSchema = schema};
                 string writePath = Path.Combine(tempDir, "structures.ini");
 
-                var weir = new Weir2D("TestStructure", true)
+                var weir = new Structure()
                 {
-                    WeirFormula = new GatedWeirFormula(true)
+                    Name = "TestStructure",
+                    Formula = new GatedWeirFormula(true)
                     {
                         DoorHeight = 50.0,
                         HorizontalDoorOpeningWidth = 30.0,
@@ -737,10 +734,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     UseCrestLevelTimeSeries = useSillLevelTimeSeries
                 };
 
-                Weir2D[] structures = new[]
-                {
-                    weir
-                };
+                IStructure[] structures = {weir};
 
                 // When
                 structuresFile.Write(writePath, structures);
@@ -799,9 +793,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var structuresFile = new StructuresFile {StructureSchema = schema};
                 string writePath = Path.Combine(tempDir, "structures.ini");
 
-                var weir = new Weir2D("TestStructure", true)
+                var weir = new Structure()
                 {
-                    WeirFormula = new GeneralStructureWeirFormula
+                    Name = "TestStructure",
+                    Formula = new GeneralStructureWeirFormula
                     {
                         DoorHeight = 50.0,
                         HorizontalDoorOpeningWidth = 30.0,
@@ -836,10 +831,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     UseCrestLevelTimeSeries = useCrestLevelTimeSeries
                 };
 
-                Weir2D[] structures = new[]
-                {
-                    weir
-                };
+                IStructure[] structures = {weir};
 
                 // When
                 structuresFile.Write(writePath, structures);
@@ -908,15 +900,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                         "Expected a different string as second sub message.");
         }
 
-        private static Weir2D ValidatedWeir(IList<IStructure> structures)
+        private static IStructure ValidatedWeir(IList<IStructureObject> structures)
         {
             Assert.AreEqual(1, structures.Count, "One structure was expected to be created.");
-            var weir = structures.FirstOrDefault() as Weir2D;
+            var weir = structures.FirstOrDefault() as IStructure;
             Assert.NotNull(weir, "The structure was expected to be a weir.");
             return weir;
         }
 
-        private static void ValidateCommonWeirProperties(Weir2D weir, string expectedWeirName)
+        private static void ValidateCommonWeirProperties(IStructure weir, string expectedWeirName)
         {
             Assert.AreEqual(expectedWeirName, weir.Name,
                             "Name of weir was different than expected.");
@@ -926,11 +918,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                             "Crest width of weir was different than expected.");
         }
 
-        private static void ValidateGatedWeirFormulaProperties(Weir2D weir, string expectedWeirName)
+        private static void ValidateGatedWeirFormulaProperties(IStructure weir, string expectedWeirName)
         {
             ValidateCommonWeirProperties(weir, expectedWeirName);
 
-            var gatedWeirFormula = weir.WeirFormula as IGatedWeirFormula;
+            var gatedWeirFormula = weir.Formula as IGatedWeirFormula;
             Assert.NotNull(gatedWeirFormula,
                            "Expected a gated weir formula for weir.");
             Assert.AreEqual(3, gatedWeirFormula.LowerEdgeLevel,
@@ -943,11 +935,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                             "Gate opening direction of weir was different than expected.");
         }
 
-        private void ValidateGeneralWeirFormulaProperties(Weir2D weir, string expectedWeirName)
+        private void ValidateGeneralWeirFormulaProperties(IStructure weir, string expectedWeirName)
         {
             ValidateGatedWeirFormulaProperties(weir, expectedWeirName);
 
-            var generalStructureFormula = weir.WeirFormula as GeneralStructureWeirFormula;
+            var generalStructureFormula = weir.Formula as GeneralStructureWeirFormula;
             Assert.NotNull(generalStructureFormula,
                            "Expected a general structure weir formula for weir.");
             Assert.AreEqual(6, generalStructureFormula.WidthLeftSideOfStructure,
@@ -1158,16 +1150,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 ReferenceDate = new DateTime()
             };
 
-            List<IStructure> structures = structureFile.Read(path).ToList();
+            List<IStructureObject> structures = structureFile.Read(path).ToList();
 
             Assert.AreEqual(3, structures.Count); // There are 4 pumps in the file
-            Assert.AreEqual(0, structures.OfType<IWeir>().Count());
+            Assert.AreEqual(0, structures.OfType<IStructure>().Count());
             Assert.AreEqual(3, structures.OfType<IPump>().Count());
 
             IPump pump = structures.OfType<IPump>().First();
             Assert.AreEqual("pump01", pump.Name);
-            Assert.IsNull(pump.LongName);
-            Assert.IsNull(pump.Branch);
             Assert.AreEqual(new Point(500, 360), pump.Geometry);
             Assert.AreEqual(3.0, pump.Capacity);
         }
@@ -1184,10 +1174,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 ReferenceDate = new DateTime(2013, 1, 1)
             };
 
-            List<IStructure> structures = structureFile.Read(path).ToList();
+            List<IStructureObject> structures = structureFile.Read(path).ToList();
 
             Assert.AreEqual(3, structures.Count);
-            Assert.AreEqual(2, structures.OfType<IWeir>().Count());
+            Assert.AreEqual(2, structures.OfType<IStructure>().Count());
             Assert.AreEqual(1, structures.OfType<IPump>().Count());
 
             IPump pump = structures.OfType<IPump>().First();
@@ -1195,13 +1185,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(5.6, pump.CapacityTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
             Assert.AreEqual(11.12, pump.CapacityTimeSeries[new DateTime(2013, 1, 1, 1, 2, 0)]);
 
-            IWeir weir = structures.OfType<IWeir>().First(w => w.WeirFormula is SimpleWeirFormula);
+            IStructure weir = structures.OfType<IStructure>().First(w => w.Formula is SimpleWeirFormula);
             Assert.AreEqual(2, weir.CrestLevelTimeSeries.Time.Values.Count);
             Assert.AreEqual(1.2, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
             Assert.AreEqual(3.4, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
 
-            IWeir gate = structures.OfType<IWeir>().First(w => w.WeirFormula is GatedWeirFormula);
-            var gateFormula = gate.WeirFormula as GatedWeirFormula;
+            IStructure gate = structures.OfType<IStructure>().First(w => w.Formula is GatedWeirFormula);
+            var gateFormula = gate.Formula as GatedWeirFormula;
             Assert.NotNull(gateFormula);
 
             Assert.AreEqual(2, gateFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);
