@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
@@ -81,8 +82,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Contains<PlizFileImporterExporter<BridgePillar, BridgePillar>>(importers);
             Contains<PliFileImporterExporter<ThinDam2D, ThinDam2D>>(importers);
             Contains<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>(importers);
-            Contains<PliFileImporterExporter<Weir2D, Weir2D>>(importers);
-            Contains<PliFileImporterExporter<Pump2D, Pump2D>>(importers);
+            Contains<PliFileImporterExporter<Structure, Structure>>(importers);
+            Contains<PliFileImporterExporter<Pump, Pump>>(importers);
             Contains<PliFileImporterExporter<SourceAndSink, Feature2D>>(importers);
             Contains<PliFileImporterExporter<BoundaryConditionSet, Feature2D>>(importers);
             Contains<PointFileImporterExporter>(importers);
@@ -100,8 +101,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Contains<ShapeFileImporter<ILineString, ObservationCrossSection2D>>(importers);
             Contains<ShapeFileImporter<ILineString, Embankment>>(importers);
             Contains<ShapeFileImporter<ILineString, BridgePillar>>(importers);
-            Contains<ShapeFileImporter<ILineString, Pump2D>>(importers);
-            Contains<ShapeFileImporter<ILineString, Weir2D>>(importers);
+            Contains<ShapeFileImporter<ILineString, Pump>>(importers);
+            Contains<ShapeFileImporter<ILineString, Structure>>(importers);
         }
 
         [Test]
@@ -132,8 +133,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         /// AND GetSupportedExporterForItemIsCalled for these exporter and the EventedList
         /// THEN there exists a PliImporterExporter within the result
         /// </summary>
-        [TestCase(typeof(Weir2D))]
-        [TestCase(typeof(Pump2D))]
+        [TestCase(typeof(Structure))]
+        [TestCase(typeof(Pump))]
         public void GivenAFlowFMApplicationPlugin_WhenGetExportersIsCalledAndGetSupportedExporterForItemIsCalled_ThenThereExistsAPliImporterExporterWithinTheResult(Type t)
         {
             // Given
