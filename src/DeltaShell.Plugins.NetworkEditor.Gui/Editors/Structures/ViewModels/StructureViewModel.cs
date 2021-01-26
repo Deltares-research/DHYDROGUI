@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Guards;
@@ -15,7 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
     /// </summary>
     public sealed class StructureViewModel : INotifyPropertyChanged, IDisposable
     {
-        private readonly IWeir weir;
+        private readonly IStructure weir;
         private readonly WeirPropertiesViewModel weirPropertiesViewModel;
 
         private WeirViewModel weirViewModel;
@@ -31,13 +32,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="weir"/> is <c>null</c>.
         /// </exception>
-        public StructureViewModel(Weir2D weir)
+        public StructureViewModel(IStructure weir)
         {
             Ensure.NotNull(weir, nameof(weir));
             this.weir = weir;
 
             weirPropertiesViewModel = new WeirPropertiesViewModel(weir);
-            WeirViewModel = ConstructWeirViewModel(weir.WeirFormula, weirPropertiesViewModel);
+            WeirViewModel = ConstructWeirViewModel(weir.Formula, weirPropertiesViewModel);
         }
 
         /// <summary>
@@ -85,8 +86,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
                     return;
                 }
 
-                weir.WeirFormula = GetFormulaOfType(value);
-                WeirViewModel = ConstructWeirViewModel(weir.WeirFormula, WeirViewModel.WeirPropertiesViewModel);
+                weir.Formula = GetFormulaOfType(value);
+                WeirViewModel = ConstructWeirViewModel(weir.Formula, WeirViewModel.WeirPropertiesViewModel);
                 OnPropertyChanged();
             }
         }

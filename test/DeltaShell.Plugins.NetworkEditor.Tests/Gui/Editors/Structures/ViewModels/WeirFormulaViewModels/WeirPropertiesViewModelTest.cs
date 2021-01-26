@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
 using NUnit.Framework;
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void CrestLevel_SetsCorrectly()
         {
             // Setup
-            var weir = new Weir2D();
+            var weir = new Structure();
             const double crestLevelValue = 21.3;
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void CrestWidth_SetsCorrectly()
         {
             // Setup
-            var weir = new Weir2D() {CrestWidth = 1.0};
+            var weir = new Structure() {CrestWidth = 1.0};
             const double crestWidthValue = 21.3;
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void CrestWidth_MapsNaNCorrectlyToNull()
         {
             // Setup
-            var weir = new Weir2D {CrestWidth = double.NaN};
+            var weir = new Structure {CrestWidth = double.NaN};
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void UseCrestLevelTimeSeries_SetsCorrectly()
         {
             // Setup
-            var weir = new Weir2D();
+            var weir = new Structure();
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void CrestLevelTimeSeries_SameAsWeir()
         {
             // Setup
-            var weir = new Weir2D();
+            var weir = new Structure();
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void StructureName_SetsCorrectly()
         {
             // Setup
-            var weir = new Weir2D();
+            var weir = new Structure();
             const string structureName = "EiffelTower";
 
             using (var viewModel = new WeirPropertiesViewModel(weir))

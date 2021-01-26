@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
 using NUnit.Framework;
@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         {
             // Setup
             var formula = new GatedWeirFormula(true);
-            var weir = new Weir2D {WeirFormula = formula};
+            var weir = new Structure() {Formula = formula};
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
             {
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void Constructor_FormulaNull_ThrowsArgumentNullException()
         {
             // Setup
-            var weir = new Weir2D();
+            var weir = new Structure();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
             {

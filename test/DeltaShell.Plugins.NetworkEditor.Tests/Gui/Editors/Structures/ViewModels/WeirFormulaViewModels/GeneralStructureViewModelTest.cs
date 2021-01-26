@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using AutoFixture;
 using DelftTools.Functions;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                        .With(f => f.HorizontalDoorOpeningWidthTimeSeries, new TimeSeries())
                        .With(f => f.LowerEdgeLevelTimeSeries, new TimeSeries())
                        .Create();
-            var weir = new Weir2D { WeirFormula = formula };
+            var weir = new Structure { Formula = formula };
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
             {
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void Constructor_FormulaNull_ThrowsArgumentNullException()
         {
             // Setup
-            var weir = new Weir2D();
+            var weir = new Structure();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
             {
@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                        .With(f => f.HorizontalDoorOpeningWidthTimeSeries, new TimeSeries())
                        .With(f => f.LowerEdgeLevelTimeSeries, new TimeSeries())
                        .Create();
-            var weir = new Weir2D { WeirFormula = formula };
+            var weir = new Structure { Formula = formula };
             
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
@@ -243,7 +243,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                        .With(f => f.HorizontalDoorOpeningWidthTimeSeries, new TimeSeries())
                        .With(f => f.LowerEdgeLevelTimeSeries, new TimeSeries())
                        .Create();
-            var weir = new Weir2D { WeirFormula = formula };
+            var weir = new Structure { Formula = formula };
             
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
