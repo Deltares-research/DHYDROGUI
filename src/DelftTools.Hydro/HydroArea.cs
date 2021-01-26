@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
@@ -7,29 +8,92 @@ using NetTopologySuite.Extensions.Features;
 
 namespace DelftTools.Hydro
 {
+    /// <summary>
+    /// <see cref="HydroArea"/> defines a single <see cref="IHydroRegion"/>
+    /// describing all Hydro elements (i.e. elements that can be visualized on the map).
+    /// </summary>
+    /// <seealso cref="RegionBase" />
+    /// <seealso cref="IHydroRegion" />
     [Entity]
     public class HydroArea : RegionBase, IHydroRegion
     {
+        /// <summary>
+        /// Creates a new <see cref="HydroArea"/>.
+        /// </summary>
         public HydroArea()
         {
             Initialize();
         }
 
+        /// <summary>
+        /// Gets or sets the collection of <see cref="LandBoundary2D"/>.
+        /// </summary>
         public virtual IEventedList<LandBoundary2D> LandBoundaries { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the dry points.
+        /// </summary>
         public virtual IEventedList<GroupablePointFeature> DryPoints { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the dry areas.
+        /// </summary>
         public virtual IEventedList<GroupableFeature2DPolygon> DryAreas { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the collection of <see cref="ThinDam2D"/> objects.
+        /// </summary>
         public virtual IEventedList<ThinDam2D> ThinDams { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the collection of <see cref="FixedWeir"/>.
+        /// </summary>
         public virtual IEventedList<FixedWeir> FixedWeirs { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the observation points.
+        /// </summary>
         public virtual IEventedList<GroupableFeature2DPoint> ObservationPoints { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the collection of <see cref="ObservationCrossSection2D"/> objects.
+        /// </summary>
         public virtual IEventedList<ObservationCrossSection2D> ObservationCrossSections { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the dumping locations.
+        /// </summary>
         public virtual IEventedList<GroupableFeature2D> DumpingLocations { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the dredging locations.
+        /// </summary>
         public virtual IEventedList<GroupableFeature2D> DredgingLocations { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the collection of <see cref="Embankment"/> objects.
+        /// </summary>
         public virtual IEventedList<Embankment> Embankments { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the enclosures.
+        /// </summary>
         public virtual IEventedList<GroupableFeature2DPolygon> Enclosures { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the collection of <see cref="BridgePillar"/> objects.
+        /// </summary>
         public virtual IEventedList<BridgePillar> BridgePillars { get; protected set; }
 
-        public virtual IEventedList<Pump2D> Pumps { get; protected set; }
-        public virtual IEventedList<Weir2D> Weirs { get; protected set; }
+        /// <summary>
+        /// Gets or sets the collection of <see cref="Pump"/>.
+        /// </summary>
+        public virtual IEventedList<Pump> Pumps { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the collection of <see cref="Structure"/> objects.
+        /// </summary>
+        public virtual IEventedList<Structure> Weirs { get; protected set; }
 
         private void Initialize()
         {
@@ -48,8 +112,8 @@ namespace DelftTools.Hydro
             Enclosures = new EventedList<GroupableFeature2DPolygon>();
             BridgePillars = new EventedList<BridgePillar>();
 
-            Pumps = new EventedList<Pump2D>();
-            Weirs = new EventedList<Weir2D>();
+            Pumps = new EventedList<Pump>();
+            Weirs = new EventedList<Structure>();
         }
 
         #region IHydroRegion
@@ -59,13 +123,13 @@ namespace DelftTools.Hydro
         public override IEnumerable<object> GetDirectChildren()
         {
             yield return Pumps; // Required to open view for the collection of pumps
-            foreach (Pump2D pump in Pumps)
+            foreach (Pump pump in Pumps)
             {
                 yield return pump;
             }
 
             yield return Weirs; // Required to open view for the collection of weirs
-            foreach (Weir2D weir in Weirs)
+            foreach (Structure weir in Weirs)
             {
                 yield return weir;
             }

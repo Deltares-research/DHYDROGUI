@@ -1,4 +1,4 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Area.Objects;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests
@@ -15,7 +15,7 @@ namespace DelftTools.Hydro.Tests
         [TestCase(null, null)]
         public void GivenWeir2D_WhenSettingGroupName_ThenItGetsStoredAsLowercaseAndForwardslashBecomesBackslash(string setterName, string expectedValue)
         {
-            CheckGroupableGroupNameSetting<Weir2D>(setterName, expectedValue);
+            CheckGroupableGroupNameSetting<Structure>(setterName, expectedValue);
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace DelftTools.Hydro.Tests
         [TestCase(null, null)]
         public void GivenPump2D_WhenSettingGroupName_ThenItGetsStoredAsLowercaseAndForwardslashBecomesBackslash(string setterName, string expectedValue)
         {
-            CheckGroupableGroupNameSetting<Pump2D>(setterName, expectedValue);
+            CheckGroupableGroupNameSetting<Pump>(setterName, expectedValue);
         }
 
         [Test]
@@ -103,19 +103,20 @@ namespace DelftTools.Hydro.Tests
         [TestCase(false)]
         public void GivenPump2D_WhenCloning_ThenGroupableFeaturePropertiesAreTheSame(bool isDefaultGroupValue)
         {
-            VerifyGroupableFeatureCloning<Pump2D>(isDefaultGroupValue);
+            VerifyGroupableFeatureCloning<Pump>(isDefaultGroupValue);
         }
 
         [TestCase(true)]
         [TestCase(false)]
         public void GivenWeir2D_WhenCloning_ThenGroupableFeaturePropertiesAreTheSame(bool isDefaultGroupValue)
         {
-            VerifyGroupableFeatureCloning<Weir2D>(isDefaultGroupValue);
+            VerifyGroupableFeatureCloning<Structure>(isDefaultGroupValue);
         }
 
-        private static void VerifyGroupableFeatureCloning<T>(bool isDefaultGroupValue) where T : IGroupableFeature, new()
+        private static void VerifyGroupableFeatureCloning<T>(bool isDefaultGroupValue) 
+            where T : IGroupableFeature, new()
         {
-            var groupName = "MyGroupName";
+            const string groupName = "MyGroupName";
             var gate = new T
             {
                 GroupName = groupName,
@@ -126,7 +127,9 @@ namespace DelftTools.Hydro.Tests
             Assert.That(clonedGate.IsDefaultGroup, Is.EqualTo(isDefaultGroupValue));
         }
 
-        private void CheckGroupableGroupNameSetting<T>(string setterName, string expectedValue) where T : IGroupableFeature, new()
+        private static void CheckGroupableGroupNameSetting<T>(string setterName, 
+                                                              string expectedValue) 
+            where T : IGroupableFeature, new()
         {
             var feature2D = new T() {GroupName = setterName};
             Assert.That(feature2D.GroupName, Is.EqualTo(expectedValue));
