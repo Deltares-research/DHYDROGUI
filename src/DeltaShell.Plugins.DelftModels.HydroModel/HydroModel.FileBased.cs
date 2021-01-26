@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common;
@@ -29,8 +30,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// </summary>
         public virtual void SaveLinks()
         {
-            IModel flowModel, rtcModel;
-            if (TryGetFmAndRtcModel(out flowModel, out rtcModel))
+            if (TryGetFmAndRtcModel(out IModel flowModel, out IModel rtcModel))
             {
                 modelExchangeInfos.Clear();
                 modelExchangeInfos.AddRange(GetModelExchangeInfos(flowModel, rtcModel));
@@ -43,8 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// </summary>
         public virtual void UnlinkAndRememberDataItems()
         {
-            IModel flowModel, rtcModel;
-            if (TryGetFmAndRtcModel(out flowModel, out rtcModel))
+            if (TryGetFmAndRtcModel(out IModel flowModel, out IModel rtcModel))
             {
                 modelExchangeInfos.Clear();
                 modelExchangeInfos.AddRange(GetUnlinkedModelExchangeInfos(flowModel, rtcModel));
@@ -55,50 +54,70 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// re-establish the data links that were cut when the model was saved
         /// Can only be used once linkInfos is filled.
         /// </summary>
-        public virtual void RelinkDataItems()
+        public virtual void RelinkDataItems() =>
+            modelExchangeInfos.ForEach(RelinkDataItems);
+
+        private void RelinkDataItems(ModelExchangeInfo info)
         {
-            foreach (ModelExchangeInfo exchangeInfo in modelExchangeInfos)
+            ICoupledModel sourceModel = GetCoupledModel(info.SourceModelName);
+            IDictionary<string, IDataItem> sourceItems = 
+                GetDataItemsUsedForCouplingModel(sourceModel, DataItemRole.Output);
+
+            if (sourceItems == null || !sourceItems.Any())
             {
-                IModel sourceModel = Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), exchangeInfo.SourceModelName));
-                IModel targetModel = Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), exchangeInfo.TargetModelName));
-
-                if (sourceModel == null || targetModel == null)
-                {
-                    continue;
-                }
-
-                SuspendModelOutputEvents(sourceModel);
-                SuspendModelOutputEvents(targetModel);
-
-                List<IDataItem> sourceItems = GetDataItemsUsedForCouplingModel(sourceModel, DataItemRole.Output).ToList();
-                List<IDataItem> targetItems = GetDataItemsUsedForCouplingModel(targetModel, DataItemRole.Input).ToList();
-
-                foreach (ModelExchange exchange in exchangeInfo.Exchanges)
-                {
-                    IDataItem sourceItem = sourceItems.FirstOrDefault(di => Equals(ModelExchange.GetExchangeIdentifier(di), exchange.SourceName));
-
-                    string targetName = exchange.TargetName.Trim();
-
-                    if (exchangeInfo.TargetModelName == "FlowFM")
-                    {
-                        targetName = HydroModelHelper.UpdateOldNamesOfStructuresComponentsToNewNamesIfNeeded(targetName);
-                    }
-
-                    IDataItem targetItem = targetItems.FirstOrDefault(di => Equals(ModelExchange.GetExchangeIdentifier(di), targetName));
-
-                    if (sourceItem == null || targetItem == null)
-                    {
-                        continue;
-                    }
-
-                    // link:
-                    targetItem.LinkTo(sourceItem);
-                }
-
-                UnsuspendModelOutputEvents(sourceModel);
-                UnsuspendModelOutputEvents(targetModel);
+                return;
             }
+
+            ICoupledModel targetModel = GetCoupledModel(info.TargetModelName);
+            IDictionary<string, IDataItem> targetItems = 
+                GetDataItemsUsedForCouplingModel(targetModel, DataItemRole.Input);
+
+            if (targetItems == null || !targetItems.Any())
+            {
+                return;
+            }
+                
+            SuspendModelOutputEvents(sourceModel as IModel);
+            SuspendModelOutputEvents(targetModel as IModel);
+
+            foreach (ModelExchange modelExchange in info.Exchanges)
+            {
+                RelinkDataItemsInModelExchange(modelExchange,
+                                               sourceItems,
+                                               targetItems,
+                                               targetModel);
+            }
+
+           UnsuspendModelOutputEvents(sourceModel as IModel);
+           UnsuspendModelOutputEvents(targetModel as IModel);
         }
+
+        private static void RelinkDataItemsInModelExchange(ModelExchange exchange, 
+                                                           IDictionary<string, IDataItem> sourceItems,
+                                                           IDictionary<string, IDataItem> targetItems,
+                                                           ICoupledModel targetModel)
+        {
+                if (!sourceItems.TryGetValue(exchange.SourceName, out IDataItem sourceItem))
+                {
+                    return;
+                }
+
+                string targetName = targetModel.GetUpToDateDataItemName(exchange.TargetName);
+                if (!targetItems.TryGetValue(targetName, out IDataItem targetItem))
+                {
+                    return;
+                }
+
+                targetItem.LinkTo(sourceItem);
+        }
+
+        private IDictionary<string, IDataItem> GetDataItemsUsedForCouplingModel(ICoupledModel model, DataItemRole role) =>
+            model?.GetDataItemsUsedForCouplingModel(role)
+                 .Where(di => di != null)
+                 .ToDictionary(ModelExchange.GetExchangeIdentifier);
+
+        private ICoupledModel GetCoupledModel(string modelName) =>
+            Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), modelName)) as ICoupledModel;
 
         private static void SuspendModelOutputEvents(IModel model)
         {
