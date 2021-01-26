@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenSimpleWeir_WhenGettingQuantitiesForSimpleWeir_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            IWeir weir = GetWeirStubWithWeirFormulaType<SimpleWeirFormula>();
+            IStructure weir = GetWeirStubWithWeirFormulaType<SimpleWeirFormula>();
 
             // When
             string[] quantities = QuantityGenerator.GetQuantitiesForFeature(weir, useSalinity).ToArray();
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenGeneralStructure_WhenGettingQuantitiesForGeneralStructure_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            IWeir generalStructure = GetWeirStubWithWeirFormulaType<GeneralStructureWeirFormula>();
+            IStructure generalStructure = GetWeirStubWithWeirFormulaType<GeneralStructureWeirFormula>();
 
             // When
             string[] quantities = QuantityGenerator.GetQuantitiesForFeature(generalStructure, useSalinity).ToArray();
@@ -67,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenGate_WhenGettingQuantitiesForGate_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            IWeir gate = GetWeirStubWithWeirFormulaType<GatedWeirFormula>();
+            IStructure gate = GetWeirStubWithWeirFormulaType<GatedWeirFormula>();
 
             // When
             string[] quantities = QuantityGenerator.GetQuantitiesForFeature(gate, useSalinity).ToArray();
@@ -116,11 +117,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(quantities.Contains("velocity"));
         }
 
-        private IWeir GetWeirStubWithWeirFormulaType<TWeirFormulaType>()
+        private IStructure GetWeirStubWithWeirFormulaType<TWeirFormulaType>()
             where TWeirFormulaType : IWeirFormula, new()
         {
-            var weir = mocks.Stub<IWeir>();
-            weir.WeirFormula = new TWeirFormulaType();
+            var weir = mocks.Stub<IStructure>();
+            weir.Formula = new TWeirFormulaType();
             return weir;
         }
     }

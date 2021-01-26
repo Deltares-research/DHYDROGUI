@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Reflection;
@@ -25,63 +25,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         /// <returns> A collection of strings that describe every possible quantity for <paramref name="feature"/> </returns>
         public static IEnumerable<string> GetQuantitiesForFeature(IFeature feature, bool useSalinity)
         {
-            if (feature is IPump)
+            switch (feature)
             {
-                yield return KnownStructureProperties.Capacity;
-                yield break;
-            }
-
-            if (feature is IWeir weir)
-            {
-                foreach (string quantity in GetWeirQuantities(weir))
+                case IPump _:
+                    yield return KnownStructureProperties.Capacity;
+                    yield break;
+                case IStructure weir:
                 {
-                    yield return quantity;
+                    foreach (string quantity in GetWeirQuantities(weir))
+                    {
+                        yield return quantity;
+                    }
+
+                    yield break;
                 }
-
-                yield break;
-            }
-
-            if (feature is GroupableFeature2DPoint)
-            {
-                yield return "water_level";
-                if (useSalinity)
+                case GroupableFeature2DPoint _:
                 {
-                    yield return "salinity";
+                    yield return "water_level";
+                    if (useSalinity)
+                    {
+                        yield return "salinity";
+                    }
+
+                    yield return "water_depth";
+                    yield break;
                 }
-
-                yield return "water_depth";
-                yield break;
-            }
-
-            if (feature is ObservationCrossSection2D)
-            {
-                yield return "discharge";
-                yield return "velocity";
-                yield return "water_level";
-                yield return "water_depth";
+                case ObservationCrossSection2D _:
+                    yield return "discharge";
+                    yield return "velocity";
+                    yield return "water_level";
+                    yield return "water_depth";
+                    break;
             }
         }
 
-        private static IEnumerable<string> GetWeirQuantities(IWeir weir)
+        private static IEnumerable<string> GetWeirQuantities(IStructure weir)
         {
-            IWeirFormula weirFormula = weir.WeirFormula;
-            if (weirFormula is SimpleWeirFormula)
+            switch (weir.Formula)
             {
-                yield return KnownStructureProperties.CrestLevel;
-            }
-
-            if (weirFormula is GeneralStructureWeirFormula)
-            {
-                yield return KnownGeneralStructureProperties.CrestLevel.GetDescription();
-                yield return KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription();
-                yield return KnownGeneralStructureProperties.GateOpeningWidth.GetDescription();
-            }
-
-            if (weirFormula is GatedWeirFormula)
-            {
-                yield return KnownStructureProperties.CrestLevel;
-                yield return KnownStructureProperties.GateLowerEdgeLevel;
-                yield return KnownStructureProperties.GateOpeningWidth;
+                case SimpleWeirFormula _:
+                    yield return KnownStructureProperties.CrestLevel;
+                    break;
+                case GeneralStructureWeirFormula _:
+                    yield return KnownGeneralStructureProperties.CrestLevel.GetDescription();
+                    yield return KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription();
+                    yield return KnownGeneralStructureProperties.GateOpeningWidth.GetDescription();
+                    break;
+                case GatedWeirFormula _:
+                    yield return KnownStructureProperties.CrestLevel;
+                    yield return KnownStructureProperties.GateLowerEdgeLevel;
+                    yield return KnownStructureProperties.GateOpeningWidth;
+                    break;
             }
         }
     }
