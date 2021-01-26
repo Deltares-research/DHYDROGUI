@@ -286,6 +286,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 bool eventBubblingEnabled = EventSettings.BubblingEnabled;
                 try
                 {
+                    // while opening, bubbling of events is disabled,
+                    // which will prevent the execution of spatial operations.
                     EventSettings.BubblingEnabled = true;
                     valueConverter.SpatialOperationSet.Execute();
                 }
