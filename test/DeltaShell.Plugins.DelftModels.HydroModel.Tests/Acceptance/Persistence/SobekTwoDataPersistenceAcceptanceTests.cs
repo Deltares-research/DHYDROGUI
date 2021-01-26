@@ -12,7 +12,7 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
     [TestFixture]
-    [Category("Build.Acceptance.SaveLoad")]
+    [Category("Build.Acceptance.SaveLoad.SOBEK")]
     [Category(TestCategory.Slow)]
     [Category(TestCategory.WindowsForms)]
     public class SobekTwoDataPersistenceAcceptanceTests
