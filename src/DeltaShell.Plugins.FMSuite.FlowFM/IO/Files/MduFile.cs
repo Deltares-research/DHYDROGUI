@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils;
@@ -985,7 +986,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                           hydroArea.ObservationCrossSections.ToList(),
                           ref obsCrsFile, FileConstants.ObsCrossSectionPliFileExtension, FileConstants.ObsCrossSectionPlizFileExtension);
 
-            List<IStructure> structures = hydroArea.Pumps.Cast<IStructure>().Concat(hydroArea.Weirs).ToList();
+            List<IStructureObject> structures = hydroArea.Pumps.Cast<IStructureObject>().Concat(hydroArea.Weirs).ToList();
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
                           ref structuresFile, FileConstants.StructuresFileExtension);
@@ -1288,41 +1289,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             ReadFeatures(filePath, modelDefinition, KnownProperties.LandBoundaryFile, hydroArea.LandBoundaries,
                          ref landBoundariesFile, FileConstants.LandBoundaryFileExtension);
 
-            ReadFeatures(filePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams, ref thinDamFile, FileConstants.ThinDamPliFileExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams, 
+                         ref thinDamFile, FileConstants.ThinDamPliFileExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs,
                          ref fixedWeirFile, FileConstants.FixedWeirPlizFileExtension);
-            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, ref obsFile, FileConstants.ObsPointFileExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, 
+                         ref obsFile, FileConstants.ObsPointFileExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections,
                          ref obsCrsFile, FileConstants.ObsCrossSectionPliFileExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.BridgePillarFile, hydroArea.BridgePillars,
                          ref bridgePillarFile, FileConstants.PlizFileExtension);
 
-            var structures = new List<IStructure>();
+            var structures = new List<IStructureObject>();
 
-            ReadFeatures(filePath, modelDefinition, KnownProperties.StructuresFile, structures, ref structuresFile, FileConstants.StructuresFileExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.StructuresFile, structures, 
+                         ref structuresFile, FileConstants.StructuresFileExtension);
 
-            foreach (IStructure structure in structures)
+            foreach (IStructureObject structure in structures)
             {
                 switch (structure)
                 {
-                    case Pump2D pump2D:
-                        hydroArea.Pumps.Add(pump2D);
+                    case Pump pump:
+                        hydroArea.Pumps.Add(pump);
                         break;
-                    case Weir2D weir2D:
-                        hydroArea.Weirs.Add(weir2D);
+                    case Structure weir:
+                        hydroArea.Weirs.Add(weir);
                         break;
                     default:
-                        throw new NotImplementedException();
+                        throw new NotSupportedException();
                 }
             }
 
             ReadDryPointsAndDryAreas(filePath, modelDefinition, hydroArea);
 
-            IList<string> enclosureMultipleFilePath = MduFileHelper.GetMultipleSubfilePath(filePath,
-                                                                                           modelDefinition
-                                                                                               .GetModelProperty(
-                                                                                                   KnownProperties
-                                                                                                       .EnclosureFile));
+            IList<string> enclosureMultipleFilePath = 
+                MduFileHelper.GetMultipleSubfilePath(
+                    filePath, modelDefinition.GetModelProperty(KnownProperties.EnclosureFile));
 
             List<string> enclosuresToRemove = enclosureMultipleFilePath
                                               .Where(efp => !efp.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension))
