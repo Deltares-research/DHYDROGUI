@@ -611,7 +611,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     return (VectorLayer)AddSnappingRulesToLayer<ILeveeBreach>(leveeBreachLayer);
                 default:
                     return null;
-                    //throw new Exception($"Can not create layer for hydro area object {data.GetType()}");
             }
         }
 
@@ -695,7 +694,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 }
                 default:
                     return null;
-                    //throw new Exception($"Cannot generate Hydro region / basin layer for data of type : {data.GetType()}");
             }
         }
 
@@ -781,7 +779,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         };
                 default:
                     return null;
-                    //throw new Exception($"Cannot generate Hydro network layer for data of type : {data.GetType()}");
             }
         }
 

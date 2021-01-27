@@ -73,14 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             var gmlNode = xmlDoc.DocumentElement.FirstChild.NextSibling.FirstChild.LastChild.InnerXml;
             Console.WriteLine(gmlNode);
 
-            //if (hydroNetwork == null) return null;
-            var reader = new GMLReader();
-            //var document = new XmlDocument();
-            //document.Load(path);
-            //string gml = document.InnerXml;
-            //gml = gml.Replace("gml:", "");
-            //var result = reader.Read(gmlNode);
-            //var geometry = gmlReader.(document.InnerXml);
+            new GMLReader();
             return hydroNetwork;
         }
 

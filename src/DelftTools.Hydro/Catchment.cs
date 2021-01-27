@@ -223,11 +223,11 @@ namespace DelftTools.Hydro
             return Name;
         }
 
-        public virtual int CompareTo(object other)
+        public virtual int CompareTo(object obj)
         {
-            if (other is Catchment)
+            if (obj is Catchment)
             {
-                if (Equals(this, other))
+                if (Equals(this, obj))
                     return 0;
 
                 foreach(var c in Basin.AllCatchments)
@@ -236,13 +236,13 @@ namespace DelftTools.Hydro
                     {
                         return -1;
                     }
-                    if (Equals(c, other))
+                    if (Equals(c, obj))
                     {
                         return 1;
                     }
                 }
             }
-            else if (other is WasteWaterTreatmentPlant)
+            else if (obj is WasteWaterTreatmentPlant)
             {
                 return -1;
             }

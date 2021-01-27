@@ -101,17 +101,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             WriteTimeSeriesActions.Keys.Where(k => k.IsInstanceOfType(structure2D)).ForEach(key => WriteTimeSeriesActions[key](timFilePath, referenceTime, structure2D));
         }
 
-        /*private static string GetTargetFilePath(string fileName, string mduFilePath)
-        {
-            var subFilePathProperty = fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath);
-            var subFilePath = subFilePathProperty?.GetValueAsString();
-
-            var mduFilePath = string.IsNullOrEmpty(subFilePath) ? fmModel.MduFilePath : subFilePath;
-            var filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFilePath, fileName);
-
-            return filePath;
-        }*/
-
         private static void WritePumpTimeSeriesFile(string timFilePath, DateTime referenceDateTime, IPump pump)
         {
             if (pump != null && pump.HasCapacityTimeSeries())

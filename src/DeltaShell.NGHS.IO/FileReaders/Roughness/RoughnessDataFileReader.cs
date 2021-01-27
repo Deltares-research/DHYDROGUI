@@ -243,7 +243,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
             }
             else
             {
-                var hasGlobalType = contentSection.Name.Equals(RoughnessDataRegion.GlobalIniHeader, StringComparison.InvariantCultureIgnoreCase); //contentSection.Properties.Any(p => p.Name == RoughnessDataRegion.GlobalType.Key);
+                var hasGlobalType = contentSection.Name.Equals(RoughnessDataRegion.GlobalIniHeader, StringComparison.InvariantCultureIgnoreCase);
 
                 if (isReversed)
                 {

@@ -13,7 +13,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
     [Entity(FireOnCollectionChange=false)]
     public class WeirViewData 
     {
-        //private CrestShape crestShape;
         private IDictionary<string, CrestShape> crestShapeDictionary;
         private IDictionary<string, bool> geometryDictionary;
         private IDictionary<Type, IWeirFormula> weirFormulaDictionary;
@@ -22,7 +21,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         public WeirViewData(IEnumerable<IWeirFormula> supportedFormulas)
         {
             SetDictionaries(supportedFormulas);
-            //UpdateDataWithWeir();
         }
 
         public IDictionary<string, Type> GetWeirFormulaTypes()

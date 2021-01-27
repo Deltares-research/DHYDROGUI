@@ -96,12 +96,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                         IsBusy = false;
                         if (null != ShapeChanged)
                         {
-                            //ShapeChanged(this, new ShapeEventArgs(((ShapeFeatureEditor)ShapeFeatureEditor).ShapeFeature));
                             ShapeChanged(this, new ShapeEventArgs(ShapeModifyTool.SelectedShape));
                         }
                     }
                     break;
-            } // switch (kind)
+            }
         }
     }
 }

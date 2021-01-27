@@ -73,18 +73,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             SelectedNetwork = 0;
 
             // databinding does not work as expected for radio buttons
-            //radioAllBranches.Checked = AllBranches;
-            //radioAllBranches.Checked = true;
             radioSelectedBranches.Checked = !AllBranches;
             radioOverwrite.Checked = OverwriteSegments;
 
             checkBoxPreferred.DataBindings.Add(new Binding("Checked", this, "UseFixedLength"));
 
-            // data bibding has the annoying side effect that it will reset the textbox to its original 
+            // data binding has the annoying side effect that it will reset the textbox to its original 
             // (binded) value when it encounters an error.
-            //textBoxFixed.DataBindings.Add(new Binding("Text", this, "FixedLength"));
-            //textBoxStructureBefore.DataBindings.Add(new Binding("Text", this, "BeforeStructureDistance"));
-            //textBoxStructureAfter.DataBindings.Add(new Binding("Text", this, "AfterStructureDistance"));
             textBoxPreferredLength.Text = FixedLength.ToString();
             textBoxPreferredLength.Enabled = checkBoxPreferred.Checked;
             textBoxStructureDistance.Text = StructureDistance.ToString();

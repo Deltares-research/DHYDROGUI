@@ -24,7 +24,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
             set
             {
                 currentTracker = value;
-                //Debug.WriteLine(value);
                 ShapeFeature.Invalidate();
             } 
         }

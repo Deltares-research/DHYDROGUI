@@ -58,17 +58,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private readonly IChart chart;
 
         private ShapeModifyTool shapeModifyTool;
-        //private ShapeModifyTool structureWallTool;
 
-        private double maxZValue = double.MinValue;
         private double minZValue = double.MaxValue;
         private double leftView = 0;
         private double rightView = 0;
 
         private readonly IDictionary<IShapeFeature, IStructure1D> Shapes2Structures = new Dictionary<IShapeFeature, IStructure1D>();
         private readonly IDictionary<IStructure1D, IShapeFeature> Structures2Shape = new Dictionary<IStructure1D, IShapeFeature>();
-        //private readonly IDictionary<IFunction, IStructure> Function2Structures = new Dictionary<IFunction, IStructure>();
-       
+
         private readonly VectorStyle selectStyle = new VectorStyle
                                                        {
                                                            Fill = new SolidBrush(Color.FromArgb(150, Color.Magenta)), 
@@ -327,12 +324,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private void UpdateBridgeShapeWithBridge(IBridge bridge)
         {
-            //var pumpShape = Structures2Shape[pump];
-            // Validate(this);
             RemoveShapeFeature(bridge);
             AddBridge(bridge);
-            //Validate(this);
-            //chartView.Invalidate();
             chartView.Invalidate();
         }
 
@@ -662,16 +655,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         private Envelope GetBoundingRectExtraResistance(IExtraResistance extraResistance)
         {
             //used in min max for axis
-            //var zValues = new[]
-            //                  {
-            //                      pump.OffsetZ,
-            //                      pump.StartDelivery,
-            //                      pump.StartSuction,
-            //                      pump.StopDelivery,
-            //                      pump.StopSuction
-            //                  };
-            double minY = 10;// zValues.Min();
-            double maxY = 10;// zValues.Max();
+            double minY = 10;
+            double maxY = 10;
             double width = chartView.ChartCoordinateService.ToWorldWidth(ExtraResistanceSmallIcon.Width);
             return GeometryFactory.CreateEnvelope(extraResistance.OffsetY, extraResistance.OffsetY + width, minY, maxY);
         }

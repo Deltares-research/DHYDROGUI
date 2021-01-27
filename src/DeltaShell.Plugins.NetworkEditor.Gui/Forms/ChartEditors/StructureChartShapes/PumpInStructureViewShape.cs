@@ -25,18 +25,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             this.chart = chart;
             this.pump = pump;
 
-            //get a shape for the image. Don't generate this one all the
-            //time since it contains our selection
-            //Image image = DeliverySideIsLeft
-            //                  ? Properties.Resources.PumpSmallNegative
-            //                  : Properties.Resources.PumpSmallPositive;
-            //symbolShapeFeature = new SymbolShapeFeature(chart, offset, pump.OffsetZ,
-            //                                            SymbolShapeFeatureHorizontalAlignment.Left,
-            //                                            SymbolShapeFeatureVerticalAlignment.Center) {Image = image};
-
             CreateLineStyles();
-
-
             CalculateShapeFeatures();
         }
 
@@ -71,7 +60,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// <param name="vectorStyle"></param>
         public override void Paint(VectorStyle  vectorStyle)
         {
-            //base.Paint(vectorStyle);
             //custom paint logic :)
             CalculateShapeFeatures();
             base.Paint(vectorStyle);
@@ -151,15 +139,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private IShapeFeature GetHorizontalLine(double y, bool isStopLevel, HoverPosition hoverPosition, 
             Color hoverColor, string hoverText)
         {
-            var left = symbolShapeFeature.Left;// GetImageLeftInWorld();
-                //pump.OffsetY - GetImageWidthInWorld() / 2;
-            //var right = pump.OffsetY + GetImageWidthInWorld() / 2;
+            var left = symbolShapeFeature.Left;
             var right = left + GetImageWidthInWorld();
 
-            
             //if delivery is left this is suction so the bottom is a off line
 
-            //var height = top - bottom;
             var line = new FixedRectangleShapeFeature(chart,
                                                   left,
                                                   y,

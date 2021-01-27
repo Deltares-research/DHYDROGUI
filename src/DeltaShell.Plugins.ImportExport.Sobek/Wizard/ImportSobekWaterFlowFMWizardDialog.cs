@@ -57,11 +57,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 
                 if (selectFileWizardPage.FileName.ToLower().EndsWith("network.tp"))
                 {
-                    //string dir = Path.GetDirectoryName(selectFileWizardPage.FileName);
-                    //string pathSettingsDat = Path.Combine(dir, "settings.dat");
-                    //var settingsDat = File.ReadAllText(pathSettingsDat).ToLower();
-                    //var indexRestart = settingsDat.IndexOf("[restart]");
-                    //settingsDat = settingsDat.Substring(0, indexRestart);
+
                 }
                 else
                 {

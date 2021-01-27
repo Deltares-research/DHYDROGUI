@@ -60,17 +60,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
             var g = (ChartGraphics)chartDrawingContext.Graphics;
 
-            //g.BackColor = Selected ? Color.FromArgb(100, Color.Red) : Color.FromArgb(100, Color.Blue);
             g.BackColor = ((SolidBrush)chartDrawingContext.Style.Fill).Color;
             GraphicsPath graphicsPath = GenerateArch(Chart, X, Y, Width, Bottom, CrestOffset);
             if (null == graphicsPath) 
                 return;
             g.DrawPath(new Pen(g.PenColor), graphicsPath);
-            // hack: Graphics3D does not support FillPath but DrawPath does not
-/*            if (g is Graphics3DGdiPlus)
-            {
-                ((Graphics3DGdiPlus)g).Graphics.FillPath(new SolidBrush(g.BackColor), graphicsPath);
-            }*/
         }
     }
 }

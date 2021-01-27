@@ -196,7 +196,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         {
             get
             {
-                //if (Formula == FormulaEnum.GatedWeir)
                 if (Weir is IOrifice)
                 {
                     if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
@@ -216,7 +215,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 var newValue = double.Parse(value, CultureInfo.CurrentCulture);
                 if (newValue > Weir.CrestLevel)
                 {
-                    //if (Formula == FormulaEnum.GatedWeir)
                     if (Weir is IOrifice)
                     {
                         if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
@@ -239,7 +237,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         {
             get
             {
-                //if (Formula == FormulaEnum.GatedWeir)
                 if (Weir is IOrifice)
                 {
                     if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
@@ -256,7 +253,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             }
             set
             {
-                //if (Formula == FormulaEnum.GatedWeir)
                 if (Weir is IOrifice)
                 {
                     if (GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries)
@@ -352,7 +348,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
             if (propertyName == nameof(GLowerEdge) || propertyName == nameof(GGateOpening))
             {
-                //if (Formula == FormulaEnum.GatedWeir)
                 if (Weir is IOrifice)
                 {
                     return GatedWeirFormula.CanBeTimedependent && GatedWeirFormula.UseLowerEdgeLevelTimeSeries;
@@ -368,39 +363,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             if (propertyName == nameof(GContractionCoefficient) || propertyName == nameof(GLateralContraction) || propertyName == nameof(GMaxFlowPos) || 
                 propertyName == nameof(GMaxFlowNeg) || propertyName == nameof(GUseMaxFlowPos) || propertyName == nameof(GUseMaxFlowNeg))
             {
-                //return Formula != FormulaEnum.GatedWeir;
                 return true;
-            }
-
-            if (false/*propertyName == nameof(PNumberOfPiers) || propertyName == nameof(PUpstreamFacePos) || propertyName == nameof(PUpstreamFaceNeg) ||
-                propertyName == nameof(PDesignHeadPos) || propertyName == nameof(PDesignHeadNeg) || propertyName == nameof(PPierContractionPos) ||
-                propertyName == nameof(PPierContractionNeg) || propertyName == nameof(PAbutmentContractionPos) || propertyName == nameof(PAbutmentContractionNeg)*/)
-            {
-                //return Formula != FormulaEnum.PierWeir;
-                return true;
-            }
-
-            if (false/*propertyName == nameof(RCorrectionCoefficientPos) || propertyName == nameof(RCorrectionCoefficientNeg) || 
-                propertyName == nameof(RSubmergeLimitPos) || propertyName == nameof(RSubmergeLimitNeg)*/)
-            {
-                //return Formula != FormulaEnum.RiverWeir;
-                return true;
-            }
-
-            if (false/*propertyName == nameof(FDischargeCoefficient)*/)
-            {
-                return Formula != FormulaEnum.FreeFormWeir;
-            }
-            if (false/*propertyName == nameof(APositiveFreeGateFlow) || propertyName == nameof(ANegativeFreeGateFlow) || propertyName == nameof(APositiveDrownedGateFlow) ||
-                propertyName == nameof(ANegativeDrownedGateFlow) || propertyName == nameof(APositiveFreeWeirFlow) || propertyName == nameof(ANegativeFreeWeirFlow) ||
-                propertyName == nameof(APositiveDrownedWeirFlow) || propertyName == nameof(ANegativeDrownedWeirFlow) || propertyName == nameof(APositiveContractionCoefficient) ||
-                propertyName == nameof(ANegativeContractionCoefficient) || propertyName == nameof(ABedLevelLeftSideOfStructure) || propertyName == nameof(ABedLevelLeftSideStructure) ||
-                propertyName == nameof(ABedLevelStructureCentre) || propertyName == nameof(ABedLevelRightSideStructure) || propertyName == nameof(ABedLevelRightSideOfStructure) ||
-                propertyName == nameof(AWidthLeftSideOfStructure) || propertyName == nameof(AWidthStructureLeftSide) || propertyName == nameof(AWidthStructureCentre) ||
-                propertyName == nameof(AWidthStructureRightSide) || propertyName == nameof(AWidthRightSideOfStructure) || propertyName == nameof(AUseExtraResistance) ||
-                propertyName == nameof(AExtraResistance)*/)
-            {
-                return Formula != FormulaEnum.GeneralStructure;
             }
 
             return false;
@@ -423,27 +386,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             GeneralStructureWeirFormula = StGeneralStructureWeirFormula;
             switch (newFormula)
             {
-                /*case FormulaEnum.GatedWeir:
-                    if (setToWeir)
-                    {
-                        Weir.WeirFormula = new GatedWeirFormula();
-                    }
-                    GatedWeirFormula = (GatedWeirFormula)Weir.WeirFormula;
-                    break;
-                case FormulaEnum.PierWeir:
-                    if (setToWeir)
-                    {
-                        Weir.WeirFormula = new PierWeirFormula();
-                    }
-                    PierWeirFormula = (PierWeirFormula)Weir.WeirFormula;
-                    break;
-                case FormulaEnum.RiverWeir:
-                    if (setToWeir)
-                    {
-                        Weir.WeirFormula = new RiverWeirFormula();
-                    }
-                    RiverWeirFormula = (RiverWeirFormula)Weir.WeirFormula;
-                    break;*/
                 case FormulaEnum.SimpleWeir:
                     if (Weir is IOrifice) break;
                     if (setToWeir)
@@ -495,18 +437,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         {
             var type = weirFormula.GetEntityType();
 
-            /*if (type == typeof(GatedWeirFormula))
-            {
-                return FormulaEnum.GatedWeir;
-            }
-            if (type == typeof(PierWeirFormula))
-            {
-                return FormulaEnum.PierWeir;
-            }
-            if (type == typeof(RiverWeirFormula))
-            {
-                return FormulaEnum.RiverWeir;
-            }*/
             if (type == typeof(SimpleWeirFormula))
             {
                 return FormulaEnum.SimpleWeir;
@@ -529,12 +459,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
 
         public enum FormulaEnum
         {
-            /*[Description("Gated weir")]
-            GatedWeir,
-            [Description("Pier weir")]
-            PierWeir,
-            [Description("River weir")]
-            RiverWeir,*///Not yet implemented in the kernel
             [Description("Simple weir")]
             SimpleWeir,
             [Description("Free form weir")]

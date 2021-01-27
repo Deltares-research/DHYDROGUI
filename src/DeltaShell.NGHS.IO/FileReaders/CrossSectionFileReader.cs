@@ -29,7 +29,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 cslCategories = new DelftIniReader().ReadDelftIniFile(cslFilename);
             }
             IList<DelftIniCategory> csIniLocations = new List<DelftIniCategory>();
-            if (cslCategories.Count != 0) //throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", cslFilename));
+            if (cslCategories.Count != 0)
             {
                 csIniLocations = cslCategories.Where(category => category.Name == CrossSectionRegion.IniHeader).ToList();
                 if (!csIniLocations.Any()) throw new FileReadingException("Could not read any cross section locations it seems not available");

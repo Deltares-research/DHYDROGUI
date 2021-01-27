@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
     /// TODO: get this class under test.
     public class ShowSideViewCommand : NetworkEditorCommand,IGuiCommand
     {
-        private const string WaterLevelTag =  "Water level";//"water level";
         private static readonly ILog log = LogManager.GetLogger(typeof(ShowSideViewCommand));
 
         protected override void OnExecute(params object[] arguments)

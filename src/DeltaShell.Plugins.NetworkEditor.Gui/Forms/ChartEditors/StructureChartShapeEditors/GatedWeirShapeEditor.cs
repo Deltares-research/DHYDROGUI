@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             : base(shapeFeature, chartCoordinateService, shapeEditMode)
         {
             WeirEditor = (RectangleShapeEditor) ShapeFeatureEditors[0];
-            //GateEditor = (RectangleShapeEditor) shapeFeatureEditors[1];
         }
 
         /// <summary>

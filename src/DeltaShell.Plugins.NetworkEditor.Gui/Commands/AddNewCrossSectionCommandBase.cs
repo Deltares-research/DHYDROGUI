@@ -38,11 +38,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         protected abstract Cursor Cursor { get; }
 
         /// <summary>
-        /// Creation delegate to be inserted in the layer when this command is activated
-        /// </summary>
-        //protected abstract Func<IFeature> CreateNew { get; }
-        
-        /// <summary>
         /// Name of the maptool associated with this command
         /// </summary>
         protected abstract IMapTool CurrentTool { get; }

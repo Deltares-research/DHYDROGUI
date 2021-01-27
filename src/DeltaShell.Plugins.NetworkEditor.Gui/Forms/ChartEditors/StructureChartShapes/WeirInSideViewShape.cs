@@ -39,8 +39,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         private IShapeFeature GetWeirShape()
         {
-            //const double zMinValue = -1000;
-            //const double zMaxValue = 1000;
             double zMinValue = ChartCoordinateService.ToWorldY(Chart, Chart.ChartBounds.Bottom);
             double zMaxValue = ChartCoordinateService.ToWorldY(Chart, Chart.ChartBounds.Top);
             

@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
             {
                 throw new ArgumentException("Chainage can not be negative.", "chainage");
             }
-            //if (chainage > branchFeature.Branch.Geometry.Length)
+
             if (chainage > branchFeature.Branch.Length)
             {
                 throw new ArgumentException("Chainage can not exceed the length of the channel.", "chainage");

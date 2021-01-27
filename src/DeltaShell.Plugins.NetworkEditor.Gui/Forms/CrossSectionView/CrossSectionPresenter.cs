@@ -5,13 +5,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
     internal class CrossSectionPresenter : ICanvasEditor
     {
-        /*CrossSectionView CrossSectionView { get; set; }
-
-        internal CrossSectionPresenter(CrossSectionView crossSectionView)
-        {
-            CrossSectionView = crossSectionView;
-        }*/
-
         public bool CanSelectItem
         {
             get { return false; }
@@ -66,13 +59,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             get
             {
                 throw new NotImplementedException();
-                
-                //return CrossSectionView.ToolEnabled(typeof(AddPointTool));
             }
             set
             {
                 throw new NotImplementedException();
-                //CrossSectionView.EnableTool(typeof(AddPointTool), value);
             }
         }
 

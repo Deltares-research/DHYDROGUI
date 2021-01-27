@@ -102,7 +102,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
                 ChartCoordinateService.ToDeviceX(worldPosition.X),
                 ChartCoordinateService.ToDeviceY(worldPosition.Y));
              
-            //DistanceOp distanceOp = new DistanceOp(ShapeFeature.Geometry, GeometryFactory.CreatePoint(worldPosition));
             DistanceOp distanceOp = new DistanceOp(lineString, GeometryFactory.CreatePoint(deviceCoordinate));
             GeometryLocation[] closestLocations = distanceOp.ClosestLocations();
             if (-1 == closestLocations[0].SegmentIndex) 

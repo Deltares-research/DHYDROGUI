@@ -26,7 +26,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             {
                 Rectangle rectangle = borderShape.GetBounds();
                 double worldHeight = chartCoordinateService.ToWorldHeight(rectangle.Height);
-                //points.Add(GeometryFactory.CreatePoint(borderShape.X, RectangleSeriesShapeFeature.Y + RectangleSeriesShapeFeature.Height / 2));
                 points.Add(GeometryFactory.CreatePoint(borderShape.X, RectangleSeriesShapeFeature.Y + worldHeight / 2));
             }
         }

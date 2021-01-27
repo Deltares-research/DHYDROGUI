@@ -23,13 +23,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             : base(chart, offset, pump)
         {
             this.horizontalAxisIsReversed = horizontalAxisIsReversed;
-            
-            //get a shape for the image. Don't generate this one all the
-            //time since it contains our selection
-            /*Image image = DeliverySideIsLeft
-                              ? Properties.Resources.PumpSmallLeft
-                              : Properties.Resources.PumpSmallRight;
-            symbolShapeFeature = new SymbolShapeFeature(chart, offset, pump.OffsetZ) { Image = image };*/
         }
 
         protected override void CreateStyles()
@@ -224,7 +217,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
             double y = relevantZValues.Max();
 
-            //var height = top - bottom;
             var line = new FixedRectangleShapeFeature(Chart,
                                                          left,
                                                          y,
@@ -245,7 +237,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
             double y = relevantZValues.Min() ;
             
-            //var height = top - bottom;
             var line = new FixedRectangleShapeFeature(Chart,
                                                          left,
                                                          y,
@@ -269,7 +260,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
             double y = relevantZValues.Max();
 
-            //var height = top - bottom;
             var line = new FixedRectangleShapeFeature(Chart,
                                                          left,
                                                          y,
@@ -282,6 +272,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             
             return line;
         }
+
         private FixedRectangleShapeFeature GetRightBottomLine()
         {
             var left = -GetWorldWidth(2) + OffsetInSideView+ GetImageWidthInWorld() / 2;
@@ -293,7 +284,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
             //if delivery is left this is suction so the bottom is a off line
 
-            //var height = top - bottom;
             var line =  new FixedRectangleShapeFeature(Chart,
                                                   left,
                                                   y,

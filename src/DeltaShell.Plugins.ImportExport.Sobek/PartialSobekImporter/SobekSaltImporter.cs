@@ -231,28 +231,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (boundaryNodeData == null)
                 {
                     log.ErrorFormat("No boundary data for node {0}", featureId);
-                    continue;
-                }
-
-                if (SaltBoundaryNodeType.ZeroFlux == sobekSaltNodeBoundary.SaltBoundaryNodeType)
-                {
-                    //boundaryNodeData.SaltConditionType = SaltBoundaryConditionType.None;
-                }
-                else
-                {
-                    // switch (sobekSaltNodeBoundary.SaltStorageType)
-                    // {
-                    //     case SaltStorageType.Constant:
-                    //         boundaryNodeData.SaltConcentrationConstant = sobekSaltNodeBoundary.ConcentrationConst;
-                    //         break;
-                    //     case SaltStorageType.FunctionOfTime:
-                    //         boundaryNodeData.SaltConditionType = SaltBoundaryConditionType.TimeDependent;
-                    //         DataTableHelper.SetTableToFunction(
-                    //             sobekSaltNodeBoundary.ConcentrationTable, boundaryNodeData.SaltConcentrationTimeSeries);
-                    //         break;
-                    // }
-                    //
-                    // boundaryNodeData.ThatcherHarlemannCoefficient = sobekSaltNodeBoundary.TimeLag;
                 }
             }
         }

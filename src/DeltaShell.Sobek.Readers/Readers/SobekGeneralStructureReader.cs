@@ -26,9 +26,6 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         public ISobekStructureDefinition GetStructure(string text)
         {
-            //string source = @"w1 1 wl 1 ws 1 wr 1 w2 1 z1 2 zl 2 zs 2 zr 2 z2 2 gh 5 pg 0.5 pd 0.3 pi 0.52 pr 0.9 pc 0.8 ng 0.3 " +
-            //                @"nd 0.12 nf 0.6 nr 0.5 nc 0.9 stds";
-
             // WHEN PROBLEMS PARSING STRUCTURE DEFINITION DUE TO SEQUENCE OF FIELDS 
             // SEE : SobekCulvertReader.GetStructure
             string pattern = RegularExpression.GetScientific("w1") +

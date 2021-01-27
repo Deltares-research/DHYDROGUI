@@ -7,10 +7,8 @@ using SharpMap.Converters.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors
 {
-    public class RectangleShapeEditor : ShapeFeatureEditor//, IShapeFeatureEditor
+    public class RectangleShapeEditor : ShapeFeatureEditor
     {
-        //public ShapeEditMode ShapeEditMode;
-
         public RectangleShapeEditor(IShapeFeature shapeFeature, IChartCoordinateService chartCoordinateService, ShapeEditMode shapeEditMode)
             : base(shapeFeature, chartCoordinateService, shapeEditMode)
         {

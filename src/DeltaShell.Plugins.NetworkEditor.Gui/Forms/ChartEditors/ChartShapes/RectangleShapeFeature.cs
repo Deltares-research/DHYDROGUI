@@ -40,7 +40,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         {
             var g = (ChartGraphics) chartDrawingContext.Graphics;
             var bounds = GetBounds();
-            // FillRectangle causes crash? g.FillRectangle(Brushes.YellowGreen, bounds.X, bounds.Y, bounds.Width, bounds.Height);
             g.Rectangle(bounds);
         }
 

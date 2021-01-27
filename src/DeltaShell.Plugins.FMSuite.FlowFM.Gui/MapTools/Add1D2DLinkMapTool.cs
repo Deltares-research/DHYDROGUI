@@ -162,7 +162,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             if (theme != null)
             {
                 var styleName = LinkType.GetDescription();
-                //var style = theme.GetStyle(LinkType) as VectorStyle;
                 var themeItem = theme.ThemeItems.FirstOrDefault(i => i.Label.Equals(styleName));
                 var style = themeItem?.Style as VectorStyle;
                 if (style != null)

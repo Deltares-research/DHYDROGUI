@@ -83,14 +83,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         public override void Render(Graphics graphics)
         {
-            if (movingBreachLocation)
-            {
-                //breachLocationTool.Render(graphics, mapBox);
-            }
-            else
-            {
-                base.Render(graphics);
-            }
+            if (movingBreachLocation) return;
+
+            base.Render(graphics);
         }
 
         private bool IsOnBreachLocation(Coordinate worldPosition)

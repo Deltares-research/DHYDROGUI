@@ -399,7 +399,6 @@
     <Compile Include="Forms\CompositeStructureView\StructureView.Designer.cs">
       <DependentUpon>StructureView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\CompositeStructureView\StructureViewHelper.cs" />
     <Compile Include="Forms\ComputationalGridDialog.cs">
       <SubType>Form</SubType>
     </Compile>

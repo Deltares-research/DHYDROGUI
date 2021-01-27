@@ -41,7 +41,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                 return null;
             }
 
-            // @"STRU id '13' nm 'steelcun' ci '1' lc 18270.969411203 stru";
+            // example: @"STRU id '13' nm 'steelcun' ci '1' lc 18270.969411203 stru";
 
             string pattern =
                 RegularExpression.GetExtendedCharacters("id") + "|" +

@@ -34,10 +34,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             var compositeStructure = (ICompositeBranchStructure)feature;
             foreach (var structure in compositeStructure.Structures)
             {
-                // #$# GeometryHelper.SetCoordinate(structure.Geometry, 0, newGeometry.Coordinates[0]);
                 IGeometry geometry = (IGeometry)structure.Geometry.Clone();
                 structure.Geometry = GeometryHelper.SetCoordinate(geometry, 0, newGeometry.Coordinates[0]);
-                // #$# 
             }
         }
 
@@ -70,11 +68,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             foreach (var structure in CompositeBranchStructure.Structures)
             {
-                //originalRelatedFeatures.Add(structure);
                 var clone = CloneStructure(structure, cloneCompositeBranchStructure);
                 clonedRelatedFeatures.Add(clone);
                 if (null != addRelatedFeature)
-                    addRelatedFeature(null/*activeRules*/, structure, clone, level);
+                    addRelatedFeature(null, structure, clone, level);
             }
         }
 

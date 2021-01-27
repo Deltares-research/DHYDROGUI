@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFo
         public SimpleWeirFormulaView()
         {
             InitializeComponent();
-            //textBoxDischargeCoefficient.GotFocus += textBoxDischargeCoefficient_GotFocus;
         }
 
         /// <summary>

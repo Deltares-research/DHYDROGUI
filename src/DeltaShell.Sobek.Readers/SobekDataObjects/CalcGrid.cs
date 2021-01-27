@@ -29,14 +29,5 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         {
             get { return gridPoints; }
         }
-
-        /*internal void AddValue(double offset, string id, string segmentId)
-        {
-            SobekCalcGridPoint sobekCalcGridPoint = new SobekCalcGridPoint();
-            sobekCalcGridPoint.Offset = offset;
-            sobekCalcGridPoint.Id = id;
-            sobekCalcGridPoint.SegmentId = segmentId;
-            gridPoints.Add(sobekCalcGridPoint);
-        }*/
     }
 }

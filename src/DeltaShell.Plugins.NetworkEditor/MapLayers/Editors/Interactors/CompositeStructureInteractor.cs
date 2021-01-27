@@ -169,7 +169,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         }
         public override void Delete()
         {
-            //Layer.DataSource.Features.Remove(SourceFeature);
             var compositeBranchStructure = (ICompositeBranchStructure)SourceFeature;
             if (null == compositeBranchStructure.Branch)
             {

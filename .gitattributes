@@ -2392,7 +2392,6 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CompositeStructureView/StructureP
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CompositeStructureView/StructureView.Designer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CompositeStructureView/StructureView.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CompositeStructureView/StructureView.resx -text
-src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/CompositeStructureView/StructureViewHelper.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/ComputationalGridDialog.Designer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/ComputationalGridDialog.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/ComputationalGridDialog.resx -text

@@ -236,14 +236,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
                     }
                     break;
                 case YZTableYColumnIndex:
-                    // e.Value.RowIndex < 0 when editing a newly added row
-                    //if (e.Value.RowIndex < 0)
-                    //{
-                    //    return;
-                    //}
                     if (null != PropertyChanged)
                     {
-                        //var value = tableViewYZ.GetCellValue(e.Value.RowIndex, e.Value.ColumnIndex);
                         int rowIndex = e.Value.RowIndex < 0 ? data.Count - 1 : e.Value.RowIndex;
                         PropertyChanged(data[rowIndex], new PropertyChangedEventArgs("X"));
                     }

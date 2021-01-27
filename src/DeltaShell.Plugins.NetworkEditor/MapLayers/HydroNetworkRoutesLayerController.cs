@@ -96,8 +96,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
             // remove all layers where coverage does not exist in network.Routes
             RoutesLayer.Layers.RemoveAllWhere(l => l is NetworkCoverageGroupLayer && !Network.Routes.Contains((Route) ((NetworkCoverageGroupLayer)l).NetworkCoverage));
 
-            // RoutesLayer.Layers.Clear();
-
             var count = 0;
             foreach (var route in Network.Routes)
             {

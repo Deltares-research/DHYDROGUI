@@ -151,7 +151,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
                     //seems like an integrated model without rtc
                     var rtcModel = new RealTimeControlModel();
                     hydroModel.Activities.Add(rtcModel);
-                    //rtcModel.UpgradeModelIntoIntegratedModel(hydroModel.GetTargetFolder());
                 }
                 hydroModel.RefreshDefaultModelWorkflows();
             }

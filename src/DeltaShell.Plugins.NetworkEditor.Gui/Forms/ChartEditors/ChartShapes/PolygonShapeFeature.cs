@@ -39,11 +39,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
         public override void Paint(IChartDrawingContext chartDrawingContext)
         {
             var g = (ChartGraphics)chartDrawingContext.Graphics;
-            //ChartBrush brush = new ChartBrush(Chart);
-            //ChartPen pen = new ChartPen(Chart, Color.Black);
-            /*g.Pen = pen;
-            g.Brush = brush;
-            g.BackColor = ((SolidBrush)chartDrawingContext.Style.Fill).Color;*/
             Point[] devicePoint = new Point[Geometry.Coordinates.Length];
             for (int i = 0; i < devicePoint.Length; i++)
             {
@@ -51,8 +46,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                 devicePoint[i].Y = ChartCoordinateService.ToDeviceY(Chart, Geometry.Coordinates[i].Y);
             }
             g.Polygon(devicePoint);
-            //brush.Dispose();
-            //pen.Dispose();
         }
 
         public override object Clone()

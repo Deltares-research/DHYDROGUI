@@ -640,7 +640,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                                   };
 
             shapeModifyTool.SelectionChanged += ShapeModifyToolSelectionChanged;
-            //shapeModifyTool.ShapeChanged += ShapeModifyToolShapeChanged;
 
             shapeModifyTool.SelectStyle = selectStyle;
             shapeModifyTool.DefaultStyle = defaultStyle;

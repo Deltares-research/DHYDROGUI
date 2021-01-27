@@ -16,8 +16,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             this.crossSection = crossSection;
             crossSection.HydroNetwork.SharedCrossSectionDefinitions.CollectionChanged += CrossSectionDefinitionsCollectionChanged;
             ((INotifyPropertyChanged)crossSection.HydroNetwork.SharedCrossSectionDefinitions).PropertyChanged += CrossSectionDefinitionsPropertyChanged;
-            //SharedDefinitionsBindingList = new BindingList<ICrossSectionDefinition>(crossSection.HydroNetwork.SharedCrossSectionDefinitions);
-            //TODO: subscribe etc
         }
 
         private void CrossSectionDefinitionsPropertyChanged(object sender, PropertyChangedEventArgs e)

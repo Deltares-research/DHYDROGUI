@@ -55,9 +55,6 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         public SobekCrossSectionDefinition GetCrossSectionDefinition(string text)
         {
-            //const string pattern =
-            //    @"id\s'(?<Id>" + RegularExpression.Characters + @")'\snm\s'(?<Name>" + RegularExpression.ExtendedCharacters + @")'\sty\s" +
-            //    "(?<Type>" + RegularExpression.Integer + @")\s(?<Structure>" + RegularExpression.CharactersAndQuote + @"?)\s+stds";
             const string pattern = @"id\s'(?<Id>" + RegularExpression.Characters + @")'\snm\s'(?<Name>" +
                                    RegularExpression.ExtendedCharacters + @")'\sty\s" + @"(?<Type>" +
                                    RegularExpression.Integer + @")" + @"\s(?<Structure>" +
@@ -278,8 +275,6 @@ namespace DeltaShell.Sobek.Readers.Readers
                                         @"w2\s*(?<floodplain2>" + RegularExpression.CharactersAndQuote + @"?) " +
                                         RegularExpression.CharactersAndQuote + @"lt lw(?<TabTable>" +
                                         RegularExpression.CharactersAndQuote + @"?)tble";
-            //lt lw (0|(?<StorageTable>" + CharactersAndQuote + @"?)tble)";// + 
-            //CharactersAndQuote + " lt lw(?<Structure>" + CharactersAndQuote + @"?)tble";
 
             var tableMatch = RegularExpression.GetFirstMatch(tablepattern, tableSource);
             if (tableMatch == null)

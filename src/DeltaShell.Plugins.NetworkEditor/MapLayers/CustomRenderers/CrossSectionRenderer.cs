@@ -33,11 +33,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
     public class CrossSectionRenderer : BranchFeatureRenderer
     {
         private const double minimumPixelLength = 16.0;
-        // Store all geometries for which we have updated the default geometry
-        // todo replace by HashSet<IFeature>
-        // The envelope that is used to calculate the default geometry
-        double defaultLength = 10;
-
+        
         /// <summary>
         /// Called for each feature that needs to be rendered. CrossSectionRenderer assumes it is always 
         /// added to a vectorlayer.
@@ -53,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             {
                 return false; 
             }
-            //var crossSection = (ICrossSection)feature;
+            
             //Linestring outlines is drawn by drawing the layer once with a thicker line
             //before drawing the "inline" on top.
             vectorLayer = layer as VectorLayer;
@@ -141,8 +137,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             }
 
             VectorRenderingHelper.RenderGeometry(g, layer.Map , currentGeometry, currentVectorStyle, 
-                null/*DefaultPointSymbol*/, vectorLayer.ClippingEnabled);
-            //lastRenderedCoordinatesCount += currentGeometry.Coordinates.Length;
+                null, vectorLayer.ClippingEnabled);
             return true;
         }
 

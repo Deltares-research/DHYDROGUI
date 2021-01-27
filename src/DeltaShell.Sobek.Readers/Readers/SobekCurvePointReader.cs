@@ -54,11 +54,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             {
                 double x = (double) row[0];
                 double y = (double) row[1];
-                //if ((branchGeometry.CurvingPoints.Count > 0) &&
-                //    (Math.Abs(branchGeometry.CurvingPoints[branchGeometry.CurvingPoints.Count - 1].)))
-                //{
-                //    continue;
-                //}
+
                 branchGeometry.CurvingPoints.Add(new CurvingPoint(x, y));
             }
             return branchGeometry;

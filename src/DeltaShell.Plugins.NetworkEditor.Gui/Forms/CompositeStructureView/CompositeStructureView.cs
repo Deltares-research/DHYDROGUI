@@ -34,12 +34,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             InitializeComponent();
             Load += delegate
                         {
-                            //presenter.ViewReady(); // <- should always be called first
                             tabControl1.SelectedIndexChanged += TabControl1SelectedIndexChanged;
                             CrossSectionStructureView.SelectionChanged += CrossSectionStructureViewSelectionChanged;
                             networkSideView1.SelectionChanged += networkSideView1_SelectionChanged;
-                            //presenter.ViewReady(); // <- should always be called first
                         };
+
             //hide chart header in this view.
             networkSideView1.AllowFeatureVisibilityChanges = false;
             networkSideView1.ChartHeaderVisible = false;

@@ -149,35 +149,6 @@ namespace DeltaShell.Plugins.NetworkEditor
                         },
                     AddExampleData = data => AddExampleDrainageBasinData(data)
                 };
-
-            //yield return new DataItemInfo<Area>
-            //{
-            //    Name = "Area",
-            //    Category = "Hydro",
-            //    Image = Properties.Resources.CrossSectionSmallWithExclamation,
-            //    AdditionalOwnerCheck = owner => !(owner is HydroRegion)
-            //                                    || !((HydroRegion)owner).SubRegions.OfType<Area>().Any(), // Support only a single area per region for now
-            //    CreateData = owner =>
-            //    {
-            //        var area = new Area();
-
-            //        var hydroRegion = owner as HydroRegion;
-            //        if (hydroRegion != null)
-            //        {
-            //            area.Name = NamingHelper.GetUniqueName("area{0}", hydroRegion.SubRegions);
-
-            //            hydroRegion.SubRegions.Add(area);
-            //        }
-
-            //        var folder = owner as Folder;
-            //        if (folder != null)
-            //        {
-            //            area.Name = NamingHelper.GetUniqueName("area{0}", folder.Items);
-            //        }
-
-            //        return area;
-            //    }
-            //};
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()

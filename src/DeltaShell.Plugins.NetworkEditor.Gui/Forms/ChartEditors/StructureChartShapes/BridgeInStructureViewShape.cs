@@ -69,7 +69,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// <param name="vectorStyle"></param>
         public override void Paint(VectorStyle vectorStyle)
         {
-            //base.Paint(vectorStyle);
             //custom paint logic :)
             CalculateShapeFeatures();
             base.Paint(vectorStyle);

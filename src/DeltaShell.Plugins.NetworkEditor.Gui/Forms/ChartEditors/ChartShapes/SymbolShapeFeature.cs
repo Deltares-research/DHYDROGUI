@@ -44,7 +44,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                     case SymbolShapeFeatureHorizontalAlignment.Left:
                         return X;
                     default:
-                        //case SymbolShapeFeatureHorizontalAlignment.Center:
                         return X - ChartCoordinateService.ToWorldWidth(Chart, Image.Width)/2;
                     case SymbolShapeFeatureHorizontalAlignment.Right:
                         return X + ChartCoordinateService.ToWorldWidth(Chart, Image.Width);
@@ -94,8 +93,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             if (!Active)
             {
                 g.Draw(GetBounds(), GetGraysImage(Image), false);
-                //g.BackColor = Color.FromArgb(100, Color.Magenta);
-                //g.Rectangle(GetBounds());
             }
             else if (Selected)
             {

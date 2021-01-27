@@ -344,29 +344,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         {
                             var project = Gui.Application.Project;
                             var coverages = project.GetAllItemsRecursive().OfType<ICoverage>().Distinct();
-                            var manager = new NetworkSideViewCoverageManager(o, (INotifyCollectionChange) project,
-                                                                             coverages)
+                            var manager = new NetworkSideViewCoverageManager(o, project, coverages)
                                 {
                                     OnRouteRemoved = () => Gui.DocumentViews.Remove(v)
                                 };
                             v.DataController = new NetworkSideViewDataController(o, manager, GetModelNameForCoverage);
                         },
-                    /*WIP
-                     OnActivateView = (view, o) =>
-                    {
-                        var project = Gui.Application.Project;
-                        var coverages = project.GetAllItemsRecursive().OfType<INetworkCoverage>().Distinct().Where(nc => nc.Name.Equals(NetworkSideViewDataController.WaterLevelCoverageNameInMapFile) && nc.IsTimeDependent);
-                        //view.DataController.WaterLevelNetworkCoverage
-                        /*foreach (var networkCoverage in coverages)
-                        {
-                            if(view.DataController.AllNetworkCoverages.Contains(networkCoverage)) continue;
-                            var comperator = new NetworkStructureComparer();
-                            if (comperator.Equals(networkCoverage.Network, view.DataController.NetworkRoute.Network))
-                                
-                            view.DataController.AddRenderedCoverage(networkCoverage);
-                        }#1#
-                        
-                    }*/
                 };
             yield return new ViewInfo<HydroRegionFromGisImporter, ImportHydroNetworkFromGisWizardDialog>
                 {
@@ -667,28 +650,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 item.Visible = eventedList.OfType<IGroupableFeature>().Where(g => string.IsNullOrWhiteSpace(g.GroupName)).OfType<TFeature>().Any();
             }
         }
-        
-        /*        private static void RemoveUngroupedItems<TFeature>(IEventedList<TFeature> eventedList)
-        {
-            var itemsToRemove = eventedList.OfType<IGroupableFeature>()
-                .Where(g => string.IsNullOrWhiteSpace(g.GroupName))
-                .OfType<TFeature>()
-                .ToList();
-
-            itemsToRemove.ForEach(f => eventedList.Remove(f));
-        }
-
-        private static void RemoveGroup<TFeature>(IEventedList<TFeature> eventedList, string group)
-        {
-            var itemsToRemove = eventedList.OfType<IGroupableFeature>()
-                .Where(g => g.GroupName == group)
-                .OfType<TFeature>()
-                .ToList();
-
-            itemsToRemove.ForEach(f => eventedList.Remove(f));
-        }
-        
-             */
 
         private static void ConfigureAreaFeatureRowCreation<T>(VectorLayerAttributeTableView view) where T : IStructure1D
         {
@@ -1049,7 +1010,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     }
                     break;
                 case NotifyCollectionChangedAction.Replace:
-                    //throw new NotImplementedException();
                     break;
 
                 case NotifyCollectionChangedAction.Add:

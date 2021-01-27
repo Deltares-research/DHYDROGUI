@@ -275,8 +275,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void ViewGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            /*SetViewGridSize();
-            ViewModel.SetShapesPixelValues();*/
         }
 
         private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)

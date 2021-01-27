@@ -167,7 +167,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         public string YOffSet
         {
             get { return string.Format("{0:0.##}", data.OffsetY); }
-            //set { weir.OffsetY = double.Parse(value); }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]

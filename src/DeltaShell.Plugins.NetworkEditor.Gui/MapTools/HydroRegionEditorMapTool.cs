@@ -587,7 +587,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var branch = (IBranch) MapControl.SnapTool.SnapResult.SnappedFeature;
             double offset = GeometryHelper.Distance((ILineString) branch.Geometry, geometry.Coordinates[0]);
 
-            //double distance = GeometryHelper.Distance((ILineString)branch.Geometry, branchFeature.Geometry.Coordinates[0]);
             if (branch.IsLengthCustom)
             {
                 offset *= branch.Length / branch.Geometry.Length;
@@ -709,8 +708,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 TopologyRulesEnabled = true;
             }
-
-            //log.DebugFormat("Mouse down");
 
             if (e.Button != MouseButtons.Right)
             {

@@ -113,14 +113,12 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         public SobekBedFrictionData MainFriction { get; set; }
         public SobekBedFrictionData FloodPlain1Friction { get; set; }
         public SobekBedFrictionData FloodPlain2Friction { get; set; }
-        //public SobekBedFrictionData GroundLayerFriction { get; set; }
 
         public SobekBedFriction()
         {
             MainFriction = new SobekBedFrictionData();
             FloodPlain1Friction = new SobekBedFrictionData();
             FloodPlain2Friction = new SobekBedFrictionData();
-            //GroundLayerFriction = new SobekBedFrictionData();
         }
     }
 }

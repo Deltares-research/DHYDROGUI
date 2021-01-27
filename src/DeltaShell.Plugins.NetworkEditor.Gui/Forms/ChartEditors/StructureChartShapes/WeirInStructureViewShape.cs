@@ -59,8 +59,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                     NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir),
                                     SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir)
                                 };
-                //gatedWeirShape.NormalStyle = StructureShapeStyleProvider.GetNormalStyleForStructure(weir);
-                //gatedWeirShape.SelectedStyle = StructureShapeStyleProvider.GetSelectedStyleForStructure(weir);
                 gatedWeirShape.WaterStyle = new VectorStyle
                                                               {
                                                                   Line = Pens.Transparent,

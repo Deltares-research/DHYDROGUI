@@ -42,13 +42,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private void ChangeValue(double oldValue, double newValue, double value)
         {
             var sel = FreeFormatWeirShapeFeature.CrestShape.Where(c => c.X == oldValue).FirstOrDefault();
-            //FreeFormatWeirShapeFeature.CrestShape.RemoveValues(
-            //        new VariableValueFilter(FreeFormatWeirShapeFeature.CrestShape.Arguments[0], new[] { oldValue }));
-            //FreeFormatWeirShapeFeature.CrestShape[newValue] = value;
             sel.X = newValue;
             sel.Y = value;
-            ///FreeFormatWeirShapeFeature.UpdateGeometry();
-            ///CreateTrackers();
         }
 
         public override bool MoveTracker(IPoint trackerFeature, Coordinate worldPosition, double deltaX, double deltaY)
@@ -76,9 +71,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 geometry.GeometryChangedAction();
 
                 // Note: the startpoint/ endpoint is not directly editable
-                //FreeFormatWeirShapeFeature.ChangeValue(trackerFeature.X - FreeFormatWeirShapeFeature.Weir.OffsetY,
-                //    trackerFeature.X + deltaX - FreeFormatWeirShapeFeature.Weir.OffsetY,
-                //    trackerFeature.Y + deltaY);
                 FreeFormatWeirShapeFeature.ChangeValue(moveIndex,
                     trackerFeature.X + deltaX - FreeFormatWeirShapeFeature.Weir.OffsetY,
                     trackerFeature.Y + deltaY);
@@ -97,7 +89,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                     GeometryHelper.MoveCoordinate(geometry, geometry.Coordinates.Length - 1, deltaX, 0);
                 }
                 UpdateEnvelopeInternal(geometry);
-                //ShapeFeature.Geometry.GeometryChangedAction();
 
                 ChangeValue(trackerFeature.X - FreeFormatWeirShapeFeature.Weir.OffsetY,
                     trackerFeature.X + deltaX - FreeFormatWeirShapeFeature.Weir.OffsetY,
@@ -153,7 +144,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         public override SnapResult Snap(Coordinate worldPosition, double width, double height)
         {
-            //double worldPositionX = worldPosition.X - FreeFormatWeirShapeFeature.Weir.OffsetY; 
             // do not allow snapping outside the curent width of the weir
             IGeometry geometry = FreeFormatWeirShapeFeature.PolygonShapeFeature.Geometry;
             if (worldPosition.X <= (points[0].X + 1.0e-6))
@@ -189,9 +179,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         public override void InsertCoordinate(Coordinate worldPosition, double width, double height)
         {
             IGeometry geometry = FreeFormatWeirShapeFeature.PolygonShapeFeature.Geometry;
-            //throw new NotImplementedException("todo implement insert coordinates");
-            /// To avoid odd effects due to an odd aspect ratio first translate to screen coordinates and then the visual 
-            /// nearest point is also the nearest point returned by
+            // To avoid odd effects due to an odd aspect ratio first translate to screen coordinates and then the visual 
+            // nearest point is also the nearest point returned by
             if (!(geometry is IPolygon))
             {
                 throw new ArgumentException("Geometry is not a polygon");
@@ -227,7 +216,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
             if (CanDeleteTracker(trackerFeature))
             {
-                //List<ICoordinate> vertices = new List<ICoordinate>();
                 IGeometry geometry = FreeFormatWeirShapeFeature.PolygonShapeFeature.Geometry;
 
                 if (!(geometry is IPolygon))
@@ -264,7 +252,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         public override void Start()
         {
-            //FreeFormatWeirShapeFeature.CrestShape.ValuesChanged += CrestShape_ValuesChanged;
         }
 
         void CrestShape_ValuesChanged(object sender, FunctionValuesChangingEventArgs e)
@@ -274,7 +261,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         public override void Stop()
         {
-            //FreeFormatWeirShapeFeature.CrestShape.ValuesChanged -= CrestShape_ValuesChanged;
         }
 
     }

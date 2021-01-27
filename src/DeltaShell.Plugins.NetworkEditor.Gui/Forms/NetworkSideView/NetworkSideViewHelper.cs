@@ -121,7 +121,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             lineSeries.PointerStyle = PointerStyles.Nothing;
             // areaSeries.PointerVisible: only visible effect is shapes are no longer filled with style brush
             // and legendline is thick
-            // areaSeries.PointerVisible = false;  
             lineSeries.CheckDataSource();
             lineSeries.UpdateASynchronously = true;
             return lineSeries;
@@ -144,7 +143,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             pointSeries.Size = pointerSize;
             // areaSeries.PointerVisible: only visible effect is shapes are no longer filled with style brush
             // and legendline is thick
-            // areaSeries.PointerVisible = false;  
             pointSeries.CheckDataSource();
             return pointSeries;
         }
@@ -173,7 +171,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             areaSeries.PointerStyle = PointerStyles.Nothing;
             // areaSeries.PointerVisible: only visible effect is shapes are no longer filled with style brush
             // and legendline is thick
-            // areaSeries.PointerVisible = false;
             areaSeries.UpdateASynchronously = true;
             areaSeries.CheckDataSource();
             return areaSeries;

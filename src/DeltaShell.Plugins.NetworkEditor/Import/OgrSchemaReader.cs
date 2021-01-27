@@ -56,7 +56,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         {
             get
             {
-                //var sql = "SELECT table_name FROM MSysObjects.Tables WHERE TABLE_TYPE = 'BASE TABLE'";
                 var sql = "SELECT [Name] FROM MSysObjects WHERE [Type] = 1";
                return GetFirstColumnAsValuesListFromLayer(ogrDataSource.ExecuteSQL(sql, null,null));
             }

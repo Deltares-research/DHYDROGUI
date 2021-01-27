@@ -177,7 +177,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                     visibleSelection = ((ICompositeBranchStructure) visibleSelection).Structures[0];
                 }
                 View.CrossSectionStructureView.SelectedStructure = visibleSelection;
-                //this.View.SideView.SelectedStructure = structure;
                 View.SideView.SelectedFeature = visibleSelection;
             }
         }

@@ -164,7 +164,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public override void Paint(VectorStyle style)
         {
-            //base.Paint(style);
             ShapeFeatures.ForEach(cs => cs.Paint(style));
             BorderShapes.ForEach(cs => cs.Paint(style));
         }

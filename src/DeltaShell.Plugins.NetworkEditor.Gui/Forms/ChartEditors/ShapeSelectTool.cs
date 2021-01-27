@@ -47,7 +47,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                             IPoint tracker = GetTrackerAt(ShapeFeatureEditor, tmP);
                             if (null != tracker)
                             {
-                                //Chart.Zoom.Active = false; // zoom is not a tool thus CancelMouse is ignored
                                 ShapeModifyTool.Chart.CancelMouseEvents = true;
                                 ShapeFeatureEditor.CurrentTracker = tracker;
                                 return;
@@ -56,23 +55,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                             ShapeModifyTool.SelectedShape = null;
                         }
                         IShapeFeature selectedShape = ShapeModifyTool.Clicked(tmP.X, tmP.Y);
-                        SelectShape(selectedShape);    
-                        
-                        
-                        //ShapeModifyTool.SelectedShape = selectedShape;
-                        //if (null != selectedShape)
-                        //{
-                        //    selectedShape.Selected = true;
-                        //    ShapeFeatureEditor = selectedShape.CreateShapeFeatureAccessor(ShapeModifyTool.ShapeEditMode);
-                        //}
-                        //else
-                        //{
-                        //    ShapeFeatureEditor = null;
-                        //}
+                        SelectShape(selectedShape);
                         ShapeModifyTool.Invalidate();
-                    } //if (Utils.GetMouseButton(e) == MouseButtons.Left)
+                    }
                     break;
-            } // switch (kind)
+            }
         }
 
         public void SelectShape(IShapeFeature shapeFeature)

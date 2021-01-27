@@ -74,11 +74,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
             backGround = null;
         }
 
-        public override void Paint()
-        {
-            //PaintHovers();
-        }
-
         private void PaintHovers(Graphics graphics)
         {
             var usedSpace = new List<Rectangle>();

@@ -70,7 +70,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             wind.Arguments.Add(new Variable<DateTime>("time"));
             wind.Components.Add(new Variable<double>("velocity"));
             wind.Components.Add(new Variable<double>("direction"));
-            //DataTable wind = velocity.Clone();
+
             List<DateTime> times = new List<DateTime>();
             foreach (DataRow row in velocity.Rows)
             {
