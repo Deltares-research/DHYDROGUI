@@ -4117,7 +4117,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public string ExplicitWorkingDirectory { get; set; }
 
-        internal void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged(string propertyName)
         {
             OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }

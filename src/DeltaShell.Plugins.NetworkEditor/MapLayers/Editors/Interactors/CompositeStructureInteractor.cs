@@ -131,10 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             var oldBranch = compositeBranchStructure.Branch;
             var structures = compositeBranchStructure.Structures.ToList();
 
-            if (channel != null)
-            {
-                channel.BranchFeatures.Remove(compositeBranchStructure);
-            }
+            channel?.BranchFeatures.Remove(compositeBranchStructure);
 
             compositeBranchStructure.Branch = null;
 
@@ -153,9 +150,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 structure.Geometry = (IGeometry)branchFeature.Geometry.Clone();
                 if (oldBranch != compositeBranchStructure.Branch)
                 {
-                    channel.BranchFeatures.Remove(structure);
+                    channel?.BranchFeatures.Remove(structure);
                     structure.Branch = compositeBranchStructure.Branch;
-                    compositeBranchStructure.Branch.BranchFeatures.Add(structure);
+                    compositeBranchStructure.Branch?.BranchFeatures.Add(structure);
                 }
             }
         }

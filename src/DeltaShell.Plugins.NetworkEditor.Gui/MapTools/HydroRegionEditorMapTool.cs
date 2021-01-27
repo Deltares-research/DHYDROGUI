@@ -1054,7 +1054,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             catch (ArgumentException ex)
             {
                 //isn't a dialog more appropriate..
-                log.ErrorFormat("An error occured while removing node '{0}': {1}", currentNode.Name, ex.Message);
+                log.ErrorFormat("An error occured while removing node '{0}': {1}", currentNode?.Name, ex.Message);
             }
 
             MapControl.SelectTool.RefreshSelection();

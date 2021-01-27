@@ -101,9 +101,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             }
             t.ParentStructure = parentStructure;
             if (-1 != newIndex)
-                parentStructure.Structures.Insert(newIndex, t);
+                parentStructure?.Structures.Insert(newIndex, t);
             else
-                parentStructure.Structures.Add(t);
+                parentStructure?.Structures.Add(t);
         }
 
         private void AddStructureToNewCompositeStructure(IStructure1D structure)
