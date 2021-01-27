@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.TestUtils
         /// <summary>
         /// Gets or sets the number of calls.
         /// </summary>
-        public int NCalls { get; set; } = 0;
+        public int NCalls { get; private set; } = 0;
 
         /// <summary>
         /// Gets the senders observed.
