@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects.StructuresObjects.KnownProperties;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 

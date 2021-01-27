@@ -7,7 +7,6 @@ using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
-using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;

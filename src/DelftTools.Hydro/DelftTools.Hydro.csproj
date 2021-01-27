@@ -200,7 +200,7 @@
     <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\IStructureFormula.cs" />
     <Compile Include="Area\Objects\StructuresObjects\KnownProperties\KnownGeneralStructureProperties.cs" />
     <Compile Include="Area\Objects\StructuresObjects\KnownProperties\KnownStructureProperties.cs" />
-    <Compile Include="Structures\GuiParameterNames.cs" />
+    <Compile Include="Area\Objects\StructuresObjects\GuiParameterNames.cs" />
     <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\SimpleGateFormula.cs" />
     <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\GeneralStructureFormula.cs" />
     <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\IGatedStructureFormula.cs" />

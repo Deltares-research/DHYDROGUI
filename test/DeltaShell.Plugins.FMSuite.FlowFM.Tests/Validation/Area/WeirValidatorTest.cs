@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;

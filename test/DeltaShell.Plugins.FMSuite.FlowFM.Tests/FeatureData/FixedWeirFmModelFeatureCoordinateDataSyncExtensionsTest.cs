@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Geometries;

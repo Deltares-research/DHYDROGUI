@@ -6,7 +6,6 @@ using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;

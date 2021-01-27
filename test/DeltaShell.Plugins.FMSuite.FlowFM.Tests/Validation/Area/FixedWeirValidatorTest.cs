@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;

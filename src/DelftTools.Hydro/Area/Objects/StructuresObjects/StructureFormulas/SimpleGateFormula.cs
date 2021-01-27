@@ -1,6 +1,5 @@
 ﻿using System;
 using DelftTools.Functions;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 

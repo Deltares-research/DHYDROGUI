@@ -1,6 +1,5 @@
 ﻿using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
-using DelftTools.Hydro.Structures;
 
 namespace DelftTools.Hydro.Area.Objects.StructuresObjects
 {
