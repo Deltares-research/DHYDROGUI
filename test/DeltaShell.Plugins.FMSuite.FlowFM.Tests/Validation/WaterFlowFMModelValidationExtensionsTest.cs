@@ -381,6 +381,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual("Output Parameters", ((FmValidationShortcut) viewData).TabName);
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Validate_PhysicalProcesses_CompositeHeatFluxModelTypeWithoutMeteoData_AddsExpectedValidationIssueToValidationReport()
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                string compositeHeatFluxModelType = ((int) HeatFluxModelType.Composite).ToString();
+                model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(compositeHeatFluxModelType);
+                
+                // Precondition
+                Assert.That(model.ModelDefinition.HeatFluxModel.MeteoData.GetValues<double>().Any(), Is.False);
+                
+                // Call
+                ValidationReport report = model.Validate();
+
+                // Assert
+                Assert.That(report, Is.Not.Null);
+
+                ValidationReport physicalProcessesReport = report.SubReports.SingleOrDefault(r => r.Category.Equals("Physical Processes"));
+                Assert.That(physicalProcessesReport, Is.Not.Null);
+
+                const string expectedError = "Composite Model option is selected for Temperature, however no Meteo Data was specified.";
+                ValidationIssue heatFluxModelMeteoDataIssue = physicalProcessesReport.GetAllIssuesRecursive()
+                                                                                     .SingleOrDefault(i => i.Message == expectedError);
+                Assert.That(heatFluxModelMeteoDataIssue, Is.Not.Null);
+                Assert.That(heatFluxModelMeteoDataIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
+                
+                object viewData = heatFluxModelMeteoDataIssue.ViewData;
+                Assert.IsInstanceOf<HeatFluxModel>(viewData);
+            }
+        }
+
         private static void CreateSedimentFraction(SpatiallyVaryingSedimentProperty<double> thickProp, WaterFlowFMModel fmModel)
         {
             var testSedimentType = new SedimentType

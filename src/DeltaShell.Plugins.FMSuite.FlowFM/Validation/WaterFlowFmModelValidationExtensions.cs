@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateCoordinateSystem(model),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateBathymetry(model),
-                ValidatePhysicalProcesses(model),
+                ValidatePhysicalProcesses(model, model.ModelDefinition.HeatFluxModel),
                 WaterFlowFMWindValidator.Validate(model),
                 WaterFlowFMModelDefinitionValidator.Validate(model),
                 WaterFlowFMBoundaryConditionValidator.Validate(model),
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return sedimentThicknessDataItems.Select(di => di.Value as UnstructuredGridCoverage).Where(c => c != null);
         }
 
-        private static ValidationReport ValidatePhysicalProcesses(WaterFlowFMModel model)
+        private static ValidationReport ValidatePhysicalProcesses(WaterFlowFMModel model, HeatFluxModel heatFluxModel)
         {
             var issues = new List<ValidationIssue>();
 
@@ -133,6 +133,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                                "Diffusivity contains unspecified points, the calculation kernel will replace these with default values"));
             }
 
+            if (model.HeatFluxModelType == HeatFluxModelType.Composite
+                && !heatFluxModel.MeteoData.GetValues<double>().Any())
+            {
+                issues.Add(new ValidationIssue(model, 
+                                               ValidationSeverity.Error, 
+                                               Resources.ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_temperature_but_no_meteo_data_was_specified, 
+                                               heatFluxModel));
+            }
+            
             return new ValidationReport("Physical Processes", issues);
         }
 

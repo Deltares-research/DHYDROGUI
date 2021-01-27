@@ -1216,6 +1216,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Composite Model option is selected for Temperature, however no Meteo Data was specified..
+        /// </summary>
+        public static string ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_temperature_but_no_meteo_data_was_specified {
+            get {
+                return ResourceManager.GetString("ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_t" +
+                        "emperature_but_no_meteo_data_was_specified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to thin dam &apos;{0}&apos; not within grid extent.
         /// </summary>
         public static string WaterFlowFMArea2DValidator_Validate_thin_dam___0___not_within_grid_extent {
