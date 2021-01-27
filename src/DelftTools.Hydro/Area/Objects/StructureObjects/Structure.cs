@@ -1,4 +1,5 @@
-﻿using DelftTools.Functions;
+﻿using System.ComponentModel;
+using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Aop;
@@ -55,6 +56,8 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
 
         public bool IsDefaultGroup { get; set; } = false;
 
+        [DisplayName("Name")]
+        [FeatureAttribute(Order = 1)]
         public string Name { get; set; } = "Structure";
 
         /// <summary>
@@ -63,7 +66,13 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
         public string FormulaName => Formula?.Name;
 
         public IStructureFormula Formula { get; set; }
+        
+        [ReadOnly(true)]
+        [DisplayName("Formula")]
+        [FeatureAttribute(Order = 5)]
+        public string WeirFormula => Formula?.Name;
 
+        [FeatureAttribute(Order = 6)]
         public double CrestWidth
         {
             get => Formula is GeneralStructureFormula formula 
@@ -82,6 +91,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
 
         public bool UseCrestLevelTimeSeries { get; set; }
 
+        [FeatureAttribute(Order = 7)]
         public double CrestLevel
         {
             get => Formula is GeneralStructureFormula formula
