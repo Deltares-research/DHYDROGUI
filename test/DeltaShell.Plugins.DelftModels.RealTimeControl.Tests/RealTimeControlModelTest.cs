@@ -23,8 +23,8 @@ using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         {
             Assert.That(new RealTimeControlModel().CanRun, Is.False);
         }
-        
+
         [Test]
         public void DimrModelRelativeOutputDirectory_ShouldReturnDirectoryNamePlusOutputDirectoryName()
         {
@@ -302,7 +302,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // Assert
                 Assert.That(model.OutputIsEmpty, Is.False);
-                
+
                 RestartFile[] restartOutput = model.RestartOutput.ToArray();
                 Assert.That(restartOutput, Has.Length.EqualTo(5));
 
@@ -390,18 +390,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
                 CreateRestartFiles(tempDir, rtcFolderName);
                 model.ConnectOutput(rtcDirectory);
-                
+
                 // Precondition
                 Assert.That(model.OutputOutOfSync, Is.False);
-                
+
                 // When
                 model.StartTime = DateTime.Now;
-                
+
                 // Then
                 Assert.That(model.OutputOutOfSync, Is.True);
             }
         }
-        
+
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void GivenRealTimeControlModel_WhenSetStopTime_ThenOutputMarkedOutOfSync()
@@ -412,18 +412,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
                 CreateRestartFiles(tempDir, rtcFolderName);
                 model.ConnectOutput(rtcDirectory);
-                
+
                 // Precondition
                 Assert.That(model.OutputOutOfSync, Is.False);
-                
+
                 // When
                 model.StopTime = DateTime.Now;
-                
+
                 // Then
                 Assert.That(model.OutputOutOfSync, Is.True);
             }
         }
-        
+
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void GivenRealTimeControlModel_WhenSetTimeStep_ThenOutputMarkedOutOfSync()
@@ -434,18 +434,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
                 CreateRestartFiles(tempDir, rtcFolderName);
                 model.ConnectOutput(rtcDirectory);
-                
+
                 // Precondition
                 Assert.That(model.OutputOutOfSync, Is.False);
-                
+
                 // When
                 model.TimeStep = TimeSpan.FromDays(1);
-                
+
                 // Then
                 Assert.That(model.OutputOutOfSync, Is.True);
             }
         }
-        
+
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void GivenRealTimeControlModel_WhenSetWriteRestart_ThenOutputMarkedOutOfSync()
@@ -456,18 +456,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
                 CreateRestartFiles(tempDir, rtcFolderName);
                 model.ConnectOutput(rtcDirectory);
-                
+
                 // Precondition
                 Assert.That(model.OutputOutOfSync, Is.False);
-                
+
                 // When
                 model.WriteRestart = true;
-                
+
                 // Then
                 Assert.That(model.OutputOutOfSync, Is.True);
             }
         }
-        
+
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void GivenRealTimeControlModel_WhenSetRestartInput_ThenOutputMarkedOutOfSync()
@@ -478,13 +478,79 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
                 CreateRestartFiles(tempDir, rtcFolderName);
                 model.ConnectOutput(rtcDirectory);
-                
+
                 // Precondition
                 Assert.That(model.OutputOutOfSync, Is.False);
-                
+
                 // When
                 model.RestartInput = new RealTimeControlRestartFile();
-                
+
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetSaveStateStopTime_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+
+                // When
+                model.SaveStateStopTime = DateTime.Now;
+
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetSaveStateStartTime_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+
+                // When
+                model.SaveStateStartTime = DateTime.Now;
+
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetSaveStateTimeStep_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+
+                // When
+                model.SaveStateTimeStep = TimeSpan.FromDays(2);
+
                 // Then
                 Assert.That(model.OutputOutOfSync, Is.True);
             }
@@ -1618,8 +1684,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.OpenProject(pathPersistentFolder);
 
                 // Then
-                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
-                Assert.AreEqual(pathPersistentFolder, ((IFileBased)rtcModel).Path);
+                Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
+                Assert.AreEqual(pathPersistentFolder, ((IFileBased) rtcModel).Path);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
@@ -1810,11 +1876,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.Save(pathAfterSave);
 
-
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
 
-                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
@@ -1846,11 +1911,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 rtcModel.Name = "rtc2";
                 frameworkSimulator.Save(pathAfterSave);
 
-
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
 
-                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
@@ -1880,19 +1944,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.NewProject(pathBeforeSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.FirstSave(pathAfterSave);
-                
+
                 // test precondition
                 Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
 
                 rtcModel.Name = "rtc2";
                 frameworkSimulator.Save(pathAfterSave);
 
-
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
                 Assert.IsFalse(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
 
-                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
@@ -1934,13 +1997,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.Save(pathAfterSave);
-                
+
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryAfterSave, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
                 Assert.IsFalse(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
                 Assert.IsTrue(Directory.Exists(Path.Combine(workingDirectoryForRunning, rtcModel.DirectoryName, DirectoryNameConstants.OutputDirectoryName)));
 
-                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
@@ -1980,12 +2043,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 rtcModel.Name = "rtc2";
                 frameworkSimulator.SaveAs(pathAfterSecondSaveAs);
 
-
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryAfterSecondSaveAs, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
                 Assert.IsTrue(Directory.Exists(Path.Combine(projectDirectoryAfterSave, "rtc1")));
 
-                Assert.IsTrue(((IFileBased)rtcModel).IsOpen);
+                Assert.IsTrue(((IFileBased) rtcModel).IsOpen);
                 Assert.AreEqual(1, rtcModel.OutputDocuments.Count);
             }
         }
@@ -2015,7 +2077,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 SimulateRun(rtcModel, workingDirectoryForRunning);
 
                 ReadOnlyTextFileData[] outputDocumentsBeforeClear = rtcModel.OutputDocuments.ToArray();
-                
+
                 rtcModel.ClearOutput(true);
                 frameworkSimulator.FirstSave(pathAfterSave);
 
@@ -2026,7 +2088,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.That(rtcModel.OutputDocuments.Count, Is.EqualTo(0));
             }
         }
-        
+
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenSavedProjectWithRTCOutput_WhenClearOutputAndSaveAs_ThenNoOutputFolderWrittenToNewProjectFolder()
@@ -2042,7 +2104,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 string projectDirectoryAfterSave = Path.Combine(tempDirectory.Path, "ProjectAfterSave_data");
                 string pathAfterSave = Path.Combine(projectDirectoryAfterSave, "RealTimeControlModelGUID");
-                
+
                 string projectDirectoryAfterSaveAs = Path.Combine(tempDirectory.Path, "ProjectAfterSaveAs_data");
                 string pathAfterSaveAs = Path.Combine(projectDirectoryAfterSaveAs, "RealTimeControlModelGUID");
 
@@ -2053,7 +2115,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 frameworkSimulator.NewProject(pathBeforeSave);
                 SimulateRun(rtcModel, workingDirectoryForRunning);
                 frameworkSimulator.FirstSave(pathAfterSave);
-                
+
                 // When
                 rtcModel.ClearOutput(true);
                 frameworkSimulator.SaveAs(pathAfterSaveAs);
@@ -2066,7 +2128,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 Assert.AreEqual(0, rtcModel.OutputDocuments.Count);
             }
         }
-        
+
         [Test]
         [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void OnFinishIntegratedModelRun_ShouldOnlyMoveOutputFilesAndDirectoriesInRtcFolderToSeparateOutputFolder()
