@@ -181,12 +181,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <param name="origin">The array to set the origin values for.</param>
         /// <param name="stride">The array to set the shape values for.</param>
         /// <remarks>
-        /// <list type="bullet">
-        /// <item>The shape describes how the data is structured in each dimension. (Generally the number of elements across every dimension)</item> 
-        /// <item>The origin describes where to start looking for the the data in each dimension. (Generally value 1 across the dimensions,
-        /// and value n being the corresponding slice along the third dimensional axis)</item> 
-        /// <item>The stride describes the offset from each looked up value in each dimension (generally value 1 across all dimensions)</item> 
-        /// </list>
+        ///     <list type="bullet">
+        ///         <item>
+        ///         The shape describes how the data is structured in each dimension. (Generally the number of elements
+        ///         across every dimension)
+        ///         </item>
+        ///         <item>
+        ///         The origin describes where to start looking for the the data in each dimension. (Generally value 1 across the
+        ///         dimensions,
+        ///         and value n being the corresponding slice along the third dimensional axis)
+        ///         </item>
+        ///         <item>
+        ///         The stride describes the offset from each looked up value in each dimension (generally value 1 across all
+        ///         dimensions)
+        ///         </item>
+        ///     </list>
         /// </remarks>
         private void SetThreeDimensionalProperties(IVariable function,
                                                    IEnumerable<NetCdfDimension> dimensions,
@@ -210,12 +219,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <param name="origin">The array to set the origin values for.</param>
         /// <param name="stride">The array to set the shape values for.</param>
         /// <remarks>
-        /// <list type="bullet">
-        /// <item>The shape describes how the data is structured in each dimension. (Generally the number of elements across every dimension)</item> 
-        /// <item>The origin describes where to start looking for the the data in each dimension. (Generally value 1 across the dimensions,
-        /// and value n being the corresponding slice along the third dimensional axis and m being the corresponding slice along the fourth dimensional axis)</item> 
-        /// <item>The stride describes the offset from each looked up value in each dimension (generally value 1 across all dimensions)</item> 
-        /// </list>
+        ///     <list type="bullet">
+        ///         <item>
+        ///         The shape describes how the data is structured in each dimension. (Generally the number of elements
+        ///         across every dimension)
+        ///         </item>
+        ///         <item>
+        ///         The origin describes where to start looking for the the data in each dimension. (Generally value 1 across the
+        ///         dimensions,
+        ///         and value n being the corresponding slice along the third dimensional axis and m being the corresponding slice
+        ///         along the fourth dimensional axis)
+        ///         </item>
+        ///         <item>
+        ///         The stride describes the offset from each looked up value in each dimension (generally value 1 across all
+        ///         dimensions)
+        ///         </item>
+        ///     </list>
         /// </remarks>
         private void SetFourDimensionalProperties(IVariable function,
                                                   IEnumerable<NetCdfDimension> dimensions,
@@ -236,7 +255,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <summary>
         /// Sets the shape, origin and stride properties based on the input arguments.
         /// </summary>
-        /// <param name="function">The <see cref="IVariable{T}"/> to base the properties for.</param>
         /// <param name="filters">The filters to apply.</param>
         /// <param name="dimensionIndex">The index of the dimension to set the shape, origin and the stride value for.</param>
         /// <param name="originValue">The value to set for the origin at the <paramref name="dimensionIndex"/>.</param>
@@ -244,12 +262,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <param name="origin">The array to set the origin values for.</param>
         /// <param name="stride">The array to set the shape values for.</param>
         /// <remarks>
-        /// <list type="bullet">
-        /// <item>The shape describes how the data is structured in each dimension. (Generally the number of elements across every dimension)</item> 
-        /// <item>The origin describes where to start looking for the the data in each dimension. (Generally value 1 across the dimensions,
-        /// and value n being the corresponding slice along the third dimensional axis)</item> 
-        /// <item>The stride describes the offset from each looked up value in each dimension (generally value 1 across all dimensions)</item> 
-        /// </list>
+        ///     <list type="bullet">
+        ///         <item>
+        ///         The shape describes how the data is structured in each dimension. (Generally the number of elements
+        ///         across every dimension)
+        ///         </item>
+        ///         <item>
+        ///         The origin describes where to start looking for the the data in each dimension. (Generally value 1 across the
+        ///         dimensions,
+        ///         and value n being the corresponding slice along the third dimensional axis)
+        ///         </item>
+        ///         <item>
+        ///         The stride describes the offset from each looked up value in each dimension (generally value 1 across all
+        ///         dimensions)
+        ///         </item>
+        ///     </list>
         /// </remarks>
         private void SetShapeAndOriginProperties(IReadOnlyCollection<IVariableFilter> filters, int dimensionIndex, int originValue,
                                                  ref int[] shape, ref int[] origin, ref int[] stride)
@@ -397,7 +424,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         }
 
         /// <summary>
-        /// Gets the index of the primary axis dimension in three dimensional case based on a collection of <see cref="NetCdfDimension"/>.
+        /// Gets the index of the primary axis dimension in three dimensional case based on a collection of
+        /// <see cref="NetCdfDimension"/>.
         /// </summary>
         /// <param name="dimensions">
         /// The collection of <see cref="NetCdfDimension"/> to retrieve the index of the third dimension
@@ -430,8 +458,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// Gets the index of the bed layers dimension based on a collection of <see cref="NetCdfDimension"/>.
         /// </summary>
         /// <param name="dimensions">The collection to determine the index from.</param>
-        /// <returns>The index of the bed layers dimension in the <paramref name="dimensions"/>, -1 if the dimension could
-        /// not be found.</returns>
+        /// <returns>
+        /// The index of the bed layers dimension in the <paramref name="dimensions"/>, -1 if the dimension could
+        /// not be found.
+        /// </returns>
         private int GetBedLayersDimensionIndex(IEnumerable<NetCdfDimension> dimensions)
         {
             return GetDimensionIndex(dimensions, NBedLayersName);
@@ -441,8 +471,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// Gets the index of the sediment dimension based on a collection of <see cref="NetCdfDimension"/>.
         /// </summary>
         /// <param name="dimensions">The collection to determine the index from.</param>
-        /// <returns>The index of the sediment dimension in the <paramref name="dimensions"/>, -1 if the dimension could
-        /// not be found.</returns>
+        /// <returns>
+        /// The index of the sediment dimension in the <paramref name="dimensions"/>, -1 if the dimension could
+        /// not be found.
+        /// </returns>
         private int GetSedimentDimensionIndex(IEnumerable<NetCdfDimension> dimensions)
         {
             int sedSusVarIndex = GetDimensionIndex(dimensions, NSedSusName);
@@ -1021,7 +1053,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 yield return coverage;
             }
         }
-        
+
         /// <summary>
         /// Process three dimensional time dependent variables by creating additional <see cref="UnstructuredGridCoverage"/>
         /// along the third dimensional axis for each value.
@@ -1077,21 +1109,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             return Enumerable.Empty<UnstructuredGridCoverage>();
         }
-        
+
         /// <summary>
         /// Process three dimensional time dependent variables by creating additional <see cref="UnstructuredGridCoverage"/>
         /// along the third dimensional axis for each value.
         /// </summary>
         /// <param name="timeDependentVariable">The <see cref="NetCdfVariableInfo"/>  to process.</param>
-        /// <param name="dimension">The dimension to process along to.</param>
-        /// <param name="surfaceName">The name of the surfaces for each entry along the <paramref name="dimension"/>.</param>
+        /// <param name="firstDimension">The first dimension to process along with.</param>
+        /// <param name="secondDimension">The second dimension to process along with.</param>
+        /// <param name="surfaceName">
+        /// The name of the surfaces for each entry along the <paramref name="firstDimension"/> and
+        /// <paramref name="secondDimension"/>.
+        /// </param>
         /// <param name="location">The name of the location which is processed.</param>
         /// <param name="coverageLongName">The long name of the <paramref name="timeDependentVariable"/>.</param>
         /// <param name="netCdfVariableName">The name of the variable.</param>
         /// <param name="unitSymbol">The unit symbol of the variable.</param>
-        /// <param name="additionalAttributeNames">
-        /// The collection of attribute names to add for each created separate
-        /// <see cref="UnstructuredGridCoverage"/>.
+        /// <param name="additionalAttributeNamesFirstDimension">
+        /// The collection of attribute names to add for each created separate  <see cref="UnstructuredGridCoverage"/> along the
+        /// first dimension.
+        /// </param>
+        /// <param name="additionalAttributeNamesSecondDimension">
+        /// The collection of attribute names to add for each created separate  <see cref="UnstructuredGridCoverage"/> along the
+        /// second dimension.
         /// </param>
         /// <returns>A collection of <see cref="UnstructuredGridCoverage"/> along the third axis.</returns>
         private IEnumerable<UnstructuredGridCoverage> ProcessFourDimensionalTimeDependentVariable(NetCdfVariableInfo timeDependentVariable,
