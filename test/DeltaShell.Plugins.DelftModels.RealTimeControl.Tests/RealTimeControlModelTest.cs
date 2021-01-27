@@ -490,6 +490,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             }
         }
 
+        [Test]
+        public void GetUpToDateDataItemName_ReturnsIdentity()
+        {
+            const string inputValue = "I like big data items and I cannot lie";
+            using (var model = new RealTimeControlModel())
+            {
+                string result = model.GetUpToDateDataItemName(inputValue);
+
+                Assert.That(result, Is.EqualTo(inputValue));
+            }
+        }
+
         private static RealTimeControlModel CreateRtcModelAndFiles(TemporaryDirectory tempDir, out string rtcFolderName, out string rtcDirectory, out string[] relevantFiles)
         {
             var model = new RealTimeControlModel();
