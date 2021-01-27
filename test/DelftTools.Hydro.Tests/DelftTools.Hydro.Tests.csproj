@@ -40,6 +40,7 @@
     <Compile Include="Area\Objects\AreaObjectTest.cs" />
     <Compile Include="Area\Objects\StructureObjects\PumpTest.cs" />
     <Compile Include="Area\Objects\StructureObjects\StructureFormulas\GateOpeningDirectionTest.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\SimpleWeirFormulaTest.cs" />
     <Compile Include="Area\Objects\StructureObjects\StructureTest.cs" />
     <Compile Include="GroupableFeatures\GroupableFeatureComparerTest.cs" />
     <Compile Include="GroupableFeatures\GroupableFeatureExtensionsTest.cs" />
