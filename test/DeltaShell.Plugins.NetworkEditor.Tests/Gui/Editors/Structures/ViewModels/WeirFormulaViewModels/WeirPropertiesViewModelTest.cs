@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Pre-condition
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Pre-condition
@@ -105,7 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Pre-condition
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Pre-condition

@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                        .Create();
             var weir = new Weir2D { WeirFormula = formula };
             
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
             {
@@ -245,7 +245,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                        .Create();
             var weir = new Weir2D { WeirFormula = formula };
             
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
             {

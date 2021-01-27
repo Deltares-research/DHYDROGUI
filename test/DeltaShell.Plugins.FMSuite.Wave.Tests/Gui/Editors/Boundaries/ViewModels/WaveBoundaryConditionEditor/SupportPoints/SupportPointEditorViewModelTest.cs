@@ -408,7 +408,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void IsEnabled_SetDifferentValue_TriggersINotifyPropertyChange()
         {
             // Setup
-            var notifyPropertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var notifyPropertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += notifyPropertyChangedObserver.OnPropertyChanged;
 
             bool expectedValue = !viewModel.IsEnabled;
@@ -428,7 +428,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         public void IsEnabled_SetSameValue_DoesNotTriggerINotifyPropertyChange()
         {
             // Setup
-            var notifyPropertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var notifyPropertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += notifyPropertyChangedObserver.OnPropertyChanged;
 
             bool expectedValue = viewModel.IsEnabled;

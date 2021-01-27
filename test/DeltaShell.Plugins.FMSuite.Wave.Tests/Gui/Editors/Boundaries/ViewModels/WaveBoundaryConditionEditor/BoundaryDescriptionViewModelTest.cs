@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
@@ -89,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                                  SpatialDefinitionViewType.SpatiallyVarying);
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
-            var observer = new NotifyPropertyChangedTestObserver();
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
             // Call
@@ -115,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                                  SpatialDefinitionViewType.SpatiallyVarying);
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
-            var observer = new NotifyPropertyChangedTestObserver();
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
             boundary.ClearReceivedCalls();
@@ -154,7 +155,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
 
-            var observer = new NotifyPropertyChangedTestObserver();
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
             boundary.ConditionDefinition.ClearReceivedCalls();
@@ -185,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
 
-            var observer = new NotifyPropertyChangedTestObserver();
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
             // Call
@@ -221,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
 
-            var observer = new NotifyPropertyChangedTestObserver();
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
             boundary.ConditionDefinition.ClearReceivedCalls();
@@ -252,7 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
 
-            var observer = new NotifyPropertyChangedTestObserver();
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += observer.OnPropertyChanged;
 
             // Call

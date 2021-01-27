@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.Eventing;
@@ -85,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenADisabledSupportPointViewModel_WhenIsEnabledIsSetToTrue_ThenAParameterIsAddedToTheModel()
         {
             // Setup
@@ -119,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAnEnabledSupportPointViewModel_WhenIsEnabledIsSetToFalse_ThenTheCorrespondingParameterIsRemovedFromTheModel()
         {
             // Setup
@@ -153,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAnEnabledSupportPointViewModelWithAnUniformDataComponent_WhenIsEnabledIsSetToFalse_ThenIsEnabledIsFalseAndOnNotifyPropertyChangeIsCalled()
         {
             // Setup
@@ -184,7 +185,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.IsEnabled, Is.True, "Precondition violated:");
 
             var notifyChangedObserver =
-                new NotifyPropertyChangedTestObserver();
+                new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += notifyChangedObserver.OnPropertyChanged;
 
             // Call

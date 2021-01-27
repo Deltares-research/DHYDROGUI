@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double lowerEdgeLevel = 20.0;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double lowerEdgeLevel = 20.0;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -228,7 +228,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new GatedWeirFormula(true) {LowerEdgeLevel = lowerEdgeLevel};
             var weir2D = new Weir2D {WeirFormula = formula};
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -262,7 +262,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new GeneralStructureWeirFormula() {LowerEdgeLevel = lowerEdgeLevel};
             var weir2D = new Weir2D {WeirFormula = formula};
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -296,7 +296,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             bool useGateLowerEdgeLevel = !formula.UseLowerEdgeLevelTimeSeries;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -335,7 +335,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             bool useGateLowerEdgeLevel = !formula.UseLowerEdgeLevelTimeSeries;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -374,7 +374,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             bool useGateLowerEdgeLevel = formula.UseLowerEdgeLevelTimeSeries;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -410,7 +410,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             bool useGateLowerEdgeLevel = formula.UseLowerEdgeLevelTimeSeries;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -446,7 +446,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double gateHeight = 20.0;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -483,7 +483,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double gateHeight = 20.0;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -519,7 +519,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new GatedWeirFormula(true) {DoorHeight = gateHeight};
             var weir2D = new Weir2D {WeirFormula = formula};
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -552,7 +552,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new GeneralStructureWeirFormula() {DoorHeight = gateHeight};
             var weir2D = new Weir2D {WeirFormula = formula};
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -586,7 +586,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double openingWidth = 20.0;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -623,7 +623,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double openingWidth = 20.0;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -660,7 +660,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new GatedWeirFormula(true) {HorizontalDoorOpeningWidth = openingWidth};
             var weir2D = new Weir2D {WeirFormula = formula};
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -694,7 +694,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new GeneralStructureWeirFormula() {HorizontalDoorOpeningWidth = openingWidth};
             var weir2D = new Weir2D {WeirFormula = formula};
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -729,7 +729,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             bool useHorizontalDoorOpeningWidthTimeSeries =
                 !formula.UseHorizontalDoorOpeningWidthTimeSeries;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -770,7 +770,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             bool useHorizontalDoorOpeningWidthTimeSeries =
                 !formula.UseHorizontalDoorOpeningWidthTimeSeries;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -811,7 +811,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             bool useHorizontalDoorOpeningWidthTimeSeries =
                 formula.UseHorizontalDoorOpeningWidthTimeSeries;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -849,7 +849,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             bool useHorizontalDoorOpeningWidthTimeSeries =
                 formula.UseHorizontalDoorOpeningWidthTimeSeries;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -887,7 +887,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             const GateOpeningDirection openingDirection =
                 GateOpeningDirection.Symmetric;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -927,7 +927,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             const GateOpeningDirection openingDirection =
                 GateOpeningDirection.Symmetric;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -970,7 +970,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var weir2D = new Weir2D { WeirFormula = formula };
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -1011,7 +1011,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var weir2D = new Weir2D {WeirFormula = formula};
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -1052,7 +1052,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var weir2D = new Weir2D {WeirFormula = formula};
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {

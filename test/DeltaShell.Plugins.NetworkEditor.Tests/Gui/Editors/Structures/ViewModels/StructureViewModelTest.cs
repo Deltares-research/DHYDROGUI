@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.TestUtils;
@@ -94,7 +95,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             using (var viewModel = new StructureViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Call
@@ -139,7 +140,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             using (var viewModel = new StructureViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
                 // Call

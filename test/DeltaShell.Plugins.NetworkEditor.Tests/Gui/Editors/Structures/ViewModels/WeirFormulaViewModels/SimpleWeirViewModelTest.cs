@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const double contractionCoefficient = 20.0;
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var formula = new SimpleWeirFormula() {LateralContraction = lateralContraction};
             var weir2D = new Weir2D {WeirFormula = formula};
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
             {

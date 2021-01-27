@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             Assert.That(viewModel.ActiveParametersViewModel, Is.Null, "Precondition violated.");
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
             // Call
@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.UpdateActiveSupportPoint(supportPoint);
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, "Precondition violated.");
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
             var otherSupportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(initialObservedParameters,
                         Is.SameAs(dictionary[supportPoint]), "Precondition violated.");
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
             // Call
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             Assert.That(viewModel.ActiveParametersViewModel, Is.Null, "Precondition violated.");
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
             viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
             var supportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
