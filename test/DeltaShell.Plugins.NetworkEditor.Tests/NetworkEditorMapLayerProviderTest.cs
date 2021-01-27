@@ -126,11 +126,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 })
             };
 
-            area.Weirs.Add(gate2DFeature);
+            area.Structures.Add(gate2DFeature);
 
             using (var mapView = new MapView())
             {
-                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Weirs, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Structures, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
                 mapView.Map.Layers.Add(layer);
 
                 WindowsFormsTestHelper.ShowModal(mapView, delegate { mapView.Map.ZoomToExtents(); });
@@ -153,11 +153,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 })
             };
 
-            area.Weirs.Add(weir2DFeature);
+            area.Structures.Add(weir2DFeature);
 
             using (var mapView = new MapView())
             {
-                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Weirs, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Structures, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
                 mapView.Map.Layers.Add(layer);
 
                 WindowsFormsTestHelper.ShowModal(mapView, delegate { mapView.Map.ZoomToExtents(); });

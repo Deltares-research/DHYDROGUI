@@ -324,7 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         "StructuresGroup2_structures.ini"
                     };
 
-                CheckFeatureWasReadCorrectly(area.Weirs, "Weirs", structuresGroupNames);
+                CheckFeatureWasReadCorrectly(area.Structures, "Weirs", structuresGroupNames);
                 CheckFeatureWasReadCorrectly(area.Pumps, "Pumps", structuresGroupNames);
             }
             finally
@@ -655,7 +655,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 RemoveGroupNameFromGroupableFeature(originalArea.ObservationCrossSections);
                 RemoveGroupNameFromGroupableFeature(originalArea.LandBoundaries);
                 RemoveGroupNameFromGroupableFeature(originalArea.Pumps);
-                RemoveGroupNameFromGroupableFeature(originalArea.Weirs);
+                RemoveGroupNameFromGroupableFeature(originalArea.Structures);
 
                 mduFile.Write(savePath, originalMD, originalArea, allFixedWeirsAndCorrespondingProperties.Values, switchTo: false);
 
@@ -673,7 +673,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 CheckDefaultGroupIsInFeature("DryAreas", originalArea.DryAreas, mduPathName, FileConstants.DryAreaFileExtension);
                 CheckDefaultGroupIsInFeature("Enclosures", originalArea.Enclosures, mduPathName, FileConstants.EnclosureExtension);
                 CheckDefaultGroupIsInFeature("Pumps", originalArea.Pumps, mduPathName, FileConstants.StructuresFileExtension);
-                CheckDefaultGroupIsInFeature("Weirs", originalArea.Weirs, mduPathName, FileConstants.StructuresFileExtension);
+                CheckDefaultGroupIsInFeature("Weirs", originalArea.Structures, mduPathName, FileConstants.StructuresFileExtension);
             }
             finally
             {
@@ -741,7 +741,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
             Assert.That(area.Pumps.Count, Is.EqualTo(1));
             Assert.That(area.ThinDams.Count, Is.EqualTo(1));
-            Assert.That(area.Weirs.Count, Is.EqualTo(2));
+            Assert.That(area.Structures.Count, Is.EqualTo(2));
             Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
             Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
 
@@ -774,7 +774,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.ObservationPoints.Count, Is.EqualTo(2));
             Assert.That(area.Pumps.Count, Is.EqualTo(1));
             Assert.That(area.ThinDams.Count, Is.EqualTo(1));
-            Assert.That(area.Weirs.Count, Is.EqualTo(2));
+            Assert.That(area.Structures.Count, Is.EqualTo(2));
             Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
             Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
 
@@ -850,7 +850,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         string.Format(errorMessage, "FixedWeirs"));
             Assert.That(area.Pumps, Has.Count.EqualTo(nExpectedFeatures),
                         string.Format(errorMessage, "Pumps"));
-            Assert.That(area.Weirs, Has.Count.EqualTo(nExpectedFeatures),
+            Assert.That(area.Structures, Has.Count.EqualTo(nExpectedFeatures),
                         string.Format(errorMessage, "Weirs"));
             Assert.That(area.ThinDams, Has.Count.EqualTo(nExpectedFeatures),
                         string.Format(errorMessage, "ThinDams"));
@@ -1034,7 +1034,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             );
 
             var structureGroupName = @"featureFiles/myGates";
-            area.Weirs.AddRange(
+            area.Structures.AddRange(
                 new[]
                 {
                     WaterFlowFMMduFileTestHelper.GetNewWeir2DWithGateFormula(structureGroupName, "Gate01"),
@@ -1334,7 +1334,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }),
                 IsDefaultGroup = true
             });
-            area.Weirs.Add(new Structure()
+            area.Structures.Add(new Structure()
             {
                 GroupName = "MyStructures.ini",
                 Name = "MyGate",
@@ -1385,7 +1385,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var structuresFileEntries = modelDefinition.GetModelProperty(KnownProperties.StructuresFile).Value as List<string>;
             Assert.NotNull(structuresFileEntries);
             Assert.That(structuresFileEntries.Count, Is.EqualTo(1));
-            Assert.That(area.Weirs.FirstOrDefault().GroupName, Is.EqualTo("MyStructures.ini"));
+            Assert.That(area.Structures.FirstOrDefault().GroupName, Is.EqualTo("MyStructures.ini"));
             Assert.That(structuresFileEntries.Contains(gateGroupName));
             Assert.That(File.Exists(gateFilePath));
 
@@ -1470,9 +1470,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CompareHydroAreaFeatureCollections("Pumps", originalArea.Pumps,
                                                originalArea.Pumps.Select(op => op.Name), savedArea.Pumps,
                                                savedArea.Pumps.Select(op => op.Name));
-            CompareHydroAreaFeatureCollections("Weirs", originalArea.Weirs,
-                                               originalArea.Weirs.Select(op => op.Name), savedArea.Weirs,
-                                               savedArea.Weirs.Select(op => op.Name));
+            CompareHydroAreaFeatureCollections("Weirs", originalArea.Structures,
+                                               originalArea.Structures.Select(op => op.Name), savedArea.Structures,
+                                               savedArea.Structures.Select(op => op.Name));
         }
 
         private void CompareHydroAreaModelProperties(string propertyName, string saveMduFilePath, WaterFlowFMModelDefinition expectedMD,

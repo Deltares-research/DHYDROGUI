@@ -144,7 +144,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 
         public virtual object Clone()
         {
-            var gatedWeirFormula = new SimpleGateFormula(CanBeTimedependent)
+            var gateFormula = new SimpleGateFormula(CanBeTimedependent)
             {
                 ContractionCoefficient = ContractionCoefficient,
                 GateOpening = GateOpening,
@@ -161,18 +161,18 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
                 UseLowerEdgeLevelTimeSeries = UseLowerEdgeLevelTimeSeries
             };
 
-            if (gatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+            if (gateFormula.UseLowerEdgeLevelTimeSeries)
             {
-                gatedWeirFormula.LowerEdgeLevelTimeSeries = (TimeSeries) LowerEdgeLevelTimeSeries.Clone(true);
+                gateFormula.LowerEdgeLevelTimeSeries = (TimeSeries) LowerEdgeLevelTimeSeries.Clone(true);
             }
 
-            if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
+            if (gateFormula.UseHorizontalDoorOpeningWidthTimeSeries)
             {
-                gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries =
+                gateFormula.HorizontalDoorOpeningWidthTimeSeries =
                     (TimeSeries) HorizontalDoorOpeningWidthTimeSeries.Clone(true);
             }
 
-            return gatedWeirFormula;
+            return gateFormula;
         }
 
         [EditAction]

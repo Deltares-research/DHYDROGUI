@@ -30,15 +30,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
         protected override HydroArea CreateHydroArea()
         {
             var hydroArea = new HydroArea();
-            hydroArea.Weirs.Add(new Structure());
-            hydroArea.Weirs.Add(new Structure());
+            hydroArea.Structures.Add(new Structure());
+            hydroArea.Structures.Add(new Structure());
 
             return hydroArea;
         }
 
         protected override IEventedList<Structure> GetStructureCollection(HydroArea hydroArea)
         {
-            return new EventedList<Structure>(hydroArea.Weirs.Cast<Structure>());
+            return new EventedList<Structure>(hydroArea.Structures.Cast<Structure>());
         }
 
         protected override Color ExpectedVectorStyleLineColor()

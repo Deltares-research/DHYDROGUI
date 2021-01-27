@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Name = gateName,
                 Formula = new SimpleGateFormula()
             };
-            fmModel.Area.Weirs.Add(gate);
+            fmModel.Area.Structures.Add(gate);
 
             // When
             var itemStringComponents = new List<string>(new[]
@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Name = "structure01",
                 Formula = new SimpleGateFormula()
             };
-            fmModel.Area.Weirs.Add(gate);
+            fmModel.Area.Structures.Add(gate);
 
             // When
             const string parameterName = "NotExisting";

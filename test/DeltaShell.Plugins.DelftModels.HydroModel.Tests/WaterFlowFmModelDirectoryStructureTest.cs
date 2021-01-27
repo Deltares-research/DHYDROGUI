@@ -1759,7 +1759,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             model.Area.DryAreas.Add(CreateDryArea());
             model.Area.DryPoints.Add(CreateDryPoints());
             model.Area.ObservationPoints.Add(CreateObservationPoint());
-            model.Area.Weirs.Add(CreateWeir());
+            model.Area.Structures.Add(CreateWeir());
             model.Area.FixedWeirs.Add(CreateFixedWeir());
             model.Area.ObservationCrossSections.Add(CreateObservationCrossSection());
             AddFlowBoundaryConditionToModel(model);

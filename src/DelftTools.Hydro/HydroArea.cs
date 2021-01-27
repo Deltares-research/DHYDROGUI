@@ -94,7 +94,7 @@ namespace DelftTools.Hydro
         /// <summary>
         /// Gets or sets the collection of <see cref="Structure"/> objects.
         /// </summary>
-        public virtual IEventedList<Structure> Weirs { get; protected set; }
+        public virtual IEventedList<Structure> Structures { get; protected set; }
 
         private void Initialize()
         {
@@ -114,7 +114,7 @@ namespace DelftTools.Hydro
             BridgePillars = new EventedList<BridgePillar>();
 
             Pumps = new EventedList<Pump>();
-            Weirs = new EventedList<Structure>();
+            Structures = new EventedList<Structure>();
         }
 
         #region IHydroRegion
@@ -129,8 +129,8 @@ namespace DelftTools.Hydro
                 yield return pump;
             }
 
-            yield return Weirs; // Required to open view for the collection of weirs
-            foreach (Structure weir in Weirs)
+            yield return Structures; // Required to open view for the collection of weirs
+            foreach (Structure weir in Structures)
             {
                 yield return weir;
             }

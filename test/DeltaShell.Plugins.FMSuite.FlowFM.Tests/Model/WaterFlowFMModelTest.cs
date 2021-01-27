@@ -296,7 +296,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 weirFormulaChangeCount++;
             };
             // add weir to model
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
             Assert.AreEqual(1, collectionChangedCount);
 
             // change weirformula
@@ -314,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Name = "weir01",
                 Formula = new SimpleWeirFormula()
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             List<IDataItem> dataItems = model.GetChildDataItems(weir).ToList();
 
@@ -1106,11 +1106,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             // Import dry points
             fmModel.Area.Pumps.Add(new Pump {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
-            fmModel.Area.Weirs.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
+            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.Pumps.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
-            Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
+            Assert.That(fmModel.Area.Structures.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
         }
 
         [Test]
@@ -1125,10 +1125,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Weirs.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")});
+            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")});
 
             // Check that group name gives a relative path from the mdu folder
-            Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
+            Assert.That(fmModel.Area.Structures.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
         }
 
         [Test]
@@ -1717,7 +1717,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 dataItemWaterFlowFmModel.LinkedTo.Parent.ToString());
 
             // When and Then
-            IStructure feature = model.Area.Weirs.FirstOrDefault();
+            IStructure feature = model.Area.Structures.FirstOrDefault();
             Assert.NotNull(feature);
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => feature.Formula = new SimpleGateFormula(),
@@ -1736,7 +1736,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             WaterFlowFMModel model = CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel);
 
             // When
-            model.Area.Weirs.Clear();
+            model.Area.Structures.Clear();
 
             dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is IStructure);
             Assert.IsNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not removed after removing the weir");
@@ -1934,7 +1934,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Arrange
             var fmModel = new WaterFlowFMModel();
             var weir = new Structure();
-            fmModel.Area.Weirs.Add(weir);
+            fmModel.Area.Structures.Add(weir);
 
             // Act
             IList<IDataItem> couplingDataItems = ((ICoupledModel) fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Input).ToList();
@@ -2159,7 +2159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             rtcDataItem = new DataItem() {Parent = new DataItem() {Name = "Control Group 1"}};
 
-            model.Area.Weirs.Add(feature);
+            model.Area.Structures.Add(feature);
 
             dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is IStructure);
 

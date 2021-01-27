@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using System.Globalization;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Shell.Gui;

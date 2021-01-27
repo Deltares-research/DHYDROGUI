@@ -4,7 +4,9 @@ using DelftTools.Utils.Data;
 namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 {
     /// <summary>
-    /// Class to manage properties specific for the Sobek Simple Weir
+    /// <see cref="SimpleWeirFormula"/> implements the Simple Weir
+    /// <see cref="IStructureFormula"/> defining a <see cref="DischargeCoefficient"/>
+    /// and <see cref="LateralContraction"/>.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
     public class SimpleWeirFormula : Unique<long>, IStructureFormula

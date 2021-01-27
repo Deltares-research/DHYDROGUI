@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
             string expectedMessage = string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_,
-                                                   WeirValidator.CrestWidthPropertyName,
+                                                   StructureValidator.CrestWidthPropertyName,
                                                    weir.Name,
                                                    weir.Formula.Name);
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Info, issue.Severity, "The severity of this validation issue should have been of type Info.");
             string expectedMessage = string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calculated_by_the_computational_core_,
-                                                   WeirValidator.CrestWidthPropertyName,
+                                                   StructureValidator.CrestWidthPropertyName,
                                                    weir.Name,
                                                    weir.Formula.Name);
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
@@ -218,11 +218,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 
             // Then
             Assert.AreEqual(5, issues.Count, "Exactly 5 log messages were expected when validating this weir.");
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.CrestWidthPropertyName);
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.Downstream1WidthPropertyName);
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.Downstream2WidthPropertyName);
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.Upstream1WidthPropertyName);
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.Upstream2WidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.CrestWidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.Downstream1WidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.Downstream2WidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.Upstream1WidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.Upstream2WidthPropertyName);
         }
 
         [Test]
@@ -407,11 +407,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         [Test]
         public void GivenAWeirValidator_WhenPropertyNamesAreCalled_ThenExpectedStringsAreReturned()
         {
-            Assert.AreEqual(WeirValidator.CrestWidthPropertyName, "Crest Width");
-            Assert.AreEqual(WeirValidator.Upstream1WidthPropertyName, "Upstream 1 Width");
-            Assert.AreEqual(WeirValidator.Upstream2WidthPropertyName, "Upstream 2 Width");
-            Assert.AreEqual(WeirValidator.Downstream1WidthPropertyName, "Downstream 1 Width");
-            Assert.AreEqual(WeirValidator.Downstream2WidthPropertyName, "Downstream 2 Width");
+            Assert.AreEqual(StructureValidator.CrestWidthPropertyName, "Crest Width");
+            Assert.AreEqual(StructureValidator.Upstream1WidthPropertyName, "Upstream 1 Width");
+            Assert.AreEqual(StructureValidator.Upstream2WidthPropertyName, "Upstream 2 Width");
+            Assert.AreEqual(StructureValidator.Downstream1WidthPropertyName, "Downstream 1 Width");
+            Assert.AreEqual(StructureValidator.Downstream2WidthPropertyName, "Downstream 2 Width");
         }
 
         /// <summary>
@@ -456,11 +456,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             List<ValidationIssue> validationIssues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.CrestWidthPropertyName, weir, validCrestWidth);
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.Upstream2WidthPropertyName, weir, validUpstream2);
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.Upstream1WidthPropertyName, weir, validUpstream1);
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.Downstream1WidthPropertyName, weir, validDownstream1);
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.Downstream2WidthPropertyName, weir, validDownstream2);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.CrestWidthPropertyName, weir, validCrestWidth);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.Upstream2WidthPropertyName, weir, validUpstream2);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.Upstream1WidthPropertyName, weir, validUpstream1);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.Downstream1WidthPropertyName, weir, validDownstream1);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.Downstream2WidthPropertyName, weir, validDownstream2);
 
             int nExpectedMessages = GetNumberOfExpectedMessagesInvalid(new[]
             {
@@ -530,11 +530,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             List<ValidationIssue> validationIssues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.CrestWidthPropertyName, weir, emptyCrestWidth);
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.Upstream2WidthPropertyName, weir, emptyUpstream2);
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.Upstream1WidthPropertyName, weir, emptyUpstream1);
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.Downstream1WidthPropertyName, weir, emptyDownstream1);
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.Downstream2WidthPropertyName, weir, emptyDownstream2);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.CrestWidthPropertyName, weir, emptyCrestWidth);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.Upstream2WidthPropertyName, weir, emptyUpstream2);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.Upstream1WidthPropertyName, weir, emptyUpstream1);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.Downstream1WidthPropertyName, weir, emptyDownstream1);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.Downstream2WidthPropertyName, weir, emptyDownstream2);
 
             int nExpectedMessages = GetNumberOfExpectedMessagesEmpty(new[]
             {

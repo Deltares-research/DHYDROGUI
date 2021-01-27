@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         #endregion
 
-        #region Weir
+        #region Structure
 
         /// <summary>
         /// Create a weir.

@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 UseCrestLevelTimeSeries = true,
                 CrestWidth = 1.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             model.StartTime = t;
 
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 CrestWidth = 1.0
             };
 
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 CrestWidth = 1.0
             };
 
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             //   Validate is called
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             model.StartTime = t;
             model.StopTime = t.AddDays(7);
 
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             model.StartTime = t;
 
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Formula = formula,
                 CrestWidth = 1.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Formula = formula,
                 CrestWidth = 1.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             model.StartTime = t;
 
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -289,7 +289,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Formula = formula,
                 CrestWidth = 1.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -314,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 UseCrestLevelTimeSeries = false,
                 CrestWidth = 0.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -345,7 +345,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Formula = formula,
                 CrestWidth = 1.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -375,7 +375,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Formula = formula,
                 CrestWidth = 1.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Formula = formula,
                 CrestWidth = 1.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -439,7 +439,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Formula = formula,
                 CrestWidth = 1.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called
@@ -471,7 +471,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 Formula = formula,
                 CrestWidth = 1.0
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             // When 
             // Validate is called

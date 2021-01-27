@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             };
 
             fmModel.Area.ObservationPoints.Add(observationPointFm);
-            fmModel.Area.Weirs.Add(weirFm);
+            fmModel.Area.Structures.Add(weirFm);
 
             /* Structures definition */
             var input = new Input()
@@ -242,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             };
 
             fmModel.Area.ObservationPoints.Add(observationPointFm);
-            fmModel.Area.Weirs.Add(weirFm);
+            fmModel.Area.Structures.Add(weirFm);
 
             /* Structures definition */
             var input = new Input()

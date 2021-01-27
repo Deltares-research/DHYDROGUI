@@ -389,7 +389,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             flow.FixedWeirsProperties.ElementAt(0).DataColumns[0].ValueList[0] = 10.0;
             flow.FixedWeirsProperties.ElementAt(0).DataColumns[0].ValueList[1] = 10.0;
 
-            flow.Area.Weirs.Add(new Structure()
+            flow.Area.Structures.Add(new Structure()
             {
                 Name = "weir",
                 Geometry = new LineString(new[]
@@ -421,7 +421,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             IDataItem outputDataItem = flow.GetChildDataItems(flow.Area.ObservationPoints[0]).First();
             rtc.GetDataItemByValue(controlGroup.Inputs[0]).LinkTo(outputDataItem);
 
-            IDataItem inputDataItem = flow.GetChildDataItems(flow.Area.Weirs[0]).First();
+            IDataItem inputDataItem = flow.GetChildDataItems(flow.Area.Structures[0]).First();
             inputDataItem.LinkTo(rtc.GetDataItemByValue(controlGroup.Outputs[0]));
 
             return hydroModel;

@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             };
 
             yield return CreateAreaStructureCollectionViewInfo<Pump>(HydroAreaLayerNames.PumpsPluralName);
-            yield return CreateAreaStructureCollectionViewInfo<Structure>(HydroAreaLayerNames.WeirsPluralName);
+            yield return CreateAreaStructureCollectionViewInfo<Structure>(HydroAreaLayerNames.StructuresPluralName);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.LandBoundaries);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryPoints);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.DryAreas);

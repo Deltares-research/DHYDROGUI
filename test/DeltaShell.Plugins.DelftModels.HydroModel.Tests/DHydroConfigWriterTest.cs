@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
 
             waterFlowFMModel.Area.Pumps.Add(pump);
-            waterFlowFMModel.Area.Weirs.Add(gate);
+            waterFlowFMModel.Area.Structures.Add(gate);
             waterFlowFMModel.Area.ObservationPoints.Add(obserVationPoint);
 
             realTimeControlModel.ControlGroups.Add(RealTimeControlModelHelper.CreateStandardControlGroup("InvertorRule"));

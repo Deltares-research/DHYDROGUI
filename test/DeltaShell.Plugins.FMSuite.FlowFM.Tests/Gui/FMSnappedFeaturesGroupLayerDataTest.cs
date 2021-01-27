@@ -285,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Envelope gridExtent = model.GridExtent;
                 Coordinate center = gridExtent.Centre;
-                model.Area.Weirs.Add(new Structure()
+                model.Area.Structures.Add(new Structure()
                 {
                     Geometry = new LineString(new[]
                     {

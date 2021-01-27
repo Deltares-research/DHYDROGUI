@@ -136,9 +136,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 HydroArea area = CreateHydroArea();
 
                 yield return new TestCaseData(area, KnownFeatureCategories.Pumps, area.Pumps);
-                yield return new TestCaseData(area, KnownFeatureCategories.Weirs, area.Weirs.Where(w => w.Formula is SimpleWeirFormula));
-                yield return new TestCaseData(area, KnownFeatureCategories.Gates, area.Weirs.Where(w => w.Formula is SimpleGateFormula));
-                yield return new TestCaseData(area, KnownFeatureCategories.GeneralStructures, area.Weirs.Where(w => w.Formula is GeneralStructureFormula));
+                yield return new TestCaseData(area, KnownFeatureCategories.Weirs, area.Structures.Where(w => w.Formula is SimpleWeirFormula));
+                yield return new TestCaseData(area, KnownFeatureCategories.Gates, area.Structures.Where(w => w.Formula is SimpleGateFormula));
+                yield return new TestCaseData(area, KnownFeatureCategories.GeneralStructures, area.Structures.Where(w => w.Formula is GeneralStructureFormula));
                 yield return new TestCaseData(area, KnownFeatureCategories.ObservationPoints, area.ObservationPoints);
                 yield return new TestCaseData(area, KnownFeatureCategories.ObservationCrossSections, area.ObservationCrossSections);
             }
@@ -163,9 +163,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 area.ObservationCrossSections.Add(observationCrossSection);
                 area.ObservationPoints.Add(observationPoint);
                 area.Pumps.Add(pump);
-                area.Weirs.Add(simpleWeir);
-                area.Weirs.Add(gate);
-                area.Weirs.Add(generalStructure);
+                area.Structures.Add(simpleWeir);
+                area.Structures.Add(gate);
+                area.Structures.Add(generalStructure);
             }
 
             return area;

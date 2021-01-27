@@ -88,14 +88,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             try
             {
                 IEnumerable<IStructureObject> structures =
-                    targetHydroArea.Weirs.Cast<IStructureObject>()
+                    targetHydroArea.Structures.Cast<IStructureObject>()
                                    .Concat(targetHydroArea.Pumps);
                 structuresFile.Write(path, structures);
                 
                 log.InfoFormat("Written {0} structures (Pumps: {1}; Weir structures: {2};).",
-                               targetHydroArea.Pumps.Count + targetHydroArea.Weirs.Count,
+                               targetHydroArea.Pumps.Count + targetHydroArea.Structures.Count,
                                targetHydroArea.Pumps.Count,
-                               targetHydroArea.Weirs.Count);
+                               targetHydroArea.Structures.Count);
                 return true;
             }
             catch (Exception e) when (e is ArgumentException || 

@@ -200,13 +200,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
                 switch (formulaName)
                 {
-                    case "Simple weir (Weir)":
+                    case "Simple Weir":
                         targetFeature.Formula = new SimpleWeirFormula();
                         break;
-                    case "Gated weir (Orifice)":
+                    case "Simple Gate":
                         targetFeature.Formula = new SimpleGateFormula(true);
                         break;
-                    case "General structure":
+                    case "General Structure":
                         targetFeature.Formula = new GeneralStructureFormula();
                         break;
                 }

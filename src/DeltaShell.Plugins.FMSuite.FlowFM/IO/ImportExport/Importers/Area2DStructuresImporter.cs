@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             if (simpleWeirIni > 0)
             {
-                simpleWeirString = "Weirs: " + simpleWeirIni + " ";
+                simpleWeirString = "Structures: " + simpleWeirIni + " ";
             }
 
             if (gatedWeirIni > 0)
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                         pumpCount++;
                         break;
                     case Structure weir:
-                        targetHydroArea.Weirs.Add(weir);
+                        targetHydroArea.Structures.Add(weir);
                         weirCount++;
                         break;
                     default:

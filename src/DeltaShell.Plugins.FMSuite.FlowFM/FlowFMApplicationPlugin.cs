@@ -273,8 +273,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     Geometry = w.Geometry
                 },
                 EqualityComparer = new GroupableFeatureComparer<Structure>(),
-                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Weirs)),
-                GetEditableObject = target => GetModelFor(target, a => a.Weirs).Area
+                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Structures)),
+                GetEditableObject = target => GetModelFor(target, a => a.Structures).Area
             };
             yield return new PliFileImporterExporter<Pump, Pump>
             {
@@ -639,7 +639,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static bool GetAvailableLists(WaterFlowFMModel model, IEnumerable list)
         {
-            if (Equals(model.Area.Weirs, list))
+            if (Equals(model.Area.Structures, list))
             {
                 return true;
             }

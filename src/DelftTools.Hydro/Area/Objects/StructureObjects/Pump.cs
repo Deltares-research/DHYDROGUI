@@ -72,7 +72,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
         // uses the `feature.ToString()` method to generate a name. In order
         // to ensure the name does not get overwritten, we need to overwrite
         // the `ToString` method to return the Name. This is legacy behaviour 
-        // from the previous Weir implementation unfortunately.
+        // from the previous Pump implementation unfortunately.
         public override string ToString() => 
             !string.IsNullOrEmpty(Name) ? Name : "Unnamed Pump";
     }

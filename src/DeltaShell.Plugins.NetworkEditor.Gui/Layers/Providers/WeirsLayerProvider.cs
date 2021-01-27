@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         /// <inheritdoc/>
         protected override string GetLayerName()
         {
-            return HydroAreaLayerNames.WeirsPluralName;
+            return HydroAreaLayerNames.StructuresPluralName;
         }
 
         /// <inheritdoc/>
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         /// <inheritdoc/>
         protected override IEventedList<Structure> GetLayerFeatures(HydroArea hydroArea)
         {
-            return hydroArea.Weirs;
+            return hydroArea.Structures;
         }
     }
 }

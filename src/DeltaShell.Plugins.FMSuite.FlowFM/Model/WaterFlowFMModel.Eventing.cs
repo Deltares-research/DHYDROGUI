@@ -767,7 +767,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             if (sender is IStructure weir && 
                 e.PropertyName == nameof(IStructure.Formula))
             {
-                bool isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
+                bool isInputSender = Area.Structures.Any(w => w.Name == weir.Name);
                 UpdateAreaDataItems(weir, isInputSender);
             }
 

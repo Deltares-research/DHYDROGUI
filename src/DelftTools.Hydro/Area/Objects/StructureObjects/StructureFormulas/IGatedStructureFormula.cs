@@ -3,7 +3,8 @@
 namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 {
     /// <summary>
-    /// Weirformula supporting gate..can be gated or general structure for now..
+    /// <see cref="IGatedStructureFormula"/> defines the common properties of
+    /// gated structure, e.g. Simple Gates and General Structures
     /// </summary>
     public interface IGatedStructureFormula : IStructureFormula
     {

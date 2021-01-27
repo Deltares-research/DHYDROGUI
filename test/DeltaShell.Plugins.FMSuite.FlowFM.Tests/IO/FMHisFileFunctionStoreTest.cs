@@ -380,7 +380,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 weir.CrestLevelTimeSeries[model.StartTime.AddHours(1)] = 7.5;
                 weir.CrestLevelTimeSeries[model.StartTime.AddHours(2)] = 2.5;
                 weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
-                model.Area.Weirs.Add(weir);
+                model.Area.Structures.Add(weir);
 
                 var gate = new Structure()
                 {
@@ -412,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
                 gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
                 gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
-                model.Area.Weirs.Add(gate);
+                model.Area.Structures.Add(gate);
 
                 var pump = new Pump()
                 {
@@ -562,7 +562,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Name = "ObservationPoint02",
                 Geometry = new Point(model.GridExtent.MaxX - 1, model.GridExtent.MinY + 5)
             });
-            model.Area.Weirs.Add(new Structure()
+            model.Area.Structures.Add(new Structure()
             {
                 Name = "structure01",
                 Geometry = new LineString(new[]
@@ -571,7 +571,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     new Coordinate(model.GridExtent.MinX + 2, model.GridExtent.MinY + 4)
                 })
             });
-            model.Area.Weirs.Add(new Structure()
+            model.Area.Structures.Add(new Structure()
             {
                 Name = "structure02",
                 Geometry = new LineString(new[]
@@ -581,7 +581,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }),
                 Formula = new SimpleGateFormula()
             });
-            model.Area.Weirs.Add(new Structure()
+            model.Area.Structures.Add(new Structure()
             {
                 Name = "structure03",
                 Geometry = new LineString(new[]

@@ -987,7 +987,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                           hydroArea.ObservationCrossSections.ToList(),
                           ref obsCrsFile, FileConstants.ObsCrossSectionPliFileExtension, FileConstants.ObsCrossSectionPlizFileExtension);
 
-            List<IStructureObject> structures = hydroArea.Pumps.Cast<IStructureObject>().Concat(hydroArea.Weirs).ToList();
+            List<IStructureObject> structures = hydroArea.Pumps.Cast<IStructureObject>().Concat(hydroArea.Structures).ToList();
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.StructuresFile, structures,
                           ref structuresFile, FileConstants.StructuresFileExtension);
@@ -1314,7 +1314,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                         hydroArea.Pumps.Add(pump);
                         break;
                     case Structure weir:
-                        hydroArea.Weirs.Add(weir);
+                        hydroArea.Structures.Add(weir);
                         break;
                     default:
                         throw new NotSupportedException();
