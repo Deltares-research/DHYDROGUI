@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 using NUnit.Framework;

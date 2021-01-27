@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using DelftTools.Functions;
-using DelftTools.Hydro.Area.Objects.StructuresObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 
-namespace DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas
+namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 {
     [Entity(FireOnCollectionChange = false)]
     public class GeneralStructureFormula : Unique<long>, IGatedStructureFormula

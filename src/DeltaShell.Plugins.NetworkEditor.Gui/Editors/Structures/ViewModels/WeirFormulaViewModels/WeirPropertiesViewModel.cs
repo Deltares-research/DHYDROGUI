@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels

@@ -3,7 +3,7 @@ using DelftTools.Functions;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 
-namespace DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas
+namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 {
     /// <summary>
     /// Sharp crested gated weir (Orifice)

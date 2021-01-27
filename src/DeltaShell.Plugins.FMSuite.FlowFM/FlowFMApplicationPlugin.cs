@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;

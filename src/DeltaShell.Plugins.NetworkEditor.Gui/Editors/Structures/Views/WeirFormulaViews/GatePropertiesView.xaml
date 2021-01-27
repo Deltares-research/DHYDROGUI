@@ -6,7 +6,7 @@
              xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
              xmlns:converters="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:structureFormulas="clr-namespace:DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;assembly=DelftTools.Hydro"
+             xmlns:structureFormulas="clr-namespace:DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;assembly=DelftTools.Hydro"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>

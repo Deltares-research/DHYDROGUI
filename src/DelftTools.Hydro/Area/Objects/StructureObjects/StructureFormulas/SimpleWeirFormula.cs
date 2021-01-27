@@ -1,7 +1,7 @@
 ﻿using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 
-namespace DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas
+namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 {
     /// <summary>
     /// Class to manage properties specific for the Sobek Simple Weir

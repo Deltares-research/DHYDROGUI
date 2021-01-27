@@ -1,4 +1,4 @@
-﻿namespace DelftTools.Hydro.Area.Objects.StructuresObjects.KnownProperties
+﻿namespace DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties
 {
     public static class KnownStructureProperties
     {

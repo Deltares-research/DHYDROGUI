@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects.KnownProperties;
-using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;

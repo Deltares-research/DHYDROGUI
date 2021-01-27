@@ -1,4 +1,4 @@
-﻿namespace DelftTools.Hydro.Area.Objects.StructuresObjects
+﻿namespace DelftTools.Hydro.Area.Objects.StructureObjects
 {
     public static class GuiParameterNames
     {

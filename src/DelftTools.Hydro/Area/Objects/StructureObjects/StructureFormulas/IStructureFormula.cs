@@ -1,7 +1,7 @@
 using System;
 using DelftTools.Utils.Data;
 
-namespace DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas
+namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 {
     /// <summary>
     /// <see cref="IStructureFormula"/> defines the interface of structure formulas.

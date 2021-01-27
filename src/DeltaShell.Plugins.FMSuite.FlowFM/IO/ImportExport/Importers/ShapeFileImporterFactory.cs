@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;

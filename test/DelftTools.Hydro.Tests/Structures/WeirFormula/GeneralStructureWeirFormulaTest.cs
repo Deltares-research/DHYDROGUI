@@ -1,4 +1,4 @@
-﻿using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
+﻿using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using NUnit.Framework;
 

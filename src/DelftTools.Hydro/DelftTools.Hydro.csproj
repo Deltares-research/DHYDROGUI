@@ -158,11 +158,11 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Area\Objects\StructuresObjects\IPump.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\IStructure.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\IStructureObject.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\Pump.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\Structure.cs" />
+    <Compile Include="Area\Objects\StructureObjects\IPump.cs" />
+    <Compile Include="Area\Objects\StructureObjects\IStructure.cs" />
+    <Compile Include="Area\Objects\StructureObjects\IStructureObject.cs" />
+    <Compile Include="Area\Objects\StructureObjects\Pump.cs" />
+    <Compile Include="Area\Objects\StructureObjects\Structure.cs" />
     <Compile Include="Embankment.cs" />
     <Compile Include="GroupableFeatures\GroupableFeature2D.cs" />
     <Compile Include="GroupableFeatures\GroupableFeature2DPoint.cs" />
@@ -196,15 +196,15 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GroupableFeatures\GroupableFeatureHelper.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\GateOpeningDirection.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\IStructureFormula.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\KnownProperties\KnownGeneralStructureProperties.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\KnownProperties\KnownStructureProperties.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\GuiParameterNames.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\SimpleGateFormula.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\GeneralStructureFormula.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\IGatedStructureFormula.cs" />
-    <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\SimpleWeirFormula.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\GateOpeningDirection.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\IStructureFormula.cs" />
+    <Compile Include="Area\Objects\StructureObjects\KnownProperties\KnownGeneralStructureProperties.cs" />
+    <Compile Include="Area\Objects\StructureObjects\KnownProperties\KnownStructureProperties.cs" />
+    <Compile Include="Area\Objects\StructureObjects\GuiParameterNames.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\SimpleGateFormula.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\GeneralStructureFormula.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\IGatedStructureFormula.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\SimpleWeirFormula.cs" />
     <Compile Include="HydroTimeSeriesFactory.cs" />
     <Compile Include="Area\Objects\ThinDam2D.cs" />
   </ItemGroup>

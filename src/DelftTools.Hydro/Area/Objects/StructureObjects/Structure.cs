@@ -1,5 +1,5 @@
 ﻿using DelftTools.Functions;
-using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
@@ -7,7 +7,7 @@ using DelftTools.Utils.Guards;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
-namespace DelftTools.Hydro.Area.Objects.StructuresObjects
+namespace DelftTools.Hydro.Area.Objects.StructureObjects
 {
     /// <summary>
     /// <see cref="Structure"/> defines a single structure.

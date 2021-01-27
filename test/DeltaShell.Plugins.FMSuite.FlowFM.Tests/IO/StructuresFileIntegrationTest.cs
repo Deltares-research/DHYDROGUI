@@ -2,8 +2,8 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;

@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using DelftTools.Controls;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;

@@ -1,7 +1,7 @@
 ﻿using DelftTools.Functions;
-using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 
-namespace DelftTools.Hydro.Area.Objects.StructuresObjects
+namespace DelftTools.Hydro.Area.Objects.StructureObjects
 {
     /// <summary>
     /// <see cref="IStructure"/> defines a single 2D structure.

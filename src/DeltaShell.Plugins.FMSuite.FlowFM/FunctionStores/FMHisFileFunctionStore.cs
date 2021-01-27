@@ -6,8 +6,8 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects;
-using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Units;
 using DelftTools.Utils;
@@ -25,7 +25,7 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
-using IStructure = DelftTools.Hydro.Area.Objects.StructuresObjects.IStructure;
+using IStructure = DelftTools.Hydro.Area.Objects.StructureObjects.IStructure;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {

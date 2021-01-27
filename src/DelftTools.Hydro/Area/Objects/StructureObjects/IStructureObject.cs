@@ -1,7 +1,7 @@
 ﻿using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils;
 
-namespace DelftTools.Hydro.Area.Objects.StructuresObjects
+namespace DelftTools.Hydro.Area.Objects.StructureObjects
 {
     /// <summary>
     /// <see cref="IStructureObject"/> defines a 2D nameable, groupable
