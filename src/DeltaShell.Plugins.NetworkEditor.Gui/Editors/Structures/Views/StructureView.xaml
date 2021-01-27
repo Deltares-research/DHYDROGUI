@@ -17,14 +17,14 @@
 
             <convertersCommon:TypeToDescriptionConverter x:Key="TypeToDescriptionConverter" />
 
-            <DataTemplate DataType="{x:Type viewModels:SimpleWeirViewModel}">
-                <weirFormulaViews:SimpleWeirView DataContext="{Binding}" />
+            <DataTemplate DataType="{x:Type viewModels:SimpleWeirFormulaViewModel}">
+                <weirFormulaViews:SimpleWeirFormulaView DataContext="{Binding}" />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModels:GatedWeirViewModel}">
-                <weirFormulaViews:GatedWeirView DataContext="{Binding}" />
+            <DataTemplate DataType="{x:Type viewModels:SimpleGateFormulaViewModel}">
+                <weirFormulaViews:SimpleGateFormulaView DataContext="{Binding}" />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type viewModels:GeneralStructureViewModel}">
-                <weirFormulaViews:GeneralStructureView DataContext="{Binding}" />
+            <DataTemplate DataType="{x:Type viewModels:GeneralStructureFormulaViewModel}">
+                <weirFormulaViews:GeneralStructureFormulaView DataContext="{Binding}" />
             </DataTemplate>
 
             <DataTemplate x:Key="TypeLabeledComboBoxTemplate">
@@ -51,7 +51,7 @@
                 </Grid>
             </GroupBox>
 
-            <ContentControl Content="{Binding Path=WeirViewModel}" />
+            <ContentControl Content="{Binding Path=StructureFormulaViewModel}" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

@@ -5,36 +5,36 @@ using DelftTools.Utils.Guards;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
     /// <summary>
-    /// <see cref="WeirViewModel"/> acts as the base class for all weir
+    /// <see cref="StructureFormulaViewModel"/> acts as the base class for all structure
     /// formula view models.
     /// </summary>
-    public abstract class WeirViewModel : INotifyPropertyChanged
+    public abstract class StructureFormulaViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Creates a new <see cref="WeirViewModel"/>.
+        /// Creates a new <see cref="StructureFormulaViewModel"/>.
         /// </summary>
-        /// <param name="weirPropertiesViewModel">The weir properties view model.</param>
+        /// <param name="structurePropertiesViewModel">The weir properties view model.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="weirPropertiesViewModel"/> is <c>null</c>.
+        /// Thrown when <paramref name="structurePropertiesViewModel"/> is <c>null</c>.
         /// </exception>
-        protected WeirViewModel(WeirPropertiesViewModel weirPropertiesViewModel)
+        protected StructureFormulaViewModel(StructurePropertiesViewModel structurePropertiesViewModel)
         {
-            Ensure.NotNull(weirPropertiesViewModel, nameof(weirPropertiesViewModel));
-            WeirPropertiesViewModel = weirPropertiesViewModel;
+            Ensure.NotNull(structurePropertiesViewModel, nameof(structurePropertiesViewModel));
+            StructurePropertiesViewModel = structurePropertiesViewModel;
         }
 
         /// <summary>
         /// Gets the weir properties view model.
         /// </summary>
         /// <remarks>
-        /// Note that the <see cref="WeirViewModel"/> is not the "owner " of the
-        /// <see cref="WeirPropertiesViewModel"/> it merely holds a reference to it.
+        /// Note that the <see cref="StructureFormulaViewModel"/> is not the "owner " of the
+        /// <see cref="StructurePropertiesViewModel"/> it merely holds a reference to it.
         /// The actual life-time management is done by the <see cref="StructureViewModel"/>
         /// As such we do not need to dispose of this object.
         /// </remarks>
-        public WeirPropertiesViewModel WeirPropertiesViewModel { get; }
+        public StructurePropertiesViewModel StructurePropertiesViewModel { get; }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

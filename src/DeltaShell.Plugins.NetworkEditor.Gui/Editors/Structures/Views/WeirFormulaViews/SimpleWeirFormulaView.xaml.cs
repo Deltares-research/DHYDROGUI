@@ -3,11 +3,11 @@
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.WeirFormulaViews
 {
     /// <summary>
-    /// Interaction logic for WeirPropertiesView.xaml
+    /// Interaction logic for SimpleWeirFormulaView.xaml
     /// </summary>
-    public partial class WeirPropertiesView : UserControl
+    public partial class SimpleWeirFormulaView : UserControl
     {
-        public WeirPropertiesView()
+        public SimpleWeirFormulaView()
         {
             InitializeComponent();
         }

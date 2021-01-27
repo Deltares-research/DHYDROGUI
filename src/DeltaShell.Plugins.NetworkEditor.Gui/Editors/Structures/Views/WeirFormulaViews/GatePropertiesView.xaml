@@ -39,7 +39,7 @@
 
             <StackPanel Grid.Column="0">
                 <components:LabeledTimeSeriesHeaderView />
-                <components:LabeledTimeSeriesView StructureName="{Binding Path=WeirPropertiesViewModel.StructureName}"
+                <components:LabeledTimeSeriesView StructureName="{Binding Path=StructurePropertiesViewModel.StructureName}"
                                                   Label="Gate lower edge level"
                                                   SingleValueContent="{Binding GateLowerEdgeLevel}"
                                                   TimeSeries="{Binding GateLowerEdgeLevelTimeSeries}"
@@ -48,11 +48,11 @@
                 <components:StructuresValueBox Label="Gate height"
                                                ValueContent="{Binding GateHeight}"
                                                Unit="m" />
-                <components:GateOpeningHeightCalculatedFieldView CrestLevel="{Binding Path=WeirPropertiesViewModel.CrestLevel}"
+                <components:GateOpeningHeightCalculatedFieldView CrestLevel="{Binding Path=StructurePropertiesViewModel.CrestLevel}"
                                                                  GateLowerEdgeLevel="{Binding Path=GateLowerEdgeLevel}"
-                                                                 IsUsingCrestLevelTimeSeries="{Binding Path=WeirPropertiesViewModel.UseCrestLevelTimeSeries}"
+                                                                 IsUsingCrestLevelTimeSeries="{Binding Path=StructurePropertiesViewModel.UseCrestLevelTimeSeries}"
                                                                  IsUsingGateLowerEdgeLevelTimeSeries="{Binding Path=UseGateLowerEdgeLevelTimeSeries}" />
-                <components:LabeledTimeSeriesView StructureName="{Binding Path=WeirPropertiesViewModel.StructureName}"
+                <components:LabeledTimeSeriesView StructureName="{Binding Path=StructurePropertiesViewModel.StructureName}"
                                                   Label="Horizontal opening width"
                                                   SingleValueContent="{Binding HorizontalOpeningWidth}"
                                                   TimeSeries="{Binding HorizontalOpeningWidthTimeSeries}"

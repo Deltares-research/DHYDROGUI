@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const bool canChooseGateOpeningDirection = true;
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 // Call
                 var viewModel = new GatePropertiesViewModel(formula,
@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
                 // Assert
                 Assert.That(viewModel, Is.InstanceOf(typeof(INotifyPropertyChanged)));
-                Assert.That(viewModel.WeirPropertiesViewModel,
+                Assert.That(viewModel.StructurePropertiesViewModel,
                             Is.SameAs(weirPropertiesViewModel));
                 Assert.That(viewModel.CanChooseGateOpeningDirection,
                             Is.EqualTo(canChooseGateOpeningDirection));
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             const bool canChooseGateOpeningDirection = true;
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 // Call
                 var viewModel = new GatePropertiesViewModel(formula,
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
                 // Assert
                 Assert.That(viewModel, Is.InstanceOf(typeof(INotifyPropertyChanged)));
-                Assert.That(viewModel.WeirPropertiesViewModel,
+                Assert.That(viewModel.StructurePropertiesViewModel,
                             Is.SameAs(weirPropertiesViewModel));
                 Assert.That(viewModel.CanChooseGateOpeningDirection,
                             Is.EqualTo(canChooseGateOpeningDirection));
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void Constructor_FormulaNull_ThrowsArgumentNullException()
         {
             var weir2D = new Structure();
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 void Call() => new GatePropertiesViewModel(null, weirPropertiesViewModel, true);
                 var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             void Call() => new GatePropertiesViewModel(formula, null, true);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
-            Assert.That(exception.ParamName, Is.EqualTo("weirPropertiesViewModel"));
+            Assert.That(exception.ParamName, Is.EqualTo("structurePropertiesViewModel"));
         }
 
         [Test]
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -265,7 +265,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -299,7 +299,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -338,7 +338,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -377,7 +377,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -413,7 +413,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -449,7 +449,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -486,7 +486,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -522,7 +522,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -555,7 +555,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -589,7 +589,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -626,7 +626,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -663,7 +663,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -697,7 +697,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -732,7 +732,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -773,7 +773,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -814,7 +814,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -852,7 +852,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -890,7 +890,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -930,7 +930,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -973,7 +973,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -1014,7 +1014,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
@@ -1055,7 +1055,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,

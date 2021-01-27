@@ -5,26 +5,26 @@ using DelftTools.Utils.Guards;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
     /// <summary>
-    /// <see cref="SimpleWeirViewModel"/> defines the view model for the
-    /// <see cref="Views.WeirFormulaViews.SimpleWeirView"/>.
+    /// <see cref="SimpleWeirFormulaViewModel"/> defines the view model for the
+    /// <see cref="Views.WeirFormulaViews.SimpleWeirFormulaView"/>.
     /// </summary>
-    /// <seealso cref="WeirViewModel"/>
+    /// <seealso cref="StructureFormulaViewModel"/>
     [Description("Simple Weir")]
-    public sealed class SimpleWeirViewModel : WeirViewModel
+    public sealed class SimpleWeirFormulaViewModel : StructureFormulaViewModel
     {
         private readonly SimpleWeirFormula formula;
 
         /// <summary>
-        /// Creates a new <see cref="SimpleWeirViewModel"/>.
+        /// Creates a new <see cref="SimpleWeirFormulaViewModel"/>.
         /// </summary>
         /// <param name="formula">The formula.</param>
-        /// <param name="weirPropertiesViewModel">The weir properties view model.</param>
+        /// <param name="structurePropertiesViewModel">The weir properties view model.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public SimpleWeirViewModel(SimpleWeirFormula formula,
-                                   WeirPropertiesViewModel weirPropertiesViewModel) :
-            base(weirPropertiesViewModel)
+        public SimpleWeirFormulaViewModel(SimpleWeirFormula formula,
+                                          StructurePropertiesViewModel structurePropertiesViewModel) :
+            base(structurePropertiesViewModel)
         {
             Ensure.NotNull(formula, nameof(formula));
             this.formula = formula;

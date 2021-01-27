@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         [Test]
         public void Constructor_WeirNull_ThrowsArgumentNullException()
         {
-            void Call() => new WeirPropertiesViewModel(null);
+            void Call() => new StructurePropertiesViewModel(null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("weir"));
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var weir = new Structure();
             const double crestLevelValue = 21.3;
 
-            using (var viewModel = new WeirPropertiesViewModel(weir))
+            using (var viewModel = new StructurePropertiesViewModel(weir))
             {
                 var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var weir = new Structure() {CrestWidth = 1.0};
             const double crestWidthValue = 21.3;
 
-            using (var viewModel = new WeirPropertiesViewModel(weir))
+            using (var viewModel = new StructurePropertiesViewModel(weir))
             {
                 var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             var weir = new Structure {CrestWidth = double.NaN};
 
-            using (var viewModel = new WeirPropertiesViewModel(weir))
+            using (var viewModel = new StructurePropertiesViewModel(weir))
             {
                 Assert.That(viewModel.CrestWidth, Is.Null);
             }
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             var weir = new Structure();
 
-            using (var viewModel = new WeirPropertiesViewModel(weir))
+            using (var viewModel = new StructurePropertiesViewModel(weir))
             {
                 var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             var weir = new Structure();
 
-            using (var viewModel = new WeirPropertiesViewModel(weir))
+            using (var viewModel = new StructurePropertiesViewModel(weir))
             {
                 // Call
                 TimeSeries timeSeries = viewModel.CrestLevelTimeSeries;
@@ -155,7 +155,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var weir = new Structure();
             const string structureName = "EiffelTower";
 
-            using (var viewModel = new WeirPropertiesViewModel(weir))
+            using (var viewModel = new StructurePropertiesViewModel(weir))
             {
                 var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;

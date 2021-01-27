@@ -36,23 +36,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// Creates a new <see cref="GatePropertiesViewModel"/>.
         /// </summary>
         /// <param name="formula">The formula.</param>
-        /// <param name="weirPropertiesViewModel">The weir properties view model.</param>
+        /// <param name="structurePropertiesViewModel">The weir properties view model.</param>
         /// <param name="canChooseGateOpeningDirection">
         /// if set to <c>true</c> then the gate opening direction can be set.
         /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="formula"/> or
-        /// <paramref name="weirPropertiesViewModel"/> is <c>null</c>.
+        /// <paramref name="structurePropertiesViewModel"/> is <c>null</c>.
         /// </exception>
         public GatePropertiesViewModel(IGatedStructureFormula formula,
-                                       WeirPropertiesViewModel weirPropertiesViewModel,
+                                       StructurePropertiesViewModel structurePropertiesViewModel,
                                        bool canChooseGateOpeningDirection)
         {
             Ensure.NotNull(formula, nameof(formula));
-            Ensure.NotNull(weirPropertiesViewModel, nameof(weirPropertiesViewModel));
+            Ensure.NotNull(structurePropertiesViewModel, nameof(structurePropertiesViewModel));
 
             this.formula = formula;
-            WeirPropertiesViewModel = weirPropertiesViewModel;
+            StructurePropertiesViewModel = structurePropertiesViewModel;
             CanChooseGateOpeningDirection = canChooseGateOpeningDirection;
 
             Subscribe();
@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <summary>
         /// Gets the weir properties view model.
         /// </summary>
-        public WeirPropertiesViewModel WeirPropertiesViewModel { get; }
+        public StructurePropertiesViewModel StructurePropertiesViewModel { get; }
 
         /// <summary>
         /// Gets a value indicating whether the gate opening direction can be

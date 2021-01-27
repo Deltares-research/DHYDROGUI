@@ -3,11 +3,11 @@
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.WeirFormulaViews
 {
     /// <summary>
-    /// Interaction logic for GeneralStructureView.xaml
+    /// Interaction logic for GeneralStructureFormulaView.xaml
     /// </summary>
-    public partial class GeneralStructureView : UserControl
+    public partial class GeneralStructureFormulaView : UserControl
     {
-        public GeneralStructureView()
+        public GeneralStructureFormulaView()
         {
             InitializeComponent();
         }

@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using DelftTools.Functions;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Utils.Guards;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
     /// <summary>
-    /// <see cref="WeirPropertiesViewModel"/> provides the view model of the
+    /// <see cref="StructurePropertiesViewModel"/> provides the view model of the
     /// <see cref="Views.WeirFormulaViews.WeirPropertiesView"/>.
     /// </summary>
-    public sealed class WeirPropertiesViewModel : INotifyPropertyChanged, IDisposable
+    public sealed class StructurePropertiesViewModel : INotifyPropertyChanged, IDisposable
     {
         private readonly IReadOnlyDictionary<string, string> PropertyMapping =
             new Dictionary<string, string>()
@@ -24,23 +23,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
                 {nameof(IStructure.Name), nameof(StructureName)},
             };
 
-        private readonly IStructure weir;
+        private readonly IStructure structure;
 
         private bool hasDisposed = false;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Creates a new <see cref="WeirPropertiesViewModel"/>.
+        /// Creates a new <see cref="StructurePropertiesViewModel"/>.
         /// </summary>
-        /// <param name="weir">The weir.</param>
+        /// <param name="structure">The structure.</param>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="weir"/> is <c>null</c>.
+        /// Thrown when <paramref name="structure"/> is <c>null</c>.
         /// </exception>
-        public WeirPropertiesViewModel(IStructure weir)
+        public StructurePropertiesViewModel(IStructure structure)
         {
-            Ensure.NotNull(weir, nameof(weir));
-            this.weir = weir;
+            Ensure.NotNull(structure, nameof(structure));
+            this.structure = structure;
 
             Subscribe();
         }
@@ -50,8 +49,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public double CrestLevel
         {
-            get => weir.CrestLevel;
-            set => weir.CrestLevel = value;
+            get => structure.CrestLevel;
+            set => structure.CrestLevel = value;
         }
 
         /// <summary>
@@ -60,22 +59,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public bool UseCrestLevelTimeSeries
         {
-            get => weir.UseCrestLevelTimeSeries;
-            set => weir.UseCrestLevelTimeSeries = value;
+            get => structure.UseCrestLevelTimeSeries;
+            set => structure.UseCrestLevelTimeSeries = value;
         }
 
         /// <summary>
         /// Gets the crest level time series.
         /// </summary>
-        public TimeSeries CrestLevelTimeSeries => weir.CrestLevelTimeSeries;
+        public TimeSeries CrestLevelTimeSeries => structure.CrestLevelTimeSeries;
 
         /// <summary>
         /// Gets or sets the width of the crest.
         /// </summary>
         public double? CrestWidth
         {
-            get => !double.IsNaN(weir.CrestWidth) ? (double?) weir.CrestWidth : null;
-            set => weir.CrestWidth = value ?? double.NaN;
+            get => !double.IsNaN(structure.CrestWidth) ? (double?) structure.CrestWidth : null;
+            set => structure.CrestWidth = value ?? double.NaN;
         }
 
         /// <summary>
@@ -83,8 +82,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </summary>
         public string StructureName
         {
-            get => weir.Name;
-            set => weir.Name = value;
+            get => structure.Name;
+            set => structure.Name = value;
         }
 
         /// <summary>
@@ -108,7 +107,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
 
         private void Subscribe()
         {
-            ((INotifyPropertyChanged) weir).PropertyChanged += PropagatePropertyChanged;
+            ((INotifyPropertyChanged) structure).PropertyChanged += PropagatePropertyChanged;
         }
 
         /// <summary>
@@ -127,7 +126,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// </remarks>
         private void PropagatePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!Equals(sender, weir) || !IsObservedProperty(e.PropertyName))
+            if (!Equals(sender, structure) || !IsObservedProperty(e.PropertyName))
             {
                 return;
             }
@@ -140,7 +139,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
 
         private void Unsubscribe()
         {
-            ((INotifyPropertyChanged) weir).PropertyChanged -= PropagatePropertyChanged;
+            ((INotifyPropertyChanged) structure).PropertyChanged -= PropagatePropertyChanged;
         }
 
         private void OnPropertyChanged(string propertyName)

@@ -20,14 +20,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var weir = new Structure {Formula = formula};
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir))
             {
                 // Call
                 var viewModel =
-                    new SimpleWeirViewModel(formula, weirPropertiesViewModel);
+                    new SimpleWeirFormulaViewModel(formula, weirPropertiesViewModel);
 
                 Assert.That(viewModel, Is.InstanceOf(typeof(INotifyPropertyChanged)));
-                Assert.That(viewModel.WeirPropertiesViewModel,
+                Assert.That(viewModel.StructurePropertiesViewModel,
                             Is.SameAs(weirPropertiesViewModel));
                 Assert.That(viewModel.ContractionCoefficient,
                             Is.EqualTo(formula.LateralContraction));
@@ -40,10 +40,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             var weir = new Structure();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir))
             {
                 // Call | Assert
-                void Call() => new SimpleWeirViewModel(null, weirPropertiesViewModel);
+                void Call() => new SimpleWeirFormulaViewModel(null, weirPropertiesViewModel);
 
                 var exception = Assert.Throws<ArgumentNullException>(Call);
                 Assert.That(exception.ParamName, Is.EqualTo("formula"));
@@ -55,10 +55,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         {
             // Setup
             var formula = new SimpleWeirFormula();
-            void Call() => new SimpleWeirViewModel(formula, null);
+            void Call() => new SimpleWeirFormulaViewModel(formula, null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("weirPropertiesViewModel"));
+            Assert.That(exception.ParamName, Is.EqualTo("structurePropertiesViewModel"));
         }
 
         [Test]
@@ -72,9 +72,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
-                var viewModel = new SimpleWeirViewModel(formula,
+                var viewModel = new SimpleWeirFormulaViewModel(formula,
                                                         weirPropertiesViewModel);
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 
@@ -109,9 +109,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
 
-            using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir2D))
+            using (var weirPropertiesViewModel = new StructurePropertiesViewModel(weir2D))
             {
-                var viewModel = new SimpleWeirViewModel(formula,
+                var viewModel = new SimpleWeirFormulaViewModel(formula,
                                                         weirPropertiesViewModel);
                 viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
 

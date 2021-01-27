@@ -6,27 +6,27 @@ using DelftTools.Utils.Guards;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
     /// <summary>
-    /// <see cref="GatedWeirViewModel"/> provides the view model for the
+    /// <see cref="SimpleGateFormulaViewModel"/> provides the view model for the
     /// <see cref="Views.WeirFormulaViews.GatedWeirView"/>.
     /// </summary>
-    /// <seealso cref="WeirViewModel"/>
+    /// <seealso cref="StructureFormulaViewModel"/>
     [Description("Simple Gate")]
-    public sealed class GatedWeirViewModel : WeirViewModel, IDisposable
+    public sealed class SimpleGateFormulaViewModel : StructureFormulaViewModel, IDisposable
     {
         /// <summary>
-        /// Creates a new <see cref="GatedWeirViewModel"/>.
+        /// Creates a new <see cref="SimpleGateFormulaViewModel"/>.
         /// </summary>
         /// <param name="formula">The formula.</param>
-        /// <param name="weirPropertiesViewModel">The weir properties view model.</param>
-        /// <exception cref="System.ArgumentNullException">
+        /// <param name="structurePropertiesViewModel">The weir properties view model.</param>
+        /// <exception cref="ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public GatedWeirViewModel(SimpleGateFormula formula,
-                                  WeirPropertiesViewModel weirPropertiesViewModel) :
-            base(weirPropertiesViewModel)
+        public SimpleGateFormulaViewModel(SimpleGateFormula formula,
+                                  StructurePropertiesViewModel structurePropertiesViewModel) :
+            base(structurePropertiesViewModel)
         {
             Ensure.NotNull(formula, nameof(formula));
-            GatePropertiesViewModel = new GatePropertiesViewModel(formula, weirPropertiesViewModel, true);
+            GatePropertiesViewModel = new GatePropertiesViewModel(formula, structurePropertiesViewModel, true);
         }
 
         /// <summary>

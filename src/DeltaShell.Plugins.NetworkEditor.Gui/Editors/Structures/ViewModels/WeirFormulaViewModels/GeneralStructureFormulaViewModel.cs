@@ -6,31 +6,31 @@ using DelftTools.Utils.Guards;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
 {
     /// <summary>
-    /// <see cref="GeneralStructureViewModel"/> provides the view model for the
+    /// <see cref="GeneralStructureFormulaViewModel"/> provides the view model for the
     /// <see cref="Views.WeirFormulaViews.GeneralStructureView"/>.
     /// </summary>
-    /// <seealso cref="WeirViewModel"/>
+    /// <seealso cref="StructureFormulaViewModel"/>
     [Description("General Structure")]
-    public sealed class GeneralStructureViewModel : WeirViewModel, IDisposable
+    public sealed class GeneralStructureFormulaViewModel : StructureFormulaViewModel, IDisposable
     {
         private readonly GeneralStructureFormula formula;
 
         /// <summary>
-        /// Creates a new <see cref="GeneralStructureViewModel"/>
+        /// Creates a new <see cref="GeneralStructureFormulaViewModel"/>
         /// </summary>
         /// <param name="formula">The formula.</param>
-        /// <param name="weirPropertiesViewModel">The weir properties view model.</param>
+        /// <param name="structurePropertiesViewModel">The weir properties view model.</param>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public GeneralStructureViewModel(GeneralStructureFormula formula,
-                                         WeirPropertiesViewModel weirPropertiesViewModel) :
-            base(weirPropertiesViewModel)
+        public GeneralStructureFormulaViewModel(GeneralStructureFormula formula,
+                                                StructurePropertiesViewModel structurePropertiesViewModel) :
+            base(structurePropertiesViewModel)
         {
             Ensure.NotNull(formula, nameof(formula));
 
             this.formula = formula;
-            GatePropertiesViewModel = new GatePropertiesViewModel(formula, weirPropertiesViewModel, false);
+            GatePropertiesViewModel = new GatePropertiesViewModel(formula, structurePropertiesViewModel, false);
         }
 
         /// <summary>

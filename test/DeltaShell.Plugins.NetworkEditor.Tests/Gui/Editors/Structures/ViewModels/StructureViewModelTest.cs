@@ -19,17 +19,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var simpleWeirFormula = new SimpleWeirFormula();
             var simpleWeir = new Structure {Formula = simpleWeirFormula};
 
-            yield return new TestCaseData(simpleWeir, typeof(SimpleWeirViewModel));
+            yield return new TestCaseData(simpleWeir, typeof(SimpleWeirFormulaViewModel));
 
             var gatedWeirFormula = new SimpleGateFormula();
             var gatedWeir = new Structure {Formula = gatedWeirFormula};
 
-            yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel));
+            yield return new TestCaseData(gatedWeir, typeof(SimpleGateFormulaViewModel));
 
             var generalStructureFormula = new GeneralStructureFormula();
             var generalStructure = new Structure {Formula = generalStructureFormula};
 
-            yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel));
+            yield return new TestCaseData(generalStructure, typeof(GeneralStructureFormulaViewModel));
         }
 
         [Test]
@@ -41,8 +41,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             {
                 // Assert
                 Assert.That(viewModel.FormulaType, Is.EqualTo(expectedViewModelType));
-                Assert.That(viewModel.WeirViewModel, Is.Not.Null);
-                Assert.That(viewModel.WeirViewModel, Is.InstanceOf(expectedViewModelType));
+                Assert.That(viewModel.StructureFormulaViewModel, Is.Not.Null);
+                Assert.That(viewModel.StructureFormulaViewModel, Is.InstanceOf(expectedViewModelType));
             }
         }
 
@@ -68,9 +68,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 // Assert
                 Type[] expectedTypes =
                 {
-                    typeof(SimpleWeirViewModel), 
-                    typeof(GatedWeirViewModel), 
-                    typeof(GeneralStructureViewModel)
+                    typeof(SimpleWeirFormulaViewModel), 
+                    typeof(SimpleGateFormulaViewModel), 
+                    typeof(GeneralStructureFormulaViewModel)
                 };
                 Assert.That(formulaTypes, Is.EqualTo(expectedTypes));
             }
@@ -81,9 +81,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var simpleWeir = new Structure {Formula = new SimpleWeirFormula()};
             var gatedWeir = new Structure {Formula = new SimpleGateFormula(true)};
 
-            yield return new TestCaseData(gatedWeir,  typeof(SimpleWeirViewModel),       typeof(SimpleWeirFormula));
-            yield return new TestCaseData(simpleWeir, typeof(GatedWeirViewModel),        typeof(SimpleGateFormula));
-            yield return new TestCaseData(simpleWeir, typeof(GeneralStructureViewModel), typeof(GeneralStructureFormula));
+            yield return new TestCaseData(gatedWeir,  typeof(SimpleWeirFormulaViewModel),       typeof(SimpleWeirFormula));
+            yield return new TestCaseData(simpleWeir, typeof(SimpleGateFormulaViewModel),        typeof(SimpleGateFormula));
+            yield return new TestCaseData(simpleWeir, typeof(GeneralStructureFormulaViewModel), typeof(GeneralStructureFormula));
         }
 
         [Test]
@@ -103,14 +103,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
                 // Assert
                 Assert.That(viewModel.FormulaType, Is.EqualTo(newWeirViewModelType));
-                Assert.That(viewModel.WeirViewModel, Is.Not.Null);
-                Assert.That(viewModel.WeirViewModel, Is.InstanceOf(newWeirViewModelType));
+                Assert.That(viewModel.StructureFormulaViewModel, Is.Not.Null);
+                Assert.That(viewModel.StructureFormulaViewModel, Is.InstanceOf(newWeirViewModelType));
 
                 Assert.That(weir.Formula, Is.InstanceOf(newFormulaType));
 
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(2));
                 Assert.That(propertyChangedObserver.Senders[0], Is.SameAs(viewModel));
-                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, Is.EqualTo(nameof(viewModel.WeirViewModel)));
+                Assert.That(propertyChangedObserver.EventArgses[0].PropertyName, Is.EqualTo(nameof(viewModel.StructureFormulaViewModel)));
                 Assert.That(propertyChangedObserver.Senders[1], Is.SameAs(viewModel));
                 Assert.That(propertyChangedObserver.EventArgses[1].PropertyName, Is.EqualTo(nameof(viewModel.FormulaType)));
 
@@ -122,13 +122,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public static IEnumerable<TestCaseData> GetFormulaTypeNoChangeData()
         {
             var simpleWeir = new Structure {Formula = new SimpleWeirFormula()};
-            yield return new TestCaseData(simpleWeir,  typeof(SimpleWeirViewModel), typeof(SimpleWeirFormula));
+            yield return new TestCaseData(simpleWeir,  typeof(SimpleWeirFormulaViewModel), typeof(SimpleWeirFormula));
 
             var gatedWeir = new Structure {Formula = new SimpleGateFormula(true)};
-            yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel), typeof(SimpleGateFormula));
+            yield return new TestCaseData(gatedWeir, typeof(SimpleGateFormulaViewModel), typeof(SimpleGateFormula));
 
             var generalStructure = new Structure {Formula = new GeneralStructureFormula()};
-            yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel), typeof(GeneralStructureFormula));
+            yield return new TestCaseData(generalStructure, typeof(GeneralStructureFormulaViewModel), typeof(GeneralStructureFormula));
         }
 
         [Test]
@@ -148,8 +148,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
                 // Assert
                 Assert.That(viewModel.FormulaType, Is.EqualTo(newWeirViewModelType));
-                Assert.That(viewModel.WeirViewModel, Is.Not.Null);
-                Assert.That(viewModel.WeirViewModel, Is.InstanceOf(newWeirViewModelType));
+                Assert.That(viewModel.StructureFormulaViewModel, Is.Not.Null);
+                Assert.That(viewModel.StructureFormulaViewModel, Is.InstanceOf(newWeirViewModelType));
 
                 Assert.That(weir.Formula, Is.InstanceOf(expectedWeirFormulaType));
 
