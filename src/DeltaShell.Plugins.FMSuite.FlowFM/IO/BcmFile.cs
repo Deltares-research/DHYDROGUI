@@ -220,24 +220,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private BcmBlockData ReadDataBlock(out string line, string blockName)
         {
-            string blockValue = blockName; //supportPointName
             string contentsValue = null;
-            string verticalProfileDefinition = null;
             string locationValue = blockName;
             string timeFunctionValue = "timeseries"; //time-function
             DateTime referenceTimeValue = new DateTime(); //with the timeUnitValue helps determine the time reference and time steps for each entry.
             string timeUnitValue = null;
             string interpolationValue = null; //timeInterpolationType
             string parameterValue = null;
-            string recordsInTableValues = null;
-            string unitValue = null;
 
             var parameterCount = 0;
             var quantityDataList = new List<BcQuantityData>();
 
             BcmQuantityData quantityData = null;
-
-            var lineNumber = LineNumber;
 
             line = GetNextLine();
 

@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             if (!e.Data.GetDataPresent("ShapeType")) return;
 
             var item = e.Data.GetData("ShapeType");
-            if (item == null || !(item is ShapeType)) return;
+            if (!(item is ShapeType)) return;
 
             var pos = e.GetPosition((IInputElement) sender);
 

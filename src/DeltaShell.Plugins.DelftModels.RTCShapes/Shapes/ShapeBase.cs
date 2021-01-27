@@ -138,7 +138,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
         protected void PreRender(Graphics g)
         {
             if (!ShowLabel) return;
-            var sf = new StringFormat { Alignment = stringAlignment };
 
             PointF origin = Point.Empty;
 

@@ -72,12 +72,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition)
-        {
-            var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
-
-        }
-
         private void Write(string filePath, string modelDefinitionModelName, IList<IFmMeteoField> fmMeteoFields, WaterFlowFMProperty modelProperty, DateTime refDate)
         {
             FilePath = filePath;

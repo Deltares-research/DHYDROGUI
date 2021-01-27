@@ -142,7 +142,7 @@ namespace DelftTools.Hydro.CrossSections
             }
             set
             {
-                if (!(value is ILineString) || value == null)
+                if (!(value is ILineString))
                 {
                     throw new ArgumentException("Invalid Geometry for CrossSection XYZ");
                 }

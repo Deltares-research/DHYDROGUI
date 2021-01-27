@@ -54,9 +54,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
                     return false;
                 }
 
-                // 4debug:
-                var layerWithoutDs = mapView.Map.GetAllVisibleLayers(true).OfType<VectorLayer>().FirstOrDefault(l => l.DataSource == null);
-
                 return mapView.Map.GetAllVisibleLayers(true).OfType<VectorLayer>().Any(l => l.DataSource.FeatureType == typeof(HydroLink));
             }
         }

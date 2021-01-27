@@ -502,8 +502,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void SetCompartmentComboBoxTypeEditor(VectorLayerAttributeTableView view, IModelWithNetwork networkModel)
         {
             var sewerConnection = view.TableView.CurrentFocusedRowObject as SewerConnection;
-            if (sewerConnection?.Source == null ||
-                !(sewerConnection?.Source is IManhole sourceManhole) ||
+            if (!(sewerConnection?.Source is IManhole sourceManhole) ||
                 sewerConnection.Target == null ||
                 !(sewerConnection?.Target is IManhole targetManhole)) return;
             

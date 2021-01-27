@@ -263,6 +263,7 @@ namespace DeltaShell.Dimr
             {
                 messages.Add(msg);
             }
+            else
             {
                 Log.Info(msg);
             }

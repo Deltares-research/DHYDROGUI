@@ -158,7 +158,6 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
         {
             int c_jsferic = 0;
             int c_jasfer3D = 0;
-            int c_jglobe = 0;
             int ierr = ggeo_make1D2Dembeddedlinks_dll(ref c_jsferic, ref c_jasfer3D, ref intnFilterMesh1DPoints, ref intPtrfilterMesh1DPoints);
             return ierr;
         }

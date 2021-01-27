@@ -285,7 +285,7 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             if (propertyName == nameof(SourceCompartment))
             {
-                return Source == null || !(Source is IManhole sourceManhole) || sourceManhole.Compartments.Count <= 1;
+                return !(Source is IManhole sourceManhole) || sourceManhole.Compartments.Count <= 1;
             }
             if (propertyName == nameof(TargetCompartment))
             {

@@ -22,7 +22,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         public static List<string> CollectAllErrorMessages(string diaFile)
         {
             var errorLine = string.Empty;
-            var lineCount = 0;
             var errorMessages = new List<string>();
 
             using (var reader = new StreamReader(diaFile))

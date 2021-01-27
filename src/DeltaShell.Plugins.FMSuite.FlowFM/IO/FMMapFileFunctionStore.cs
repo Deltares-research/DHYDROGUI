@@ -367,10 +367,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     })
                     .ToList();
 
-                var mesh1DVariables = timeDepVariables
-                    .Where(v => string.Equals(netCdfFile.GetAttributeValue(v.NetCdfDataVariable, "mesh"), "mesh1d", StringComparison.InvariantCultureIgnoreCase))
-                    .ToList();
-                
                 var linkVariables = timeDepVariables
                     .Where(v => string.Equals(netCdfFile.GetAttributeValue(v.NetCdfDataVariable, "mesh"), "links", StringComparison.InvariantCultureIgnoreCase))
                     .ToList();

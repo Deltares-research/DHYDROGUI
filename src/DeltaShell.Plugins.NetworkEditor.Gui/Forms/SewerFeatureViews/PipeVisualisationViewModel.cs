@@ -88,9 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             var heightLineLength = 0.25 * dx;
 
             var sourceLeft = x0 - heightLineLength;
-            var sourceRight = x0 + heightLineLength;
-
-            var targetLeft = xL - heightLineLength;
+            
             var targetRight = xL + heightLineLength;
 
             var sourceBottomLevel = Pipe.SourceCompartment.BottomLevel;

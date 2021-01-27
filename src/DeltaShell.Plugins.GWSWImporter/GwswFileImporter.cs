@@ -406,7 +406,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         }
                     });
                 }, "Initialize nwrw feature in rainfall runoff model");
-                var nwrwDischargeDataFeatureElements = featureElements.OfType<NwrwDischargeData>().ToArray();
+                
                 var nwrwDryWeatherFlowDefinitionbyName = rrModel.NwrwDryWeatherFlowDefinitions.ToLookup(dwfd => dwfd.Name, dwfd => dwfd);
 
                 ParallelHelper.RunActionInParallel(this, featureElements.OfType<NwrwDischargeData>().Where(nwrwDischargeData => !nwrwDischargeData.IsSpecialCase() && nwrwDischargeData.DischargeType == DischargeType.Lateral).ToArray(), nwrwDischargeData =>

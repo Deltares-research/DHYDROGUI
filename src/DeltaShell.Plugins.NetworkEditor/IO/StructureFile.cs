@@ -13,7 +13,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
     {
         public static IEnumerable<DelftIniCategory> ExtractFunctionStructuresOfNetworkGenerator(IHydroNetwork network)
         {
-            var lastCompositeStructureId = 0;
             var compositeStructures = network.Structures.Where(s => s.GetStructureType() == StructureType.CompositeBranchStructure).Cast<ICompositeBranchStructure>().ToList();
             
             foreach (var structure in compositeStructures.SelectMany(composite => composite.Structures).Concat(network.Structures.Where(s => s.GetStructureType() != StructureType.CompositeBranchStructure)).Distinct())
@@ -56,28 +55,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
                         structurefrictionData.FrictionDataType,
                         structurefrictionData.Friction);
                 }
-            } /*var structureGroundLayerData = structure as IGroundLayer;
-                    if (structurefrictionData != null && structureGroundLayerData != null)
-                    {
-                        if(structure is IBridge)
-                        {
-                            //key is bedfriction
-                            AddBedFrictionData(
-                                structureCategory,
-                                structurefrictionData.FrictionDataType,
-                                structurefrictionData.Friction,
-                                structureGroundLayerData.GroundLayerEnabled ? structureGroundLayerData.GroundLayerRoughness : structurefrictionData.Friction);
-                        }
-                        else
-                        {
-                            //key is friction
-                            AddBedFrictionData(
-                                structureCategory,
-                                structurefrictionData.FrictionDataType,
-                                structurefrictionData.Friction,
-                                structureGroundLayerData.GroundLayerEnabled ? structureGroundLayerData.GroundLayerRoughness : structurefrictionData.Friction);
-                        }
-                    }*/
+            }
 
             return structureCategory;
         }

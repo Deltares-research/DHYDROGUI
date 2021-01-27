@@ -32,17 +32,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
         }
 
-        public override void Execute()
-        {
-            base.Execute();
-
-            var featureCount = VectorLayer.DataSource.GetFeatureCount();
-
-            var feature = featureCount > 0
-                ? VectorLayer.DataSource.GetFeature(featureCount - 1)
-                : null;
-        }
-
         public override void OnMouseDown(Coordinate worldPosition, MouseEventArgs e)
         {
             if(IsOnBreachLocation(worldPosition))

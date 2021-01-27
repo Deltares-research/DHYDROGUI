@@ -20,23 +20,6 @@ namespace DelftTools.Hydro.Link1d2d
         }
 
         /// <summary>
-        /// Geometry
-        /// Don't throw this redundant property away: needed for NotifyPropertyChannge event [Entity]
-        /// </summary>
-        public override IGeometry Geometry
-        {
-            get
-            {
-                return base.Geometry;
-            }
-            set
-            {
-                base.Geometry = value;
-                var IsThisOverrideNeededForNotifyPropertyChangeEvent = true;
-            }
-        }
-
-        /// <summary>
         /// The snap tolerance used during creation on map -> for reproducing
         /// </summary>
         public double SnapToleranceUsed { get; set; }

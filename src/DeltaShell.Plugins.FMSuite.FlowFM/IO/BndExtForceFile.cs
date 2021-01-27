@@ -921,7 +921,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var isOnOutletCompartment = delftIniCategory.ReadProperty<bool>("isOnOutletCompartment", true);
 
                 INode node = null;
-                ICompartment compartment = null;
                 
                 if (isOnOutletCompartment)
                 {

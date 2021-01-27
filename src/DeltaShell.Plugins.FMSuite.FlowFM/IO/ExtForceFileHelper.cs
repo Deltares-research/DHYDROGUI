@@ -208,8 +208,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> { (Feature2D)fmMeteoField.FeatureData.Feature });
 
-                var count = fmMeteoField.FeatureData.Feature.Geometry.Coordinates.Count();
-
                 var dataFilePath = GetNumberedFilePath(pliFilePath, "tim", 0);
 
                 for (var i = 0; i < 1; ++i)

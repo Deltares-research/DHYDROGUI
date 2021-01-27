@@ -32,7 +32,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
         public abstract class CrossSectionXYZDataTable : LightDataTable<CrossSectionXYZRow>
         {
-            public CrossSectionXYZDataTable()
+            protected CrossSectionXYZDataTable()
             {
                 OnInitialize();
             }

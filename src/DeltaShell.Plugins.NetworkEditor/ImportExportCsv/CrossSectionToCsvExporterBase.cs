@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
 
         private DataTable dataTable = null;
 
-        public CrossSectionToCsvExporterBase()
+        protected CrossSectionToCsvExporterBase()
         {
             Settings = new CrossSectionCsvExportSettings();
         }

@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         private readonly List<MappingColumn> possibleMappingColumns = new List<MappingColumn>();
         private FeatureFromGisImporterSettings featureFromGisImporterSettings;
 
-        public FeatureFromGisImporterBase()
+        protected FeatureFromGisImporterBase()
         {
             featureFromGisImporterSettings = new FeatureFromGisImporterSettings();
         }

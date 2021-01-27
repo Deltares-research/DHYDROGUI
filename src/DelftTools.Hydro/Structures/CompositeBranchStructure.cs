@@ -90,18 +90,6 @@ namespace DelftTools.Hydro.Structures
         [EditAction]
         void StructuresCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var structure = (IStructure1D)e.GetRemovedOrAddedItem();
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Replace:
-                    throw new NotImplementedException();
-
-                case NotifyCollectionChangedAction.Remove:
-                    break;
-
-                case NotifyCollectionChangedAction.Add:
-                    break;
-            }
             Count = structures.Count;
         }
 

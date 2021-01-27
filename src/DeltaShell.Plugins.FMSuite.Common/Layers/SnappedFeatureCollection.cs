@@ -243,7 +243,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 
                 if (points.Count == 1)
                 { 
-                    var coordinateSnappedPoint = points.Coordinate;
                     var distances = new List<double>();
                     
                     foreach (var coord in feature.Geometry.Coordinates)

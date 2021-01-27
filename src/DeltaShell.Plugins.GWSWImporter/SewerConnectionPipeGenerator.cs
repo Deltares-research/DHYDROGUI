@@ -17,8 +17,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
             base.SetSewerConnectionAttributes(newPipe, gwswElement);
 
-            var auxDouble = 0.0;
-
             var pipeIdAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PipeId);
             newPipe.PipeId = pipeIdAttribute.GetValidStringValue();
 

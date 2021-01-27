@@ -112,7 +112,6 @@ namespace DeltaShell.Sobek.Readers.Readers
                 var triggerid2 = "TRG_" + matches[0].Groups["triggerid2"].Value;
                 var triggerid3 = "TRG_" + matches[0].Groups["triggerid3"].Value;
 
-                var andorIgnore = matches[0].Groups["andorIgnore"].Value;
                 var andor0 = matches[0].Groups["andor0"].Value;
                 var andor1 = matches[0].Groups["andor1"].Value;
                 var andor2 = matches[0].Groups["andor2"].Value;

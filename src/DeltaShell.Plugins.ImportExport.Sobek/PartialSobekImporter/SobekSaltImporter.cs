@@ -79,8 +79,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void ImportSaltLateralBoundaries()
         {
             string path = GetFilePath(SobekFileNames.SobekSaltLateralBoundaryFileName);
-            var waterFlowFmModel = GetModel<WaterFlowFMModel>();
-
+            
             if (!File.Exists(path))
             {
                 log.InfoFormat("Import of lateral salt conditions skipped, file {0} does not exist.", path);
@@ -147,7 +146,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void ImportSaltInitialConcentration()
         {
             var initialPath = GetFilePath(SobekFileNames.SobekSaltInitialConditionsFileName);
-            var waterFlowFmModel = GetModel<WaterFlowFMModel>();
 
             if (!File.Exists(initialPath))
             {
@@ -176,9 +174,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 // chlorine 35.453 g/mol
                 // Sodium 22.98976928 g/mol
                 // Sodium chloride 58.443 g/mol
-                var saltCorrectionFactor = (saltInitialCondition.SaltConcentrationType == SaltConcentrationType.Choride)
-                                               ? (58.443 / 35.453)
-                                               : 1.0;
+
                 if (saltInitialCondition.IsGlobalDefinition)
                 {
                     if (!saltInitialCondition.Salt.IsConstant)
@@ -189,13 +185,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
                 else
                 {
-                    if (branches.ContainsKey(saltInitialCondition.BranchId))
+                    if (!branches.ContainsKey(saltInitialCondition.BranchId))
                     {
-                        var branch = branches[saltInitialCondition.BranchId];
-                    }
-                    else
-                    {
-                        log.WarnFormat("Branch {0} for initial salt concentration has not been found", saltInitialCondition.BranchId);
+                        log.WarnFormat("Branch {0} for initial salt concentration has not been found",
+                            saltInitialCondition.BranchId);
                     }
                 }
             }
@@ -272,7 +265,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void ImportSaltDispersion()
         {
             var initialPath = GetFilePath(SobekFileNames.SobekSaltGlobalDispersionFileName);
-            var waterFlowFmModel = GetModel<WaterFlowFMModel>();
 
             if (!File.Exists(initialPath))
             {
@@ -321,10 +313,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (!branches.ContainsKey(sobekSaltLocalDispersion.BranchId))
                 {
                     log.ErrorFormat("Branch {0} not found, dispersion for this branch ignored.", sobekSaltLocalDispersion.BranchId);
-                    continue;
                 }
-                var branch = branches[sobekSaltLocalDispersion.BranchId];
-
             }
         }
     }

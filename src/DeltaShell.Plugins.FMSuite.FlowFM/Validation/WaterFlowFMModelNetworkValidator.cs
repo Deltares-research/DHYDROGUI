@@ -208,7 +208,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
         private static IEnumerable<ValidationIssue> GetCorrectCrossSectionIssue(ICrossSection crossSection, IHydroNetwork network)
         {
-            string errorMessage;
             yield break;
         }
 

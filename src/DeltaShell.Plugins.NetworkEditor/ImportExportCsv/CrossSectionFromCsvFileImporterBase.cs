@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
 
         public object ImportItem(string path, object target)
         {
-            if (target == null || !(target is IHydroNetwork))
+            if (!(target is IHydroNetwork))
             {
                 Log.Error("No network available to import the cross-sections.");
                 return null;

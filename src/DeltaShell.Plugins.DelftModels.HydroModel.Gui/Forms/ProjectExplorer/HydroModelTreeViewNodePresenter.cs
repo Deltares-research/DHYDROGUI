@@ -149,8 +149,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
 
             if ((operation & DragOperations.Move) != 0)
             {
-                var project = TreeView.Nodes[0].Tag as Project;
-
                 gui.CopyPasteHandler.Cut(model);
                 gui.CopyPasteHandler.Paste(gui.Application.Project, targetModel, position);
             }

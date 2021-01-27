@@ -10,9 +10,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
         {
             string openWaterId = openWaterData.Catchment.Name;
 
-            int iref = writer.AddOpenWater(openWaterId, openWaterData.CalculationArea,
-                                             GetMeteoId(model, openWaterData),
-                                             GetAreaAdjustmentFactor(model, openWaterData),openWaterData.Catchment?.InteriorPoint?.Y ?? 0d, openWaterData.Catchment?.InteriorPoint?.Y ?? 0d );
+            writer.AddOpenWater(openWaterId, openWaterData.CalculationArea,
+                GetMeteoId(model, openWaterData),
+                GetAreaAdjustmentFactor(model, openWaterData),openWaterData.Catchment?.InteriorPoint?.Y ?? 0d, openWaterData.Catchment?.InteriorPoint?.Y ?? 0d );
 
             RainfallRunoffModelController.AddLink(links, openWaterData.Catchment);
         }

@@ -43,8 +43,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             //const double zMaxValue = 1000;
             double zMinValue = ChartCoordinateService.ToWorldY(Chart, Chart.ChartBounds.Bottom);
             double zMaxValue = ChartCoordinateService.ToWorldY(Chart, Chart.ChartBounds.Top);
-            double minX = Chart.BottomAxis.Minimum;
-            double maxX = Chart.BottomAxis.Maximum;
             
             if (Structure.WeirFormula is IGatedWeirFormula)
             {

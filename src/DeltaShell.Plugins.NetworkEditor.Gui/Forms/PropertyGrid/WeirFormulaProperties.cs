@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         protected readonly IWeir weir;
 
-        public WeirFormulaProperties(IWeirFormula weirFormula, IWeir weir)
+        protected WeirFormulaProperties(IWeirFormula weirFormula, IWeir weir)
         {
             this.weirFormula = weirFormula;
             this.weir = weir;

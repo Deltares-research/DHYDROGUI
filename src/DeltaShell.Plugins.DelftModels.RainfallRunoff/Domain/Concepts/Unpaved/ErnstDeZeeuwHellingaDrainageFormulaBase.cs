@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Unpaved
         private double levelOneTo;
         private double levelTwoTo;
 
-        public ErnstDeZeeuwHellingaDrainageFormulaBase()
+        protected ErnstDeZeeuwHellingaDrainageFormulaBase()
         {
             LevelOneTo = 0.5;
         }

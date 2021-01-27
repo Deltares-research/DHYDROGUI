@@ -19,9 +19,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private bool isActive = true;
         private bool isVisible = true;
 
-        public PartialSobekImporterBase()
+        protected PartialSobekImporterBase()
         {
-            SobekFileNames = new DeltaShell.Sobek.Readers.SobekFileNames();
+            SobekFileNames = new SobekFileNames();
         }
 
         public abstract string DisplayName { get; }
@@ -269,7 +269,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 var rainfallRunoffModel = TargetObject as RainfallRunoffModel;
                 if (rainfallRunoffModel != null)
                 {
-                    if (rainfallRunoffModel.Owner != null && rainfallRunoffModel.Owner is HydroModel integratedModel)
+                    if (rainfallRunoffModel.Owner is HydroModel integratedModel)
                     {
                         var fmModel = integratedModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
                         var network = fmModel?.Network;

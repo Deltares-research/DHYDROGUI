@@ -156,14 +156,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
 
             log.DebugFormat("Importing Rainfall Runoff nodes and links...");
             string nodeFilePath = GetFilePath(SobekFileNames.SobekRRNodeFileName);
-            string linkFilePath = GetFilePath(SobekFileNames.SobekRRLinkFileName);
             Dictionary<string, SobekRRNode> dictionaryNodes = new SobekRRNodeReader().Read(nodeFilePath).ToDictionaryWithErrorDetails(nodeFilePath, n => n.Id, n => n);
-            List<SobekRRLink> lstLinksOrderedByFromNode = new SobekRRLinkReader().Read(linkFilePath).OrderBy(l => l.NodeFromId).ToList();
-
+            
             log.DebugFormat("Updating Rainfall Runoff runoff boundaries...");
             AddOrUpdateRunoffBoundaries(rrModel, dictionaryNodes);
-            Dictionary<string, RunoffBoundary> dictionaryRRBoundaries = rrModel.Basin.Boundaries.ToDictionary(b => b.Name, b => b);
-
+            
             log.DebugFormat("Importing waste water treatment plants ...");
             Dictionary<string, WasteWaterTreatmentPlant> dictionaryWWTP = rrModel.Basin.WasteWaterTreatmentPlants.ToDictionary(wwtp => wwtp.Name, wwtp => wwtp);
             ReadAndAddOrUpdateWasteWaterTreatmentPlants(rrModel, dictionaryNodes, dictionaryWWTP, GetFilePath(SobekFileNames.SobekRRWasteWaterTreatmentPlantFileName));

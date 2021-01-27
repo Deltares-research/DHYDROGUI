@@ -732,12 +732,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     return;
                 }
 
-                // use message buffering when running in Main thread 
-                // dimrExe (using process.WaitForExit) blocks main thread, so messages (that are marshaled to MainThread) that 
-                // are send from async output handlers will cause deadlock
-                var runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
-                                          HydroModelApplicationPlugin.MainThreadId;
-                dimrApi = DimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
+                dimrApi = DimrApiFactory.CreateNew();
 
                 if (dimrApi == null)
                 {

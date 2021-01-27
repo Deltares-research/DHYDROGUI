@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
@@ -14,7 +13,6 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         static readonly Regex regexInterpolation = new Regex(patternInterpolation, RegexOptions.Singleline);
 
         private string parseTag;
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRTableReader));
         private DataTable formatTable;
 
         public SobekRRTableReader(string parseTag)
@@ -43,7 +41,6 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
         private DataTable GetDataTable(string line)
         {
-            var tableName = "Unkown";
             var dataTable = formatTable.Clone();
 
             //Id

@@ -29,12 +29,6 @@ namespace DelftTools.Hydro
             return observationPoint;
         }
 
-        public override void CopyFrom(object source)
-        {
-            base.CopyFrom(source);
-            var copyFrom = (ObservationPoint)source;
-        }
-
         public virtual IHydroNetwork HydroNetwork
         {
             get { return Network as IHydroNetwork; }

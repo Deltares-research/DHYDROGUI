@@ -11,11 +11,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
         {
             string greenhouseId = greenhouseData.Name;
             Writer = writer;
-            int iref = Writer.AddGreenhouse(greenhouseId, greenhouseData.AreaPerGreenhouse.Values.ToArray(),
-                                              greenhouseData.SurfaceLevel, greenhouseData.InitialRoofStorage,
-                                              greenhouseData.MaximumRoofStorage, greenhouseData.SiloCapacity,
-                                              greenhouseData.PumpCapacity, greenhouseData.UseSubsoilStorage,
-                                              greenhouseData.SubSoilStorageArea, GetMeteoId(model, greenhouseData), GetAreaAdjustmentFactor(model, greenhouseData), greenhouseData.Catchment?.InteriorPoint?.X ?? 0d, greenhouseData.Catchment?.InteriorPoint?.Y ?? 0d);
+            Writer.AddGreenhouse(greenhouseId, greenhouseData.AreaPerGreenhouse.Values.ToArray(),
+                greenhouseData.SurfaceLevel, greenhouseData.InitialRoofStorage,
+                greenhouseData.MaximumRoofStorage, greenhouseData.SiloCapacity,
+                greenhouseData.PumpCapacity, greenhouseData.UseSubsoilStorage,
+                greenhouseData.SubSoilStorageArea, GetMeteoId(model, greenhouseData), GetAreaAdjustmentFactor(model, greenhouseData), greenhouseData.Catchment?.InteriorPoint?.X ?? 0d, greenhouseData.Catchment?.InteriorPoint?.Y ?? 0d);
 
             RainfallRunoffModelController.AddLink(links, greenhouseData.Catchment);
         }
