@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Globalization;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.KnownProperties;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
 using DelftTools.Utils.Guards;

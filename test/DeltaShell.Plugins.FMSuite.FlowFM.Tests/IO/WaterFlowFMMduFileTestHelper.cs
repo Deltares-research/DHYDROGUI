@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;

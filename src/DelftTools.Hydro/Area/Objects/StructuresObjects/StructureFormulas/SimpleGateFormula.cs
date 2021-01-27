@@ -1,9 +1,10 @@
 ﻿using System;
 using DelftTools.Functions;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 
-namespace DelftTools.Hydro.Structures.WeirFormula
+namespace DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas
 {
     /// <summary>
     /// Sharp crested gated weir (Orifice)

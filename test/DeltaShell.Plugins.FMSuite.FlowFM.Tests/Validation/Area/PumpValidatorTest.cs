@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 using GeoAPI.Geometries;

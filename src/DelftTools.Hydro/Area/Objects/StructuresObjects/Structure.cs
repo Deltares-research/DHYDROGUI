@@ -1,13 +1,13 @@
 ﻿using DelftTools.Functions;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Guards;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
-namespace DelftTools.Hydro.Area.Objects
+namespace DelftTools.Hydro.Area.Objects.StructuresObjects
 {
     /// <summary>
     /// <see cref="Structure"/> defines a single structure.

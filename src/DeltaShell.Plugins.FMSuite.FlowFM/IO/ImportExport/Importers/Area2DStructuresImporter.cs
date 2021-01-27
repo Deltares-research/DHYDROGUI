@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.FMSuite.Common.IO;

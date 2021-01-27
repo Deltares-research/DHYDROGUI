@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;

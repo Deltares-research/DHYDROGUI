@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;

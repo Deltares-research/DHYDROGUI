@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;

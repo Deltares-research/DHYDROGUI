@@ -1,6 +1,7 @@
 ﻿using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Data;
@@ -21,7 +22,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects
             var structure = new Structure();
 
             // Assert
-            Assert.That(structure, Is.InstanceOf<Hydro.Area.Objects.IStructure>());
+            Assert.That(structure, Is.InstanceOf<IStructure>());
             Assert.That(structure, Is.InstanceOf<INotifyCollectionChange>());
             Assert.That(structure, Is.InstanceOf<Unique<long>>());
 

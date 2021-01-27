@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Data;
 using GeoAPI.Extensions.Feature;

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;

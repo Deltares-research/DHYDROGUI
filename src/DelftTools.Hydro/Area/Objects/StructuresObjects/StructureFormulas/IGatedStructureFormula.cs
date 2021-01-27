@@ -1,6 +1,7 @@
 ﻿using DelftTools.Functions;
+using DelftTools.Hydro.Structures;
 
-namespace DelftTools.Hydro.Structures.WeirFormula
+namespace DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas
 {
     /// <summary>
     /// Weirformula supporting gate..can be gated or general structure for now..

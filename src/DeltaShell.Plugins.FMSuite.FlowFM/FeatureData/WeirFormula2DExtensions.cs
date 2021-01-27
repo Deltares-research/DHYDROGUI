@@ -1,6 +1,6 @@
 ﻿using System;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 {

@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;

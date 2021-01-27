@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
 using NUnit.Framework;

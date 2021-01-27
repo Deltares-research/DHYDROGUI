@@ -6,7 +6,7 @@ using DelftTools.Utils.Guards;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 
-namespace DelftTools.Hydro.Area.Objects
+namespace DelftTools.Hydro.Area.Objects.StructuresObjects
 {
     /// <summary>
     /// <see cref="Pump"/> implements a 2D pump which is

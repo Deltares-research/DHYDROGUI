@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
 using NUnit.Framework;
 

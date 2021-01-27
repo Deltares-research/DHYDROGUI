@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;

@@ -1,5 +1,5 @@
 ﻿using System;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using NUnit.Framework;
 

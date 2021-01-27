@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Structures;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests.Structures

@@ -7,6 +7,7 @@
              xmlns:converters="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:enums="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:structureFormulas="clr-namespace:DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;assembly=DelftTools.Hydro"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -24,7 +25,7 @@
             <ObjectDataProvider x:Key="GateOpeningDirections"
                                 MethodName="GetValues" ObjectType="{x:Type system:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="enums:GateOpeningDirection" />
+                    <x:Type TypeName="structureFormulas:GateOpeningDirection" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
         </ResourceDictionary>

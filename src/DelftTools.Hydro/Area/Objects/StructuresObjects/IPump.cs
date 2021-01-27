@@ -1,6 +1,6 @@
 ﻿using DelftTools.Functions;
 
-namespace DelftTools.Hydro.Area.Objects
+namespace DelftTools.Hydro.Area.Objects.StructuresObjects
 {
     /// <summary>
     /// <see cref="IPump"/> defines a single pump located in an <see cref="HydroArea"/>.

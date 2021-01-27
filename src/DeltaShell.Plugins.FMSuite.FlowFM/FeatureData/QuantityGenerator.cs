@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects.StructuresObjects;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 

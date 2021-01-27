@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using DelftTools.Utils;
 
-namespace DelftTools.Hydro.Structures
+namespace DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas
 {
     [TypeConverter(typeof(EnumDescriptionAttributeTypeConverter))]
     public enum GateOpeningDirection
