@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             if (simpleWeirIni > 0)
             {
-                simpleWeirString = "Structures: " + simpleWeirIni + " ";
+                simpleWeirString = "Weirs: " + simpleWeirIni + " ";
             }
 
             if (gatedWeirIni > 0)

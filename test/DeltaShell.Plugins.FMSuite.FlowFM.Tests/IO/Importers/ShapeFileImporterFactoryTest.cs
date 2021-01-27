@@ -421,9 +421,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         /// WHEN TryAddWeirFormula is executed
         /// THEN targetFeature WeirFormula Name equals IFeature FormulaName
         /// </summary>
-        [TestCase("Simple weir (Weir)", typeof(SimpleWeirFormula))]
-        [TestCase("Gated weir (Orifice)", typeof(SimpleGateFormula))]
-        [TestCase("General structure", typeof(GeneralStructureFormula))]
+        [TestCase("Simple Weir", typeof(SimpleWeirFormula))]
+        [TestCase("Simple Gate", typeof(SimpleGateFormula))]
+        [TestCase("General Structure", typeof(GeneralStructureFormula))]
         public void GivenAnIFeatureWithAFormulaNameAndATargetFeature_WhenTryAddWeirFormulaIsExecuted_ThenTargetFeatureWeirFormulaNameEqualsIFeatureFormulaName(string formulaName,
                                                                                                                                                                Type expectedType)
         {
