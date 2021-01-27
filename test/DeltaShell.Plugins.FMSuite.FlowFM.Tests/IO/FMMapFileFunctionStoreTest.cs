@@ -375,7 +375,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// AND a function store reading this map file
         /// WHEN variables are retrieved
         /// THEN no exception is thrown
-        /// AND an error is logged.
+        /// AND no error is logged.
         /// </summary>
         [Test]
 
@@ -389,39 +389,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 string mapFilePath = Path.Combine(tempDir.Path, mapFileName);
 
-                var store = new FMMapFileFunctionStore {Path = mapFilePath};
-
-                const string compName = "mesh2d_q1";
-                var function =
-                    (UnstructuredGridEdgeCoverage) store.Functions
-                                                        .FirstOrDefault(f => f.Components[0].Name == compName);
-
+                FMMapFileFunctionStore store = null;
+                
                 // When
-                void testAction()
-                {
-                    DateTime filterTime = function.Time.Values.FirstOrDefault();
-                    var filter = new VariableValueFilter<DateTime>(function.Time, filterTime);
-
-                    IMultiDimensionalArray filteredValues = function.GetValues(filter);
-
-                    // Trigger lazy initialization
-                    IEnumerator _ = filteredValues.GetEnumerator();
-                }
-
-                void executeTestActionWithoutException()
-                {
-                    Assert.DoesNotThrow(testAction);
-                }
-
-                List<string> msgs = TestHelper.GetAllRenderedMessages(executeTestActionWithoutException)?.ToList();
+                Action call = () => store = new FMMapFileFunctionStore {Path = mapFilePath};
 
                 // Then
-                Assert.That(msgs, Is.Not.Null, "Expected the messages not to be null:");
-                Assert.That(msgs, Has.Count.EqualTo(1), "Expected a single message when accessing a variable:");
+                IEnumerable messages = TestHelper.GetAllRenderedMessages(call)?.ToArray();
 
-                string expectedMsg = string.Format(Resources.FMMapFileFunctionStore_GetVariableValuesCore_While_reading_variable__0__from_the_file__1__an_error_was_encountered___2_,
-                                                   compName, mapFileName, ""); // we ignore the actual error message, and just test for the beginning of the message.
-                Assert.That(msgs[0], Does.StartWith(expectedMsg), "Expected a different msg:");
+                Assert.That(messages, Is.Not.Null, "Expected the messages not to be null:");
+                
+                const string compName = "mesh2d_q1";
+                Assert.That(store.Functions.Where(f => string.Equals(f.Components[0].Name, compName)), Is.Empty);
             }
         }
 
