@@ -80,6 +80,7 @@
     <Compile Include="Utils\EnumUtils.cs" />
     <Compile Include="Utils\Repeat.cs" />
     <Compile Include="Utils\NameableCollectionExtensions.cs" />
+    <Compile Include="Utils\SyncHelper.cs" />
     <Compile Include="Validation\RestartTimeRangeValidator.cs" />
   </ItemGroup>
   <ItemGroup>
