@@ -172,7 +172,6 @@
     <Compile Include="GroupablePointFeature.cs" />
     <Compile Include="HydroAreaLayerNames.cs" />
     <Compile Include="IGroupableFeature.cs" />
-    <Compile Include="ILongNameable.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Structures\BridgePillar.cs" />
     <Compile Include="Structures\CrestShape.cs" />
