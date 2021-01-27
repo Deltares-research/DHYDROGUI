@@ -167,10 +167,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         public virtual string Name => "General structure";
 
-        public virtual bool IsRectangle => false;
-
-        public virtual bool HasFlowDirection => false;
-
         public virtual double DoorHeight { get; set; }
 
         public virtual GateOpeningDirection HorizontalDoorOpeningDirection { get; set; }

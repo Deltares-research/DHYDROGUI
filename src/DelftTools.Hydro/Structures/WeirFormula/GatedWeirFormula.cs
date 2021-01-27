@@ -83,10 +83,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         public virtual string Name => "Gated weir (Orifice)";
 
-        public virtual bool IsRectangle => true;
-
-        public virtual bool HasFlowDirection => true;
-
         /// <summary>
         /// Gate opening (openlevel)
         /// </summary>

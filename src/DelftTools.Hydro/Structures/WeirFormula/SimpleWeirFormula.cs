@@ -39,16 +39,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             LateralContraction = 1.0;
         }
 
-        #region IWeirFormula Members
-
         public virtual string Name => "Simple weir (Weir)";
-
-        public virtual bool IsRectangle => true;
-
-        public virtual bool IsGated => false;
-
-        public virtual bool HasFlowDirection => true;
-
-        #endregion
     }
 }

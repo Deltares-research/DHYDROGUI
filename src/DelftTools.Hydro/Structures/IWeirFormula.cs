@@ -4,23 +4,13 @@ using DelftTools.Utils.Data;
 namespace DelftTools.Hydro.Structures
 {
     /// <summary>
-    /// Formule of weirs for Sobek
+    /// <see cref="IWeirFormula"/> defines the interface of structure formulas.
     /// </summary>
     public interface IWeirFormula : IUnique<long>, ICloneable
     {
         /// <summary>
-        /// Name of the weirformula
+        /// Gets the name of the <see cref="IWeirFormula"/>.
         /// </summary>
         string Name { get; }
-
-        /// <summary>
-        /// Secondary property: Freeform/Rectangle
-        /// </summary>
-        bool IsRectangle { get; }
-
-        /// <summary>
-        /// Secondary property: Has flowdirection
-        /// </summary>
-        bool HasFlowDirection { get; }
     }
 }
