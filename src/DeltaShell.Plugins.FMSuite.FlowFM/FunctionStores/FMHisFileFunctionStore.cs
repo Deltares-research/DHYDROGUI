@@ -8,6 +8,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Units;
 using DelftTools.Utils;

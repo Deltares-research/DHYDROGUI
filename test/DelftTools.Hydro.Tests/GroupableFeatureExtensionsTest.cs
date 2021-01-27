@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Collections.Generic;
 using NUnit.Framework;
 using Rhino.Mocks;

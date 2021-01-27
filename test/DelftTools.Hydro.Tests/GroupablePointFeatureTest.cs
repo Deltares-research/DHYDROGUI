@@ -1,4 +1,5 @@
-﻿using GeoAPI.Geometries;
+﻿using DelftTools.Hydro.GroupableFeatures;
+using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 

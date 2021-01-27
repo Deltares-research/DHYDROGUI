@@ -3,6 +3,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects;
 using DelftTools.Hydro.Area.Objects.StructuresObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;

@@ -1,4 +1,5 @@
 ﻿using DelftTools.Functions;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;

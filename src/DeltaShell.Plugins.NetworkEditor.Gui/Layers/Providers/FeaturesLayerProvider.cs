@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;

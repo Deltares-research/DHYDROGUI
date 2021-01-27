@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files

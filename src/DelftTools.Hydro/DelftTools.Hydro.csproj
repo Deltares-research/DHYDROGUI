@@ -164,14 +164,14 @@
     <Compile Include="Area\Objects\StructuresObjects\Pump.cs" />
     <Compile Include="Area\Objects\StructuresObjects\Structure.cs" />
     <Compile Include="Embankment.cs" />
-    <Compile Include="GroupableFeature2D.cs" />
-    <Compile Include="GroupableFeature2DPoint.cs" />
-    <Compile Include="GroupableFeature2DPolygon.cs" />
-    <Compile Include="GroupableFeatureComparer.cs" />
-    <Compile Include="GroupableFeatureExtensions.cs" />
-    <Compile Include="GroupablePointFeature.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeature2D.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeature2DPoint.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeature2DPolygon.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeatureComparer.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeatureExtensions.cs" />
+    <Compile Include="GroupableFeatures\GroupablePointFeature.cs" />
     <Compile Include="HydroAreaLayerNames.cs" />
-    <Compile Include="IGroupableFeature.cs" />
+    <Compile Include="GroupableFeatures\IGroupableFeature.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
     <Compile Include="Area\Objects\BridgePillar.cs" />
     <Compile Include="Area\Objects\FixedWeir.cs" />
@@ -195,7 +195,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Structures\GroupableFeatureHelper.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeatureHelper.cs" />
     <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\GateOpeningDirection.cs" />
     <Compile Include="Area\Objects\StructuresObjects\StructureFormulas\IStructureFormula.cs" />
     <Compile Include="Area\Objects\StructuresObjects\KnownProperties\KnownGeneralStructureProperties.cs" />

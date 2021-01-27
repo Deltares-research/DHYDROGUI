@@ -1,4 +1,5 @@
-﻿using DelftTools.Utils;
+﻿using DelftTools.Hydro.GroupableFeatures;
+using DelftTools.Utils;
 using NUnit.Framework;
 using Rhino.Mocks;
 

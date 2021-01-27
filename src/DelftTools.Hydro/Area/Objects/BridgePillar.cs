@@ -1,4 +1,6 @@
-﻿namespace DelftTools.Hydro.Area.Objects
+﻿using DelftTools.Hydro.GroupableFeatures;
+
+namespace DelftTools.Hydro.Area.Objects
 {
     /// <summary>
     /// Class used for creating Bridge pillar objects.

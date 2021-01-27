@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;

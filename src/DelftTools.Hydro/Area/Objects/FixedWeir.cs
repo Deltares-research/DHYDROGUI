@@ -1,3 +1,5 @@
+using DelftTools.Hydro.GroupableFeatures;
+
 namespace DelftTools.Hydro.Area.Objects
 {
     /// <summary>

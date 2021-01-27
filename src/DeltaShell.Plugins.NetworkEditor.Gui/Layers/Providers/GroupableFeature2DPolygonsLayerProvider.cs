@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;

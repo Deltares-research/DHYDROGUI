@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;

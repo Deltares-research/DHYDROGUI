@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
