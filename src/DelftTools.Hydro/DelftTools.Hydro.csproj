@@ -204,7 +204,6 @@
     <Compile Include="Structures\KnownStructureProperties\KnownGeneralStructureProperties.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownStructureProperties.cs" />
     <Compile Include="Structures\GuiParameterNames.cs" />
-    <Compile Include="Structures\PumpControlDirection.cs" />
     <Compile Include="Structures\WeirFormula\GatedWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\IGatedWeirFormula.cs" />
