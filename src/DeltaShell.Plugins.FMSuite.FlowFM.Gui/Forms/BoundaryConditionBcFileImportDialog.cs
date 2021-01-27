@@ -14,11 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public void Configure(IFileImporter fileImporter)
         {
-            if (fileImporter is BcFileImporter)
-            {
-                ((BcFileImporter) fileImporter).DeleteDataBeforeImport = deleteDataCheckBox.Checked;
-                ((BcFileImporter) fileImporter).OverwriteExistingData = overwriteCheckBox.Checked;
-            }
+            if (!(fileImporter is BcFileImporter importer)) return;
+
+            importer.DeleteDataBeforeImport = deleteDataCheckBox.Checked;
+            importer.OverwriteExistingData = overwriteCheckBox.Checked;
         }
     }
 }

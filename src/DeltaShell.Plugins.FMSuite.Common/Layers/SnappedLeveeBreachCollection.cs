@@ -68,18 +68,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             leveeBreach = new LeveeBreach();
             if (feature.Attributes != null)
                 leveeBreach.Attributes = (IFeatureAttributeCollection)feature.Attributes.Clone();
-            if (feature is INameable)
-                leveeBreach.Name = ((INameable)feature).Name;
+            if (feature is INameable nameable)
+                leveeBreach.Name = nameable.Name;
 
-            if (snappedLeveeBreachGeometry.Count() == 2)
+            if (snappedLeveeBreachGeometry.Count() != 2) 
+                return leveeBreach;
+
+            leveeBreach.Geometry = snappedLeveeBreachGeometry.First();
+            
+            if (snappedLeveeBreachGeometry.Last() is IPoint breachLocation)
             {
-                leveeBreach.Geometry = snappedLeveeBreachGeometry.First();
-                var breachLocation = snappedLeveeBreachGeometry.Last() as IPoint;
-                if (breachLocation != null)
-                {
-                    leveeBreach.BreachLocationX = breachLocation.X;
-                    leveeBreach.BreachLocationY = breachLocation.Y;
-                }
+                leveeBreach.BreachLocationX = breachLocation.X;
+                leveeBreach.BreachLocationY = breachLocation.Y;
             }
 
             return leveeBreach;

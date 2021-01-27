@@ -222,8 +222,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             var feature2D = new Feature2D();
             if (feature.Attributes != null)
                 feature2D.Attributes = (IFeatureAttributeCollection) feature.Attributes.Clone();
-            if (feature is INameable)
-                feature2D.Name = ((INameable) feature).Name;
+            if (feature is INameable nameable)
+                feature2D.Name = nameable.Name;
 
             if (snappedGeometry == null)
             {
@@ -329,8 +329,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             for (var i = 0; i < OriginalFeatures.Count; i++)
             {
                 var feature = OriginalFeatures[i];
-                if (feature is IFeatureData)
-                    feature = ((IFeatureData) feature).Feature;
+                if (feature is IFeatureData featureData)
+                    feature = featureData.Feature;
 
                 SnappedFeatures.Add(GetSnappedFeature((IFeature) feature, snappedGeometries[i]));
             }

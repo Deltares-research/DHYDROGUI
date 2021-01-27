@@ -34,10 +34,10 @@ namespace DelftTools.Hydro.Structures
         /// implements new ParentStructure to hide FeatureAttribute which is confusing for user for composite structure
         ///</summary>
         [Aggregation]
-        new public virtual ICompositeBranchStructure ParentStructure
+        public new virtual ICompositeBranchStructure ParentStructure
         {
             get { return base.ParentStructure; }
-            set { base.ParentStructure = value; }
+            set { base.ParentStructure = value; } 
         }
 
         [NoNotifyPropertyChange]

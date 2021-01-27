@@ -29,14 +29,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     new VariableReduceFilter(function.Arguments[1])
                 });
 
-            if (argumentValue is INameable)
+            switch (argumentValue)
             {
-                func.Components[0].Name = (argumentValue as INameable).Name;
+                case INameable nameable:
+                    func.Components[0].Name = nameable.Name;
+                    break;
+                case string value:
+                    func.Components[0].Name = value;
+                    break;
             }
-            if (argumentValue is string)
-            {
-                func.Components[0].Name = (string)argumentValue;
-            }
+
             return func;
         }
     }

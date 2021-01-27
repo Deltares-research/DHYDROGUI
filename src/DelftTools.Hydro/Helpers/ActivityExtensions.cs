@@ -7,16 +7,17 @@ namespace DelftTools.Hydro.Helpers
     {
         public static IEnumerable<T> GetActivitiesOfType<T>(this IActivity activity)
         {
-            if (activity is ActivityWrapper)
+            if (activity is ActivityWrapper activityWrapper)
             {
-                activity = ((ActivityWrapper) activity).Activity;
+                activity = activityWrapper.Activity;
             }
-            if (activity is T)
+            if (activity is T typeT)
             {
-                yield return (T) activity;
+                yield return typeT;
             }
-            var compActivity = activity as ICompositeActivity;
-            if (compActivity == null) yield break;
+
+            if (!(activity is ICompositeActivity compActivity)) 
+                yield break;
 
             foreach (var subActivity in compActivity.Activities)
             {

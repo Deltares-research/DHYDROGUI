@@ -629,19 +629,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public void Link(Shape shape, IDataItem dataItem)
         {
-            if (shape.Tag is Input)
+            if (shape.Tag is Input input)
             {
                 if ((dataItem.Role & DataItemRole.Output) == DataItemRole.Output)
                 {
-                    var input = (Input) shape.Tag;
                     LinkDataItems(Model.GetDataItemByValue(input), dataItem);
                 }
             }
-            else if (shape.Tag is Output)
+            else if (shape.Tag is Output output)
             {
                 if ((dataItem.Role & DataItemRole.Input) == DataItemRole.Input)
                 {
-                    var output = (Output) shape.Tag;
                     LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
                 }
             }

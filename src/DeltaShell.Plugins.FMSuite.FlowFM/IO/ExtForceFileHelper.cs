@@ -763,9 +763,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return 4;
             }
-            if (operation is ImportSamplesSpatialOperationExtension)
+            if (operation is ImportSamplesSpatialOperationExtension extension)
             {
-                switch (((ImportSamplesSpatialOperationExtension) operation).InterpolationMethod)
+                switch (extension.InterpolationMethod)
                 {
                     case SpatialInterpolationMethod.Triangulation:
                         return 5;

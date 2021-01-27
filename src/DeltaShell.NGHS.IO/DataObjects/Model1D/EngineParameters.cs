@@ -407,9 +407,8 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         /// <returns></returns>
         public static bool AllowedAsQuantityTypeForFeature(IFeature feature, EngineParameter engineParameter)
         {
-            if (feature is IWeir)
+            if (feature is IWeir weir)
             {
-                var weir = (IWeir) feature;
                 if ((engineParameter.QuantityType == QuantityType.ValveOpening) ||
                     (engineParameter.QuantityType == QuantityType.Setpoint))
                 {
@@ -423,9 +422,8 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                 }
             }
 
-            if (feature is ICulvert)
+            if (feature is ICulvert culvert)
             {
-                var culvert = (ICulvert) feature;
                 if ((engineParameter.QuantityType == QuantityType.CrestLevel) ||
                     (engineParameter.QuantityType == QuantityType.CrestWidth) ||
                     (engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel) ||
@@ -542,9 +540,8 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         /// <returns></returns>
         public static double GetInitialValue(IFeature feature, string parameter)
         {
-            if (feature is IWeir)
+            if (feature is IWeir weir)
             {
-                var weir = (IWeir) feature;
                 switch (parameter)
                 {
                     case Model1DParameterNames.StructureCrestLevel:
@@ -565,14 +562,12 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                     }
                 }
             }
-            else if ((feature is ICulvert) && (parameter == Model1DParameterNames.StructureValveOpening))
+            else if ((feature is ICulvert culvert) && (parameter == Model1DParameterNames.StructureValveOpening))
             {
-                var culvert = (ICulvert) feature;
                 return culvert.GateInitialOpening;
             }
-            else if (feature is IPump)
+            else if (feature is IPump pump)
             {
-                var pump = (IPump) feature;
                 switch (parameter)
                 {
                     case Model1DParameterNames.StructureSetPoint:

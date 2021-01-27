@@ -65,21 +65,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         private static UnstructuredGridCoverage ImportRasterFileInBathymetryOfFlowFMModel(string netFilePath, UnstructuredGridCoverage bathymetry, Func<UnstructuredGridCoverage, WaterFlowFMModel> getModelForBathemetry, Action<object> makeLayerVisibleAction)
         {
-            if (bathymetry == null || bathymetry.Name != WaterFlowFMModelDefinition.BathymetryDataItemName || getModelForBathemetry == null) return bathymetry;
+            if (bathymetry == null || bathymetry.Name != WaterFlowFMModelDefinition.BathymetryDataItemName || getModelForBathemetry == null) 
+                return bathymetry;
 
             var flowModel = getModelForBathemetry(bathymetry);
+            if (flowModel == null)
+            {
+                Log.Error($"Could not find model for bathymetry {bathymetry.Name}");
+                return bathymetry;
+            }
             if (flowModel?.Grid != null && flowModel.Grid.IsEmpty)
             {
                 Log.Error("Import of bed level canceled. You do not have a grid in your model to import bed levels on. Create or import a grid first.");
                 return bathymetry;
             }
 
-            bool verticesEqual;
-            bool cellsEqual;
             bool linksEqual;
-            IRegularGridCoverage gridCoverage = null;
-            var grid = RasterFile.ReadUnstructuredGrid(netFilePath, out gridCoverage);
-            UnstructuredGridHelper.CompareGrids(flowModel.Grid, grid, out verticesEqual, out cellsEqual, out linksEqual);
+            var grid = RasterFile.ReadUnstructuredGrid(netFilePath, out var gridCoverage);
+            UnstructuredGridHelper.CompareGrids(flowModel.Grid, grid, out var verticesEqual, out var cellsEqual, out linksEqual);
             if (!verticesEqual || !cellsEqual)
             {
                 Log.Error($"Import of bed level canceled. The file at '{netFilePath}' does not contain the same grid data as the grid you currently have in your model.\nImport this file as a spatial operation instead and interpolate.");
@@ -121,40 +124,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         private static void SetBedLevel(string path, WaterFlowFMModel flowModel, IRegularGridCoverage gridCoverage)
         {
             var bedlevels = RasterFile.ReadPointValues(path, gridCoverage);
-            if (bedlevels != null)
-            {
-                var bedLevelTypeProperty = flowModel.ModelDefinition.Properties.FirstOrDefault(p =>
-                    p.PropertyDefinition != null &&
-                    p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+            if (bedlevels == null) return;
 
-                if (bedLevelTypeProperty == null)
+            var bedLevelTypeProperty = flowModel.ModelDefinition.Properties.FirstOrDefault(p =>
+                p.PropertyDefinition != null &&
+                p.PropertyDefinition.MduPropertyName.ToLower() == KnownProperties.BedlevType);
+
+            if (bedLevelTypeProperty == null)
+            {
+                Log.WarnFormat("Cannot determine Bed level location, z-values will not be exported");
+            }
+            else
+            {
+                var location = (UGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
+                var zValues = bedlevels.Select(bl => bl.Value).ToArray();
+                if (flowModel.Grid.Vertices.Count == zValues.Length &&
+                    location == UGridFileHelper.BedLevelLocation.Faces)
                 {
-                    Log.WarnFormat("Cannot determine Bed level location, z-values will not be exported");
+                    Log.Warn($"seems location type is on vertices, setting model type to {UGridFileHelper.BedLevelLocation.NodesMeanLev.GetDisplayName()}");
+                    flowModel.ModelDefinition.SetModelProperty(KnownProperties.BedlevType, ((int)UGridFileHelper.BedLevelLocation.NodesMeanLev).ToString());
                 }
-                else
+                if (flowModel.Grid.Cells.Count == zValues.Length &&
+                    (location == UGridFileHelper.BedLevelLocation.NodesMeanLev||
+                     location == UGridFileHelper.BedLevelLocation.NodesMaxLev ||
+                     location == UGridFileHelper.BedLevelLocation.NodesMinLev ||
+                     location == UGridFileHelper.BedLevelLocation.CellEdges  
+                    ))
                 {
-                    var location = (UGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
-                    var zValues = bedlevels.Select(bl => bl.Value).ToArray();
-                    if (flowModel.Grid.Vertices.Count == zValues.Length &&
-                        (location == UGridFileHelper.BedLevelLocation.Faces ||
-                         location == UGridFileHelper.BedLevelLocation.Faces))
-                    {
-                        Log.Warn($"seems location type is on vertices, setting model type to {UGridFileHelper.BedLevelLocation.NodesMeanLev.GetDisplayName()}");
-                        flowModel.ModelDefinition.SetModelProperty(KnownProperties.BedlevType, ((int)UGridFileHelper.BedLevelLocation.NodesMeanLev).ToString());
-                    }
-                    if (flowModel.Grid.Cells.Count == zValues.Length &&
-                        (location == UGridFileHelper.BedLevelLocation.NodesMeanLev||
-                         location == UGridFileHelper.BedLevelLocation.NodesMaxLev ||
-                         location == UGridFileHelper.BedLevelLocation.NodesMinLev ||
-                         location == UGridFileHelper.BedLevelLocation.CellEdges  
-                         ))
-                    {
-                        Log.Warn($"seems location type is on faces, setting model type to {UGridFileHelper.BedLevelLocation.Faces.GetDisplayName()}");
-                        flowModel.ModelDefinition.SetModelProperty(KnownProperties.BedlevType, ((int)UGridFileHelper.BedLevelLocation.Faces).ToString());
-                    }
-                    flowModel.Bathymetry.SetValues(zValues);
-                    flowModel.Bathymetry.Components[0].NoDataValue = gridCoverage.Components[0].NoDataValue;
+                    Log.Warn($"seems location type is on faces, setting model type to {UGridFileHelper.BedLevelLocation.Faces.GetDisplayName()}");
+                    flowModel.ModelDefinition.SetModelProperty(KnownProperties.BedlevType, ((int)UGridFileHelper.BedLevelLocation.Faces).ToString());
                 }
+                flowModel.Bathymetry.SetValues(zValues);
+                flowModel.Bathymetry.Components[0].NoDataValue = gridCoverage.Components[0].NoDataValue;
             }
         }
         public bool CanImportOn(object targetObject)

@@ -81,11 +81,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 waterFlowFMModel.TimeStep = sobekCaseSettings.TimeStep;
                 waterFlowFMModel.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
 
-                waterFlowFMModel.OutputTimeStep = waterFlowFMModel.OutputTimeStep;
-
                 path = GetFilePath("DEFRUN.2");
                 var sobekReDefRun2Reader = new SobekReDefRun2Reader { SobekCaseSettingsInstance = sobekCaseSettings };
-                sobekReDefRun2Reader.Read(path).First();
+                var settings = sobekReDefRun2Reader.Read(path).First();
                 sobekCaseSettings = sobekReDefRun2Reader.SobekCaseSettingsInstance;
             }
             catch (Exception exception)

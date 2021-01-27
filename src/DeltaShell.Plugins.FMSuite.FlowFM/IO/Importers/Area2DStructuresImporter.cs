@@ -78,6 +78,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 }
             }
 
+            if (model == null)
+            {
+                Log.Error($"Could not find model for area {targetHydroArea?.Name}");
+                return false;
+            }
+
             var structuresFile = new StructuresFile
                 {
                     StructureSchema = model.ModelDefinition.StructureSchema,

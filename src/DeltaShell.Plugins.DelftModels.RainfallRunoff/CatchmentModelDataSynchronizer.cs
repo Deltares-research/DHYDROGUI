@@ -74,9 +74,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             CatchmentModelData modelData;
 
-            if (sender is CatchmentModelData)
+            if (sender is CatchmentModelData catchmentModelData)
             {
-                modelData = (CatchmentModelData)sender;
+                modelData = catchmentModelData;
             }
             else
             {

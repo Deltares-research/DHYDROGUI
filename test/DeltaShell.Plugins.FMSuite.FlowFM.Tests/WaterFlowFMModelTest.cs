@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
@@ -76,6 +77,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.That(model.SnapVersion, Is.EqualTo(0));
             Assert.IsTrue(model.ValidateBeforeRun);
+        }
+
+        [Test]
+        public void GivenWaterFlowFMModel_DoingOnPropertyChanged_ShouldFirePropertyChangedEvent()
+        {
+            //Arrange
+            var fmModel = new WaterFlowFMModel();
+
+            var count = 0;
+            fmModel.PropertyChanged += (s, a) =>
+            {
+                Assert.AreEqual(nameof(WaterFlowFMModel.UseSalinity), a.PropertyName);
+                count++;
+            };
+
+            // Act
+            fmModel.OnPropertyChanged(nameof(WaterFlowFMModel.UseSalinity));
+
+            // Assert
+            Assert.AreEqual(1, count);
         }
 
         [Test]

@@ -20,31 +20,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public static string MakeFileFilter(IWindField windField)
         {
-            if (windField is UniformWindField)
+            switch (windField)
             {
-                return TimFileFilter;
+                case UniformWindField _:
+                    return TimFileFilter;
+                case SpiderWebWindField _:
+                    return SpiderWebFileFilter;
+                case GriddedWindField field:
+                    switch (field.Quantity)
+                    {
+                        case WindQuantity.VelocityX:
+                            return XGridFileFilter;
+                        case WindQuantity.VelocityY:
+                            return YGridFileFilter;
+                        case WindQuantity.AirPressure:
+                            return PGridFileFilter;
+                        case WindQuantity.VelocityVectorAirPressure:
+                            return CurviGridFileFilter;
+                        default:
+                            throw new ArgumentException("Wind quantity does not have a corresponding file filter");
+                    }
+                default:
+                    return null;
             }
-            if (windField is SpiderWebWindField)
-            {
-                return SpiderWebFileFilter;
-            }
-            if (windField is GriddedWindField)
-            {
-                switch (((GriddedWindField)windField).Quantity)
-                {
-                    case WindQuantity.VelocityX:
-                        return XGridFileFilter;
-                    case WindQuantity.VelocityY:
-                        return YGridFileFilter;
-                    case WindQuantity.AirPressure:
-                        return PGridFileFilter;
-                    case WindQuantity.VelocityVectorAirPressure:
-                        return CurviGridFileFilter;
-                    default:
-                        throw new ArgumentException("Wind quantity does not have a corresponding file filter");
-                }
-            }
-            return null;
         }
 
         public WindSelectionDialog()

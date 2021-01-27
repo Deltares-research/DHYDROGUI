@@ -404,31 +404,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public void GraphControlShapesOnShapeRemoved(object sender, Shape shape)
         {
-            if (shape != null)
+            if (shape == null) 
+                return;
+
+            DesubscribeControlGroupEvents();
+            
+            switch (shape.Tag)
             {
-                DesubscribeControlGroupEvents();
-                if (shape.Tag is RuleBase)
-                {
-                    controlGroup.Rules.Remove((RuleBase)shape.Tag);
-                }
-                if (shape.Tag is SignalBase)
-                {
-                    controlGroup.Signals.Remove((SignalBase)shape.Tag);
-                }
-                if (shape.Tag is ConditionBase)
-                {
-                    controlGroup.Conditions.Remove((ConditionBase)shape.Tag);
-                }
-                if (shape.Tag is Input)
-                {
-                    controlGroup.Inputs.Remove((Input)shape.Tag);
-                }
-                if (shape.Tag is Output)
-                {
-                    controlGroup.Outputs.Remove((Output)shape.Tag);
-                }
-                SubscribeControlGroupEvents();
+                case RuleBase tag:
+                    controlGroup.Rules.Remove(tag);
+                    break;
+                case SignalBase tag:
+                    controlGroup.Signals.Remove(tag);
+                    break;
+                case ConditionBase tag:
+                    controlGroup.Conditions.Remove(tag);
+                    break;
+                case Input tag:
+                    controlGroup.Inputs.Remove(tag);
+                    break;
+                case Output tag:
+                    controlGroup.Outputs.Remove(tag);
+                    break;
             }
+
+            SubscribeControlGroupEvents();
         }
 
         private ShapeBase FindShapeByObject(object obj)
@@ -580,31 +580,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         public ShapeBase ObjectToShape(object obj)
         {
             ShapeBase shape = null;
-            if (obj is RuleBase)
+            switch (obj)
             {
-                shape = new RuleShape { Text = ((RuleBase)obj).Name, Tag = obj };
-            }
-            if (obj is ConditionBase)
-            {
-                var conditionBase = (ConditionBase)obj;
-                shape = new ConditionShape
-                            {
-                                Text = conditionBase.Name,
-                                Tag = obj
-                            };
-                FillConditionDescription(shape, conditionBase);
-            }
-            if (obj is Input)
-            {
-                shape = new InputItemShape { Text = ((Input)obj).Name, Tag = obj };
-            }
-            if (obj is Output)
-            {
-                shape = new OutputItemShape { Text = ((Output)obj).Name, Tag = obj };
-            }
-            if (obj is SignalBase)
-            {
-                shape = new SignalShape { Text = ((SignalBase)obj).Name, Tag = obj };
+                case RuleBase ruleBase:
+                    shape = new RuleShape { Text = ruleBase.Name, Tag = ruleBase };
+                    break;
+                case ConditionBase conditionBase:
+                {
+                    shape = new ConditionShape
+                    {
+                        Text = conditionBase.Name,
+                        Tag = conditionBase
+                    };
+                    FillConditionDescription(shape, conditionBase);
+                    break;
+                }
+                case Input input:
+                    shape = new InputItemShape { Text = input.Name, Tag = input };
+                    break;
+                case Output output:
+                    shape = new OutputItemShape { Text = output.Name, Tag = output };
+                    break;
+                case SignalBase signalBase:
+                    shape = new SignalShape { Text = signalBase.Name, Tag = signalBase };
+                    break;
             }
 
             if (shape != null && GetAutoResizeState != null)
@@ -705,139 +704,120 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 Log.Error("Input can only be connected from.");
                 return false;
             }
-            if (from is Output)
+            switch (@from)
             {
-                Log.Error("Output can only be connected to.");
-                return false;
-            }
-            if (from is Input)
-            {
-                if (fromConnector != ConnectorType.Bottom)
-                {
+                case Output _:
+                    Log.Error("Output can only be connected to.");
+                    return false;
+                case Input _ when fromConnector != ConnectorType.Bottom:
                     Log.Error("Input can only be connected at the lowest connection point.");
                     return false;
-                }
-                if (to is Output)
-                {
+                case Input _ when to is Output:
                     Log.Error("Input can only be connected to a rule, condition or signal.");
                     return false;
-                }
-                if (to is RuleBase)
+                case Input _:
                 {
-                    var ruleBase = (RuleBase)to;
-                    if (ruleBase.Inputs.Count > 0)
+                    switch (to)
                     {
-                        Log.Error("Rule can only have 1 input.");
-                        return false;
-                    }
-                }
+                        case RuleBase ruleBase:
+                        {
+                            if (ruleBase.Inputs.Count > 0)
+                            {
+                                Log.Error("Rule can only have 1 input.");
+                                return false;
+                            }
 
-                if (to is LookupSignal)
-                {
-                    var lookupSignal = (LookupSignal)to;
-                    if (lookupSignal.Inputs.Count > 0)
+                            break;
+                        }
+                        case LookupSignal signal:
+                        {
+                            var lookupSignal = signal;
+                            if (lookupSignal.Inputs.Count > 0)
+                            {
+                                Log.Error("Lookup signal can only have 1 input.");
+                                return false;
+                            }
+
+                            break;
+                        }
+                        case ConditionBase conditionBase:
+                        {
+                            if (conditionBase.Input != null)
+                            {
+                                Log.Error("Condition can only have 1 input.");
+                                return false;
+                            }
+
+                            break;
+                        }
+                    }
+
+                    if (to is SignalBase)
                     {
-                        Log.Error("Lookup signal can only have 1 input.");
-                        return false;
+                        if ((toConnector != ConnectorType.Top) && (toConnector != ConnectorType.Left))
+                        {
+                            Log.Error("Input can only be connected to the left or top connection point.");
+                            return false;
+                        }
                     }
-                }
 
-                if (to is ConditionBase)
-                {
-                    var conditionBase = (ConditionBase)to;
-                    if (conditionBase.Input != null)
-                    {
-                        Log.Error("Condition can only have 1 input.");
-                        return false;
-                    }
+                    break;
                 }
-
-                if (to is SignalBase)
-                {
-                    if ((toConnector != ConnectorType.Top) && (toConnector != ConnectorType.Left))
-                    {
-                        Log.Error("Input can only be connected to the left or top connection point.");
-                        return false;
-                    }
-                }
-            }
-
-            if (from is SignalBase)
-            {
-                if (fromConnector != ConnectorType.Right)
-                {
+                case SignalBase _ when fromConnector != ConnectorType.Right:
                     Log.Error("Signal can only be connected at the right connection point.");
                     return false;
-                }
-            }
-
-            
-            // Multiple connections to 1 output are allowed. During runtime only 1 can be active!
-            if (from is RuleBase)
-            {
-                if (fromConnector != ConnectorType.Right)
-                {
+                // Multiple connections to 1 output are allowed. During runtime only 1 can be active!
+                case RuleBase _ when fromConnector != ConnectorType.Right:
                     Log.Error("Rule can only be connected at the right connection point.");
                     return false;
-                }
-                var ruleBase = (RuleBase)from;
-                if (ruleBase.Outputs.Count > 0)
+                case RuleBase ruleBase:
                 {
-                    Log.Error("Can only connect to 1 output.");
+                    if (ruleBase.Outputs.Count > 0)
+                    {
+                        Log.Error("Can only connect to 1 output.");
+                        return false;
+                    }
+
+                    break;
+                }
+                case ConditionBase _ when (fromConnector == ConnectorType.Left) || (fromConnector == ConnectorType.Top):
+                    Log.Error("Condition can only be connected at the right or bottom connection point.");
                     return false;
+                case ConditionBase _ when to is Output:
+                    Log.Error("Can not connect condition to output; Output can only be set by rule.");
+                    return false;
+                case ConditionBase conditionBase:
+                {
+                    switch (fromConnector)
+                    {
+                        case ConnectorType.Right when (conditionBase.TrueOutputs.Count > 0):
+                            Log.Error("True output of a condition can only connect to 1 other condition or a rule.");
+                            return false;
+                        case ConnectorType.Right when (conditionBase.FalseOutputs.Contains((RtcBaseObject)to)):
+                            Log.Error("Condition is already connected to false of same condition.");
+                            return false;
+                        case ConnectorType.Bottom when (conditionBase.FalseOutputs.Count > 0):
+                            Log.Error("True output of a condition can only connect to 1 other condition or a rule.");
+                            return false;
+                        case ConnectorType.Bottom when (conditionBase.TrueOutputs.Contains((RtcBaseObject)to)):
+                            Log.Error("Condition is already connected to true of same condition.");
+                            return false;
+                    }
+
+                    switch (to)
+                    {
+                        case ConditionBase _ when toConnector == ConnectorType.Top:
+                            Log.Error("Can only connect a condition to the left of another condition; top is for input.");
+                            return false;
+                        case RuleBase _ when toConnector == ConnectorType.Top:
+                            Log.Error("Can only connect a condition to the left of a rule; top is for input.");
+                            return false;
+                    }
+
+                    break;
                 }
             }
 
-            if (from is ConditionBase)
-            {
-                if ((fromConnector == ConnectorType.Left) || (fromConnector == ConnectorType.Top))
-                {
-                    Log.Error("Condition can only be connected at the right or bottom connection point.");
-                    return false;
-                }
-                if (to is Output)
-                {
-                    Log.Error("Can not connect condition to output; Output can only be set by rule.");
-                    return false;
-                }
-                var conditionBase = (ConditionBase)from;
-                if ((fromConnector == ConnectorType.Right) && (conditionBase.TrueOutputs.Count > 0))
-                {
-                    Log.Error("True output of a condition can only connect to 1 other condition or a rule.");
-                    return false;
-                }
-                if ((fromConnector == ConnectorType.Right) && (conditionBase.FalseOutputs.Contains((RtcBaseObject)to)))
-                {
-                    Log.Error("Condition is already connected to false of same condition.");
-                    return false;
-                }
-                if ((fromConnector == ConnectorType.Bottom) && (conditionBase.FalseOutputs.Count > 0))
-                {
-                    Log.Error("True output of a condition can only connect to 1 other condition or a rule.");
-                    return false;
-                }
-                if ((fromConnector == ConnectorType.Bottom) && (conditionBase.TrueOutputs.Contains((RtcBaseObject)to)))
-                {
-                    Log.Error("Condition is already connected to true of same condition.");
-                    return false;
-                }
-                if (to is ConditionBase)
-                {
-                    if (toConnector == ConnectorType.Top)
-                    {
-                        Log.Error("Can only connect a condition to the left of another condition; top is for input.");
-                        return false;
-                    }
-                }
-                if (to is RuleBase)
-                {
-                    if (toConnector == ConnectorType.Top)
-                    {
-                        Log.Error("Can only connect a condition to the left of a rule; top is for input.");
-                        return false;
-                    }
-                }
-            }
 
             if (to is ConditionBase)
             {

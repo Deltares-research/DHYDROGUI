@@ -227,9 +227,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 
         private static IGeometry GetGeometryForSecondaryAttribute(IFeature feature)
         {
-            if (feature is Catchment)
+            if (feature is Catchment catchment)
             {
-                var catchment = (Catchment) feature;
                 return catchment.InteriorPoint;
             }
             return feature.Geometry; //or exception

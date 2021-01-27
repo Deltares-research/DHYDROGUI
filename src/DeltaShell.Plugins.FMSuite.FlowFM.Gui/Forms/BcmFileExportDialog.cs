@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 
@@ -13,9 +12,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
     {
         private void ExportModeComboBoxFormat(object sender, ListControlConvertEventArgs e)
         {
-            if (e.ListItem is BcFile.WriteMode)
+            if (e.ListItem is BcFile.WriteMode mode)
             {
-                e.Value = ((BcFile.WriteMode)e.ListItem).GetDescription();
+                e.Value = mode.GetDescription();
             }
         }
 

@@ -71,9 +71,9 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
         private void TagPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (Tag is INameable)
+            if (Tag is INameable nameable)
             {
-                Title = ((INameable)Tag).Name;
+                Title = nameable.Name;
             }
 
             //Don't want a reference to RTCObjects. We could also implement IDisplayName

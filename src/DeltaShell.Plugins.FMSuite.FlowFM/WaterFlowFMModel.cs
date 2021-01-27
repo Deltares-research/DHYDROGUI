@@ -1251,8 +1251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var prop = sender as WaterFlowFMProperty;
-            if (prop != null && e.PropertyName == nameof(prop.Value))
+            if (sender is WaterFlowFMProperty prop && e.PropertyName == nameof(prop.Value))
             {
                 if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity1D) ||
                     prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity2D))
@@ -1286,7 +1285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching salinity process"));
-                    UseSalinity = UseSalinity;
+                    OnPropertyChanged(nameof(UseSalinity));
                     BoundaryConditions1D?.ForEach(bc => bc.UseSalt = UseSalinity);
                     LateralSourcesData?.ForEach(lat => lat.UseSalt = UseSalinity);
                     EndEdit();
@@ -1295,14 +1294,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching morphology process"));
-                    UseMorSed = UseMorSed;
+                    OnPropertyChanged(nameof(UseMorSed));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteSnappedFeatures,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching write snapped features options"));
-                    WriteSnappedFeatures = WriteSnappedFeatures;
+                    OnPropertyChanged(nameof(WriteSnappedFeatures));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ISlope,
@@ -1321,14 +1320,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching 3D dynamics"));
-                    UseDepthLayers = UseDepthLayers;
+                    OnPropertyChanged(nameof(UseDepthLayers));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ICdtyp,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching wind formulation type"));
-                    CdType = CdType;
+                    OnPropertyChanged(nameof(CdType)); 
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Temperature,
@@ -1342,105 +1341,105 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching secondary flow process"));
-                    UseSecondaryFlow = UseSecondaryFlow;
+                    OnPropertyChanged(nameof(UseSecondaryFlow));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteHisFile,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching WriteHisFile"));
-                    WriteHisFile = WriteHisFile;
+                    OnPropertyChanged(nameof(WriteHisFile));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStart,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyHisStart"));
-                    SpecifyHisStart = SpecifyHisStart;
+                    OnPropertyChanged(nameof(SpecifyHisStart));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStop,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyHisStop"));
-                    SpecifyHisStop = SpecifyHisStop;
+                    OnPropertyChanged(nameof(SpecifyHisStop));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteMapFile,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching WriteMapFile"));
-                    WriteMapFile = WriteMapFile;
+                    OnPropertyChanged(nameof(WriteMapFile));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStart,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyMapStart"));
-                    SpecifyMapStart = SpecifyMapStart;
+                    OnPropertyChanged(nameof(SpecifyMapStart));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStop,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyMapStop"));
-                    SpecifyMapStop = SpecifyMapStop;
+                    OnPropertyChanged(nameof(SpecifyMapStop));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteRstFile,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching WriteRstFile"));
-                    WriteRstFile = WriteRstFile;
+                    OnPropertyChanged(nameof(WriteRstFile));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStart,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyRstStart"));
-                    SpecifyRstStart = SpecifyRstStart;
+                    OnPropertyChanged(nameof(SpecifyRstStart));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStop,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching SpecifyRstStop"));
-                    SpecifyRstStop = SpecifyRstStop;
+                    OnPropertyChanged(nameof(SpecifyRstStop));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaveModelNr,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Waves Model Nr"));
-                    WaveModel = WaveModel;
+                    OnPropertyChanged(nameof(WaveModel));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Irov,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Wall behavior type"));
-                    WaveModel = WaveModel;
+                    OnPropertyChanged(nameof(WaveModel));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputInterval,
                 StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Waq output interval time"));
-                    SpecifyWaqOutputInterval = SpecifyWaqOutputInterval;
+                    OnPropertyChanged(nameof(SpecifyWaqOutputInterval));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStartTime,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Waq output start time"));
-                    SpecifyWaqOutputStartTime = SpecifyWaqOutputStartTime;
+                    OnPropertyChanged(nameof(SpecifyWaqOutputStartTime));
                     EndEdit();
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStopTime,
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     BeginEdit(new DefaultEditAction("Switching Waq output end time"));
-                    SpecifyWaqOutputStopTime = SpecifyWaqOutputStopTime;
+                    OnPropertyChanged(nameof(SpecifyWaqOutputStopTime));
                     EndEdit();
                 }
             }
@@ -2288,118 +2287,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public bool WriteHisFile
         {
             get { return (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool SpecifyHisStart
         {
             get { return (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStart).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool SpecifyHisStop
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStop).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool WriteMapFile
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool SpecifyMapStart
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStart).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool SpecifyMapStop
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStop).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool WriteRstFile
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool SpecifyRstStart
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool SpecifyRstStop
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool SpecifyWaqOutputInterval
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool SpecifyWaqOutputStartTime
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStartTime).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
         public bool SpecifyWaqOutputStopTime
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStopTime).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public object WaveModel
         {
             // cannot actually return anything, because it's a dynamic enum
             get { return null; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public ImportProgressChangedDelegate ImportProgressChanged { get; set; }
@@ -4169,5 +4116,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         public string ExplicitWorkingDirectory { get; set; }
+
+        internal void OnPropertyChanged(string propertyName)
+        {
+            OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

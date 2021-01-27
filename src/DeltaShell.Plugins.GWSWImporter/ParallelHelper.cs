@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         cts.Cancel();
                 }
                 EventSettings.BubblingEnabled = true;
-                importer.ProgressChanged?.Invoke($"{importTo} ({((double)((double)nrOfElements / (double)nrOfElements)):P0})", nrOfElements, nrOfElements);
+                importer.ProgressChanged?.Invoke($"{importTo} ({((double)((double)current / (double)nrOfElements)):P0})", nrOfElements, nrOfElements);
                 EventSettings.BubblingEnabled = false;
                 if (listOfErrors.Any())
                     Log.ErrorFormat($"While {importTo} we encountered the following errors: {Environment.NewLine}{String.Join(Environment.NewLine, listOfErrors)}");

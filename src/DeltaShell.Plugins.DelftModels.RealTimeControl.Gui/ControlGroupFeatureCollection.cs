@@ -84,17 +84,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             get { return editableObjectRefresh; }
             set 
             { 
-                if (editableObjectRefresh is INotifyPropertyChanged)
+                if (editableObjectRefresh is INotifyPropertyChanged changed)
                 {
-                    ((INotifyPropertyChanged)editableObjectRefresh).PropertyChanged -= EditableObjectPropertyChanged;
+                    changed.PropertyChanged -= EditableObjectPropertyChanged;
                 }
 
                 editableObjectRefresh = value;
                 RefreshEventedList();
                 RefreshCoordinateSystem();
-                if (editableObjectRefresh is INotifyPropertyChanged)
+
+                if (editableObjectRefresh is INotifyPropertyChanged propertyChanged)
                 {
-                    ((INotifyPropertyChanged)editableObjectRefresh).PropertyChanged += EditableObjectPropertyChanged;
+                    propertyChanged.PropertyChanged += EditableObjectPropertyChanged;
                 }
             }
         }

@@ -193,20 +193,19 @@ namespace DelftTools.Hydro.CrossSections
 
         public virtual IGeometry GetGeometry(ICrossSection crossSection)
         {
-            if (cachedGeometry == null)
+            if (cachedGeometry != null) 
+                return cachedGeometry;
+
+            if (InnerDefinition is CrossSectionDefinition definition)
             {
-                if (InnerDefinition is CrossSectionDefinition)
-                {
-                    cachedGeometry =
-                        ((CrossSectionDefinition) InnerDefinition).CalculateGeometry(crossSection.Branch.Geometry,
-                                                                                     NetworkHelper.MapChainage(
-                                                                                         crossSection.Branch,
-                                                                                         crossSection.Chainage));
-                }
-                else
-                {
-                    cachedGeometry = InnerDefinition.GetGeometry(crossSection);
-                }
+                cachedGeometry = definition.CalculateGeometry(crossSection.Branch.Geometry,
+                    NetworkHelper.MapChainage(
+                        crossSection.Branch,
+                        crossSection.Chainage));
+            }
+            else
+            {
+                cachedGeometry = InnerDefinition.GetGeometry(crossSection);
             }
 
             return cachedGeometry;

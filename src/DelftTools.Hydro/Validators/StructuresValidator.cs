@@ -30,8 +30,15 @@ namespace DelftTools.Hydro.Validators
                             result.ValidationException.Message));
                     }
 
-                    if (structure is IWeir) ValidateWeir((IWeir) structure, issues);
-                    if (structure is IPump) ValidatePump((IPump) structure, issues);
+                    switch (structure)
+                    {
+                        case IWeir weir:
+                            ValidateWeir(weir, issues);
+                            break;
+                        case IPump pump:
+                            ValidatePump(pump, issues);
+                            break;
+                    }
                 }
             }
             return new ValidationReport("Structures", issues);

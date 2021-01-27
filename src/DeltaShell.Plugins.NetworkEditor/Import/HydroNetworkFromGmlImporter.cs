@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             var gmlNode = xmlDoc.DocumentElement.FirstChild.NextSibling.FirstChild.LastChild.InnerXml;
             Console.WriteLine(gmlNode);
 
-            new GMLReader();
+            //TODO : use GMLReader to import
             return hydroNetwork;
         }
 

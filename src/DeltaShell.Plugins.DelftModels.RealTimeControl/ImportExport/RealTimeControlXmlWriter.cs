@@ -237,10 +237,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport
                 foreach (var output in group.Outputs)
                 {
                     var startObject = ControlGroupHelper.StartObjectsForOutput(group, output).FirstOrDefault();
-                    if (startObject is ConditionBase)
+                    if (startObject is ConditionBase condition)
                     {
                         var gf = group.Name;
-                        var condition = (ConditionBase) startObject;
                         triggersElement.Add(condition.ToXml(Fns, gf));
                     }
                 }

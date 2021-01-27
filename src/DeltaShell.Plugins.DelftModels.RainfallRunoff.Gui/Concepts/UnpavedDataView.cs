@@ -244,24 +244,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             Control drainageControl;
 
-            if (drainageFormula is ErnstDrainageFormula)
+            switch (drainageFormula)
             {
-                drainageControl = new ErnstZeeuwHellingaDrainageControl
-                    {Data = (ErnstDrainageFormula) drainageFormula};
-            }
-            else if (drainageFormula is KrayenhoffVanDeLeurDrainageFormula)
-            {
-                drainageControl = new KrayenhoffDrainageControl
-                    {Data = (KrayenhoffVanDeLeurDrainageFormula) drainageFormula};
-            }
-            else if (drainageFormula is DeZeeuwHellingaDrainageFormula)
-            {
-                drainageControl = new ErnstZeeuwHellingaDrainageControl
-                    {Data = (DeZeeuwHellingaDrainageFormula) drainageFormula};
-            }
-            else
-            {
-                throw new NotImplementedException("Unknown drainage formula?");
+                case ErnstDrainageFormula ernstDrainageFormula:
+                    drainageControl = new ErnstZeeuwHellingaDrainageControl
+                        {Data = ernstDrainageFormula};
+                    break;
+                case KrayenhoffVanDeLeurDrainageFormula krayenhoffVanDeLeurDrainageFormula:
+                    drainageControl = new KrayenhoffDrainageControl
+                        {Data = krayenhoffVanDeLeurDrainageFormula};
+                    break;
+                case DeZeeuwHellingaDrainageFormula zeeuwHellingaDrainageFormula:
+                    drainageControl = new ErnstZeeuwHellingaDrainageControl
+                        {Data = zeeuwHellingaDrainageFormula};
+                    break;
+                default:
+                    throw new NotImplementedException("Unknown drainage formula?");
             }
 
             drainageControl.Dock = DockStyle.Fill;

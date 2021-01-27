@@ -936,9 +936,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private void OnActivityRunnerStatusChanged(object sender,
             ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
-            if (sender is FileImportActivity)
+            if (sender is FileImportActivity fileImportActivity)
             {
-                var importer = ((FileImportActivity) sender).FileImporter;
+                var importer = fileImportActivity.FileImporter;
 
                 if (importer is FlowFMNetFileImporter || importer is IFeature2DImporterExporter || importer is RasterFileImporter)
                 {

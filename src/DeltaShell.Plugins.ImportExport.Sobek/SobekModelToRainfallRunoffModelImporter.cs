@@ -52,8 +52,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 PathSobek = path;
             }
             // Import by using the import logic of the IPartialSobekImporter part of the importer
-            importer.TargetObject = targetObjectInternal;
-            GetImporters(importer).ForEach(i => i.TargetObject = targetObjectInternal);
+            if (importer != null)
+            {
+                importer.TargetObject = targetObjectInternal;
+                GetImporters(importer).ForEach(i => i.TargetObject = targetObjectInternal);
+            }
+
             Import();
 
             if (ShouldCancel)

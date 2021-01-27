@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         yield return issue;
                     }
 
-                    chainOfChannels.All(c => channelsCheckedOnInterpolationBranches.Add(c.Name));
+                    chainOfChannels.ForEach(c => channelsCheckedOnInterpolationBranches.Add(c.Name));
                 }
             }
         }

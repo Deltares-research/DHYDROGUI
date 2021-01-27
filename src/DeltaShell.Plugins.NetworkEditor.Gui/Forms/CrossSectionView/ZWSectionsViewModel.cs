@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
         private void ForceRecalculationOfSectionWidths()
         {
-            MainWidth = MainWidth;
+            SetSectionWidths(mainSectionName);
         }
 
         private void UpdateSectionWidths()

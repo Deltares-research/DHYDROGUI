@@ -60,11 +60,11 @@ namespace DelftTools.Hydro.Helpers
                 double wettedPerimeter = 0;
                 double hydraulicRadius;
                 double conveyance;
-                if (intersection is IGeometryCollection)
+                if (intersection is IGeometryCollection collection)
                 {
-                    for (int j = 0; j < intersection.NumGeometries; j++)
+                    for (int j = 0; j < collection.NumGeometries; j++)
                     {
-                        IGeometry smallPolygon = ((IGeometryCollection)intersection).Geometries[j];
+                        IGeometry smallPolygon = collection.Geometries[j];
                         width += smallPolygon.EnvelopeInternal.Width;
                         area += smallPolygon.Area;
                         wettedPerimeter += smallPolygon.Boundary.Length;

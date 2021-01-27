@@ -97,13 +97,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             {
                 var cmd = new MapZoomToFeatureCommand();
                 var valueObject = ((DataItem)Gui.Selection).Value;
-                if (valueObject is Model1DBoundaryNodeData)
+                switch (valueObject)
                 {
-                    cmd.Execute(((Model1DBoundaryNodeData)valueObject).Feature);
-                }
-                if (valueObject is Model1DLateralSourceData)
-                {
-                    cmd.Execute(((Model1DLateralSourceData)valueObject).Feature);
+                    case Model1DBoundaryNodeData model1DBoundaryNodeData:
+                        cmd.Execute(model1DBoundaryNodeData.Feature);
+                        break;
+                    case Model1DLateralSourceData lateralSourceData:
+                        cmd.Execute(lateralSourceData.Feature);
+                        break;
                 }
             }
         }
@@ -147,58 +148,55 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             bool activeViewIsMapView =
                 Gui != null && Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Count() == 1;
 
-            if (dataobject is Model1DBoundaryNodeData)
+            switch (dataobject)
             {
-                //add zoom to functionality to context menu
-                var waterFlowModel1DBoundaryNodeData = (Model1DBoundaryNodeData) dataobject;
-                if (waterFlowModel1DBoundaryNodeData.IsLinked ||
-                    waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.FlowConstant ||
-                    waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
+                case Model1DBoundaryNodeData model1DBoundaryNodeData:
                 {
-                    if (activeViewIsMapView)
+                    //add zoom to functionality to context menu
+                    var waterFlowModel1DBoundaryNodeData = model1DBoundaryNodeData;
+                    if (waterFlowModel1DBoundaryNodeData.IsLinked ||
+                        waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.FlowConstant ||
+                        waterFlowModel1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
                     {
-                        zoomToToolStripMenuItem.Available = true;
-                        generateDataInSeriesToolStripMenuItem.Available = false;
-                        return new MenuItemContextMenuStripAdapter(generateDataMenu);
+                        if (activeViewIsMapView)
+                        {
+                            zoomToToolStripMenuItem.Available = true;
+                            generateDataInSeriesToolStripMenuItem.Available = false;
+                            return new MenuItemContextMenuStripAdapter(generateDataMenu);
+                        }
+
+                        return null;
                     }
 
-                    return null;
+                    function = waterFlowModel1DBoundaryNodeData.Data;
+                    break;
                 }
-
-                function = waterFlowModel1DBoundaryNodeData.Data;
-            }
-            else if (dataobject is Model1DLateralSourceData)
-            {
-                var waterFlowModel1DLateralSourceData = (Model1DLateralSourceData) dataobject;
-                if (waterFlowModel1DLateralSourceData.IsLinked ||
-                    waterFlowModel1DLateralSourceData.DataType == Model1DLateralDataType.FlowConstant)
+                case Model1DLateralSourceData lateralSourceData:
                 {
-                    if (activeViewIsMapView)
+                    var waterFlowModel1DLateralSourceData = lateralSourceData;
+                    if (waterFlowModel1DLateralSourceData.IsLinked ||
+                        waterFlowModel1DLateralSourceData.DataType == Model1DLateralDataType.FlowConstant)
                     {
-                        zoomToToolStripMenuItem.Available = true;
-                        generateDataInSeriesToolStripMenuItem.Available = false;
-                        return new MenuItemContextMenuStripAdapter(generateDataMenu);
+                        if (activeViewIsMapView)
+                        {
+                            zoomToToolStripMenuItem.Available = true;
+                            generateDataInSeriesToolStripMenuItem.Available = false;
+                            return new MenuItemContextMenuStripAdapter(generateDataMenu);
+                        }
+
+                        return null;
                     }
 
-                    return null;
+                    function = waterFlowModel1DLateralSourceData.Data;
+                    break;
                 }
-
-                function = waterFlowModel1DLateralSourceData.Data;
-            }
-            else
-            {
-                return null;
+                default:
+                    return null;
             }
 
-            var node = sender as TreeNode;
-            if (node != null && node.Tag is IDataItem)
+            if (sender is TreeNode node && node.Tag is IDataItem dataItem)
             {
-                if (((IDataItem) node.Tag).Role != DataItemRole.Input)
-                {
-                    return null;
-                }
-
-                if (((IDataItem) node.Tag).IsLinked)
+                if (dataItem.Role != DataItemRole.Input || dataItem.LinkedTo != null)
                 {
                     return null;
                 }

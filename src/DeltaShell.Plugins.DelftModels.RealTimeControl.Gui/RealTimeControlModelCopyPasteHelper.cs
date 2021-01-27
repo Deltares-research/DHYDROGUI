@@ -82,67 +82,76 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             PlaceShapesAndConnections(clonedRtcObjects, controller, mea);
         }
 
-        public static void SetClonedInputsAndOutputsToClonedObjects(Dictionary<object, object> source, Dictionary<object, object> target, object o)
+        private static void SetClonedInputsAndOutputsToClonedObjects(Dictionary<object, object> source, Dictionary<object, object> target, object o)
         {
-            if (o is RuleBase)
+            switch (o)
             {
-                var ruleTarget = (RuleBase)o;
-                var ruleSource = (RuleBase)source[ruleTarget];
-                foreach (var input in ruleSource.Inputs)
+                case RuleBase ruleBase:
                 {
-                    if (target.ContainsKey(input))
+                    var ruleTarget = ruleBase;
+                    var ruleSource = (RuleBase)source[ruleTarget];
+                    foreach (var input in ruleSource.Inputs)
                     {
-                        ruleTarget.Inputs.Add((Input)target[input]);
+                        if (target.ContainsKey(input))
+                        {
+                            ruleTarget.Inputs.Add((Input)target[input]);
+                        }
                     }
-                }
-                foreach (var output in ruleSource.Outputs)
-                {
-                    if (target.ContainsKey(output))
+                    foreach (var output in ruleSource.Outputs)
                     {
-                        ruleTarget.Outputs.Add((Output)target[output]);
+                        if (target.ContainsKey(output))
+                        {
+                            ruleTarget.Outputs.Add((Output)target[output]);
+                        }
                     }
+
+                    break;
                 }
-            }
-            if (o is ConditionBase)
-            {
-                var conditionTarget = (ConditionBase)o;
-                var conditionSource = (ConditionBase)source[conditionTarget];
-                foreach (var trueOutput in conditionSource.TrueOutputs)
+                case ConditionBase conditionBase:
                 {
-                    if (target.ContainsKey(trueOutput))
+                    var conditionTarget = conditionBase;
+                    var conditionSource = (ConditionBase)source[conditionTarget];
+                    foreach (var trueOutput in conditionSource.TrueOutputs)
                     {
-                        conditionTarget.TrueOutputs.Add((RtcBaseObject)target[trueOutput]);
+                        if (target.ContainsKey(trueOutput))
+                        {
+                            conditionTarget.TrueOutputs.Add((RtcBaseObject)target[trueOutput]);
+                        }
                     }
-                }
-                foreach (var falseOutput in conditionSource.FalseOutputs)
-                {
-                    if (target.ContainsKey(falseOutput))
+                    foreach (var falseOutput in conditionSource.FalseOutputs)
                     {
-                        conditionTarget.FalseOutputs.Add((RtcBaseObject)target[falseOutput]);
+                        if (target.ContainsKey(falseOutput))
+                        {
+                            conditionTarget.FalseOutputs.Add((RtcBaseObject)target[falseOutput]);
+                        }
                     }
-                }
-                if (conditionSource.Input != null && target.ContainsKey(conditionSource.Input))
-                {
-                    conditionTarget.Input = (Input)target[conditionSource.Input];
-                }
-            }
-            if (o is SignalBase)
-            {
-                var signalTarget = (SignalBase)o;
-                var signalSource = (SignalBase)source[signalTarget];
-                foreach (var input in signalSource.Inputs)
-                {
-                    if (target.ContainsKey(input))
+                    if (conditionSource.Input != null && target.ContainsKey(conditionSource.Input))
                     {
-                        signalTarget.Inputs.Add((Input)target[input]);
+                        conditionTarget.Input = (Input)target[conditionSource.Input];
                     }
+
+                    break;
                 }
-                foreach (var ruleBase in signalSource.RuleBases)
+                case SignalBase signalBase:
                 {
-                    if (target.ContainsKey(ruleBase))
+                    var signalTarget = signalBase;
+                    var signalSource = (SignalBase)source[signalTarget];
+                    foreach (var input in signalSource.Inputs)
                     {
-                        signalTarget.RuleBases.Add((RuleBase)target[ruleBase]);
+                        if (target.ContainsKey(input))
+                        {
+                            signalTarget.Inputs.Add((Input)target[input]);
+                        }
                     }
+                    foreach (var ruleBase in signalSource.RuleBases)
+                    {
+                        if (target.ContainsKey(ruleBase))
+                        {
+                            signalTarget.RuleBases.Add((RuleBase)target[ruleBase]);
+                        }
+                    }
+
+                    break;
                 }
             }
         }

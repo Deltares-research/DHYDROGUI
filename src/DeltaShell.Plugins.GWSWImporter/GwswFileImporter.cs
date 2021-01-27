@@ -164,11 +164,18 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             if (rrModel == null) throw new ArgumentNullException(nameof(rrModel));
             if (fmModel == null) throw new ArgumentNullException(nameof(fmModel));
             var listOfErrors = new ConcurrentQueue<string>();
-            var network = fmModel?.Network;
-            network?.BeginEdit(new DefaultEditAction("Importing GWSW database."));
-            fmModel?.UnSubscribeFromNetwork(network);
-            fmModel?.UnSubscribeLateralSourcesData();
-            fmModel?.UnSubscribeBoundaryConditions1D();
+            var network = fmModel.Network;
+
+            if (network == null)
+            {
+                Log.Error("Could not add NWRW links between FM model and RR model");
+                return;
+            }
+
+            network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
+            fmModel.UnSubscribeFromNetwork(network);
+            fmModel.UnSubscribeLateralSourcesData();
+            fmModel.UnSubscribeBoundaryConditions1D();
             var bubbelingEventSetting = EventSettings.BubblingEnabled;
             var branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
             var pipesBySourceCompartmentName = network.Pipes.ToLookup(p => p.SourceCompartmentName, p => p, StringComparer.OrdinalIgnoreCase);
@@ -250,12 +257,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             finally
             {
                 EventSettings.BubblingEnabled = bubbelingEventSetting;
-                fmModel?.SubscribeToNetwork(network);
-                fmModel?.SubscribeLateralSourcesData();
-                fmModel?.SubscribeBoundaryConditions1D();
-                network?.EndEdit();
+                fmModel.SubscribeToNetwork(network);
+                fmModel.SubscribeLateralSourcesData();
+                fmModel.SubscribeBoundaryConditions1D();
+                network.EndEdit();
             }
-            
         }
 
         /// <summary>

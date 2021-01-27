@@ -180,14 +180,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (file == null) return false;
 
             IList<TFeat> featureList = null;
-            if (item is TFeat)
+            switch (item)
             {
-                featureList = new[] {FeatureToExport((TFeat) item)};
+                case TFeat feat:
+                    featureList = new[] {FeatureToExport(feat)};
+                    break;
+                case IList<TFeat> features:
+                    featureList = features.Select(FeatureToExport).ToList();
+                    break;
             }
-            if (item is IList<TFeat>)
-            {
-                featureList = ((IList<TFeat>) item).Select(FeatureToExport).ToList();
-            }
+
             if (featureList != null)
             {
                 Export(featureList, file);

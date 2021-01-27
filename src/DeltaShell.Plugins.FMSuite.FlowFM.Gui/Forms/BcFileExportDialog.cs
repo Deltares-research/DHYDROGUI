@@ -44,9 +44,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         private void ExportModeComboBoxFormat(object sender, ListControlConvertEventArgs e)
         {
-            if (e.ListItem is BcFile.WriteMode)
+            if (e.ListItem is BcFile.WriteMode mode)
             {
-                e.Value = ((BcFile.WriteMode) e.ListItem).GetDescription();
+                e.Value = mode.GetDescription();
             }
         }
 

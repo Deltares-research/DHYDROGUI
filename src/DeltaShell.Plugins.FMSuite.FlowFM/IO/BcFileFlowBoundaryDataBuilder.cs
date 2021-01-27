@@ -1186,13 +1186,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected virtual BcQuantityData CreateBcQuantityDataForArgument(string quantity, IVariable argument, DateTime? referenceTime)
         {
-            var unit = argument.Unit == null ? null : argument.Unit.Symbol;
+            var unit = argument.Unit?.Symbol;
             Func<double, double> converter = null;
             if (argument.ValueType == typeof(DateTime) && referenceTime != null)
             {
                 unit = "seconds since " + referenceTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
             }
-            if (argument.ValueType == typeof (double) && unit.ToLower() == "deg/h") //convert frequencies to periods...
+            if (argument.ValueType == typeof (double) && unit?.ToLower() == "deg/h") //convert frequencies to periods...
             {
                 unit = "minutes";
                 converter = FlowBoundaryCondition.GetPeriodInMinutes;
