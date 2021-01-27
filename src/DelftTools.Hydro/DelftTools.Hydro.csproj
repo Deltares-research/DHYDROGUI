@@ -208,7 +208,6 @@
     <Compile Include="Structures\WeirFormula\IGatedWeirFormula.cs" />
     <Compile Include="Structures\WeirFormula\SimpleWeirFormula.cs" />
     <Compile Include="HydroTimeSeriesFactory.cs" />
-    <Compile Include="StructureType.cs" />
     <Compile Include="Structures\ThinDam2D.cs" />
   </ItemGroup>
   <ItemGroup>
