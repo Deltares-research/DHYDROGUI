@@ -190,7 +190,6 @@
     <Compile Include="IModelMerge.cs" />
     <Compile Include="LandBoundary2D.cs" />
     <Compile Include="ObservationCrossSection2D.cs" />
-    <Compile Include="FlowDirection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
