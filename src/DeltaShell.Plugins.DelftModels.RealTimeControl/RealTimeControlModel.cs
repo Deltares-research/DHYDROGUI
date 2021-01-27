@@ -438,6 +438,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return AllDataItems.Where(di => di.Role == role);
         }
 
+        public virtual string GetUpToDateDataItemName(string oldDataItemName) => oldDataItemName;
+
         public void Dispose()
         {
             Dispose(true);
@@ -701,6 +703,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                         if (controlGroupDataItem != null)
                         {
+                            bool originalClearOutputOnInputChange = SuspendClearOutputOnInputChange;
                             SuspendClearOutputOnInputChange = true;
 
                             foreach (IDataItem dataItem in controlGroupDataItem.Children)
@@ -711,7 +714,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                             controlGroupDataItem.Children.Clear();
                             DataItems.Remove(controlGroupDataItem);
 
-                            SuspendClearOutputOnInputChange = false;
+                            SuspendClearOutputOnInputChange = originalClearOutputOnInputChange;
                         }
 
                         break;
@@ -736,9 +739,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 AddConnectionDataItem(controlGroupDataItem, output, DataItemRole.Output);
             }
 
+            bool originalSuspendClearOutputOnInputChange = SuspendClearOutputOnInputChange;
             SuspendClearOutputOnInputChange = true;
             DataItems.Add(controlGroupDataItem);
-            SuspendClearOutputOnInputChange = false;
+            SuspendClearOutputOnInputChange = originalSuspendClearOutputOnInputChange;
         }
 
         private static void AddConnectionDataItem(IDataItem controlGroupDataItem, ConnectionPoint connectionPoint, DataItemRole role)
@@ -1366,11 +1370,50 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         #region Save State: Time Range
 
-        public virtual DateTime SaveStateStartTime { get; set; }
+        public virtual DateTime SaveStateStartTime
+        {
+            get => saveStateStartTime;
+            set
+            {
+                if (saveStateStartTime == value)
+                {
+                    return;
+                }
 
-        public virtual DateTime SaveStateStopTime { get; set; }
+                saveStateStartTime = value;
+                MarkOutputOutOfSync();
+            }
+        }
 
-        public virtual TimeSpan SaveStateTimeStep { get; set; }
+        public virtual DateTime SaveStateStopTime
+        {
+            get => saveStateStopTime;
+            set
+            {
+                if (saveStateStopTime == value)
+                {
+                    return;
+                }
+
+                saveStateStopTime = value;
+                MarkOutputOutOfSync();
+            }
+        }
+
+        public virtual TimeSpan SaveStateTimeStep
+        {
+            get => saveStateTimeStep;
+            set
+            {
+                if (saveStateTimeStep == value)
+                {
+                    return;
+                }
+                
+                saveStateTimeStep = value;
+                MarkOutputOutOfSync();
+            }
+        }
 
         #endregion
 
@@ -1640,6 +1683,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private string oldPersistentOutputDirectory = string.Empty;
         private bool removeSourceOutputFolder;
         private bool writeRestart;
+        private DateTime saveStateStartTime;
+        private DateTime saveStateStopTime;
+        private TimeSpan saveStateTimeStep;
 
         /// <summary>
         /// The persistent output directory to which output files
