@@ -429,7 +429,6 @@
     <Compile Include="WaterFlowFMModelDefinitionTest.cs" />
     <Compile Include="WaterFlowFMSaveLoadTest.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.cs" />
-    <Compile Include="WeirFormula2DExtensionsTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">

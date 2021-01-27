@@ -164,7 +164,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
         /// </summary>
         public virtual double ExtraResistance { get; set; }
 
-        public virtual string Name => "General structure";
+        public virtual string Name => "General Structure";
 
         public virtual double DoorHeight { get; set; }
 

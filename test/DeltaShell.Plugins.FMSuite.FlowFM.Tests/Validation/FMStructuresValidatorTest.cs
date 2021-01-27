@@ -322,7 +322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             // Then
             // The correct issues are added.
-            var expectedIssue = $"Crest Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
+            var expectedIssue = $"Crest Width for '{weir.Name}' structure type: {weir.Formula.Name}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -384,7 +384,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Upstream 2 Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
+                $"Upstream 2 Width for '{weir.Name}' structure type: {weir.Formula.Name}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -416,7 +416,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Upstream 1 Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
+                $"Upstream 1 Width for '{weir.Name}' structure type: {weir.Formula.Name}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -448,7 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Downstream 1 Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
+                $"Downstream 1 Width for '{weir.Name}' structure type: {weir.Formula.Name}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;
@@ -480,7 +480,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Then
             // The correct issues are added.
             var expectedIssue =
-                $"Downstream 2 Width for '{weir.Name}' structure type: {weir.Formula.GetName2D()}, must be greater than 0.";
+                $"Downstream 2 Width for '{weir.Name}' structure type: {weir.Formula.Name}, must be greater than 0.";
 
             Assert.That(validationReport.ContainsError(expectedIssue));
             int numberOfMessages = validationReport.ErrorCount + validationReport.WarningCount + validationReport.InfoCount;

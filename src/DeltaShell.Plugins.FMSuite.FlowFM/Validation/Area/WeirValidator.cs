@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                                                  string.Format(
                                                      Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calculated_by_the_computational_core_,
                                                      crestWidthPropertyName, structure.Name,
-                                                     structure.Formula.GetName2D()),
+                                                     structure.Formula.Name),
                                                  structure);
             }
             else if (crestWidthValue <= 0.0)
@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                                                  string.Format(
                                                      Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_,
                                                      crestWidthPropertyName, structure.Name,
-                                                     structure.Formula.GetName2D()),
+                                                     structure.Formula.Name),
                                                  structure);
             }
         }

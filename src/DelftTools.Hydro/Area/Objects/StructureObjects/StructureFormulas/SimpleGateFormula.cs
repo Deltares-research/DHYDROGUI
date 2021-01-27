@@ -81,7 +81,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
         /// </summary>
         public virtual bool UseMaxFlowNeg { get; set; }
 
-        public virtual string Name => "Gated weir (Orifice)";
+        public virtual string Name => "Simple Gate";
 
         /// <summary>
         /// Gate opening (openlevel)

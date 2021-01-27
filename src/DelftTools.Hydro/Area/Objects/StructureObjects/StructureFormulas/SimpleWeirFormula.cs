@@ -39,6 +39,6 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
             LateralContraction = 1.0;
         }
 
-        public virtual string Name => "Simple weir (Weir)";
+        public virtual string Name => "Simple Weir";
     }
 }

@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             string expectedMessage = string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_,
                                                    WeirValidator.CrestWidthPropertyName,
                                                    weir.Name,
-                                                   weir.Formula.GetName2D());
+                                                   weir.Formula.Name);
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
         }
 
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             string expectedMessage = string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calculated_by_the_computational_core_,
                                                    WeirValidator.CrestWidthPropertyName,
                                                    weir.Name,
-                                                   weir.Formula.GetName2D());
+                                                   weir.Formula.Name);
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
         }
 
@@ -478,7 +478,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         {
             var expectedIssue = new ValidationIssue(weir,
                                                     ValidationSeverity.Error,
-                                                    string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_, propertyName, weir.Name, weir.Formula.GetName2D()),
+                                                    string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_, propertyName, weir.Name, weir.Formula.Name),
                                                     weir);
 
             Assert.That(issues.Contains(expectedIssue), Is.EqualTo(!isValid));
@@ -553,7 +553,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             string expectedMessage = string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calculated_by_the_computational_core_,
                                                    propertyName,
                                                    weir.Name,
-                                                   weir.Formula.GetName2D());
+                                                   weir.Formula.Name);
             var expectedIssue = new ValidationIssue(weir, ValidationSeverity.Info, expectedMessage, weir);
 
             Assert.That(issues.Contains(expectedIssue), Is.EqualTo(isEmpty));
@@ -570,7 +570,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_,
                 propertyName,
                 weir.Name,
-                weir.Formula.GetName2D());
+                weir.Formula.Name);
 
             ValidationIssue expectedIssue = issues.FirstOrDefault(i => i.Message == expectedMessage);
             Assert.NotNull(expectedIssue, $"The following message was expected in the returned validation messages: '{expectedMessage}'");
