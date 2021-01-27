@@ -47,11 +47,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         }
 
         [Test]
-        public void Constructor_WeirNull_ThrowsArgumentNullException()
+        public void Constructor_StructureNull_ThrowsArgumentNullException()
         {
             void Call() => new StructureViewModel(null);
             var exception = Assert.Throws<System.ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("weir"));
+            Assert.That(exception.ParamName, Is.EqualTo("structure"));
         }
 
         [Test]

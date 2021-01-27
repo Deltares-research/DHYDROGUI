@@ -2,24 +2,23 @@
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
+namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels
 {
     [TestFixture]
-    public class WeirPropertiesViewModelTest
+    public class StructurePropertiesViewModelTest
     {
         [Test]
-        public void Constructor_WeirNull_ThrowsArgumentNullException()
+        public void Constructor_StructureNull_ThrowsArgumentNullException()
         {
             void Call() => new StructurePropertiesViewModel(null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("weir"));
+            Assert.That(exception.ParamName, Is.EqualTo("structure"));
         }
 
         [Test]

@@ -27,7 +27,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects
             Assert.That(structure.Name, Is.EqualTo("Structure"));
 
             Assert.That(structure.Formula, Is.InstanceOf<SimpleWeirFormula>());
-            Assert.That(structure.FormulaName, Is.EqualTo("Simple weir (Weir)"));
+            Assert.That(structure.FormulaName, Is.EqualTo("Simple Weir"));
 
             Assert.That(structure.CrestLevelTimeSeries, Is.Not.Null);
             Assert.That(structure.UseCrestLevelTimeSeries, Is.False);

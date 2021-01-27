@@ -47,7 +47,6 @@
     <Compile Include="HydroTimeSeriesFactoryTest.cs" />
     <Compile Include="NameableFeatureComparerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\GeneralStructureWeirFormulaTest.cs" />
     <Compile Include="TestClassSetup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -195,7 +194,9 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Area\Objects\StructureObjects\StructureFormulas\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

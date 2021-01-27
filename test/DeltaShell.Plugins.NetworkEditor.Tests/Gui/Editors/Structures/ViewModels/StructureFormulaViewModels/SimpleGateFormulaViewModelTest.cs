@@ -1,15 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
+namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels
 {
     [TestFixture]
-    public class GatedWeirViewModelTest
+    public class SimpleGateFormulaViewModelTest
     {
         [Test]
         public void Constructor_SetsPropertiesCorrectly()

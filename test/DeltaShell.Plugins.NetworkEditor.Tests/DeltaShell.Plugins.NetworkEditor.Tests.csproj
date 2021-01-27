@@ -236,15 +236,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaLayerTest.cs" />
-    <Compile Include="Forms\GridProperties\FeatureCoveragePropertiesTest.cs" />
-    <Compile Include="Forms\GridProperties\HydroRegionPropertiesTest.cs" />
+    <Compile Include="Gui\Forms\GridProperties\FeatureCoveragePropertiesTest.cs" />
+    <Compile Include="Gui\Forms\GridProperties\HydroRegionPropertiesTest.cs" />
     <Compile Include="Gui\Converters\EmptyDoubleValueConverterTest.cs" />
     <Compile Include="Gui\Editors\Structures\ViewModels\StructureViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatedWeirViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\GeneralStructureViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\SimpleWeirViewModelTest.cs" />
-    <Compile Include="Gui\Editors\Structures\ViewModels\WeirFormulaViewModels\WeirPropertiesViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\StructureFormulaViewModels\SimpleGateFormulaViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\StructureFormulaViewModels\GatePropertiesViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\StructureFormulaViewModels\GeneralStructureFormulaViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\StructureFormulaViewModels\SimpleWeirFormulaViewModelTest.cs" />
+    <Compile Include="Gui\Editors\Structures\ViewModels\StructureFormulaViewModels\StructurePropertiesViewModelTest.cs" />
     <Compile Include="Gui\Layers\NetworkEditorMapLayerProviderCreatorTest.cs" />
     <Compile Include="Gui\Layers\Providers\BridgePillarsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\DryAreasLayerProviderTest.cs" />
@@ -271,7 +271,7 @@
     <Compile Include="NetworkEditorMapLayerProviderTest.cs" />
     <Compile Include="NetworkEditorPluginTest.cs" />
     <Compile Include="TestClassSetup.cs" />
-    <Compile Include="Forms\StructureFeatureView\PumpViewTest.cs" />
+    <Compile Include="Gui\Forms\StructureFeatureView\PumpViewTest.cs" />
     <Compile Include="NetworkEditorGuiPluginTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
