@@ -23,6 +23,7 @@ using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -1774,6 +1775,78 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             {
                 // Assert
                 Assert.That(model.SpatialData, Is.Not.Null);
+                Assert.That(model.SpatialDataItems, Is.Not.Empty);
+                Assert.That(model.SpatialDataItems, Is.EqualTo(model.SpatialData.DataItems));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void Constructor_SubscribesToSpatialDataDataItems_WhenAddingItemToSpatialData_PropagatesEvents()
+        {
+            var dataItemsObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+            var modelObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                var dataItem = new DataItem();
+
+                model.SpatialDataItems.CollectionChanged += dataItemsObserver.OnEventFired;
+                ((INotifyCollectionChanged) model).CollectionChanged += modelObserver.OnEventFired;
+
+                // When
+                model.SpatialData.DataItems.Add(dataItem);
+
+                // Then
+                Assert.That(model.SpatialDataItems, Is.EqualTo(model.SpatialData.DataItems));
+
+                Assert.That(dataItemsObserver.NCalls, Is.EqualTo(1));
+                Assert.That(dataItemsObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(dataItemsObserver.EventArgses[0].NewItems, Has.Count.EqualTo(1));
+                Assert.That(dataItemsObserver.EventArgses[0].NewItems[0], Is.SameAs(dataItem));
+                Assert.That(dataItemsObserver.EventArgses[0].OldItems, Is.Null);
+
+                Assert.That(modelObserver.NCalls, Is.EqualTo(1));
+                Assert.That(modelObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(modelObserver.EventArgses[0].NewItems, Has.Count.EqualTo(1));
+                Assert.That(modelObserver.EventArgses[0].NewItems[0], Is.SameAs(dataItem));
+                Assert.That(modelObserver.EventArgses[0].OldItems, Is.Null);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void Constructor_SubscribesToSpatialDataDataItems_WhenRemovingItemFromSpatialData_PropagatesEvents()
+        {
+            var dataItemsObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+            var modelObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                IDataItem dataItem = model.SpatialData.DataItems.First();
+
+                model.SpatialDataItems.CollectionChanged += dataItemsObserver.OnEventFired;
+                ((INotifyCollectionChanged) model).CollectionChanged += modelObserver.OnEventFired;
+
+                // When
+                model.SpatialData.DataItems.Remove(dataItem);
+
+                // Then
+                Assert.That(model.SpatialDataItems, Is.EqualTo(model.SpatialData.DataItems));
+
+                Assert.That(dataItemsObserver.NCalls, Is.EqualTo(1));
+                Assert.That(dataItemsObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(dataItemsObserver.EventArgses[0].NewItems, Is.Null);
+                Assert.That(dataItemsObserver.EventArgses[0].OldItems, Has.Count.EqualTo(1));
+                Assert.That(dataItemsObserver.EventArgses[0].OldItems[0], Is.SameAs(dataItem));
+
+                Assert.That(modelObserver.NCalls, Is.EqualTo(1));
+                Assert.That(modelObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(modelObserver.EventArgses[0].NewItems, Is.Null);
+                Assert.That(modelObserver.EventArgses[0].OldItems, Has.Count.EqualTo(1));
+                Assert.That(modelObserver.EventArgses[0].OldItems[0], Is.SameAs(dataItem));
             }
         }
 

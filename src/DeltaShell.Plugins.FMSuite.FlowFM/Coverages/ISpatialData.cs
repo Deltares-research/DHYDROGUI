@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Collections.Generic;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
@@ -57,7 +58,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         /// <summary>
         /// Gets the collection of data items in which the coverages are held.
         /// </summary>
-        IEnumerable<IDataItem> DataItems { get; }
+        /// <remarks>
+        /// This collection should not be changed from outside.
+        /// Instead, use the provided methods.
+        /// </remarks>
+        IEventedList<IDataItem> DataItems { get; }
 
         /// <summary>
         /// Adds a tracer to the tracers.

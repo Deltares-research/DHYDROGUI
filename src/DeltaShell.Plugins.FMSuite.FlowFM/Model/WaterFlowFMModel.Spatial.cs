@@ -7,7 +7,9 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
@@ -28,6 +30,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private double bathymetryNoDataValue;
 
         public Envelope GridExtent { get; private set; }
+
+        /// <summary>
+        /// Gets the collection of spatial data items.
+        /// This collection is equal to <seealso cref="SpatialData.DataItems"/>
+        /// and should not be changed or accessed from outside.
+        /// Moreover, changing this collection will not lead to changes in the domain.
+        /// Instead, use the public methods of <see cref="SpatialData"/>.
+        /// This construct is needed to propagate events.
+        /// </summary>
+        public IEventedList<IDataItem> SpatialDataItems { get; private set; }
 
         public UnstructuredGrid Grid
         {
@@ -561,6 +573,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 coverage.Grid = newGrid;
             }
+        }
+
+        private void InitializeSpatialDataItems()
+        {
+            SpatialDataItems = new EventedList<IDataItem>(SpatialData.DataItems);
+            SpatialData.DataItems.CollectionChanged +=
+                SyncHelper.GetSyncNotifyCollectionChangedEventHandler(SpatialDataItems);
         }
 
         #region IGridSnapApi

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -50,6 +51,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             roughnessDataItem = CreateDataItem<UnstructuredGridFlowLinkCoverage>(WaterFlowFMModelDefinition.RoughnessDataItemName);
             tracerDataItems = new List<IDataItem>();
             fractionDataItems = new List<IDataItem>();
+
+            DataItems = new EventedList<IDataItem>
+            {
+                bathymetryDataItem,
+                initialWaterLevelDataItem,
+                initialSalinityDataItem,
+                initialTemperatureDataItem,
+                roughnessDataItem,
+                viscosityDataItem,
+                diffusivityDataItem
+            };
         }
 
         public UnstructuredGridCoverage Bathymetry
@@ -102,29 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
         public IEnumerable<UnstructuredGridCellCoverage> InitialFractions => fractionDataItems.Select(d => d.Value).Cast<UnstructuredGridCellCoverage>();
 
-        public IEnumerable<IDataItem> DataItems
-        {
-            get
-            {
-                yield return bathymetryDataItem;
-                yield return initialWaterLevelDataItem;
-                yield return initialSalinityDataItem;
-                yield return initialTemperatureDataItem;
-                yield return viscosityDataItem;
-                yield return diffusivityDataItem;
-                yield return roughnessDataItem;
-
-                foreach (IDataItem tracerDataItem in tracerDataItems)
-                {
-                    yield return tracerDataItem;
-                }
-
-                foreach (IDataItem fractionDataItem in fractionDataItems)
-                {
-                    yield return fractionDataItem;
-                }
-            }
-        }
+        public IEventedList<IDataItem> DataItems { get; }
 
         public void SwitchTo(string targetDir)
         {
@@ -175,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             }
         }
 
-        private static void RemoveDataItem(ICollection<IDataItem> dataItems, string name)
+        private void RemoveDataItem(ICollection<IDataItem> dataItems, string name)
         {
             IDataItem dataItem = dataItems.GetByName(name);
             if (dataItem == null)
@@ -184,16 +174,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             }
 
             dataItems.Remove(dataItem);
+            DataItems.Remove(dataItem);
         }
 
-        private void AddCoverage(IList<IDataItem> dataItems, UnstructuredGridCoverage coverage)
+        private void AddCoverage(ICollection<IDataItem> dataItems, UnstructuredGridCoverage coverage)
         {
             if (dataItems.GetByName(coverage.Name) != null)
             {
                 return;
             }
 
-            dataItems.Add(CreateDataItem(coverage.Name, coverage));
+            IDataItem dataItem = CreateDataItem(coverage.Name, coverage);
+
+            dataItems.Add(dataItem);
+            DataItems.Add(dataItem);
         }
 
         private IDataItem CreateDataItem<T>(string name, T value = default(T)) =>

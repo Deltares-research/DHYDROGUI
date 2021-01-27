@@ -88,6 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             SynchronizeModelDefinitions();
 
             SpatialData = new SpatialData(this);
+            InitializeSpatialDataItems();
 
             Grid = new UnstructuredGrid();
 

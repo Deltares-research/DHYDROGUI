@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -49,8 +50,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
             Assert.That(data.InitialTracers, Is.Empty);
             Assert.That(data.InitialFractions, Is.Empty);
 
-            IDataItem[] dataItems = data.DataItems.ToArray();
-            Assert.That(dataItems, Has.Length.EqualTo(7));
+            IEventedList<IDataItem> dataItems = data.DataItems;
+            Assert.That(dataItems, Has.Count.EqualTo(7));
             Assert.That(dataItems.Select(d => d.Value), Is.All.Null);
         }
 
@@ -205,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
             data.AddFraction(new UnstructuredGridCellCoverage(grid, false) {Name = "b"});
 
             // Call
-            IEnumerable<IDataItem> dataItems = data.DataItems;
+            IEventedList<IDataItem> dataItems = data.DataItems;
 
             // Assert
             object[] values = dataItems.Select(d => d.Value).ToArray();
