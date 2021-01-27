@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:weirFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.WeirFormulaViews"
              xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
              xmlns:convertersCommon="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
              xmlns:viewModels="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels"
+             xmlns:structureFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.StructureFormulaViews"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="920">
     <UserControl.Resources>
@@ -18,13 +18,13 @@
             <convertersCommon:TypeToDescriptionConverter x:Key="TypeToDescriptionConverter" />
 
             <DataTemplate DataType="{x:Type viewModels:SimpleWeirFormulaViewModel}">
-                <weirFormulaViews:SimpleWeirFormulaView DataContext="{Binding}" />
+                <structureFormulaViews:SimpleWeirFormulaView DataContext="{Binding}" />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:SimpleGateFormulaViewModel}">
-                <weirFormulaViews:SimpleGateFormulaView DataContext="{Binding}" />
+                <structureFormulaViews:SimpleGateFormulaView DataContext="{Binding}" />
             </DataTemplate>
             <DataTemplate DataType="{x:Type viewModels:GeneralStructureFormulaViewModel}">
-                <weirFormulaViews:GeneralStructureFormulaView DataContext="{Binding}" />
+                <structureFormulaViews:GeneralStructureFormulaView DataContext="{Binding}" />
             </DataTemplate>
 
             <DataTemplate x:Key="TypeLabeledComboBoxTemplate">

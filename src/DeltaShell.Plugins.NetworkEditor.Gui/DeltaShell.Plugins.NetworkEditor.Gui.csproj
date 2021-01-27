@@ -207,25 +207,25 @@
     <Compile Include="Editors\Structures\Views\Components\StructuresValueBox.xaml.cs">
       <DependentUpon>StructuresValueBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Structures\Views\WeirFormulaViews\SimpleGateFormulaView.xaml.cs">
+    <Compile Include="Editors\Structures\Views\StructureFormulaViews\SimpleGateFormulaView.xaml.cs">
       <DependentUpon>SimpleGateFormulaView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Structures\Views\WeirFormulaViews\GatePropertiesView.xaml.cs">
+    <Compile Include="Editors\Structures\Views\StructureFormulaViews\GatePropertiesView.xaml.cs">
       <DependentUpon>GatePropertiesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\Structures\Views\Components\LabeledTimeSeriesView.xaml.cs">
       <DependentUpon>LabeledTimeSeriesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Structures\Views\WeirFormulaViews\GeneralStructureFormulaView.xaml.cs">
+    <Compile Include="Editors\Structures\Views\StructureFormulaViews\GeneralStructureFormulaView.xaml.cs">
       <DependentUpon>GeneralStructureFormulaView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Structures\Views\WeirFormulaViews\SimpleWeirFormulaView.xaml.cs">
+    <Compile Include="Editors\Structures\Views\StructureFormulaViews\SimpleWeirFormulaView.xaml.cs">
       <DependentUpon>SimpleWeirFormulaView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Editors\Structures\Views\StructureView.xaml.cs">
       <DependentUpon>StructureView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Editors\Structures\Views\WeirFormulaViews\StructurePropertiesView.xaml.cs">
+    <Compile Include="Editors\Structures\Views\StructureFormulaViews\StructurePropertiesView.xaml.cs">
       <DependentUpon>StructurePropertiesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Export\HydroRegionShapeFileExporter.cs" />
@@ -368,11 +368,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\Structures\Views\WeirFormulaViews\SimpleGateFormulaView.xaml">
+    <Page Include="Editors\Structures\Views\StructureFormulaViews\SimpleGateFormulaView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\Structures\Views\WeirFormulaViews\GatePropertiesView.xaml">
+    <Page Include="Editors\Structures\Views\StructureFormulaViews\GatePropertiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -380,11 +380,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\Structures\Views\WeirFormulaViews\GeneralStructureFormulaView.xaml">
+    <Page Include="Editors\Structures\Views\StructureFormulaViews\GeneralStructureFormulaView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\Structures\Views\WeirFormulaViews\SimpleWeirFormulaView.xaml">
+    <Page Include="Editors\Structures\Views\StructureFormulaViews\SimpleWeirFormulaView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -392,7 +392,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Editors\Structures\Views\WeirFormulaViews\StructurePropertiesView.xaml">
+    <Page Include="Editors\Structures\Views\StructureFormulaViews\StructurePropertiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

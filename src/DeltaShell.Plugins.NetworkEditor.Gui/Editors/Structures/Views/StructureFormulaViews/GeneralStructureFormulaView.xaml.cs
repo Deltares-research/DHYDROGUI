@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.WeirFormulaViews
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.StructureFormulaViews
 {
     /// <summary>
     /// Interaction logic for GeneralStructureFormulaView.xaml
