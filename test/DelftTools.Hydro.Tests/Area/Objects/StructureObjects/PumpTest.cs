@@ -1,5 +1,4 @@
-﻿using DelftTools.Hydro.Area.Objects;
-using DelftTools.Hydro.Area.Objects.StructureObjects;
+﻿using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Data;
 using GeoAPI.Extensions.Feature;
@@ -7,7 +6,7 @@ using GeoAPI.Geometries;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DelftTools.Hydro.Tests.Area.Objects
+namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects
 {
     [TestFixture]
     public class PumpTest
