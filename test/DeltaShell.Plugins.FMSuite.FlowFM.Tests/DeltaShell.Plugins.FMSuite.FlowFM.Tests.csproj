@@ -334,6 +334,7 @@
     <Compile Include="IO\ExtForceFilePerformanceTest.cs" />
     <Compile Include="IO\ExtForceFileTest.cs" />
     <Compile Include="IO\FileConstantsTest.cs" />
+    <Compile Include="IO\NetCdfFileParsingExceptionTest.cs" />
     <Compile Include="IO\Files\BndExtForceFileConstantsTest.cs" />
     <Compile Include="IO\Files\CacheFileTest.cs" />
     <Compile Include="IO\Files\ExtForceFileConstantsTest.cs" />
