@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;

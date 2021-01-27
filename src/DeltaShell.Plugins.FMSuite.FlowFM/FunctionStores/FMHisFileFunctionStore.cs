@@ -25,7 +25,6 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
-using IStructure = DelftTools.Hydro.Area.Objects.StructureObjects.IStructure;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 {

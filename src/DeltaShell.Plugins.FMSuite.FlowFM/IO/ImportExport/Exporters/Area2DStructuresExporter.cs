@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Shell.Core;
 using DeltaShell.Plugins.FMSuite.Common.IO;

@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
-using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
