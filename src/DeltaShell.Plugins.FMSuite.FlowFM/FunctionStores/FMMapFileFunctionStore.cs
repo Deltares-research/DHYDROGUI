@@ -276,14 +276,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <param name="function">The function to retrieve the origin for.</param>
         /// <param name="attributeName">The attribute name to retrieve the origin from.</param>
         /// <returns>An integer representing the origin.</returns>
-        /// <exception cref="Exception">Thrown when the origin could not be determined.</exception>
+        /// <exception cref="NetCdfFileParsingException">Thrown when the origin could not be determined.</exception>
         private int GetOrigin(IVariable function, string attributeName)
         {
             var origin = 0;
             IFunction coverage = GetCoverageFunction(function);
             if (!int.TryParse(coverage.Attributes[attributeName], out origin))
             {
-                throw new Exception("Index is not of integer type");
+                throw new NetCdfFileParsingException("Index is not of integer type");
             }
 
             return origin;
@@ -315,7 +315,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// </summary>
         /// <param name="dimensions">The collection of <see cref="NetCdfDimension"/> to determine the scaling factor for.</param>
         /// <returns>An integer representing the scaling factor along the third dimension.</returns>
-        /// <exception cref="Exception">Thrown when the scaling factor could not be determined.</exception>
+        /// <exception cref="NetCdfFileParsingException">Thrown when the scaling factor could not be determined.</exception>
         private int GetThreeDimensionalScalingFactor(IEnumerable<NetCdfDimension> dimensions)
         {
             IEnumerable<string> dimensionNames = GetDimensionNames(dimensions);
@@ -329,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return GetBedLayerScalingFactor(dimensionNames);
             }
 
-            throw new Exception($"Scaling factor could not be determined. Supported dimensions: {NSedSusName}, {NSedTotName}, {NBedLayersName}");
+            throw new NetCdfFileParsingException($"Scaling factor could not be determined. Supported dimensions: {NSedSusName}, {NSedTotName}, {NBedLayersName}");
         }
 
         /// <summary>
@@ -337,7 +337,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// </summary>
         /// <param name="dimensions">The collection of <see cref="NetCdfDimension"/> to determine the scaling factor for.</param>
         /// <returns>An integer representing the scaling factor along the third and fourth dimension.</returns>
-        /// <exception cref="Exception">Thrown when the scaling factor could not be determined.</exception>
+        /// <exception cref="NetCdfFileParsingException">Thrown when the scaling factor could not be determined.</exception>
         private int GetFourDimensionalScalingFactor(IEnumerable<NetCdfDimension> dimensions)
         {
             IEnumerable<string> dimensionNames = GetDimensionNames(dimensions);
@@ -346,7 +346,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return GetSedimentDimensionScalingFactor(dimensionNames) * GetBedLayerScalingFactor(dimensionNames);
             }
 
-            throw new Exception($"Scaling factor could not be determined. Supported dimensions: {NSedSusName}, {NSedTotName}, {NBedLayersName}");
+            throw new NetCdfFileParsingException($"Scaling factor could not be determined. Supported dimensions: {NSedSusName}, {NSedTotName}, {NBedLayersName}");
         }
 
         /// <summary>
@@ -364,7 +364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// </summary>
         /// <param name="dimensionNames">The names of the dimensions that are present.</param>
         /// <returns>A scaling factor along the sediment related dimension.</returns>
-        /// <exception cref="Exception">Thrown when the scaling factor could not be determined.</exception>
+        /// <exception cref="NetCdfFileParsingException">Thrown when the scaling factor could not be determined.</exception>
         private int GetSedimentDimensionScalingFactor(IEnumerable<string> dimensionNames)
         {
             if (dimensionNames.Contains(NSedSusName))
@@ -377,7 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return netCdfFile.GetDimensionLength(NSedTotName);
             }
 
-            throw new Exception("Sediment related dimension not present.");
+            throw new NetCdfFileParsingException("Sediment related dimension not present.");
         }
 
         /// <summary>
@@ -385,7 +385,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// </summary>
         /// <param name="dimensionNames">The names of the dimensions that are present.</param>
         /// <returns>A scaling factor along the bed layer related dimension.</returns>
-        /// <exception cref="Exception">Thrown when the scaling factor could not be determined.</exception>
+        /// <exception cref="NetCdfFileParsingException">Thrown when the scaling factor could not be determined.</exception>
         private int GetBedLayerScalingFactor(IEnumerable<string> dimensionNames)
         {
             if (dimensionNames.Contains(NBedLayersName))
@@ -393,7 +393,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return netCdfFile.GetDimensionLength(NBedLayersName);
             }
 
-            throw new Exception("Bed layer related dimension not present.");
+            throw new NetCdfFileParsingException("Bed layer related dimension not present.");
         }
 
         /// <summary>
@@ -404,13 +404,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// from.
         /// </param>
         /// <returns>The index of the third dimension.</returns>
-        /// <exception cref="Exception">Thrown when the third dimension could not be found.</exception>
+        /// <exception cref="NetCdfFileParsingException">Thrown when the third dimension could not be found.</exception>
         private int GetThirdDimensionIndex(IEnumerable<NetCdfDimension> dimensions)
         {
             const string exceptionMessage = "Dimension Index could not be determined.";
             if (dimensions.Count() != 3)
             {
-                throw new Exception(exceptionMessage);
+                throw new NetCdfFileParsingException(exceptionMessage);
             }
 
             if (HasSedimentDimensions(dimensions))
@@ -423,7 +423,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 return GetBedLayersDimensionIndex(dimensions);
             }
 
-            throw new Exception(exceptionMessage);
+            throw new NetCdfFileParsingException(exceptionMessage);
         }
 
         /// <summary>
@@ -484,13 +484,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// </summary>
         /// <param name="function">The <see cref="IVariable"/> to get the NetCdf variable for.</param>
         /// <returns>The <see cref="NetCdfVariable"/> corresponding with the <paramref name="function"/>.</returns>
-        /// <exception cref="Exception">Thrown when the <paramref name="function"/> does not have a name.</exception>
+        /// <exception cref="NetCdfFileParsingException">Thrown when the <paramref name="function"/> does not have a name.</exception>
         private NetCdfVariable GetNetcdfVariable(IVariable function)
         {
             NetCdfVariable netcdfVariable = netCdfFile.GetVariableByName(function.Components[0].Attributes[NcNameAttribute]);
             if (netcdfVariable == null)
             {
-                throw new Exception("Missing NetCdf name");
+                throw new NetCdfFileParsingException("Missing NetCdf name");
             }
 
             return netcdfVariable;
@@ -659,7 +659,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                         int ierr = api.GetConvention(netCdfFile.Path, out convention);
                         if (ierr != GridApiDataSet.GridConstants.NOERR)
                         {
-                            throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
+                            throw new NetCdfFileParsingException("Couldn't get the nc file convention because of error number: " + ierr);
                         }
 
                         return convention;
