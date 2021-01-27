@@ -925,11 +925,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private void SetGuiIntervalFromMduProperty(string doWritePropName, string deltaTPropName,
+        private void SetGuiIntervalFromMduProperty(string doWritePropName, 
+                                                   string deltaTPropName,
                                                    IList<double> timeFrame)
         {
             var seconds = (int) Math.Floor(timeFrame[0]);
-            var millis = (int) ((timeFrame[0] - seconds) * 1000d);
+            var millis = (int) ((timeFrame[0] * 1000d) - (seconds * 1000d));
             var interval = new TimeSpan(0, 0, 0, seconds, millis);
             GetModelProperty(deltaTPropName).Value = interval;
             GetModelProperty(doWritePropName).Value = interval.Ticks > 0;

@@ -15,11 +15,13 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -383,24 +385,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [Test]
         public void CheckSedimentPropertyEventPropagatesToModel()
         {
-            var model = new WaterFlowFMModel();
-            model.ModelDefinition.UseMorphologySediment = true;
+            // Setup
+            var model = new WaterFlowFMModel {ModelDefinition = {UseMorphologySediment = true}};
             var sedFrac = new SedimentFraction {Name = "testFrac"};
             model.SedimentFractions.Add(sedFrac);
 
-            var modelCount = 0;
-            ((INotifyPropertyChanged) model).PropertyChanged += (s, e) => modelCount++;
-            var sedFracCount = 0;
-            ((INotifyPropertyChanged) sedFrac).PropertyChanged += (s, e) => sedFracCount++;
-
             ISpatiallyVaryingSedimentProperty prop = sedFrac.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().First();
-            prop.IsSpatiallyVarying = true;
 
-            Assert.AreEqual(1, sedFracCount);
+            // Call
+            void Call() => prop.IsSpatiallyVarying = true;
 
-            // TODO: Set the assertion value to 3 when initial condition is supported in ext-files (DELFT3DFM-996)
-            //Assert.AreEqual(3, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
-            Assert.AreEqual(1, modelCount); /* IsSpatiallyVarying + 2 changes id AddOrRenameDataItem */
+            // Assert
+            const string propertyName = nameof(ISpatiallyVaryingSedimentProperty.IsSpatiallyVarying);
+            model.AssertPropertyChangedFired(Call, 1, propertyName);
+            ((INotifyPropertyChanged) sedFrac).AssertPropertyChangedFired(Call, 1, propertyName);
         }
 
         [Test]
@@ -2178,6 +2176,108 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                            "Something else is linked to the DataItem of the structure instead of the RTC component");
 
             return model;
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void SedimentFractionPropertyChanged_SetSedimentFractionType_UpdatesUnderlyingFormula()
+        {
+            // Setup
+            var sedimentFraction = new SedimentFraction();
+
+            // Change the current formula to the last one, such that it has a
+            // different TraFrm than the default.
+            sedimentFraction.CurrentFormulaType = 
+                sedimentFraction.SupportedFormulaTypes.Last(); 
+
+            var fractionList = new EventedList<ISedimentFraction> { sedimentFraction };
+            ISedimentType newSedimentType = sedimentFraction.AvailableSedimentTypes.Last();
+
+            using (var model = new WaterFlowFMModel())
+            {
+                model.SedimentFractions = fractionList;
+
+                // Call
+                // Change the sediment type, this should update the underlying TraFrm.
+                sedimentFraction.CurrentSedimentType = newSedimentType;
+
+                // Assert
+                var traFrmProperty = 
+                    sedimentFraction.CurrentSedimentType
+                                    .Properties
+                                    .FirstOrDefault(x => x.Name.ToLowerInvariant() == "trafrm") 
+                        as SedimentProperty<int>;
+
+                Assert.That(traFrmProperty, Is.Not.Null);
+                Assert.That(traFrmProperty.Value, Is.EqualTo(sedimentFraction.CurrentFormulaType.TraFrm));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void AddTracer_CorrectTracerCoverageIsAdded()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
+                coverage.Components[0].NoDataValue = -999d;
+
+                model.DataItems.Add(new DataItem(coverage, "Some Tracer"));
+
+                // When
+                model.TracerDefinitions.Add("Some Tracer");
+
+                // Then
+                Assert.That(model.InitialTracers.Single(), Is.SameAs(coverage));
+                Assert.That(coverage.Grid, Is.SameAs(model.Grid));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void AddSedimentFraction_CorrectSedimentFractionCoverageIsAdded()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
+                coverage.Components[0].NoDataValue = -999d;
+
+                model.DataItems.Add(new DataItem(coverage, "Some Sediment Fraction_SedConc"));
+
+                // When
+                model.SedimentFractions.Add(new SedimentFraction {Name = "Some Sediment Fraction"});
+
+                // Then
+                Assert.That(model.InitialFractions.Single(), Is.SameAs(coverage));
+                Assert.That(coverage.Grid, Is.SameAs(model.Grid));
+            }
+        }
+
+        [Test]
+        [TestCase("structure01.levelcenter", "structure01.CrestLevel")]
+        [TestCase("structure01.sill_level", "structure01.CrestLevel")]
+        [TestCase("structure01.crest_level", "structure01.CrestLevel")]
+        [TestCase("structure01.gateheight", "structure01.GateLowerEdgeLevel")]
+        [TestCase("structure01.lower_edge_level", "structure01.GateLowerEdgeLevel")]
+        [TestCase("structure01.door_opening_width", "structure01.GateOpeningWidth")]
+        [TestCase("structure01.opening_width", "structure01.GateOpeningWidth")]
+        [TestCase("structure.one.sill_level", "structure.one.CrestLevel")]
+        [TestCase("structure01_sill_level.sill_level", "structure01_sill_level.CrestLevel")]
+        [TestCase("structure01_sill_level", "structure01_sill_level")]
+        [TestCase("structure01.CrestLevel", "structure01.CrestLevel")]
+        [TestCase("structure01.GateLowerEdgeLevel", "structure01.GateLowerEdgeLevel")]
+        [TestCase("structure01.GateOpeningWidth", "structure01.GateOpeningWidth")]
+        public void GetUpToDateDataItemName_ReturnsExpectedValue(string oldTargetName, string expectedCorrectedTargetName)
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                string correctedTargetName = model.GetUpToDateDataItemName(oldTargetName);
+                Assert.That(correctedTargetName, 
+                            Is.EqualTo(expectedCorrectedTargetName), 
+                            "The retrieved corrected target name {0} is not the same as the expected corrected target name {1} for target name {2}", correctedTargetName, expectedCorrectedTargetName, oldTargetName);
+            }
         }
     }
 }

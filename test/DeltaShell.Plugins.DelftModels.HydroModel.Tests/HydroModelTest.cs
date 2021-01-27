@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void CreateCoupler_WhenSourceIsRtcModel_ShouldCreateNewCouplerAndSetCommunicationRtcToFmFileName()
         {
-           // Arrange
+            // Arrange
             var provider = new RealTimeControlDimrConfigModelCouplerProvider();
 
             var rtcModel = new RealTimeControlModel();
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             // Arrange
             var provider = new RealTimeControlDimrConfigModelCouplerProvider();
-            
+
             var rtcModel = new RealTimeControlModel();
             var fmModel = Substitute.For<IDimrModel>();
             fmModel.ShortName.Returns("fm");
@@ -582,7 +582,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 hydroModel.WorkingDirectoryPathFunc = () => tempDirectory.Path;
                 const string hydroModelName = "TestModel";
                 hydroModel.Name = hydroModelName;
-                SetUpHydroModelWithActivity(hydroModel, tempDirectory, out string modelDirectoryName, out string modelMduFileName);
+                SetUpHydroModelWithActivity(hydroModel, 
+                                            out string modelDirectoryName, 
+                                            out string modelMduFileName);
 
                 string oldFilePath = Path.Combine(hydroModel.WorkingDirectoryPath, "test.txt");
 
@@ -593,7 +595,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     byte[] info = new UTF8Encoding(true).GetBytes("test");
                     fs.Write(info, 0, info.Length);
                 }
-                
+
                 // When
                 hydroModel.Initialize();
 
@@ -680,7 +682,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var hydroModel = new HydroModel();
 
             // Act
-            void Call() => hydroModel.WorkingDirectoryPathFunc = null;
+            void Call()
+            {
+                hydroModel.WorkingDirectoryPathFunc = null;
+            }
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
@@ -714,11 +719,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void Initialise_WhenThereIsAFileExceptionDuringClearingWorkingDirectory_ShouldNotRemoveThisFileException()
         {
             // Arrange
             using (var tempDirectory = new TemporaryDirectory())
-                using (var hydroModel = new HydroModel())
+            using (var hydroModel = new HydroModel())
             {
                 hydroModel.WorkingDirectoryPathFunc = () => tempDirectory.Path;
                 const string hydroModelName = "TestModel";
@@ -731,7 +737,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string shouldBeRemovedFilePath = Path.Combine(hydroModel.WorkingDirectoryPath, "test2.txt");
                 File.WriteAllText(shouldBeRemovedFilePath, "test");
 
-                SetUpHydroModelWithActivity(hydroModel, tempDirectory, out string modelDirectoryName, out string modelMduFileName, exceptionFilePath);
+                SetUpHydroModelWithActivity(hydroModel, 
+                                            out string _, 
+                                            out string _, 
+                                            exceptionFilePath);
                 
                 // Act
                 hydroModel.Initialize();
@@ -742,21 +751,81 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static void SetUpHydroModelWithActivity(HydroModel hydroModel, TemporaryDirectory tempDirectory, out string modelDirectoryName, out string modelMduFileName, string fileException = null)
+        [Test]
+        public void GivenHydroModelWithoutModels_ThenCanRunIsFalse()
+        {
+            var hydroModel = new HydroModel();
+
+            Assert.That(hydroModel.CanRun, Is.False);
+        }
+
+        [Test]
+        public void GivenHydroModelWithModelWhereCanRunIsFalse_ThenCanRunIsFalse()
+        {
+            var hydroModel = new HydroModel();
+
+            var model = Substitute.For<IModel>();
+            model.CanRun.Returns(false);
+            hydroModel.Activities.Add(model);
+
+            Assert.That(hydroModel.CanRun, Is.False);
+        }
+
+        [Test]
+        public void GivenHydroModelWithModelWhereCanRunIsTrue_ThenCanRunIsTrue()
+        {
+            var hydroModel = new HydroModel();
+
+            var model = Substitute.For<IModel>();
+            model.CanRun.Returns(true);
+            hydroModel.Activities.Add(model);
+
+            Assert.That(hydroModel.CanRun, Is.True);
+        }
+
+        [Test]
+        public void GivenHydroModelWithModelWhereCanRunIsFalseAndTrue_ThenCanRunIsTrue()
+        {
+            var hydroModel = new HydroModel();
+
+            var model1 = Substitute.For<IModel>();
+            model1.CanRun.Returns(false);
+
+            var model2 = Substitute.For<IModel>();
+            model2.CanRun.Returns(true);
+
+            hydroModel.Activities.Add(model1);
+            hydroModel.Activities.Add(model2);
+
+            Assert.That(hydroModel.CanRun, Is.True);
+        }
+
+        private static void SetUpHydroModelWithActivity(HydroModel hydroModel, 
+                                                        out string modelDirectoryName, 
+                                                        out string modelMduFileName, 
+                                                        string fileException = null)
         {
             var activity = Substitute.For<IDimrModel>();
+
             modelDirectoryName = "flowfm";
             modelMduFileName = "fm.mdu";
+
             activity.Validate().Returns(new ValidationReport("", new List<ValidationIssue>()));
             activity.ExporterType.Returns(typeof(SimpleFileExporter));
+
             string modelDirectory = Path.Combine(hydroModel.WorkingDirectoryPath, modelDirectoryName);
+
             activity.GetExporterPath(Arg.Is(modelDirectory))
                     .Returns(Path.Combine(modelDirectory, modelMduFileName));
+
             activity.DirectoryName.Returns(modelDirectoryName);
 
-            activity.FileExceptionsCleaningWorkingDirectory.Returns(fileException != null ? new List<string> {fileException} : new List<string>());
+            activity.IgnoredFilePathsWhenCleaningWorkingDirectory
+                    .Returns(fileException != null 
+                                 ? new HashSet<string> {fileException} 
+                                 : new HashSet<string>());
 
-            var workflow = new SequentialActivity { Activities = { activity } };
+            var workflow = new SequentialActivity {Activities = {activity}};
 
             hydroModel.Activities.Add(activity);
             hydroModel.CurrentWorkflow = workflow;
@@ -817,13 +886,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 DataItems.Add(new DataItem(new HydroArea(), "area", SupportedRegionType, DataItemRole.Input, "area"));
             }
 
-            public Type SupportedRegionType
-            {
-                get
-                {
-                    return typeof(HydroArea);
-                }
-            }
+            public Type SupportedRegionType => typeof(HydroArea);
 
             public IHydroRegion Region
             {

@@ -162,60 +162,68 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void SedimentFractionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Name")
+            switch (sender)
             {
-                var sedimentFraction = sender as ISedimentFraction;
-
-                if (sedimentFraction != null)
-                {
-                    sedimentFraction.UpdateSpatiallyVaryingNames();
-                }
+                case ISedimentFraction fraction:
+                    OnSedimentFractionChanged(fraction, e.PropertyName);
+                    break;
+                case ISpatiallyVaryingSedimentProperty spatiallyVaryingSedimentProperty:
+                    OnSpatiallyVaryingSedimentPropertyChanged(spatiallyVaryingSedimentProperty, 
+                                                              e.PropertyName);
+                    break;
             }
+        }
 
-            if (e.PropertyName == "CurrentFormulaType"
-                || e.PropertyName == "CurrentSedimentType")
+        private void OnSedimentFractionChanged(ISedimentFraction fraction,
+                                               string propertyName)
+        {
+            switch (propertyName)
             {
-                var sedimentFraction = sender as ISedimentFraction;
-                if (sedimentFraction != null)
-                {
-                    sedimentFraction.UpdateSpatiallyVaryingNames();
-                    List<string> activeSpatiallyVarying = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
-                    List<string> spatiallyVarying = sedimentFraction.GetAllSpatiallyVaryingPropertyNames();
-                    InitialFractions.RemoveAllWhere(
-                        fr => spatiallyVarying.Contains(fr.Name) && !activeSpatiallyVarying.Contains(fr.Name));
+                case nameof(ISedimentFraction.Name):
+                    fraction.UpdateSpatiallyVaryingNames();
+                    break;
+                case nameof(ISedimentFraction.CurrentFormulaType):
+                case nameof(ISedimentFraction.CurrentSedimentType):
+                    SynchronizeSedimentFractionData(fraction);
+                    break;
+            }
+        }
 
-                    foreach (string layerName in activeSpatiallyVarying)
-                    {
-                        AddToInitialFractions(layerName);
-                    }
+        private void SynchronizeSedimentFractionData(ISedimentFraction fraction)
+        {
+            fraction.UpdateSpatiallyVaryingNames();
 
-                    sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
+            List<string> activeSpatiallyVarying = fraction.GetAllActiveSpatiallyVaryingPropertyNames();
+            List<string> spatiallyVarying = fraction.GetAllSpatiallyVaryingPropertyNames();
 
-                    if (e.PropertyName == "CurrentFormulaType")
-                    {
-                        sedimentFraction.SetTransportFormulaInCurrentSedimentType();
-                    }
-                }
+            InitialFractions.RemoveAllWhere(
+                fr => spatiallyVarying.Contains(fr.Name) && 
+                      !activeSpatiallyVarying.Contains(fr.Name));
+       
+            foreach (string layerName in activeSpatiallyVarying)
+            {
+                AddToInitialFractions(layerName);
+            }
+       
+            fraction.CompileAndSetVisibilityAndIfEnabled();
+            fraction.SetTransportFormulaInCurrentSedimentType();
+        }
 
+        private void OnSpatiallyVaryingSedimentPropertyChanged(ISpatiallyVaryingSedimentProperty prop,
+                                                               string propertyName)
+        {
+            if (propertyName != nameof(ISpatiallyVaryingSedimentProperty.IsSpatiallyVarying))
+            {
                 return;
             }
 
-            var prop = sender as ISpatiallyVaryingSedimentProperty;
-            if (prop == null)
+            if (prop.IsSpatiallyVarying)
             {
-                return;
+                AddToInitialFractions(prop.SpatiallyVaryingName);
             }
-
-            if (e.PropertyName == "IsSpatiallyVarying")
+            else
             {
-                if (prop.IsSpatiallyVarying)
-                {
-                    AddToInitialFractions(prop.SpatiallyVaryingName);
-                }
-                else
-                {
-                    InitialFractions.RemoveAllWhere(tr => tr.Name.Equals(prop.SpatiallyVaryingName));
-                }
+                InitialFractions.RemoveAllWhere(tr => tr.Name.Equals(prop.SpatiallyVaryingName));
             }
         }
 

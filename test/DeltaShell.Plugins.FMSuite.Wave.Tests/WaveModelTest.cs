@@ -10,6 +10,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -592,8 +593,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GetDirectChildren_ContainsDiagnosticFiles()
         {
             // Setup
-            var diagFile1 = new ReadOnlyTextFileData("", "");
-            var diagFile2 = new ReadOnlyTextFileData("", "");
+            var diagFile1 = new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default);
+            var diagFile2 = new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default);
             using (var model = new WaveModel())
             {
                 
@@ -613,8 +614,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void GetDirectChildren_ContainsSpectraFiles()
         {
             // Setup
-            var spectraFile1 = new ReadOnlyTextFileData("", "");
-            var spectraFile2 = new ReadOnlyTextFileData("", "");
+            var spectraFile1 = new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default);
+            var spectraFile2 = new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default);
             using (var model = new WaveModel())
             {
                 
@@ -1455,8 +1456,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             using (var model = new WaveModel())
             {
-                IReadOnlyCollection<string> fileExceptions = model.FileExceptionsCleaningWorkingDirectory;
-                Assert.AreEqual(fileExceptions.Count, 0);
+                Assert.That(model.IgnoredFilePathsWhenCleaningWorkingDirectory, Is.Empty);
             }
         }
 

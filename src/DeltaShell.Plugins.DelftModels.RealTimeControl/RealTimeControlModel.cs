@@ -26,7 +26,9 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
+using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
@@ -47,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
     /// NotifyPropertyChange attribute should not be necessary because base class
     /// already has it applied. Project explorer does not function correctly when left out.
     /// </summary>
-    [Entity(FireOnCollectionChange = false)]
+    [Entity]
     public class RealTimeControlModel : TimeDependentModelBase, IRealTimeControlModel, IModelMerge, IDisposable, IDimrModel, IControllingModel, IFileBased
     {
         public const string InputPostFix = ".input";
@@ -95,9 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             SaveStateStopTime = StopTime;
             SaveStateTimeStep = TimeStep;
 
-            RestartOutput = new EventedList<RestartFile>();
-
-            OutputDocuments = new EventedList<ReadOnlyOutputTextDocument>();
+            InitializeOutputData();
 
             runner = new DimrRunner(this, new DimrApiFactory());
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RealTimeControlDimrConfigModelCouplerProvider());
@@ -161,7 +161,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual bool UseRestart => !RestartInput.IsEmpty;
 
-        public virtual bool WriteRestart { get; set; }
+        public virtual bool WriteRestart
+        {
+            get => writeRestart;
+            set
+            {
+                if (value == writeRestart)
+                {
+                    return;
+                }
+
+                writeRestart = value;
+                MarkOutputOutOfSync();
+            }
+        }
 
         /// <summary>
         /// Gets or sets the input restart file.
@@ -171,39 +184,47 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => restartInput;
             set
             {
-                if (value == null)
+                if (value == null || restartInput == value)
                 {
                     return;
                 }
 
                 restartInput = value;
+
+                MarkOutputOutOfSync();
             }
         }
 
         /// <summary>
         /// Gets or sets the restart output files.
         /// </summary>
-        public virtual IEventedList<RestartFile> RestartOutput { get; set; }
+        public virtual IEventedList<RestartFile> RestartOutput { get; protected set; }
 
         /// <summary>
         /// Gets or sets the output text documents.
         /// </summary>
-        public virtual IEventedList<ReadOnlyOutputTextDocument> OutputDocuments { get; }
+        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; protected set; }
 
-        //HOW can we overcome this duplication?
+        public override bool CanRun => false;
+
         [NoNotifyPropertyChange]
         public override DateTime StartTime
         {
             get => TimeProvider?.StartTime ?? base.StartTime;
             set
             {
+                if (base.StartTime == value)
+                {
+                    return;
+                }
+
                 if (TimeProvider != null)
                 {
                     TimeProvider.StartTime = value;
                 }
 
-                // This base model setting is made to make the base logic right
                 base.StartTime = value;
+                MarkOutputOutOfSync();
             }
         }
 
@@ -213,13 +234,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.StopTime ?? base.StopTime;
             set
             {
+                if (base.StopTime == value)
+                {
+                    return;
+                }
+
                 if (TimeProvider != null)
                 {
                     TimeProvider.StopTime = value;
                 }
 
-                // This base model setting is made to make the base logic right
                 base.StopTime = value;
+                MarkOutputOutOfSync();
             }
         }
 
@@ -229,13 +255,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.TimeStep ?? base.TimeStep;
             set
             {
+                if (base.TimeStep == value)
+                {
+                    return;
+                }
+
                 if (TimeProvider != null)
                 {
                     TimeProvider.TimeStep = value;
                 }
 
-                // This base model setting is made to make the base logic right
                 base.TimeStep = value;
+                MarkOutputOutOfSync();
             }
         }
 
@@ -396,7 +427,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             if (outputFileFunctionStore != null && File.Exists(outputFileFunctionStore.Path))
             {
-                clonedModel.OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore() {Path = outputFileFunctionStore.Path};
+                clonedModel.OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore {Path = outputFileFunctionStore.Path};
             }
 
             return clonedModel;
@@ -406,6 +437,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             return AllDataItems.Where(di => di.Role == role);
         }
+
+        public virtual string GetUpToDateDataItemName(string oldDataItemName) => oldDataItemName;
 
         public void Dispose()
         {
@@ -538,6 +571,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             disposed = true;
         }
 
+        private void InitializeOutputData()
+        {
+            RestartOutput = new EventedList<RestartFile>();
+            OutputDocuments = new EventedList<ReadOnlyTextFileData>();
+        }
+
         // This is no edit action...
         private void ResubscribeToOwner()
         {
@@ -589,7 +628,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [EditAction]
         private void OnRemoveModel()
         {
-            OutputIsEmpty = false; // hack to make ClearOutput fire appropriately. 
             ClearOutput();
         }
 
@@ -665,6 +703,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                         if (controlGroupDataItem != null)
                         {
+                            SuspendClearOutputOnInputChange = true;
+
                             foreach (IDataItem dataItem in controlGroupDataItem.Children)
                             {
                                 dataItem.Unlink();
@@ -672,6 +712,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                             controlGroupDataItem.Children.Clear();
                             DataItems.Remove(controlGroupDataItem);
+
+                            SuspendClearOutputOnInputChange = false;
                         }
 
                         break;
@@ -696,7 +738,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 AddConnectionDataItem(controlGroupDataItem, output, DataItemRole.Output);
             }
 
+            SuspendClearOutputOnInputChange = true;
             DataItems.Add(controlGroupDataItem);
+            SuspendClearOutputOnInputChange = false;
         }
 
         private static void AddConnectionDataItem(IDataItem controlGroupDataItem, ConnectionPoint connectionPoint, DataItemRole role)
@@ -964,19 +1008,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             ClearOutputDocuments();
 
             EndEdit();
-            
+
             MarkDirty();
         }
 
-        private void ClearOutputDocuments()
-        {
-            foreach (ReadOnlyOutputTextDocument outputDocument in OutputDocuments)
-            {
-                outputDocument.Content = string.Empty;
-            }
-
-            OutputDocuments.Clear();
-        }
+        private void ClearOutputDocuments() => OutputDocuments.Clear();
 
         private void DisconnectOutputFileFunctionStore()
         {
@@ -1018,39 +1054,51 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             string rtcToFlowFilePath = Path.Combine(dirInfo.FullName, CommunicationRtcToFmFileName);
             ReconnectRtcToFmOutputFile(rtcToFlowFilePath);
+
+            OutputIsEmpty = false;
         }
 
         private void ReconnectOutputDocuments(IEnumerable<string> outputDocumentFilePaths)
         {
-            OutputDocuments.RemoveAllWhere(d => !outputDocumentFilePaths.Any(fp => fp.EndsWith(d.Name)));
+            ClearOutputDocuments();
 
-            foreach (string filePath in outputDocumentFilePaths)
+            var logHandler = new LogHandler("Reconnecting output documents", Log);
+            OutputDocuments.AddRange(outputDocumentFilePaths
+                                     .Select(p => ReadTextDocument(p, logHandler))
+                                     .Where(x => x != null));
+            logHandler.LogReport();
+        }
+
+        private static ReadOnlyTextFileData ReadTextDocument(string textFilePath, ILogHandler logHandler)
+        {
+            var textFileInfo = new FileInfo(textFilePath);
+
+            try
             {
-                string fileName = Path.GetFileName(filePath);
+                return new ReadOnlyTextFileData(textFileInfo.Name,
+                                                File.ReadAllText(textFileInfo.FullName),
+                                                GetReadOnlyTextFileDataType(textFileInfo));
+            }
+            catch (Exception e)
+            {
+                logHandler.ReportErrorFormat("Error while reading {0}: {1}",
+                                             textFileInfo.FullName,
+                                             e.Message);
+            }
 
-                ReadOnlyOutputTextDocument existingTextDocument = OutputDocuments.FirstOrDefault(d => d.Name == fileName);
+            return null;
+        }
 
-                try
-                {
-                    string log = File.ReadAllText(filePath);
-
-                    // Replace content in the existing output documents, so that open views will be updated after a run.
-                    // Don't create always new ones, because the open views of the old ones will not be closed during a run.
-                    if (existingTextDocument != null)
-                    {
-                        existingTextDocument.Content = log;
-                    }
-                    else
-                    {
-                        var textDocument = new ReadOnlyOutputTextDocument(fileName, log);
-
-                        OutputDocuments.Add(textDocument);
-                    }
-                }
-                catch (Exception)
-                {
-                    Log.ErrorFormat("Error reading file");
-                }
+        private static ReadOnlyTextFileDataType GetReadOnlyTextFileDataType(FileInfo fileInfo)
+        {
+            switch (fileInfo.Extension)
+            {
+                case ".xml":
+                    return ReadOnlyTextFileDataType.Xml;
+                case ".csv":
+                    return ReadOnlyTextFileDataType.Table;
+                default:
+                    return ReadOnlyTextFileDataType.Default;
             }
         }
 
@@ -1070,7 +1118,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             List<IFeature> features = GetChildDataItemLocationsFromControlledModels(DataItemRole.Output).ToList();
-            outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore()
+            outputFileFunctionStore = new RealTimeControlOutputFileFunctionStore
             {
                 Features = features,
                 CoordinateSystem = CoordinateSystem,
@@ -1169,7 +1217,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             MarkDirty();
         }
 
-        public virtual IReadOnlyCollection<string> FileExceptionsCleaningWorkingDirectory => new List<string>();
+        public virtual ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory =>
+            new HashSet<string>();
 
         #endregion
 
@@ -1584,6 +1633,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         #endregion
 
         #region IFileBased
+
         private bool isOpen;
         private int dirtyCounter; // tells NHibernate we need to be saved
         private string path;
@@ -1591,6 +1641,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private string persistentOutputDirectory;
         private string oldPersistentOutputDirectory = string.Empty;
         private bool removeSourceOutputFolder;
+        private bool writeRestart;
 
         /// <summary>
         /// The persistent output directory to which output files
@@ -1623,12 +1674,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// <see cref="persistentOutputDirectory"/> is up to date when setting
         /// <see cref="IFileBased.Path"/> property afterwards. Resulting in unnecessary
         /// second copy action without removal of source folder and second
-        /// <see cref="IFileBased.SwitchTo"/>. 
+        /// <see cref="IFileBased.SwitchTo"/>.
         /// </summary>
         private void UpdatePersistentOutputDirectoryIfNeeded()
         {
             var dirInfo = new DirectoryInfo(persistentOutputDirectory);
-            var modelDirectory = dirInfo.Parent;
+            DirectoryInfo modelDirectory = dirInfo.Parent;
             if (modelDirectory.Name != Name)
             {
                 removeSourceOutputFolder = true;
@@ -1648,7 +1699,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             isOpen = true;
         }
 
-        
         void IFileBased.Close()
         {
             isOpen = false;
@@ -1804,7 +1854,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             DisconnectOutput();
             FileUtils.DeleteIfExists(Directory.GetParent(oldPersistentOutputDirectory).FullName);
-            oldPersistentOutputDirectory = String.Empty;
+            oldPersistentOutputDirectory = string.Empty;
             removeSourceOutputFolder = false;
         }
 

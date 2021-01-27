@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Schema;
@@ -300,7 +301,8 @@ namespace DeltaShell.Dimr
             FileUtils.CreateDirectoryIfNotExists(workDirectory);
             string exportDir = Path.Combine(workDirectory, model.DirectoryName);
             FileUtils.CreateDirectoryIfNotExists(exportDir);
-            CommonFileAndDirectoryActions.ClearFolderWithFileExceptions(exportDir, model.FileExceptionsCleaningWorkingDirectory);
+            CommonFileSystemActions.ClearFolder(exportDir, 
+                                                new HashSet<string>(model.IgnoredFilePathsWhenCleaningWorkingDirectory));
             exporter.Export(modelObject, model.GetExporterPath(exportDir));
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
         }

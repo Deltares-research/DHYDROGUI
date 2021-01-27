@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public WpsClient Client { get; private set; }
 
-        public string Process { get; private set; }
+        public string Process { get; }
 
         public void InitializeClient()
         {

@@ -331,6 +331,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files
                          + "myPoints2_dry.pol # Dry points files";
         }
 
+        [Test]
+        public void Read_MapIntervalIsReadCorrectly()
+        {
+            string fileContent = "[output]"
+                                 + Environment.NewLine
+                                 + "MapInterval = 9.6";
+
+            ReadWithAssert(fileContent, definition =>
+            {
+                WaterFlowFMProperty property = definition.GetModelProperty(GuiProperties.MapOutputDeltaT);
+                Assert.That(property.Value, Is.InstanceOf<TimeSpan>());
+                var time = (TimeSpan) property.Value;
+
+                Assert.That(time.Seconds, Is.EqualTo(9));
+                Assert.That(time.Milliseconds, Is.EqualTo(600));
+            });
+        }
+
         private static void AssertPropertyValues(WaterFlowFMProperty property, string categoryName, object propertyValue, string propertyComment)
         {
             Assert.That(property.PropertyDefinition.FileCategoryName, Is.EqualTo(categoryName));
