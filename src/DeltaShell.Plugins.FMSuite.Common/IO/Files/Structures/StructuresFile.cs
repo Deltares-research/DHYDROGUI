@@ -477,14 +477,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         private IEnumerable<DelftIniProperty> ConstructWeirProperties(IStructure structure, string structureType,
                                                                       string path, DateTime refDate)
         {
-            IWeirFormula weirFormula = structure.Formula;
-            switch (weirFormula)
+            IStructureFormula structureFormula = structure.Formula;
+            switch (structureFormula)
             {
                 case SimpleWeirFormula _:
                     return ConstructSimpleWeirProperties(structure, path, structureType, refDate);
-                case GeneralStructureWeirFormula _:
+                case GeneralStructureFormula _:
                     return ConstructGeneralStructureProperties(structure, path, structureType, refDate);
-                case GatedWeirFormula _:
+                case SimpleGateFormula _:
                     return ConstructGatedWeirProperties(structure, structureType, path, refDate);
                 default:
                     throw new NotSupportedException();
@@ -497,7 +497,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                                                                   DateTime refDate)
         {
             var properties = new List<DelftIniProperty>();
-            var generalStructureFormula = (GeneralStructureWeirFormula) structure.Formula;
+            var generalStructureFormula = (GeneralStructureFormula) structure.Formula;
 
             // Width
             AddDoubleOrEmptyPropertyConditionally(properties,
@@ -733,7 +733,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                                                            string path,
                                                                            DateTime refDate)
         {
-            var gatedWeirFormula = (IGatedWeirFormula) structure.Formula;
+            var gatedWeirFormula = (IGatedStructureFormula) structure.Formula;
 
             var properties = new List<DelftIniProperty>();
 
@@ -866,9 +866,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                         case SimpleWeirFormula _:
                             return StructureRegion.StructureTypeName.Weir;
                         // A GatedWeir is a Gate for the Kernel, hence we specify it as a "gate".
-                        case GatedWeirFormula _:
+                        case SimpleGateFormula _:
                             return StructureRegion.StructureTypeName.Gate;
-                        case GeneralStructureWeirFormula _:
+                        case GeneralStructureFormula _:
                             return StructureRegion.StructureTypeName.GeneralStructure;
                     }
 

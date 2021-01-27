@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var gate = new Structure
             {
                 Name = gateName,
-                Formula = new GatedWeirFormula()
+                Formula = new SimpleGateFormula()
             };
             fmModel.Area.Weirs.Add(gate);
 
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var gate = new Structure
             {
                 Name = "structure01",
-                Formula = new GatedWeirFormula()
+                Formula = new SimpleGateFormula()
             };
             fmModel.Area.Weirs.Add(gate);
 

@@ -197,13 +197,13 @@
     </Compile>
     <Compile Include="Structures\GroupableFeatureHelper.cs" />
     <Compile Include="Structures\GateOpeningDirection.cs" />
-    <Compile Include="Structures\IWeirFormula.cs" />
+    <Compile Include="Structures\IStructureFormula.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownGeneralStructureProperties.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownStructureProperties.cs" />
     <Compile Include="Structures\GuiParameterNames.cs" />
-    <Compile Include="Structures\WeirFormula\GatedWeirFormula.cs" />
-    <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormula.cs" />
-    <Compile Include="Structures\WeirFormula\IGatedWeirFormula.cs" />
+    <Compile Include="Structures\WeirFormula\SimpleGateFormula.cs" />
+    <Compile Include="Structures\WeirFormula\GeneralStructureFormula.cs" />
+    <Compile Include="Structures\WeirFormula\IGatedStructureFormula.cs" />
     <Compile Include="Structures\WeirFormula\SimpleWeirFormula.cs" />
     <Compile Include="HydroTimeSeriesFactory.cs" />
     <Compile Include="Structures\ThinDam2D.cs" />

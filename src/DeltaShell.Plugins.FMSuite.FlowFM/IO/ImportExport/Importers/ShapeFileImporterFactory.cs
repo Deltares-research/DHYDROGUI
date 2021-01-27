@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
 
             /// <summary>
-            /// An action to try and add the <see cref="IWeirFormula"/> described
+            /// An action to try and add the <see cref="IStructureFormula"/> described
             /// by the "FormulaName" attribute of <paramref name="srcFeature"/>
             /// to <paramref name="targetFeature"/>.WeirFormula.
             /// </summary>
@@ -204,10 +204,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                         targetFeature.Formula = new SimpleWeirFormula();
                         break;
                     case "Gated weir (Orifice)":
-                        targetFeature.Formula = new GatedWeirFormula(true);
+                        targetFeature.Formula = new SimpleGateFormula(true);
                         break;
                     case "General structure":
-                        targetFeature.Formula = new GeneralStructureWeirFormula();
+                        targetFeature.Formula = new GeneralStructureFormula();
                         break;
                 }
             }

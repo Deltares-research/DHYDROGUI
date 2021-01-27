@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public GatedWeirViewModel(GatedWeirFormula formula,
+        public GatedWeirViewModel(SimpleGateFormula formula,
                                   WeirPropertiesViewModel weirPropertiesViewModel) :
             base(weirPropertiesViewModel)
         {

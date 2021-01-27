@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     new Coordinate(0, 100),
                     new Coordinate(50, 50)
                 }),
-                Formula = new GatedWeirFormula()
+                Formula = new SimpleGateFormula()
             };
         }
 

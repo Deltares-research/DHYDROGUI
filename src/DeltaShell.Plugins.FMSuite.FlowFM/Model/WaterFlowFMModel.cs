@@ -160,12 +160,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             if (feature is IStructure weir)
             {
-                IWeirFormula weirFormula = weir.Formula;
-                switch (weirFormula)
+                IStructureFormula structureFormula = weir.Formula;
+                switch (structureFormula)
                 {
-                    case GeneralStructureWeirFormula _:
+                    case GeneralStructureFormula _:
                         return KnownFeatureCategories.GeneralStructures;
-                    case GatedWeirFormula _:
+                    case SimpleGateFormula _:
                         return KnownFeatureCategories.Gates;
                     default:
                         return KnownFeatureCategories.Weirs;

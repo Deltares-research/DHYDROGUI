@@ -299,7 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.AreEqual(1, collectionChangedCount);
 
             // change weirformula
-            weir.Formula = new GeneralStructureWeirFormula();
+            weir.Formula = new GeneralStructureFormula();
             Assert.AreEqual(1, weirFormulaChangeCount);
         }
 
@@ -327,7 +327,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.AreEqual(KnownStructureProperties.CrestLevel, ((WaterFlowFMFeatureValueConverter) dataItems[0].ValueConverter).ParameterName);
 
             // change weir formula
-            weir.Formula = new GeneralStructureWeirFormula();
+            weir.Formula = new GeneralStructureFormula();
             dataItems = model.GetChildDataItems(weir).ToList();
             Assert.AreEqual(3, dataItems.Count);
 
@@ -1640,12 +1640,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [TestCase(typeof(SimpleWeirFormula), KnownFeatureCategories.Weirs)]
-        [TestCase(typeof(GatedWeirFormula), KnownFeatureCategories.Gates)]
-        [TestCase(typeof(GeneralStructureWeirFormula), KnownFeatureCategories.GeneralStructures)]
+        [TestCase(typeof(SimpleGateFormula), KnownFeatureCategories.Gates)]
+        [TestCase(typeof(GeneralStructureFormula), KnownFeatureCategories.GeneralStructures)]
         public void GivenAWeirFeature_WhenGettingFeatureCategory_ThenTheCorrectStringIsReturned(Type weirType, string expectedString)
         {
             // Given
-            var feature = new Structure() {Name = "myStructure", Formula = (IWeirFormula) Activator.CreateInstance(weirType, false)};
+            var feature = new Structure() {Name = "myStructure", Formula = (IStructureFormula) Activator.CreateInstance(weirType, false)};
             var model = new WaterFlowFMModel();
 
             // When
@@ -1719,7 +1719,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             IStructure feature = model.Area.Weirs.FirstOrDefault();
             Assert.NotNull(feature);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature.Formula = new GatedWeirFormula(),
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature.Formula = new SimpleGateFormula(),
                                                            expectedMessage);
 
             Assert.IsNull(dataItemWaterFlowFmModel.LinkedTo, "The DataItem of the structure is still linked after changing the weir formula");

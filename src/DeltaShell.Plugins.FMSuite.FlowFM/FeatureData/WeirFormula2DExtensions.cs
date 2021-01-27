@@ -20,19 +20,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         /// <exception cref="ArgumentNullException">Thrown when <paramref name="formula"/> is null.</exception>
         /// <exception cref="NotImplementedException">Thrown when <paramref name="formula"/> is not of a
         /// type supported within FM.</exception>
-        public static string GetName2D(this IWeirFormula formula)
+        public static string GetName2D(this IStructureFormula formula)
         {
             if (formula == null)
             {
                 throw new ArgumentNullException(nameof(formula));
             }
 
-            if (formula is GatedWeirFormula)
+            if (formula is SimpleGateFormula)
             {
                 return "Simple gate";
             }
 
-            if (formula is GeneralStructureWeirFormula)
+            if (formula is GeneralStructureFormula)
             {
                 return "General structure";
             }

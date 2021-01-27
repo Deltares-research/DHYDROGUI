@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     [Description("General Structure")]
     public sealed class GeneralStructureViewModel : WeirViewModel, IDisposable
     {
-        private readonly GeneralStructureWeirFormula formula;
+        private readonly GeneralStructureFormula formula;
 
         /// <summary>
         /// Creates a new <see cref="GeneralStructureViewModel"/>
@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when any parameter is <c>null</c>.
         /// </exception>
-        public GeneralStructureViewModel(GeneralStructureWeirFormula formula,
+        public GeneralStructureViewModel(GeneralStructureFormula formula,
                                          WeirPropertiesViewModel weirPropertiesViewModel) :
             base(weirPropertiesViewModel)
         {

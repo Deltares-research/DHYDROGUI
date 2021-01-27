@@ -527,17 +527,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             };
 
         // Mapping dictionary used to relate under which name are FeatureTypes are mapped.
-        private readonly IDictionary<string, Func<IWeirFormula>> weirFormulaByDimensionName =
-            new Dictionary<string, Func<IWeirFormula>>()
+        private readonly IDictionary<string, Func<IStructureFormula>> weirFormulaByDimensionName =
+            new Dictionary<string, Func<IStructureFormula>>()
             {
-                {featureNameGeneralStructures, () => new GeneralStructureWeirFormula()},
+                {featureNameGeneralStructures, () => new GeneralStructureFormula()},
                 {featureNameWeirgens, () => new SimpleWeirFormula()},
-                {featureNameGategens, () => new GatedWeirFormula()},
+                {featureNameGategens, () => new SimpleGateFormula()},
             };
 
         // Mapping dictionary used to create features under which name are FeatureTypes are mapped.
-        private readonly IDictionary<Type, Func<string, IGeometry, IWeirFormula, IFeature>> mapTypeGenerateDictionary =
-            new Dictionary<Type, Func<string, IGeometry, IWeirFormula, IFeature>>()
+        private readonly IDictionary<Type, Func<string, IGeometry, IStructureFormula, IFeature>> mapTypeGenerateDictionary =
+            new Dictionary<Type, Func<string, IGeometry, IStructureFormula, IFeature>>()
             {
                 {typeof(GroupableFeature2DPoint), (name, geometry, _) => CreateFeature2D(name, geometry)},
                 {typeof(ObservationCrossSection2D), (name, geometry, _) => CreateFeature2D(name, geometry)},
@@ -727,7 +727,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
-        private IFeature CreateFeatureFromNetCdf(string name, Type type, IGeometry geometry, IWeirFormula formula)
+        private IFeature CreateFeatureFromNetCdf(string name, Type type, IGeometry geometry, IStructureFormula formula)
         {
             if (type != null && mapTypeGenerateDictionary.ContainsKey(type))
             {
@@ -840,7 +840,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             };
         }
 
-        private static Structure CreateGeneralStructureFromNetCdf(string name, IGeometry geometry, IWeirFormula formula)
+        private static Structure CreateGeneralStructureFromNetCdf(string name, IGeometry geometry, IStructureFormula formula)
         {
             return new Structure
             {

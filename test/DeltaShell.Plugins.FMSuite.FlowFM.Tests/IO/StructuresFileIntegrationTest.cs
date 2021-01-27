@@ -94,9 +94,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(readWeir.CrestLevel, Is.EqualTo(writtenWeir.CrestLevel), "Expected read crest level to be equal to written crest level:");
 
                 // Extra values of general structure.
-                if (writtenWeir.Formula is GeneralStructureWeirFormula writtenGSFormula)
+                if (writtenWeir.Formula is GeneralStructureFormula writtenGSFormula)
                 {
-                    var readGSFormula = readWeir.Formula as GeneralStructureWeirFormula;
+                    var readGSFormula = readWeir.Formula as GeneralStructureFormula;
                     Assert.That(readGSFormula.BedLevelLeftSideOfStructure, Is.EqualTo(writtenGSFormula.BedLevelLeftSideOfStructure));
                     Assert.That(readGSFormula.BedLevelRightSideOfStructure, Is.EqualTo(writtenGSFormula.BedLevelRightSideOfStructure));
                     Assert.That(readGSFormula.BedLevelLeftSideStructure, Is.EqualTo(writtenGSFormula.BedLevelLeftSideStructure));
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static Structure GetGeneralStructure(string weirName)
         {
-            var generalStructureFormula = new GeneralStructureWeirFormula()
+            var generalStructureFormula = new GeneralStructureFormula()
             {
                 WidthLeftSideOfStructure = double.NaN,
                 WidthRightSideOfStructure = double.NaN,
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             new Structure()
             {
                 Name = weirName,
-                Formula = new GatedWeirFormula(true),
+                Formula = new SimpleGateFormula(true),
                 CrestWidth = double.NaN,
                 Geometry = new Point(0.0, 0.0)
             };

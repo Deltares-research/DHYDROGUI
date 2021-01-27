@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
     /// </summary>
     public sealed class GatePropertiesViewModel : INotifyPropertyChanged, IDisposable
     {
-        private readonly IGatedWeirFormula formula;
+        private readonly IGatedStructureFormula formula;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -23,14 +23,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         private readonly IReadOnlyDictionary<string, string> propertyMapping =
             new Dictionary<string, string>()
             {
-                {nameof(GatedWeirFormula.DoorHeight), nameof(GateHeight)},
-                {nameof(GatedWeirFormula.HorizontalDoorOpeningDirection), nameof(GateOpeningDirection)},
-                {nameof(GatedWeirFormula.HorizontalDoorOpeningWidth), nameof(HorizontalOpeningWidth)},
-                {nameof(GatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries), nameof(UseHorizontalOpeningWidthTimeSeries)},
-                {nameof(GatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries), nameof(HorizontalOpeningWidthTimeSeries)},
-                {nameof(GatedWeirFormula.LowerEdgeLevel), nameof(GateLowerEdgeLevel)},
-                {nameof(GatedWeirFormula.UseLowerEdgeLevelTimeSeries), nameof(UseGateLowerEdgeLevelTimeSeries)},
-                {nameof(GatedWeirFormula.LowerEdgeLevelTimeSeries), nameof(GateLowerEdgeLevelTimeSeries)}
+                {nameof(SimpleGateFormula.DoorHeight), nameof(GateHeight)},
+                {nameof(SimpleGateFormula.HorizontalDoorOpeningDirection), nameof(GateOpeningDirection)},
+                {nameof(SimpleGateFormula.HorizontalDoorOpeningWidth), nameof(HorizontalOpeningWidth)},
+                {nameof(SimpleGateFormula.UseHorizontalDoorOpeningWidthTimeSeries), nameof(UseHorizontalOpeningWidthTimeSeries)},
+                {nameof(SimpleGateFormula.HorizontalDoorOpeningWidthTimeSeries), nameof(HorizontalOpeningWidthTimeSeries)},
+                {nameof(SimpleGateFormula.LowerEdgeLevel), nameof(GateLowerEdgeLevel)},
+                {nameof(SimpleGateFormula.UseLowerEdgeLevelTimeSeries), nameof(UseGateLowerEdgeLevelTimeSeries)},
+                {nameof(SimpleGateFormula.LowerEdgeLevelTimeSeries), nameof(GateLowerEdgeLevelTimeSeries)}
             };
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// Thrown when <paramref name="formula"/> or
         /// <paramref name="weirPropertiesViewModel"/> is <c>null</c>.
         /// </exception>
-        public GatePropertiesViewModel(IGatedWeirFormula formula,
+        public GatePropertiesViewModel(IGatedStructureFormula formula,
                                        WeirPropertiesViewModel weirPropertiesViewModel,
                                        bool canChooseGateOpeningDirection)
         {
@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.Wei
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="PropertyChangedEventArgs"/> instance containing the event data.</param>
         /// <remarks>
-        /// This leverages the PostSharp Entity properties of the <see cref="IGatedWeirFormula"/>. Unfortunately,
+        /// This leverages the PostSharp Entity properties of the <see cref="IGatedStructureFormula"/>. Unfortunately,
         /// their exist no proper way to pass messages around within DeltaShell / D-HYDRO. Instead we
         /// abuse callbacks. This means that the only way to determine whether the underlying domain is
         /// updated, is by adding callbacks to the property changed events. Instead of creating a significant

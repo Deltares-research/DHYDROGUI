@@ -303,7 +303,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 File.Delete(pliFilePath);
             }
 
-            var initialFormula = new GeneralStructureWeirFormula
+            var initialFormula = new GeneralStructureFormula
             {
                 PositiveFreeGateFlow = 1,
                 PositiveDrownedGateFlow = 2,
@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
             var resultingGeneralStructure = readResult.FirstOrDefault() as IStructure;
             Assert.IsNotNull(resultingGeneralStructure);
-            var resultingFormula = resultingGeneralStructure.Formula as GeneralStructureWeirFormula;
+            var resultingFormula = resultingGeneralStructure.Formula as GeneralStructureFormula;
             Assert.IsNotNull(resultingFormula);
 
             bool weirPropertiesAreEqual = initialGeneralStructure.FormulaName == resultingGeneralStructure.Formula.Name;
@@ -565,7 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var generalStructure = structures[0] as IStructure;
                 Assert.IsNotNull(generalStructure, "The ini file for the structures is not correctly read");
 
-                var weirFormula = generalStructure.Formula as GeneralStructureWeirFormula;
+                var weirFormula = generalStructure.Formula as GeneralStructureFormula;
                 Assert.IsNotNull(weirFormula, "The ini file for the structures is not correctly read");
 
                 Assert.IsTrue(generalStructure.UseCrestLevelTimeSeries, "The tim file for the crest level is not correctly read");
@@ -719,7 +719,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var weir = new Structure()
                 {
                     Name = "TestStructure",
-                    Formula = new GatedWeirFormula(true)
+                    Formula = new SimpleGateFormula(true)
                     {
                         DoorHeight = 50.0,
                         HorizontalDoorOpeningWidth = 30.0,
@@ -796,7 +796,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var weir = new Structure()
                 {
                     Name = "TestStructure",
-                    Formula = new GeneralStructureWeirFormula
+                    Formula = new GeneralStructureFormula
                     {
                         DoorHeight = 50.0,
                         HorizontalDoorOpeningWidth = 30.0,
@@ -922,7 +922,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             ValidateCommonWeirProperties(weir, expectedWeirName);
 
-            var gatedWeirFormula = weir.Formula as IGatedWeirFormula;
+            var gatedWeirFormula = weir.Formula as IGatedStructureFormula;
             Assert.NotNull(gatedWeirFormula,
                            "Expected a gated weir formula for weir.");
             Assert.AreEqual(3, gatedWeirFormula.LowerEdgeLevel,
@@ -939,7 +939,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             ValidateGatedWeirFormulaProperties(weir, expectedWeirName);
 
-            var generalStructureFormula = weir.Formula as GeneralStructureWeirFormula;
+            var generalStructureFormula = weir.Formula as GeneralStructureFormula;
             Assert.NotNull(generalStructureFormula,
                            "Expected a general structure weir formula for weir.");
             Assert.AreEqual(6, generalStructureFormula.WidthLeftSideOfStructure,
@@ -1190,8 +1190,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.AreEqual(1.2, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 0, 0, 0)]);
             Assert.AreEqual(3.4, weir.CrestLevelTimeSeries[new DateTime(2013, 1, 1, 1, 1, 0)]);
 
-            IStructure gate = structures.OfType<IStructure>().First(w => w.Formula is GatedWeirFormula);
-            var gateFormula = gate.Formula as GatedWeirFormula;
+            IStructure gate = structures.OfType<IStructure>().First(w => w.Formula is SimpleGateFormula);
+            var gateFormula = gate.Formula as SimpleGateFormula;
             Assert.NotNull(gateFormula);
 
             Assert.AreEqual(2, gateFormula.LowerEdgeLevelTimeSeries.Time.Values.Count);

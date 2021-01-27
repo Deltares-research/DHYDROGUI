@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenAGatedWeirFormula_WhenGetName2DIsCalled_ThenTheCorrectNameIsReturned()
         {
             // Given 
-            var formula = new GatedWeirFormula();
+            var formula = new SimpleGateFormula();
 
             // When
             string obtainedName = formula.GetName2D();
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenAGeneralStructureFormula_WhenGetName2DIsCalled_ThenTheCorrectNameIsReturned()
         {
             // Given 
-            var formula = new GeneralStructureWeirFormula();
+            var formula = new GeneralStructureFormula();
 
             // When
             string obtainedName = formula.GetName2D();

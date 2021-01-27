@@ -7,7 +7,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     /// Class to manage properties specific for the Sobek Simple Weir
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public class SimpleWeirFormula : Unique<long>, IWeirFormula
+    public class SimpleWeirFormula : Unique<long>, IStructureFormula
     {
         public SimpleWeirFormula()
         {

@@ -389,7 +389,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         new Coordinate(-149.1, -180.0),
                         new Coordinate(-50.1, -180.0)
                     }),
-                    Formula = new GatedWeirFormula(true)
+                    Formula = new SimpleGateFormula(true)
                     {
                         UseHorizontalDoorOpeningWidthTimeSeries = true,
                         UseLowerEdgeLevelTimeSeries = true
@@ -398,7 +398,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     CrestWidth = 42.0
                 };
 
-                var gatedWeirFormula = gate.Formula as GatedWeirFormula;
+                var gatedWeirFormula = gate.Formula as SimpleGateFormula;
 
                 Assert.NotNull(gatedWeirFormula);
 
@@ -578,7 +578,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     new Coordinate(model.GridExtent.MinX + 3, model.GridExtent.MinY + 4),
                     new Coordinate(model.GridExtent.MinX + 4, model.GridExtent.MinY + 4)
                 }),
-                Formula = new GatedWeirFormula()
+                Formula = new SimpleGateFormula()
             });
             model.Area.Weirs.Add(new Structure()
             {
@@ -588,7 +588,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     new Coordinate(model.GridExtent.MinX + 5, model.GridExtent.MinY + 4),
                     new Coordinate(model.GridExtent.MinX + 6, model.GridExtent.MinY + 4)
                 }),
-                Formula = new GeneralStructureWeirFormula
+                Formula = new GeneralStructureFormula
                 {
                     HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
                     WidthStructureCentre = 0.5d,

@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenGeneralStructure_WhenGettingQuantitiesForGeneralStructure_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            IStructure generalStructure = GetWeirStubWithWeirFormulaType<GeneralStructureWeirFormula>();
+            IStructure generalStructure = GetWeirStubWithWeirFormulaType<GeneralStructureFormula>();
 
             // When
             string[] quantities = QuantityGenerator.GetQuantitiesForFeature(generalStructure, useSalinity).ToArray();
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenGate_WhenGettingQuantitiesForGate_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            IStructure gate = GetWeirStubWithWeirFormulaType<GatedWeirFormula>();
+            IStructure gate = GetWeirStubWithWeirFormulaType<SimpleGateFormula>();
 
             // When
             string[] quantities = QuantityGenerator.GetQuantitiesForFeature(gate, useSalinity).ToArray();
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         private IStructure GetWeirStubWithWeirFormulaType<TWeirFormulaType>()
-            where TWeirFormulaType : IWeirFormula, new()
+            where TWeirFormulaType : IStructureFormula, new()
         {
             var weir = mocks.Stub<IStructure>();
             weir.Formula = new TWeirFormulaType();

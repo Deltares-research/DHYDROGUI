@@ -340,7 +340,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         {
             // Given
             var dstArg = new Structure();
-            IWeirFormula formula = dstArg.Formula;
+            IStructureFormula formula = dstArg.Formula;
 
             var srcArg = MockRepository.GenerateStrictMock<IFeature>();
             srcArg.Expect(a => a.Attributes)
@@ -422,8 +422,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         /// THEN targetFeature WeirFormula Name equals IFeature FormulaName
         /// </summary>
         [TestCase("Simple weir (Weir)", typeof(SimpleWeirFormula))]
-        [TestCase("Gated weir (Orifice)", typeof(GatedWeirFormula))]
-        [TestCase("General structure", typeof(GeneralStructureWeirFormula))]
+        [TestCase("Gated weir (Orifice)", typeof(SimpleGateFormula))]
+        [TestCase("General structure", typeof(GeneralStructureFormula))]
         public void GivenAnIFeatureWithAFormulaNameAndATargetFeature_WhenTryAddWeirFormulaIsExecuted_ThenTargetFeatureWeirFormulaNameEqualsIFeatureFormulaName(string formulaName,
                                                                                                                                                                Type expectedType)
         {

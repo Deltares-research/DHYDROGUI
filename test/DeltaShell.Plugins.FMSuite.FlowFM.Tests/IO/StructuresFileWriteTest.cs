@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var generalStructureWeir = new Structure()
             {
                 Name = "weir01",
-                Formula = new GeneralStructureWeirFormula
+                Formula = new GeneralStructureFormula
                 {
                     WidthLeftSideOfStructure = 1.0,
                     WidthStructureLeftSide = 2.0,
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var gatedWeir = new Structure()
             {
                 Name = "Its weir-d",
-                Formula = new GatedWeirFormula(true),
+                Formula = new SimpleGateFormula(true),
                 CrestWidth = double.NaN
             };
 
@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             StructuresFile structuresFile = GetStructuresFile();
 
             // - simple weir with an empty crest width
-            var generalStructureFormula = new GeneralStructureWeirFormula()
+            var generalStructureFormula = new GeneralStructureFormula()
             {
                 WidthLeftSideOfStructure = double.NaN,
                 WidthRightSideOfStructure = double.NaN,

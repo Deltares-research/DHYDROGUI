@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 AssertThatOnlyOneStructureExistsWithin(structures);
 
                 IStructureObject weirStructure = structures[0];
-                AssertThatStructureIsCorrect(weirStructure, typeof(GatedWeirFormula));
+                AssertThatStructureIsCorrect(weirStructure, typeof(SimpleGateFormula));
             });
         }
 
@@ -156,8 +156,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 AssertThatOnlyOneStructureExistsWithin(structures);
 
                 IStructureObject weirStructure = structures[0];
-                AssertThatStructureIsCorrect(weirStructure, typeof(GeneralStructureWeirFormula));
-                var generalStructureFormula = ((Structure) weirStructure).Formula as GeneralStructureWeirFormula;
+                AssertThatStructureIsCorrect(weirStructure, typeof(GeneralStructureFormula));
+                var generalStructureFormula = ((Structure) weirStructure).Formula as GeneralStructureFormula;
                 AssertThatAdditionalGeneralStructureIsCorrect(generalStructureFormula);
             });
         }
@@ -294,7 +294,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(weirStructure, Is.Not.Null, "Expected read structure to not be null.");
         }
 
-        private static void AssertThatAdditionalGeneralStructureIsCorrect(GeneralStructureWeirFormula formula)
+        private static void AssertThatAdditionalGeneralStructureIsCorrect(GeneralStructureFormula formula)
         {
             Assert.That(formula.WidthRightSideOfStructure, Is.NaN, "Expected general structure's Downstream 2 width to be Empty:");
             Assert.That(formula.WidthStructureRightSide, Is.NaN, "Expected general structure's Downstream 1 width to be Empty:");

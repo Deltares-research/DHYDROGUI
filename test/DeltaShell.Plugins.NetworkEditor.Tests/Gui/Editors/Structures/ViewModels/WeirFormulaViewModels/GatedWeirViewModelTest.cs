@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void Constructor_SetsPropertiesCorrectly()
         {
             // Setup
-            var formula = new GatedWeirFormula(true);
+            var formula = new SimpleGateFormula(true);
             var weir = new Structure() {Formula = formula};
 
             using (var weirPropertiesViewModel = new WeirPropertiesViewModel(weir))
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void Constructor_WeirPropertiesViewModelNull_ThrowsArgumentNullException()
         {
             // Setup
-            var formula = new GatedWeirFormula(true);
+            var formula = new SimpleGateFormula(true);
             void Call() => new GatedWeirViewModel(formula, null);
 
             var exception = Assert.Throws<ArgumentNullException>(Call);

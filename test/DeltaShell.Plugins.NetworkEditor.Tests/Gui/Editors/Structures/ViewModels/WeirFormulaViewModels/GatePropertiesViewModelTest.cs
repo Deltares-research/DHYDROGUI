@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void Constructor_WithGatedWeirFormula_SetsValuesCorrectly()
         {
             // Setup
-            var formula = new GatedWeirFormula(true)
+            var formula = new SimpleGateFormula(true)
             {
                 HorizontalDoorOpeningWidth = 5.0,
                 UseHorizontalDoorOpeningWidthTimeSeries = true,
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void Constructor_WithGeneralStructureFormula_SetsValuesCorrectly()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula()
+            var formula = new GeneralStructureFormula()
             {
                 HorizontalDoorOpeningWidth = 5.0,
                 UseHorizontalDoorOpeningWidthTimeSeries = true,
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         [Test]
         public void Constructor_WeirPropertiesViewModelNull_ThrowsArgumentNullException()
         {
-            var formula = new GatedWeirFormula();
+            var formula = new SimpleGateFormula();
             void Call() => new GatePropertiesViewModel(formula, null, true);
             var exception = Assert.Throws<ArgumentNullException>(Call);
 
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void GateLowerEdgeLevel_WithGatedWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GatedWeirFormula(true) {LowerEdgeLevel = 6.0};
+            var formula = new SimpleGateFormula(true) {LowerEdgeLevel = 6.0};
             var weir2D = new Structure {Formula = formula};
 
             const double lowerEdgeLevel = 20.0;
@@ -187,7 +187,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void GateLowerEdgeLevel_WithGeneralStructureFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula() {LowerEdgeLevel = 6.0};
+            var formula = new GeneralStructureFormula() {LowerEdgeLevel = 6.0};
             var weir2D = new Structure {Formula = formula};
 
             const double lowerEdgeLevel = 20.0;
@@ -226,7 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             var fixture = new Fixture();
             var lowerEdgeLevel = fixture.Create<double>();
-            var formula = new GatedWeirFormula(true) {LowerEdgeLevel = lowerEdgeLevel};
+            var formula = new SimpleGateFormula(true) {LowerEdgeLevel = lowerEdgeLevel};
             var weir2D = new Structure {Formula = formula};
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
@@ -260,7 +260,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             var fixture = new Fixture();
             var lowerEdgeLevel = fixture.Create<double>();
-            var formula = new GeneralStructureWeirFormula() {LowerEdgeLevel = lowerEdgeLevel};
+            var formula = new GeneralStructureFormula() {LowerEdgeLevel = lowerEdgeLevel};
             var weir2D = new Structure {Formula = formula};
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
@@ -292,7 +292,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void UseGateLowerEdgeLevelTimeSeries_WithGatedWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GatedWeirFormula(true);
+            var formula = new SimpleGateFormula(true);
             var weir2D = new Structure {Formula = formula};
 
             bool useGateLowerEdgeLevel = !formula.UseLowerEdgeLevelTimeSeries;
@@ -331,7 +331,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void UseGateLowerEdgeLevelTimeSeries_WithStructureWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula();
+            var formula = new GeneralStructureFormula();
             var weir2D = new Structure {Formula = formula};
 
             bool useGateLowerEdgeLevel = !formula.UseLowerEdgeLevelTimeSeries;
@@ -370,7 +370,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void UseGateLowerEdgeLevelTimeSeries_WithGateWeirFormula_SameValue_DoesNotFirePropertyChanged()
         {
             // Setup
-            var formula = new GatedWeirFormula(true);
+            var formula = new SimpleGateFormula(true);
             var weir2D = new Structure {Formula = formula};
 
             bool useGateLowerEdgeLevel = formula.UseLowerEdgeLevelTimeSeries;
@@ -406,7 +406,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void UseGateLowerEdgeLevelTimeSeries_WithStructureWeirFormula_SameValue_DoesNotFirePropertyChanged()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula();
+            var formula = new GeneralStructureFormula();
             var weir2D = new Structure {Formula = formula};
 
             bool useGateLowerEdgeLevel = formula.UseLowerEdgeLevelTimeSeries;
@@ -442,7 +442,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void GateHeight_WithGateWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GatedWeirFormula(true) {DoorHeight = 6.0};
+            var formula = new SimpleGateFormula(true) {DoorHeight = 6.0};
             var weir2D = new Structure {Formula = formula};
 
             const double gateHeight = 20.0;
@@ -479,7 +479,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void GateHeight_WithStructureWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula() {DoorHeight = 6.0};
+            var formula = new GeneralStructureFormula() {DoorHeight = 6.0};
             var weir2D = new Structure {Formula = formula};
 
             const double gateHeight = 20.0;
@@ -517,7 +517,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         {
             // Setup
             const double gateHeight = 20.0;
-            var formula = new GatedWeirFormula(true) {DoorHeight = gateHeight};
+            var formula = new SimpleGateFormula(true) {DoorHeight = gateHeight};
             var weir2D = new Structure {Formula = formula};
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
@@ -550,7 +550,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         {
             // Setup
             const double gateHeight = 20.0;
-            var formula = new GeneralStructureWeirFormula() {DoorHeight = gateHeight};
+            var formula = new GeneralStructureFormula() {DoorHeight = gateHeight};
             var weir2D = new Structure {Formula = formula};
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
@@ -582,7 +582,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void HorizontalOpeningWidth_WithGateWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GatedWeirFormula(true) {HorizontalDoorOpeningWidth = 6.0};
+            var formula = new SimpleGateFormula(true) {HorizontalDoorOpeningWidth = 6.0};
             var weir2D = new Structure {Formula = formula};
 
             const double openingWidth = 20.0;
@@ -619,7 +619,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void HorizontalOpeningWidth_WithStructureWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula() {HorizontalDoorOpeningWidth = 6.0};
+            var formula = new GeneralStructureFormula() {HorizontalDoorOpeningWidth = 6.0};
             var weir2D = new Structure {Formula = formula};
 
             const double openingWidth = 20.0;
@@ -658,7 +658,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             const double openingWidth = 20.0;
 
-            var formula = new GatedWeirFormula(true) {HorizontalDoorOpeningWidth = openingWidth};
+            var formula = new SimpleGateFormula(true) {HorizontalDoorOpeningWidth = openingWidth};
             var weir2D = new Structure {Formula = formula};
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
@@ -692,7 +692,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             // Setup
             const double openingWidth = 20.0;
 
-            var formula = new GeneralStructureWeirFormula() {HorizontalDoorOpeningWidth = openingWidth};
+            var formula = new GeneralStructureFormula() {HorizontalDoorOpeningWidth = openingWidth};
             var weir2D = new Structure {Formula = formula};
 
             var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
@@ -724,7 +724,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void UseHorizontalOpeningWidthTimeSeries_WithGateWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GatedWeirFormula(true);
+            var formula = new SimpleGateFormula(true);
             var weir2D = new Structure {Formula = formula};
 
             bool useHorizontalDoorOpeningWidthTimeSeries =
@@ -765,7 +765,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void UseHorizontalOpeningWidthTimeSeries_WithStructureWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula();
+            var formula = new GeneralStructureFormula();
             var weir2D = new Structure {Formula = formula};
 
             bool useHorizontalDoorOpeningWidthTimeSeries =
@@ -806,7 +806,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void UseHorizontalOpeningWidthTimeSeries_WithGateWeirFormula_SameValue_DoesNotFirePropertyChanged()
         {
             // Setup
-            var formula = new GatedWeirFormula(true);
+            var formula = new SimpleGateFormula(true);
             var weir2D = new Structure {Formula = formula};
 
             bool useHorizontalDoorOpeningWidthTimeSeries =
@@ -844,7 +844,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void UseHorizontalOpeningWidthTimeSeries_WithStructureWeirFormula_SameValue_DoesNotFirePropertyChanged()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula();
+            var formula = new GeneralStructureFormula();
             var weir2D = new Structure {Formula = formula};
 
             bool useHorizontalDoorOpeningWidthTimeSeries =
@@ -882,7 +882,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void GateOpeningDirection_WithGateWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GatedWeirFormula(true) {HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft};
+            var formula = new SimpleGateFormula(true) {HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft};
             var weir2D = new Structure {Formula = formula};
 
             const GateOpeningDirection openingDirection =
@@ -922,7 +922,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public void GateOpeningDirection_WithStructureWeirFormula_PropagatesSetCorrectly()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula() {HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft};
+            var formula = new GeneralStructureFormula() {HorizontalDoorOpeningDirection = GateOpeningDirection.FromLeft};
             var weir2D = new Structure {Formula = formula};
 
             const GateOpeningDirection openingDirection =
@@ -964,7 +964,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             const GateOpeningDirection openingDirection =
                 GateOpeningDirection.Symmetric;
 
-            var formula = new GatedWeirFormula(true)
+            var formula = new SimpleGateFormula(true)
             {
                 HorizontalDoorOpeningDirection = openingDirection,
             };
@@ -1005,7 +1005,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             const GateOpeningDirection openingDirection =
                 GateOpeningDirection.Symmetric;
 
-            var formula = new GatedWeirFormula(true)
+            var formula = new SimpleGateFormula(true)
             {
                 HorizontalDoorOpeningDirection = openingDirection,
             };
@@ -1046,7 +1046,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             const GateOpeningDirection openingDirection =
                 GateOpeningDirection.Symmetric;
 
-            var formula = new GeneralStructureWeirFormula()
+            var formula = new GeneralStructureFormula()
             {
                 HorizontalDoorOpeningDirection = openingDirection,
             };

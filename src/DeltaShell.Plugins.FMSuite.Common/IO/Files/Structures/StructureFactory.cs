@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         private static void SetTimeSeriesPropertyInsideWeirFormula(Structure2D structure2D, string propertyName,
                                                                    string structuresSubFilesReferenceFilePath, DateTime refDate,
-                                                                   IWeirFormula structure, string useTimeSeriesProperty,
+                                                                   IStructureFormula structure, string useTimeSeriesProperty,
                                                                    string constantValueProperty,
                                                                    string timeSeriesProperties)
         {
@@ -273,7 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// </summary>
         /// <param name="structure2D"> Source of data to create the formula with. </param>
         /// <returns> The created formula </returns>
-        private static IWeirFormula CreateSimpleWeirFormula(Structure2D structure2D)
+        private static IStructureFormula CreateSimpleWeirFormula(Structure2D structure2D)
         {
             var simpleWeirFormula = new SimpleWeirFormula();
 
@@ -318,10 +318,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return weir;
         }
 
-        private static IWeirFormula CreateGeneralStructureWeirFormula(Structure2D structure2D, string structuresSubFilesReferenceFilePath,
+        private static IStructureFormula CreateGeneralStructureWeirFormula(Structure2D structure2D, string structuresSubFilesReferenceFilePath,
                                                                       DateTime refDate)
         {
-            var gsWeirFormula = new GeneralStructureWeirFormula()
+            var gsWeirFormula = new GeneralStructureFormula()
             {
                 // Set default values for Structure2D general structures.
                 WidthStructureLeftSide = double.NaN,
@@ -442,9 +442,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return weir;
         }
 
-        private static IWeirFormula CreateGateWeirFormula(Structure2D structure2D, string structuresSubFilesReferenceFilePath, DateTime refDate)
+        private static IStructureFormula CreateGateWeirFormula(Structure2D structure2D, string structuresSubFilesReferenceFilePath, DateTime refDate)
         {
-            var gateWeirFormula = new GatedWeirFormula(true);
+            var gateWeirFormula = new SimpleGateFormula(true);
 
             ModelProperty gateHeightProperty = structure2D.GetProperty(KnownStructureProperties.GateHeight);
             if (gateHeightProperty != null)

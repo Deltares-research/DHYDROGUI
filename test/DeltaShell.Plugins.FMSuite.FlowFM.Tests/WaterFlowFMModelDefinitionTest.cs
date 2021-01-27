@@ -418,7 +418,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.AreEqual(2, area.Pumps.Count);
             Assert.AreEqual(3, area.Weirs.Count);
-            Assert.AreEqual(1, area.Weirs.Where(w => w.Formula.GetType() == typeof(GatedWeirFormula)).ToList().Count);
+            Assert.AreEqual(1, area.Weirs.Where(w => w.Formula.GetType() == typeof(SimpleGateFormula)).ToList().Count);
             Assert.AreEqual(2, area.Weirs.Where(w => w.Formula.GetType() == typeof(SimpleWeirFormula)).ToList().Count);
         }
 

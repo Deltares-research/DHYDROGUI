@@ -21,12 +21,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             yield return new TestCaseData(simpleWeir, typeof(SimpleWeirViewModel));
 
-            var gatedWeirFormula = new GatedWeirFormula();
+            var gatedWeirFormula = new SimpleGateFormula();
             var gatedWeir = new Structure {Formula = gatedWeirFormula};
 
             yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel));
 
-            var generalStructureFormula = new GeneralStructureWeirFormula();
+            var generalStructureFormula = new GeneralStructureFormula();
             var generalStructure = new Structure {Formula = generalStructureFormula};
 
             yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel));
@@ -79,11 +79,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
         public static IEnumerable<TestCaseData> GetFormulaTypeData()
         {
             var simpleWeir = new Structure {Formula = new SimpleWeirFormula()};
-            var gatedWeir = new Structure {Formula = new GatedWeirFormula(true)};
+            var gatedWeir = new Structure {Formula = new SimpleGateFormula(true)};
 
             yield return new TestCaseData(gatedWeir,  typeof(SimpleWeirViewModel),       typeof(SimpleWeirFormula));
-            yield return new TestCaseData(simpleWeir, typeof(GatedWeirViewModel),        typeof(GatedWeirFormula));
-            yield return new TestCaseData(simpleWeir, typeof(GeneralStructureViewModel), typeof(GeneralStructureWeirFormula));
+            yield return new TestCaseData(simpleWeir, typeof(GatedWeirViewModel),        typeof(SimpleGateFormula));
+            yield return new TestCaseData(simpleWeir, typeof(GeneralStructureViewModel), typeof(GeneralStructureFormula));
         }
 
         [Test]
@@ -124,11 +124,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             var simpleWeir = new Structure {Formula = new SimpleWeirFormula()};
             yield return new TestCaseData(simpleWeir,  typeof(SimpleWeirViewModel), typeof(SimpleWeirFormula));
 
-            var gatedWeir = new Structure {Formula = new GatedWeirFormula(true)};
-            yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel), typeof(GatedWeirFormula));
+            var gatedWeir = new Structure {Formula = new SimpleGateFormula(true)};
+            yield return new TestCaseData(gatedWeir, typeof(GatedWeirViewModel), typeof(SimpleGateFormula));
 
-            var generalStructure = new Structure {Formula = new GeneralStructureWeirFormula()};
-            yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel), typeof(GeneralStructureWeirFormula));
+            var generalStructure = new Structure {Formula = new GeneralStructureFormula()};
+            yield return new TestCaseData(generalStructure, typeof(GeneralStructureViewModel), typeof(GeneralStructureFormula));
         }
 
         [Test]

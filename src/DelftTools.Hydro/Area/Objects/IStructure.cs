@@ -16,7 +16,7 @@ namespace DelftTools.Hydro.Area.Objects
         /// <summary>
         /// Gets or sets the weir formula.
         /// </summary>
-        IWeirFormula Formula { get; set; }
+        IStructureFormula Formula { get; set; }
 
         /// <summary>
         /// Crest width (-1 : look at profile)

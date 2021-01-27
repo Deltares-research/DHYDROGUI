@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             // Given
             var weir = new Structure
             {
-                Formula = new GeneralStructureWeirFormula
+                Formula = new GeneralStructureFormula
                 {
                     WidthStructureCentre = 1.0,
                     WidthLeftSideOfStructure = 1.0,
@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             // Given
             var weir = new Structure
             {
-                Formula = new GeneralStructureWeirFormula
+                Formula = new GeneralStructureFormula
                 {
                     WidthStructureCentre = -1.0d,
                     WidthLeftSideOfStructure = -1.0d,
@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var weir = new Structure
             {
                 CrestWidth = 1.0d,
-                Formula = new GatedWeirFormula {DoorHeight = -1.0d}
+                Formula = new SimpleGateFormula {DoorHeight = -1.0d}
             };
             weirs.Add(weir);
 
@@ -255,7 +255,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var weir = new Structure
             {
                 CrestWidth = 1.0d,
-                Formula = new GatedWeirFormula {HorizontalDoorOpeningWidth = -1.0d}
+                Formula = new SimpleGateFormula {HorizontalDoorOpeningWidth = -1.0d}
             };
             weirs.Add(weir);
 
@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesWithAtLeastOneValueSmallerThanZero_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var gatedWeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
+            var gatedWeirFormula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
             gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.AddValues(new[]
             {
                 modelStartTime,
@@ -313,7 +313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var weir = new Structure()
             {
                 CrestWidth = 1.0d,
-                Formula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true}
+                Formula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true}
             };
             weirs.Add(weir);
 
@@ -333,7 +333,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var gatedWeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
+            var gatedWeirFormula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
             gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
 
             var weir = new Structure()
@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGatedWeirWithLowerEdgeLevelTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var gatedWeirFormula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true};
+            var gatedWeirFormula = new SimpleGateFormula(true) {UseLowerEdgeLevelTimeSeries = true};
             gatedWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
 
             var weir = new Structure()
@@ -388,7 +388,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             var weir = new Structure()
             {
                 CrestWidth = 1.0d,
-                Formula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true}
+                Formula = new SimpleGateFormula(true) {UseLowerEdgeLevelTimeSeries = true}
             };
             weirs.Add(weir);
 
@@ -436,7 +436,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                                                                                                                                                                                                        bool validDownstream2)
         {
             // Given
-            var formula = new GeneralStructureWeirFormula
+            var formula = new GeneralStructureFormula
             {
                 HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
                 WidthStructureLeftSide = validUpstream2 ? 1.0 : -1.0,
@@ -510,7 +510,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                                                                                                                                                                                                      bool emptyDownstream2)
         {
             // Given
-            var formula = new GeneralStructureWeirFormula
+            var formula = new GeneralStructureFormula
             {
                 HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
                 WidthStructureLeftSide = emptyUpstream2 ? double.NaN : 1.0,

@@ -48,7 +48,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects
                 Attributes = Substitute.For<IFeatureAttributeCollection>(),
                 Name = "Struclet",
                 IsDefaultGroup = true,
-                Formula = Substitute.For<IWeirFormula>(),
+                Formula = Substitute.For<IStructureFormula>(),
                 CrestWidth = 25.32,
                 CrestLevel = 125.32,
                 UseCrestLevelTimeSeries = true,
@@ -60,7 +60,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects
             var clonedAttributes = Substitute.For<IFeatureAttributeCollection>();
             structure.Attributes.Clone().Returns(clonedAttributes);
 
-            var clonedFormula = Substitute.For<IWeirFormula>();
+            var clonedFormula = Substitute.For<IStructureFormula>();
             structure.Formula.Clone().Returns(clonedFormula);
 
             // Call
@@ -130,7 +130,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects
         public void GivenAStructureWithAGeneralStructure_WhenCrestLevelIsSet_ThenTheGeneralStructurePropertyAndStructurePropertyAreUpdatedCorrectly()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula();
+            var formula = new GeneralStructureFormula();
             var structure = new Structure {Formula = formula};
             const double crestLevel = 123.456;
 
@@ -151,7 +151,7 @@ namespace DelftTools.Hydro.Tests.Area.Objects
         public void GivenAStructureWithAGeneralStructure_WhenCrestWidthIsSet_ThenTheGeneralStructurePropertyAndStructurePropertyAreUpdatedCorrectly()
         {
             // Setup
-            var formula = new GeneralStructureWeirFormula();
+            var formula = new GeneralStructureFormula();
             var structure = new Structure {Formula = formula};
             const double crestWidth = 123.456;
 

@@ -111,26 +111,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
             hasDisposed = true;
         }
 
-        private static WeirViewModel ConstructWeirViewModel(IWeirFormula weirFormula,
+        private static WeirViewModel ConstructWeirViewModel(IStructureFormula structureFormula,
                                                             WeirPropertiesViewModel weirProperties)
         {
-            switch (weirFormula)
+            switch (structureFormula)
             {
                 case SimpleWeirFormula simpleWeirFormula:
                     return new SimpleWeirViewModel(simpleWeirFormula,
                                                    weirProperties);
-                case GatedWeirFormula gatedWeirFormula:
+                case SimpleGateFormula gatedWeirFormula:
                     return new GatedWeirViewModel(gatedWeirFormula,
                                                   weirProperties);
-                case GeneralStructureWeirFormula generalStructureWeirFormula:
+                case GeneralStructureFormula generalStructureWeirFormula:
                     return new GeneralStructureViewModel(generalStructureWeirFormula,
                                                          weirProperties);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(weirFormula));
+                    throw new ArgumentOutOfRangeException(nameof(structureFormula));
             }
         }
 
-        private IWeirFormula GetFormulaOfType(Type value)
+        private IStructureFormula GetFormulaOfType(Type value)
         {
             if (value == typeof(SimpleWeirViewModel))
             {
@@ -139,12 +139,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
 
             if (value == typeof(GatedWeirViewModel))
             {
-                return new GatedWeirFormula(true);
+                return new SimpleGateFormula(true);
             }
 
             if (value == typeof(GeneralStructureViewModel))
             {
-                return new GeneralStructureWeirFormula()
+                return new GeneralStructureFormula()
                 {
                     BedLevelStructureCentre = weir.CrestLevel,
                     WidthStructureCentre = weir.CrestWidth,

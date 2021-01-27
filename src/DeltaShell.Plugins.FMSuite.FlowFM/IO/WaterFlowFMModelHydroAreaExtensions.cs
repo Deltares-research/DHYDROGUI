@@ -37,9 +37,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 case KnownFeatureCategories.Pumps:
                     return area.Pumps;
                 case KnownFeatureCategories.GeneralStructures:
-                    return area.Weirs.Where(w => w.Formula is GeneralStructureWeirFormula);
+                    return area.Weirs.Where(w => w.Formula is GeneralStructureFormula);
                 case KnownFeatureCategories.Gates:
-                    return area.Weirs.Where(w => w.Formula is GatedWeirFormula);
+                    return area.Weirs.Where(w => w.Formula is SimpleGateFormula);
                 case KnownFeatureCategories.Weirs:
                     return area.Weirs.Where(w => w.Formula is SimpleWeirFormula);
                 case KnownFeatureCategories.ObservationPoints:

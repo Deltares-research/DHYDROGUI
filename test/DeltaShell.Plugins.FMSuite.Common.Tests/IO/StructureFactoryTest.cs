@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             Assert.IsTrue(result is IStructure);
 
             var weir = (IStructure) result;
-            Assert.That(weir.Formula is GeneralStructureWeirFormula);
+            Assert.That(weir.Formula is GeneralStructureFormula);
         }
 
         public static IEnumerable<TestCaseData> GetKnownGeneralStructureProperties() =>
@@ -241,14 +241,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             var weir = resultingStructure as IStructure;
             Assert.NotNull(weir);
 
-            var weirFormula = weir.Formula as GeneralStructureWeirFormula;
+            var weirFormula = weir.Formula as GeneralStructureFormula;
             Assert.NotNull(weirFormula);
             Assert.IsFalse(weirFormula.UseExtraResistance);
         }
 
         private static Dictionary<KnownGeneralStructureProperties, object> ConstructWeirFormulaValueDictionary(IStructure weir)
         {
-            var weirFormula = weir.Formula as GeneralStructureWeirFormula;
+            var weirFormula = weir.Formula as GeneralStructureFormula;
             Assert.NotNull(weirFormula);
 
             var dictionary = new Dictionary<KnownGeneralStructureProperties, object>
@@ -369,7 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
             IStructure gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime());
-            var gateWeirFormula = gate.Formula as IGatedWeirFormula;
+            var gateWeirFormula = gate.Formula as IGatedStructureFormula;
 
             Assert.NotNull(gateWeirFormula);
 
@@ -413,7 +413,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
             IStructure gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime(2013, 1, 1));
-            var gateWeirFormula = gate.Formula as IGatedWeirFormula;
+            var gateWeirFormula = gate.Formula as IGatedStructureFormula;
 
             Assert.NotNull(gateWeirFormula);
             Assert.AreEqual("Gate02", gate.Name);
@@ -735,7 +735,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             VerifyGated(weir, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
 
             // Verify GeneralStructure
-            var generalStructureFormula = weir.Formula as GeneralStructureWeirFormula;
+            var generalStructureFormula = weir.Formula as GeneralStructureFormula;
             Assert.That(generalStructureFormula, Is.Not.Null, "Expected the weir formula to be a general structure:");
 
             Assert.That(generalStructureFormula.WidthLeftSideOfStructure, Is.EqualTo(constValLookUpTable[KnownGeneralStructureProperties.Upstream2Width.GetDescription()]));
@@ -790,7 +790,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         private void VerifyGated(IStructure weir, bool isConstLowerEdgeLevel, bool isConstHorizontalOpeningWidth)
         {
             Assert.That(weir.Formula, Is.Not.Null, "Expected a weir formula:");
-            var weirFormula = weir.Formula as IGatedWeirFormula;
+            var weirFormula = weir.Formula as IGatedStructureFormula;
             Assert.That(weirFormula, Is.Not.Null, "Expected the weir formula to be a gated weir");
 
             if (isConstLowerEdgeLevel)

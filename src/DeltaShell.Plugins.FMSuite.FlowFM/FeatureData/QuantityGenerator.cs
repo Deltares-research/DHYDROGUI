@@ -66,12 +66,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 case SimpleWeirFormula _:
                     yield return KnownStructureProperties.CrestLevel;
                     break;
-                case GeneralStructureWeirFormula _:
+                case GeneralStructureFormula _:
                     yield return KnownGeneralStructureProperties.CrestLevel.GetDescription();
                     yield return KnownGeneralStructureProperties.GateLowerEdgeLevel.GetDescription();
                     yield return KnownGeneralStructureProperties.GateOpeningWidth.GetDescription();
                     break;
-                case GatedWeirFormula _:
+                case SimpleGateFormula _:
                     yield return KnownStructureProperties.CrestLevel;
                     yield return KnownStructureProperties.GateLowerEdgeLevel;
                     yield return KnownStructureProperties.GateOpeningWidth;

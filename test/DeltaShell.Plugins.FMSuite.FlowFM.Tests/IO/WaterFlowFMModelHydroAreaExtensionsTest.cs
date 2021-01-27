@@ -136,8 +136,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 yield return new TestCaseData(area, KnownFeatureCategories.Pumps, area.Pumps);
                 yield return new TestCaseData(area, KnownFeatureCategories.Weirs, area.Weirs.Where(w => w.Formula is SimpleWeirFormula));
-                yield return new TestCaseData(area, KnownFeatureCategories.Gates, area.Weirs.Where(w => w.Formula is GatedWeirFormula));
-                yield return new TestCaseData(area, KnownFeatureCategories.GeneralStructures, area.Weirs.Where(w => w.Formula is GeneralStructureWeirFormula));
+                yield return new TestCaseData(area, KnownFeatureCategories.Gates, area.Weirs.Where(w => w.Formula is SimpleGateFormula));
+                yield return new TestCaseData(area, KnownFeatureCategories.GeneralStructures, area.Weirs.Where(w => w.Formula is GeneralStructureFormula));
                 yield return new TestCaseData(area, KnownFeatureCategories.ObservationPoints, area.ObservationPoints);
                 yield return new TestCaseData(area, KnownFeatureCategories.ObservationCrossSections, area.ObservationCrossSections);
             }
@@ -154,8 +154,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 var pump = new Pump();
                 var simpleWeir = new Structure() {Formula = new SimpleWeirFormula()};
-                var gate = new Structure {Formula = new GatedWeirFormula()};
-                var generalStructure = new Structure() {Formula = new GeneralStructureWeirFormula()};
+                var gate = new Structure {Formula = new SimpleGateFormula()};
+                var generalStructure = new Structure() {Formula = new GeneralStructureFormula()};
                 var observationPoint = new GroupableFeature2DPoint();
                 var observationCrossSection = new ObservationCrossSection2D();
 

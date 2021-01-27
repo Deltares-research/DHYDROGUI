@@ -42,9 +42,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             {
                 switch (data.Formula)
                 {
-                    case GatedWeirFormula _:
+                    case SimpleGateFormula _:
                         return SelectableWeirFormulaType.SimpleGate;
-                    case GeneralStructureWeirFormula _:
+                    case GeneralStructureFormula _:
                         return SelectableWeirFormulaType.GeneralStructure;
                     default:
                         return SelectableWeirFormulaType.SimpleWeir;
@@ -58,10 +58,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                         data.Formula = new SimpleWeirFormula();
                         break;
                     case SelectableWeirFormulaType.SimpleGate:
-                        data.Formula = new GatedWeirFormula(true);
+                        data.Formula = new SimpleGateFormula(true);
                         break;
                     case SelectableWeirFormulaType.GeneralStructure:
-                        var generalStructureWeirFormula = new GeneralStructureWeirFormula()
+                        var generalStructureWeirFormula = new GeneralStructureFormula()
                         {
                             BedLevelStructureCentre = data.CrestLevel,
                             WidthStructureCentre = data.CrestWidth,

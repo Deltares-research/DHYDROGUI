@@ -49,12 +49,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                 issues.AddRange(structure.ValidateCrestLevel());
                 issues.AddRange(structure.ValidateCrestWidth(structure.CrestWidth, CrestWidthPropertyName));
 
-                if (structure.Formula is IGatedWeirFormula gatedWeirFormula)
+                if (structure.Formula is IGatedStructureFormula gatedWeirFormula)
                 {
                     issues.AddRange(structure.ValidateGatedWeir(gatedWeirFormula));
                 }
 
-                if (structure.Formula is GeneralStructureWeirFormula generalStructureFormula)
+                if (structure.Formula is GeneralStructureFormula generalStructureFormula)
                 {
                     issues.AddRange(structure.ValidateGeneralStructure(generalStructureFormula));
                 }
@@ -162,19 +162,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         }
 
         private static IEnumerable<ValidationIssue> ValidateGatedWeir(this IStructure structure,
-                                                                      IGatedWeirFormula gatedWeirFormula)
+                                                                      IGatedStructureFormula gatedStructureFormula)
         {
             var issues = new List<ValidationIssue>();
 
-            issues.AddRange(structure.ValidateDoorHeight(gatedWeirFormula));
-            issues.AddRange(structure.ValidateHorizontalDoorOpeningWidth(gatedWeirFormula));
-            issues.AddRange(structure.ValidateLowerEdgeLevel(gatedWeirFormula));
+            issues.AddRange(structure.ValidateDoorHeight(gatedStructureFormula));
+            issues.AddRange(structure.ValidateHorizontalDoorOpeningWidth(gatedStructureFormula));
+            issues.AddRange(structure.ValidateLowerEdgeLevel(gatedStructureFormula));
 
             return issues;
         }
 
         private static IEnumerable<ValidationIssue> ValidateGeneralStructure(this IStructure structure, 
-                                                                             GeneralStructureWeirFormula generalStructureFormula)
+                                                                             GeneralStructureFormula generalStructureFormula)
         {
             var issues = new List<ValidationIssue>();
 
@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         }
 
         private static IEnumerable<ValidationIssue> ValidateHorizontalDoorOpeningDirection(this IStructure structure, 
-                                                                                           GeneralStructureWeirFormula generalStructureFormula)
+                                                                                           GeneralStructureFormula generalStructureFormula)
         {
             if (generalStructureFormula.HorizontalDoorOpeningDirection
                 != GateOpeningDirection.Symmetric)
@@ -207,14 +207,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         }
 
         private static IEnumerable<ValidationIssue> ValidateLowerEdgeLevel(this IStructure structure, 
-                                                                           IGatedWeirFormula gatedWeirFormula)
+                                                                           IGatedStructureFormula gatedStructureFormula)
         {
-            if (!gatedWeirFormula.UseLowerEdgeLevelTimeSeries)
+            if (!gatedStructureFormula.UseLowerEdgeLevelTimeSeries)
             {
                 yield break;
             }
 
-            TimeSeries lowerEdgeLevelTimeSeries = gatedWeirFormula.LowerEdgeLevelTimeSeries;
+            TimeSeries lowerEdgeLevelTimeSeries = gatedStructureFormula.LowerEdgeLevelTimeSeries;
             if (lowerEdgeLevelTimeSeries.Time.Values.Any())
             {
                 DateTime startTime = lowerEdgeLevelTimeSeries.Time.Values.First();
@@ -242,12 +242,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         }
 
         private static IEnumerable<ValidationIssue> ValidateHorizontalDoorOpeningWidth(
-            this IStructure structure, IGatedWeirFormula gatedWeirFormula)
+            this IStructure structure, IGatedStructureFormula gatedStructureFormula)
         {
-            if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
+            if (gatedStructureFormula.UseHorizontalDoorOpeningWidthTimeSeries)
             {
                 TimeSeries doorOpeningTimeSeries =
-                    gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries;
+                    gatedStructureFormula.HorizontalDoorOpeningWidthTimeSeries;
                 if (doorOpeningTimeSeries.Components[0].Values.Cast<object>()
                                          .Any(value => (double) value < 0.0))
                 {
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
                                                      structure);
                 }
             }
-            else if (gatedWeirFormula.HorizontalDoorOpeningWidth < 0.0)
+            else if (gatedStructureFormula.HorizontalDoorOpeningWidth < 0.0)
             {
                 yield return new ValidationIssue(structure,
                                                  ValidationSeverity.Error,
@@ -300,9 +300,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area
         }
 
         private static IEnumerable<ValidationIssue> ValidateDoorHeight(this IStructure structure,
-                                                                       IGatedWeirFormula gatedWeirFormula)
+                                                                       IGatedStructureFormula gatedStructureFormula)
         {
-            if (gatedWeirFormula.DoorHeight < 0.0)
+            if (gatedStructureFormula.DoorHeight < 0.0)
             {
                 yield return new ValidationIssue(structure,
                                                  ValidationSeverity.Error,

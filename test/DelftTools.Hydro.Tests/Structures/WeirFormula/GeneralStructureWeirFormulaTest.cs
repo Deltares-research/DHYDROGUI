@@ -10,7 +10,7 @@ namespace DelftTools.Hydro.Tests.Structures.WeirFormula
         [Test]
         public void Clone()
         {
-            var original = new GeneralStructureWeirFormula();
+            var original = new GeneralStructureFormula();
             ReflectionTestHelper.FillRandomValuesForValueTypeProperties(original);
             ReflectionTestHelper.AssertPublicPropertiesAreEqual(original, original.Clone());
         }
@@ -18,7 +18,7 @@ namespace DelftTools.Hydro.Tests.Structures.WeirFormula
         [Test]
         public void DefaultValuesForGeneralStructureWeirFormula_SOBEK3_582()
         {
-            var generalStructureWeirFormula = new GeneralStructureWeirFormula();
+            var generalStructureWeirFormula = new GeneralStructureFormula();
             Assert.That(generalStructureWeirFormula.PositiveFreeGateFlow, Is.EqualTo(1.0).Within(0.0001));
             Assert.That(generalStructureWeirFormula.PositiveContractionCoefficient, Is.EqualTo(1.0).Within(0.0001));
             Assert.That(generalStructureWeirFormula.PositiveDrownedGateFlow, Is.EqualTo(1.0).Within(0.0001));

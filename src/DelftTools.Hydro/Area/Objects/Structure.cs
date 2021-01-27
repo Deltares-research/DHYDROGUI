@@ -62,18 +62,18 @@ namespace DelftTools.Hydro.Area.Objects
         /// </summary>
         public string FormulaName => Formula?.Name;
 
-        public IWeirFormula Formula { get; set; }
+        public IStructureFormula Formula { get; set; }
 
         public double CrestWidth
         {
-            get => Formula is GeneralStructureWeirFormula formula 
+            get => Formula is GeneralStructureFormula formula 
                        ? formula.WidthStructureCentre
                        : crestWidth;
             set
             {
                 crestWidth = value;
 
-                if (Formula is GeneralStructureWeirFormula formula)
+                if (Formula is GeneralStructureFormula formula)
                 {
                     formula.WidthStructureCentre = value;
                 }
@@ -84,14 +84,14 @@ namespace DelftTools.Hydro.Area.Objects
 
         public double CrestLevel
         {
-            get => Formula is GeneralStructureWeirFormula formula
+            get => Formula is GeneralStructureFormula formula
                        ? formula.BedLevelStructureCentre
                        : crestLevel;
             set
             {
                 crestLevel = value;
 
-                if (Formula is GeneralStructureWeirFormula formula)
+                if (Formula is GeneralStructureFormula formula)
                 {
                     formula.BedLevelStructureCentre = value;
                 }
@@ -109,7 +109,7 @@ namespace DelftTools.Hydro.Area.Objects
                 Attributes = (IFeatureAttributeCollection) Attributes?.Clone(),
                 Name = Name,
                 IsDefaultGroup = IsDefaultGroup,
-                Formula = (IWeirFormula) Formula?.Clone(),
+                Formula = (IStructureFormula) Formula?.Clone(),
                 CrestWidth = CrestWidth,
                 CrestLevel = CrestLevel,
                 UseCrestLevelTimeSeries = UseCrestLevelTimeSeries,
