@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     /// Composite hydro model which is able to simulate its <see cref="Region"/> or parts of it using child models.
     /// </summary>
     [Entity(FireOnCollectionChange = false)]
-    public partial class HydroModel : TimeDependentModelBase, IHydroModel, ICompositeActivity, IFileBased, IModelMerge, IDisposable
+    public partial class HydroModel : TimeDependentModelBase, IHydroModel, IWorkDirectoryModel, ICompositeActivity, IFileBased, IModelMerge, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModel));
         
@@ -847,7 +847,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     CurrentWorkflowIsDimr.ConnectOutput(validPath);
                     CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
                 }
-                DimrRunner.ConnectDimrRunLogFile((IWorkDirectoryModel) this);
+                DimrRunner.ConnectDimrRunLogFile(this);
             }
         }
 
