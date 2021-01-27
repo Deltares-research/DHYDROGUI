@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             using (var viewModel = new StructureViewModel(weir))
             {
                 var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.FormulaType = newWeirViewModelType;
@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.EventArgses[1].PropertyName, Is.EqualTo(nameof(viewModel.FormulaType)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
             }
         }
 
@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             using (var viewModel = new StructureViewModel(weir))
             {
                 var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.FormulaType = newWeirViewModelType;
@@ -156,7 +156,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
             }
         }
 

@@ -186,7 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var notifyChangedObserver =
                 new EventTestObserver<PropertyChangedEventArgs>();
-            viewModel.PropertyChanged += notifyChangedObserver.OnPropertyChanged;
+            viewModel.PropertyChanged += notifyChangedObserver.OnEventFired;
 
             // Call
             viewModel.IsEnabled = false;

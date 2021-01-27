@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateLowerEdgeLevel = lowerEdgeLevel;
@@ -176,7 +176,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.GateLowerEdgeLevel)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -198,7 +198,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateLowerEdgeLevel = lowerEdgeLevel;
@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.GateLowerEdgeLevel)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -235,7 +235,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateLowerEdgeLevel = lowerEdgeLevel;
@@ -247,7 +247,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -269,7 +269,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateLowerEdgeLevel = lowerEdgeLevel;
@@ -281,7 +281,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -303,7 +303,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.UseGateLowerEdgeLevelTimeSeries = useGateLowerEdgeLevel;
@@ -320,7 +320,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.UseGateLowerEdgeLevelTimeSeries)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -342,7 +342,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.UseGateLowerEdgeLevelTimeSeries = useGateLowerEdgeLevel;
@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.UseGateLowerEdgeLevelTimeSeries)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -381,7 +381,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.UseGateLowerEdgeLevelTimeSeries = useGateLowerEdgeLevel;
@@ -395,7 +395,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -417,7 +417,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.UseGateLowerEdgeLevelTimeSeries = useGateLowerEdgeLevel;
@@ -431,7 +431,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -453,7 +453,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateHeight = gateHeight;
@@ -468,7 +468,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.GateHeight)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -490,7 +490,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateHeight = gateHeight;
@@ -505,7 +505,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.GateHeight)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -526,7 +526,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateHeight = gateHeight;
@@ -538,7 +538,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -559,7 +559,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateHeight = gateHeight;
@@ -571,7 +571,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -593,7 +593,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.HorizontalOpeningWidth = openingWidth;
@@ -608,7 +608,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.HorizontalOpeningWidth)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -630,7 +630,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.HorizontalOpeningWidth = openingWidth;
@@ -645,7 +645,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.HorizontalOpeningWidth)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -667,7 +667,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.HorizontalOpeningWidth = openingWidth;
@@ -679,7 +679,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -701,7 +701,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.HorizontalOpeningWidth = openingWidth;
@@ -713,7 +713,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -736,7 +736,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.UseHorizontalOpeningWidthTimeSeries =
@@ -754,7 +754,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.UseHorizontalOpeningWidthTimeSeries)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -777,7 +777,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.UseHorizontalOpeningWidthTimeSeries =
@@ -795,7 +795,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.UseHorizontalOpeningWidthTimeSeries)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -818,7 +818,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.UseHorizontalOpeningWidthTimeSeries =
@@ -833,7 +833,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -856,7 +856,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.UseHorizontalOpeningWidthTimeSeries =
@@ -871,7 +871,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -894,7 +894,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateOpeningDirection = openingDirection;
@@ -911,7 +911,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.GateOpeningDirection)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -934,7 +934,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateOpeningDirection = openingDirection;
@@ -951,7 +951,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.GateOpeningDirection)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -977,7 +977,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateOpeningDirection = openingDirection;
@@ -991,7 +991,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -1018,7 +1018,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateOpeningDirection = openingDirection;
@@ -1032,7 +1032,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }
@@ -1059,7 +1059,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 var viewModel = new GatePropertiesViewModel(formula,
                                                             weirPropertiesViewModel,
                                                             true);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.GateOpeningDirection = openingDirection;
@@ -1073,7 +1073,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(propertyChangedObserver.NCalls, Is.EqualTo(0));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
 
                 viewModel.Dispose();
             }

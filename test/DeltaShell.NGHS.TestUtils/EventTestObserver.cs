@@ -30,7 +30,7 @@ namespace DeltaShell.NGHS.TestUtils
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="eventArgs">The <see cref="T"/> instance containing the event data.</param>
-        public void OnPropertyChanged(object sender, T eventArgs)
+        public void OnEventFired(object sender, T eventArgs)
         {
             NCalls += 1;
             Senders.Add(sender);

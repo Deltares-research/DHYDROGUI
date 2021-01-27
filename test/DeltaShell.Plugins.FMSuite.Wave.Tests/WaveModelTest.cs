@@ -1284,7 +1284,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 string connectDirectoryPath = tempDir.CopyDirectoryToTempDirectory(modelOutputPath);
 
                 var observer = new EventTestObserver<PropertyChangedEventArgs>();
-                ((INotifyPropertyChange) model).PropertyChanged += observer.OnPropertyChanged;
+                ((INotifyPropertyChange) model).PropertyChanged += observer.OnEventFired;
 
                 // Call
                 model.WaveOutputData.ConnectTo(connectDirectoryPath, true);

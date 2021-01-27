@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.ActiveParametersViewModel, Is.Null, "Precondition violated.");
 
             var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
-            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+            viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
             // Call
             viewModel.UpdateActiveSupportPoint(supportPoint);
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, "Precondition violated.");
 
             var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
-            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+            viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
             SupportPoint otherSupportPoint = GetDefaultSupportPoint();
 
@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                         Is.SameAs(dictionary[supportPoint]), "Precondition violated.");
 
             var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
-            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+            viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
             // Call
             viewModel.UpdateActiveSupportPoint(supportPoint);
@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                                                      generateSeries);
 
             var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
-            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+            viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
             SupportPoint supportPoint = GetDefaultSupportPoint();
 

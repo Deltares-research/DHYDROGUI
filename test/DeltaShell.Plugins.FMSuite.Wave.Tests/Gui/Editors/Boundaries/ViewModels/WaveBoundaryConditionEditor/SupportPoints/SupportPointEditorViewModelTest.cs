@@ -409,7 +409,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var notifyPropertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
-            viewModel.PropertyChanged += notifyPropertyChangedObserver.OnPropertyChanged;
+            viewModel.PropertyChanged += notifyPropertyChangedObserver.OnEventFired;
 
             bool expectedValue = !viewModel.IsEnabled;
 
@@ -429,7 +429,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
         {
             // Setup
             var notifyPropertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
-            viewModel.PropertyChanged += notifyPropertyChangedObserver.OnPropertyChanged;
+            viewModel.PropertyChanged += notifyPropertyChangedObserver.OnEventFired;
 
             bool expectedValue = viewModel.IsEnabled;
 

@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                                     parameters);
 
             var observer = new EventTestObserver<PropertyChangedEventArgs>();
-            viewModel.PropertyChanged += observer.OnPropertyChanged;
+            viewModel.PropertyChanged += observer.OnEventFired;
 
             var stateIsValid = false;
 

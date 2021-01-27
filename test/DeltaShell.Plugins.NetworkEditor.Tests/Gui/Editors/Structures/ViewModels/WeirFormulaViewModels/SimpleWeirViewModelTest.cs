@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             {
                 var viewModel = new SimpleWeirViewModel(formula,
                                                         weirPropertiesViewModel);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.ContractionCoefficient = contractionCoefficient;
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.ContractionCoefficient)));
 
                 // Cleanup
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
             }
         }
 
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             {
                 var viewModel = new SimpleWeirViewModel(formula,
                                                         weirPropertiesViewModel);
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Call
                 viewModel.ContractionCoefficient = lateralContraction;
@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             "Expected a no property changed event to be fired.");
 
                 // Cleanup
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
             }
         }
     }
