@@ -3,7 +3,7 @@ using System.ComponentModel;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Utils.Guards;
 
-namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels
 {
     /// <summary>
     /// <see cref="SimpleGateFormulaViewModel"/> provides the view model for the

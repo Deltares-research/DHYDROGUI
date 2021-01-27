@@ -177,12 +177,12 @@
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />
     <Compile Include="Editors\FMWeirPropertiesRow.cs" />
     <Compile Include="Editors\Structures\ViewModels\StructureViewModel.cs" />
-    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\SimpleGateFormulaViewModel.cs" />
-    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GatePropertiesViewModel.cs" />
-    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\GeneralStructureFormulaViewModel.cs" />
-    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\SimpleWeirFormulaViewModel.cs" />
-    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\StructurePropertiesViewModel.cs" />
-    <Compile Include="Editors\Structures\ViewModels\WeirFormulaViewModels\StructureFormulaViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\StructureFormulaViewModels\SimpleGateFormulaViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\StructureFormulaViewModels\GatePropertiesViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\StructureFormulaViewModels\GeneralStructureFormulaViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\StructureFormulaViewModels\SimpleWeirFormulaViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\StructureFormulaViewModels\StructurePropertiesViewModel.cs" />
+    <Compile Include="Editors\Structures\ViewModels\StructureFormulaViewModels\StructureFormulaViewModel.cs" />
     <Compile Include="Editors\Structures\Views\Components\GateOpeningHeightCalculatedFieldView.xaml.cs">
       <DependentUpon>GateOpeningHeightCalculatedFieldView.xaml</DependentUpon>
     </Compile>

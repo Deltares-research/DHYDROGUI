@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:viewModels="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels"
              xmlns:weirFormulaViews="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.WeirFormulaViews"
              xmlns:components="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Components"
              xmlns:convertersCommon="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters;assembly=DeltaShell.NGHS.Common.Gui"
+             xmlns:viewModels="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="920">
     <UserControl.Resources>

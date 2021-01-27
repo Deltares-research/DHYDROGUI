@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using DelftTools.Utils.Guards;
 
-namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels
 {
     /// <summary>
     /// <see cref="StructureFormulaViewModel"/> acts as the base class for all structure

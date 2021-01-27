@@ -5,7 +5,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Utils.Guards;
 
-namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels
+namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels
 {
     /// <summary>
     /// <see cref="StructurePropertiesViewModel"/> provides the view model of the
