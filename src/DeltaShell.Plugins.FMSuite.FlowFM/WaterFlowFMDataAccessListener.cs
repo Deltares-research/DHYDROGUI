@@ -113,13 +113,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 // only do this when there are values or you will get an ArgumentException.
                 // This happens when only a point cloud is loaded and there was no grid (TOOLS-21425)
-                if (originalValues.Any(v => !Equals(v, coverage.Components[0].NoDataValue)))
+                if (originalValues.Any(v => !Equals(v, coverage.Components[0].NoDataValue)) && model.Grid.FlowLinks.Count == originalValues.Count)
                 {
                     // TODO: remove this check, whenever we fix the flow link loading definitively...
-                    if (model.Grid.FlowLinks.Count == originalValues.Count)
-                    {
-                        coverage.SetValues(originalValues);                        
-                    }
+                    coverage.SetValues(originalValues);                        
                 }
 
                 spatialOperationSetValueConverter.SpatialOperationSet.SetDirty();

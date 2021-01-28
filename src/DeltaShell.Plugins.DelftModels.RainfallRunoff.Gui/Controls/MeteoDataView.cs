@@ -146,14 +146,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 
         private void MeteoDataPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (ReferenceEquals(sender, meteoData))
-            {
-                if (e.PropertyName == "DataDistributionType" || (e.PropertyName=="IsEditing" && !meteoData.IsEditing))
-                {
-                    SetMeteoDataView();
-                    SetMeteoDataTypeComboBox();
-                }
-            }
+            if (!ReferenceEquals(sender, meteoData)) return;
+
+            if (e.PropertyName != "DataDistributionType" &&
+                (e.PropertyName != "IsEditing" || meteoData.IsEditing)) return;
+
+            SetMeteoDataView();
+            SetMeteoDataTypeComboBox();
         }
 
         [EditAction]
@@ -340,13 +339,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 
         void StationsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (meteoData.DataDistributionType == MeteoDataDistributionType.PerStation)
-            {
-                if (meteoData.Data.Arguments[1].Values.Count == Stations.Count)// meteo data and model stations should be in sync
-                {
-                    RefreshMeteoStationsData();
-                }
-            }
+            if (meteoData.DataDistributionType != MeteoDataDistributionType.PerStation ||
+                meteoData.Data.Arguments[1].Values.Count != Stations.Count) return;
+
+            // meteo data and model stations should be in sync
+            RefreshMeteoStationsData();
         }
     }
 

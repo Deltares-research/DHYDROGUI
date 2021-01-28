@@ -484,15 +484,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             // When tool is active (eg drawing branch) keydown/up should not reset TopologyRulesEnabled
             TopologyRulesEnabled = TopologyRulesEnabledState;
 
-            if (e.KeyCode == Keys.Control | e.KeyCode == Keys.C && MapControl.SelectedFeatures.Count() > 0)
+            if ((e.KeyCode == Keys.Control || e.KeyCode == Keys.C && MapControl.SelectedFeatures.Any()) && (MapControl.SelectedFeatures.First() is IChannel || MapControl.SelectedFeatures.First() is IBranchFeature))
             {
-                if (MapControl.SelectedFeatures.First() is IChannel || MapControl.SelectedFeatures.First() is IBranchFeature)
-                {
-                    HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard((INetworkFeature)MapControl.SelectedFeatures.First());
-                }
+                HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard((INetworkFeature)MapControl.SelectedFeatures.First());
             }
 
-            if (e.KeyCode == Keys.Control | e.KeyCode == Keys.V)
+            if (e.KeyCode == Keys.Control || e.KeyCode == Keys.V)
             {
                 if (!MapControl.SelectedFeatures.Any())
                 {
@@ -885,19 +882,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
 
             var networkLocations = MapControl.SelectedFeatures.OfType<INetworkLocation>().ToList();
-            if (networkLocations.Count > 0)
+            if (networkLocations.Count > 0 && discretization != null && discretization.Locations.Values.Any(networkLocations.Contains))
             {
-                if ((discretization != null) && discretization.Locations.Values.Any(networkLocations.Contains))
+                yield return new MapToolContextMenuItem
                 {
-                    yield return new MapToolContextMenuItem
-                        {
-                            Priority = 3,
-                            MenuItem = new ToolStripMenuItem("Fixed gridpoint", null, (s, e) => ToggleFixedGridPoint(discretization, networkLocations))
-                                {
-                                    Checked = networkLocations.Any(discretization.IsFixedPoint)
-                                }
-                        };
-                }
+                    Priority = 3,
+                    MenuItem = new ToolStripMenuItem("Fixed gridpoint", null, (s, e) => ToggleFixedGridPoint(discretization, networkLocations))
+                    {
+                        Checked = networkLocations.Any(discretization.IsFixedPoint)
+                    }
+                };
             }
 
             var crossSections = MapControl.SelectedFeatures.OfType<ICrossSection>().ToList();

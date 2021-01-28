@@ -9,12 +9,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
-            if (model.Grid == null || model.Grid.IsEmpty)
+            if ((model.Grid == null || model.Grid.IsEmpty) && 
+                !ModelNetworkDiscretizationIsValid(model))
             {
-                if (!ModelNetworkDiscretizationIsValid(model))
-                {
-                    issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_));
-                }
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Error, Resources.WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_defined_));
             }
             return new ValidationReport("Domain", issues);
         }

@@ -35,14 +35,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         {
             get
             {
-                if (base.Enabled && CurrentTool is NewPointFeatureTool)
-                {
-                    if (((NewPointFeatureTool)CurrentTool).GetFeaturePerProvider != null)
-                    {
-                        return true;
-                    }
-                }
-                return false;
+                return base.Enabled && 
+                       CurrentTool is NewPointFeatureTool tool && 
+                       tool.GetFeaturePerProvider != null;
             }
         }
     }

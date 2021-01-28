@@ -253,15 +253,10 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         private double ParseAndGetValue(string stringValue)
         {
-            double value = 0;
-            if (Double.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out value))
-            {
-                if (value != 0)
-                {
-                    return value;
-                }
-            }
-            return 0;
+            return Double.TryParse(stringValue, NumberStyles.Float, CultureInfo.InvariantCulture, out var value) &&
+                   value != 0
+                ? value
+                : 0;
         }
 
         private string ConcatinateStringValues(string[] words, int i, string value)

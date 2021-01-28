@@ -62,28 +62,28 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 flowBoundaryConditionData.UseSalt = useSalt;
                 flowBoundaryConditionData.UseTemperature = useTemperature;
 
-                if ((SobekType == DeltaShell.Sobek.Readers.SobekType.SobekRE) && (!nodes[nodeId].IsConnectedToMultipleBranches) && (condition.BoundaryType == SobekFlowBoundaryConditionType.Flow))
+                if (SobekType == DeltaShell.Sobek.Readers.SobekType.SobekRE && 
+                    !nodes[nodeId].IsConnectedToMultipleBranches && 
+                    condition.BoundaryType == SobekFlowBoundaryConditionType.Flow && 
+                    nodes[nodeId].IncomingBranches.Count > 0)
                 {
                     // RE defines positive flow along the branch, hence at the end of a branch a boundary has a positive Q, 
                     // this means a flow out of the system. If the direction of the branch is flipped, the same positive Q 
                     // suddenly means a flow into the system.
                     // In 2.12 (and DeltaShell) negative flow is always out of the system, and positive always into the system.
-                    if (nodes[nodeId].IncomingBranches.Count > 0)
-                    {
-                        // end node thus invert boundary
-                        flowBoundaryConditionData.Flow *= -1.0;
+                    // end node thus invert boundary
+                    flowBoundaryConditionData.Flow *= -1.0;
 
-                        if (flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries ||
-                            flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.FlowWaterLevelTable ||
-                            flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries)
+                    if (flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.FlowTimeSeries ||
+                        flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.FlowWaterLevelTable ||
+                        flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries)
+                    {
+                        var values = ((IMultiDimensionalArray<double>)flowBoundaryConditionData.Data.Components[0].Values).ToArray();
+                        for (var i = 0; i < values.Length; i++)
                         {
-                            var values = ((IMultiDimensionalArray<double>)flowBoundaryConditionData.Data.Components[0].Values).ToArray();
-                            for (var i = 0; i < values.Length; i++)
-                            {
-                                values[i] *= -1.0;
-                            }
-                            flowBoundaryConditionData.Data.Components[0].SetValues(values);
+                            values[i] *= -1.0;
                         }
+                        flowBoundaryConditionData.Data.Components[0].SetValues(values);
                     }
                 }
                 waterFlowFMModel.ReplaceBoundaryCondition(flowBoundaryConditionData);

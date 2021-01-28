@@ -62,10 +62,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             if (item == route.Network)
             {
-                if (OnRouteRemoved != null)
-                {
-                    OnRouteRemoved();
-                }
+                OnRouteRemoved?.Invoke();
             }
         }
 
@@ -75,13 +72,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             if (e.GetRemovedOrAddedItem() is Route)
             {
                 var routeItem = e.GetRemovedOrAddedItem() as Route;
-                var routeItemNetwork = routeItem.Network as IHydroNetwork;
-                if (Equals(route, routeItem) && routeItemNetwork != null && Equals(routeItemNetwork.Routes, sender))
+                if (Equals(route, routeItem) && routeItem?.Network is IHydroNetwork routeItemNetwork && Equals(routeItemNetwork.Routes, sender))
                 {
-                    if (OnRouteRemoved != null)
-                    {
-                        OnRouteRemoved();
-                    }
+                    OnRouteRemoved?.Invoke();
                 }
             }
             else if (e.GetRemovedOrAddedItem() is IModel && e.Action == NotifyCollectionChangedAction.Remove)
@@ -101,10 +94,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                         AddCoverage((ICoverage)value);
                         break;
                     case NotifyCollectionChangedAction.Remove:
-                        if (OnCoverageRemovedFromProject != null)
-                        {
-                            OnCoverageRemovedFromProject((ICoverage)value);
-                        }
+                        OnCoverageRemovedFromProject?.Invoke((ICoverage)value);
                         break;
                     case NotifyCollectionChangedAction.Replace:
                         break;

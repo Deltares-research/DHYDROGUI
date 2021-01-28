@@ -66,8 +66,6 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
 
         public virtual DataItemRole Role { get; private set; }
 
-        public int LocationModelId = -1; // cached model id (for performance reasons)
-
         [NoNotifyPropertyChange]
         public override double ConvertedValue
         {

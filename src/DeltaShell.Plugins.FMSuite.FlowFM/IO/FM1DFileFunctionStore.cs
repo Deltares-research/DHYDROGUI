@@ -119,35 +119,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return base.GetVariableValuesCount(variable, filters);
         }
 
-        public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable function, params IVariableFilter[] filters)
+        public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable variable, params IVariableFilter[] filters)
         {
             if (!HasValidFile)
             {
-                return (IMultiDimensionalArray<T>)CreateEmptyArrayForType(function.ValueType);
+                return (IMultiDimensionalArray<T>)CreateEmptyArrayForType(variable.ValueType);
             }
-            if (function.IsIndependent && typeof(T) == typeof(INetworkLocation))
+            if (variable.IsIndependent && typeof(T) == typeof(INetworkLocation))
             {
                 var featureFilter = filters.FirstOrDefault(f => f.Variable.ValueType == typeof(INetworkLocation));
-                if (function.Attributes != null && function.Attributes.ContainsKey(NcNameAttribute))
+                if (variable.Attributes != null && variable.Attributes.ContainsKey(NcNameAttribute))
                 {
-                    var location = function.Attributes[NcNameAttribute];
+                    var location = variable.Attributes[NcNameAttribute];
                     var networkLocations = LocationsByNetworkDataType[location];
                     if (filters.Length == 0 || featureFilter == null)
                     {
-                        if (!networkLocationsForThisFunctionCache.TryGetValue(function, out var networkLocationsForThisFunction))
+                        if (!networkLocationsForThisFunctionCache.TryGetValue(variable, out var networkLocationsForThisFunction))
                         {
                             networkLocationsForThisFunction = new MultiDimensionalArray<T>((IList<T>)networkLocations);
-                            networkLocationsForThisFunctionCache[function] = networkLocationsForThisFunction;
+                            networkLocationsForThisFunctionCache[variable] = networkLocationsForThisFunction;
                         }
                         return (MultiDimensionalArray<T>)networkLocationsForThisFunction;
                     }
 
                     if (featureFilter is VariableIndexFilter indexFilter)
                     {
-                        if (!networkLocationsForThisFunctionCache.TryGetValue(function, out var networkLocationsForThisFunction))
+                        if (!networkLocationsForThisFunctionCache.TryGetValue(variable, out var networkLocationsForThisFunction))
                         {
                             networkLocationsForThisFunction = new MultiDimensionalArray<T>((IList<T>)networkLocations);
-                            networkLocationsForThisFunctionCache[function] = networkLocationsForThisFunction;
+                            networkLocationsForThisFunctionCache[variable] = networkLocationsForThisFunction;
                         }
                         // ik weet niet helemaal zeker of dit nou moet... maar hier zit volgens mij de conversie naar de output
                         var indexesOfLocationsInOutput = indexFilter.Indices.Select(i => LocationsByNetworkDataType[location].IndexOf(networkLocations[i])).ToArray();
@@ -157,19 +157,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return new MultiDimensionalArray<T>();
             }
 
-            if (function.ValueType == typeof(DateTime) && function.Name.Equals("Time", StringComparison.InvariantCultureIgnoreCase) && filters!= null && filters.Length ==0) //waarom double, gewoon omdat het kan (alle values in de map dile zijn direct doubles in de output, nooit int of ander type
+            if (variable.ValueType == typeof(DateTime) && variable.Name.Equals("Time", StringComparison.InvariantCultureIgnoreCase) && filters!= null && filters.Length ==0) //waarom double, gewoon omdat het kan (alle values in de map dile zijn direct doubles in de output, nooit int of ander type
             {
-                if (!argumentVariableCache.TryGetValue(function, out var timeArgument))
+                if (!argumentVariableCache.TryGetValue(variable, out var timeArgument))
                 {
                     timeArgument = new MultiDimensionalArray<T>((IList<T>) MetaData.Times);
-                    argumentVariableCache[function] = timeArgument;
+                    argumentVariableCache[variable] = timeArgument;
                 }
                 return (MultiDimensionalArray<T>) timeArgument;
             }
 
-            if (function.ValueType == typeof(double) && !function.IsIndependent)//waarom double, gewoon omdat het kan (alle values in de map dile zijn direct doubles in de output, nooit int of ander type)
+            if (variable.ValueType == typeof(double) && !variable.IsIndependent)//waarom double, gewoon omdat het kan (alle values in de map dile zijn direct doubles in de output, nooit int of ander type)
             {
-                var coverage = GetCoverage(function);
+                var coverage = GetCoverage(variable);
                 if (coverage == null) return new MultiDimensionalArray<T>(new List<T>(), new[] {0, 0});
                 var coverageComponent = coverage.Components[0];
                 var ncVariableName = coverageComponent.Attributes.ContainsKey(NcNameAttribute) 
@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (filters == null  || filters.Length == 0)
                 {
-                    return GetValuesForTimeSeriesAtAllLocations<T>(function, ncVariableName); ;
+                    return GetValuesForTimeSeriesAtAllLocations<T>(variable, ncVariableName); ;
                 }
 
                 var dateTimeFilter = filters.OfType<VariableValueFilter<DateTime>>().FirstOrDefault(f => f.Variable == coverage.Time);
@@ -206,23 +206,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         if (hasBranchFilter)
                         {
                             
-                            timeSeriesData = GetValueForTimeStepAtSingleLocation<T>(function, ncVariableName, branchFeatureFilter, timeStepIndex, out shape);
+                            timeSeriesData = GetValueForTimeStepAtSingleLocation<T>(variable, ncVariableName, branchFeatureFilter, timeStepIndex, out shape);
                             
                         }
                         else if (hasBranchRangeFilter)
                         {
-                            timeSeriesData = GetValuesForTimeStepAtRangeOfLocations<T>(function, ncVariableName, branchRangeFilter, timeStepIndex, out shape);
+                            timeSeriesData = GetValuesForTimeStepAtRangeOfLocations<T>(variable, ncVariableName, branchRangeFilter, timeStepIndex, out shape);
                         }
                         else
                         {
-                            timeSeriesData = GetValuesForTimeStepAtAllLocations<T>(function, ncVariableName, timeStepIndex, out shape);
+                            timeSeriesData = GetValuesForTimeStepAtAllLocations<T>(variable, ncVariableName, timeStepIndex, out shape);
                         }
                     }
                     else
                     {
                         if (hasBranchFilter)
                         {
-                            timeSeriesData = GetValuesForTimeSeriesAtSingleLocation<T>(function, ncVariableName, branchFeatureFilter, out shape);
+                            timeSeriesData = GetValuesForTimeSeriesAtSingleLocation<T>(variable, ncVariableName, branchFeatureFilter, out shape);
                         }
                     }
                 }
@@ -237,10 +237,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     throw new NotImplementedException();
                 }
                 
-                UpdateMinMaxCache(timeSeriesData.Cast<double>(), function);
+                UpdateMinMaxCache(timeSeriesData.Cast<double>(), variable);
                 return new MultiDimensionalArray<T>(timeSeriesData, shape);
             }
-            return base.GetVariableValues<T>(function, filters);
+            return base.GetVariableValues<T>(variable, filters);
         }
         #region private GetValue helper methods
 

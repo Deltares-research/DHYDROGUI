@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using DelftTools.Controls;
-using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows

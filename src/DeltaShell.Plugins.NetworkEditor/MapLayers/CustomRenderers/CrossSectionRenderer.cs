@@ -74,17 +74,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             {
                 currentGeometry = GeometryTransform.Scale(currentGeometry, minimumPixelLength/pixelLength);
             }
-            else if (pixelLength > 3*minimumPixelLength)
+            else if (pixelLength > 3*minimumPixelLength && 
+                     crossSection.Branch != null)
             {
-                if (crossSection.Branch != null)
-                {
-                    var branchGeometry = crossSection.Branch.Geometry;
-                    var indexLine = new LengthIndexedLine(branchGeometry);
-                    var mapOffset = NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage);
-                    var intersection = indexLine.ExtractPoint(mapOffset);
+                var branchGeometry = crossSection.Branch.Geometry;
+                var indexLine = new LengthIndexedLine(branchGeometry);
+                var mapOffset = NetworkHelper.MapChainage(crossSection.Branch, crossSection.Chainage);
+                var intersection = indexLine.ExtractPoint(mapOffset);
                     
-                    VectorRenderingHelper.DrawCircle(g, new Point(intersection), 5, Brushes.DarkSlateGray, layer.Map);
-                }
+                VectorRenderingHelper.DrawCircle(g, new Point(intersection), 5, Brushes.DarkSlateGray, layer.Map);
             }
             
             var currentVectorStyle = themeOn

@@ -1,9 +1,7 @@
-using System;
 using System.ComponentModel;
 using System.Drawing.Design;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
-using DelftTools.Utils.ComponentModel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 using GeoAPI.Extensions.CoordinateSystems;
 using SharpMap.UI.Forms;

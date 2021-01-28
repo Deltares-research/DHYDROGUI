@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 {
     /// TODO : remove this. too much architecture for the problem at hand.Look at LayerPropertiesEditor/ThemeEditorController for a more nice 
     /// example of separation of view / controller
-    public class CompositeStructureViewPresenter : ICanvasEditor
+    public sealed class CompositeStructureViewPresenter : ICanvasEditor, IDisposable
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(CompositeStructureViewPresenter));
         private CompositeStructureViewDataController _sideViewDataController;

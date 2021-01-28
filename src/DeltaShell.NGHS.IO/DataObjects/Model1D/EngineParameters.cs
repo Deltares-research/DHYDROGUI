@@ -439,19 +439,11 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                 }
             }
 
-            if (feature is IPump)
-            {
-                if ((engineParameter.QuantityType == QuantityType.CrestLevel) ||
-                    (engineParameter.QuantityType == QuantityType.CrestWidth) ||
-                    (engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel) ||
-                    (engineParameter.QuantityType == QuantityType.GateOpeningHeight) ||
-                    (engineParameter.QuantityType == QuantityType.ValveOpening))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return !(feature is IPump) || ((engineParameter.QuantityType != QuantityType.CrestLevel) &&
+                                           (engineParameter.QuantityType != QuantityType.CrestWidth) &&
+                                           (engineParameter.QuantityType != QuantityType.GateLowerEdgeLevel) &&
+                                           (engineParameter.QuantityType != QuantityType.GateOpeningHeight) &&
+                                           (engineParameter.QuantityType != QuantityType.ValveOpening));
         }
 
         public static ElementSet? GetElementSet(IFeature feature)

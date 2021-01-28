@@ -108,14 +108,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (disposing && nwrwDryWeatherFlowDefinitions != null)
             {
-                if (nwrwDryWeatherFlowDefinitions != null)
-                {
-                    nwrwDryWeatherFlowDefinitions.CollectionChanged -= OnDefinitionsOnCollectionChanged;
-                    ((INotifyPropertyChanged)nwrwDryWeatherFlowDefinitions).PropertyChanged -= OnDefinitionsOnPropertyChanged;
-                    nwrwDryWeatherFlowDefinitions = null;
-                }
+                nwrwDryWeatherFlowDefinitions.CollectionChanged -= OnDefinitionsOnCollectionChanged;
+                ((INotifyPropertyChanged)nwrwDryWeatherFlowDefinitions).PropertyChanged -= OnDefinitionsOnPropertyChanged;
+                nwrwDryWeatherFlowDefinitions = null;
             }
 
             base.Dispose(disposing);

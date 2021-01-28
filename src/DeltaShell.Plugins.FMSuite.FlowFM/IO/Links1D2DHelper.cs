@@ -77,13 +77,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var locations = networkDiscretization.Locations.Values.ToList();
                 for (int i = 0; i < locations.Count; i++)
                 {
-                    if (locationsMask[i])
+                    if (locationsMask[i] && 
+                        IsPointEqual(locations[i], startPointLink, tolerance))
                     {
-                        if (IsPointEqual(locations[i], startPointLink, tolerance))
-                        {
-                            locationIndex = i;
-                            break;
-                        }
+                        locationIndex = i;
+                        break;
                     }
                 }
             }
@@ -120,13 +118,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var locations = networkDiscretization.Locations.Values.ToList();
                 for (int i = 0; i < locations.Count; i++)
                 {
-                    if (locationsMask[i])
+                    if (locationsMask[i] && IsPointEqual(locations[i], startPointLink, tolerance))
                     {
-                        if (IsPointEqual(locations[i], startPointLink, tolerance))
-                        {
-                            locationIndex = i;
-                            break;
-                        }
+                        locationIndex = i;
+                        break;
                     }
                 }
             }

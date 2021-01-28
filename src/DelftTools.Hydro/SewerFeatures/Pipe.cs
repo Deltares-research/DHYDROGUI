@@ -70,10 +70,11 @@ namespace DelftTools.Hydro.SewerFeatures
         private void AddCrossSectionSectionToDefinition(IHydroNetwork hydroNetwork)
         {
             var sewerCrossSectionSectionType = hydroNetwork?.CrossSectionSectionTypes?.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
-            if (sewerCrossSectionSectionType != null)
+            if (sewerCrossSectionSectionType != null && 
+                CrossSectionDefinition != null && 
+                CrossSectionDefinition.Sections.All(css => css.SectionType != sewerCrossSectionSectionType))
             {
-                if (CrossSectionDefinition != null && CrossSectionDefinition.Sections.All(css => css.SectionType != sewerCrossSectionSectionType))
-                    CrossSectionDefinition?.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
+                CrossSectionDefinition?.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
             }
         }
 

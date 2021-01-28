@@ -83,13 +83,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             {
                 var input = data.Inputs[0];
 
-                if (!string.IsNullOrEmpty(input.ParameterName))
+                if (!string.IsNullOrEmpty(input.ParameterName) && data.Function.Arguments[0].Name != input.ParameterName)
                 {
                     // Prevent unneeded property change event
-                    if(data.Function.Arguments[0].Name != input.ParameterName)
-                    {
-                        data.Function.Arguments[0].Name = input.ParameterName;
-                    }
+                    data.Function.Arguments[0].Name = input.ParameterName;
                 }
 
                 return;
@@ -108,13 +105,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid
             {
                 var output = data.Outputs[0];
 
-                if (!string.IsNullOrEmpty(output.ParameterName))
+                if (!string.IsNullOrEmpty(output.ParameterName) && data.Function.Components[0].Name != output.ParameterName)
                 {
                     // Prevent unneeded property change event
-                    if (data.Function.Components[0].Name != output.ParameterName)
-                    {
-                        data.Function.Components[0].Name = output.ParameterName;
-                    }
+                    data.Function.Components[0].Name = output.ParameterName;
                 }
 
                 return;

@@ -61,32 +61,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private void ModelDataAdded(object sender, EventArgs e)
         {
             var area = sender as CatchmentModelData;
-            if (ShouldBeInIncluded(area))
-            {
-                if (OnAreaAddedOrModified != null)
-                {
-                    OnAreaAddedOrModified(area);
-                }
-            }
+            if (!ShouldBeInIncluded(area)) return;
+
+            OnAreaAddedOrModified?.Invoke(area);
         }
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            CatchmentModelData modelData;
-
-            if (sender is CatchmentModelData catchmentModelData)
-            {
-                modelData = catchmentModelData;
-            }
-            else
+            if (!(sender is CatchmentModelData catchmentModelData))
             {
                 return;
             }
 
-            if (modelData == null)
-            {
-                throw new ArgumentException("Property changed for unknown concept!");
-            }
+            var modelData = catchmentModelData;
 
             bool shouldBeIncluded = ShouldBeInIncluded(modelData);
 

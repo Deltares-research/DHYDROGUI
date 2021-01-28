@@ -369,22 +369,19 @@ namespace DeltaShell.Sobek.Readers.Readers
                         friction.QTable = ParseMultiDimensionalFrictionTable(match.Groups[FrictionPos].Value);
                     }
                 }
-                if (match.Groups[frictionValueType].Value == "cp")
+                if (match.Groups[frictionValueType].Value == "cp" && match.Groups[FrictionPos].Success)
                 {
-                    if (match.Groups[FrictionPos].Success)
+                    friction.FunctionType = SobekFrictionFunctionType.Constant;
+                    var cp = match.Groups[FrictionPos].Value.Trim();
+                    if (cp.StartsWith("0"))
                     {
-                        friction.FunctionType = SobekFrictionFunctionType.Constant;
-                        var cp = match.Groups[FrictionPos].Value.Trim();
-                        if (cp.StartsWith("0"))
-                        {
-                            var results = Regex.Split(cp, @"[\t\s]+");
-                            friction.FrictionConst = ConversionHelper.ToDouble(results[1]);
-                        }
-                        else
-                        {
-                            friction.FunctionType = SobekFrictionFunctionType.FunctionOfLocation;
-                            friction.LocationTable = ParseLocationFrictionTable(match.Groups[FrictionPos].Value);
-                        }
+                        var results = Regex.Split(cp, @"[\t\s]+");
+                        friction.FrictionConst = ConversionHelper.ToDouble(results[1]);
+                    }
+                    else
+                    {
+                        friction.FunctionType = SobekFrictionFunctionType.FunctionOfLocation;
+                        friction.LocationTable = ParseLocationFrictionTable(match.Groups[FrictionPos].Value);
                     }
                 }
 

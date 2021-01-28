@@ -324,19 +324,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
 
             //manholes??
-            if (nodeTypes.ContainsKey(sobekNode.ID))
+            if (nodeTypes.ContainsKey(sobekNode.ID) && 
+                SobekNetworkNetterReader.IsManhole(nodeTypes[sobekNode.ID]))
             {
-                if (SobekNetworkNetterReader.IsManhole(nodeTypes[sobekNode.ID]))
+                var manhole = CreateManholeWithOneCompartment(sobekNode);
+
+                if (nodeData.ContainsKey(sobekNode.ID))
                 {
-                    var manhole = CreateManholeWithOneCompartment(sobekNode);
-
-                    if (nodeData.ContainsKey(sobekNode.ID))
-                    {
-                        UpdateManholeWithNodeData(manhole, nodeData[sobekNode.ID]);
-                    }
-
-                    return manhole;
+                    UpdateManholeWithNodeData(manhole, nodeData[sobekNode.ID]);
                 }
+
+                return manhole;
             }
 
             return new HydroNode

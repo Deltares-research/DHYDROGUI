@@ -327,12 +327,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions
                     }
                 }
 
-                if (isSetData)
+                if (isSetData && channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition)
                 {
-                    if (channelInitialConditionDefinition.SpecificationType == ChannelInitialConditionSpecificationType.ConstantChannelInitialConditionDefinition)
-                    {
-                        channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value = double.Parse(value.ToString());
-                    }
+                    channelInitialConditionDefinition.ConstantChannelInitialConditionDefinition.Value = double.Parse(value.ToString());
                 }
             }
 

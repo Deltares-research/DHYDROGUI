@@ -54,30 +54,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
                 return;
             }
 
-            if (e.X > GetDeleteButtonLeft() && e.X < ClientRectangle.Width)
+            if (e.X <= GetDeleteButtonLeft() || e.X >= ClientRectangle.Width || !deleteIconClicked ||
+                SelectedItem == null) return;
+
+            var removedItem = SelectedItem;
+            var removedIndex = SelectedIndex;
+            var removingEvent = new ListBoxItemRemovingEventArgs(removedItem, removedIndex);
+            
+            OnItemRemoving?.Invoke(this, removingEvent);
+
+            if (!removingEvent.Cancel)
             {
-                if (deleteIconClicked && SelectedItem != null)
-                {
-                    var removedItem = SelectedItem;
-                    var removedIndex = SelectedIndex;
-                    var removingEvent = new ListBoxItemRemovingEventArgs(removedItem, removedIndex);
-                    if (OnItemRemoving != null)
-                    {
-                        OnItemRemoving(this, removingEvent);
-                    }
-
-                    if (!removingEvent.Cancel)
-                    {
-                        Items.Remove(SelectedItem);
-                        if (OnItemRemoved != null)
-                        {
-                            OnItemRemoved(this, new ListBoxItemRemovedEventArgs(removedItem, removedIndex));
-                        }
-                    }
-
-                    deleteIconClicked = false;
-                }
+                Items.Remove(SelectedItem);
+                OnItemRemoved?.Invoke(this, new ListBoxItemRemovedEventArgs(removedItem, removedIndex));
             }
+
+            deleteIconClicked = false;
         }
 
         private int GetDeleteButtonLeft()

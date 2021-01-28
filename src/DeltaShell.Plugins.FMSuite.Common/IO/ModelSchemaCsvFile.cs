@@ -52,13 +52,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 {
                     line = line.Trim();
                     var lineFields = line.Split(',');
-                    if (lineFields.Length >= 1 && !String.IsNullOrWhiteSpace(lineFields[0]))
+                    if (lineFields.Length >= 1 && !String.IsNullOrWhiteSpace(lineFields[0]) && !line.StartsWith("MduGroup"))
                     {
-                        if (!line.StartsWith("MduGroup"))
-                        {
-                            // add mdu group
-                            schema.ModelDefinitionCategory.Add(lineFields[0].Trim(), new ModelPropertyGroup(lineFields[0].Trim()));
-                        }
+                        // add mdu group
+                        schema.ModelDefinitionCategory.Add(lineFields[0].Trim(), new ModelPropertyGroup(lineFields[0].Trim()));
                     }
 
                     line = GetNextLine();

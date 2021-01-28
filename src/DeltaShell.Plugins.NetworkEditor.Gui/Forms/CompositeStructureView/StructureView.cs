@@ -182,89 +182,82 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             bool updateAxes = false;
             IStructure1D selectedStructure = null;
-            if (sender is IStructure1D)
+            switch (sender)
             {
-                if (e.PropertyName == "OffsetY")
-                {
+                case IStructure1D structure when e.PropertyName == "OffsetY":
                     return;
-                }
-                var structure = sender as IStructure1D;
-
                 // Try to maintain the selected structure in the shapeModifyTool
                 // for example when a weir is selected with Trackers and the user modifies the crest width in
                 // the propertygrid the selection is maintained and the Trackers are updated.
-                if (shapeModifyTool.SelectedShape == null)
-                {
+                case IStructure1D structure when shapeModifyTool.SelectedShape == null:
                     return;
-                }
-                if (!Shapes2Structures.ContainsKey(shapeModifyTool.SelectedShape))
-                {
+                case IStructure1D structure when !Shapes2Structures.ContainsKey(shapeModifyTool.SelectedShape):
                     // this is occasionally detected after changing the weir formula
                     return;
-                }
-                selectedStructure = Shapes2Structures[shapeModifyTool.SelectedShape];
+                case IStructure1D structure:
+                {
+                    selectedStructure = Shapes2Structures[shapeModifyTool.SelectedShape];
 
-                if (Structures2Shape.ContainsKey(structure))
-                {
-                    if (structure is IWeir)
+                    if (Structures2Shape.ContainsKey(structure))
                     {
-                        UpdateWeirShapeWithWeir(structure as IWeir);
+                        switch (structure)
+                        {
+                            case IWeir weir:
+                                UpdateWeirShapeWithWeir(weir);
+                                break;
+                            case IPump pump:
+                                UpdatePumpShapeWithPump(pump);
+                                break;
+                            case IBridge bridge:
+                                UpdateBridgeShapeWithBridge(bridge);
+                                break;
+                        }
+
+                        updateAxes = true;
+                        shapeModifyTool.ClearChache();
+                        chartView.Invalidate();
                     }
-                    if (structure is IPump)
-                    {
-                        UpdatePumpShapeWithPump(structure as IPump);
-                    }
-                    if (structure is IBridge)
-                    {
-                        UpdateBridgeShapeWithBridge(structure as IBridge);
-                    }
-                    updateAxes = true;
-                    shapeModifyTool.ClearChache();
-                    chartView.Invalidate();
+
+                    break;
                 }
-            }
-            else if (sender is IWeirFormula)
-            {
-                UpdateWeirShapeWithWeirFormula((IWeirFormula) sender);
-                updateAxes = true;
-            }
-            else if(sender is ICrossSectionDefinition)
-            {
-                if(CompareCrossSectionDefinitions((ICrossSectionDefinition)sender, predecessorCrossSectionDefinition) || 
-                    CompareCrossSectionDefinitions((ICrossSectionDefinition)sender, successorCrossSectionDefinition))
+                case IWeirFormula formula:
+                    UpdateWeirShapeWithWeirFormula(formula);
+                    updateAxes = true;
+                    break;
+                case ICrossSectionDefinition definition:
                 {
+                    if(CompareCrossSectionDefinitions(definition, predecessorCrossSectionDefinition) || 
+                       CompareCrossSectionDefinitions(definition, successorCrossSectionDefinition))
+                    {
+                        crossSectionDefinitionSeries.Clear();
+                        Refresh();
+                        updateAxes = true;
+                    }
+
+                    break;
+                }
+                case ICrossSectionStandardShape shape when (CompareCrossSectionShapes(shape, predecessorCrossSectionDefinition) || 
+                                                            CompareCrossSectionShapes(shape, successorCrossSectionDefinition)):
                     crossSectionDefinitionSeries.Clear();
                     Refresh();
                     updateAxes = true;
-                }
+                    break;
             }
-            else if(sender is ICrossSectionStandardShape)
-            {
-                if (CompareCrossSectionShapes((ICrossSectionStandardShape)sender, predecessorCrossSectionDefinition) || 
-                    CompareCrossSectionShapes((ICrossSectionStandardShape)sender, successorCrossSectionDefinition))
-                {
-                    crossSectionDefinitionSeries.Clear();
-                    Refresh();
-                    updateAxes = true;
-                }
-            }
-            if ((null != selectedStructure) && (Structures2Shape.ContainsKey(selectedStructure)))
+
+            if (null != selectedStructure && Structures2Shape.ContainsKey(selectedStructure))
             {
                 IShapeFeature shapeFeature = Structures2Shape[selectedStructure];
                 shapeModifyTool.ShapeSelectTool.SelectShape(shapeFeature);
             }
-            if ((sender is IHydroNetwork) && (e.PropertyName == "IsEditing"))
+            if (sender is IHydroNetwork && e.PropertyName == "IsEditing" && !HydroNetwork.IsEditing)
             {
-                if (!HydroNetwork.IsEditing)
-                {
-                    updateAxes = true;
-                }
+                updateAxes = true;
             }
-            if (updateAxes)
-            {
-                UpdateLeftAxis();
-                UpdateBottomAxis();
-            }
+
+            if (!updateAxes) return;
+
+            UpdateLeftAxis();
+            UpdateBottomAxis();
         }
 
         private static bool CompareCrossSectionDefinitions(ICrossSectionDefinition sender, ICrossSectionDefinition neighbor)
@@ -282,18 +275,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
         private static bool CompareCrossSectionShapes(ICrossSectionStandardShape sender, ICrossSectionDefinition neighbor)
         {
-            if(neighbor is CrossSectionDefinitionStandard)
+            if(neighbor is CrossSectionDefinitionStandard standard)
             {
-                return Equals(sender, ((CrossSectionDefinitionStandard) neighbor).Shape);
+                return Equals(sender, standard.Shape);
             }
-            if (neighbor is CrossSectionDefinitionProxy)
+            if (neighbor is CrossSectionDefinitionProxy proxy && 
+                proxy.InnerDefinition is CrossSectionDefinitionStandard innerDefinition)
             {
-                if(((CrossSectionDefinitionProxy)neighbor).InnerDefinition is CrossSectionDefinitionStandard)
-                {
-                    var innerDefinition =
-                        (CrossSectionDefinitionStandard) ((CrossSectionDefinitionProxy) neighbor).InnerDefinition;
-                    return Equals(sender, innerDefinition.Shape);
-                }
+                return Equals(sender, innerDefinition.Shape);
             }
             return false;
         }

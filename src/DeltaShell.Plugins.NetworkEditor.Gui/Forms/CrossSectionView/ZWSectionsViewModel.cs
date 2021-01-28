@@ -101,14 +101,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             var fp2Width = sectionSettings[floodplain2SectionTypeName].Width;
 
             // Note: Only validate and update MainWidth if it was directly edited
-            if (lastUpdated == mainSectionName)
+            if (lastUpdated == mainSectionName && ((!FloodPlain1Exist && !FloodPlain2Exist) ||     // Main is the only section 
+                                                   !(mainWidth > 0 && mainWidth <= totalWidth)))
             {
-                if ((!FloodPlain1Exist && !FloodPlain2Exist) ||     // Main is the only section 
-                     !(mainWidth > 0 && mainWidth <= totalWidth))   // MainWidth out of bounds
-                {
-                    mainWidth = totalWidth;
-                    fp1Width = 0;
-                }
+                // MainWidth out of bounds
+                mainWidth = totalWidth;
+                fp1Width = 0;
             }
 
             // Note: Always validate and update FP1 & FP2

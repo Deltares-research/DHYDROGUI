@@ -240,13 +240,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable function, params IVariableFilter[] filters)
+        public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable variable, params IVariableFilter[] filters)
         {
             if (!HasValidFile)
             {
-                return (IMultiDimensionalArray<T>)CreateEmptyArrayForType(function.ValueType);
+                return (IMultiDimensionalArray<T>)CreateEmptyArrayForType(variable.ValueType);
             }
-            if (function.IsIndependent && function.ValueType == typeof(ILink1D2D))
+            if (variable.IsIndependent && variable.ValueType == typeof(ILink1D2D))
             {
                 var featureFilter = filters.FirstOrDefault(f => f.Variable.ValueType == typeof(ILink1D2D));
                 if (filters.Length == 0 || featureFilter == null)
@@ -262,7 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return new MultiDimensionalArray<T>();
             }
             
-            return base.GetVariableValues<T>(function, filters);
+            return base.GetVariableValues<T>(variable, filters);
         }
         private bool HasValidFile
         {

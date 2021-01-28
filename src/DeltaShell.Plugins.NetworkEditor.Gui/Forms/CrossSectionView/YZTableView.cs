@@ -164,22 +164,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         {
             if (!Equals(sender, data)) return;
 
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Add && data.Count > 1)
             {
-                if (data.Count > 1)
-                {
-                    Coordinate coordinate = (Coordinate)e.GetRemovedOrAddedItem();
-                    UnSubscribeToData();
-                    // item is already added to internal list
-                    coordinate.X = data[data.Count - 2].X;
-                    coordinate.Y = data[data.Count - 2].Y;
-                    SubscribeToData();
-                }
+                Coordinate coordinate = (Coordinate)e.GetRemovedOrAddedItem();
+                UnSubscribeToData();
+                // item is already added to internal list
+                coordinate.X = data[data.Count - 2].X;
+                coordinate.Y = data[data.Count - 2].Y;
+                SubscribeToData();
             }
-            if (null != CollectionChanged)
-            {
-                CollectionChanged(sender, e);
-            }
+
+            CollectionChanged?.Invoke(sender, e);
         }
 
         void TableViewYZSelectionChanged(object sender, TableSelectionChangedEventArgs e)
@@ -191,15 +186,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             if (e.Cells.Count > 0)
             {
                 int lastRow = tableViewYZ.RowCount - 1;
-                if (e.Cells.Where(c => c.RowIndex == 0 || c.RowIndex == lastRow).Count() >= 1)
-                {
-                    // do not allow removal of the first or last row
-                    tableViewYZ.AllowDeleteRow = false;
-                }
-                else
-                {
-                    tableViewYZ.AllowDeleteRow = true;
-                }
+                tableViewYZ.AllowDeleteRow = !e.Cells.Any(c => c.RowIndex == 0 || c.RowIndex == lastRow);
             }
             else
             {

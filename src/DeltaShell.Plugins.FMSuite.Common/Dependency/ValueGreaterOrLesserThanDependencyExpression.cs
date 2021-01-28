@@ -44,13 +44,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                     p =>
                     p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
                                                                  StringComparison.InvariantCultureIgnoreCase));
-            if (dependencyProperty != null)
+            if (dependencyProperty != null && dependencyProperty.PropertyDefinition.DataType != typeof(double) &&
+                dependencyProperty.PropertyDefinition.DataType != typeof(int))
             {
-                if (dependencyProperty.PropertyDefinition.DataType != typeof(double) &&
-                    dependencyProperty.PropertyDefinition.DataType != typeof(int))
-                {
-                    return String.Format("Model property '{0}' should be have 'double' or 'integer' data type.", dependencyPropertyName);
-                }
+                return $"Model property '{dependencyPropertyName}' should be have 'double' or 'integer' data type.";
             }
 
             return null;

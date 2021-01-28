@@ -66,26 +66,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             base.OnCollectionChanged(childNodeData, parentNode, e, newNodeIndex);
 
             // re-order structure nodes in case if this is the only one structure
-            if (e.Action == NotifyCollectionChangedAction.Add && childNodeData.ParentStructure == null)
+            if (e.Action != NotifyCollectionChangedAction.Add || 
+                childNodeData.ParentStructure != null ||
+                parentNode.Nodes.Count <= 1) return;
+
+            var node = parentNode.GetNodeByTag(e.GetRemovedOrAddedItem());
+            if (node == null) return;
+
+            var index = parentNode.Nodes.IndexOf(node);
+
+            //index of node in sorted list
+            var nodes = new List<ITreeNode>(parentNode.Nodes);
+            nodes.Sort(new BranchFeatureComparer());
+            var sortedIndex = nodes.IndexOf(node);
+
+            if (sortedIndex != index)
             {
-                if (parentNode.Nodes.Count > 1)
-                {
-                    var node = parentNode.GetNodeByTag(e.GetRemovedOrAddedItem());
-                    if (node == null) return;
-
-                    var index = parentNode.Nodes.IndexOf(node);
-
-                    //index of node in sorted list
-                    var nodes = new List<ITreeNode>(parentNode.Nodes);
-                    nodes.Sort(new BranchFeatureComparer());
-                    var sortedIndex = nodes.IndexOf(node);
-
-                    if (sortedIndex != index)
-                    {
-                        parentNode.Nodes.Remove(node);
-                        parentNode.Nodes.Insert(sortedIndex, node);
-                    }
-                }
+                parentNode.Nodes.Remove(node);
+                parentNode.Nodes.Insert(sortedIndex, node);
             }
         }
     }

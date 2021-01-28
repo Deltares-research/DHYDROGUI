@@ -75,13 +75,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Unpaved
             }
 
             TextBox fromBox = fromBoxes[level];
-            if (Double.TryParse(fromBox.Text, out from))
+            if (Double.TryParse(fromBox.Text, out @from) && @from >= to)
             {
-                if (from >= to)
-                {
-                    errorProvider.SetError(textBox, String.Format("Must be larger than {0:0.##}", to));
-                    return;
-                }
+                errorProvider.SetError(textBox, String.Format("Must be larger than {0:0.##}", to));
+                return;
             }
 
             errorProvider.SetError(textBox, "");
@@ -279,12 +276,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Unpaved
                 {
                     double level;
                     double value;
-                    if (Double.TryParse(box.Text, out level))
+                    if (Double.TryParse(box.Text, out level) && 
+                        Double.TryParse(valueBoxes[i].Text, out value))
                     {
-                        if (Double.TryParse(valueBoxes[i].Text, out value))
-                        {
-                            yield return new Pair<double, double>(level, value);
-                        }
+                        yield return new Pair<double, double>(level, value);
                     }
                 }
                 else

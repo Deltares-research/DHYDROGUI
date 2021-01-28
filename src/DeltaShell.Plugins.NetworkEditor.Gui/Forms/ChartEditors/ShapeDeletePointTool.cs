@@ -23,14 +23,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                         if (null != ShapeModifyTool.ShapeFeatureEditor)
                         {
                             IPoint tracker = ShapeModifyTool.ShapeSelectTool.GetTrackerAt(ShapeModifyTool.ShapeFeatureEditor, tmP);
-                            if (null != tracker)
+                            if (null != tracker && ShapeModifyTool.ShapeFeatureEditor.CanDeleteTracker(tracker))
                             {
-                                if (ShapeModifyTool.ShapeFeatureEditor.CanDeleteTracker(tracker))
-                                {
-                                    ShapeModifyTool.ShapeFeatureEditor.DeleteTracker(tracker);
-                                    ((ShapeFeatureEditor)ShapeModifyTool.ShapeFeatureEditor).ShapeFeature.Invalidate();
-                                    return;
-                                }
+                                ShapeModifyTool.ShapeFeatureEditor.DeleteTracker(tracker);
+                                ((ShapeFeatureEditor)ShapeModifyTool.ShapeFeatureEditor).ShapeFeature.Invalidate();
+                                return;
                             }
                         }
                         ShapeModifyTool.ShapeSelectTool.MouseEvent(kind, e, c);
@@ -40,13 +37,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors
                     if (null != ShapeModifyTool.ShapeFeatureEditor)
                     {
                         IPoint tracker = ShapeModifyTool.ShapeSelectTool.GetTrackerAt(ShapeModifyTool.ShapeFeatureEditor, tmP);
-                        if (null != tracker)
+                        if (null != tracker && ShapeModifyTool.ShapeFeatureEditor.CanDeleteTracker(tracker))
                         {
-                            if (ShapeModifyTool.ShapeFeatureEditor.CanDeleteTracker(tracker))
-                            {
-                                c = ShapeModifyTool.ShapeFeatureEditor.GetCursor(tracker);
-                                return;
-                            }
+                            c = ShapeModifyTool.ShapeFeatureEditor.GetCursor(tracker);
+                            return;
                         }
                         c = Cursors.Default;
                     }

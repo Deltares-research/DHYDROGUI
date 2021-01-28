@@ -93,12 +93,9 @@ namespace DeltaShell.NGHS.IO
                             ConstructLineContent(i, numericColumnValues, 0.0, NumericColumnAttributesKeys, ref line, feature2D.Name);
                             ConstructLineContent(i, stringColumnValues, "T", StringColumnAttributesKeys, ref line, feature2D.Name);
 
-                            if (locationNames != null)
+                            if (locationNames != null && i < locationNames.Count)
                             {
-                                if (i < locationNames.Count)
-                                {
-                                    line += string.Format(" {0}", locationNames[i]);
-                                }
+                                line += string.Format(" {0}", locationNames[i]);
                             }
                             WriteLine(line);
                         }

@@ -274,35 +274,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     timeUnitValue = split[1];
                 }
-                if (split[0] == RecordsInTableKey)
+                if (split[0] == RecordsInTableKey && split.Length == 2)
                 {
-                    if (split.Length == 2)
+                    parameterCount = quantityDataList.Count;
+                    int.TryParse(split[1], out var recordNumber);
+                    //Read number of records
+                    while (recordNumber > 0)
                     {
-                        parameterCount = quantityDataList.Count;
-                        var recordNumber = 0;
-                        int.TryParse(split[1], out recordNumber);
-                        //Read number of records
-                        while (recordNumber > 0)
-                        {
-                            line = GetNextLine();
-                            if (line == null) break;
-                            recordNumber -= 1;
+                        line = GetNextLine();
+                        if (line == null) break;
+                        recordNumber -= 1;
 
-                            var columns = SplitString(line);
-                            if (columns.Length < parameterCount)
+                        var columns = SplitString(line);
+                        if (columns.Length < parameterCount)
+                        {
+                            log.WarnFormat("Omitting line {0} with less than {1} columns", LineNumber, parameterCount);
+                        }
+                        else if (columns.Length > parameterCount)
+                        {
+                            log.WarnFormat("Omitting line {0} with more than {1} columns", LineNumber, parameterCount);
+                        }
+                        else
+                        {
+                            for (var i = 0; i < parameterCount; ++i)
                             {
-                                log.WarnFormat("Omitting line {0} with less than {1} columns", LineNumber, parameterCount);
-                            }
-                            else if (columns.Length > parameterCount)
-                            {
-                                log.WarnFormat("Omitting line {0} with more than {1} columns", LineNumber, parameterCount);
-                            }
-                            else
-                            {
-                                for (var i = 0; i < parameterCount; ++i)
-                                {
-                                    quantityDataList[i].Values.Add(columns[i]);
-                                }
+                                quantityDataList[i].Values.Add(columns[i]);
                             }
                         }
                     }

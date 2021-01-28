@@ -494,22 +494,16 @@ namespace DeltaShell.Sobek.Readers.Readers
             const string propertiesPatternMC = @"mc\s(?<maxchangevelocity>" + RegularExpression.Scientific + @")\s";
 
             var matches = RegularExpression.GetMatches(propertiesPatternMC, properties);
-            if (matches.Count == 1)
+            if (matches.Count == 1 && matches[0].Groups["maxchangevelocity"].Value != "")
             {
-                if (matches[0].Groups["maxchangevelocity"].Value != "")
-                {
-                    sobekController.MaxChangeVelocity = ConversionHelper.ToDouble(matches[0].Groups["maxchangevelocity"].Value);
-                }
+                sobekController.MaxChangeVelocity = ConversionHelper.ToDouble(matches[0].Groups["maxchangevelocity"].Value);
             }
 
             var patternMP = RegularExpression.GetInteger("mp");
             matches = RegularExpression.GetMatches(patternMP, properties);
-            if (matches.Count == 1)
+            if (matches.Count == 1 && matches[0].Groups["mp"].Value != "")
             {
-                if (matches[0].Groups["mp"].Value != "")
-                {
-                    sobekController.MinimumPeriod = Convert.ToInt32(matches[0].Groups["mp"].Value);
-                }
+                sobekController.MinimumPeriod = Convert.ToInt32(matches[0].Groups["mp"].Value);
             }
         }
 
@@ -527,22 +521,16 @@ namespace DeltaShell.Sobek.Readers.Readers
             const string propertiesPatternMC = @"mc\s(?<maxchangevelocity>" + RegularExpression.Scientific + @")\s";
 
             var matches = RegularExpression.GetMatches(propertiesPatternMC, properties);
-            if (matches.Count == 1)
+            if (matches.Count == 1 && matches[0].Groups["maxchangevelocity"].Value != "")
             {
-                if (matches[0].Groups["maxchangevelocity"].Value != "")
-                {
-                    sobekController.MaxChangeVelocity = ConversionHelper.ToDouble(matches[0].Groups["maxchangevelocity"].Value);
-                }
+                sobekController.MaxChangeVelocity = ConversionHelper.ToDouble(matches[0].Groups["maxchangevelocity"].Value);
             }
 
             var patternMP = RegularExpression.GetInteger("mp");
             matches = RegularExpression.GetMatches(patternMP, properties);
-            if (matches.Count == 1)
+            if (matches.Count == 1 && matches[0].Groups["mp"].Value != "")
             {
-                if (matches[0].Groups["mp"].Value != "")
-                {
-                    sobekController.MinimumPeriod = Convert.ToInt32(matches[0].Groups["mp"].Value);
-                }
+                sobekController.MinimumPeriod = Convert.ToInt32(matches[0].Groups["mp"].Value);
             }
         }
 
@@ -588,12 +576,9 @@ namespace DeltaShell.Sobek.Readers.Readers
             MatchCollection matches;
 
             matches = RegularExpression.GetMatches(propertiesPatternMeasurementLocation, properties);
-            if (matches.Count == 1)
+            if (matches.Count == 1 && matches[0].Groups["measurementLoacationid"].Value != "")
             {
-                if (matches[0].Groups["measurementLoacationid"].Value != "")
-                {
-                    sobekController.MeasurementStationId = matches[0].Groups["measurementLoacationid"].Value;
-                }
+                sobekController.MeasurementStationId = matches[0].Groups["measurementLoacationid"].Value;
             }
 
             matches = RegularExpression.GetMatches(propertiesPatternBranchLocation, properties);

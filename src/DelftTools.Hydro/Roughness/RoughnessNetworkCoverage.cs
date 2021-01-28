@@ -133,7 +133,7 @@ namespace DelftTools.Hydro.Roughness
             base.LocationsValuesChanged(sender, e); // <- This call should not be wrapped in EditAction!
         }
 
-        public bool SkipInterpolationForNewLocation = false;
+        public bool SkipInterpolationForNewLocation { get; set; } = false;
 
         [EditAction]
         private void InterpolateValuesForNewLocation(FunctionValuesChangingEventArgs e)

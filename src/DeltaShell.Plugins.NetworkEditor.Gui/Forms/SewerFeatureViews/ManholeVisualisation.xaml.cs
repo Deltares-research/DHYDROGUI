@@ -273,10 +273,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             throw new NotImplementedException($"Not able to obtain a strategy for the shape of type '{shape.GetType()}'");
         }
 
-        private void ViewGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-        }
-
         private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
             var view = dependencyObject as ManholeVisualisation;

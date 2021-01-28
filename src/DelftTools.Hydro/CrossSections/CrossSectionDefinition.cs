@@ -241,13 +241,10 @@ namespace DelftTools.Hydro.CrossSections
         private bool enforceConstraintsSkipped;
         public override void BeginEdit(IEditAction action)
         {
-            if (editingCount == 0 && RawData != null)
+            if (editingCount == 0 && RawData != null && RawData.EnforceConstraints)
             {
-                if (RawData.EnforceConstraints)
-                {
-                    enforceConstraintsSkipped = true;
-                    RawData.EnforceConstraints = false;
-                }
+                enforceConstraintsSkipped = true;
+                RawData.EnforceConstraints = false;
             }
             editingCount++;
 
@@ -350,18 +347,15 @@ namespace DelftTools.Hydro.CrossSections
                     }
                 }
             }
-            else if (e.PropertyName == "MaxY")
+            else if (e.PropertyName == "MaxY" && index < sections.Count - 1)
             {
-                if (index < sections.Count - 1)
+                var oldValue = sections[index + 1].MinY;
+                sections[index + 1].MinY = crossSectionSection.MaxY;
+                while (index < sections.Count - 2 && Math.Abs(oldValue - sections[index + 2].MinY) < double.Epsilon)
                 {
-                    var oldValue = sections[index + 1].MinY;
-                    sections[index + 1].MinY = crossSectionSection.MaxY;
-                    while (index < sections.Count - 2 && Math.Abs(oldValue - sections[index + 2].MinY) < double.Epsilon)
-                    {
-                        sections[index + 1].MaxY = crossSectionSection.MaxY;
-                        sections[index + 2].MinY = crossSectionSection.MaxY;
-                        index++;
-                    }
+                    sections[index + 1].MaxY = crossSectionSection.MaxY;
+                    sections[index + 2].MinY = crossSectionSection.MaxY;
+                    index++;
                 }
             }
 
@@ -413,20 +407,14 @@ namespace DelftTools.Hydro.CrossSections
                     crossSectionSection.MaxY = sectionsMaxY;
                 }
 
-                if (i == 0) //first
+                if (i == 0 && crossSectionSection.MinY > sectionsMinY) //first
                 {
-                    if (crossSectionSection.MinY > sectionsMinY)
-                    {
-                        crossSectionSection.MinY = sectionsMinY;
-                    }
+                    crossSectionSection.MinY = sectionsMinY;
                 }
 
-                if (i == sections.Count - 1) //last
+                if (i == sections.Count - 1 && crossSectionSection.MaxY < sectionsMaxY) //last
                 {
-                    if (crossSectionSection.MaxY < sectionsMaxY)
-                    {
-                        crossSectionSection.MaxY = sectionsMaxY;
-                    }
+                    crossSectionSection.MaxY = sectionsMaxY;
                 }
 
                 if (crossSectionSection.MinY > crossSectionSection.MaxY)

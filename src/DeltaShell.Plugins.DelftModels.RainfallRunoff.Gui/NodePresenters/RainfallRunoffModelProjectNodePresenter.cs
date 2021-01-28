@@ -24,10 +24,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
         {
         }
 
-        public override IEnumerable GetChildNodeObjects(RainfallRunoffModel model, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(RainfallRunoffModel parentNodeData, ITreeNode node)
         {
-            yield return new TreeFolder(model, GetInputItems(model), "Input", FolderImageType.Input);
-            yield return new TreeFolder(model, GetOutputItems(model), "Output", FolderImageType.Output);
+            yield return new TreeFolder(parentNodeData, GetInputItems(parentNodeData), "Input", FolderImageType.Input);
+            yield return new TreeFolder(parentNodeData, GetOutputItems(parentNodeData), "Output", FolderImageType.Output);
         }
 
         private IEnumerable GetInputItems(RainfallRunoffModel model)

@@ -121,47 +121,44 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             var startYears = new[] { startYear, startYear + 1, startYear + 2, startYear + 3 };
 
             // Reference data is non-leap year:
-            if (timeRange.TotalDays == 365)
+            if (timeRange.TotalDays == 365 && startYears.Any(DateTime.IsLeapYear))
             {
-                if (startYears.Any(DateTime.IsLeapYear))
+                var timesList = new List<DateTime>(times);
+
+                var nonLeapTimes = new List<DateTime>(times);
+                timesList.AddRange(nonLeapTimes.Select(t => t.AddYears(1)));
+                timesList.AddRange(nonLeapTimes.Select(t => t.AddYears(2)));
+                timesList.AddRange(nonLeapTimes.Select(t => t.AddYears(3)));
+
+                var valuesList = new List<double>(values);
+                valuesList.AddRange(values);
+                valuesList.AddRange(values);
+                valuesList.AddRange(values);
+
+                var leapIndex = startYears.ToList().FindIndex(DateTime.IsLeapYear);
+
+                if (times[0].Month > 2)
                 {
-                    var timesList = new List<DateTime>(times);
-
-                    var nonLeapTimes = new List<DateTime>(times);
-                    timesList.AddRange(nonLeapTimes.Select(t => t.AddYears(1)));
-                    timesList.AddRange(nonLeapTimes.Select(t => t.AddYears(2)));
-                    timesList.AddRange(nonLeapTimes.Select(t => t.AddYears(3)));
-
-                    var valuesList = new List<double>(values);
-                    valuesList.AddRange(values);
-                    valuesList.AddRange(values);
-                    valuesList.AddRange(values);
-
-                    var leapIndex = startYears.ToList().FindIndex(DateTime.IsLeapYear);
-
-                    if (times[0].Month > 2)
-                    {
-                        leapIndex--;
-                    }
-
-                    var startIndex = timesList.FindIndex(d => (d.Day == 28 && d.Month == 2)) + leapIndex * 365;
-                    var endIndex = timesList.FindIndex(d => d.Month == 3) + leapIndex * 365;
-
-                    if (startIndex == -1 || endIndex == -1)
-                    {
-                        return;
-                    }
-
-                    var elementsToCopy =
-                        timesList.GetRange(startIndex, endIndex - startIndex).Select(t => t.AddDays(1)).ToList();
-                    timesList.InsertRange(endIndex, elementsToCopy);
-
-                    var valuesToCopy = valuesList.GetRange(startIndex, endIndex - startIndex).ToList();
-                    valuesList.InsertRange(endIndex, valuesToCopy);
-
-                    times = timesList;
-                    values = valuesList;
+                    leapIndex--;
                 }
+
+                var startIndex = timesList.FindIndex(d => (d.Day == 28 && d.Month == 2)) + leapIndex * 365;
+                var endIndex = timesList.FindIndex(d => d.Month == 3) + leapIndex * 365;
+
+                if (startIndex == -1 || endIndex == -1)
+                {
+                    return;
+                }
+
+                var elementsToCopy =
+                    timesList.GetRange(startIndex, endIndex - startIndex).Select(t => t.AddDays(1)).ToList();
+                timesList.InsertRange(endIndex, elementsToCopy);
+
+                var valuesToCopy = valuesList.GetRange(startIndex, endIndex - startIndex).ToList();
+                valuesList.InsertRange(endIndex, valuesToCopy);
+
+                times = timesList;
+                values = valuesList;
             }
 
             // Reference data is leap year

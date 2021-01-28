@@ -120,12 +120,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             var network = Data.Network;
 
-            if ((Equals(sender, network)) && e.PropertyName == nameof(network.IsEditing))
+            if ((Equals(sender, network)) && e.PropertyName == nameof(network.IsEditing) && !network.IsEditing)
             {
-                if (!network.IsEditing) // finished editing...
-                {
-                    Presenter.SetModelIntoView(); // refresh the view
-                }
+                // finished editing...
+                Presenter.SetModelIntoView(); // refresh the view
             }
 
             var structure = sender as IStructure1D;

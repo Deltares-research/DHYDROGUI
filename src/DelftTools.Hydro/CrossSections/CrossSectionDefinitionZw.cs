@@ -154,12 +154,10 @@ namespace DelftTools.Hydro.CrossSections
             if (columnIndex == 2)
             {
                 if (value < 0.0) return new Utils.Tuple<string, bool>("Storage Width cannot be negative.", false);
-                if (rowIndex >= 0 && rowIndex < zwDataTable.Count) // Can only check for committed rows :(
+                if (rowIndex >= 0 && rowIndex < zwDataTable.Count && 
+                    value > zwDataTable.Rows[rowIndex].Width) // Can only check for committed rows :(
                 {
-                    if (value > zwDataTable.Rows[rowIndex].Width)
-                    {
-                        return new Utils.Tuple<string, bool>("Storage Width cannot exceed Total Width.", false);
-                    }
+                    return new Utils.Tuple<string, bool>("Storage Width cannot exceed Total Width.", false);
                 }
             }
             return new Utils.Tuple<string, bool>("",true);

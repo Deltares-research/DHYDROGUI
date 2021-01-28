@@ -10,7 +10,6 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Functions;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
@@ -88,9 +87,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new TreeFolder(parentNodeData, GetOutputItems(parentNodeData), "Output", FolderImageType.Output);
         }
 
-        protected override void OnPropertyChanged(WaterFlowFMModel model, ITreeNode node, PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(WaterFlowFMModel item, ITreeNode node, PropertyChangedEventArgs e)
         {
-            base.OnPropertyChanged(model, node, e);
+            base.OnPropertyChanged(item, node, e);
 
             if (e.PropertyName == nameof(WaterFlowFMModel.InitialCoverageSetChanged))
             {

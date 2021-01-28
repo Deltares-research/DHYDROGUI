@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.GraphicsProviders
 
             return dataItemInfo.ValueType.Implements(typeof(IHydroNetwork)) || 
                    dataItemInfo.ValueType.Implements(typeof(IHydroRegion)) ||
-                   dataItemInfo.ValueType.IsInstanceOfType(typeof(HydroArea))
+                   dataItemInfo.ValueType.IsAssignableFrom(typeof(HydroArea))
                 ;
         }
 
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.GraphicsProviders
             {
                 return (DrawingGroup)resources["RegionDrawingGroup"];
             }
-            if (dataItemInfo.ValueType.IsInstanceOfType(typeof(HydroArea)))
+            if (dataItemInfo.ValueType.IsAssignableFrom(typeof(HydroArea)))
             {
                 return (DrawingGroup)resources["AreaDrawingGroup"];
             }

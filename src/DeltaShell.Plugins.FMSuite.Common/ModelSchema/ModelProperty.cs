@@ -207,23 +207,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             {
                 return true;
             }
-            var minValue = MinValue as IComparable;
-            if (minValue != null)
+
+            if (MinValue is IComparable minValue && minValue.CompareTo(value) > 0)
             {
-                if (minValue.CompareTo(value) > 0)
-                {
-                    return false;
-                }
+                return false;
             }
-            var maxValue = MaxValue as IComparable;
-            if (maxValue != null)
-            {
-                if (maxValue.CompareTo(value) < 0)
-                {
-                    return false;
-                }
-            }
-            return true;
+
+            return !(MaxValue is IComparable maxValue) || maxValue.CompareTo(value) >= 0;
         }
 
         /// <summary>

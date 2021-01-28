@@ -636,12 +636,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     LinkDataItems(Model.GetDataItemByValue(input), dataItem);
                 }
             }
-            else if (shape.Tag is Output output)
+            else if (shape.Tag is Output output && (dataItem.Role & DataItemRole.Input) == DataItemRole.Input)
             {
-                if ((dataItem.Role & DataItemRole.Input) == DataItemRole.Input)
-                {
-                    LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
-                }
+                LinkDataItems(dataItem, Model.GetDataItemByValue(output), true);
             }
             shape.Text = dataItem.ToString();
             graphControl.NetronGraph.Invalidate();
@@ -704,19 +701,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 var entity = graphControl.NetronGraph.HitEntity(point);
                 if (entity is Shape)
                 {
-                    if (entity is InputItemShape)
+                    if (entity is InputItemShape && CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof (InputItemShape), DataItemRole.Output))
                     {
-                        if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof (InputItemShape), DataItemRole.Output))
-                        {
-                            DropFeatureOnShape(feature, entity, DataItemRole.Output);
-                        }
+                        DropFeatureOnShape(feature, entity, DataItemRole.Output);
                     }
-                    if (entity is OutputItemShape)
+                    if (entity is OutputItemShape && CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof (OutputItemShape), DataItemRole.Input))
                     {
-                        if (CanLinkFeaturetoShape(dragEventArgs, feature, entity, typeof (OutputItemShape), DataItemRole.Input))
-                        {
-                            DropFeatureOnShape(feature, entity, DataItemRole.Input);
-                        }
+                        DropFeatureOnShape(feature, entity, DataItemRole.Input);
                     }
                 }
                 dragEventArgs.Effect = DragDropEffects.None;
@@ -756,15 +747,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private bool CanLinkFeaturetoShape(DragEventArgs dragEventArgs, IFeature feature, Entity entity, Type t, DataItemRole role)
         {
-            if (entity.GetType() == t)
-            {
-                if (Model.GetChildDataItemLocationsFromControlledModels(role).Contains(feature))
-                {
-                    dragEventArgs.Effect = DragDropEffects.Link;
-                    return true;
-                }
-            }
-            return false;
+            if (entity.GetType() != t ||
+                !Model.GetChildDataItemLocationsFromControlledModels(role).Contains(feature)) return false;
+
+            dragEventArgs.Effect = DragDropEffects.Link;
+            return true;
         }
 
         private void OnTsbConditionClick(object sender, EventArgs e)

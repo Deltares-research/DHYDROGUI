@@ -241,61 +241,43 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return null;
             }
 
-            if (TargetObject is HydroModel)
+            switch (TargetObject)
             {
-                var hydroModel = TargetObject as IHydroModel;
-                var network = hydroModel.Region.SubRegions.OfType<HydroNetwork>().FirstOrDefault();
-                if (network != null)
+                case HydroModel hydroModel:
                 {
-                    return network;
-                }
-            }
+                    var network = hydroModel.Region.SubRegions.OfType<HydroNetwork>().FirstOrDefault();
+                    if (network != null)
+                    {
+                        return network;
+                    }
 
-            if (TargetObject is WaterFlowFMModel)
-            {
-                var waterFlowFmModel = TargetObject as WaterFlowFMModel;
-                if (waterFlowFmModel != null)
+                    break;
+                }
+                case WaterFlowFMModel waterFlowFmModel:
                 {
                     var network = waterFlowFmModel.Network;
                     if (network != null)
                     {
                         return network;
                     }
-                }
-            }
 
-            if (TargetObject is RainfallRunoffModel)
-            {
-                var rainfallRunoffModel = TargetObject as RainfallRunoffModel;
-                if (rainfallRunoffModel != null)
-                {
-                    if (rainfallRunoffModel.Owner is HydroModel integratedModel)
-                    {
-                        var fmModel = integratedModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
-                        var network = fmModel?.Network;
-                        if (network != null)
-                        {
-                            return network;
-                        }
-                    }
+                    break;
                 }
-            }
-
-            if (TargetObject is ICompositeActivity)
-            {
-                foreach (var model in ((ICompositeActivity)TargetObject).Activities.OfType<IModel>())
+                case RainfallRunoffModel rainfallRunoffModel when rainfallRunoffModel.Owner is HydroModel integratedModel:
                 {
-                    var network = GetNetworkOfModel(model);
+                    var fmModel = integratedModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
+                    var network = fmModel?.Network;
                     if (network != null)
                     {
                         return network;
                     }
+
+                    break;
                 }
 
-                //could be a recursive method, but just 2 layers...
-                foreach (var compositeModel in ((ICompositeActivity)TargetObject).Activities.OfType<ICompositeActivity>())
+                case ICompositeActivity compositeActivity:
                 {
-                    foreach (var model in compositeModel.Activities.OfType<IModel>())
+                    foreach (var model in compositeActivity.Activities.OfType<IModel>())
                     {
                         var network = GetNetworkOfModel(model);
                         if (network != null)
@@ -303,27 +285,39 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                             return network;
                         }
                     }
-                }
 
-            }
-
-            if (TargetObject is IModel)
-            {
-                return GetNetworkOfModel((IModel)TargetObject);
-            }
-
-            if (TargetObject is Project)
-            {
-                foreach (var model in ((Project)TargetObject).RootFolder.GetAllModelsRecursive())
-                {
-                    var network = GetNetworkOfModel(model);
-                    if (network != null)
+                    //could be a recursive method, but just 2 layers...
+                    foreach (var compositeModel in compositeActivity.Activities.OfType<ICompositeActivity>())
                     {
-                        return network;
+                        foreach (var model in compositeModel.Activities.OfType<IModel>())
+                        {
+                            var network = GetNetworkOfModel(model);
+                            if (network != null)
+                            {
+                                return network;
+                            }
+                        }
                     }
+
+                    break;
+                }
+                case IModel targetModel:
+                    return GetNetworkOfModel(targetModel);
+
+                case Project project:
+                {
+                    foreach (var model in project.RootFolder.GetAllModelsRecursive())
+                    {
+                        var network = GetNetworkOfModel(model);
+                        if (network != null)
+                        {
+                            return network;
+                        }
+                    }
+
+                    break;
                 }
             }
-
             return null;
         }
 

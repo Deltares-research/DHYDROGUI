@@ -350,13 +350,13 @@ File import of structures file '{1}' has failed.</value>
     <value>Tim-file import failed: could not retrieve model for SourceAndSink: {0}</value>
   </data>
   <data name="Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_" xml:space="preserve">
-    <value>Tim-file import failed: could not retrieve function for SourceAndSink: {0}</value>
+    <value>Tim-file import failed: could not retrieve variable for SourceAndSink: {0}</value>
   </data>
   <data name="Tim_file_import_failed__could_not_determine_physical_processes_for_imported_SourceAndSink__0_" xml:space="preserve">
     <value>Tim-file import failed: could not determine physical processes for imported SourceAndSink {0}</value>
   </data>
   <data name="Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_" xml:space="preserve">
-    <value>Read SourceAndSink values failed: no function detected for SourceAndSink {0}</value>
+    <value>Read SourceAndSink values failed: no variable detected for SourceAndSink {0}</value>
   </data>
   <data name="Read_SourceAndSink_values_failed__could_not_determine_component_values_for_SourceAndSink__0_" xml:space="preserve">
     <value>Read SourceAndSink values failed: could not determine component values for SourceAndSink {0}</value>
@@ -446,7 +446,7 @@ File import of structures file '{1}' has failed.</value>
     <value>Could not read content section {0} properly; {1} is not a valid friction type</value>
   </data>
   <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly__1__is_not_a_valid_function_type" xml:space="preserve">
-    <value>Could not read content section {0} properly; {1} is not a valid function type</value>
+    <value>Could not read content section {0} properly; {1} is not a valid variable type</value>
   </data>
   <data name="ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_file__0__properly_invalid_global_value_was_given" xml:space="preserve">
     <value>Could not read file {0} properly, invalid global value was given.</value>

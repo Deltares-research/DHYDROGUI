@@ -170,7 +170,10 @@ namespace DelftTools.Hydro.CrossSections
         public virtual string Name
         {
             get { return InnerDefinition.Name; }
-            set { }
+            set
+            {
+                throw new InvalidOperationException("Unable to set properties on proxy");
+            }
         }
 
         public virtual object Clone()

@@ -25,12 +25,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                             p.PropertyDefinition.FilePropertyName.Equals(dependencyExpression,
                                                                          StringComparison.InvariantCultureIgnoreCase));
 
-            if (dependencyProperty != null)
+            if (dependencyProperty != null && dependencyProperty.PropertyDefinition.DataType != typeof(bool))
             {
-                if (dependencyProperty.PropertyDefinition.DataType != typeof(bool))
-                {
-                    return String.Format("Model property '{0}' should be have 'boolean' data type.", dependencyExpression);
-                }
+                return $"Model property '{dependencyExpression}' should be have 'boolean' data type.";
             }
 
             return null;

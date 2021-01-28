@@ -111,14 +111,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                             "': crest level time series does not contain any values.", weir));
                     }
                 }
-                if (weir.WeirFormula is SimpleWeirFormula)
+                if (weir.WeirFormula is SimpleWeirFormula formula && formula.CorrectionCoefficient < 0.0)
                 {
-                    if (((SimpleWeirFormula) weir.WeirFormula).CorrectionCoefficient < 0.0)
-                    {
-                        issues.Add(new ValidationIssue(weir, ValidationSeverity.Error,
-                            "weir '" + weir.Name +
-                            "': correction coefficient must be greater than or equal to zero.", weir));
-                    }
+                    issues.Add(new ValidationIssue(weir, ValidationSeverity.Error,
+                        "weir '" + weir.Name +
+                        "': correction coefficient must be greater than or equal to zero.", weir));
                 }
             }
 

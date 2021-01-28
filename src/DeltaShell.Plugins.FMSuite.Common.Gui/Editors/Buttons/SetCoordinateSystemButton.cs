@@ -35,19 +35,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons
 
             var selectedCoordinateSystem = control.SelectedCoordinateSystem;
 
+            var message = string.Format(
+                "The model coordinates do not appear to be in '{0}', as they fall outside the expected range of values for this system. Please verify the selected " +
+                "coordinate system is the system the coordinates were measured in. Continuing could lead to the map visualization failing and unexpected behaviour of spatial operations {1}{1}" +
+                "Are you sure you want to continue?",
+                selectedCoordinateSystem, Environment.NewLine);
+
             if (selectedCoordinateSystem != null &&
-                !model.CanSetCoordinateSystem(selectedCoordinateSystem))
-            {
-                if (MessageBox.Show(string.Format(
-                    "The model coordinates do not appear to be in '{0}', as they fall outside the expected range of values for this system. Please verify the selected " +
-                    "coordinate system is the system the coordinates were measured in. Continuing could lead to the map visualization failing and unexpected behaviour of spatial operations {1}{1}" +
-                    "Are you sure you want to continue?",
-                    selectedCoordinateSystem, Environment.NewLine),
+                !model.CanSetCoordinateSystem(selectedCoordinateSystem) && MessageBox.Show(message,
                     "Warning: model coordinates do not appear to be in the selected system",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning) == DialogResult.No)
-                    return;
-            }
+                return;
 
             var coordinateSystem = model.CoordinateSystem;
 

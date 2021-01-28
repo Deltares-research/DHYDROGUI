@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
-using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
 using log4net;
 

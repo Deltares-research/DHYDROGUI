@@ -31,16 +31,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             var text = ((TextBox) sender).Text;
             double value;
-            if (double.TryParse(text, out value))
+            if (double.TryParse(text, out value) && 
+                value > 0 && 
+                value < 1e+6)
             {
-                if (value > 0 && value < 1e+6)
-                {
-                    sourceAndSink.Area = value;
-                    errorProvider1.Clear();
-                    errorProvider1.SetError(areaTextBox, "");
-                    e.Cancel = false;
-                    return;
-                }
+                sourceAndSink.Area = value;
+                errorProvider1.Clear();
+                errorProvider1.SetError(areaTextBox, "");
+                e.Cancel = false;
+                return;
             }
             errorProvider1.Clear();
             errorProvider1.SetError(areaTextBox, "Choose an area between zero and 1e+6");

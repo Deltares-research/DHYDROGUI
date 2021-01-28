@@ -161,12 +161,11 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             AssignParentManholeNameIfMissing(network);
             IManhole manhole = null;
-            if (helper != null && !helper.ManholesByManholeName.TryGetValue(ParentManholeName, out manhole))
+            if (helper != null && 
+                !helper.ManholesByManholeName.TryGetValue(ParentManholeName, out manhole) && 
+                !helper.ManholesByCompartmentName.TryGetValue(Name, out manhole))
             {
-                if (!helper.ManholesByCompartmentName.TryGetValue(Name, out manhole))
-                {
-                    manhole = null;
-                }
+                manhole = null;
             }
 
             if (helper == null && manhole == null)

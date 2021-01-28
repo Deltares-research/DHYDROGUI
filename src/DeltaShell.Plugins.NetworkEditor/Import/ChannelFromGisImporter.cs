@@ -230,31 +230,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             var geometry = newGeometry;
 
             if (channel.Source != null && channel.Source.Geometry != null && 
-                channel.Target != null && channel.Target.Geometry != null)
+                channel.Target != null && channel.Target.Geometry != null && 
+                newGeometry.Coordinates.Length >= 2)
             {
-                if (newGeometry.Coordinates.Count() >= 2)
+                var newSource = new Point(newGeometry.Coordinates.First());
+                var newTarget = new Point(newGeometry.Coordinates.Last());
+
+                if (!channel.Source.Geometry.IsWithinDistance(newSource, SnappingTolerance))
                 {
-                    var newSource = new Point(newGeometry.Coordinates.First());
-                    var newTarget = new Point(newGeometry.Coordinates.Last());
+                    Log.WarnFormat(
+                        "New geometry for existing channel {0} does not match with geometry of its source node {1}. Geometry adjusted.",
+                        channel.Name, channel.Source.Name);
 
-                    if (!channel.Source.Geometry.IsWithinDistance(newSource, SnappingTolerance))
-                    {
-                        Log.WarnFormat(
-                            "New geometry for existing channel {0} does not match with geometry of its source node {1}. Geometry adjusted.",
-                            channel.Name, channel.Source.Name);
+                    var newCoordinates = new []{channel.Source.Geometry.Coordinate}.Concat(geometry.Coordinates).ToArray();
+                    geometry = new LineString(newCoordinates);
+                }
 
-                        var newCoordinates = new []{channel.Source.Geometry.Coordinate}.Concat(geometry.Coordinates).ToArray();
-                        geometry = new LineString(newCoordinates);
-                    }
-
-                    if (!channel.Target.Geometry.IsWithinDistance(newTarget, SnappingTolerance))
-                    {
-                        Log.WarnFormat(
-                            "New geometry for existing channel {0} does not match with geometry of its target node {1}. Geometry adjusted.",
-                            channel.Name, channel.Target.Name);
-                        var newCoordinates = geometry.Coordinates.Concat(new[] {channel.Target.Geometry.Coordinate}).ToArray();
-                        geometry = new LineString(newCoordinates);
-                    }
+                if (!channel.Target.Geometry.IsWithinDistance(newTarget, SnappingTolerance))
+                {
+                    Log.WarnFormat(
+                        "New geometry for existing channel {0} does not match with geometry of its target node {1}. Geometry adjusted.",
+                        channel.Name, channel.Target.Name);
+                    var newCoordinates = geometry.Coordinates.Concat(new[] {channel.Target.Geometry.Coordinate}).ToArray();
+                    geometry = new LineString(newCoordinates);
                 }
             }
             return geometry;

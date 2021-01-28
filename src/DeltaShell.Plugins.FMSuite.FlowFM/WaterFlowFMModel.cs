@@ -398,7 +398,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private int CdType
         {
             get { return Convert.ToInt32(ModelDefinition.GetModelProperty(KnownProperties.ICdtyp).Value); }
-            set { }
         }
 
         public IEventedList<IWindField> WindFields { get; private set; }
@@ -426,28 +425,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public bool UseDepthLayers
         {
             get { return ModelDefinition.Kmx != 0; }
-            private set
-            { 
-                // just sending an event
-            }
         }
 
         public bool UseSalinity
         {
             get { return (bool)ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool UseSecondaryFlow
         {
             get { return (bool)ModelDefinition.GetModelProperty(KnownProperties.SecondaryFlow).Value; }
-            private set
-            {
-                // empty, but just used for event bubbling
-            }
         }
 
         public bool UseTemperature
@@ -464,19 +451,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public bool UseMorSed
         {
             get { return ModelDefinition.UseMorphologySediment; }
-            private set
-            {
-                // empty, but just used for event bubbling                
-            }
         }
 
         public bool WriteSnappedFeatures
         {
             get { return ModelDefinition.WriteSnappedFeatures; }
-            private set
-            {
-                // empty, but just used for event bubbling                
-            }
         }
 
         [PropertyGrid]
@@ -810,7 +789,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 case NotifyCollectionChangedAction.Replace:
                     // can't rename yet
                     throw new NotImplementedException("Renaming of tracer definitions is not yet supported");
-                    break;
                 case NotifyCollectionChangedAction.Reset:
                     // sync the initial tracers
                     InitialTracers.Clear();
@@ -835,16 +813,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             foreach (var boundaryCondition in BoundaryConditions)
             {
                 var flowCondition = boundaryCondition as FlowBoundaryCondition;
-                if (flowCondition != null)
+                if (flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
                 {
-                    if (flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
+                    if(!TracerDefinitions.Contains(flowCondition.TracerName))
                     {
-                        if(!TracerDefinitions.Contains(flowCondition.TracerName))
-                        {
-                            TracerDefinitions.Add(flowCondition.TracerName);
-                        }
-                        AddTracerToSourcesAndSink(flowCondition.TracerName);
+                        TracerDefinitions.Add(flowCondition.TracerName);
                     }
+                    AddTracerToSourcesAndSink(flowCondition.TracerName);
                 }
             }
             var sp = SedimentFractions.SelectMany(sf => sf.GetAllActiveSpatiallyVaryingPropertyNames()).Distinct();
@@ -869,22 +844,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SedimentFractionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Name")
+            switch (e.PropertyName)
             {
-                var sedimentFraction = sender as ISedimentFraction;
-
-                if (sedimentFraction != null)
+                case "Name":
                 {
-                    sedimentFraction.UpdateSpatiallyVaryingNames();
+                    if (sender is ISedimentFraction sedimentFraction)
+                    {
+                        sedimentFraction.UpdateSpatiallyVaryingNames();
+                    }
+
+                    break;
                 }
-            }
-
-            if (e.PropertyName == "CurrentFormulaType"
-                || e.PropertyName == "CurrentSedimentType")
-            {
-                var sedimentFraction = sender as ISedimentFraction;
-                if (sedimentFraction != null)
+                case "CurrentFormulaType":
+                case "CurrentSedimentType":
                 {
+                    if (!(sender is ISedimentFraction sedimentFraction)) 
+                        return;
+
                     sedimentFraction.UpdateSpatiallyVaryingNames();
                     var activeSpatiallyVarying = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
                     var spatiallyVarying = sedimentFraction.GetAllSpatiallyVaryingPropertyNames();
@@ -902,22 +878,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     {
                         sedimentFraction.SetTransportFormulaInCurrentSedimentType();
                     }
+                    return;
                 }
-                return;
-            }
-
-            var prop = sender as ISpatiallyVaryingSedimentProperty;
-            if (prop == null) return;
-
-            if (e.PropertyName == "IsSpatiallyVarying")
-            {
-                if (prop.IsSpatiallyVarying)
+                case "IsSpatiallyVarying":
                 {
-                    AddToIntialFractions(prop.SpatiallyVaryingName);
-                }
-                else
-                {
-                    InitialFractions.RemoveAllWhere(tr => tr.Name.Equals(prop.SpatiallyVaryingName));
+                    if (!(sender is ISpatiallyVaryingSedimentProperty prop)) return;
+
+                    if (prop.IsSpatiallyVarying)
+                    {
+                        AddToIntialFractions(prop.SpatiallyVaryingName);
+                    }
+                    else
+                    {
+                        InitialFractions.RemoveAllWhere(tr => tr.Name.Equals(prop.SpatiallyVaryingName));
+                    }
+
+                    break;
                 }
             }
         }
@@ -988,7 +964,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
-                    break;
                 case NotifyCollectionChangedAction.Reset:
                     // sync the initial fractions
                     InitialFractions.Clear();
@@ -1919,9 +1894,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     Output1DFileStore.CoordinateSystem = value;
                 }
                 
-                if (Network != null)
+                if (Network != null && Network.CoordinateSystem != value)
                 {
-                    if (Network.CoordinateSystem != value) Network.CoordinateSystem = value;
+                    Network.CoordinateSystem = value;
                 }
                 
                 // coverages are handled via the feature collections.
@@ -2622,10 +2597,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (filePath == null)
                     return;
 
-                if (filePath.StartsWith("$"))
+                if (filePath.StartsWith("$") && MduFilePath != null)
                 {
-                    if (MduFilePath != null)
-                        OnSave();
+                    OnSave();
                 }
             }
         }
@@ -3311,48 +3285,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var weir = sender as IWeir;
-            if (weir != null)
+            switch (sender)
             {
-                if (e.PropertyName == nameof(weir.WeirFormula))
+                case IWeir weir when e.PropertyName == nameof(weir.WeirFormula):
                 {
                     var isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
                     UpdateAreaDataItems(weir, isInputSender);
+                    break;
                 }
-            }
-            if (sender is ILeveeBreach leveeBreach && e.PropertyName == nameof(leveeBreach.WaterLevelFlowLocationsActive))
-            {
-                if (leveeBreach.WaterLevelFlowLocationsActive)
+                case ILeveeBreach leveeBreach when e.PropertyName == nameof(leveeBreach.WaterLevelFlowLocationsActive):
                 {
-                    CreatePointFeatureOfThisLeveeBreach(
-                        leveeBreach,
-                        LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
-                        leveeBreach.WaterLevelUpstreamLocation);
-                    CreatePointFeatureOfThisLeveeBreach(
-                        leveeBreach,
-                        LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
-                        leveeBreach.WaterLevelDownstreamLocation);
-                }
-                else
-                {
-                    var supportPoint2DFeatures = ((IEventedList<Feature2D>)Area.LeveeBreaches)
-                        .Where(f2d => f2d.Attributes != null &&
-                                      f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
-                                      ((ILeveeBreach)f2d.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE])
-                                      .Equals(leveeBreach)).ToList();
-                    foreach (var supportPoint2DFeature in supportPoint2DFeatures)
+                    if (leveeBreach.WaterLevelFlowLocationsActive)
                     {
-                        if (supportPoint2DFeature.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE) &&
-                            (LeveeBreachPointLocationType)supportPoint2DFeature.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE] == LeveeBreachPointLocationType.BreachLocation)
-                            continue;
-
-                        supportPoint2DFeature.PropertyChanged -= Feature2DPointOnPropertyChanged;
-                        Area.LeveeBreaches.Remove(supportPoint2DFeature);
+                        CreatePointFeatureOfThisLeveeBreach(
+                            leveeBreach,
+                            LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
+                            leveeBreach.WaterLevelUpstreamLocation);
+                        CreatePointFeatureOfThisLeveeBreach(
+                            leveeBreach,
+                            LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
+                            leveeBreach.WaterLevelDownstreamLocation);
                     }
+                    else
+                    {
+                        var supportPoint2DFeatures = Area.LeveeBreaches
+                            .Where(f2d => f2d.Attributes != null &&
+                                          f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
+                                          ((ILeveeBreach)f2d.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE])
+                                          .Equals(leveeBreach)).ToList();
+                        foreach (var supportPoint2DFeature in supportPoint2DFeatures)
+                        {
+                            if (supportPoint2DFeature.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE) &&
+                                (LeveeBreachPointLocationType)supportPoint2DFeature.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE] == LeveeBreachPointLocationType.BreachLocation)
+                                continue;
+
+                            supportPoint2DFeature.PropertyChanged -= Feature2DPointOnPropertyChanged;
+                            Area.LeveeBreaches.Remove(supportPoint2DFeature);
+                        }
+                    }
+
+                    break;
                 }
             }
-            var groupableFeature = sender as IGroupableFeature;
-            if (updatingGroupName || Area.IsEditing || groupableFeature == null ||
+
+            if (updatingGroupName || Area.IsEditing || !(sender is IGroupableFeature groupableFeature) ||
                 e.PropertyName != nameof(groupableFeature.GroupName)) return;
 
             updatingGroupName = true;// prevent recursive calls
@@ -3365,14 +3341,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             updatingGroupName = false;
-
-            
         }
 
         private void RemoveAreaFeature(IFeature feature)
         {
-            List<IDataItem> dataItemsToBeRemoved;
-            if (areaDataItems.TryGetValue(feature, out dataItemsToBeRemoved))
+            if (areaDataItems.TryGetValue(feature, out var dataItemsToBeRemoved))
             {
                 foreach (var dataItem in dataItemsToBeRemoved)
                 {
@@ -4088,15 +4061,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnWaterFlowFm1D2DLinkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is Link1D2D & e.PropertyName.Equals("Geometry"))
-            { 
-                //update indexes
-                var link = (Link1D2D) sender;
-                var firstCoordinate = link.Geometry?.Coordinates.First();
-                var lastCoordinate = link.Geometry?.Coordinates.Last();
-                link.DiscretisationPointIndex = Links1D2DHelper.FindCalculationPointIndex(firstCoordinate, NetworkDiscretization, link.SnapToleranceUsed);
-                link.FaceIndex = Links1D2DHelper.FindCellIndex(lastCoordinate, Grid);
-            }
+            if (!(sender is Link1D2D) || !e.PropertyName.Equals("Geometry")) 
+                return;
+
+            //update indexes
+            var link = (Link1D2D) sender;
+            var firstCoordinate = link.Geometry?.Coordinates.First();
+            var lastCoordinate = link.Geometry?.Coordinates.Last();
+            link.DiscretisationPointIndex = Links1D2DHelper.FindCalculationPointIndex(firstCoordinate, NetworkDiscretization, link.SnapToleranceUsed);
+            link.FaceIndex = Links1D2DHelper.FindCellIndex(lastCoordinate, Grid);
         }
         private void CopyRestartFile(string targetDir)
         {

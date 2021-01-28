@@ -131,13 +131,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             {
                 var activity = subActivity is ActivityWrapper ? ((ActivityWrapper) subActivity).Activity : subActivity;
                 if(activity == sourceActivity) return sourceActivity as IDimrModel;
-                var compositeActivity = activity as ICompositeActivity;
-                if (compositeActivity != null)
+                if (activity is ICompositeActivity compositeActivity &&
+                    compositeActivity.Activities.Any(compositeActivityActivity =>
+                        (compositeActivityActivity is ActivityWrapper wrapper
+                            ? wrapper.Activity
+                            : compositeActivityActivity) == sourceActivity))
                 {
-                    if (compositeActivity.Activities.Any(compositeActivityActivity => (compositeActivityActivity is ActivityWrapper ? ((ActivityWrapper)compositeActivityActivity).Activity : compositeActivityActivity) == sourceActivity))
-                    {
-                        return compositeActivity as IDimrModel;
-                    }
+                    return compositeActivity as IDimrModel;
                 }
             }
             return sourceActivity as IDimrModel;

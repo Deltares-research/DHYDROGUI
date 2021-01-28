@@ -51,12 +51,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             // do the move
             var movedTracker = base.MoveTracker(trackerFeature, deltaX, deltaY, snapResult);
 
-            if (movedTracker)
+            if (movedTracker && trackerFeature.Index != -1)
             {
-                if (trackerFeature.Index != -1)
-                {
-                    wasMoved = true;
-                }
+                wasMoved = true;
             }
 
             return movedTracker;

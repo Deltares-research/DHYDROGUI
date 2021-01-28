@@ -209,26 +209,24 @@ namespace DeltaShell.NGHS.IO.FileReaders
                                 }
                             }
                         }
-                        else if (sharedNotConnectedCrossSectionDefinitions.Contains(crossSectionDefinition))
+                        else if (sharedNotConnectedCrossSectionDefinitions.Contains(crossSectionDefinition) && 
+                                 crossSection?.Definition != null)
                         {
-                            if (crossSection != null && crossSection.Definition != null)
+                            crossSectionDefinition.Name = crossSectionDefinitionName;
+                            if (!network.SharedCrossSectionDefinitions.Any(scsd => scsd.Name.Equals(crossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase)) &&  !network.SharedCrossSectionDefinitions.Contains(crossSectionDefinition))
                             {
-                                crossSectionDefinition.Name = crossSectionDefinitionName;
-                                if (!network.SharedCrossSectionDefinitions.Any(scsd => scsd.Name.Equals(crossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase)) &&  !network.SharedCrossSectionDefinitions.Contains(crossSectionDefinition))
-                                {
-                                    network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
-                                }
-                                var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
-
-                                var definition = network.SharedCrossSectionDefinitions.SingleOrDefault(scsd => scsd.Name.Equals(crossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase));
-                                if (definition == null)
-                                {
-                                    fileReadingExceptions.Add(new FileReadingException("There was no single shared cross section definition with only this name: " + crossSectionDefinitionName));
-                                    continue;
-                                }
-                                crossSection.UseSharedDefinition(definition);
-                                crossSection.Definition.ShiftLevel(shiftLevel);
+                                network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
                             }
+                            var shiftLevel = crossSectionLocationInfo.ReadProperty<double>(LocationRegion.Shift.Key);
+
+                            var definition = network.SharedCrossSectionDefinitions.SingleOrDefault(scsd => scsd.Name.Equals(crossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase));
+                            if (definition == null)
+                            {
+                                fileReadingExceptions.Add(new FileReadingException("There was no single shared cross section definition with only this name: " + crossSectionDefinitionName));
+                                continue;
+                            }
+                            crossSection.UseSharedDefinition(definition);
+                            crossSection.Definition.ShiftLevel(shiftLevel);
                         }
                         crsDefCoupledToCrossSection.Add(crossSectionDefinition);
                     }

@@ -688,20 +688,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ExtForceFileItem existingExtForceFileItem, bool writeToDisk, string prefix = null)
         {
             var targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extForceFilePath));
-            if (writeToDisk)
+            if (writeToDisk && Path.GetDirectoryName(importSamplesOperation.FilePath) != targetDirectory)
             {
-                if (Path.GetDirectoryName(importSamplesOperation.FilePath) != targetDirectory)
+                try
                 {
-                    try
-                    {
-                        importSamplesOperation.SwitchToDirectory(targetDirectory);
-                    }
-                    catch (Exception e)
-                    {
-                        log.Warn("Unable to import samples "+ e.Message);
-                    }
-                    
+                    importSamplesOperation.SwitchToDirectory(targetDirectory);
                 }
+                catch (Exception e)
+                {
+                    log.Warn("Unable to import samples "+ e.Message);
+                }
+                    
             }
 
             var quantityName = prefix != null ? prefix + extForceFileQuantityName : extForceFileQuantityName;

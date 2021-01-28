@@ -648,14 +648,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             var vertexCoverage = coverage as UnstructuredGridVertexCoverage;
-            if (vertexCoverage!=null && vertexCoverage.Name == WaterFlowFMModelDefinition.BathymetryDataItemName)
+            if (vertexCoverage!=null && vertexCoverage.Name == WaterFlowFMModelDefinition.BathymetryDataItemName &&
+                !vertexCoverage.GetValues<double>().Any())
             {
                 // TODO: this method does not take bathymetry as an UnstructuredGridCellCoverage into account! (DELFT3DFM-1355)
-                if (!vertexCoverage.GetValues<double>().Any())
-                {
-                    vertexCoverage.LoadBathymetry(newGrid, bathymetryNoDataValue);
-                    return;
-                }
+                vertexCoverage.LoadBathymetry(newGrid, bathymetryNoDataValue);
+                return;
             }
             
             if ((coverage is UnstructuredGridVertexCoverage && nodesChanged) ||

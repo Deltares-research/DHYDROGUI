@@ -65,20 +65,17 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             currentVectorStyle.Outline.Width = 6;
             currentVectorStyle.Outline.DashStyle = DashStyle.Dash;
             
-            if (vectorLayer.Style.EnableOutline)
+            if (vectorLayer.Style.EnableOutline && (!themeOn || (currentVectorStyle.Enabled && currentVectorStyle.EnableOutline)))
             {
                 // Draw background of all line-outlines first
-                if (!themeOn || (currentVectorStyle.Enabled && currentVectorStyle.EnableOutline))
+                switch (currentGeometry.GeometryType)
                 {
-                    switch (currentGeometry.GeometryType)
-                    {
-                        case "LineString":
-                            VectorRenderingHelper.DrawLineString(g, currentGeometry as ILineString, currentVectorStyle.Outline, layer.Map);
-                            break;
-                        case "MultiLineString":
-                            VectorRenderingHelper.DrawMultiLineString(g, currentGeometry as IMultiLineString, currentVectorStyle.Outline, layer.Map);
-                            break;
-                    }
+                    case "LineString":
+                        VectorRenderingHelper.DrawLineString(g, currentGeometry as ILineString, currentVectorStyle.Outline, layer.Map);
+                        break;
+                    case "MultiLineString":
+                        VectorRenderingHelper.DrawMultiLineString(g, currentGeometry as IMultiLineString, currentVectorStyle.Outline, layer.Map);
+                        break;
                 }
             }
 

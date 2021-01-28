@@ -524,12 +524,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                         else if (extForceFileItem != null && line.StartsWith(AreaKey))
                         {
-                            if (extForceFileItem.Quantity != ExtForceQuantNames.SourceAndSink)
-                            {
-                                if (extForceFileItem.Operand == null)
-                                    throw new FormatException(string.Format(
-                                        "Unexpected keyword {0} on line {1} of file {2}", AreaKey, LineNumber, FilePath));
-                            }
+                            if (extForceFileItem.Quantity != ExtForceQuantNames.SourceAndSink && extForceFileItem.Operand == null)
+                                throw new FormatException(string.Format(
+                                    "Unexpected keyword {0} on line {1} of file {2}", AreaKey, LineNumber, FilePath));
                             if (extForceFileItem.ModelData.ContainsKey(AreaKey))
                             {
                                 log.WarnFormat("{0} is already set, will be overwritten by line {1} of file {2} will be ignored.", AreaKey,
@@ -539,13 +536,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                         else if (extForceFileItem != null && line.StartsWith(AveragingTypeKey))
                         {
-                            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation)
-                            {
-                                if (extForceFileItem.Operand == null)
-                                    throw new FormatException(string.Format(
-                                        "Unexpected keyword {0} on line {1} of file {2}", AveragingTypeKey, LineNumber,
-                                        FilePath));
-                            }
+                            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation && extForceFileItem.Operand == null)
+                                throw new FormatException(string.Format(
+                                    "Unexpected keyword {0} on line {1} of file {2}", AveragingTypeKey, LineNumber,
+                                    FilePath));
                             if (extForceFileItem.ModelData.ContainsKey(AveragingTypeKey))
                             {
                                 log.WarnFormat("{0} is already set, will be overwritten by line {1} of file {2} will be ignored.", AveragingTypeKey,
@@ -555,13 +549,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                         else if (extForceFileItem != null && line.StartsWith(RelSearchCellSizeKey))
                         {
-                            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation)
-                            {
-                                if (extForceFileItem.Operand == null)
-                                    throw new FormatException(string.Format(
-                                        "Unexpected keyword {0} on line {1} of file {2}", AveragingTypeKey, LineNumber,
-                                        FilePath));
-                            }
+                            if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation && extForceFileItem.Operand == null)
+                                throw new FormatException(string.Format(
+                                    "Unexpected keyword {0} on line {1} of file {2}", AveragingTypeKey, LineNumber,
+                                    FilePath));
                             if (extForceFileItem.ModelData.ContainsKey(RelSearchCellSizeKey))
                             {
                                 log.WarnFormat("{0} is already set, will be overwritten by line {1} of file {2} will be ignored.", RelSearchCellSizeKey,

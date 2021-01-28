@@ -341,18 +341,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             INetworkCoverage primaryCoverage,
             INetworkCoverage secondaryCoverage)
         {
-            if (operation.RequiresSecondCoverage && !operation.AllowSecondaryNonTimeDependentIfFirstIs)
-            {
-                if (primaryCoverage.IsTimeDependent && !secondaryCoverage.IsTimeDependent)
-                {
-                    MessageBox.Show(String.Format(
-                        "Spatial data {0} is not time dependent, which is required for this operation because spatial data {1} is time dependent",
-                        secondaryCoverage.Name, primaryCoverage.Name));
-                    return true;
-                }
-            }
+            if (!operation.RequiresSecondCoverage || operation.AllowSecondaryNonTimeDependentIfFirstIs ||
+                !primaryCoverage.IsTimeDependent || secondaryCoverage.IsTimeDependent) return false;
+            
+            MessageBox.Show(String.Format(
+                "Spatial data {0} is not time dependent, which is required for this operation because spatial data {1} is time dependent",
+                secondaryCoverage.Name, primaryCoverage.Name));
 
-            return false;
+            return true;
         }
 
         //wtf: why do we even have to do this: fixit!!
@@ -360,11 +356,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
         {
             var mapView = coverageView.ChildViews.OfType<MapView>().First();
 
-            if (mapView.Map != null)
-            {
-                mapView.Map.Layers.Clear();
-            }
-
+            mapView.Map?.Layers.Clear();
             coverageView.Data = null;
         }
 

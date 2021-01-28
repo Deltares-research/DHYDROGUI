@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Sobek.Readers.Readers;
@@ -41,11 +40,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             ImportCaseSettingsFile();
-            if (sobekCaseSettings != null)
-            {
-                // This happens in a few tests. 
-                SetOutputSettings();
-            }
         }
 
         private void ImportSobek212Settings()
@@ -155,66 +149,5 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             waterFlowFMModel.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.DtMax).Value = sobekCaseSettings.TimeStep.TotalSeconds;
         }
-
-        private void SetOutputSettings()
-        {
-            /* 
-             * This mapping is based on the parameters.xml file. It's imperfect, but as good as it gets: not all 
-             * parameters in the SOBEK2 settings.dat file can be converted to an output setting in SOBEK3, and 
-             * not all output settings in SOBEK3 have an equivalent in the SOBEK2 settings.dat file.
-             */
-
-            // Grid points
-            // No salt options are found in the sobekCaseSettings yet. 
-            ConditionallyAddOutputSetting(sobekCaseSettings.TotalArea, QuantityType.TotalArea, ElementSet.GridpointsOnBranches);
-            ConditionallyAddOutputSetting(sobekCaseSettings.TotalWidth, QuantityType.TotalWidth, ElementSet.GridpointsOnBranches);
-            ConditionallyAddOutputSetting(sobekCaseSettings.Volume, QuantityType.Volume, ElementSet.GridpointsOnBranches);
-            ConditionallyAddOutputSetting(sobekCaseSettings.WaterDepth, QuantityType.WaterDepth, ElementSet.GridpointsOnBranches);
-            ConditionallyAddOutputSetting(sobekCaseSettings.WaterLevelOnResultsNodes, QuantityType.WaterLevel, ElementSet.GridpointsOnBranches);
-            ConditionallyAddOutputSetting(sobekCaseSettings.LateralOnNodes, QuantityType.LateralAtNodes, ElementSet.GridpointsOnBranches);
-
-            // Branches
-            // No dispersion is found in the sobekCaseSettings yet. 
-            ConditionallyAddOutputSetting(sobekCaseSettings.Chezy, QuantityType.FlowConv, ElementSet.ReachSegElmSet);    // Chezy in SOBEK 2 settings.dat also means outputting Conveyance
-            ConditionallyAddOutputSetting(sobekCaseSettings.Chezy, QuantityType.FlowChezy, ElementSet.ReachSegElmSet);
-            ConditionallyAddOutputSetting(sobekCaseSettings.DischargeOnResultsBranches, QuantityType.Discharge, ElementSet.ReachSegElmSet);
-            ConditionallyAddOutputSetting(sobekCaseSettings.Froude, QuantityType.Froude, ElementSet.ReachSegElmSet);
-            ConditionallyAddOutputSetting(sobekCaseSettings.VelocityOnResultsBranches, QuantityType.Velocity, ElementSet.ReachSegElmSet);
-            ConditionallyAddOutputSetting(sobekCaseSettings.WaterLevelSlope, QuantityType.WaterLevelGradient, ElementSet.ReachSegElmSet);
-
-            // Structures
-            ConditionallyAddOutputSetting(sobekCaseSettings.CrestLevel, QuantityType.CrestLevel, ElementSet.Structures);
-            ConditionallyAddOutputSetting(sobekCaseSettings.CrestWidth, QuantityType.CrestWidth, ElementSet.Structures);
-            ConditionallyAddOutputSetting(sobekCaseSettings.DischargeOnResultsStructures, QuantityType.Discharge, ElementSet.Structures);
-            ConditionallyAddOutputSetting(sobekCaseSettings.GateLowerEdgeLevel, QuantityType.GateLowerEdgeLevel, ElementSet.Structures);
-            ConditionallyAddOutputSetting(sobekCaseSettings.Head, QuantityType.Head, ElementSet.Structures);
-            ConditionallyAddOutputSetting(sobekCaseSettings.OpeningsArea, QuantityType.FlowArea, ElementSet.Structures);
-            ConditionallyAddOutputSetting(sobekCaseSettings.PressureDifference, QuantityType.PressureDifference, ElementSet.Structures);
-            ConditionallyAddOutputSetting(sobekCaseSettings.VelocityOnResultsStructures, QuantityType.Velocity, ElementSet.Structures);
-            ConditionallyAddOutputSetting(sobekCaseSettings.WaterLevelOnResultsStructures, QuantityType.WaterlevelUp, ElementSet.Structures);    // One setting in SOBEK 2...
-            ConditionallyAddOutputSetting(sobekCaseSettings.WaterLevelOnResultsStructures, QuantityType.WaterlevelDown, ElementSet.Structures);  // ...controls two settings in SOBEK 3!
-            ConditionallyAddOutputSetting(sobekCaseSettings.WaterlevelOnCrest, QuantityType.WaterLevelAtCrest, ElementSet.Structures);
-            ConditionallyAddOutputSetting(sobekCaseSettings.CrestlevelOpeningsHeight, QuantityType.GateOpeningHeight, ElementSet.Structures);
-
-            // Pumps
-            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.SuctionSideLevel, ElementSet.Pumps);
-            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.DeliverySideLevel, ElementSet.Pumps);
-            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.PumpHead, ElementSet.Pumps);
-            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.ActualPumpStage, ElementSet.Pumps);
-            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.PumpCapacity, ElementSet.Pumps);
-            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.ReductionFactor, ElementSet.Pumps);
-            ConditionallyAddOutputSetting(sobekCaseSettings.PumpResults, QuantityType.PumpDischarge, ElementSet.Pumps);
-
-            // This is an odd one: it selects 15 output settings at once and is accessed differently. 
-            if (sobekCaseSettings.RiverSubsectionParameters)
-            {
-            }
-        }
-
-        private void ConditionallyAddOutputSetting(bool add, QuantityType quantityType, ElementSet elementSet)
-        {
-
-        }
-
     }
 }

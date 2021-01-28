@@ -28,15 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override bool Equals(object obj)
         {
-            var that = obj as Record;
-            if (that != null)
-            {
-                if (X == that.X && Y == that.Y)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return obj is Record that && X == that.X && Y == that.Y;
         }
 
         public override int GetHashCode()

@@ -26,7 +26,7 @@ namespace DelftTools.Hydro
     public class HydroNetwork : Network, IHydroNetwork
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(HydroNetwork));
-        public static string CrossSectionSectionFormat = "Section{0:D3}";
+        public const string CrossSectionSectionFormat = "Section{0:D3}";
 
         public const string ImportBranchesActionName = "Import branches";
 
@@ -125,12 +125,10 @@ namespace DelftTools.Hydro
                     e.Cancel = true;
                 }
             }
-            else if (e.Action == NotifyCollectionChangeAction.Add)
+            else if (e.Action == NotifyCollectionChangeAction.Add && 
+                     e.Item is CrossSectionDefinitionXYZ)
             {
-                if (e.Item is CrossSectionDefinitionXYZ)
-                {
-                    throw new NotSupportedException("XYZ cross sections cannot be added as definitions.");
-                }
+                throw new NotSupportedException("XYZ cross sections cannot be added as definitions.");
             }
         }
 

@@ -218,11 +218,9 @@ namespace DeltaShell.NGHS.IO.DataObjects
         [DynamicReadOnlyValidationMethod]
         public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == nameof(DataType))
-            {
-                if (Node is Manhole manhole && manhole.Compartments.OfType<OutletCompartment>().Any()|| !(Node is Manhole)) return false;
-            }
-            return true;
+            return propertyName != nameof(DataType) ||
+                   ((!(Node is Manhole manhole) || !manhole.Compartments.OfType<OutletCompartment>().Any()) &&
+                    Node is Manhole);
         }
 
         public virtual InterpolationType InterpolationType

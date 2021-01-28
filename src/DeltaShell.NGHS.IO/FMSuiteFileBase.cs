@@ -17,7 +17,7 @@ namespace DeltaShell.NGHS.IO
         {
             var i = 0;
             var contentIdentifier = new char[line.Length];
-            foreach (var c in line.ToCharArray())
+            foreach (var c in line)
             {
                 if (c == ' ' || c == '\t')
                     continue;

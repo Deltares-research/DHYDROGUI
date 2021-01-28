@@ -342,12 +342,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
                     }
                 }
 
-                if (isSetData)
+                if (isSetData && channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition)
                 {
-                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.ConstantChannelFrictionDefinition)
-                    {
-                        channelFrictionDefinition.ConstantChannelFrictionDefinition.Value = double.Parse(value.ToString());
-                    }
+                    channelFrictionDefinition.ConstantChannelFrictionDefinition.Value = double.Parse(value.ToString());
                 }
             }
 
@@ -371,20 +368,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
 
             if (columnIndex == FunctionTypeColumnIndex)
             {
-                if (isGetData)
+                if (isGetData && channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
                 {
-                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
-                    {
-                        return channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType;
-                    }
+                    return channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType;
                 }
 
-                if (isSetData)
+                if (isSetData && channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
                 {
-                    if (channelFrictionDefinition.SpecificationType == ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition)
-                    {
-                        channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = (RoughnessFunction) Enum.Parse(typeof(RoughnessFunction), value.ToString());
-                    }
+                    channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = (RoughnessFunction) Enum.Parse(typeof(RoughnessFunction), value.ToString());
                 }
             }
 

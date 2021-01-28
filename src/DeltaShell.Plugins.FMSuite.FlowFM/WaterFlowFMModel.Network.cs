@@ -115,17 +115,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             //is dit nodig?
-            if (sender is IDataItem && ((IDataItem)sender).Value is IHydroNetwork)
+            if (sender is IDataItem item && 
+                item.Value is IHydroNetwork && 
+                e.PropertyName == nameof(IDataItem.Value))
             {
-                if (e.PropertyName == nameof(IDataItem.Value))
-                {
-                    RefreshNetworkRelatedData();
-                }
+                RefreshNetworkRelatedData();
             }
 
-            if (sender is OutletCompartment && e.PropertyName == nameof(OutletCompartment.SurfaceWaterLevel))
+            if (sender is OutletCompartment outlet && e.PropertyName == nameof(OutletCompartment.SurfaceWaterLevel))
             {
-                var outlet = (OutletCompartment) sender;
                 var model1DBoundaryNodeData = BoundaryConditions1D.FirstOrDefault(bc => bc.Node == outlet.ParentManhole);
                 model1DBoundaryNodeData.SetBoundaryConditionDataForOutlet();
             }

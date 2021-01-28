@@ -185,11 +185,7 @@ namespace DelftTools.Hydro
         [DynamicReadOnlyValidationMethod]
         public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == nameof(Length))
-            {
-                if (IsLengthCustom) return false;
-            }
-            return true;
+            return propertyName != nameof(Length) || !IsLengthCustom;
         }
 
         #region MDE properties

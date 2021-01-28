@@ -86,45 +86,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         {
             switch (o)
             {
-                case RuleBase ruleBase:
+                case RuleBase ruleTarget:
                 {
-                    var ruleTarget = ruleBase;
                     var ruleSource = (RuleBase)source[ruleTarget];
-                    foreach (var input in ruleSource.Inputs)
+                    foreach (var input in ruleSource.Inputs.Where(target.ContainsKey))
                     {
-                        if (target.ContainsKey(input))
-                        {
-                            ruleTarget.Inputs.Add((Input)target[input]);
-                        }
+                        ruleTarget.Inputs.Add((Input)target[input]);
                     }
-                    foreach (var output in ruleSource.Outputs)
+
+                    foreach (var output in ruleSource.Outputs.Where(target.ContainsKey))
                     {
-                        if (target.ContainsKey(output))
-                        {
-                            ruleTarget.Outputs.Add((Output)target[output]);
-                        }
+                        ruleTarget.Outputs.Add((Output)target[output]);
                     }
 
                     break;
                 }
-                case ConditionBase conditionBase:
+                case ConditionBase conditionTarget:
                 {
-                    var conditionTarget = conditionBase;
                     var conditionSource = (ConditionBase)source[conditionTarget];
-                    foreach (var trueOutput in conditionSource.TrueOutputs)
+                    foreach (var trueOutput in conditionSource.TrueOutputs.Where(target.ContainsKey))
                     {
-                        if (target.ContainsKey(trueOutput))
-                        {
-                            conditionTarget.TrueOutputs.Add((RtcBaseObject)target[trueOutput]);
-                        }
+                        conditionTarget.TrueOutputs.Add((RtcBaseObject)target[trueOutput]);
                     }
-                    foreach (var falseOutput in conditionSource.FalseOutputs)
+
+                    foreach (var falseOutput in conditionSource.FalseOutputs.Where(target.ContainsKey))
                     {
-                        if (target.ContainsKey(falseOutput))
-                        {
-                            conditionTarget.FalseOutputs.Add((RtcBaseObject)target[falseOutput]);
-                        }
+                       conditionTarget.FalseOutputs.Add((RtcBaseObject)target[falseOutput]);
                     }
+
                     if (conditionSource.Input != null && target.ContainsKey(conditionSource.Input))
                     {
                         conditionTarget.Input = (Input)target[conditionSource.Input];
@@ -132,23 +121,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
                     break;
                 }
-                case SignalBase signalBase:
+                case SignalBase signalTarget:
                 {
-                    var signalTarget = signalBase;
                     var signalSource = (SignalBase)source[signalTarget];
-                    foreach (var input in signalSource.Inputs)
+                    foreach (var input in signalSource.Inputs.Where(target.ContainsKey))
                     {
-                        if (target.ContainsKey(input))
-                        {
-                            signalTarget.Inputs.Add((Input)target[input]);
-                        }
+                        signalTarget.Inputs.Add((Input)target[input]);
                     }
-                    foreach (var ruleBase in signalSource.RuleBases)
+                    foreach (var ruleBase in signalSource.RuleBases.Where(target.ContainsKey))
                     {
-                        if (target.ContainsKey(ruleBase))
-                        {
-                            signalTarget.RuleBases.Add((RuleBase)target[ruleBase]);
-                        }
+                        signalTarget.RuleBases.Add((RuleBase)target[ruleBase]);
                     }
 
                     break;

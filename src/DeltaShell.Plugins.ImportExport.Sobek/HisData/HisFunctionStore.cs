@@ -384,7 +384,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.HisData
             set { functions = value; }
         }
 
-        public void SetVariableValues<T>(IVariable function, IEnumerable<T> values, params IVariableFilter[] filters)
+        public void SetVariableValues<T>(IVariable variable, IEnumerable<T> values, params IVariableFilter[] filters)
         {
             throw new NotSupportedException("Readonly Store");
         }
@@ -537,7 +537,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.HisData
 
         public void UpdateVariableSize(IVariable variable)
         {
-            
+            throw new NotSupportedException("Resizing of variables is not supported");
         }
 
         public T GetMaxValue<T>(IVariable variable)
@@ -562,22 +562,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.HisData
 
         private void UpdateMinMaxIfNeeded(IVariable variable)
         {
-            if(!minMaxValues.ContainsKey(variable))
-            {
-                if (variable.ValueType == typeof(double)) //double is expected -> values for networkcoverage
-                {
-                    var min = double.MaxValue;
-                    var max = double.MinValue;
-                    var hisDataRows = hisFileReader.ReadAllData(variable.Name);
-                    foreach (var hisDataRow in hisDataRows)
-                    {
-                        min = Math.Min(min, hisDataRow.Value);
-                        max = Math.Max(max, hisDataRow.Value);
-                    }
-                    minMaxValues[variable] = new DelftTools.Utils.Tuple<object,object>(min,max);
-                }
+            if (minMaxValues.ContainsKey(variable) || 
+                variable.ValueType != typeof(double)) return;
 
+            //double is expected -> values for networkcoverage
+            var min = double.MaxValue;
+            var max = double.MinValue;
+            var hisDataRows = hisFileReader.ReadAllData(variable.Name);
+            foreach (var hisDataRow in hisDataRows)
+            {
+                min = Math.Min(min, hisDataRow.Value);
+                max = Math.Max(max, hisDataRow.Value);
             }
+            minMaxValues[variable] = new DelftTools.Utils.Tuple<object,object>(min,max);
         }
 
         #endregion

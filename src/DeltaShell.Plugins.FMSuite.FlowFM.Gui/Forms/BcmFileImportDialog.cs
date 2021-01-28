@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 

@@ -103,12 +103,9 @@ namespace DeltaShell.Sobek.Readers.Readers
             value = double.NaN;
             var pattern = RegularExpression.GetScientific(label);
             var matches = RegularExpression.GetMatches(pattern, record);
-            if (matches.Count == 1)
+            if (matches.Count == 1 && double.TryParse(matches[0].Groups[label].Value, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
             {
-                if (double.TryParse(matches[0].Groups[label].Value, NumberStyles.Any, CultureInfo.InvariantCulture, out value))
-                {
-                    return true;
-                }
+                return true;
             }
 
             if (reportError) ReportParseError(label, record);

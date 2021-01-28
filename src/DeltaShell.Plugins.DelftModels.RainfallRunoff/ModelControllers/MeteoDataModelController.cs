@@ -33,13 +33,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                 log.ErrorFormat("It's not possible to set the evaporation data. Check the validation report.");
                 returnValue = false;
             }
-            if (tempData != null)
+            if (tempData != null && !AddTemperatureData(writer, tempData, startDate, endDate, timeStepModel))
             {
-                if (!AddTemperatureData(writer, tempData, startDate, endDate, timeStepModel))
-                {
-                    log.ErrorFormat("It's not possible to set the temperature data. Check the validation report.");
-                    returnValue = false;
-                }
+                log.ErrorFormat("It's not possible to set the temperature data. Check the validation report.");
+                returnValue = false;
             }
 
             return returnValue;

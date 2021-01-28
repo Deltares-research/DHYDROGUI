@@ -264,12 +264,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 RefreshConnections();
             }
 
-            if (sender is ControlGroup && e.PropertyName == "IsEditing")
+            if (sender is ControlGroup && e.PropertyName == "IsEditing" && !controlGroup.IsEditing)
             {
-                if (!controlGroup.IsEditing)
-                {
-                    RefreshConnections();
-                }
+                RefreshConnections();
             }
 
             // force redrawing to fix rendering bug in netron (TOOLS-7748, point 5).
@@ -309,14 +306,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                     graphControl.Shapes.Remove(shape);
                     SubscribeGraphControlEvents();
                 }
-                if (e.Action == NotifyCollectionChangedAction.Replace)
+                if (e.Action == NotifyCollectionChangedAction.Replace && replaceable != null)
                 {
-                    if (replaceable != null)
-                    {
-                        var shape = FindShapeByObject(replaceable);
-                        shape.Tag = e.GetRemovedOrAddedItem();
-                        replaceable = null;
-                    }
+                    var shape = FindShapeByObject(replaceable);
+                    shape.Tag = e.GetRemovedOrAddedItem();
+                    replaceable = null;
                 }
                 graphControl.Invalidate();
             }
@@ -752,13 +746,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                         }
                     }
 
-                    if (to is SignalBase)
+                    if (to is SignalBase && 
+                        toConnector != ConnectorType.Top && 
+                        toConnector != ConnectorType.Left)
                     {
-                        if ((toConnector != ConnectorType.Top) && (toConnector != ConnectorType.Left))
-                        {
-                            Log.Error("Input can only be connected to the left or top connection point.");
-                            return false;
-                        }
+                        Log.Error("Input can only be connected to the left or top connection point.");
+                        return false;
                     }
 
                     break;
@@ -852,13 +845,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 return false;
             }
 
-            if (to is Output)
+            if (to is Output && toConnector != ConnectorType.Left)
             {
-                if (toConnector != ConnectorType.Left)
-                {
-                    Log.Error("Can only connect to the left of output.");
-                    return false;
-                }
+                Log.Error("Can only connect to the left of output.");
+                return false;
             }
             if ((from is RuleBase) && (to is ConditionBase))
             {

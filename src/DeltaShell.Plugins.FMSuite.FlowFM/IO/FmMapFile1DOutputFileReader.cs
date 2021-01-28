@@ -10,12 +10,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class FmMapFile1DOutputFileReader
     {
-        protected string timeVariableNameInNetCDFFile;
-        protected string timeDimensionNameInNetCdfFile;
-        protected string unitsAttributeKeyNameInNetCdfFile;
-        protected string timeVariableUnitValuePrefixInNetCdfFile;
-        protected string dateTimeFormat;
-        protected string longNameAttributeKeyNameInNetCdfFile;
+        private string timeVariableNameInNetCDFFile;
+        private string timeDimensionNameInNetCdfFile;
+        private string unitsAttributeKeyNameInNetCdfFile;
+        private string timeVariableUnitValuePrefixInNetCdfFile;
+        private string dateTimeFormat;
+        private string longNameAttributeKeyNameInNetCdfFile;
 
         public FmMapFile1DOutputFileReader()
         {
@@ -179,21 +179,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 : unit.ToString().Replace(timeVariableUnitValuePrefixInNetCdfFile, "").Trim();
             
             DateTime referenceTime;
-            if (!DateTime.TryParseExact(unitString, $"{dateTimeFormat} zzz", 
-                CultureInfo.InvariantCulture, DateTimeStyles.None, out referenceTime))
-            {
-                if (!DateTime.TryParseExact(unitString, dateTimeFormat,
-                    CultureInfo.InvariantCulture, DateTimeStyles.None, out referenceTime))
-                {
-                    var errorMessage = string.Format(
-                        (string) "Unable to parse DateTime {0} from file {1}",
-                        unitString, outputFile.Path);
+            if (DateTime.TryParseExact(unitString, $"{dateTimeFormat} zzz",
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out referenceTime) || DateTime.TryParseExact(
+                unitString, dateTimeFormat,
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out referenceTime)) return referenceTime;
 
-                    throw new FileReadingException(errorMessage);
-                }
-            }
+            var errorMessage = $"Unable to parse DateTime {unitString} from file {outputFile.Path}";
 
-            return referenceTime;
+            throw new FileReadingException(errorMessage);
         }
 
         private IList<DateTime> ParseTimeVariable(string path, DateTime referenceTime)

@@ -43,9 +43,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             {
                 return function;
             }
-            if (dataType == BoundaryConditionDataType.AstroComponents)
+
+            switch (dataType)
             {
-                if (newDataType == BoundaryConditionDataType.AstroCorrection)
+                case BoundaryConditionDataType.AstroComponents when newDataType == BoundaryConditionDataType.AstroCorrection:
                 {
                     function.BeginEdit(new DefaultEditAction("Expanding astro function"));
                     for (int i = 0; i < dimensions; ++i)
@@ -64,24 +65,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     function.EndEdit();
                     return function;
                 }
-            }
-            if (dataType == BoundaryConditionDataType.AstroCorrection)
-            {
-                function.BeginEdit("Reducing astro correction function");
-                if (newDataType == BoundaryConditionDataType.AstroComponents)
+                case BoundaryConditionDataType.AstroCorrection:
                 {
-                    for (int i = dimensions - 1; i >=0 ; --i)
+                    function.BeginEdit("Reducing astro correction function");
+                    if (newDataType == BoundaryConditionDataType.AstroComponents)
                     {
-                        function.Components.RemoveAt(4*i + 3);
-                        function.Components.RemoveAt(4*i + 2);
+                        for (int i = dimensions - 1; i >=0 ; --i)
+                        {
+                            function.Components.RemoveAt(4*i + 3);
+                            function.Components.RemoveAt(4*i + 2);
+                        }
+                        function.EndEdit();
+                        return function;
                     }
-                    function.EndEdit();
-                    return function;
+
+                    break;
                 }
-            }
-            if (dataType == BoundaryConditionDataType.Harmonics)
-            {
-                if (newDataType == BoundaryConditionDataType.HarmonicCorrection)
+                case BoundaryConditionDataType.Harmonics when newDataType == BoundaryConditionDataType.HarmonicCorrection:
                 {
                     function.BeginEdit(new DefaultEditAction("Expanding harmonic function"));
                     for (int i = 0; i < dimensions; ++i)
@@ -100,10 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     function.EndEdit();
                     return function;
                 }
-            }
-            if (dataType == BoundaryConditionDataType.HarmonicCorrection)
-            {
-                if (newDataType == BoundaryConditionDataType.Harmonics)
+                case BoundaryConditionDataType.HarmonicCorrection when newDataType == BoundaryConditionDataType.Harmonics:
                 {
                     function.BeginEdit("Reducing harmonic correction function");
                     for (int i = dimensions - 1; i >= 0; --i)
@@ -115,6 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     return function;
                 }
             }
+
             return null;
         }
     }

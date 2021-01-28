@@ -948,8 +948,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private IEventedList<RunoffBoundaryData> boundaryData;
         private IEventedList<string> meteoStations;
         private IEventedList<string> temperatureStations; 
-        private static readonly int[] SupportedMetaDataVersions = new[] { 1 };
-
+        
         #region Save State: Time Range
 
         public virtual bool UseSaveStateTimeRange { get; set; }
@@ -962,74 +961,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         #endregion
 
-        public virtual IEnumerable<DateTime> GetRestartWriteTimes()
-        {
-            if (UseSaveStateTimeRange)
-            {
-                var time = SaveStateStartTime;
-                while (time <= SaveStateStopTime)
-                {
-                    yield return time;
-
-                    time += SaveStateTimeStep;
-                }
-            }
-        }
         
-        private Dictionary<string, string> GetMetaDataRequirements(int version)
-        {
-            if (version == 1)
-            {
-                return new Dictionary<string, string>
-                    {
-                        {
-                            "NrOfNoneCatchments",
-                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.None))
-                                 .ToString(CultureInfo.InvariantCulture)
-                        },
-                        {
-                            "NrOfGreenHouseCatchments",
-                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.GreenHouse))
-                                 .ToString(CultureInfo.InvariantCulture)
-                        },
-                        {
-                            "NrOfOpenWaterCatchments",
-                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.OpenWater))
-                                 .ToString(CultureInfo.InvariantCulture)
-                        },
-                        {
-                            "NrOfPavedCatchments",
-                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Paved))
-                                 .ToString(CultureInfo.InvariantCulture)
-                        },
-                        {
-                            "NrOfPolderCatchments",
-                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Polder))
-                                 .ToString(CultureInfo.InvariantCulture)
-                        },
-                        {
-                            "NrOfUnpavedCatchments",
-                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Unpaved))
-                                 .ToString(CultureInfo.InvariantCulture)
-                        },
-                        {
-                            "NrOfSacramentoCatchments",
-                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Sacramento))
-                                 .ToString(CultureInfo.InvariantCulture)
-                        },
-                        {
-                            "NrOfHbvCatchments",
-                            Basin.AllCatchments.Count(c => c.CatchmentType.Equals(CatchmentType.Hbv))
-                                 .ToString(CultureInfo.InvariantCulture)
-                        },
-                        {"NrOfBoundaries", Basin.Boundaries.Count.ToString(CultureInfo.InvariantCulture)}
-                    };
-            }
-
-            throw new NotImplementedException(String.Format("Meta data version {0} for model type {1} is not supported",
-                                                            version, "RainfallRunoffModel"));
-        }
-
         #endregion
 
         public bool IsRunningParallelWithFlow()
@@ -1164,8 +1096,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return parameter == null ? (ElementSet?) null : parameter.ElementSet;
         }
 
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
+            if (!disposing) return;
+
             // Ensure all stores are closed
             var fileStores = AllDataItems.Where(di => di.LinkedTo == null && di.ValueType.Implements(typeof(IFunction)))
                     .Select(di => di.Value).OfType<IFunction>()
@@ -1290,6 +1224,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~RainfallRunoffModel()
+        {
+            Dispose(false);
+        }
     }
 
     public interface IRainfallRunoffModel : IHydroModel, IDimrModel

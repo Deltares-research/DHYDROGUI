@@ -23,7 +23,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public override IBoundaryCondition CreateBoundaryCondition(Feature2D feature, string variable, BoundaryConditionDataType dataType, string quantityType = null)
         {
-            FlowBoundaryQuantityType flowBoundaryQuantityType;
             var fractionList = new List<string>();
             if (Model != null)
             {
@@ -31,13 +30,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
 
             // try to parse the sediment concentration name and the quantity type of the boundary condition (special case)
-            if (quantityType != null && FlowBoundaryQuantityType.SedimentConcentration.GetDescription().Equals(quantityType))
+            if (quantityType != null && 
+                FlowBoundaryQuantityType.SedimentConcentration.GetDescription().Equals(quantityType) && fractionList.Count > 0 && 
+                fractionList.Contains(variable))
             {
-                if (fractionList.Count > 0 && fractionList.Contains(variable))
-                {
-                    var fractionName = variable;
-                    return CreateBoundaryCondition(feature, FlowBoundaryQuantityType.SedimentConcentration, dataType, fractionName, fractionList);
-                }
+                var fractionName = variable;
+                return CreateBoundaryCondition(feature, FlowBoundaryQuantityType.SedimentConcentration, dataType, fractionName, fractionList);
             }
 
             // try to parse the tracer name and the quantity type of the boundary condition (special case)
@@ -55,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             // try to parse regular boundary condition
             if (variable != FlowBoundaryQuantityType.Tracer.ToString()
                 && variable != FlowBoundaryQuantityType.SedimentConcentration.ToString()
-                && Enum.TryParse(variable, out flowBoundaryQuantityType))
+                && Enum.TryParse(variable, out FlowBoundaryQuantityType flowBoundaryQuantityType))
             {
                 return CreateBoundaryCondition(feature, flowBoundaryQuantityType, dataType, null, fractionList);
             }

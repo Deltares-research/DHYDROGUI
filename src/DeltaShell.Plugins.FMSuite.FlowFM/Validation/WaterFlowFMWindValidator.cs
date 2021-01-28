@@ -39,26 +39,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (!File.Exists(griddedWindField.WindFilePath))
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                            string.Format("Could not find wind file {0} for {1}", griddedWindField.WindFilePath,
-                                griddedWindField.Name), griddedWindField));
+                            $"Could not find wind file {griddedWindField.WindFilePath} for {griddedWindField.Name}", griddedWindField));
                     }
                     if (griddedWindField.SeparateGridFile && !File.Exists(griddedWindField.GridFilePath))
                     {
                         issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                            string.Format("Could not find grid file {0} for {1}", griddedWindField.GridFilePath,
-                                griddedWindField.Name), griddedWindField));
+                            $"Could not find grid file {griddedWindField.GridFilePath} for {griddedWindField.Name}", griddedWindField));
                     }
                 }
 
-                var spiderWebWindField = windField as SpiderWebWindField;
-                if (spiderWebWindField != null)
+                if (windField is SpiderWebWindField spiderWebWindField && 
+                    !File.Exists(spiderWebWindField.WindFilePath))
                 {
-                    if (!File.Exists(spiderWebWindField.WindFilePath))
-                    {
-                        issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
-                            string.Format("Could not find wind file {0} for {1}", spiderWebWindField.WindFilePath,
-                                spiderWebWindField.Name), spiderWebWindField));
-                    }
+                    issues.Add(new ValidationIssue(subject, ValidationSeverity.Error,
+                        $"Could not find wind file {spiderWebWindField.WindFilePath} for {spiderWebWindField.Name}", spiderWebWindField));
                 }
             }
 

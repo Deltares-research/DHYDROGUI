@@ -272,16 +272,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             return base.GetVariableValuesCount(variable, filters);
         }
-        public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable function, params IVariableFilter[] filters)
+        public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable variable, params IVariableFilter[] filters)
         {
             if (!HasValidFile)
             {
-                return (IMultiDimensionalArray<T>)CreateEmptyArrayForType(function.ValueType);
+                return (IMultiDimensionalArray<T>)CreateEmptyArrayForType(variable.ValueType);
             }
-            return base.GetVariableValues<T>(function, filters);
+            return base.GetVariableValues<T>(variable, filters);
         }
 
-        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, DelftTools.Functions.Filters.IVariableFilter[] filters)
+        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
         {
             var functionName = function.Attributes[NcNameAttribute];
             if (function.Attributes[NcUseVariableSizeAttribute] == "false" 

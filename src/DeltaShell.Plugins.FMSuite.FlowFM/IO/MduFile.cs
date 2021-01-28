@@ -278,14 +278,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     }
 
                     // write the bathymetry in the net file.
-                    IList<ISpatialOperation> bathymetryOperations;
                     if (modelDefinition.SpatialOperations.TryGetValue(
-                        WaterFlowFMModelDefinition.BathymetryDataItemName, out bathymetryOperations) && File.Exists(targetFile))
+                        WaterFlowFMModelDefinition.BathymetryDataItemName, out var bathymetryOperations) && File.Exists(targetFile) && bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
                     {
-                        if (bathymetryOperations.Any(so => !(so is ISpatialOperationSet)))
-                        {
-                            WriteBathymetry(modelDefinition, targetFile);
-                        }
+                        WriteBathymetry(modelDefinition, targetFile);
                     }
 
                     // if needed, adjust coordinate system in netfile

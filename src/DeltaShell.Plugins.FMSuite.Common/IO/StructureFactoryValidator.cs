@@ -56,24 +56,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (property != null)
             {
                 var numberOfLevels = DataTypeValueParser.FromString<int>(property.GetValueAsString());
-                if (numberOfLevels == 1)
+                if (numberOfLevels == 1 && structure.GetProperty(KnownStructureProperties.ReductionFactor) == null)
                 {
-                    if (structure.GetProperty(KnownStructureProperties.ReductionFactor) == null)
-                    {
-                        errorMessage = string.Format("Structure '{0}' with constant reduction factor does not have factor defined.", name);
-                        return true;
-                    }
+                    errorMessage = $"Structure '{name}' with constant reduction factor does not have factor defined.";
+                    return true;
                 }
                 if (numberOfLevels > 1)
                 {
                     if (structure.GetProperty(KnownStructureProperties.Head) == null)
                     {
-                        errorMessage = string.Format("Structure '{0}' with multiple reduction factors does not have reference levels defined.", name);
+                        errorMessage = $"Structure '{name}' with multiple reduction factors does not have reference levels defined.";
                         return true;
                     }
                     if (structure.GetProperty(KnownStructureProperties.ReductionFactor) == null)
                     {
-                        errorMessage = string.Format("Structure '{0}' with multiple reduction factors does not have factors defined.", name);
+                        errorMessage = $"Structure '{name}' with multiple reduction factors does not have factors defined.";
                         return true;
                     }
                 }

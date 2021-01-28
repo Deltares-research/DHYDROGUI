@@ -70,16 +70,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation.Polder
                                               "A paved node dry water flow sewer link can only be connected (downstream) to a boundary, lateral or waste water treatment plant", pavedData.Catchment.Basin));
             }
 
-            if ((dwfToBoundary && mixedToBoundary) || (dwfToWwtp && mixedToWwtp))
+            if (((dwfToBoundary && mixedToBoundary) || (dwfToWwtp && mixedToWwtp)) && pavedDwfSewerLink != pavedMixedSewerLink)
             {
-                if (pavedDwfSewerLink != pavedMixedSewerLink) //if same type, must be same object
-                {
-                    issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                                                  String.Format("A paved node cannot be connected to multiple {0}",
-                                                                dwfToBoundary
-                                                                    ? "boundaries (both pumps must discharge to the same, or to a waste water treatment plant)"
-                                                                    : "waste water treatment plants"), pavedData.Catchment.Basin));
-                }
+                //if same type, must be same object
+                issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
+                    String.Format("A paved node cannot be connected to multiple {0}",
+                        dwfToBoundary
+                            ? "boundaries (both pumps must discharge to the same, or to a waste water treatment plant)"
+                            : "waste water treatment plants"), pavedData.Catchment.Basin));
             }
             return issues;
         }

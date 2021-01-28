@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using BasicModelInterface;
@@ -151,14 +150,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public override IDataItem GetDataItemByTag(string tag)
         {
-            return base.GetDataItemByTag(tag) ?? CreateDataItemNotAvailableInPreviousVersion(tag);
+            return base.GetDataItemByTag(tag) ?? CreateDataItemNotAvailableInPreviousVersion();
         }
 
         /// <summary>
         /// Incredibly ugly construct, but this is used for backward compatibility reasons
         /// </summary>
         /// <param name="tag"></param>
-        private IDataItem CreateDataItemNotAvailableInPreviousVersion(string tag)
+        private IDataItem CreateDataItemNotAvailableInPreviousVersion()
         {
             return null;
         }
@@ -175,14 +174,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                         di =>
                             {
                                 var controlGroup = di.Value as ControlGroup;
-                                if (controlGroup != null)
-                                {
-                                    if (controlGroup.Inputs.Cast<ConnectionPoint>().Concat(controlGroup.Outputs).Contains(connectionPoint))
-                                    {
-                                        return true;
-                                    }
-                                }
-                                return false;
+                                return controlGroup != null &&
+                                       controlGroup.Inputs.Cast<ConnectionPoint>().Concat(controlGroup.Outputs)
+                                           .Contains(connectionPoint);
                             });
 
                     if (controlGroupDataItem != null)
@@ -1157,8 +1151,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         #endregion
 
-        public void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
+            if (!disposing) return;
+
             // Ensure all stores are closed
             var fileStores = AllDataItems.Where(di => di.LinkedTo == null && di.ValueType.Implements(typeof(IFunction)))
                     .Select(di => di.Value).OfType<IFunction>()
@@ -1232,5 +1228,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         #endregion
 
         public virtual string ExplicitWorkingDirectory { get; set; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

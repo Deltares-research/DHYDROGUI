@@ -62,17 +62,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     // * R=A/P
                     if (conveyanceTypeProperty != null && waterFlowFmProperty == conveyanceTypeProperty)
                     {
-                        Conveyance2DType currentConveyanceType;
                         var useMorSed = modelDefinition.UseMorphologySediment;
                         if (useMorSed && Enum.TryParse(waterFlowFmProperty.GetValueAsString(),
-                                out currentConveyanceType))
-                            if (currentConveyanceType != Conveyance2DType.RisHU
-                                && currentConveyanceType != Conveyance2DType.RisH
-                                && currentConveyanceType != Conveyance2DType.RisAperP)
-                            {
-                                issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
-                                    Resources.WaterFlowFMModelDefinitionValidator_Validate_));
-                            }
+                            out Conveyance2DType currentConveyanceType) && currentConveyanceType != Conveyance2DType.RisHU && currentConveyanceType != Conveyance2DType.RisH && currentConveyanceType != Conveyance2DType.RisAperP)
+                        {
+                            issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
+                                Resources.WaterFlowFMModelDefinitionValidator_Validate_));
+                        }
                     }
                 }
                 if (propertyGroup.Key.Equals(timerCategory))

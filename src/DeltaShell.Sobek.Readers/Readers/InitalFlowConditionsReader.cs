@@ -74,13 +74,10 @@ namespace DeltaShell.Sobek.Readers.Readers
 
             const string patternQ = @"q_ lq" + @"\s(?<q>" + RegularExpression.CharactersAndQuote + @")\s*" + "(ty)?";
             var match = RegularExpression.GetFirstMatch(patternQ, record);
-            if (match != null)
+            if (match != null && match.Groups["q"].Success)
             {
-                if (match.Groups["q"].Success)
-                {
-                    flowInitialCondition.IsQBoundary = true;
-                    ParseInitialCondition(flowInitialCondition,flowInitialCondition.Discharge, match.Groups["q"].Value);
-                }
+                flowInitialCondition.IsQBoundary = true;
+                ParseInitialCondition(flowInitialCondition,flowInitialCondition.Discharge, match.Groups["q"].Value);
             }
 
             const string patternT = @"(ty\s(?<ty>" + RegularExpression.Integer + @")\s?)lv ll";

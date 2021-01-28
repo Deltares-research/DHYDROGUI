@@ -5,15 +5,11 @@ using System.IO;
 using System.Xml;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
-using log4net;
-using NetTopologySuite.IO.GML2;
 
 namespace DeltaShell.Plugins.NetworkEditor.Import
 {
     public class HydroNetworkFromGmlImporter : IFileImporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(HydroNetworkFromGmlImporter));
-
         #region IFileImporter Members
 
         public virtual string Name

@@ -149,30 +149,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
 
         private void TreeViewKeyDown(object sender, KeyEventArgs e)
         {          
-            if (e.KeyCode == Keys.Control | e.KeyCode == Keys.C)
+            if ((e.KeyCode == Keys.Control || e.KeyCode == Keys.C) && 
+                (treeView.SelectedNode.Tag is IBranch || treeView.SelectedNode.Tag is IBranchFeature))
             {
-                if (treeView.SelectedNode.Tag is IBranch || treeView.SelectedNode.Tag is IBranchFeature)
-                {
-                    HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard((INetworkFeature) treeView.SelectedNode.Tag);
-                }
+                HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard((INetworkFeature) treeView.SelectedNode.Tag);
             }
 
-            if (e.KeyCode == Keys.Control | e.KeyCode == Keys.V)
+            if (e.KeyCode != Keys.Control && e.KeyCode != Keys.V) return;
+
+            if (treeView.SelectedNode.Tag is IBranchFeature && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
             {
-                if (treeView.SelectedNode.Tag is IBranchFeature && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
-                {
-                    ButtonMenuFeaturePasteIntoClick(sender, e);   
-                }
+                ButtonMenuFeaturePasteIntoClick(sender, e);   
+            }
 
-                if (treeView.SelectedNode.Tag is IChannel && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
-                {
-                    ButtonMenuBranchPasteClick(sender, e);
-                }
+            if (treeView.SelectedNode.Tag is IChannel && HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard())
+            {
+                ButtonMenuBranchPasteClick(sender, e);
+            }
 
-                if (treeView.SelectedNode.Tag is IHydroNetwork && HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard())
-                {
-                    handleButtonPaste_Click(sender, e);
-                }
+            if (treeView.SelectedNode.Tag is IHydroNetwork && HydroNetworkCopyAndPasteHelper.IsChannelSetToClipBoard())
+            {
+                handleButtonPaste_Click(sender, e);
             }
         }
 

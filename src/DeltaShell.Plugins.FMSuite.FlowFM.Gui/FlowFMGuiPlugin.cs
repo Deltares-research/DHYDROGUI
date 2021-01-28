@@ -202,12 +202,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
 
                 var model = sender as WaterFlowFMModel;
-                if (model != null)
+                if (model != null && propertyName == nameof(model.CoordinateSystem))
                 {
-                    if (propertyName == nameof(model.CoordinateSystem))
-                    {
-                        return "CoordinateSystem";
-                    }
+                    return "CoordinateSystem";
                 }
 
                 return null;
@@ -940,12 +937,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 var importer = fileImportActivity.FileImporter;
 
-                if (importer is FlowFMNetFileImporter || importer is IFeature2DImporterExporter || importer is RasterFileImporter)
+                if ((importer is FlowFMNetFileImporter || importer is IFeature2DImporterExporter || importer is RasterFileImporter) && 
+                    activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
                 {
-                    if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
-                    {
-                        RefreshTreeViewAndZoomActiveMapViewToExtends();                     
-                    }
+                    RefreshTreeViewAndZoomActiveMapViewToExtends();                     
                 }
                 if (importer is WaterFlowFMFileImporter &&
                     activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)

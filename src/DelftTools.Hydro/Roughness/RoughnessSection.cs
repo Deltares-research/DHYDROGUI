@@ -878,13 +878,11 @@ namespace DelftTools.Hydro.Roughness
                 return;
 
             double chainage = ((NetworkLocation)e.Items[0]).Chainage;
-            if (e.Action == NotifyCollectionChangeAction.Add)
+            if (e.Action == NotifyCollectionChangeAction.Add && 
+                !functionOf.Arguments[ChainageArgumentIndex].Values.Contains(chainage))
             {
                 //check might be expensive...but needed because importer add values to coverage AFTER the function is set
-                if (!functionOf.Arguments[ChainageArgumentIndex].Values.Contains(chainage))
-                {
-                    functionOf.Arguments[ChainageArgumentIndex].Values.Add(chainage);
-                }
+                functionOf.Arguments[ChainageArgumentIndex].Values.Add(chainage);
             }
 
             if (e.Action == NotifyCollectionChangeAction.Remove)

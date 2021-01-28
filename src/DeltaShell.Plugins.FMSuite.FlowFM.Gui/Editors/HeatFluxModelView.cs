@@ -64,38 +64,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void RadiationCheckBoxOnCheckedChanged(object sender, EventArgs eventArgs)
         {
+            if (heatFluxModel == null) return;
+
             bool proceed = true;
 
-            if (heatFluxModel != null)
+            if (radiationCheckBox.Enabled && 
+                !radiationCheckBox.Checked && 
+                heatFluxModel.MeteoData != null && 
+                heatFluxModel.MeteoData.Arguments[0].Values.Count > 0)
             {
-                if (radiationCheckBox.Enabled && !radiationCheckBox.Checked)
-                {
-                    if (heatFluxModel.MeteoData != null &&
-                        heatFluxModel.MeteoData.Arguments[0].Values.Count > 0)
-                    {
-                        var dialogResult = MessageBox.Show("Are you sure you want to erase solar radiation data?",
-                                                           "Dismiss solar radiation",
-                                                           MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                var dialogResult = MessageBox.Show("Are you sure you want to erase solar radiation data?",
+                    "Dismiss solar radiation",
+                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                         
-                        if (dialogResult == DialogResult.Cancel)
-                        {
-                            proceed = false;
-                        }
-                    }
+                if (dialogResult == DialogResult.Cancel)
+                {
+                    proceed = false;
                 }
+            }
 
-                if (proceed)
-                {
-                    heatFluxModel.ContainsSolarRadiation = radiationCheckBox.Checked;
-                    tabbedMultipleFunctionView.FullRefresh();
-                }
-                else
-                {
-                    radiationCheckBox.CheckedChanged -= RadiationCheckBoxOnCheckedChanged;
-                    // reset value back to what it was
-                    radiationCheckBox.Checked = heatFluxModel.ContainsSolarRadiation;    
-                    radiationCheckBox.CheckedChanged += RadiationCheckBoxOnCheckedChanged;
-                }
+            if (proceed)
+            {
+                heatFluxModel.ContainsSolarRadiation = radiationCheckBox.Checked;
+                tabbedMultipleFunctionView.FullRefresh();
+            }
+            else
+            {
+                radiationCheckBox.CheckedChanged -= RadiationCheckBoxOnCheckedChanged;
+                // reset value back to what it was
+                radiationCheckBox.Checked = heatFluxModel.ContainsSolarRadiation;    
+                radiationCheckBox.CheckedChanged += RadiationCheckBoxOnCheckedChanged;
             }
         }
 

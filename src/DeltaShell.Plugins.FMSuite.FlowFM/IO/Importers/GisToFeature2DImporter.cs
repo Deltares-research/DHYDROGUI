@@ -51,15 +51,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 {
                     return Properties.Resources.points;
                 }
-                else if (typeof (TGeometry) == typeof (ILineString))
+                if (typeof (TGeometry) == typeof (ILineString))
                 {
                     return Properties.Resources.lines;
                 }
-                else
-                {
-                    return Properties.Resources.polygon;
-                }
 
+                return Properties.Resources.polygon;
             }
         }
 
@@ -92,12 +89,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         {
             var filePath = path;
 
-            if (String.IsNullOrEmpty(path))
+            if (String.IsNullOrEmpty(path) && Files != null && Files.Any())
             {
-                if (Files != null && Files.Any())
-                {
-                    filePath = Files.First();
-                }
+                filePath = Files.First();
             }
 
             if (String.IsNullOrEmpty(filePath))

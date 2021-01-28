@@ -81,10 +81,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             if (DelayedEventHandlerController.FireEvents)
             {
-                if (OnDataChanged != null)
-                {
-                    OnDataChanged();
-                }
+                OnDataChanged?.Invoke();
             }
         }
         
@@ -155,27 +152,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private static INetworkCoverage FilterWithTime(INetworkCoverage coverage, DateTime? time)
         {
-            if (coverage.IsTimeDependent)
-            {
-                if (coverage.Time.Values.Count > 0)
-                {
-                    return (INetworkCoverage) coverage.Filter(new VariableValueFilter<DateTime>(coverage.Time, time == null ? coverage.Time.Values[0] : time.Value));
-                }
-            }
-            return coverage;
+            return coverage.IsTimeDependent && coverage.Time.Values.Count > 0
+                ? (INetworkCoverage) coverage.Filter(new VariableValueFilter<DateTime>(coverage.Time,
+                    time ?? coverage.Time.Values[0]))
+                : coverage;
         }
 
         private static IFeatureCoverage FilterWithTime(IFeatureCoverage coverage, DateTime? time)
         {
-            if (coverage.IsTimeDependent)
-            {
-                if (coverage.Time.Values.Count > 0)
-                {
-                    var filteredCoverage = coverage.FilterAsFeatureCoverage(new VariableValueFilter<DateTime>(coverage.Time, time == null ? coverage.Time.Values[0] : time.Value));
-                    return filteredCoverage;
-                }
-            }
-            return coverage;
+            return coverage.IsTimeDependent && coverage.Time.Values.Count > 0
+                ? coverage.FilterAsFeatureCoverage(new VariableValueFilter<DateTime>(coverage.Time,
+                    time ?? coverage.Time.Values[0]))
+                : coverage;
         }
 
         private void RemoveCoverageDelegated(ICoverage coverage)
@@ -917,52 +905,43 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private void Dispose(bool disposing)
         {
             // Check to see if Dispose has already been called.
-            if (!disposed)
+            if (!disposed && disposing)
             {
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources.
-                if (disposing)
+                OnDataChanged = null;
+                UnsubscribeToRouteNetwork();
+                NetworkSideViewCoverageManager?.Dispose();
+
+                DelayedEventHandlerController.FireEventsChanged -= DelayedEventHandlerFireEventsChanged;
+
+                WaterLevelNetworkCoverage = null;
+                foreach (var networkCoverage in ProfileNetworkCoverages)
                 {
-                    OnDataChanged = null;
-                    UnsubscribeToRouteNetwork();
-                    if (NetworkSideViewCoverageManager != null)
-                    {
-                        NetworkSideViewCoverageManager.Dispose();
-                    }
-
-                    DelayedEventHandlerController.FireEventsChanged -= DelayedEventHandlerFireEventsChanged;
-
-                    WaterLevelNetworkCoverage = null;
-                    foreach (var networkCoverage in ProfileNetworkCoverages)
-                    {
-                        networkCoverage.Network = null;
-                    }
-                    ProfileNetworkCoverages.Clear();
-
-                    foreach(var cov in RenderedNetworkCoverages)
-                    {
-                        UnsubscribeFromCoverage(cov);
-                    }
-
-                    foreach (var cov in RenderedFeatureCoverages)
-                    {
-                        UnsubscribeFromCoverage(cov);
-                    }
-
-                    if (delayedCoverageValuesChanged != null)
-                    {
-                        delayedCoverageValuesChanged.Dispose();
-                    }
-
-                    foreach (var createdRoute in createdRoutes)
-                    {
-                        createdRoute.Value.Components = null;
-                        createdRoute.Value.Arguments = null;
-                        createdRoute.Value.Store = null;
-                        createdRoute.Value.Parent = null;
-                    }
-                    createdRoutes.Clear();
+                    networkCoverage.Network = null;
                 }
+                ProfileNetworkCoverages.Clear();
+
+                foreach(var cov in RenderedNetworkCoverages)
+                {
+                    UnsubscribeFromCoverage(cov);
+                }
+
+                foreach (var cov in RenderedFeatureCoverages)
+                {
+                    UnsubscribeFromCoverage(cov);
+                }
+
+                delayedCoverageValuesChanged?.Dispose();
+
+                foreach (var createdRoute in createdRoutes)
+                {
+                    createdRoute.Value.Components = null;
+                    createdRoute.Value.Arguments = null;
+                    createdRoute.Value.Store = null;
+                    createdRoute.Value.Parent = null;
+                }
+                createdRoutes.Clear();
             }
             disposed = true;
         }

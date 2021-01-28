@@ -183,13 +183,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             {
                 RenderFormulaControls();
             }
-            if (weir.CanBeTimedependent)
+            if (weir.CanBeTimedependent && nameof(weir.UseCrestLevelTimeSeries) == e.PropertyName)
             {
-                if (nameof(weir.UseCrestLevelTimeSeries) == e.PropertyName)
-                {
-                    CrestLevelTimeDependentCheckBox.Checked = weir.UseCrestLevelTimeSeries;
-                    ConfigureUseCrestLevelTimeSeries();
-                }
+                CrestLevelTimeDependentCheckBox.Checked = weir.UseCrestLevelTimeSeries;
+                ConfigureUseCrestLevelTimeSeries();
             }
 
             RenderControls();

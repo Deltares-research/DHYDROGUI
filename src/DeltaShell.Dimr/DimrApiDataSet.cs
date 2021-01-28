@@ -115,9 +115,9 @@ namespace DeltaShell.Dimr
         public const string FEEDBACKLEVELKEY = "feedbackLevel";
         public const string LOGFILELEVELKEY = "debugLevel";
 
-        public static Level LogFileLevel = Level.Info;
-        public static Level FeedbackLevel = Level.Fatal;
-        
+        public static Level LogFileLevel { get; set; } = Level.Info;
+        public static Level FeedbackLevel { get; set; } = Level.Fatal;
+
         public const double DIMR_FILL_VALUE = -999000.0d;
     }
 }

@@ -17,12 +17,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             get { return coupler; }
             set
             {
-                if (coupler != null)
+                if (coupler?.HydroModel != null)
                 {
-                    if (coupler.HydroModel != null)
-                    {
-                        ((INotifyPropertyChanged) coupler.HydroModel).PropertyChanged -= CouplerPropertyChanged;
-                    }
+                    ((INotifyPropertyChanged) coupler.HydroModel).PropertyChanged -= CouplerPropertyChanged;
                 }
                 
                 coupler = value;

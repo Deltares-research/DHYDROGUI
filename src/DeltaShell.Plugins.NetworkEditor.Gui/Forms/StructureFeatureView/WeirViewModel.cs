@@ -17,7 +17,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private static readonly ILog Log = LogManager.GetLogger(typeof(WeirViewModel));
         private IWeir weir;
         private SelectableWeirFormulaType selectedWeirType;
-        private GateOpeningDirection selectedGateOpeningHorizontalDirection;
 
         private double lowerEdgeLevel;
         private double previousCrestLevel;

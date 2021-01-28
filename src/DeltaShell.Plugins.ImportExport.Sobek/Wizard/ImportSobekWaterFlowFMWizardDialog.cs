@@ -55,11 +55,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
                 importer.PathSobek = selectFileWizardPage.FileName;
                 selectSobekPartsWizardPage.PartialSobekImporter = importer;
 
-                if (selectFileWizardPage.FileName.ToLower().EndsWith("network.tp"))
-                {
-
-                }
-                else
+                if (!selectFileWizardPage.FileName.ToLower().EndsWith("network.tp"))
                 {
                     throw new ArgumentException("Not a valid file to import.");
                 }

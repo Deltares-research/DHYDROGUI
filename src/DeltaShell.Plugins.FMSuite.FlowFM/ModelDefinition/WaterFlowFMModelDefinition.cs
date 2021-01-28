@@ -225,14 +225,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         private void OnWaterFlowFMCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                if (e.GetRemovedOrAddedItem() == GetModelProperty(KnownProperties.Temperature))
-                {
-                    var prop = (WaterFlowFMProperty) e.GetRemovedOrAddedItem();
-                    HeatFluxModel.Type = (HeatFluxModelType) ((int)prop.Value);
-                }
-            }
+            if (e.Action != NotifyCollectionChangedAction.Add ||
+                e.GetRemovedOrAddedItem() != GetModelProperty(KnownProperties.Temperature)) return;
+
+            var prop = (WaterFlowFMProperty) e.GetRemovedOrAddedItem();
+            HeatFluxModel.Type = (HeatFluxModelType) ((int)prop.Value);
         }
 
         private bool handlingPropertyChanged;

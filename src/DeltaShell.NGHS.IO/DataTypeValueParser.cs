@@ -289,16 +289,11 @@ namespace DeltaShell.NGHS.IO
         {
             if (String.IsNullOrEmpty(valueAsString)) return DateTime.Now;
 
-            DateTime value;
-            if (!DateTime.TryParseExact(valueAsString, "yyyyMMdd", null, DateTimeStyles.None, out value))
+            if (!DateTime.TryParseExact(valueAsString, "yyyyMMdd", null, DateTimeStyles.None, out var value) && 
+                !DateTime.TryParseExact(valueAsString, "yyyyMMddHHmmss", null, DateTimeStyles.None, out value) && 
+                !DateTime.TryParseExact(valueAsString, "yyyy-MM-dd", null, DateTimeStyles.None, out value))
             {
-                if (!DateTime.TryParseExact(valueAsString, "yyyyMMddHHmmss", null, DateTimeStyles.None, out value))
-                {
-                    if (!DateTime.TryParseExact(valueAsString, "yyyy-MM-dd", null, DateTimeStyles.None, out value))
-                    {
-                        throw new FormatException("Unexpected date time format");
-                    }
-                }
+                throw new FormatException("Unexpected date time format");
             }
             return value;
         }

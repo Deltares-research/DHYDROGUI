@@ -194,12 +194,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                     return null;
             }
 
-            if (sender is TreeNode node && node.Tag is IDataItem dataItem)
+            if (sender is TreeNode node && 
+                node.Tag is IDataItem dataItem && 
+                (dataItem.Role != DataItemRole.Input || dataItem.LinkedTo != null))
             {
-                if (dataItem.Role != DataItemRole.Input || dataItem.LinkedTo != null)
-                {
-                    return null;
-                }
+                return null;
             }
 
             if (function == null || function is IVariable)
@@ -207,12 +206,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                 return null;
             }
 
-            if (function.Arguments.Count > 0)
+            if (function.Arguments.Count > 0 && 
+                function.Arguments[0].ValueType != typeof(DateTime))
             {
-                if (function.Arguments[0].ValueType != typeof(DateTime))
-                {
-                    return null;
-                }
+                return null;
             }
 
             zoomToToolStripMenuItem.Available = activeViewIsMapView;

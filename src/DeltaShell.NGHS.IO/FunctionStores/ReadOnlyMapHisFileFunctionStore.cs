@@ -95,7 +95,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
         #region Unsupported functions
 
-        public void SetVariableValues<T>(IVariable function, IEnumerable<T> values, params IVariableFilter[] filters)
+        public void SetVariableValues<T>(IVariable variable, IEnumerable<T> values, params IVariableFilter[] filters)
         {
             throw new NotSupportedException("Function store is readonly");
         }
@@ -173,29 +173,29 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             return objectToFind;
         }
 
-        public IMultiDimensionalArray GetVariableValues(IVariable function, params IVariableFilter[] filters)
+        public IMultiDimensionalArray GetVariableValues(IVariable variable, params IVariableFilter[] filters)
         {
             if (!HasValidFile)
             {
-                return CreateEmptyArrayForType(function.ValueType);
+                return CreateEmptyArrayForType(variable.ValueType);
             }
 
-            if (function.IsIndependent) 
+            if (variable.IsIndependent) 
             {
                 // is argument
-                return GetArgumentValues(function, filters);
+                return GetArgumentValues(variable, filters);
             }
 
-            var timeVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
+            var timeVariable = variable.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
 
             // should be time dependent component with single value filters
-            if (function.ValueType != typeof(double) || function.IsIndependent || timeVariable == null || filters.OfType<IVariableValueFilter>().Any(f => f.Values.Count > 1))
+            if (variable.ValueType != typeof(double) || variable.IsIndependent || timeVariable == null || filters.OfType<IVariableValueFilter>().Any(f => f.Values.Count > 1))
                 throw new NotImplementedException();
 
-            var parameterName = GetParameterName != null ? GetParameterName(function.Name) : function.Name;
+            var parameterName = GetParameterName != null ? GetParameterName(variable.Name) : variable.Name;
             if (string.IsNullOrEmpty(parameterName))
             {
-                return CreateEmptyArrayForType(function.ValueType);
+                return CreateEmptyArrayForType(variable.ValueType);
             }
 
             List<double> data = null;
@@ -204,7 +204,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             var timeFilter = filters.Where(f => f.Variable == timeVariable).OfType<VariableValueFilter<DateTime>>().FirstOrDefault();
 
             // UnstructuredCoverage
-            var locationIndexVariable = function.Arguments.FirstOrDefault(a => a.ValueType == typeof(int));
+            var locationIndexVariable = variable.Arguments.FirstOrDefault(a => a.ValueType == typeof(int));
             if (locationIndexVariable != null)
             {
                 var locationFilter = filters.Where(f => f.Variable == locationIndexVariable).OfType<VariableValueFilter<int>>().FirstOrDefault();
@@ -228,7 +228,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             }
 
             // FeatureCoverage
-            var featureVariable = function.Arguments.FirstOrDefault(a => a.ValueType.Implements(typeof(IFeature)));
+            var featureVariable = variable.Arguments.FirstOrDefault(a => a.ValueType.Implements(typeof(IFeature)));
             if (featureVariable != null)
             {
                 if (!filters.Any())
@@ -238,7 +238,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                         var values = Enumerable.Range(0, MetaData?.Times.Count ?? 1)
                             .SelectMany(i => MapHisFileReader.GetTimeStepData(path, MetaData, i, parameterName))
                             .ToList();
-                        UpdateMinMax(values, parameterName, function);
+                        UpdateMinMax(values, parameterName, variable);
                         return new MultiDimensionalArray<double>(values, MetaData?.NumberOfTimeSteps ?? 1, MetaData?.NumberOfLocations ?? 1);
                     };
                     return new LazyMultiDimensionalArray<double>(realGetFunction, () => (MetaData?.NumberOfTimeSteps ?? 1) * (MetaData?.NumberOfLocations ?? 1));
@@ -263,7 +263,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             }
 
             // TimeSeries
-            if (MetaData != null && function.Arguments.Count == 1 && !filters.Any() && MetaData.NumberOfLocations == 1)
+            if (MetaData != null && variable.Arguments.Count == 1 && !filters.Any() && MetaData.NumberOfLocations == 1)
             {
                 data = MapHisFileReader.GetTimeSeriesData(path, MetaData, parameterName, 0);
                 shape = new[] {MetaData.NumberOfTimeSteps};
@@ -272,7 +272,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             if (data == null)
                 return new MultiDimensionalArray<double>(new List<double>(), new[] { 0, 0 });
 
-            UpdateMinMax(data, parameterName, function);
+            UpdateMinMax(data, parameterName, variable);
             return new MultiDimensionalArray<double>(data, shape);
         }
 
@@ -306,9 +306,9 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             throw new NotImplementedException();
         }
 
-        public IMultiDimensionalArray<T> GetVariableValues<T>(IVariable function, params IVariableFilter[] filters)
+        public IMultiDimensionalArray<T> GetVariableValues<T>(IVariable variable, params IVariableFilter[] filters)
         {
-            return (IMultiDimensionalArray<T>) GetVariableValues(function, filters);
+            return (IMultiDimensionalArray<T>) GetVariableValues(variable, filters);
         }
 
         private void UpdateMinMaxWithOneTimeStep(IVariable variable)

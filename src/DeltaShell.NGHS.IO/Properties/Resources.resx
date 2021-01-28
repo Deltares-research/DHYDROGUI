@@ -322,13 +322,13 @@
     <value>Couldn't write 1D2DLinks to file</value>
   </data>
   <data name="RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed_" xml:space="preserve">
-    <value>Filling the table of the Q or H function failed!</value>
+    <value>Filling the table of the Q or H variable failed!</value>
   </data>
   <data name="RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed__values_count_doesn_t_match_the_defined_levels_count_" xml:space="preserve">
-    <value>Filling the table of the Q or H function failed, values count doesn't match the defined levels count!</value>
+    <value>Filling the table of the Q or H variable failed, values count doesn't match the defined levels count!</value>
   </data>
   <data name="RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a_function_type_of____0_" xml:space="preserve">
-    <value>Couldn't read roughness section with a function type of : {0}</value>
+    <value>Couldn't read roughness section with a variable type of : {0}</value>
   </data>
   <data name="RoughnessDataFileReader_ReadDefinitionData_Could_not_read_roughness_definition_data" xml:space="preserve">
     <value>Could not read roughness definition data</value>

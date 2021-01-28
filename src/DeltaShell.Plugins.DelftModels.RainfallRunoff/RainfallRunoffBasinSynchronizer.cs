@@ -28,14 +28,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private void RainfallRunoffPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // deal with undo/redo of linking..yes..I know
-            if (EditActionSettings.Disabled) //this makes sure this ONLY works DURING undo/redo
-            {
-                if ((e.PropertyName == "Value" || e.PropertyName == "LinkedTo") &&
-                    Equals(sender, subscribedBasinDataItem))
-                {
-                    Subscribe();
-                }
-            }
+            if (!EditActionSettings.Disabled || 
+                (e.PropertyName != "Value" && e.PropertyName != "LinkedTo") ||
+                !Equals(sender, subscribedBasinDataItem)) return;
+
+            Subscribe();
         }
 
         private RainfallRunoffModel Model { get; set; }
@@ -166,10 +163,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             if (!(Equals(sender, subscribedBasinDataItem))) 
                 return;
 
-            if (e.PropertyName == "Value")
+            if (e.PropertyName == "Value" && !linking)
             {
-                if (!linking)
-                    FullRefresh(); //should automatically clear output
+                FullRefresh(); //should automatically clear output
             }
         }
 
@@ -196,13 +192,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         [EditAction]
         private void BasinCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var catchmentList = sender as IEventedList<Catchment>;
-            if (catchmentList != null) //basin catchments or subcatchments
+            if (sender is IEventedList<Catchment> catchmentList && 
+                !catchmentList.SkipChildItemEventBubbling) //basin catchments or subcatchments
             {
-                if (!catchmentList.SkipChildItemEventBubbling) //not aggregation list
-                {
-                    CatchmentsCollectionChanged(e);
-                }
+                //not aggregation list
+                CatchmentsCollectionChanged(e);
             }
 
             if (Equals(sender, Basin.Boundaries))
