@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(e.ParamName, Is.EqualTo("list"));
+            Assert.That(e.ParamName, Is.EqualTo("collection"));
         }
 
         [Test]
