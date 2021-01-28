@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Guards;
 
 namespace DeltaShell.NGHS.Common.Utils
@@ -12,36 +11,37 @@ namespace DeltaShell.NGHS.Common.Utils
     public static class SyncHelper
     {
         /// <summary>
-        /// Synchronizes the specified <paramref name="list"/> with the added or removed items.
+        /// Creates a <see cref="NotifyCollectionChangedEventHandler"/> which synchronizes the
+        /// specified <paramref name="collection"/> with the source of the events.
         /// </summary>
-        /// <param name="list"> The list to be synced. </param>
-        /// <typeparam name="T"> The type of the items in the list. </typeparam>
+        /// <param name="collection"> The collection to be synced. </param>
+        /// <typeparam name="T"> The type of the items in the collection. </typeparam>
         /// <returns>The created <see cref="NotifyCollectionChangedEventHandler"/> </returns>
-        /// <remarks>
-        /// The method returns when the sender is not of the same type as <paramref name="list"/>
-        /// </remarks>
         /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="list"/> is <c>null</c>.
+        /// Thrown when <paramref name="collection"/> is <c>null</c>.
         /// </exception>
-        public static NotifyCollectionChangedEventHandler GetSyncNotifyCollectionChangedEventHandler<T>(IEventedList<T> list)
+        /// <remarks>
+        /// Remember to unsubscribe this event handler when needed, preventing the unwanted
+        /// modification of the <paramref name="collection"/>.
+        /// Note that to unsubscribe this event handler, a reference to the created instance is needed.
+        /// </remarks>
+        public static NotifyCollectionChangedEventHandler GetSyncNotifyCollectionChangedEventHandler<T>(ICollection<T> collection)
         {
-            Ensure.NotNull(list, nameof(list));
+            Ensure.NotNull(collection, nameof(collection));
 
             return (sender, e) =>
             {
-                if (!(sender is IEventedList<T>))
-                {
-                    return;
-                }
-
-                IEnumerable<T> itemsToRemove = e.OldItems?.Cast<T>() ?? Enumerable.Empty<T>();
+                IEnumerable<T> itemsToRemove = e.OldItems?.OfType<T>() ?? Enumerable.Empty<T>();
                 foreach (T data in itemsToRemove)
                 {
-                    list.Remove(data);
+                    collection.Remove(data);
                 }
 
-                IEnumerable<T> itemsToAdd = e.NewItems?.Cast<T>() ?? Enumerable.Empty<T>();
-                list.AddRange(itemsToAdd);
+                IEnumerable<T> itemsToAdd = e.NewItems?.OfType<T>() ?? Enumerable.Empty<T>();
+                foreach (T data in itemsToAdd)
+                {
+                    collection.Add(data);
+                }
             };
         }
     }

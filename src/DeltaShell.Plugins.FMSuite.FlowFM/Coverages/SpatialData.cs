@@ -165,28 +165,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             }
         }
 
-        private void RemoveDataItem(ICollection<IDataItem> dataItems, string name)
+        private void RemoveDataItem(ICollection<IDataItem> dataItemSource, string name)
         {
-            IDataItem dataItem = dataItems.GetByName(name);
+            IDataItem dataItem = dataItemSource.GetByName(name);
             if (dataItem == null)
             {
                 return;
             }
 
-            dataItems.Remove(dataItem);
+            dataItemSource.Remove(dataItem);
             DataItems.Remove(dataItem);
         }
 
-        private void AddCoverage(ICollection<IDataItem> dataItems, UnstructuredGridCoverage coverage)
+        private void AddCoverage(ICollection<IDataItem> dataItemSource, UnstructuredGridCoverage coverage)
         {
-            if (dataItems.GetByName(coverage.Name) != null)
+            if (dataItemSource.GetByName(coverage.Name) != null)
             {
                 return;
             }
 
             IDataItem dataItem = CreateDataItem(coverage.Name, coverage);
 
-            dataItems.Add(dataItem);
+            dataItemSource.Add(dataItem);
             DataItems.Add(dataItem);
         }
 

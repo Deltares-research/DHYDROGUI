@@ -1790,16 +1790,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var model = new WaterFlowFMModel())
             {
-                var dataItem = new DataItem();
-
                 model.SpatialDataItems.CollectionChanged += dataItemsObserver.OnEventFired;
                 ((INotifyCollectionChanged) model).CollectionChanged += modelObserver.OnEventFired;
 
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false) {Name = "Some tracer"};
+
                 // When
-                model.SpatialData.DataItems.Add(dataItem);
+                model.SpatialData.AddTracer(coverage);
 
                 // Then
-                Assert.That(model.SpatialDataItems, Is.EqualTo(model.SpatialData.DataItems));
+                IDataItem dataItem = model.SpatialData.DataItems.First(d => d.Value == coverage);
+                Assert.That(model.SpatialDataItems, Does.Contain(dataItem));
+                Assert.That(model.SpatialDataItems, Is.EquivalentTo(model.SpatialData.DataItems));
 
                 Assert.That(dataItemsObserver.NCalls, Is.EqualTo(1));
                 Assert.That(dataItemsObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
@@ -1825,16 +1827,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var model = new WaterFlowFMModel())
             {
-                IDataItem dataItem = model.SpatialData.DataItems.First();
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false) {Name = "Some fraction"};
+                model.SpatialData.AddFraction(coverage);
+                IDataItem dataItem = model.SpatialData.DataItems.First(d => d.Value == coverage);
 
                 model.SpatialDataItems.CollectionChanged += dataItemsObserver.OnEventFired;
                 ((INotifyCollectionChanged) model).CollectionChanged += modelObserver.OnEventFired;
 
+                // Precondition
+                Assert.That(model.SpatialDataItems, Does.Contain(dataItem));
+
                 // When
-                model.SpatialData.DataItems.Remove(dataItem);
+                model.SpatialData.RemoveFraction("Some fraction");
 
                 // Then
-                Assert.That(model.SpatialDataItems, Is.EqualTo(model.SpatialData.DataItems));
+                Assert.That(model.SpatialDataItems, Does.Not.Contain(dataItem));
+                Assert.That(model.SpatialDataItems, Is.EquivalentTo(model.SpatialData.DataItems));
 
                 Assert.That(dataItemsObserver.NCalls, Is.EqualTo(1));
                 Assert.That(dataItemsObserver.Senders[0], Is.SameAs(model.SpatialDataItems));

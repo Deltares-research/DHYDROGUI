@@ -24,8 +24,9 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void GetSyncNotifyCollectionChangedEventHandler_InvokeWithSenderOfOtherType_Returns()
+        public void GetSyncNotifyCollectionChangedEventHandler_InvokeWithSenderOfOtherType_DoesNothing()
         {
+            // Setup
             var list = new EventedList<string>
             {
                 "a",
@@ -33,6 +34,7 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
                 "c",
             };
             NotifyCollectionChangedEventHandler eventHandler = SyncHelper.GetSyncNotifyCollectionChangedEventHandler(list);
+
             // Call
             eventHandler.Invoke(new EventedList<object>(),
                                 new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
@@ -46,6 +48,7 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
         [TestCaseSource(nameof(NotifyCollectionChangedEventArgsCases))]
         public void GetSyncNotifyCollectionChangedEventHandler_Invoke_SyncsList(NotifyCollectionChangedEventArgs eventArgs, IList<string> expList)
         {
+            // Setup
             var list = new EventedList<string>
             {
                 "a",
