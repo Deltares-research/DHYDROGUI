@@ -4,7 +4,6 @@ using DelftTools.Hydro.Structures.LeveeBreachFormula;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Geometries;
-using log4net;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.LinearReferencing;
 
@@ -15,7 +14,6 @@ namespace DelftTools.Hydro.Structures
     {
         public const string LEVEE_BREACH_FEATURE = "LeveeBreachFeature";
         public const string LEVEE_BREACH_POINT_LOCATION_TYPE = "LeveeBreachPointLocationType";
-        private static readonly ILog log = LogManager.GetLogger(typeof(LeveeBreach));
         private double breachLocationX;
         private double breachLocationY;
         private bool isLocationSet;

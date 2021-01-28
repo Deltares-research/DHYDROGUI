@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
     public class NwrwTpComponentFileWriter : NwrwComponentFileWriterBase
     {
         private const string NWRW_TP_FILENAME = "3BRUNOFF.TP";
-        private static ILog Log = LogManager.GetLogger(typeof(Nwrw3BComponentFileWriter));
 
         private const string DEFAULT_BRANCH_ID = "-1";
         private const string DEFAULT_MODEL_NODETYPE = "7";

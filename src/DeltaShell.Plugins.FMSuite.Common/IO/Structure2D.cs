@@ -5,14 +5,11 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures.KnownStructureProperties;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
     public class Structure2D
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(Structure2D));
-
         public Structure2D(string type)
         {
             SetStructureType(type);

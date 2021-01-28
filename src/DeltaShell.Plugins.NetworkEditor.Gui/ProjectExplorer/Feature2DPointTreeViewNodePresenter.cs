@@ -14,8 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
     {
         private static Bitmap observationPointImage;
         private static Bitmap GullyImage;
-        private static Bitmap roofAreaImage;
-
+        
         public Feature2DPointTreeViewNodePresenter() : base("", null)
         {
             observationPointImage = Resources.observationcs2d;

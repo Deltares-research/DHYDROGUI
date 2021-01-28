@@ -8,15 +8,12 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf;
 using DeltaShell.Plugins.NetworkEditor.Import;
-using log4net;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
 {
     public partial class SelectDataWizardPage : UserControl, IWizardPage
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SelectDataWizardPage));
-
         private HydroRegionFromGisImporter hydroRegionFromGisImporter;
         private string fileFilter = "";
         private string lastVisitPath = "";

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using DelftTools.Functions.Generic;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.SobekDataObjects
 {
@@ -10,8 +9,6 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
     /// </summary>
     public class SobekLateralFlow
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekLateralFlow));
-
         public SobekLateralFlow()
         {
             IsPointDischarge = true;

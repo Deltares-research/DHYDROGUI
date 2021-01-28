@@ -8,14 +8,11 @@ using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using GeoAPI.Extensions.Networks;
-using log4net;
 
 namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
 {
     public static class DefinitionGeneratorFactory
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(DefinitionGeneratorFactory));
-
         public static IDefinitionReader<ICrossSectionDefinition> GetDefinitionReaderCrossSection(string type, string template = "")
         {
             switch (type)

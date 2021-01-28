@@ -3,14 +3,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
     public class SobekRRNwrwReader : SobekReader<SobekRRNwrw>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRNwrwReader));
-
         public override IEnumerable<SobekRRNwrw> Parse(string text)
         {
             const string pattern = @"NWRW\s+" + IdAndOptionalNamePattern + "(?'text'.*?)nwrw";

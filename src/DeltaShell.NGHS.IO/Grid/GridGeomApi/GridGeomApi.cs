@@ -16,7 +16,6 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
         public const string LIB_DLL_NAME = "gridgeom.dll";
         private const string DFLOWFM_FOLDER_NAME = "share";
         private const string DFLOWFM_BINFOLDER_NAME = "bin";
-        private const double missingValue = -999.0;
 
         static GridGeomApi()
         {

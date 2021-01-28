@@ -5,14 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
     public class SobekRRGreenhouseSiloDefinitionReader : SobekReader<SobekRRGreenhouseSiloDefinition>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRGreenhouseSiloDefinitionReader));
-
         public override IEnumerable<SobekRRGreenhouseSiloDefinition> Parse(string fileContent)
         {
             const string pattern = @"SILO\s+(?'text'.*?)\s+silo" + RegularExpression.EndOfLine;

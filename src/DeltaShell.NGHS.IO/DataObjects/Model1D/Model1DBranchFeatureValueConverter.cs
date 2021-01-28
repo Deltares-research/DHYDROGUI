@@ -105,8 +105,6 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
             ConvertedValue = Convert.ToDouble(value);
         }
 
-        private IDataItem cachedDataItem;
-
         public override string Name { get; set; }
     }
 }

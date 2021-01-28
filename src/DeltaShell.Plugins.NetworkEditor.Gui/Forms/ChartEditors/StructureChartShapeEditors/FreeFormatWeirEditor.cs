@@ -254,11 +254,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
         }
 
-        void CrestShape_ValuesChanged(object sender, FunctionValuesChangingEventArgs e)
-        {
-            CreateTrackers();
-        }
-
         public override void Stop()
         {
         }

@@ -6,7 +6,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
-using log4net;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
@@ -15,11 +14,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
     /// example of separation of view / controller
     public sealed class CompositeStructureViewPresenter : ICanvasEditor, IDisposable
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CompositeStructureViewPresenter));
         private CompositeStructureViewDataController _sideViewDataController;
         private ICompositeStructureView view;
         private ISelectionContainer selectionContainer;
-        private bool disposed;
 
         protected void OnSelectionChanged(object sender, SelectedItemChangedEventArgs args)
         {

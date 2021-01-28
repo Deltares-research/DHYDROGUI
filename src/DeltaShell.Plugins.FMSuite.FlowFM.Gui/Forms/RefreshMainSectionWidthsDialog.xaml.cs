@@ -16,8 +16,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             ViewModel.AfterFix = Close;
         }
 
-        private IEnumerable<ICrossSection> crossSections;
-
         object IView.Data
         {
             get { return Data; }

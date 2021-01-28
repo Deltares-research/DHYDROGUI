@@ -8,14 +8,11 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Shell.Gui;
-using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
     public partial class CrossSectionPipeView : UserControl, IReusableView, ICrossSectionHistoryCapableView
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CrossSectionPipeView));
-
         private static readonly Bitmap XYZImage = Properties.Resources.CrossSectionSmallXYZ;
         private static readonly Bitmap YZImage = Properties.Resources.CrossSectionSmall;
         private static readonly Bitmap ZWImage = Properties.Resources.CrossSectionTabulatedSmall;

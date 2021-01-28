@@ -7,8 +7,6 @@ namespace DeltaShell.NGHS.IO
 {
     public class DelftBcReader : DelftIniReader
     {
-        private const string KeyValuePattern = @"^\s*(?<key>[^=\s]+)\s*=\s*(?<value>[^#=]*)?$";
-
         public IList<IDelftBcCategory> ReadDelftBcFile(string bcFile)
         {
             var content = new List<IDelftBcCategory>();

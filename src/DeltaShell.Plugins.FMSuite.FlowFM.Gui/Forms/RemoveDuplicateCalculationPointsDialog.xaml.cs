@@ -18,8 +18,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             ViewModel.AfterFix = Close;
         }
 
-        private IEnumerable<IGrouping<Coordinate, INetworkLocation>> duplicateNetworkLocationsByCoordinate;
-
         object IView.Data
         {
             get { return Data; }

@@ -7,14 +7,11 @@ using DelftTools.Shell.Core;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 {
     public class RainfallRunoffModelExporter : IFileExporter
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModelExporter));
-        
         [ExcludeFromCodeCoverage]
         public string Name
         {

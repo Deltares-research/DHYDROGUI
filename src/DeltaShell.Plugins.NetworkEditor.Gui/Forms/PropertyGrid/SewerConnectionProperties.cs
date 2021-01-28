@@ -4,14 +4,11 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
-using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
     public class SewerConnectionProperties : ObjectProperties<SewerConnection>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SewerConnectionProperties));
-
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Name")]
         [PropertyOrder(1)]

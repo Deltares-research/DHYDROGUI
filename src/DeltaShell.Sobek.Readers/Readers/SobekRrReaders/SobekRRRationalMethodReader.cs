@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
@@ -23,8 +22,6 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         // ms = meteo-station
         // ii = seepage/infiltration intensity (mm/s)
         // ar = runoff area (m2)
-
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SobekRROpenWaterFromRationalMethodReader));
 
         public override IEnumerable<SobekRROpenWater> Parse(string text)
         {

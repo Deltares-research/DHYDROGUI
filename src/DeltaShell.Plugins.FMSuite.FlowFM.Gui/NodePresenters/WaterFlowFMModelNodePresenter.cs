@@ -31,7 +31,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         internal static Bitmap UnstrucModelIcon;
         public static readonly Bitmap ThinDamIcon = new Bitmap(Resources.thindam, 16, 16);
         public static readonly Bitmap FixedWeirIcon = new Bitmap(Resources.fixedweir, 16, 16);
-        public static readonly Bitmap LeveeBreachIcon = new Bitmap(Resources.DamBreak, 16, 16);
         public static readonly Bitmap LandBoundaryIcon = new Bitmap(Resources.landboundary, 16, 16);
         public static readonly Bitmap DryPointIcon = new Bitmap(Resources.dry_point, 16, 16);
         public static readonly Bitmap ObsIcon = new Bitmap(Common.Gui.Properties.Resources.Observation, 16, 16);
@@ -48,8 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private static readonly Bitmap PhysParamIcon = new Bitmap(Common.Gui.Properties.Resources.folder_wrench, 16, 16);
         private static readonly Bitmap NumParamIcon = new Bitmap(Common.Gui.Properties.Resources.settings, 16, 16);
         private static readonly Bitmap OutParamIcon = new Bitmap(Common.Gui.Properties.Resources.output_param, 16, 16);
-        private static readonly Bitmap WindIcon = new Bitmap(Resources.Wind1, 16, 16);
-        private static readonly Bitmap NetworkIcon = new Bitmap(NetworkEditor.Gui.Properties.Resources.Network, 16, 16);
         private static readonly Bitmap NetworkDiscretizationIcon = new Bitmap(SharpMapGis.Gui.Properties.Resources.discretization, 16, 16);
 
         // boolean is used only the first time to expand the node after creation.

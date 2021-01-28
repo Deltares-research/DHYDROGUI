@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
@@ -13,8 +12,6 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
     /// </summary>
     public class SobekRROpenWaterReader : SobekReader<SobekRROpenWater>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRROpenWaterReader));
-
         public override IEnumerable<SobekRROpenWater> Parse(string text)
         {
             // The tag OWRR is for (historical) testing purposes, the open water nodes

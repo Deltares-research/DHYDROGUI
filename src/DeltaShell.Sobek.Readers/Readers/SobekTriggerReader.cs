@@ -4,14 +4,11 @@ using System.Data;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers
 {
     public class SobekTriggerReader : SobekReader<SobekTrigger>
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SobekControllerReader));
-
         public override IEnumerable<SobekTrigger> Parse(string datFileText)
         {
             const string pattern = @"(TRGR\s(?<row>(?'text'.*?))\strgr)";

@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
     public class Nwrw3BComponentFileWriter : NwrwComponentFileWriterBase
     {
         private const string NWRW_3B_FILENAME = "pluvius.3b";
-        private static ILog Log = LogManager.GetLogger(typeof(Nwrw3BComponentFileWriter));
 
         public Nwrw3BComponentFileWriter(RainfallRunoffModel model) : base(model, NWRW_3B_FILENAME)
         {

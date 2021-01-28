@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
-using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
     public class SobekWindImporter : IFileImporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SobekWindImporter));
-
         public string Name
         {
             get { return "SOBEK Wind Data"; }

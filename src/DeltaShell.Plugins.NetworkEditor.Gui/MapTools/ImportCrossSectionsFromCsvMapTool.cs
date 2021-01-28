@@ -5,7 +5,6 @@ using System.Windows.Forms;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using GeoAPI.Geometries;
-using log4net;
 using SharpMap.Api.Layers;
 using SharpMap.UI.Tools;
 
@@ -13,8 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
     public class ImportCrossSectionsFromCsvMapTool: MapTool
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(ImportCrossSectionsFromCsvMapTool));
-
         public ImportCrossSectionsFromCsvMapTool(Func<ILayer, bool> layerFilter)
         {
             LayerFilter = layerFilter;

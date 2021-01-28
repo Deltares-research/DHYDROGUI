@@ -13,8 +13,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public static class SewerFeatureFactory
     {
-        private static ILog Log = LogManager.GetLogger(typeof(SewerFeatureFactory));
-
         #region Creators
         
         /// <summary>

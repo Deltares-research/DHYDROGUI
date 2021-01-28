@@ -13,8 +13,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     [Extension(typeof(IPlugin))]
     public class SobekImportApplicationPlugin : ApplicationPlugin
     {
-        private Image image;
-
         static SobekImportApplicationPlugin()
         {
             Sobek2ModelImporters.RegisterSobek2Importer(() => new SobekModelToRainfallRunoffModelImporter());

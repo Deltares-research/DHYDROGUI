@@ -1784,8 +1784,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private IList<ExplicitValueConverterLookupItem> explicitValueConverterLookupItems;
-
         public bool UseLocalApi { get; set; }
         
         // Do not remove...used in HydroModelBuilder.py

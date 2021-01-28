@@ -1,13 +1,10 @@
 ﻿using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
-using log4net;
 using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
 {
     public class AddInterpolatedCrossSectionCommand : NetworkEditorCommand
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(AddInterpolatedCrossSectionCommand));
-
         protected IMapTool CurrentTool
         {
             get

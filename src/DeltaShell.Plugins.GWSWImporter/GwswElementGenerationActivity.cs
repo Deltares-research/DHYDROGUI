@@ -7,7 +7,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
-using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -16,7 +15,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         private readonly SewerFeatureType elementType;
         private readonly GwswElement[] gwswElements;
         private readonly GwswFileImporter gwswFileImporter;
-        private static ILog Log = LogManager.GetLogger(typeof(GwswElementGenerationActivity<T>));
         private IGwswFeatureGenerator<T> generator;
         private int nrOfGwswFeatures;
         public ConcurrentQueue<T> Features { get; } = new ConcurrentQueue<T>();

@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers
 {
     public class SobekCompoundStructureReader : SobekReader<SobekCompoundStructure>
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SobekCompoundStructureReader));
-
         public override IEnumerable<SobekCompoundStructure> Parse(string text)
         {
             const string compoundstructuresPattern = @"(STCM(?'text'.*?)stcm)";

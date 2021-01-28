@@ -5,14 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
     public class SobekRRBoundaryReader : SobekReader<SobekRRBoundary>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRBoundaryReader));
-
         public override IEnumerable<SobekRRBoundary> Parse(string fileContent)
         {
             const string bounPattern = @"BOUN (?'text'.*?)boun" + RegularExpression.EndOfLine;

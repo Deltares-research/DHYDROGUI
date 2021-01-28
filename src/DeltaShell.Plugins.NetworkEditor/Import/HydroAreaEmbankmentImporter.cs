@@ -7,7 +7,6 @@ using DelftTools.Shell.Core;
 using DelftTools.Utils;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
-using log4net;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
@@ -16,8 +15,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 {
     public class HydroAreaEmbankmentImporter : IFileImporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(HydroAreaEmbankmentImporter));
-
         public string Name
         {
             get { return "Embankments"; }

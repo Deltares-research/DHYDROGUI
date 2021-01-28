@@ -3,14 +3,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
     public class SobekRRLinkReader : SobekReader<SobekRRLink>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRLinkReader));
-
         public override IEnumerable<SobekRRLink> Parse(string fileContent)
         {
             const string rrLinkPattern = @"BRCH(?'text'.*?)brch" + RegularExpression.EndOfLine;

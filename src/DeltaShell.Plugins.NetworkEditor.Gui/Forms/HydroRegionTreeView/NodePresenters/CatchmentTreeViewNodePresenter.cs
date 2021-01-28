@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Drawing;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Hydro;
@@ -10,15 +9,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 {
     public class CatchmentTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<Catchment>
     {
-        private static readonly Image CatchmentImage = Properties.Resources.catchment;
-
         public CatchmentTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin)
         {
         }
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, Catchment nodeData)
         {
-            node.Image = nodeData.CatchmentType != null ? nodeData.CatchmentType.Icon : null;
+            node.Image = nodeData.CatchmentType?.Icon;
             UpdateNodeText(nodeData, node);
         }
 

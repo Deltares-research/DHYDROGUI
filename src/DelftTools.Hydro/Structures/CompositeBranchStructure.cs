@@ -10,7 +10,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
-using log4net;
 using NetTopologySuite.Geometries;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
@@ -25,8 +24,6 @@ namespace DelftTools.Hydro.Structures
     [Entity]
     public class CompositeBranchStructure : BranchStructure, ICompositeBranchStructure
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(CompositeBranchStructure));
-
         private IEventedList<IStructure1D> structures;
 
         [NoNotifyPropertyChange]

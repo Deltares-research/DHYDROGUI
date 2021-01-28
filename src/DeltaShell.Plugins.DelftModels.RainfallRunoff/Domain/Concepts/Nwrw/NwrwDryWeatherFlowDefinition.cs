@@ -4,7 +4,6 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 using GeoAPI.Geometries;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -15,8 +14,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     [Entity]
     public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(NwrwDryWeatherFlowDefinition));
-
         public string Name { get; set; } //VER_IDE
         public DryweatherFlowDistributionType DistributionType { get; set; } // VER_TYPE
         public int DayNumber { get; set; } // VER_DAG

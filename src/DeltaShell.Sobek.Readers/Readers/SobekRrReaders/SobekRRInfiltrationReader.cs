@@ -5,14 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
     public class SobekRRInfiltrationReader : SobekReader<SobekRRInfiltration>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRInfiltrationReader));
-
         public override IEnumerable<SobekRRInfiltration> Parse(string fileContent)
         {
             const string pattern = @"INFC (?'text'.*?)infc" + RegularExpression.EndOfLine;

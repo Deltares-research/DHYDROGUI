@@ -8,20 +8,16 @@ using DelftTools.Controls;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Utils.Collections.Generic;
-using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 {
     public partial class SectionsTableView : UserControl, IView
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SectionsTableView));
-
         private const int MinYColumn = 0;
         private const int MaxYColumn = 1;
         private const int SectionTypeColumn = 2;
         private SectionsBindingList sections;
         private IEventedList<CrossSectionSectionType> sectionTypeList = new EventedList<CrossSectionSectionType>();
-
 
         public SectionsTableView()
         {

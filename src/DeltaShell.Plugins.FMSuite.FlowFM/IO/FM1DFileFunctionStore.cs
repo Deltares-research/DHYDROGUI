@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static readonly ILog log = LogManager.GetLogger(typeof(FM1DFileFunctionStore));
         public static readonly string LocationAttributeName = "Location";
 
-        private const string TimeDimensionName = "time";
         private IHydroNetwork outputNetwork = new HydroNetwork();
         private IHydroNetwork inputNetwork;
         private readonly IDiscretization outputDiscretization;
@@ -36,8 +35,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private readonly Dictionary<IVariable, IMultiDimensionalArray> argumentVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         private readonly Dictionary<IVariable, IMultiDimensionalArray> networkLocationsForThisFunctionCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         
-        private FeatureTypeConverter featureTypeConverter = new FeatureTypeConverter();
-        private NetworkLocationTypeConverter networkLocationTypeConverter = new NetworkLocationTypeConverter();
         private OutputFile1DMetaData metaData;
         private int sobekStartIndex = 1;// minus one because fortran is 1 based...
 

@@ -3,14 +3,11 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
-using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class SewerWeirGenerator : IGwswFeatureGenerator<ISewerFeature>
     {
-        private static ILog Log = LogManager.GetLogger(typeof(SewerWeirGenerator));
-
         public ISewerFeature Generate(GwswElement gwswElement)
         {
             var weir = CreateNewWeir(gwswElement);

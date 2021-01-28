@@ -6,14 +6,11 @@ using System.Text;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
     public class SobekRRGreenhouseReader : SobekReader<SobekRRGreenhouse>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRGreenhouseReader));
-
         public override IEnumerable<SobekRRGreenhouse> Parse(string fileContent)
         {
             const string greenhousePattern = @"GRHS (?'text'.*?)grhs" + RegularExpression.EndOfLine;

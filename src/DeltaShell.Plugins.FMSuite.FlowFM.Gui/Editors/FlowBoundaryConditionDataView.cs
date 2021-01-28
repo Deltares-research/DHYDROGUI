@@ -29,14 +29,11 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.CoordinateSystems;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
     public partial class FlowBoundaryConditionDataView : UserControl, ICompositeView
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowBoundaryConditionDataView));
-
         private readonly OpenFileDialog FileDialog = new OpenFileDialog()
         {
             AddExtension = true,

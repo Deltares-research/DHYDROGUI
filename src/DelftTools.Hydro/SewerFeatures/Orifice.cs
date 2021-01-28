@@ -1,15 +1,12 @@
 ﻿using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
-using log4net;
 
 namespace DelftTools.Hydro.SewerFeatures
 {
     [Entity]
     public class Orifice : Weir, IOrifice
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(Orifice));
-
         public Orifice() : this("Orifice")
         {
             

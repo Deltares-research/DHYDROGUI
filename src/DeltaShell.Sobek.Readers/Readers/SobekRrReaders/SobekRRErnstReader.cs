@@ -5,14 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
     public class SobekRRErnstReader : SobekReader<SobekRRErnst>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRErnstReader));
-
         public override IEnumerable<SobekRRErnst> Parse(string fileContent)
         {
             const string pattern = @"ERNS\s+?" + IdAndOptionalNamePattern + @"(?'text'.*?)erns" + RegularExpression.EndOfLine;

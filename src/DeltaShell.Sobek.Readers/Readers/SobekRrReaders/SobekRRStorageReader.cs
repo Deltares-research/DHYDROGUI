@@ -5,14 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
     public class SobekRRStorageReader : SobekReader<SobekRRStorage>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRStorageReader));
-
         public override IEnumerable<SobekRRStorage> Parse(string fileContent)
         {
             const string pattern = @"STDF (?'text'.*?)stdf" + RegularExpression.EndOfLine;

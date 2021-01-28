@@ -1,13 +1,11 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
 {
     public class GwswConnectionOrifice : Orifice
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(GwswConnectionOrifice));
         public GwswConnectionOrifice(string name) : base(name)
         {
         }

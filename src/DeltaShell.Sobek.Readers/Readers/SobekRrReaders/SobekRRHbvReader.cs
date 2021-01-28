@@ -1,13 +1,10 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 {
     public class SobekRRHbvReader: SobekReader<SobekRRHbv>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SobekRRHbvReader));
-
         public override IEnumerable<SobekRRHbv> Parse(string text)
         {
             var hbvData = new SobekRRHbv();

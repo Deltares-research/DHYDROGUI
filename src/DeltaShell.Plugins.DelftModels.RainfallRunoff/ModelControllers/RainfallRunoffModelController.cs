@@ -28,8 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
     {
         #region Fields
 
-        private const bool RunRemote = true; // JZ: Always True as long as Finalize is not completely BMI-Complient
-
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModelController));
 
         private readonly IEnumerable<IConceptModelController> conceptControllers = new IConceptModelController[]

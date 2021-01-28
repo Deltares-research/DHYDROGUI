@@ -380,7 +380,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ResubscribeToOwner();
             }
         }
-        private string workDirectory;
 
         public virtual bool LimitMemory { get; set; }
         

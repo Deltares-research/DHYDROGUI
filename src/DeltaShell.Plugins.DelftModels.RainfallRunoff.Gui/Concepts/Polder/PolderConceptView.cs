@@ -9,7 +9,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Polder
 {
@@ -19,7 +18,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Polder
         private const string unpavedName = "UnpavedArea";
         private const string greenhouseName = "GreenhouseArea";
         private const string openWaterName = "OpenWaterArea";
-        private static readonly ILog log = LogManager.GetLogger(typeof (PolderConceptView));
         private RainfallRunoffEnums.AreaUnit areaUnit;
         private GreenhouseDataView greenhouseDataView;
         private OpenWaterDataView openWaterDataView;
