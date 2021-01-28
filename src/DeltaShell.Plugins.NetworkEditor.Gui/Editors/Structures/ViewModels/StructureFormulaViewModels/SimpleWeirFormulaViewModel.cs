@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.StructureFormulaViews;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels
 {
     /// <summary>
     /// <see cref="SimpleWeirFormulaViewModel"/> defines the view model for the
-    /// <see cref="SimpleWeirFormulaView"/>.
+    /// <see cref="Views.StructureFormulaViews.SimpleWeirFormulaView"/>.
     /// </summary>
     /// <seealso cref="StructureFormulaViewModel"/>
     [Description("Simple Weir")]

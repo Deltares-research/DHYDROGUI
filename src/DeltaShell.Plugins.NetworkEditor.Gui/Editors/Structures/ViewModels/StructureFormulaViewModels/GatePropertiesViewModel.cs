@@ -4,13 +4,12 @@ using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.StructureFormulaViews;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels
 {
     /// <summary>
     /// <see cref="GatePropertiesViewModel"/> defines the view model for the
-    /// <see cref="GatePropertiesView"/>.
+    /// <see cref="Views.StructureFormulaViews.GatePropertiesView"/>.
     /// </summary>
     public sealed class GatePropertiesViewModel : INotifyPropertyChanged, IDisposable
     {
