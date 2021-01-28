@@ -163,20 +163,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual bool UseRestart => !RestartInput.IsEmpty;
 
-        public virtual bool WriteRestart
-        {
-            get => writeRestart;
-            set
-            {
-                if (value == writeRestart)
-                {
-                    return;
-                }
-
-                writeRestart = value;
-                MarkOutputOutOfSync();
-            }
-        }
+        public virtual bool WriteRestart { get; set; }
 
         /// <summary>
         /// Gets or sets the input restart file.
@@ -186,14 +173,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => restartInput;
             set
             {
-                if (value == null || restartInput == value)
+                if (value == null)
                 {
                     return;
                 }
 
                 restartInput = value;
-
-                MarkOutputOutOfSync();
             }
         }
 
@@ -215,18 +200,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.StartTime ?? base.StartTime;
             set
             {
-                if (base.StartTime == value)
-                {
-                    return;
-                }
-
                 if (TimeProvider != null)
                 {
                     TimeProvider.StartTime = value;
                 }
 
                 base.StartTime = value;
-                MarkOutputOutOfSync();
             }
         }
 
@@ -236,18 +215,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.StopTime ?? base.StopTime;
             set
             {
-                if (base.StopTime == value)
-                {
-                    return;
-                }
-
                 if (TimeProvider != null)
                 {
                     TimeProvider.StopTime = value;
                 }
 
                 base.StopTime = value;
-                MarkOutputOutOfSync();
             }
         }
 
@@ -257,18 +230,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.TimeStep ?? base.TimeStep;
             set
             {
-                if (base.TimeStep == value)
-                {
-                    return;
-                }
-
                 if (TimeProvider != null)
                 {
                     TimeProvider.TimeStep = value;
                 }
 
                 base.TimeStep = value;
-                MarkOutputOutOfSync();
             }
         }
 
@@ -1357,50 +1324,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         #region Save State: Time Range
 
-        public virtual DateTime SaveStateStartTime
-        {
-            get => saveStateStartTime;
-            set
-            {
-                if (saveStateStartTime == value)
-                {
-                    return;
-                }
+        public virtual DateTime SaveStateStartTime { get; set; }
 
-                saveStateStartTime = value;
-                MarkOutputOutOfSync();
-            }
-        }
+        public virtual DateTime SaveStateStopTime { get; set; }
 
-        public virtual DateTime SaveStateStopTime
-        {
-            get => saveStateStopTime;
-            set
-            {
-                if (saveStateStopTime == value)
-                {
-                    return;
-                }
-
-                saveStateStopTime = value;
-                MarkOutputOutOfSync();
-            }
-        }
-
-        public virtual TimeSpan SaveStateTimeStep
-        {
-            get => saveStateTimeStep;
-            set
-            {
-                if (saveStateTimeStep == value)
-                {
-                    return;
-                }
-                
-                saveStateTimeStep = value;
-                MarkOutputOutOfSync();
-            }
-        }
+        public virtual TimeSpan SaveStateTimeStep { get; set; }
 
         #endregion
 
@@ -1668,10 +1596,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private string persistentOutputDirectory;
         private string oldPersistentOutputDirectory = string.Empty;
         private bool removeSourceOutputFolder;
-        private bool writeRestart;
-        private DateTime saveStateStartTime;
-        private DateTime saveStateStopTime;
-        private TimeSpan saveStateTimeStep;
 
         /// <summary>
         /// The persistent output directory to which output files
@@ -1780,7 +1704,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             currentOutputDirectoryPath = expectedOutputPath;
             if (Directory.Exists(expectedOutputPath))
             {
+                bool originalOutputOutOfSync = OutputOutOfSync;
                 ConnectOutput(expectedOutputPath);
+                OutputOutOfSync = originalOutputOutOfSync;
             }
         }
 

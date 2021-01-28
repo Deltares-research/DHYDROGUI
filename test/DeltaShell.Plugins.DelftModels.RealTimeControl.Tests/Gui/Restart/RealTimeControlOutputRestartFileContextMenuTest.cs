@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
 using NSubstitute;
@@ -61,9 +62,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             using (var temp = new TemporaryDirectory())
             {
                 // Setup
-                var model = new RealTimeControlModel();
+                var model = Substitute.For<IRealTimeControlModel>();
                 var restartOutputFile = new RestartFile(temp.CreateFile("restart.file", "content restart file"));
-                model.RestartOutput.Add(restartOutputFile);
+                model.RestartOutput.Returns(new EventedList<RestartFile>(new []{restartOutputFile}));
 
                 var node = Substitute.For<ITreeNode>();
                 node.Parent.Parent.Tag.Returns(model);
@@ -83,6 +84,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
                 Assert.That(model.RestartInput, Is.Not.SameAs(restartOutputFile));
                 Assert.That(model.RestartInput.Name, Is.EqualTo(restartOutputFile.Name));
                 Assert.That(model.RestartInput.Content, Is.EqualTo("content restart file"));
+                
+                model.Received().MarkOutputOutOfSync();
             }
         }
     }
