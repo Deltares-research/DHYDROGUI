@@ -191,17 +191,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
-        public void TestGetMetaDataRequirementsIsImplementedForAllSupportedVersions()
-        {
-            var model = new RainfallRunoffModel();
-            var allSupportedVersions = TypeUtils.GetStaticField<int[]>(typeof(RainfallRunoffModel), "SupportedMetaDataVersions");
-            foreach (var version in allSupportedVersions)
-            {
-                Assert.DoesNotThrow(() => TypeUtils.CallPrivateMethod(model, "GetMetaDataRequirements", version));
-            }
-        }
-
-        [Test]
         public void NewRainfallRunoffModelHasCorrectDefaultEvaporationData()
         {
             var model = new RainfallRunoffModel();
