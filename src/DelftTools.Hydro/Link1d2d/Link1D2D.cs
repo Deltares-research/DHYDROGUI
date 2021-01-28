@@ -44,10 +44,10 @@ namespace DelftTools.Hydro.Link1d2d
             return new Coordinate((c1.X + c2.X) / 2.0, (c1.Y + c2.Y) / 2.0);
         }
 
-        public int Compare(object object1, object object2)
+        public int Compare(object x, object y)
         {
-            var link1 = (Link1D2D)object1;
-            var link2 = (Link1D2D)object2;
+            var link1 = (Link1D2D)x;
+            var link2 = (Link1D2D)y;
             if ((link1.DiscretisationPointIndex == link2.DiscretisationPointIndex) && (link1.FaceIndex == link2.FaceIndex) && (link1.TypeOfLink == link2.TypeOfLink))
                 return 0;
             if ((link1.DiscretisationPointIndex < link2.DiscretisationPointIndex) || ((link1.DiscretisationPointIndex == link2.DiscretisationPointIndex) && (link1.FaceIndex < link2.FaceIndex)))

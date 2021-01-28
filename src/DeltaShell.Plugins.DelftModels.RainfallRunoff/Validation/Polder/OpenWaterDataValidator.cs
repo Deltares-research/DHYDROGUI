@@ -7,15 +7,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation.Polder
 {
     public class OpenWaterDataValidator : IValidator<RainfallRunoffModel, IEnumerable<OpenWaterData>>
     {
-        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<OpenWaterData> targets = null)
+        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<OpenWaterData> target = null)
         {
-            if (!targets.Any())
+            if (!target.Any())
             {
                 return ValidationReport.Empty("Open water concept"); //nothing to report
             }
             var issues = new List<ValidationIssue>();
 
-            foreach (var openWaterData in targets)
+            foreach (var openWaterData in target)
             {
                 RainfallRunoffModelValidator.ValidateRunoffs(openWaterData, issues);
             }

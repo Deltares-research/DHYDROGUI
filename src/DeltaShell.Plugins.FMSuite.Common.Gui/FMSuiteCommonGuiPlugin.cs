@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             yield return new Model1DLateralDataProjectNodePresenter {GuiPlugin = this};
         }
 
-        public override IMenuItem GetContextMenu(object sender, object dataobject)
+        public override IMenuItem GetContextMenu(object sender, object data)
         {
             //TODO: method is a mess clean up.
 
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             bool activeViewIsMapView =
                 Gui != null && Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().Count() == 1;
 
-            switch (dataobject)
+            switch (data)
             {
                 case Model1DBoundaryNodeData model1DBoundaryNodeData:
                 {

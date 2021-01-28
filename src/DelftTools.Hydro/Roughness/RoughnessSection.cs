@@ -70,15 +70,16 @@ namespace DelftTools.Hydro.Roughness
             get { return crossSectionSectionType; }
             set
             {
-                if (crossSectionSectionType != null)
+                if (crossSectionSectionType is INotifyPropertyChanged notifyPropertyChange)
                 {
-                    ((INotifyPropertyChange)crossSectionSectionType).PropertyChanged -= CrossSectionSectionTypePropertyChanged;
+                    notifyPropertyChange.PropertyChanged -= CrossSectionSectionTypePropertyChanged;
                 }
 
                 crossSectionSectionType = value;
-                if (crossSectionSectionType != null)
+
+                if (crossSectionSectionType is INotifyPropertyChanged notifyPropertyChanged)
                 {
-                    ((INotifyPropertyChange)crossSectionSectionType).PropertyChanged += CrossSectionSectionTypePropertyChanged;
+                    notifyPropertyChanged.PropertyChanged += CrossSectionSectionTypePropertyChanged;
                 }
             }
         }
@@ -699,8 +700,7 @@ namespace DelftTools.Hydro.Roughness
             if (Equals(sender, roughnessNetworkCoverage) && e.PropertyName == "IsEditing")
             {
                 IEditAction coverageEditAction = roughnessNetworkCoverage.CurrentEditAction;
-                var branchSplitAction = coverageEditAction as BranchSplitAction;
-                if (branchSplitAction != null)
+                if (coverageEditAction is BranchSplitAction branchSplitAction)
                 {
                     if (roughnessNetworkCoverage.IsEditing)
                     {
@@ -709,18 +709,18 @@ namespace DelftTools.Hydro.Roughness
                     else
                     {
                         HandleBranchSplit(branchSplitAction);
-
                         isInKnownEditAction = false;
                     }
                 }
 
-                if (NotifyRoughnessTypeChangedForEmptyBranchesAfterEndEdit && !roughnessNetworkCoverage.IsEditing)
+                if (NotifyRoughnessTypeChangedForEmptyBranchesAfterEndEdit && 
+                    !roughnessNetworkCoverage.IsEditing)
                     NotifyRoughnessTypeChangedForEmptyBranches();
             }
 
-            if ((sender is INetworkLocation) && (e.PropertyName == "Chainage" || e.PropertyName == "Branch") && !isInKnownEditAction)
+            if ((sender is INetworkLocation location) && (e.PropertyName == "Chainage" || e.PropertyName == "Branch") && !isInKnownEditAction)
             {
-                HandleBranchOrChainageChanged((INetworkLocation)sender);
+                HandleBranchOrChainageChanged(location);
             }
         }
 
@@ -779,22 +779,21 @@ namespace DelftTools.Hydro.Roughness
                 return;
             }
 
-            if (Equals(sender, RoughnessNetworkCoverage.Locations))
-            {
-                if (e.Action == NotifyCollectionChangeAction.Replace)
-                {
-                    HandleRoughnessCoverageValueReplace(e);
-                }
-                else
-                {
-                    //assumes a single value change..
-                    var networkLocation = (NetworkLocation)e.Items[0];
+            if (!Equals(sender, RoughnessNetworkCoverage.Locations)) return;
 
-                    var roughnessFunction = GetRoughnessFunction(networkLocation.Branch);
-                    if (roughnessFunction != null)
-                    {
-                        SyncFunctionWithCoverage(roughnessFunction, e);
-                    }
+            if (e.Action == NotifyCollectionChangeAction.Replace)
+            {
+                HandleRoughnessCoverageValueReplace(e);
+            }
+            else
+            {
+                //assumes a single value change..
+                var networkLocation = (NetworkLocation)e.Items[0];
+
+                var roughnessFunction = GetRoughnessFunction(networkLocation.Branch);
+                if (roughnessFunction != null)
+                {
+                    SyncFunctionWithCoverage(roughnessFunction, e);
                 }
             }
         }

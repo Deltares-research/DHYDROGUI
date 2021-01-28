@@ -157,9 +157,9 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public string ParentManholeName { get; set; }
         
-        public virtual void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper)
+        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
-            AssignParentManholeNameIfMissing(network);
+            AssignParentManholeNameIfMissing(hydroNetwork);
             IManhole manhole = null;
             if (helper != null && 
                 !helper.ManholesByManholeName.TryGetValue(ParentManholeName, out manhole) && 
@@ -169,21 +169,21 @@ namespace DelftTools.Hydro.SewerFeatures
             }
 
             if (helper == null && manhole == null)
-                manhole = network.GetManhole(this);
+                manhole = hydroNetwork.GetManhole(this);
 
             if (manhole != null)
             {
                 var existingCompartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(Name,StringComparison.InvariantCultureIgnoreCase));
                 CopyToExistingCompartmentPropertyValues(existingCompartment);
                 ReplaceCompartmentInManhole(existingCompartment, manhole, helper);
-                ReconnectSewerConnections(existingCompartment, network);
+                ReconnectSewerConnections(existingCompartment, hydroNetwork);
             }
             else
             {
-                lock (network.Nodes)
+                lock (hydroNetwork.Nodes)
                 {
-                    var newManhole = CreateManholeWithCompartment(network, helper);
-                    network.Nodes.Add(newManhole);
+                    var newManhole = CreateManholeWithCompartment(hydroNetwork, helper);
+                    hydroNetwork.Nodes.Add(newManhole);
                     if (helper != null) helper.ManholesByManholeName.AddOrUpdate(ParentManholeName, newManhole, (orgParentManholeName, oldManhole) => newManhole);
                 }
             }

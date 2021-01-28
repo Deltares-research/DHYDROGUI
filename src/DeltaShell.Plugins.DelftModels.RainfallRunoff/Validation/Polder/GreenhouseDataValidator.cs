@@ -7,15 +7,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation.Polder
 {
     public class GreenhouseDataValidator : IValidator<RainfallRunoffModel, IEnumerable<GreenhouseData>>
     {
-        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<GreenhouseData> targets = null)
+        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<GreenhouseData> target = null)
         {
-            if (!targets.Any())
+            if (!target.Any())
             {
                 return ValidationReport.Empty("Greenhouse concept"); //nothing to report
             }
             var issues = new List<ValidationIssue>();
 
-            foreach (var greenhouseData in targets)
+            foreach (var greenhouseData in target)
             {
                 RainfallRunoffModelValidator.ValidateRunoffs(greenhouseData, issues);
             }

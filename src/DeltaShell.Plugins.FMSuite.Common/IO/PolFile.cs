@@ -76,11 +76,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             Write(path, features.Cast<IFeature>());
         }
 
-        public IList<T> Read(string polFilePath)
+        public IList<T> Read(string path)
         {
             var features = new List<T>();
 
-            OpenInputFile(polFilePath);
+            OpenInputFile(path);
             try
             {
                 var line = GetNextLine();
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 {
                     //  start of polyLine
                     var feature = new T {Name = line};
-                    feature.TrySetGroupName(polFilePath);
+                    feature.TrySetGroupName(path);
                     
                     line = GetNextLine();
                     if (line == null)
@@ -96,14 +96,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         throw new FormatException(
                             String.Format(
                                 "Unexpected end of file; Expected line stating number of points and columns on line {0} of file {1}",
-                                LineNumber, polFilePath));
+                                LineNumber, path));
                     }
 
                     var lineFields = (IList<string>) SplitLine(line).Take(2).ToList();
                     if (lineFields.Count != 2)
                     {
                         throw new FormatException(String.Format("Invalid numpoints/numcolums {0} in file {1}",
-                                                                lineFields, polFilePath));
+                                                                lineFields, path));
                     }
 
                     var numPoints = GetInt(lineFields[0], "value for nr of points");
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     if (numColumns < 2)
                     {
                         throw new FormatException(String.Format(
-                            "Invalid number of colums ({0}, must be 2) in file {1}", numColumns, polFilePath));
+                            "Invalid number of colums ({0}, must be 2) in file {1}", numColumns, path));
                     }
 
                     var points = new List<Coordinate>();
@@ -123,14 +123,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                             throw new FormatException(
                                 String.Format(
                                     "Unexpected end of file; Expected point row ({0} out of {1}) on line {2} in file {3}",
-                                    i + 1, numPoints, LineNumber, polFilePath));
+                                    i + 1, numPoints, LineNumber, path));
                         }
 
                         lineFields = SplitLine(line).Take(2).ToList();
                         if (lineFields.Count != 2)
                         {
                             throw new FormatException(String.Format("Invalid point row on line {0} in file {1}",
-                                                                    LineNumber, polFilePath));
+                                                                    LineNumber, path));
                         }
 
                         var x = GetDouble(lineFields[0]);
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     }
                     catch (Exception)
                     {
-                        Log.ErrorFormat("Invalid geometry in pol-file '{0}' with id '{1}', skipping", polFilePath,
+                        Log.ErrorFormat("Invalid geometry in pol-file '{0}' with id '{1}', skipping", path,
                                         feature.Name);
                         line = GetNextLine();
                         continue;

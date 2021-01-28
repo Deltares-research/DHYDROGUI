@@ -31,11 +31,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                         NameIsReadOnly = true
                     };
             }
-            
-            var modelfolder = data as ModelFolder;
-            if (modelfolder != null && modelfolder.Model is RealTimeControlModel)
+
+            if (data is ModelFolder modelFolder && modelFolder.Model is RealTimeControlModel)
             {
-                return new GroupLayer(modelfolder.Role == DataItemRole.Input ? "Input" : "Output")
+                return new GroupLayer(modelFolder.Role == DataItemRole.Input ? "Input" : "Output")
                     {
                         LayersReadOnly = true,
                         NameIsReadOnly = true
@@ -102,10 +101,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             return null;
         }
 
-        public bool CanCreateLayerFor(object data, object parentObject)
+        public bool CanCreateLayerFor(object data, object parentData)
         {
             return data is RealTimeControlModel
-                   || (data is ModelFolder && ((ModelFolder)data).Model is RealTimeControlModel)
+                   || (data is ModelFolder folder && folder.Model is RealTimeControlModel)
                    || data is IEventedList<ControlGroup>;
         }
 

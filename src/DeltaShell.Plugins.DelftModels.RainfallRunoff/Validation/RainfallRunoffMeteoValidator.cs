@@ -11,32 +11,32 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
     {
         #region IValidator<RainfallRunoffModel,RainfallRunoffModel> Members
 
-        public ValidationReport Validate(RainfallRunoffModel rootObject, RainfallRunoffModel model)
+        public ValidationReport Validate(RainfallRunoffModel rootObject, RainfallRunoffModel target)
         {
             var reports = new List<ValidationReport>();
 
-            var precipitation = model.Precipitation;
-            var evaporation = model.Evaporation;
-            var temperature = model.Temperature;
+            var precipitation = target.Precipitation;
+            var evaporation = target.Evaporation;
+            var temperature = target.Temperature;
 
             reports.Add(new ValidationReport("Precipitation",
-                                             ValidateMeteoData(precipitation, model.StartTime, model.StopTime, true).ToList()));
+                                             ValidateMeteoData(precipitation, target.StartTime, target.StopTime, true).ToList()));
             reports.Add(new ValidationReport("Evaporation",
-                                             ValidateMeteoData(evaporation, model.StartTime, model.StopTime, true).ToList()));
+                                             ValidateMeteoData(evaporation, target.StartTime, target.StopTime, true).ToList()));
             
             if (precipitation.DataDistributionType == MeteoDataDistributionType.PerStation) //always for both precip & evap
             {
-                reports.Add(new ValidationReport("Meteo stations", ValidateMeteoStations(model)));
+                reports.Add(new ValidationReport("Meteo stations", ValidateMeteoStations(target)));
             }
 
-            if (model.ModelNeedsTemperatureData)
+            if (target.ModelNeedsTemperatureData)
             {
                 reports.Add(new ValidationReport("Temperature",
-                                                 ValidateMeteoData(temperature, model.StartTime, model.StopTime).ToList()));
+                                                 ValidateMeteoData(temperature, target.StartTime, target.StopTime).ToList()));
 
                 if (temperature.DataDistributionType == MeteoDataDistributionType.PerStation)
                 {
-                    reports.Add(new ValidationReport("Temperature stations", ValidateTemperatureStations(model)));
+                    reports.Add(new ValidationReport("Temperature stations", ValidateTemperatureStations(target)));
                 }
             }
 

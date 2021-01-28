@@ -10,16 +10,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class FmMapFile1DOutputFileReader
     {
-        private string timeVariableNameInNetCDFFile;
-        private string timeDimensionNameInNetCdfFile;
-        private string unitsAttributeKeyNameInNetCdfFile;
-        private string timeVariableUnitValuePrefixInNetCdfFile;
-        private string dateTimeFormat;
-        private string longNameAttributeKeyNameInNetCdfFile;
+        private readonly string timeVariableNameInNetCdfFile;
+        private readonly string timeDimensionNameInNetCdfFile;
+        private readonly string unitsAttributeKeyNameInNetCdfFile;
+        private readonly string timeVariableUnitValuePrefixInNetCdfFile;
+        private readonly string dateTimeFormat;
+        private readonly string longNameAttributeKeyNameInNetCdfFile;
 
         public FmMapFile1DOutputFileReader()
         {
-            timeVariableNameInNetCDFFile = "time";
+            timeVariableNameInNetCdfFile = "time";
             timeDimensionNameInNetCdfFile = "time";
 
             unitsAttributeKeyNameInNetCdfFile = "units";
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             return DoWithNetCdfFile(path,  (outputFile, timeDependentVariables) =>
             {
-                var timeVariable = outputFile.GetVariableByName(timeVariableNameInNetCDFFile);
+                var timeVariable = outputFile.GetVariableByName(timeVariableNameInNetCdfFile);
                 if (timeVariable == null) return new List<DateTime>();
 
                 var t0 = ParseReferenceTime(outputFile, timeVariable);
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     // necessary to loop through since we don't know what the time-dependent variables will be called
                     var variableName = outputFile.GetVariableName(netCdfVariable);
-                    if(variableName == timeVariableNameInNetCDFFile) continue;
+                    if(variableName == timeVariableNameInNetCdfFile) continue;
 
                     var attributes = outputFile.GetAttributes(netCdfVariable);
 
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             using (var netCdfFileWrapper = new NetCdfFileWrapper(path))
             {
-                var times = netCdfFileWrapper.GetValues1D<double>(timeVariableNameInNetCDFFile) ?? new List<double>();
+                var times = netCdfFileWrapper.GetValues1D<double>(timeVariableNameInNetCdfFile) ?? new List<double>();
                 return times.Select(referenceTime.AddSeconds).ToList();
             }  
         }

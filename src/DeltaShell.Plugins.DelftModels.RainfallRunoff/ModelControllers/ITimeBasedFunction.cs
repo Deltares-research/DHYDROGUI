@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             return 1;
         }
 
-        public void SetValues(DateTime dateTime, int timeIndex, double[] values)
+        public void SetValues(DateTime dateTime, int dateTimeIndex, double[] values)
         {
             if (values.Length != 1)
                 throw new ArgumentException();
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             return numFeatures;
         }
 
-        public void SetValues(DateTime dateTime, int timeIndex, double[] values)
+        public void SetValues(DateTime dateTime, int dateTimeIndex, double[] values)
         {
             // performance hack!
             var store = InnerFunction.Store;
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             store.FireEvents = false;
 
             store.SetVariableValues(InnerFunction.Components[0], values,
-                                    new VariableIndexRangeFilter(InnerFunction.Time, timeIndex));
+                                    new VariableIndexRangeFilter(InnerFunction.Time, dateTimeIndex));
 
             store.FireEvents = oldValue;
         }

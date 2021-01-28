@@ -421,20 +421,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get { return "rtc"; }
         }
 
-        public virtual string GetItemString(IDataItem dataItem)
+        public virtual string GetItemString(IDataItem value)
         {
-            var propertyValueConverter = dataItem.ValueConverter as PropertyValueConverter;
-            if (propertyValueConverter != null)
+            if (value.ValueConverter is PropertyValueConverter propertyValueConverter && 
+                propertyValueConverter.OriginalValue is ConnectionPoint connectionPoint)
             {
-                var connectionPoint = propertyValueConverter.OriginalValue as ConnectionPoint;
-
-                if (connectionPoint != null)
-                {
-                    return connectionPoint.XmlName;
-                }
+                return connectionPoint.XmlName;
             }
 
-            throw new ArgumentException(string.Format("Could not serialize data item {0} to d-hydro xml", dataItem));
+            throw new ArgumentException($"Could not serialize data item {value} to d-hydro xml");
         }
 
         public virtual Type ExporterType

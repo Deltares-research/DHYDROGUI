@@ -13,10 +13,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             return false;
         }
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, Model1DBoundaryNodeData data)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, Model1DBoundaryNodeData nodeData)
         {
-            node.Image = GetImageForType(data.DataType);
-            node.Text = data.Name;
+            node.Image = GetImageForType(nodeData.DataType);
+            node.Text = nodeData.Name;
         }
 
         private static Image GetImageForType(Model1DBoundaryNodeDataType type)

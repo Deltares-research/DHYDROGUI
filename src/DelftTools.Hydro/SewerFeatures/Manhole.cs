@@ -319,7 +319,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [EditAction]
         public void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         #endregion

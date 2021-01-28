@@ -19,10 +19,10 @@ namespace DelftTools.Hydro.Helpers
         }
        
 
-        private bool NetworksEqual(INetwork primaryNetwork, INetwork secondaryNetwork, Func<INetwork, INode[]> getNodes = null, Func<INetwork, IBranch[]> getBranches = null)
+        private bool NetworksEqual(INetwork x, INetwork y, Func<INetwork, INode[]> getNodes = null, Func<INetwork, IBranch[]> getBranches = null)
         {
-            if (!Equals(primaryNetwork.Name, secondaryNetwork.Name)) return false;
-            if (!Equals(primaryNetwork.CoordinateSystem.AuthorityCode, secondaryNetwork.CoordinateSystem.AuthorityCode)) return false;
+            if (!Equals(x.Name, y.Name)) return false;
+            if (!Equals(x.CoordinateSystem.AuthorityCode, y.CoordinateSystem.AuthorityCode)) return false;
 
             if (getNodes == null)
             {
@@ -34,10 +34,10 @@ namespace DelftTools.Hydro.Helpers
                 getBranches = (n) => n.Branches.ToArray();
             }
 
-            var primaryNodes = getNodes(primaryNetwork);
-            var secondaryNodes = getNodes(secondaryNetwork);
-            var primaryBranches = getBranches(primaryNetwork);
-            var secondaryBranches = getBranches(secondaryNetwork);
+            var primaryNodes = getNodes(x);
+            var secondaryNodes = getNodes(y);
+            var primaryBranches = getBranches(x);
+            var secondaryBranches = getBranches(y);
 
             if (!Equals(primaryNodes.Length, secondaryNodes.Length)) return false;
             if (!Equals(primaryBranches.Length, secondaryBranches.Length)) return false;
@@ -104,15 +104,11 @@ namespace DelftTools.Hydro.Helpers
 
     public class HydroNetworkComparer : IEqualityComparer<IHydroNetwork>
     {
-        public bool Equals(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)
+        public bool Equals(IHydroNetwork x, IHydroNetwork y)
         {
-            if (!NetworksEqual(primaryNetwork, secondaryNetwork,
+            return NetworksEqual(x, y,
                 n => ((IHydroNetwork) n).HydroNodes.OfType<INode>().ToArray(),
-                n => ((IHydroNetwork) n).Channels.OfType<IBranch>().ToArray()))
-                return false;
-            if (!NetworksSewersEqual(primaryNetwork, secondaryNetwork))
-                return false;
-            return true;
+                n => ((IHydroNetwork) n).Channels.OfType<IBranch>().ToArray()) && NetworksSewersEqual(x, y);
         }
 
         private bool NetworksSewersEqual(IHydroNetwork primaryNetwork, IHydroNetwork secondaryNetwork)

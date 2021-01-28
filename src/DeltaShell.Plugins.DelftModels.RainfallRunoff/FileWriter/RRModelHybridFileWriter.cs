@@ -350,7 +350,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             double maximumDwfSewerStorage, SewerType sewerType, bool sewerCapacityIsFixed, double rainfallSewerCapacity, double dwfSewerCapacity, 
             LinkType rainfallSewerLink, LinkType dwfSewerLink,
             int numberOfPeople,
-            DwfComputationOption dwfComputationOption, double[] waterUsePerCapitaPerHourInDay, double runoffCoef, string meteoId, double areaAdjustmentFactor,
+            DwfComputationOption dwfComputationOption, double[] waterUsePerCapitaPerHourInDay, double runoffCoefficient, string meteoId, double areaAdjustmentFactor,
             double x, double y)
         {
             if (waterUsePerCapitaPerHourInDay.Length != 24)
@@ -376,7 +376,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                     "PAVE id '{0}' ar {1} lv {2} sd '{3}' ss {4} {5} qo {9} {10} ms '{6}' {13}is 0 np {7} dw '{8}' ro {11} ru {12} pave",
                     id, area, streetLevel, storageId, (int) sewerType, capacityString, meteoId,
                     numberOfPeople, dryWaterId, (int) dwfSewerLink, (int) rainfallSewerLink,
-                    (Math.Abs(runoffCoef) < double.Epsilon) ? 0 : 1, runoffCoef, GetAreaAdjustmentFactorString(areaAdjustmentFactor)));
+                    (Math.Abs(runoffCoefficient) < double.Epsilon) ? 0 : 1, runoffCoefficient, GetAreaAdjustmentFactorString(areaAdjustmentFactor)));
 
             pavedStorage.Add(String.Format("STDF id '{0}' nm '{0}' ms {1} is {2} mr {3} {4} ir {5} {6} stdf", storageId,
                 maximumStreetStorage, initialStreetStorage, maximumRainfallSewerStorage,
@@ -706,14 +706,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             RestoreCulture();
         }
 
-        public void SetUnpavedVariableSeepage(int iref, SeepageComputationOption seepageComputationOption, double resistanceC, int[] h0dates, int[] h0Times, double[] h0Table)
+        public void SetUnpavedVariableSeepage(int iref, SeepageComputationOption seepageComputationOption, double resistanceC, int[] h0Dates, int[] h0Times, double[] h0Table)
         {
             SwitchToInvariantCulture();
             var unpavedId = unpavedIds[iref - 1];
             var seepageId = unpavedId + "_seepage";
             var h0TableId = unpavedId + "_h0table";
             unpavedSeepage.Add(String.Format("SEEP id '{0}' nm '{0}' co {1} cv {2} h0 '{3}' ss 0 seep", seepageId, (int)seepageComputationOption, resistanceC, h0TableId));
-            unpavedTable.Add(String.Format("H0_T id '{0}' PDIN 1 1 '31536000' pdin\n{1}h0_t", h0TableId, WriteTable(h0dates, h0Times, h0Table)));
+            unpavedTable.Add(String.Format("H0_T id '{0}' PDIN 1 1 '31536000' pdin\n{1}h0_t", h0TableId, WriteTable(h0Dates, h0Times, h0Table)));
             RestoreCulture();
         }
 
@@ -820,26 +820,26 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             return 0; //?
         }
 
-        public void SetMeteoDataStartTimeAndInterval(int startDate, int startTime, int timeStep)
+        public void SetMeteoDataStartTimeAndInterval(int startDate, int startTime, int timeStepInSeconds)
         {
             startDateMeteoData = startDate;
             startTimeMeteoData = startTime;
-            timeStepInSeconds = timeStep;
+            this.timeStepInSeconds = timeStepInSeconds;
         }
 
-        public void AddPrecipitationStation(string stationName, double[] precipitation)
+        public void AddPrecipitationStation(string name, double[] precipitation)
         {
-            precipitationPerStation.Add(stationName, precipitation);
+            precipitationPerStation.Add(name, precipitation);
         }
 
-        public void AddEvaporationStation(string station, double[] evaporationInMmPerDay)
+        public void AddEvaporationStation(string name, double[] evaporationInMMPerDay)
         {
-            evaporationPerStation.Add(station, evaporationInMmPerDay);
+            evaporationPerStation.Add(name, evaporationInMMPerDay);
         }
 
-        public void AddTemperatureStation(string stationName, double[] temperatures)
+        public void AddTemperatureStation(string name, double[] temperatures)
         {
-            temperaturePerStation.Add(stationName, temperatures);
+            temperaturePerStation.Add(name, temperatures);
         }
 
         private void SetIniFile()

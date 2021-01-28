@@ -119,17 +119,13 @@ namespace DelftTools.Hydro.CrossSections
         {
             var value = double.NaN;
 
-            if (cellValue is double)
+            switch (cellValue)
             {
-                value = (double)cellValue;
-            }
-            else
-            {
-                var cellString = cellValue as String;
-                if (cellString != null && !Double.TryParse(cellString, out value))
-                {
+                case double d:
+                    value = d;
+                    break;
+                case string cellString when !Double.TryParse(cellString, out value):
                     return new Utils.Tuple<string, bool>("Value must be a number.", false);
-                }
             }
 
             if (double.IsNaN(value) || double.IsInfinity(value))
@@ -137,30 +133,24 @@ namespace DelftTools.Hydro.CrossSections
                 return new Utils.Tuple<string, bool>("Value must be a number.", false);
             }
 
-            // Z
-            if (columnIndex == 0 && rowIndex >= 0 && rowIndex < zwDataTable.Count && 
-                zwDataTable.Where(r => !Equals(zwDataTable[rowIndex], r)).Any(r => r.Z == value))
+            switch (columnIndex)
             {
-                return new Utils.Tuple<string, bool>("Z must be unique.", false);
-            }
-
-            // Total Width
-            if (columnIndex == 1 && (value) < 0.0)
-            {
-                return new Utils.Tuple<string, bool>("Total Width cannot be negative.", false);
-            }
-
-            // Storage Width
-            if (columnIndex == 2)
-            {
-                if (value < 0.0) return new Utils.Tuple<string, bool>("Storage Width cannot be negative.", false);
-                if (rowIndex >= 0 && rowIndex < zwDataTable.Count && 
-                    value > zwDataTable.Rows[rowIndex].Width) // Can only check for committed rows :(
-                {
+                // Z
+                case 0 when rowIndex >= 0 && rowIndex < zwDataTable.Count && zwDataTable.Where(r => !Equals(zwDataTable[rowIndex], r)).Any(r => r.Z == value):
+                    return new Utils.Tuple<string, bool>("Z must be unique.", false);
+                // Total Width
+                case 1 when (value) < 0.0:
+                    return new Utils.Tuple<string, bool>("Total Width cannot be negative.", false);
+                // Storage Width
+                case 2 when value < 0.0:
+                    return new Utils.Tuple<string, bool>("Storage Width cannot be negative.", false);
+                // Can only check for committed rows :(
+                case 2 when rowIndex >= 0 && rowIndex < zwDataTable.Count && 
+                            value > zwDataTable.Rows[rowIndex].Width:
                     return new Utils.Tuple<string, bool>("Storage Width cannot exceed Total Width.", false);
-                }
+                default:
+                    return new Utils.Tuple<string, bool>("",true);
             }
-            return new Utils.Tuple<string, bool>("",true);
         }
         protected override double SectionsMinY
         {

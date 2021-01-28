@@ -456,17 +456,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         #region Implementation of IDimrModel
 
-        public virtual string GetItemString(IDataItem dataItem)
+        public virtual string GetItemString(IDataItem value)
         {
-            var feature = dataItem.GetFeature();
+            var feature = value.GetFeature();
 
             var category = feature.GetFeatureCategory();
             if (category == null)
                 return string.Empty;
 
-            var dataItemName = ((INetworkFeature)((dataItem.ValueConverter).OriginalValue)).Name;
+            var dataItemName = ((INetworkFeature)((value.ValueConverter).OriginalValue)).Name;
 
-            var parameterName = dataItem.GetParameterName();
+            var parameterName = value.GetParameterName();
 
             string nameWithoutHashTags = dataItemName.Replace("##", "~~");
             var concatNames = new List<string>(new[] { category, nameWithoutHashTags, parameterName });

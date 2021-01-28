@@ -41,12 +41,12 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             return TypeUtils.MemberwiseClone(this);
         }
 
-        public virtual void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper)
+        public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
             CrossSectionSectionType sewerSectionType = null;
-            lock (network.CrossSectionSectionTypes)
+            lock (hydroNetwork.CrossSectionSectionTypes)
             {
-                sewerSectionType = network.CrossSectionSectionTypes.FirstOrDefault(css =>
+                sewerSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(css =>
                     string.Equals(css.Name, RoughnessDataSet.SewerSectionTypeName,
                         StringComparison.InvariantCultureIgnoreCase));
             }
@@ -55,9 +55,9 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             {
                 //sight.... this should be done somewhere on a higher level (where roughness sections can be synchronized with cross section sections)... but i am too tired to do this correctly because GWSW importer is a mess.
                 sewerSectionType = new CrossSectionSectionType {Name = RoughnessDataSet.SewerSectionTypeName};
-                lock (network.CrossSectionSectionTypes)
+                lock (hydroNetwork.CrossSectionSectionTypes)
                 {
-                    network.CrossSectionSectionTypes.Add(sewerSectionType);
+                    hydroNetwork.CrossSectionSectionTypes.Add(sewerSectionType);
                 }
             }
 
@@ -68,11 +68,11 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
                 Sections = {new CrossSectionSection {SectionType = sewerSectionType}},
             };
             
-            lock (network.SharedCrossSectionDefinitions)
+            lock (hydroNetwork.SharedCrossSectionDefinitions)
             {
-                network.SharedCrossSectionDefinitions.RemoveAllWhere(d =>
+                hydroNetwork.SharedCrossSectionDefinitions.RemoveAllWhere(d =>
                         string.Equals(d.Name, Name, StringComparison.InvariantCultureIgnoreCase));
-                network.SharedCrossSectionDefinitions.Add(crossSectionDefinitionToAdd);
+                hydroNetwork.SharedCrossSectionDefinitions.Add(crossSectionDefinitionToAdd);
             }
 
             var sharedCrossSectionDefinitionToAdd = new CrossSectionDefinitionProxy(crossSectionDefinitionToAdd);
@@ -91,7 +91,7 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             }
             else
             {
-                var pipesWithSameCrossSectionDefinitionId = network.Pipes.Where(p => string.Equals(p.CrossSectionDefinitionName, Name, StringComparison.InvariantCultureIgnoreCase));
+                var pipesWithSameCrossSectionDefinitionId = hydroNetwork.Pipes.Where(p => string.Equals(p.CrossSectionDefinitionName, Name, StringComparison.InvariantCultureIgnoreCase));
                 pipesWithSameCrossSectionDefinitionId.ForEach(p =>
                 {
                     p.CrossSection = new CrossSection(crossSectionDefinitionToAdd);

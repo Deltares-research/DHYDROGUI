@@ -58,17 +58,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             }
         }
 
-        public override IMenuItem GetContextMenu(ITreeNode node, object nodeData)
+        public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
-            var menuBase = base.GetContextMenu(node, nodeData);
-            var menu = NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, node, nodeData);
+            var menuBase = base.GetContextMenu(sender, nodeData);
+            var menu = NodePresenterHelper.GetContextMenuFromPluginGuis(Gui, sender, nodeData);
             if (menuBase != null)
                 menu.Add(menuBase);
 
             var shortcut = nodeData as ModelTreeShortcut;
             if (shortcut == null || shortcut.ShortCutType == ShortCutType.SettingsTab) return menu;
 
-            var menu1 = ContextMenuFactory.CreateMenuFor(shortcut.Data, Gui, this, node);
+            var menu1 = ContextMenuFactory.CreateMenuFor(shortcut.Data, Gui, this, sender);
             menu.Add(new MenuItemContextMenuStripAdapter(menu1));
             return menu;
         }

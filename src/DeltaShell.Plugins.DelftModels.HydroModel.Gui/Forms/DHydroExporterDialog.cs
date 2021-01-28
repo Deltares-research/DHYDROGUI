@@ -181,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             return ShowModal();
         }
 
-        public void Configure(object model)
+        public void Configure(object item)
         {
             //Everything already done in ShowModal
         }

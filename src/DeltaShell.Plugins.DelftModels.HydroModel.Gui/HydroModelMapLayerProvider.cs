@@ -70,11 +70,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             return null;
         }
 
-        public bool CanCreateLayerFor(object data, object parentObject)
+        public bool CanCreateLayerFor(object data, object parentData)
         {
             return data is HydroModel ||
                    data is Iterative1D2DCoupler ||
-                   (data is ModelFolder && ((ModelFolder)data).Model is HydroModel);
+                   (data is ModelFolder folder && folder.Model is HydroModel);
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)

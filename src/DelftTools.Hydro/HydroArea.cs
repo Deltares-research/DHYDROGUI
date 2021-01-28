@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
 
 namespace DelftTools.Hydro
@@ -94,84 +95,35 @@ namespace DelftTools.Hydro
         public override IEnumerable<object> GetDirectChildren()
         {
             yield return Pumps; // Required to open view for the collection of pumps
-            foreach (var pump in Pumps)
-            {
-                yield return pump;
-            }
             yield return Weirs; // Required to open view for the collection of weirs
-            foreach (var weir in Weirs)
-            {
-                yield return weir;
-            }
             yield return Gates;
-            foreach (var gate in Gates)
-            {
-                yield return gate;
-            }
-
-            foreach (var thinDam in ThinDams)
-            {
-                yield return thinDam;
-            }
-            foreach (var fixedWeir in FixedWeirs)
-            {
-                yield return fixedWeir;
-            }
             yield return LeveeBreaches;
-            foreach (var leveeBreach in LeveeBreaches)
-            {
-                yield return leveeBreach;
-            }
-            foreach (var landBoundary in LandBoundaries)
-            {
-                yield return landBoundary;
-            }
             yield return DryPoints;
-            foreach (var dryPoint in DryPoints)
-            {
-                yield return dryPoint;
-            }
-            foreach (var dryArea in DryAreas)
-            {
-                yield return dryArea;
-            }
-            foreach (var observationPoint in ObservationPoints)
-            {
-                yield return observationPoint;
-            }
-            foreach (var observationCrossSection in ObservationCrossSections)
-            {
-                yield return observationCrossSection;
-            }
-            foreach (var dumpingLocation in DumpingLocations)
-            {
-                yield return dumpingLocation;
-            }
-            foreach (var dredgingLocation in DredgingLocations)
-            {
-                yield return dredgingLocation;
-            }
-            foreach (var embankment in Embankments)
-            {
-                yield return embankment;
-            }
-            foreach (var enclosure in Enclosures)
-            {
-                yield return enclosure;
-            }
             yield return RoofAreas;
-            foreach (var roofArea in RoofAreas)
-            {
-                yield return roofArea;
-            }
             yield return Gullies;
-            foreach (var gully in Gullies)
+
+            var structures2d = Pumps.OfType<IFeature>()
+                .Concat(Weirs)
+                .Concat(Gates)
+                .Concat(ThinDams)
+                .Concat(FixedWeirs)
+                .Concat(LeveeBreaches)
+                .Concat(LandBoundaries)
+                .Concat(DryPoints)
+                .Concat(DryAreas)
+                .Concat(ObservationPoints)
+                .Concat(ObservationCrossSections)
+                .Concat(DumpingLocations)
+                .Concat(DredgingLocations)
+                .Concat(Embankments)
+                .Concat(Enclosures)
+                .Concat(RoofAreas)
+                .Concat(Gullies)
+                .Concat(BridgePillars);
+            
+            foreach (var structure2D in structures2d)
             {
-                yield return gully;
-            }
-            foreach (var bridgePillar in BridgePillars)
-            {
-                yield return bridgePillar;
+                yield return structure2D;
             }
         }
 

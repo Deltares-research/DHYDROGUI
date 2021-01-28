@@ -13,17 +13,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             return false;
         }
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, Model1DLateralSourceData data)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, Model1DLateralSourceData nodeData)
         {
-            node.Image = GetNodeImage(data);
+            node.Image = GetNodeImage(nodeData);
 
-            var foregroundColor = data.IsLinked ? Color.Gray : Color.Black;
+            var foregroundColor = nodeData.IsLinked ? Color.Gray : Color.Black;
             if (node.ForegroundColor != foregroundColor)
             {
                 node.ForegroundColor = foregroundColor;
             }
 
-            node.Text = data.Name;
+            node.Text = nodeData.Name;
         }
 
         private static Image GetNodeImage(Model1DLateralSourceData item)

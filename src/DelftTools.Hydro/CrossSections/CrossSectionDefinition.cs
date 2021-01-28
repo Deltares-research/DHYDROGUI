@@ -333,29 +333,36 @@ namespace DelftTools.Hydro.CrossSections
 
             var index = sections.IndexOf(crossSectionSection);
 
-            if (e.PropertyName == "MinY")
+            switch (e.PropertyName)
             {
-                if (index > 0)
+                case "MinY":
                 {
-                    double oldValue = sections[index - 1].MaxY;
-                    sections[index - 1].MaxY = crossSectionSection.MinY;
-                    while ((index > 1) && (oldValue == sections[index - 2].MaxY))
+                    if (index > 0)
                     {
-                        sections[index - 1].MinY = crossSectionSection.MinY;
-                        sections[index - 2].MaxY = crossSectionSection.MinY;
-                        index--;
+                        double oldValue = sections[index - 1].MaxY;
+                        sections[index - 1].MaxY = crossSectionSection.MinY;
+                        while ((index > 1) && (oldValue == sections[index - 2].MaxY))
+                        {
+                            sections[index - 1].MinY = crossSectionSection.MinY;
+                            sections[index - 2].MaxY = crossSectionSection.MinY;
+                            index--;
+                        }
                     }
+
+                    break;
                 }
-            }
-            else if (e.PropertyName == "MaxY" && index < sections.Count - 1)
-            {
-                var oldValue = sections[index + 1].MinY;
-                sections[index + 1].MinY = crossSectionSection.MaxY;
-                while (index < sections.Count - 2 && Math.Abs(oldValue - sections[index + 2].MinY) < double.Epsilon)
+                case "MaxY" when index < sections.Count - 1:
                 {
-                    sections[index + 1].MaxY = crossSectionSection.MaxY;
-                    sections[index + 2].MinY = crossSectionSection.MaxY;
-                    index++;
+                    var oldValue = sections[index + 1].MinY;
+                    sections[index + 1].MinY = crossSectionSection.MaxY;
+                    while (index < sections.Count - 2 && Math.Abs(oldValue - sections[index + 2].MinY) < double.Epsilon)
+                    {
+                        sections[index + 1].MaxY = crossSectionSection.MaxY;
+                        sections[index + 2].MinY = crossSectionSection.MaxY;
+                        index++;
+                    }
+
+                    break;
                 }
             }
 

@@ -83,11 +83,11 @@ namespace DeltaShell.Dimr
         }
 
         
-        public int Initialize(string xmlFile)
+        public int Initialize(string path)
         {
             if (api != null)
             {
-                var state = api.Initialize(xmlFile);
+                var state = api.Initialize(path);
                 if (state != 0)
                 {
                     ProcessMessages();
@@ -97,11 +97,11 @@ namespace DeltaShell.Dimr
             return 0;
         }
 
-        public int Update(double step)
+        public int Update(double dt)
         {
             if (api != null)
             {
-                var state = api.Update(step);
+                var state = api.Update(dt);
                 if (state != 0)
                 {
                     ProcessMessages();

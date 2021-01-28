@@ -26,10 +26,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
         {
         }
 
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, CatchmentModelData catchmentModelData)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, CatchmentModelData nodeData)
         {
-            node.Text = catchmentModelData.Name;
-            node.Image = GetImage(catchmentModelData);
+            node.Text = nodeData.Name;
+            node.Image = GetImage(nodeData);
         }
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)

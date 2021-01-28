@@ -7,15 +7,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
     public class HbvDataValidator : IValidator<RainfallRunoffModel, IEnumerable<HbvData>>
     {
-        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<HbvData> targets = null)
+        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<HbvData> target = null)
         {
-            if (targets == null || !targets.Any())
+            if (target == null || !target.Any())
             {
                 return ValidationReport.Empty("HBV concept"); //nothing to report
             }
             var issues = new List<ValidationIssue>();
 
-            foreach (var hbv in targets)
+            foreach (var hbv in target)
             {
                 issues.AddRange(ValidateHbv(hbv));
             }

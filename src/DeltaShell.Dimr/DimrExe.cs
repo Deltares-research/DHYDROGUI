@@ -130,9 +130,9 @@ namespace DeltaShell.Dimr
             
         }
 
-        public int Initialize(string xmlFile)
+        public int Initialize(string path)
         {
-            configFile = xmlFile;
+            configFile = path;
             if (!File.Exists(configFile))
             {
                 //hmm call exporter or something...
@@ -141,7 +141,7 @@ namespace DeltaShell.Dimr
             return 0;
         }
 
-        public int Update(double step)
+        public int Update(double dt)
         {
             Run(configFile);
             

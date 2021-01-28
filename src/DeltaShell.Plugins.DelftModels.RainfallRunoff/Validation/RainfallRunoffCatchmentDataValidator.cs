@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
     public class RainfallRunoffCatchmentDataValidator : IValidator<RainfallRunoffModel, IEnumerable<CatchmentModelData>>
     {
-        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<CatchmentModelData> targets)
+        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<CatchmentModelData> target)
         {
             return new ValidationReport("Concept Data", new List<ValidationIssue>(), GetSubReports(rootObject));
         }

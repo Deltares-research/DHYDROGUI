@@ -32,13 +32,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             get { return ConvertedValue; }
         }
 
-        public void Update(DateTime timeToUpdate, object value = null)
+        public void Update(DateTime time, object value = null)
         {
             var catchments = RRInputWaterLevel.FeatureVariable.Values.OfType<IHydroObject>().ToList();
             if (catchments.Count == 0)
                 return;
 
-            var timeIndex = GetActualOrPreviousTimeIndex(FlowOutputWaterLevel.Time, timeToUpdate);
+            var timeIndex = GetActualOrPreviousTimeIndex(FlowOutputWaterLevel.Time, time);
             if (timeIndex < 0)
                 return;
 
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.ValueConverters
             {
                 RRInputWaterLevel.Store.FireEvents = false;
                 RRInputWaterLevel.Time.Clear();
-                RRInputWaterLevel[timeToUpdate] = inputWaterLevels;
+                RRInputWaterLevel[time] = inputWaterLevels;
             }
             finally
             {

@@ -321,35 +321,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             return Enumerable.Empty<BoundaryConditionDataType>();
         }
 
-        public override void InsertBoundaryCondition(BoundaryConditionSet boundaryConditionSet, IBoundaryCondition boundaryCondition)
+        public override void InsertBoundaryCondition(BoundaryConditionSet boundaryConditions, IBoundaryCondition boundaryCondition)
         {
             var flowBoundaryCondition = boundaryCondition as FlowBoundaryCondition;
             if (flowBoundaryCondition == null)
             {
-                base.InsertBoundaryCondition(boundaryConditionSet, boundaryCondition);
+                base.InsertBoundaryCondition(boundaryConditions, boundaryCondition);
             }
             else
             {
                 if (FlowBoundaryCondition.AlwaysAllowedQuantities.Contains(flowBoundaryCondition.FlowQuantity))
                 {
-                    boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
+                    boundaryConditions.BoundaryConditions.Add(boundaryCondition);
                 }
                 else
                 {
                     var firstTransportConstituent =
-                        boundaryConditionSet.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                        boundaryConditions.BoundaryConditions.OfType<FlowBoundaryCondition>()
                             .FirstOrDefault(
                                 bc => FlowBoundaryCondition.AlwaysAllowedQuantities.Contains(bc.FlowQuantity));
 
 
                     if (firstTransportConstituent != null)
                     {
-                        var index = boundaryConditionSet.BoundaryConditions.IndexOf(firstTransportConstituent);
-                        boundaryConditionSet.BoundaryConditions.Insert(index, boundaryCondition);
+                        var index = boundaryConditions.BoundaryConditions.IndexOf(firstTransportConstituent);
+                        boundaryConditions.BoundaryConditions.Insert(index, boundaryCondition);
                     }
                     else
                     {
-                        boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
+                        boundaryConditions.BoundaryConditions.Add(boundaryCondition);
                     }
                 }
             }

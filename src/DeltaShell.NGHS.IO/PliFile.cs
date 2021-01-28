@@ -59,11 +59,11 @@ namespace DeltaShell.NGHS.IO
         /// <summary>
         /// Writes a polyline file for the collection of features <see cref="features"/>.
         /// </summary>
-        public virtual void Write(string pliFilePath, IEnumerable<T> features)
+        public virtual void Write(string path, IEnumerable<T> features)
         {
             using (CultureUtils.SwitchToInvariantCulture())
             {
-                OpenOutputFile(pliFilePath);
+                OpenOutputFile(path);
                 try
                 {
                     foreach (var feature2D in features)
@@ -109,21 +109,21 @@ namespace DeltaShell.NGHS.IO
         }
 
 
-        public virtual IList<T> Read(string pliFilePath)
+        public virtual IList<T> Read(string path)
         {
-            return Read(pliFilePath, null);
+            return Read(path, null);
         }
 
         /// <summary>
         /// Reads a polyline file and cerates a collection of features
         /// </summary>
-        public virtual IList<T> Read(string pliFilePath, Action<string, int,int> progress)
+        public virtual IList<T> Read(string path, Action<string, int,int> progress)
         {
             var features = new EventedList<T>();
 
-            OpenInputFile(pliFilePath);
+            OpenInputFile(path);
             int lineCount = 0;
-            int numberOfLines = File.ReadLines(pliFilePath).Count();
+            int numberOfLines = File.ReadLines(path).Count();
             try
             {
                 var line = GetNextLine();
@@ -145,13 +145,13 @@ namespace DeltaShell.NGHS.IO
                     lineCount++;
                     if (line == null)
                     {
-                        throw new FormatException($"Unexpected end of file; Expected number of points and columns on line {LineNumber} in file {pliFilePath}");
+                        throw new FormatException($"Unexpected end of file; Expected number of points and columns on line {LineNumber} in file {path}");
                     }
 
                     var lineFields = (IList<string>) SplitLine(line).ToList();
                     if (lineFields.Count < 2)
                     {
-                        throw new FormatException($"Invalid numpoints/numcolums on line {LineNumber} in file {pliFilePath}");
+                        throw new FormatException($"Invalid numpoints/numcolums on line {LineNumber} in file {path}");
                     }
 
                     var numPoints = GetInt(lineFields[0], "value for nr of points");
@@ -170,14 +170,14 @@ namespace DeltaShell.NGHS.IO
                         lineCount++;
                         if (line == null)
                         {
-                            throw new FormatException($"Unexpected end of file; Expected more data (attempting to read point {i + 1} out of {numPoints}) on line {LineNumber} in file {pliFilePath}");
+                            throw new FormatException($"Unexpected end of file; Expected more data (attempting to read point {i + 1} out of {numPoints}) on line {LineNumber} in file {path}");
                         }
 
                         lineFields = SplitLine(line).ToList();
 
                         if (lineFields.Count < numColumns || lineFields.Count >= MaximumAmountOfNumericValuesInPliFile && lineFields.Count > numColumns + 1)
                         {
-                            throw new FormatException($"Invalid point row (expected {numColumns} columns, but was {lineFields.Count}) on line {LineNumber} in file {pliFilePath}");
+                            throw new FormatException($"Invalid point row (expected {numColumns} columns, but was {lineFields.Count}) on line {LineNumber} in file {path}");
                         }
 
                         var x = GetDouble(lineFields[0]);
@@ -189,7 +189,7 @@ namespace DeltaShell.NGHS.IO
                             try
                             {
                                 var feature = CreateFeature2D(featureName + "-" + ++subFeatureCounter, points,
-                                    numColumns, columnNumericalValuesList, columnStringValuesList, locationNames, pliFilePath);
+                                    numColumns, columnNumericalValuesList, columnStringValuesList, locationNames, path);
                                 features.Add(feature);
                             }
                             catch (Exception e)
@@ -197,7 +197,7 @@ namespace DeltaShell.NGHS.IO
                                 throw new FormatException(
                                     string.Format("Failed feature construction for {0} on line {1} in file {2}: {3}",
                                         featureName, LineNumber,
-                                        pliFilePath, e.Message));
+                                        path, e.Message));
                             }
                             points.Clear();
                             foreach (var columnValues in columnNumericalValuesList)
@@ -219,7 +219,7 @@ namespace DeltaShell.NGHS.IO
                                 }
                                 catch (Exception e)
                                 {
-                                    throw new FormatException(string.Format("Invalid placement of string value '{0}' on line {1} in file {2}: {3}", lineFields[j], LineNumber, pliFilePath, e.Message));
+                                    throw new FormatException(string.Format("Invalid placement of string value '{0}' on line {1} in file {2}: {3}", lineFields[j], LineNumber, path, e.Message));
                                 }
                             }
 
@@ -239,7 +239,7 @@ namespace DeltaShell.NGHS.IO
                         try
                         {
                             var feature = CreateFeature2D(actualFeatureName, points, numColumns, columnNumericalValuesList, columnStringValuesList,
-                                locationNames, pliFilePath);
+                                locationNames, path);
                             features.Add(feature);
                         }
                         catch (Exception e)
@@ -247,7 +247,7 @@ namespace DeltaShell.NGHS.IO
                             throw new FormatException(
                                 string.Format("Failed feature construction for {0} on line {1} in file {2}: {3}",
                                     actualFeatureName, LineNumber,
-                                    pliFilePath, e.Message));
+                                    path, e.Message));
                         }
                         points.Clear();
                         foreach (var columnValues in columnNumericalValuesList)
@@ -263,7 +263,7 @@ namespace DeltaShell.NGHS.IO
 
                 if (maxColumns > NumericColumnAttributesKeys.Length + StringColumnAttributesKeys.Length + 2)
                 {
-                    Log.WarnFormat("In file {0}: columns {1} to {2} will be ignored.", pliFilePath,
+                    Log.WarnFormat("In file {0}: columns {1} to {2} will be ignored.", path,
                         NumericColumnAttributesKeys.Length + StringColumnAttributesKeys.Length + 3, maxColumns);
                 }
             }

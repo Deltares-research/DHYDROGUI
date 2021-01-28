@@ -82,11 +82,8 @@ namespace DelftTools.Hydro
                     // points per compartment
                     var pointsPerCompartment = nodeLocations.GroupBy(GetCompartmentForLocation);
 
-                    foreach (var compartmentPoints in pointsPerCompartment)
+                    foreach (var compartmentPoints in pointsPerCompartment.Where(p => p.Key != null))
                     {
-                        if (compartmentPoints.Key == null) 
-                            continue;
-                        
                         duplicateLocations.AddRange(compartmentPoints.Skip(1));
                     }
                 }

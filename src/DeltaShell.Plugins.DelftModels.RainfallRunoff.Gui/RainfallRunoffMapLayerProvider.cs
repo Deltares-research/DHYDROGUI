@@ -80,11 +80,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             throw new InvalidOperationException("Catchment not found");
         }
 
-        public bool CanCreateLayerFor(object data, object parentObject)
+        public bool CanCreateLayerFor(object data, object parentData)
         {
             return data is RainfallRunoffModel ||
-                   (data is ModelFolder && ((ModelFolder) data).Model is RainfallRunoffModel) ||
-                   (data is IFeatureCoverage && parentObject is ModelFolder && ((ModelFolder) parentObject).Model is RainfallRunoffModel);
+                   (data is ModelFolder folder && folder.Model is RainfallRunoffModel) ||
+                   (data is IFeatureCoverage && parentData is ModelFolder modelFolder && modelFolder.Model is RainfallRunoffModel);
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)

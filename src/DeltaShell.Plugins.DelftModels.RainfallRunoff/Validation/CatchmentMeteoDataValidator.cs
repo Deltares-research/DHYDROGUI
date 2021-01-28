@@ -7,13 +7,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
     public class CatchmentMeteoDataValidator : IValidator<RainfallRunoffModel, IEnumerable<CatchmentModelData>>
     {
-        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<CatchmentModelData> catchmentModelDatas)
+        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<CatchmentModelData> target)
         {
             if (rootObject.Precipitation.DataDistributionType == MeteoDataDistributionType.PerStation)
             {
                 var issues = new List<ValidationIssue>();
 
-                foreach (var cad in catchmentModelDatas)
+                foreach (var cad in target)
                 {
                     if (string.IsNullOrEmpty(cad.MeteoStationName) ||
                         !rootObject.MeteoStations.Contains(cad.MeteoStationName))
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             {
                 var issues = new List<ValidationIssue>();
 
-                foreach (var cad in catchmentModelDatas)
+                foreach (var cad in target)
                 {
                     if (string.IsNullOrEmpty(cad.TemperatureStationName) ||
                         !rootObject.TemperatureStations.Contains(cad.TemperatureStationName))

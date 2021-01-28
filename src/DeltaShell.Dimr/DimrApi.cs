@@ -156,7 +156,7 @@ namespace DeltaShell.Dimr
             }
         }
 
-        public int Initialize(string xmlFile)
+        public int Initialize(string path)
         {
             
             var previousDir = Environment.CurrentDirectory;
@@ -164,22 +164,20 @@ namespace DeltaShell.Dimr
 
             try
             {
-                Environment.CurrentDirectory = Path.GetDirectoryName(xmlFile);
-                LogMsg(string.Format("Running dimr in : {0}", Environment.CurrentDirectory));
+                Environment.CurrentDirectory = Path.GetDirectoryName(path);
+                LogMsg($"Running dimr in : {Environment.CurrentDirectory}");
                 
-                var path = Environment.GetEnvironmentVariable("PATH");
+                var envPath = Environment.GetEnvironmentVariable("PATH");
 
-                path = KernelDirs + ";" +
+                envPath = KernelDirs + ";" +
                        DimrApiDataSet.DimrDllPath + ";" +
-                       path;
-                Environment.SetEnvironmentVariable("PATH", path, EnvironmentVariableTarget.Process);
+                       envPath;
+                Environment.SetEnvironmentVariable("PATH", envPath, EnvironmentVariableTarget.Process);
                 
-                LogMsg(string.Format("Path used: {0}", Environment.GetEnvironmentVariable("PATH")));
+                LogMsg($"Path used: {Environment.GetEnvironmentVariable("PATH")}");
 
-                
                 byte useMpi = 0;
-                
-                
+
                 // Allocating memory for int
                 IntPtr intPointer = Marshal.AllocHGlobal(sizeof(byte));
 
@@ -219,7 +217,7 @@ namespace DeltaShell.Dimr
                 // Free memory
                 Marshal.FreeHGlobal(intPointer);
 
-                var result = DimrApiWrapper.initialize(xmlFile);
+                var result = DimrApiWrapper.initialize(path);
                 if (result != 0)
                 {
                     return result;
@@ -242,7 +240,7 @@ namespace DeltaShell.Dimr
             return 0;
         }
 
-        public void SetLoggingLevel(string debugLevelType, Level level)
+        public void SetLoggingLevel(string logType, Level level)
         {
             // Allocating memory for long
             IntPtr intPointer = Marshal.AllocHGlobal(sizeof(int));
@@ -251,7 +249,7 @@ namespace DeltaShell.Dimr
 
             // sending intPointer to unmanaged code here
 
-            DimrApiWrapper.set_var(debugLevelType, intPointer);
+            DimrApiWrapper.set_var(logType, intPointer);
             // Free memory
             Marshal.FreeHGlobal(intPointer);
         }
@@ -268,9 +266,9 @@ namespace DeltaShell.Dimr
                 Log.Info(msg);
             }
         }
-        public int Update(double step)
+        public int Update(double dt)
         {
-            var state = DimrApiWrapper.update(step);
+            var state = DimrApiWrapper.update(dt);
             if (state != 0) return state;
             DimrApiWrapper.get_current_time(ref tCurrent);
             currentTime = DimrRefDate.AddSeconds(tCurrent-relativeStartTime);

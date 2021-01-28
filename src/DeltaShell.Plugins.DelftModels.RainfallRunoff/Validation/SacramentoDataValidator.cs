@@ -7,15 +7,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
     public class SacramentoDataValidator : IValidator<RainfallRunoffModel, IEnumerable<SacramentoData>>
     {
-        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<SacramentoData> targets = null)
+        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<SacramentoData> target = null)
         {
-            if (targets == null || !targets.Any())
+            if (target == null || !target.Any())
             {
                 return ValidationReport.Empty("Sacramento concept"); //nothing to report
             }
             var issues = new List<ValidationIssue>();
 
-            foreach (var sacramentoData in targets)
+            foreach (var sacramentoData in target)
             {
                 issues.AddRange(ValidateSacramento(sacramentoData));
             }

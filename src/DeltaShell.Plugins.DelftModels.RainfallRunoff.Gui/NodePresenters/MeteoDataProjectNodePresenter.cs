@@ -19,11 +19,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
         }
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node,
-                                        MeteoData meteoData)
+                                        MeteoData nodeData)
         {
-            node.Image = GetImageForType(meteoData);
+            node.Image = GetImageForType(nodeData);
 
-            node.Text = meteoData.Name + " (" + meteoData.DataDistributionType.GetDescription() + ")";
+            node.Text = nodeData.Name + " (" + nodeData.DataDistributionType.GetDescription() + ")";
         }
 
         private static Image GetImageForType(MeteoData meteoData)

@@ -5,32 +5,31 @@ namespace DelftTools.Hydro.Helpers
 {
     public class DiscretizationComparer : IEqualityComparer<IDiscretization>
     {
-        public bool Equals(IDiscretization primaryDiscretisation, IDiscretization secondaryDiscretisation)
+        public bool Equals(IDiscretization x, IDiscretization y)
         {
-            if(primaryDiscretisation == null && secondaryDiscretisation != null 
-               || primaryDiscretisation != null && secondaryDiscretisation == null) return false;
+            if(x == null && y != null 
+               || x != null && y == null) return false;
 
-            if(!Equals(primaryDiscretisation?.Name, secondaryDiscretisation?.Name))return false;
-            if(!Equals(primaryDiscretisation?.Locations.Values.Count, secondaryDiscretisation?.Locations.Values.Count)) return false;
-            var comperator = new HydroNetworkComparer();
-            if (primaryDiscretisation?.Network is IHydroNetwork primaryDiscretisationNetwork &&
-                secondaryDiscretisation?.Network is IHydroNetwork secondaryDiscretisationNetwork)
-            {
-                if(!comperator.Equals(primaryDiscretisationNetwork, secondaryDiscretisationNetwork)) return false;
-            }
-            else
-            {
-                //need to think...for a network comparer instead of a hydronetwork comparer
-            }
+            if(!Equals(x?.Name, y?.Name) ||
+             (!Equals(x?.Locations.Values.Count, y?.Locations.Values.Count)))
+                return false;
+            
+            var comparer = new HydroNetworkComparer();
 
-            for (int i = 0; i < primaryDiscretisation?.Locations.Values.Count; i++)
-            {
-                var primaryLocation = primaryDiscretisation.Locations.Values[i];
-                var secondaryLocation = secondaryDiscretisation.Locations.Values[i];
+            if (x?.Network is IHydroNetwork primaryDiscretisationNetwork &&
+                y?.Network is IHydroNetwork secondaryDiscretisationNetwork && 
+                !comparer.Equals(primaryDiscretisationNetwork, secondaryDiscretisationNetwork))
+                return false;
 
-                if(!Equals(primaryLocation.Chainage, secondaryLocation.Chainage))return false;
-                if(!Equals(primaryLocation.Name, secondaryLocation.Name)) return false;
-                if(!Equals(primaryLocation.Description, secondaryLocation.Description)) return false;
+            for (int i = 0; i < x?.Locations.Values.Count; i++)
+            {
+                var primaryLocation = x.Locations.Values[i];
+                var secondaryLocation = y.Locations.Values[i];
+
+                if(!Equals(primaryLocation.Chainage, secondaryLocation.Chainage) ||
+                   !Equals(primaryLocation.Name, secondaryLocation.Name) ||
+                   !Equals(primaryLocation.Description, secondaryLocation.Description)) 
+                    return false;
             }
 
             return true;

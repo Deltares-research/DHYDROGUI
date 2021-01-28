@@ -34,11 +34,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private string TimFolder { get; set; }
 
-        public IList<IStructure> Read(string filePath)
+        public IList<IStructure> Read(string path)
         {
             return
-                ReadStructures2D(filePath)
-                    .Select(s => ConvertStructure(s, filePath))
+                ReadStructures2D(path)
+                    .Select(s => ConvertStructure(s, path))
                     .Where(s => s != null)
                     .ToList();
         }
@@ -92,12 +92,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        public void Write(string filePath, IEnumerable<IStructure> structures)
+        public void Write(string path, IEnumerable<IStructure> features)
         {
-            var supportedStructures = GetSupportedStructures(structures);
-            var delftIniCategories = supportedStructures.Select(s => CreateDelftIniCategory(s, filePath, ReferenceDate));
+            var supportedStructures = GetSupportedStructures(features);
+            var delftIniCategories = supportedStructures.Select(s => CreateDelftIniCategory(s, path, ReferenceDate));
 
-            new DelftIniWriter().WriteDelftIniFile(delftIniCategories, filePath);
+            new DelftIniWriter().WriteDelftIniFile(delftIniCategories, path);
         }
 
         private static IEnumerable<IStructure> GetSupportedStructures(IEnumerable<IStructure> structures)

@@ -2,6 +2,6 @@
 {
     public interface ISewerFeature
     {
-        void AddToHydroNetwork(IHydroNetwork network, SewerImporterHelper helper);
+        void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper);
     }
 }

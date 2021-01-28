@@ -6,22 +6,18 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using log4net;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 {
     public class RealTimeControlModelNodePresenter : ModelNodePresenterBase<RealTimeControlModel>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(RealTimeControlModelNodePresenter));
-
-        public static readonly string InputFolderName = "Input";
-        public static readonly string OutputFolderName = "Output";
+        private static readonly string InputFolderName = "Input";
+        private static readonly string OutputFolderName = "Output";
         
         private IGui gui;
 

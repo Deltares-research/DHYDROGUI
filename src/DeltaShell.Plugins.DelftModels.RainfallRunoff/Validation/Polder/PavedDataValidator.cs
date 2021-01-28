@@ -9,15 +9,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation.Polder
 {
     public class PavedDataValidator : IValidator<RainfallRunoffModel, IEnumerable<PavedData>>
     {
-        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<PavedData> targets = null)
+        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<PavedData> target = null)
         {
-            if (!targets.Any())
+            if (!target.Any())
             {
                 return ValidationReport.Empty("Paved concept"); //nothing to report
             }
             var issues = new List<ValidationIssue>();
 
-            foreach (var pavedData in targets)
+            foreach (var pavedData in target)
             {
                 issues.AddRange(ValidatePaved(pavedData));
             }
