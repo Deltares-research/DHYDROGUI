@@ -106,6 +106,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 ReconnectRtcToFmOutputFile(outputFileFunctionStore.Path);
             }
+
+            SuspendClearOutputOnInputChange = true;
         }
 
         public virtual RealTimeControlOutputFileFunctionStore OutputFileFunctionStore
@@ -377,7 +379,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             suspendUpdateFeatureAndParameter = true;
 
             clonedModel.cloning = true;
-            clonedModel.SuspendClearOutputOnInputChange = true;
             clonedModel.OutputOutOfSync = OutputOutOfSync;
             clonedModel.LimitMemory = LimitMemory;
 
@@ -418,12 +419,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             clonedModel.RelinkInternalDataItemLinks(this); // should reconnect all data items
 
             clonedModel.cloning = false;
-            clonedModel.SuspendClearOutputOnInputChange = false;
-
-            foreach (IModel model in clonedModel.ControlledModels)
-            {
-                model.SuspendClearOutputOnInputChange = false;
-            }
 
             if (outputFileFunctionStore != null && File.Exists(outputFileFunctionStore.Path))
             {
@@ -703,9 +698,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                         if (controlGroupDataItem != null)
                         {
-                            bool originalClearOutputOnInputChange = SuspendClearOutputOnInputChange;
-                            SuspendClearOutputOnInputChange = true;
-
                             foreach (IDataItem dataItem in controlGroupDataItem.Children)
                             {
                                 dataItem.Unlink();
@@ -713,8 +705,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                             controlGroupDataItem.Children.Clear();
                             DataItems.Remove(controlGroupDataItem);
-
-                            SuspendClearOutputOnInputChange = originalClearOutputOnInputChange;
                         }
 
                         break;
@@ -739,10 +729,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 AddConnectionDataItem(controlGroupDataItem, output, DataItemRole.Output);
             }
 
-            bool originalSuspendClearOutputOnInputChange = SuspendClearOutputOnInputChange;
-            SuspendClearOutputOnInputChange = true;
             DataItems.Add(controlGroupDataItem);
-            SuspendClearOutputOnInputChange = originalSuspendClearOutputOnInputChange;
         }
 
         private static void AddConnectionDataItem(IDataItem controlGroupDataItem, ConnectionPoint connectionPoint, DataItemRole role)
@@ -1661,7 +1648,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             linkedDataItemsOriginalValues.Clear();
 
-            SuspendClearOutputOnInputChange = false;
             outputWriteTimesQueue = null;
 
             // Clear the explicit value converter lookup if relevant
