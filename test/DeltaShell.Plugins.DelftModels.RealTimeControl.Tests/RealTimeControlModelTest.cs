@@ -380,6 +380,72 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetStartTime_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+
+                // When
+                model.StartTime = DateTime.Now;
+
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetStopTime_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+
+                // When
+                model.StopTime = DateTime.Now;
+
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void GivenRealTimeControlModel_WhenSetTimeStep_ThenOutputMarkedOutOfSync()
+        {
+            // Given
+            using (var tempDir = new TemporaryDirectory())
+            {
+                RealTimeControlModel model = CreateRtcModelAndFiles(tempDir, out string rtcFolderName, out string rtcDirectory, out string[] _);
+                CreateRestartFiles(tempDir, rtcFolderName);
+                model.ConnectOutput(rtcDirectory);
+
+                // Precondition
+                Assert.That(model.OutputOutOfSync, Is.False);
+
+                // When
+                model.TimeStep = TimeSpan.FromDays(1);
+
+                // Then
+                Assert.That(model.OutputOutOfSync, Is.True);
+            }
+        }
+
+        [Test]
         public void GetUpToDateDataItemName_ReturnsIdentity()
         {
             const string inputValue = "I like big data items and I cannot lie";

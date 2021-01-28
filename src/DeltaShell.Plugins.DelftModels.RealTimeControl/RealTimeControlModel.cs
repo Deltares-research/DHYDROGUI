@@ -161,6 +161,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ? outputFileFunctionStore.Functions.OfType<IFeatureCoverage>()
                 : Enumerable.Empty<IFeatureCoverage>();
 
+        /// <summary>
+        /// Gets or sets the output text documents.
+        /// </summary>
+        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; protected set; }
+
         public virtual bool UseRestart => !RestartInput.IsEmpty;
 
         public virtual bool WriteRestart { get; set; }
@@ -187,11 +192,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// </summary>
         public virtual IEventedList<RestartFile> RestartOutput { get; protected set; }
 
-        /// <summary>
-        /// Gets or sets the output text documents.
-        /// </summary>
-        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; protected set; }
-
         public override bool CanRun => false;
 
         [NoNotifyPropertyChange]
@@ -200,12 +200,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.StartTime ?? base.StartTime;
             set
             {
+                if (base.StartTime == value)
+                {
+                    return;
+                }
+
                 if (TimeProvider != null)
                 {
                     TimeProvider.StartTime = value;
                 }
 
                 base.StartTime = value;
+                MarkOutputOutOfSync();
             }
         }
 
@@ -215,12 +221,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.StopTime ?? base.StopTime;
             set
             {
+                if (base.StopTime == value)
+                {
+                    return;
+                }
+
                 if (TimeProvider != null)
                 {
                     TimeProvider.StopTime = value;
                 }
 
                 base.StopTime = value;
+                MarkOutputOutOfSync();
             }
         }
 
@@ -230,12 +242,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => TimeProvider?.TimeStep ?? base.TimeStep;
             set
             {
+                if (base.TimeStep == value)
+                {
+                    return;
+                }
+
                 if (TimeProvider != null)
                 {
                     TimeProvider.TimeStep = value;
                 }
 
                 base.TimeStep = value;
+                MarkOutputOutOfSync();
             }
         }
 
