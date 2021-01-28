@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Guards;
@@ -17,16 +18,24 @@ namespace DeltaShell.NGHS.Common.Utils
         /// <typeparam name="T">The type of the searched object.</typeparam>
         /// <param name="objects">The objects.</param>
         /// <param name="name">The name of the searched object.</param>
+        /// <param name="comparisonType"> Optional parameter; the type of comparison used to compare the strings. </param>
         /// <returns>
         /// The first object with the same name; default if the object was not found.
         /// </returns>
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="objects"/> is <c>null</c>.
         /// </exception>
-        public static T GetByName<T>(this IEnumerable<T> objects, string name) where T : INameable
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <paramref name="comparisonType"/> is not defined.
+        /// </exception>
+        /// >
+        public static T GetByName<T>(this IEnumerable<T> objects, string name, StringComparison comparisonType = StringComparison.Ordinal)
+            where T : INameable
         {
             Ensure.NotNull(objects, nameof(objects));
-            return objects.FirstOrDefault(o => o.Name == name);
+            Ensure.IsDefined(comparisonType, nameof(comparisonType));
+
+            return objects.FirstOrDefault(o => string.Equals(o.Name, name, comparisonType));
         }
 
         /// <summary>
