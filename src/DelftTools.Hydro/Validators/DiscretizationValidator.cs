@@ -102,18 +102,16 @@ namespace DelftTools.Hydro.Validators
                     .OrderBy(s => s.Chainage)
                     .ToList();
 
-            for (var i = 1; i < branchStructures.Count(); i++)
+            var countOfBranchStructures = branchStructures.Count();
+            for (var i = 1; i < countOfBranchStructures; i++)
             {
                 var branchStructureFirst = branchStructures[i - 1];
                 var branchStructureSecond = branchStructures[i];
 
-                if (
-                    branchLocations.Any(
-                        l => l.Chainage >= branchStructureFirst.Chainage && l.Chainage <= branchStructureSecond.Chainage))
+                if (branchLocations.Any(l => l.Chainage >= branchStructureFirst.Chainage && l.Chainage <= branchStructureSecond.Chainage))
                     continue;
 
-                var message = String.Format("No grid points defined between structure {0} and {1}",
-                    branchStructureFirst.Name, branchStructureSecond.Name);
+                var message = $"No grid points defined between structure {branchStructureFirst.Name} (chainage {branchStructureFirst.Chainage}) and {branchStructureSecond.Name} (chainage {branchStructureSecond.Chainage}) on branch {branch.Name} with gridpoints at chainages {string.Join("-",networkDiscretization.GetLocationsForBranch(branch).Select(b => b.Chainage))}";
                 yield return
                     new ValidationIssue(branchStructureSecond, ValidationSeverity.Error, message, networkDiscretization);
             }

@@ -4,11 +4,13 @@ using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Validators;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace DelftTools.Hydro.Tests.Validators
 {
@@ -116,9 +118,9 @@ namespace DelftTools.Hydro.Tests.Validators
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
             var discretization = new Discretization(){Network = network};
             var channel = network.Channels.First();
-            var structure = new Weir(){Chainage = channel.Length/2-1};
-            var structure1 = new Weir(){Chainage = channel.Length/2+1};
-            var structure2 = new Weir(){Chainage = (channel.Length/2)+2};
+            var structure = new Weir("weir1"){Chainage = channel.Length/2-1};
+            var structure1 = new Weir("weir2") {Chainage = channel.Length/2+1};
+            var structure2 = new Weir("weir3") {Chainage = (channel.Length/2)+2};
             channel.BranchFeatures.Add(structure);
             channel.BranchFeatures.Add(structure1);
             channel.BranchFeatures.Add(structure2);
@@ -128,7 +130,7 @@ namespace DelftTools.Hydro.Tests.Validators
             Assert.That(report.Severity(), Is.EqualTo(ValidationSeverity.Error));
             Console.WriteLine(string.Join(Environment.NewLine, report.AllErrors.Select(i => i.Message)));
             Assert.That(report.AllErrors.Count(), Is.EqualTo(1));
-            Assert.That(report.AllErrors.Select(i => i.Message), Contains.Item($"No grid points defined between structure {structure1.Name} and {structure2.Name}"));
+            report.AllErrors.Select(i => i.Message).ForEach(m => Assert.That(m,  Contains.Substring($"No grid points defined between structure")));
         }
     }
 }
