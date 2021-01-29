@@ -7,25 +7,25 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
 {
     public class SobekController : IEquatable<SobekController>
     {
-        public string Id;
-        public string Name;
-        public SobekControllerType ControllerType;
-        public SobekControllerParameter SobekControllerParameterType;
-        public bool IsActive;
-        public string StructureId;
-        public string MeasurementStationId;
-        public SobekMeasurementLocationParameter MeasurementLocationParameter;
-        public DataTable TimeTable;
-        public DataTable LookUpTable;
-        public InterpolationType InterpolationType;
-        public ExtrapolationType ExtrapolationType;
-        public string ExtrapolationPeriod;
-        public double MaxChangeVelocity;
-        public ISobekControllerProperties SpecificProperties;
+        public string Id { get; set; }
+        public string Name{ get; set; }
+        public SobekControllerType ControllerType{ get; set; }
+        public SobekControllerParameter SobekControllerParameterType{ get; set; }
+        public bool IsActive{ get; set; }
+        public string StructureId{ get; set; }
+        public string MeasurementStationId{ get; set; }
+        public SobekMeasurementLocationParameter MeasurementLocationParameter{ get; set; }
+        public DataTable TimeTable{ get; set; }
+        public DataTable LookUpTable{ get; set; }
+        public InterpolationType InterpolationType{ get; set; }
+        public ExtrapolationType ExtrapolationType{ get; set; }
+        public string ExtrapolationPeriod{ get; set; }
+        public double MaxChangeVelocity{ get; set; }
+        public ISobekControllerProperties SpecificProperties{ get; set; }
         public IList<Trigger> Triggers { get; set; }
-        public double PositiveStream;
-        public double NegativeStream;
-        public int MinimumPeriod;
+        public double PositiveStream{ get; set; }
+        public double NegativeStream{ get; set; }
+        public int MinimumPeriod{ get; set; }
 
         public static DataTable TimeTableStructure
         {
@@ -94,8 +94,8 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
 
     public struct Trigger
     {
-        public string Id;
-        public bool Active;
-        public bool And;
+        public string Id{ get; set; }
+        public bool Active{ get; set; }
+        public bool And{ get; set; }
     }
 }

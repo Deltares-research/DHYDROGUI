@@ -81,8 +81,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 waterFlowFMModel.StopTime = sobekCaseSettings.StopTime;
                 waterFlowFMModel.TimeStep = sobekCaseSettings.TimeStep;
                 waterFlowFMModel.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
-                
-                waterFlowFMModel.OutputTimeStep = waterFlowFMModel.OutputTimeStep;
 
                 path = GetFilePath("DEFRUN.2");
                 var sobekReDefRun2Reader = new SobekReDefRun2Reader {SobekCaseSettingsInstance = sobekCaseSettings};

@@ -2,17 +2,17 @@
 {
     public class SobekIntervalControllerProperties : ISobekControllerProperties
     {
-        public double USminimum;
-        public double USmaximum;
-        public IntervalControllerIntervalType IntervalType;
-        public double FixedInterval;
-        public double ControlVelocity;
-        public IntervalControllerDeadBandType DeadBandType;
-        public double DeadBandFixedSize;
-        public double DeadBandPecentage;
-        public double DeadBandMin;
-        public double DeadBandMax;
-        public double ConstantSetPoint;
+        public double USminimum{ get; set; }
+        public double USmaximum{ get; set; }
+        public IntervalControllerIntervalType IntervalType{ get; set; }
+        public double FixedInterval{ get; set; }
+        public double ControlVelocity{ get; set; }
+        public IntervalControllerDeadBandType DeadBandType{ get; set; }
+        public double DeadBandFixedSize{ get; set; }
+        public double DeadBandPecentage{ get; set; }
+        public double DeadBandMin{ get; set; }
+        public double DeadBandMax{ get; set; }
+        public double ConstantSetPoint{ get; set; }
     }
 
     public enum IntervalControllerDeadBandType
