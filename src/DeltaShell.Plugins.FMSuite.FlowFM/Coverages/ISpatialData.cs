@@ -83,9 +83,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         /// Removes the tracer with the specified <paramref name="name"/>.
         /// </summary>
         /// <param name="name"> The name of the tracer. </param>
-        /// <exception cref="System.ArgumentException">
-        /// Thrown when <paramref name="name"/> is <c>null</c> or empty.
-        /// </exception>
         void RemoveTracer(string name);
 
         /// <summary>
@@ -107,9 +104,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         /// Removes the sediment fraction with the specified <paramref name="name"/>.
         /// </summary>
         /// <param name="name"> The name of the sediment fraction. </param>
-        /// <exception cref="System.ArgumentException">
-        /// Thrown when <paramref name="name"/> is <c>null</c> or empty.
-        /// </exception>
         void RemoveFraction(string name);
 
         /// <summary>
