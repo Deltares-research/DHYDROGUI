@@ -66,11 +66,6 @@ setup/FM/WixUI/packages
 setup/FM/bin
 setup/FM/obj
 setup/FM/packages
-setup/Framework/*.suo
-setup/Framework/*.user
-setup/Framework/bin
-setup/Framework/obj
-setup/Framework/packages
 setup/HydroLibraries/*.suo
 setup/HydroLibraries/*.user
 setup/HydroLibraries/bin
