@@ -172,6 +172,7 @@
     <Compile Include="FunctionStores\IFMClassMapFileFunctionStore.cs" />
     <Compile Include="FunctionStores\IFMHisFileFunctionStore.cs" />
     <Compile Include="FunctionStores\IFMMapFileFunctionStore.cs" />
+    <Compile Include="Grid\UnstructuredGridExtensions.cs" />
     <Compile Include="IO\DataAccessBuilders\DelftIniCategoryFactory.cs" />
     <Compile Include="IO\DataAccessBuilders\ExtForceFileItemFactory.cs" />
     <Compile Include="IO\DataAccessObjects\BcBlockData.cs" />

@@ -14,6 +14,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Geometries;
@@ -65,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     grid.CoordinateSystem = CoordinateSystem;
 
                     // add flowlinks to input grid for adding data on input FlowLink coverages (Roughness, Viscosity etc.)
-                    grid.FlowLinks.AddRange(GenerateFlowLinksForEdges(grid));
+                    grid.GenerateFlowLinks();
                 }
 
                 if (!gridsAreEqual)
@@ -239,70 +240,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     Resources
                         .WaterFlowFMModel_UpdateBathymetryCoverage_Reapplying_existing_spatial_operations_to_new_BedLevel_Data);
             }
-        }
-
-        private static IList<FlowLink> GenerateFlowLinksForEdges(UnstructuredGrid grid)
-        {
-            // optimized for performance
-            var flowLinks = new List<FlowLink>();
-
-            for (var index = 0; index < grid.Edges.Count; index++)
-            {
-                Edge gridEdge = grid.Edges[index];
-
-                IList<int> gridVertexToCellIndex;
-                grid.VertexToCellIndices.TryGetValue(gridEdge.VertexFromIndex, out gridVertexToCellIndex);
-                if (gridVertexToCellIndex == null)
-                {
-                    continue;
-                }
-
-                IList<int> vertexToCellIndex;
-                grid.VertexToCellIndices.TryGetValue(gridEdge.VertexToIndex, out vertexToCellIndex);
-                if (vertexToCellIndex == null)
-                {
-                    continue;
-                }
-
-                int cellOne = -1;
-                int cellTwo = -1;
-                var moreThanTwo = false;
-                for (var i = 0; i < gridVertexToCellIndex.Count; i++)
-                {
-                    int value1 = gridVertexToCellIndex[i];
-
-                    for (var j = 0; j < vertexToCellIndex.Count; j++)
-                    {
-                        int value2 = vertexToCellIndex[j];
-
-                        if (value1 != value2)
-                        {
-                            continue;
-                        }
-
-                        if (cellOne == -1)
-                        {
-                            cellOne = value1;
-                            continue;
-                        }
-
-                        if (cellTwo == -1)
-                        {
-                            cellTwo = value2;
-                            continue;
-                        }
-
-                        moreThanTwo = true;
-                    }
-                }
-
-                if (!moreThanTwo && cellOne != -1 && cellTwo != -1)
-                {
-                    flowLinks.Add(new FlowLink(cellOne, cellTwo, gridEdge));
-                }
-            }
-
-            return flowLinks;
         }
 
         private UnstructuredGridCoverage GetOriginalCoverage(UnstructuredGridCoverage coverage)
