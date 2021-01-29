@@ -94,12 +94,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 foreach (ExtForceFileItem extForceFileItem in extForceFileItems)
                 {
                     WriteLine("");
-                    WriteLine((extForceFileItem.Enabled ? quantityKey : disabledQuantityKey) +
+                    WriteLine((extForceFileItem.Enabled ? ExtForceFileConstants.QuantityKey : disabledQuantityKey) +
                               "=" + extForceFileItem.Quantity);
-                    WriteLine(fileNameKey + "=" + extForceFileItem.FileName);
-                    WriteLine(fileTypeKey + "=" + extForceFileItem.FileType);
-                    WriteLine(methodKey + "=" + extForceFileItem.Method);
-                    WriteLine(operandKey + "=" + extForceFileItem.Operand);
+                    WriteLine(ExtForceFileConstants.FileNameKey + "=" + extForceFileItem.FileName);
+                    WriteLine(ExtForceFileConstants.FileTypeKey + "=" + extForceFileItem.FileType);
+                    WriteLine(ExtForceFileConstants.MethodKey + "=" + extForceFileItem.Method);
+                    WriteLine(ExtForceFileConstants.OperandKey + "=" + extForceFileItem.Operand);
                     if (!double.IsNaN(extForceFileItem.Value))
                     {
                         WriteLine(valueKey + "=" + extForceFileItem.Value);

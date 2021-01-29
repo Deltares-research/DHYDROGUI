@@ -24,5 +24,30 @@
         /// The sediment concentration postfix.
         /// </summary>
         public const string SedimentConcentrationPostfix = "_SedConc";
+
+        /// <summary>
+        /// The quantity key.
+        /// </summary>
+        public const string QuantityKey = "QUANTITY";
+
+        /// <summary>
+        /// The file name key.
+        /// </summary>
+        public const string FileNameKey = "FILENAME";
+
+        /// <summary>
+        /// The file type key.
+        /// </summary>
+        public const string FileTypeKey = "FILETYPE";
+
+        /// <summary>
+        /// The method key.
+        /// </summary>
+        public const string MethodKey = "METHOD";
+
+        /// <summary>
+        /// The operand key.
+        /// </summary>
+        public const string OperandKey = "OPERAND";
     }
 }
