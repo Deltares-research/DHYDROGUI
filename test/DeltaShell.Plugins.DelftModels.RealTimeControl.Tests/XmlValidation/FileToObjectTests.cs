@@ -1,4 +1,5 @@
-﻿using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
+﻿using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.XmlValidation
@@ -9,14 +10,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.XmlValidation
         [Test]
         public void ConvertXmlDocumentFileToXmlDocumentObject()
         {
-            var xmlDocument = FileToObject.ConvertToXDocument(@"XmlValidation\XMLTest.xml");
+            var xmlDocument = FileToObject.ConvertToXDocument(TestHelper.GetTestWorkingDirectory(@"..\XmlValidation\XMLTest.xml"));
             Assert.IsNotNull(xmlDocument);
         }
 
         [Test]
         public void ConvertXmlSchemaFielToXmlSchemaObject()
         {
-            var xmlSchema = FileToObject.ConvertToXmlSchema(@"XmlValidation\XMLValidationTest.xsd");
+            var xmlSchema = FileToObject.ConvertToXmlSchema(TestHelper.GetTestWorkingDirectory(@"..\XmlValidation\XMLValidationTest.xsd"));
             Assert.IsNotNull(xmlSchema);
         }
     }
