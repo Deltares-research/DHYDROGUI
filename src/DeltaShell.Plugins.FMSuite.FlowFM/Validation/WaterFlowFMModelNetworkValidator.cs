@@ -116,7 +116,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidationHelper.ValidateDuplicateNames(network.ObservationPoints.Cast<INameable>(), "observation points", network),
                 ValidationHelper.ValidateDuplicateNames(network.Pipes.Cast<INameable>(), "pipes", network),
                 ValidationHelper.ValidateDuplicateNames(network.Pumps.Cast<INameable>(), "pumps", network),
-                ValidationHelper.ValidateDuplicateNames(network.Retentions.Cast<INameable>(), "retentions", network),
                 ValidationHelper.ValidateDuplicateNames(network.Weirs.Cast<INameable>(), "weirs", network),
                 ValidationHelper.ValidateDuplicateNames(network.Gates.Cast<INameable>(), "gates", network),
 
