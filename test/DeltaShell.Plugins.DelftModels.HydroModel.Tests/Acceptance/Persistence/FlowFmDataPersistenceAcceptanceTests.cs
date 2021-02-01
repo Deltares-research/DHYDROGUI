@@ -29,6 +29,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         {
             get
             {
+                // Foldername, mdu filename, ActualCountFuncDelegate, expected # branchfeatures
+                yield return new TestCaseData("FM-Eindhoven-Urban", "FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 0); // TODO: Add preconditions when the model can be correctly imported
+                yield return new TestCaseData("Pudong", @"FM\FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 0); // TODO: Add preconditions when the model can be correctly imported
                 yield return new TestCaseData("Hydamo_DBV", "DVB", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 601); // TODO: Add preconditions when the model can be correctly imported
                 yield return new TestCaseData("Hydamo_MoergestelBroek", "moergestels_broek", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 288); // TODO: Add preconditions when the model can be correctly imported
             }
