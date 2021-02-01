@@ -3519,15 +3519,6 @@ test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/ViewModels/TimeDependentMod
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/WaterFlowFMModelRtcTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/WaterFlowFmModelDirectoryStructureTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/packages.config -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Groesbeek/FlowFM.mdu -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Groesbeek/FlowFM_bnd.ext -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Groesbeek/FlowFM_net.nc -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Groesbeek/crsdef.ini -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Groesbeek/crsloc.ini -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Groesbeek/nodeFile.ini -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Groesbeek/roughness-Main.ini -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Groesbeek/roughness-Sewer.ini -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Groesbeek/structures.ini -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Hydamo_DBV/DVB.mdu -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Hydamo_DBV/DVB_net.nc -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModels/FlowFM/Hydamo_DBV/DVB_new.ext -text
