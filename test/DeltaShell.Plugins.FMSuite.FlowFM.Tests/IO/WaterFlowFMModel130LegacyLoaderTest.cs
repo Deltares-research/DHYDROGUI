@@ -134,32 +134,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Assert
                 string inputDir = Path.Combine(projectDir, "FlowFM", "input");
 
-                void AssertFileExists(string file) => Assert.That(Path.Combine(inputDir, file), Does.Exist);
+                AssertCorrectFile("FlowFM.ext");
+                AssertCorrectFile("initialwaterlevel.xyz");
+                AssertCorrectFile("initialsalinity.xyz");
+                AssertCorrectFile("initialtemperature.xyz");
+                AssertCorrectFile("frictioncoefficient.xyz");
+                AssertCorrectFile("horizontaleddyviscositycoefficient.xyz");
+                AssertCorrectFile("horizontaleddydiffusivitycoefficient.xyz");
+                AssertCorrectFile("initialtracerSomeTracer.xyz");
 
-                AssertFileExists("FlowFM.ext");
-                AssertFileExists("initialwaterlevel.xyz");
-                AssertFileExists("initialsalinity.xyz");
-                AssertFileExists("initialtemperature.xyz");
-                AssertFileExists("frictioncoefficient.xyz");
-                AssertFileExists("horizontaleddyviscositycoefficient.xyz");
-                AssertFileExists("horizontaleddydiffusivitycoefficient.xyz");
-                AssertFileExists("initialtracerSomeTracer.xyz");
-
-                void AssertFileEquals(string fileName)
+                void AssertCorrectFile(string fileName)
                 {
-                    string actual = File.ReadAllText(Path.Combine(inputDir, fileName));
+                    string filePath = Path.Combine(inputDir, fileName);
+                    Assert.That(filePath, Does.Exist);
+
+                    string actual = File.ReadAllText(filePath);
                     string expected = File.ReadAllText(Path.Combine(expectedDir, fileName));
                     Assert.That(actual, Is.EqualTo(expected));
                 }
-
-                AssertFileEquals("FlowFM.ext");
-                AssertFileEquals("initialwaterlevel.xyz");
-                AssertFileEquals("initialsalinity.xyz");
-                AssertFileEquals("initialtemperature.xyz");
-                AssertFileEquals("frictioncoefficient.xyz");
-                AssertFileEquals("horizontaleddyviscositycoefficient.xyz");
-                AssertFileEquals("horizontaleddydiffusivitycoefficient.xyz");
-                AssertFileEquals("initialtracerSomeTracer.xyz");
             }
         }
 

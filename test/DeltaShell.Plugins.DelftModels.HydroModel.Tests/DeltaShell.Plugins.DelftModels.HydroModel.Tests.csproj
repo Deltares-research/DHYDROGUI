@@ -303,6 +303,7 @@
     <Compile Include="Validation\HydroModelValidatorTest.cs" />
     <Compile Include="ViewModels\HydroModelTimeSettingsViewModelTest.cs" />
     <Compile Include="ViewModels\TimeDependentModelViewModelTests.cs" />
+    <Compile Include="WaterFlowFMModel130LegacyLoaderIntegrationTest.cs" />
     <Compile Include="WaterFlowFmModelDirectoryStructureTest.cs" />
     <Compile Include="WavesDirectoryStructureTest.cs" />
   </ItemGroup>
