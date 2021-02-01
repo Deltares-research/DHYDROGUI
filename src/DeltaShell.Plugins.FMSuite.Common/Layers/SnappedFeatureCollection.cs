@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         public override ICoordinateSystem CoordinateSystem
         {
             get { return Area2D != null ? Area2D.CoordinateSystem : null; }
-            set { }
+            set { throw new NotSupportedException("Can not set CoordinateSystem directly. Change on the Area2D");}
         }
 
         private HydroArea Area2D

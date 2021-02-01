@@ -360,7 +360,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             {
                 Width = 2.0,
                 Height = 3.0,
-                Area = 6.0,
                 TimeSpan = new TimeSpan(0, 1, 0, 0)
             });
 

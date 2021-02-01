@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         public override IList Features
         {
             get { return useConnections ? (IList) connectionList : (IList) connectionPointList; }
-            set { }
+            set { throw new NotSupportedException("Features can not be set through Features property");}
         }
 
         public IEditableObject EditableObjectRefresh

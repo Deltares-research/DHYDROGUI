@@ -109,45 +109,64 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
                 // hack used for default geometry before feature cross section has been created.
                 featureInteractor = new CrossSectionInteractor(layer, feature, vectorStyle, Network);
             }
-            else if (feature is ICompositeBranchStructure)
-                featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
-            else if (feature is ICompartment)
-                featureInteractor = new CompartmentInteractor(layer, feature, vectorStyle, Network);
-            else if (feature is IWeir weir)
-                featureInteractor = weir.WeirFormula is GatedWeirFormula ? (IFeatureInteractor)new StructureInteractor<Orifice>(layer, feature, vectorStyle, Network) : new StructureInteractor<Weir>(layer, feature, vectorStyle, Network);
-            else if (feature is ICulvert)
-                featureInteractor = new StructureInteractor<Culvert>(layer, feature, vectorStyle, Network);
-            else if (feature is IBridge)
-                featureInteractor = new StructureInteractor<Bridge>(layer, feature, vectorStyle, Network);
-            else if (feature is IPump)
-                featureInteractor = new StructureInteractor<Pump>(layer, feature, vectorStyle, Network);
-            else if (feature is ICrossSection)
-                featureInteractor = new CrossSectionInteractor(layer, feature, vectorStyle, Network)
-                {
-                    SnapRules = { }
-                };
-            else if (feature is IManhole)
-                featureInteractor = new ManholeInteractor(layer, feature, vectorStyle, Network);
-            else if (feature is INode)
-                featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
-            else if (feature is IChannel)
-                featureInteractor = new ChannelInteractor(layer, feature, vectorStyle, Network);
-            else if (feature is ISewerConnection)
-                featureInteractor = new SewerConnectionInteractor(layer, feature, vectorStyle, Network);
-            else if (feature is INetworkLocation)
-                featureInteractor = new NetworkLocationFeatureInteractor(layer, feature, vectorStyle, null);
-            else if (feature is LateralSource)
+            else switch (feature)
             {
-                featureInteractor = ((LateralSource)feature).IsDiffuse
-                                        ? (IFeatureInteractor)new DiffuseLateralSourceInteractor(layer, feature, vectorStyle, Network)
-                                        : new LateralSourceInteractor(layer, feature, vectorStyle, Network);
+                case ICompositeBranchStructure _:
+                    featureInteractor = new CompositeStructureInteractor(layer, feature, vectorStyle, Network);
+                    break;
+                case ICompartment _:
+                    featureInteractor = new CompartmentInteractor(layer, feature, vectorStyle, Network);
+                    break;
+                case IWeir weir:
+                    featureInteractor = weir.WeirFormula is GatedWeirFormula 
+                        ? (IFeatureInteractor)new StructureInteractor<Orifice>(layer, feature, vectorStyle, Network) 
+                        : new StructureInteractor<Weir>(layer, feature, vectorStyle, Network);
+                    break;
+                case ICulvert _:
+                    featureInteractor = new StructureInteractor<Culvert>(layer, feature, vectorStyle, Network);
+                    break;
+                case IBridge _:
+                    featureInteractor = new StructureInteractor<Bridge>(layer, feature, vectorStyle, Network);
+                    break;
+                case IPump _:
+                    featureInteractor = new StructureInteractor<Pump>(layer, feature, vectorStyle, Network);
+                    break;
+                case ICrossSection _:
+                    featureInteractor = new CrossSectionInteractor(layer, feature, vectorStyle, Network)
+                    {
+                        SnapRules = { }
+                    };
+                    break;
+                case IManhole _:
+                    featureInteractor = new ManholeInteractor(layer, feature, vectorStyle, Network);
+                    break;
+                case INode _:
+                    featureInteractor = new HydroNodeInteractor(layer, feature, vectorStyle, Network);
+                    break;
+                case IChannel _:
+                    featureInteractor = new ChannelInteractor(layer, feature, vectorStyle, Network);
+                    break;
+                case ISewerConnection _:
+                    featureInteractor = new SewerConnectionInteractor(layer, feature, vectorStyle, Network);
+                    break;
+                case INetworkLocation _:
+                    featureInteractor = new NetworkLocationFeatureInteractor(layer, feature, vectorStyle, null);
+                    break;
+                case LateralSource source:
+                    featureInteractor = source.IsDiffuse
+                        ? (IFeatureInteractor)new DiffuseLateralSourceInteractor(layer, source, vectorStyle, Network)
+                        : new LateralSourceInteractor(layer, source, vectorStyle, Network);
+                    break;
+                case Retention _:
+                    featureInteractor = new BranchFeatureInteractor<Retention>(layer, feature, vectorStyle, Network);
+                    break;
+                case ObservationPoint _:
+                    featureInteractor = new BranchFeatureInteractor<ObservationPoint>(layer, feature, vectorStyle, Network);
+                    break;
+                case IExtraResistance _:
+                    featureInteractor = new StructureInteractor<ExtraResistance>(layer, feature, vectorStyle, Network);
+                    break;
             }
-            else if (feature is Retention)
-                featureInteractor = new BranchFeatureInteractor<Retention>(layer, feature, vectorStyle, Network);
-            else if (feature is ObservationPoint)
-                featureInteractor = new BranchFeatureInteractor<ObservationPoint>(layer, feature, vectorStyle, Network);
-            else if (feature is IExtraResistance)
-                featureInteractor = new StructureInteractor<ExtraResistance>(layer, feature, vectorStyle, Network);
 
             if (featureInteractor is INetworkFeatureInteractor)
             {

@@ -173,7 +173,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 var model = GetModel?.Invoke();
                 return description.IsEnabled(model);
             }
-            set { }
         }
 
         /// <summary>
@@ -190,7 +189,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
                 var model = GetModel?.Invoke();
                 return description.IsVisible(model);
             }
-            set { }
         }
 
         /// <summary>
@@ -290,7 +288,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

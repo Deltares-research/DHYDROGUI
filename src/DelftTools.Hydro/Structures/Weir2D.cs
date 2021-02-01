@@ -10,11 +10,11 @@ namespace DelftTools.Hydro.Structures
     {
         private string groupName;
 
-        public Weir2D()
+        public Weir2D(): this(false)
         {
         }
 
-        public Weir2D(bool allowTimeVaryingData = false) :this("Weir", allowTimeVaryingData) { }
+        public Weir2D(bool allowTimeVaryingData) :this("Weir", allowTimeVaryingData) { }
 
 
         public Weir2D(string name, bool allowTimeVaryingData = false) : base(name, allowTimeVaryingData)

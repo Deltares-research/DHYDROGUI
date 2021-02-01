@@ -12,26 +12,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
     public class ObsFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : Feature2DPoint, new()
     {
-        public void Write(string obsFilePath, IEnumerable<T> observationPoints, bool includeName = true)
+        public void Write(string path, IEnumerable<T> features)
         {
             using (CultureUtils.SwitchToInvariantCulture())
             {
-                OpenOutputFile(obsFilePath);
+                OpenOutputFile(path);
                 try
                 {
-                    foreach (var observationPoint in observationPoints)
+                    foreach (var observationPoint in features)
                     {
-                        if (includeName)
-                        {
-                            WriteLine(string.Format("{0,24} {1,24} '{2}'",
-                                                    observationPoint.X, observationPoint.Y,
-                                                    observationPoint.Name));
-                        }
-                        else
-                        {
-                            WriteLine(string.Format("{0,24} {1,24}", 
-                                observationPoint.X, observationPoint.Y));
-                        }
+                        WriteLine($"{observationPoint.X,24} {observationPoint.Y,24} '{observationPoint.Name}'");
                     }
                 }
                 finally
@@ -41,17 +31,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
         }
 
-        public IEventedList<T> Read(string obsFilePath, bool includeName = true)
+        public IList<T> Read(string path)
         {
             IEventedList<T> observationPoints = new EventedList<T>();
 
-            OpenInputFile(obsFilePath);
+            OpenInputFile(path);
             try
             {
                 string line = GetNextLine();
 
-                int nameSuffix = 0;
-                int expectedLineCount = includeName ? 3 : 2;
+                int expectedLineCount = true ? 3 : 2;
                 
                 while (line != null)
                 {
@@ -59,18 +48,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var lineFields = SplitLine(line).Take(3).ToList();
                     if (lineFields.Count != expectedLineCount)
                     {
-                        throw new Exception(string.Format("Invalid point row on line {0} in file {1}", LineNumber, obsFilePath));
+                        throw new Exception(string.Format("Invalid point row on line {0} in file {1}", LineNumber, path));
                     }
 
                     var observationPoint = new T
                     {
                         Geometry = new Point(GetDouble(lineFields[0], "x-coord"), GetDouble(lineFields[1], "y-coord")),
-                        Name = includeName
-                            ? lineFields[2]
-                            : string.Format("point{0}", nameSuffix++)
+                        Name = lineFields[2]
                     };
 
-                    observationPoint.TrySetGroupName(obsFilePath);
+                    observationPoint.TrySetGroupName(path);
                     observationPoints.Add(observationPoint);
 
                     line = GetNextLine();
@@ -81,16 +68,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 CloseInputFile();
             }
             return observationPoints;
-        }
-
-        public void Write(string path, IEnumerable<T> features)
-        {
-            Write(path, features, true);
-        }
-
-        public IList<T> Read(string path)
-        {
-            return Read(path, true);
         }
     }
 }

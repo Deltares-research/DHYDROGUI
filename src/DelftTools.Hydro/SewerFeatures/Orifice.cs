@@ -7,11 +7,13 @@ namespace DelftTools.Hydro.SewerFeatures
     [Entity]
     public class Orifice : Weir, IOrifice
     {
-        public Orifice() : this("Orifice")
+        public Orifice() : this(false)
         {
             
         }
-        public Orifice(bool allowTimeVaryingData = false) : this("Orifice", allowTimeVaryingData) { }
+
+        public Orifice(bool allowTimeVaryingData) : this("Orifice", allowTimeVaryingData) { }
+
         public Orifice(string name, bool allowTimeVaryingData = false) : base(name, allowTimeVaryingData)
         {
             WeirFormula = new GatedWeirFormula();

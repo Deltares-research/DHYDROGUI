@@ -45,12 +45,11 @@ namespace DelftTools.Hydro.Structures.LeveeBreachFormula
         public double Area
         {
             get { return Width * Height; }
-            set { }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

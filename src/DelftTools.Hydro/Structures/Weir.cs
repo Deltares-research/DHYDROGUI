@@ -18,11 +18,11 @@ namespace DelftTools.Hydro.Structures
         private bool canBeTimedependent;
         private bool useCrestLevelTimeSeries;
         
-        public Weir() : this("Weir")
+        public Weir() : this(false)
         {
         }
 
-        public Weir(bool allowTimeVaryingData = false) :this("Weir", allowTimeVaryingData) { }
+        public Weir(bool allowTimeVaryingData) :this("Weir", allowTimeVaryingData) { }
 
         public Weir(string name, bool allowTimeVaryingData = false)
         {

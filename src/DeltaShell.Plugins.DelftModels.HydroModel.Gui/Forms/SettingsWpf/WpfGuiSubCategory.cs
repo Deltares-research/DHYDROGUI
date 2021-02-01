@@ -66,12 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public bool IsVisible
         {
-            get
-            {
-                if (Properties == null) return true;
-                return Properties.Any(p => p.IsVisible);
-            }
-            set { OnPropertyChanged(); }
+            get {  return Properties == null || Properties.Any(p => p.IsVisible); }
         }
 
         public bool Expanded
@@ -94,9 +89,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void RefreshIsVisible()
+        {
+            OnPropertyChanged(nameof(IsVisible));
         }
     }
 }
