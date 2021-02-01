@@ -1,0 +1,53 @@
+*Name of this file: \Sobek215\FIXED\1Y3H.BUI
+*Date and time of construction: 08-12-2016   20:34:56
+*Enige algemene wenken:
+*Gebruik de default dataset (1) of de volledige reeks (0) voor overige invoer
+1
+*Aantal stations
+ 1 
+*Namen van stations
+'Station1'
+*Aantal gebeurtenissen (omdat het 1 bui betreft is dit altijd 1)
+*en het aantal seconden per waarnemingstijdstap
+ 1  300 
+*Elke commentaarregel wordt begonnen met een * (asteriks).
+*Eerste record bevat startdatum en -tijd, lengte van de gebeurtenis in dd hh mm ss
+*Het format is: yyyymmdd:hhmmss:ddhhmmss
+*Daarna voor elk station de neerslag in mm per tijdstap.
+ 2016 12 8 0 0 0 0 3 0 0
+  .4416667
+  .4833333
+  .5333334
+  .6
+  .675
+  .775
+  .9166667
+  1.125
+  1.433333
+  1.975
+  3.058333
+  6.066667
+  10.46667
+  4.125
+  2.408333
+  1.666667
+  1.258333
+  1.008333
+  .8416666
+  .725
+  .6333333
+  .5666667
+  .5083333
+  .4583333
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0
+  0

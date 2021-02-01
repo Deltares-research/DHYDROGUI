@@ -1,0 +1,11 @@
+*Name of this file: \SOB_LITE\FIXED\STNBUI01.EVP
+*Date and time of construction: 20-06-1997   10:31:23
+*Verdampingsfile
+*Meteo data: evaporation intensity in mm/day
+*First record: start date, data in mm/day
+*Datum (year month day), verdamping (mm/dag) voor elk weerstation
+*jaar maand dag verdamping[mm]
+1995    1    1    0.160
+1995    1    2    0.160
+1995    1    3    0.160
+1995    1    4    0.160

@@ -1,0 +1,22 @@
+FLTM bt '1995/01/01;00:00:00' et '1995/01/01;02:00:00' ct '00:01:00' cd 0 tp '12:25:00' dp 0 ba '' tt 75 tf 1 nt 1 if 0 im 1 ri 0 fltm
+FLNM g_ 9.81 th 1 ps 0.5 rh 1000 ur 0.3 mi 50 sw 0.01 sd 0.1 cm 1 flnm
+FLMP it ITMS h_ qt itms st '1995/01/01;00:00:00' et '1995/01/01;02:00:00' ts 5 flmp
+2DMP it ITMS h_ qt itms st '1995/01/01;00:00:00' et '1995/01/01;02:00:00' ts 5 2dmp
+2DHP it ITMS h_ qt itms st '1995/01/01;00:00:00' et '1995/01/01;02:00:00' ts 5 2dhp
+2DIP it ITMS h_ qt itms st '1995/01/01;00:00:00' et '1995/01/01;02:00:00' ts 5 2dip
+FLHS it ITMS  itms bi DLST dlst lc RLST rlst sl DLST dlst dl DLST dlst flhs
+STNM el 100000.0 fr 10 stnm
+STMP it ITMS itms st '' et '' ts -99999 stmp
+STHS it ITMS itms bi DLST dlst lc RLST rlst sths
+SDNM kv 1e-06 rd 1.65 pk 0.4 al 0.2 rn 1 sdnm
+SDMP it ITMS itms st '' et '' ts -99999 sdmp
+SDHS it ITMS itms bi DLST dlst lc RLST rlst sdhs
+MPNM sf 1.01 me 0 mi 10 mpnm
+MPMP it ITMS itms st '' et '' ts -99999 mpmp
+MPHS it ITMS itms bi DLST dlst lc RLST rlst mphs
+WQTM ct '' cd -99999 wqtm
+WQNM mn 1 sn 0 wqnm
+WQMP st '' et '' ts -99999 sb TLST tlst wqmp
+WQHS st '' et '' ts -99999 se DLST dlst sb TLST tlst wqhs
+PRNM at -99999 prnm
+

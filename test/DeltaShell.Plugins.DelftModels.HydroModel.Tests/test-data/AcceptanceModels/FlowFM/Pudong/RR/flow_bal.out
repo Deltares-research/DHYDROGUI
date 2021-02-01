@@ -1,0 +1,60 @@
+ Under License to                   :           Salf                                    
+
+                               
+ Numerical Parameters Used     
+ =========================     
+ Accuracy Level                     : Low Speed/More Accurate       
+ Structure Stability Factor         :  0
+ Theta                              :                 1.00
+ Maximum Courant number             :                 1.00
+ Epsilon value Volume (m3/s)        :           0.00010000
+ Epsilon value Level (m)            :           0.00010000
+
+ Threshold Values ...          
+ Flooding (m)                       :              0.01000
+ Drying (m)                         :              0.00100
+
+ Threshold Values OF ...       
+ Flooding (m)                       :              0.00100
+ Drying (m)                         :              0.00010
+
+ Min. Length Reach Segment (m)      :                 1.00
+ Relaxation Factor (0..1)           :                 1.00
+ Structure Dynamics Factor          :                 1.00
+ Maximum Iterations                 :                    8
+ Gravity g (m/s2)                   :                 9.81
+ Fluid Density (m3)                 :              1000.00
+ upwindculvert (-)                  :                    1
+ Relaxation structures alfa (-)     :                 0.90
+ Timestep size (s)                  :              60.0000
+ Lowest Timestep (s)                :               0.0005
+ Largest Timestep (s)               :               8.5714
+
+ External structure                  Spilled volume (m3)           
+ PumpLJZ01                                        378.4514
+ PumpLJZ02                                      17233.8971
+ PumpLJZ03                                       3617.3201
+ PumpLJD01                                        741.1554
+ PumpLJD02                                       3236.3426
+ PumpLJD03                                      12074.3197
+ PumpZJB01                                       2049.7950
+ PumpZJB02                                      15251.2441
+ PumpZJB03                                        351.8155
+ PumpHM01                                        1909.2638
+ PumpHM02                                        4502.5010
+ PumpHM03                                        3068.0522
+ PumpQCZ01                                        270.7399
+ PumpQCZ02                                      27914.0741
+ PumpQCZ03                                      10116.9661
+ PumpJX01                                       10639.2857
+ PumpJX02                                       38538.4771
+ PumpJX03                                        5404.0592
+  
+ Boundaries in (m3)                 :                 0.00
+ Boundaries out (m3)                :             13993.46
+ Structures in (m3)                 :                 0.00
+ Structures out (m3)                :            157297.76
+ Lateral disch. in (m3)             :            171456.92
+ Lateral disch. out (m3)            :             25251.84
+ Storage (m3)                       :            -24955.57
+ Error (m3)                         :              -130.57

@@ -1,0 +1,9 @@
+*Name of this file: \SOBEK215\FIXED\02_12_16.EVP
+*Date and time of construction: 13-02-2017   18:02:30
+*Verdampingsfile
+*Meteo data: evaporation intensity in mm/day
+*First record: start date, data in mm/day
+*Datum (year month day), verdamping (mm/dag) voor elk weerstation
+*jaar maand dag verdamping[mm]
+ 2016  12  2 0
+ 2016  12  3 0
