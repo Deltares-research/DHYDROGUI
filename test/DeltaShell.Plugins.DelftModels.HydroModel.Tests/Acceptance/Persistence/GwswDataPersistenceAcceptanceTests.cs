@@ -23,8 +23,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             // acceptanceModelName, preconditionExpectedBranchFeaturesCount, preconditionExpectedCatchmentsCount
             new object[] {"KorteWoerden", 84, 72},
             new object[] {"DidactischStelsel", 108, 74},
+            new object[] {"Enschede", 0, 0}, //todo: add preconditions
             new object[] {"Groesb2", 719, 675},
             new object[] {"Pudong", 4974, 4936},
+            new object[] {"Leiden", 8454, 7978},
             //new object[] {"Eindhoven", 16529, 16131} Hangs on buildserver because of timeout
         };
 
