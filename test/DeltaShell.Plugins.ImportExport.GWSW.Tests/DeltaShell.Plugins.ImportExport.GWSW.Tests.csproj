@@ -131,6 +131,7 @@
     <Compile Include="IO\Importers\GwswFileImporterTestHelper.cs" />
     <Compile Include="ISewerFeatureTest.cs" />
     <Compile Include="NwrwDischargeDataTest.cs" />
+    <Compile Include="NwrwSurfaceDataTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SewerCompartmentGeneratorTest.cs" />
     <Compile Include="SewerCompartmentOutletTest.cs" />

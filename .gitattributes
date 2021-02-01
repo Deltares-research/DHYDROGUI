@@ -9471,6 +9471,7 @@ test/DeltaShell.Plugins.ImportExport.GWSW.Tests/IO/Importers/GwswFileImporterTes
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/IO/Importers/GwswFileImporterTestHelper.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/ISewerFeatureTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/NwrwDischargeDataTest.cs -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/NwrwSurfaceDataTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/Properties/AssemblyInfo.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerCompartmentGeneratorTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerCompartmentOutletTest.cs -text
