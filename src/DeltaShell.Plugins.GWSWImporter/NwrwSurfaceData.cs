@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }
             else
             {
-                nwrwData.SurfaceLevelDict[NwrwSurfaceType] = SurfaceArea;
+                nwrwData.SurfaceLevelDict[NwrwSurfaceType] += SurfaceArea;
             }
 
             nwrwData.UpdateCatchmentAreaSize();
