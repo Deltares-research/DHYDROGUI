@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="nl-NL" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+  
+  <String Id='LanguageId'>nl-NL</String>
+  
+  <!--Set X to 40 when only Deltares logo is displayed, set to 24 when also Rijkswaterstaat logo is displayed-->
+  <String Id='DescriptionBeforeLogosX' Overridable='yes'>24</String>
+  <!--Set Width to 220 when only Deltares logo is displayed, set to 136 when also Rijkswaterstaat logo is displayed-->
+  <String Id='DescriptionBeforeLogosWidth' Overridable='yes'>136</String>
+
+
+  <!-- Change the colour of the description texts in the banners to white or set them emtpy-->
+  <String Id ='CompletePackageDescription' Overridable='yes'>Het volledige softwarepakket</String>
+  <String Id='Advanced_Font_FaceName' Overridable='yes'>Arial</String>
+  <String Id='Advanced_Font_Title_Size' Overridable='yes'>10</String>
+  <String Id='Advanced_Font_Description_Size' Overridable='yes'>8</String>
+
+  <String Id="IntroDlgTitle" Overridable='yes'></String>
+  <String Id="IntroDlgDescription" Overridable='yes'>[ProductName] wordt geïnstalleerd op uw computer. Klik op Volgende om door te gaan of op Annuleren als u de installatiewizard wilt afsluiten.</String>
+  <String Id="IntroUpdateDlgDescriptionUpdate" Overridable='yes'></String>
+
+  <String Id="WelcomeUpdateDlgDescriptionUpdate" Overridable='yes'></String>
+  <String Id="WelcomeDlgDescription" Overridable='yes'>[ProductName] wordt geïnstalleerd op uw computer. Klik op Volgende om door te gaan of op Annuleren als u de installatiewizard wilt afsluiten.</String>
+  <String Id="WelcomeDlgTitle" Overridable='yes'></String>
+
+  <String Id="NewAdvancedWelcomeEulaDlgTitle" Overridable='yes'>{\WixUI_Font_Title}Lees de gebruiksrechtovereenkomst</String>
+
+  <String Id="NewMaintenanceWelcomeDlgTitle" Overridable ="yes"></String>
+  <String Id="NewMaintenanceWelcomeDlgDescription" Overridable ="yes">Installatie van [ProductName] Verwijderen, Herstellen of Veranderen. Klik op Volgende om door te gaan of op Annuleren als u de installatiewizard wilt afsluiten.</String>
+
+  <String Id="NewMaintenanceTypeDlgDescription" Overridable="yes">{\WixUI_Font_Banner_Description}Selecteer de bewerking die u wilt uitvoeren.</String>
+  <String Id="NewBrowseDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Naar de doelmap bladeren</String>
+  <String Id="NewCustomizeDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Selecteer de manier waarop u onderdelen wilt installeren.</String>
+  <String Id="NewFeaturesDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Selecteer de manier waarop u onderdelen wilt installeren.</String>
+  <String Id="DiskCostDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}De benodigde schijfruimte voor de installatie van de geselecteerde onderdelen.</String>
+  <String Id="OutOfDiskDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}De benodigde schijfruimte voor de installatie is groter dan de beschikbare schijfruimte.</String>
+  <String Id="OutOfRbDiskDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}De benodigde schijfruimte voor de installatie is groter dan de beschikbare schijfruimte.</String>
+  <String Id="SetupTypeDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Kies het meest geschikte installatietype.</String>
+  <String Id="LicenseAgreementDlgDescription" Overridable='yes'>{\WixUI_Font_Banner_Description}Lees de volgende gebruiksrechtovereenkomst aandachtig door</String>
+
+  <String Id="PrepareDlgTitle" Overridable='yes' />
+  <String Id="WixUICostingPopupOptOut" Overridable='yes' />
+  
+  <String Id="WixUICostingPopupOptOut" Overridable='yes' />
+  <String Id="VerifyReadyDlgUpdate" Overridable='yes' />
+  <String Id="VerifyReadyDlgUpdateTitle" Overridable='yes' />
+  <String Id="VerifyReadyDlgUpdateText" Overridable='yes'/>
+  <String Id="ProgressDlgTextUpdating" Overridable='yes'/>
+  <String Id="ProgressDlgTitleUpdating" Overridable='yes'/>
+
+  <String Id="msierrXmlFileFailedOpen" Overridable='yes'/>
+  <String Id="msierrXmlFileFailedRead" Overridable='yes'/>
+  <String Id="msierrXmlFileFailedSave" Overridable='yes'/>
+  <String Id="msierrXmlFileFailedSelect" Overridable='yes'/>
+
+</WixLocalization>
