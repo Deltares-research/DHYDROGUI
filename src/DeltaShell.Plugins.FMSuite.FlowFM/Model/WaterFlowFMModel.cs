@@ -240,7 +240,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         #region Model Data
 
         private IEventedList<ISedimentFraction> sedimentFractions;
-        private IEventedList<BoundaryConditionSet> boundaryConditionSets;
         private IEventedList<string> tracerDefinitions;
         private IEventedList<SourceAndSink> sourcesAndSinks;
         private IDataItem areaDataItem;
@@ -593,24 +592,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public IEventedList<Feature2D> Boundaries { get; private set; }
 
-        public IEventedList<BoundaryConditionSet> BoundaryConditionSets
-        {
-            get => boundaryConditionSets;
-            private set
-            {
-                if (boundaryConditionSets != null)
-                {
-                    BoundaryConditionSets.CollectionChanged -= BoundaryConditionSetsCollectionChanged;
-                }
-
-                boundaryConditionSets = value;
-
-                if (boundaryConditionSets != null)
-                {
-                    BoundaryConditionSets.CollectionChanged += BoundaryConditionSetsCollectionChanged;
-                }
-            }
-        }
+        public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
 
         public IEventedList<Feature2D> Pipes { get; private set; }
 

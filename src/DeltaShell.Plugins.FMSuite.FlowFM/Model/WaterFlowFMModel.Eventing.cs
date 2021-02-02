@@ -61,50 +61,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            IEnumerable<FlowBoundaryCondition> tracerBoundaryConditions = Enumerable.Empty<FlowBoundaryCondition>();
-
-            object removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var boundaryConditionSet = removedOrAddedItem as BoundaryConditionSet;
-            if (boundaryConditionSet == null)
-            {
-                var flowBoundaryCondition = removedOrAddedItem as FlowBoundaryCondition;
-                if (flowBoundaryCondition != null &&
-                    flowBoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                {
-                    tracerBoundaryConditions = new List<FlowBoundaryCondition> {flowBoundaryCondition};
-                }
-            }
-            else
-            {
-                tracerBoundaryConditions = boundaryConditionSet.BoundaryConditions
-                                                               .OfType<FlowBoundaryCondition>()
-                                                               .Where(fbc => fbc.FlowQuantity ==
-                                                                             FlowBoundaryQuantityType.Tracer);
-            }
-
-            foreach (FlowBoundaryCondition tracerBoundaryCondition in tracerBoundaryConditions)
-            {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        AddTracerToSourcesAndSink(tracerBoundaryCondition.TracerName);
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        RemoveTracerFromSourcesAndSink(tracerBoundaryCondition.TracerName);
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        throw new NotImplementedException("Renaming of Tracers is not yet supported");
-                    case NotifyCollectionChangedAction.Reset:
-                        SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
-                        return;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(e));
-                }
-            }
-        }
-
         private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var name = (string) e.GetRemovedOrAddedItem();
