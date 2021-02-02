@@ -391,22 +391,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void SyncFractionsAndTracers(SourceAndSink sourceAndSink)
         {
             SedimentFractions.ForEach(sf => sourceAndSink.SedimentFractionNames.Add(sf.Name));
-
-            BoundaryConditionSets.ForEach(bcs =>
-            {
-                bcs.BoundaryConditions.ForEach(bc =>
-                {
-                    var flowCondition = bc as FlowBoundaryCondition;
-                    if (flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                    {
-                        string tracerName = flowCondition.TracerName;
-                        if (!sourceAndSink.TracerNames.Contains(tracerName))
-                        {
-                            sourceAndSink.TracerNames.Add(tracerName);
-                        }
-                    }
-                });
-            });
+            TracerDefinitions.ForEach(td => sourceAndSink.TracerNames.Add(td));
         }
 
         private void SyncInitialFractions(ISedimentFraction sedimentFraction)
