@@ -1016,26 +1016,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual void ConnectOutput(string outputPath)
         {
-            if (string.IsNullOrEmpty(outputPath))
+            if (!RetrieveOutputData(outputPath, out DirectoryInfo dirInfo, out string[] newOutputFiles))
             {
                 return;
             }
 
-            var dirInfo = new DirectoryInfo(outputPath);
-            if (dirInfo.Parent == null)
-            {
-                return;
-            }
-
-            string[] newOutputFiles = Directory.GetFiles(outputPath);
-
-            if (newOutputFiles.Length == 0)
-            {
-                return;
-            }
-
-            var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
-            IList<string> restartFiles = newOutputFiles.Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))).ToList();
+            IList<string> restartFiles = RetrieveRestartFiles(newOutputFiles);
             SetRestartOutputFiles(restartFiles);
 
             IEnumerable<string> outputDocumentFilePaths = newOutputFiles.Where(f => f.EndsWith(".xml") || f.EndsWith(".csv")).Except(restartFiles);
@@ -1045,6 +1031,65 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             ReconnectRtcToFmOutputFile(rtcToFlowFilePath);
 
             OutputIsEmpty = false;
+        }
+
+        private void UpdateOutputFilePaths(string outputPath)
+        {
+            if (!RetrieveOutputData(outputPath, out DirectoryInfo dirInfo, out string[] newOutputFiles))
+            {
+                return;
+            }
+
+            IList<string> restartFiles = RetrieveRestartFiles(newOutputFiles);
+            SetRestartOutputFiles(restartFiles);
+
+            string rtcToFlowFilePath = Path.Combine(dirInfo.FullName, CommunicationRtcToFmFileName);
+            UpdateRtcToFmOutputFilePath(rtcToFlowFilePath);
+
+            OutputIsEmpty = false;
+        }
+        private void UpdateRtcToFmOutputFilePath(string rtcToFlowFilePath)
+        {
+            if (!File.Exists(rtcToFlowFilePath))
+            {
+                DisconnectOutputFileFunctionStore();
+                return;
+            }
+
+            outputFileFunctionStore.Path = rtcToFlowFilePath;
+        }
+
+        private static IList<string> RetrieveRestartFiles(string[] newOutputFiles)
+        {
+            var matchRestartFile = new Regex(@"rtc_\d{8}_\d{6}.xml$");
+            IList<string> restartFiles = newOutputFiles.Where(p => matchRestartFile.IsMatch(Path.GetFileName(p))).ToList();
+            return restartFiles;
+        }
+
+        private static bool RetrieveOutputData(string outputPath, out DirectoryInfo dirInfo, out string[] newOutputFiles)
+        {
+            dirInfo = null;
+            newOutputFiles = null;
+
+            if (string.IsNullOrEmpty(outputPath))
+            {
+                return false;
+            }
+
+            dirInfo = new DirectoryInfo(outputPath);
+            if (string.IsNullOrEmpty(dirInfo.Parent?.FullName))
+            {
+                return false;
+            }
+
+            if (!dirInfo.Exists)
+            {
+                return false;
+            }
+
+            newOutputFiles = Directory.GetFiles(outputPath);
+
+            return newOutputFiles.Length != 0;
         }
 
         private void ReconnectOutputDocuments(IEnumerable<string> outputDocumentFilePaths)
@@ -1767,20 +1812,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             string expectedOutputPath = GetOutputFolderFromDeltaShellPath(newPath);
 
-            // Open project
-            if (!isOpen)
-            {
-                isOpen = true;
-            }
-
             // Open project, Save  As, Save
             path = newPath;
             PersistentOutputDirectory = expectedOutputPath;
 
             currentOutputDirectoryPath = expectedOutputPath;
+
+            // Open project
+            if (!isOpen)
+            {
+                isOpen = true;
+
+                if (Directory.Exists(expectedOutputPath))
+                {
+                    ConnectOutput(expectedOutputPath);
+                    return;
+                }
+            }
+
             if (Directory.Exists(expectedOutputPath))
             {
-                ConnectOutput(expectedOutputPath);
+                UpdateOutputFilePaths(expectedOutputPath);
             }
         }
 

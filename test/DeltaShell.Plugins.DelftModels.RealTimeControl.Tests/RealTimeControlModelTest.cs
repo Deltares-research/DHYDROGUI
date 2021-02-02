@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using Castle.Core.Internal;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
@@ -205,6 +206,70 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                             "The clean up should not have changed the parameter name of the output");
             Assert.AreEqual("[m]", output.UnitName,
                             "The clean up should not have changed the unit name of the output");
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ConnectOutput_OutputDirectoryIsNull_ShouldNotThrowExceptions()
+        {
+            // Arrange
+            var model = new RealTimeControlModel();
+
+            // Act
+            model.ConnectOutput(null);
+
+            // Assert
+            Assert.That(model.RestartOutput.IsNullOrEmpty());
+            Assert.That(model.OutputDocuments.IsNullOrEmpty());
+            Assert.IsNull(model.OutputFileFunctionStore);
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ConnectOutput_OutputDirectoryIsEmpty_ShouldNotThrowExceptions()
+        {
+            // Arrange
+            var model = new RealTimeControlModel();
+
+            // Act
+            model.ConnectOutput("");
+
+            // Assert
+            Assert.That(model.RestartOutput.IsNullOrEmpty());
+            Assert.That(model.OutputDocuments.IsNullOrEmpty());
+            Assert.IsNull(model.OutputFileFunctionStore);
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ConnectOutput_ParentOutputDirectoryIsMissing_ShouldNotThrowExceptions()
+        {
+            // Arrange
+            var model = new RealTimeControlModel();
+
+            // Act
+            model.ConnectOutput("C://");
+
+            // Assert
+            Assert.That(model.RestartOutput.IsNullOrEmpty());
+            Assert.That(model.OutputDocuments.IsNullOrEmpty());
+            Assert.IsNull(model.OutputFileFunctionStore);
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        public void ConnectOutput_WhenOutputDirectoryDoesNotExist_ShouldNotThrowExceptions()
+        {
+            // Arrange
+            var model = new RealTimeControlModel();
+
+            // Act
+            model.ConnectOutput("C://test");
+
+            // Assert
+            Assert.That(model.RestartOutput.IsNullOrEmpty());
+            Assert.That(model.OutputDocuments.IsNullOrEmpty());
+            Assert.IsNull(model.OutputFileFunctionStore);
         }
 
         [Test]
