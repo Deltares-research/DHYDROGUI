@@ -83,7 +83,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                     caseName,
                     hydroModel,
                     preconditionExpectedBranchFeaturesCount,
-                    preconditionExpectedCatchmentsCount);
+                    preconditionExpectedCatchmentsCount,
+                    isFmOnly);
 
                 // [When]
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
@@ -98,7 +99,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             string caseFolder,
             IHydroModel hydroModel,
             int expectedBranchFeaturesCount,
-            int expectedCatchmentsCount)
+            int expectedCatchmentsCount,
+            bool isFmOnly)
         {
             var zipFilePath = Path.Combine(acceptanceModelsDirectory, acceptanceModelName + ".zip");
             var extractedModelDirectory = Path.Combine(tempDirectory, "Extracted model");
@@ -125,8 +127,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             Assert.AreEqual(expectedBranchFeaturesCount, hydroNetwork.BranchFeatures.Count(), "[Precondition failure] Unexpected number of branch features");
 
             // [Precondition]
-            var basin = hydroModel.Region.SubRegions.OfType<IDrainageBasin>().Single();
-            Assert.AreEqual(expectedCatchmentsCount, basin.AllCatchments.Count(), "[Precondition failure] Unexpected number of catchments");
+            if (!isFmOnly)
+            {
+                var basin = hydroModel.Region.SubRegions.OfType<IDrainageBasin>().Single();
+                Assert.AreEqual(expectedCatchmentsCount, basin.AllCatchments.Count(), "[Precondition failure] Unexpected number of catchments");
+            }
         }
 
         private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory)
