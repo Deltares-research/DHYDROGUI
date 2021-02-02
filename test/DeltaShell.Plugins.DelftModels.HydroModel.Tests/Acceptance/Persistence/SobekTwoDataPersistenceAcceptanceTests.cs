@@ -23,14 +23,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private string acceptanceModelsDirectory;
         private static readonly object[] AcceptanceTests =
         {
-            // folder name, case name, expected number of branch features, expected number of catchments
-            new object[] {"DarEsSalaam", "14", 177, 0},
-            new object[] {"Jakarta", "3", 4148, 0},
-            new object[] {"HogeRaam", "9", 1477, 0}, // todo: fill in # of expected catchments
-            new object[] {"Tholen", "1", 0, 0} // todo: fill in # of expected branch features and catchments
-            
+            new object[] {"DarEsSalaam", "14", 177, 0, true},
+            new object[] {"Jakarta", "3", 4148, 0, false},
+            new object[] {"Tholen", "1", 0, 0, false}, // todo: fill in # of expected branch features
+            new object[] {"HogeRaam", "9", 1477, 0, true}, // todo: fill in # of expected catchments
         };
-
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()
@@ -64,20 +61,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             string acceptanceModelName,
             string caseName,
             int preconditionExpectedBranchFeaturesCount,
-            int preconditionExpectedCatchmentsCount)
+            int preconditionExpectedCatchmentsCount,
+            bool isFmOnly)
         {
             // [Given]
             using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
-                //var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
-                var fmModel = new WaterFlowFMModel();
-                gui.Application.Project.RootFolder.Add(fmModel);
-
+                IHydroModel hydroModel;
+                if (isFmOnly)
+                {
+                    hydroModel = new WaterFlowFMModel();
+                    gui.Application.Project.RootFolder.Add(hydroModel);
+                }
+                else
+                {
+                    hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
+                }
 
                 ImportSobekTwoModelAndAssertPreconditions(
                     acceptanceModelName,
                     caseName,
-                    fmModel,
+                    hydroModel,
                     preconditionExpectedBranchFeaturesCount,
                     preconditionExpectedCatchmentsCount);
 
@@ -121,8 +125,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             Assert.AreEqual(expectedBranchFeaturesCount, hydroNetwork.BranchFeatures.Count(), "[Precondition failure] Unexpected number of branch features");
 
             // [Precondition]
-            //var basin = hydroModel.Region.SubRegions.OfType<IDrainageBasin>().Single();
-            //Assert.AreEqual(expectedCatchmentsCount, basin.AllCatchments.Count(), "[Precondition failure] Unexpected number of catchments");
+            var basin = hydroModel.Region.SubRegions.OfType<IDrainageBasin>().Single();
+            Assert.AreEqual(expectedCatchmentsCount, basin.AllCatchments.Count(), "[Precondition failure] Unexpected number of catchments");
         }
 
         private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory)
