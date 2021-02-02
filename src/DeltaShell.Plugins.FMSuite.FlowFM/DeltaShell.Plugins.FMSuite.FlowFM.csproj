@@ -166,6 +166,7 @@
     <Compile Include="FeatureData\ModelFeatureCoordinateData.cs" />
     <Compile Include="FeatureData\SourcesAndSinks\SourceAndSink.cs" />
     <Compile Include="FeatureData\SourcesAndSinks\SourceSinkVariableInfo.cs" />
+    <Compile Include="FeatureData\SourcesAndSinks\TracerVariable.cs" />
     <Compile Include="FeatureData\SupportedVerticalProfileTypes.cs" />
     <Compile Include="FeatureData\FixedWeirFmModelFeatureCoordinateDataSyncExtensions.cs" />
     <Compile Include="FeatureData\FixedWeirSchemes.cs" />
