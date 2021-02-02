@@ -1,5 +1,5 @@
 ﻿using System;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
