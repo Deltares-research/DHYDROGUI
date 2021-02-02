@@ -173,7 +173,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Flow direction")]
         [Description("Direction of the flow.")]
         [PropertyOrder(16)]
-        [DynamicReadOnly]
         public FlowDirection FlowDirection
         {
             get { return data.FlowDirection; }
