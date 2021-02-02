@@ -251,6 +251,7 @@
     <Compile Include="Api\UnstrucGridOperationApiIntegrationTest.cs" />
     <Compile Include="Api\UnstrucGridOperationApiTest.cs" />
     <Compile Include="Coverages\SpatialDataTest.cs" />
+    <Compile Include="Coverages\UnstructuredGridCoverageFactoryTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewTest.cs" />
     <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewViewModelTest.cs" />

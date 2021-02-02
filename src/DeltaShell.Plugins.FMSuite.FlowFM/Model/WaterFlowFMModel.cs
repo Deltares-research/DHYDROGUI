@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void AddToInitialFractions(string spatiallyVaryingName)
         {
-            SpatialData.AddFraction(CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid));
+            SpatialData.AddFraction(UnstructuredGridCoverageFactory.CreateCellCoverage(spatiallyVaryingName, Grid));
         }
 
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)

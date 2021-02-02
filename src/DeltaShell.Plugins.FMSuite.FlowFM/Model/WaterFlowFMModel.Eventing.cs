@@ -15,6 +15,7 @@ using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -84,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void OnTracerAdded(string name)
         {
-            SpatialData.AddTracer(CreateUnstructuredGridCellCoverage(name, Grid));
+            SpatialData.AddTracer(UnstructuredGridCoverageFactory.CreateCellCoverage(name, Grid));
             foreach (SourceAndSink sourceAndSink in SourcesAndSinks)
             {
                 sourceAndSink.Function.AddTracer(name);
