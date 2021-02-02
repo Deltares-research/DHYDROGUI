@@ -15,39 +15,12 @@ using NetTopologySuite.Extensions.Features.Generic;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
 {
-    public static class SourceSinkVariableInfo
-    {
-        public const string DischargeUnitDescription = "cubic meters per second";
-        public const string DischargeUnitSymbol = "m3/s";
-
-        public const string SalinityUnitDescription = "parts per trillion";
-        public const string SalinityUnitSymbol = "ppt";
-
-        public const string TemperatureUnitDescription = "degree celsius";
-        public const string TemperatureUnitSymbol = "°C";
-
-        public const string SedimentFractionUnitDescription = "";
-        public const string SedimentFractionUnitSymbol = "";
-
-        public const string SecondaryFlowUnitDescription = "meters per second";
-        public const string SecondaryFlowUnitSymbol = "m/s";
-
-        public const string TracersUnitDescription = "kilograms per cubic meter";
-        public const string TracerUnitSymbol = "kg/m3";
-    }
-
     /// <summary>
     /// SourceAndSink represents a timeseries on a polyline.
     /// </summary>
     [Entity]
     public class SourceAndSink : FeatureData<IFunction, Feature2D>
     {
-        public const string TimeVariableName = "Time";
-        public const string DischargeVariableName = "Discharge";
-        public const string SalinityVariableName = "Salinity";
-        public const string TemperatureVariableName = "Temperature";
-        public const string SecondaryFlowVariableName = "Secondary Flow";
-
         private IEventedList<string> sedimentFractionNames;
         private IEventedList<string> tracerNames;
 
@@ -208,7 +181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
         private void AddSedimentFractionToComponents(string name)
         {
             IVariable secondaryFlow =
-                Function.Components.FirstOrDefault(c => c.Name.Equals(SecondaryFlowVariableName));
+                Function.Components.FirstOrDefault(c => c.Name.Equals(SourceSinkVariableInfo.SecondaryFlowVariableName));
             IVariable firstTracer = tracerNames.Any()
                                         ? Function.Components.FirstOrDefault(c => c.Name.Equals(tracerNames.First()))
                                         : null;
@@ -249,23 +222,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
         {
             var function = new Function();
             function.Arguments.Add(
-                new Variable<DateTime>(TimeVariableName) {DefaultValue = DateTime.Today});
-            function.Components.Add(new Variable<double>(DischargeVariableName)
+                new Variable<DateTime>(SourceSinkVariableInfo.TimeVariableName) {DefaultValue = DateTime.Today});
+            function.Components.Add(new Variable<double>(SourceSinkVariableInfo.DischargeVariableName)
             {
                 Unit = new Unit(SourceSinkVariableInfo.DischargeUnitDescription,
                                 SourceSinkVariableInfo.DischargeUnitSymbol)
             });
-            function.Components.Add(new Variable<double>(SalinityVariableName)
+            function.Components.Add(new Variable<double>(SourceSinkVariableInfo.SalinityVariableName)
             {
                 Unit = new Unit(SourceSinkVariableInfo.SalinityUnitDescription,
                                 SourceSinkVariableInfo.SalinityUnitSymbol)
             });
-            function.Components.Add(new Variable<double>(TemperatureVariableName)
+            function.Components.Add(new Variable<double>(SourceSinkVariableInfo.TemperatureVariableName)
             {
                 Unit = new Unit(SourceSinkVariableInfo.TemperatureUnitDescription,
                                 SourceSinkVariableInfo.TemperatureUnitSymbol)
             });
-            function.Components.Add(new Variable<double>(SecondaryFlowVariableName)
+            function.Components.Add(new Variable<double>(SourceSinkVariableInfo.SecondaryFlowVariableName)
             {
                 Unit = new Unit(SourceSinkVariableInfo.SecondaryFlowUnitDescription,
                                 SourceSinkVariableInfo.SecondaryFlowUnitSymbol)

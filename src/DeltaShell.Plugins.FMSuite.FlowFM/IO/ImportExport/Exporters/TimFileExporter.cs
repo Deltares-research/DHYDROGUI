@@ -73,12 +73,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
                     if (!model.UseSalinity)
                     {
-                        data.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+                        data.RemoveComponentByName(SourceSinkVariableInfo.SalinityVariableName);
                     }
 
                     if (!model.UseTemperature)
                     {
-                        data.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+                        data.RemoveComponentByName(SourceSinkVariableInfo.TemperatureVariableName);
                     }
 
                     if (!model.UseMorSed)
@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
 
                     if (!model.UseSecondaryFlow)
                     {
-                        data.RemoveComponentByName(SourceAndSink.SecondaryFlowVariableName);
+                        data.RemoveComponentByName(SourceSinkVariableInfo.SecondaryFlowVariableName);
                     }
                 }
             }

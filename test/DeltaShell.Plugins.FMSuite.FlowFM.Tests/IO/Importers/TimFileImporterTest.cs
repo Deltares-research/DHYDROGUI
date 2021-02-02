@@ -179,14 +179,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         private void ValidateImportedSourceAndSinkFunction(IFunction function, bool useSalinity, bool useTemperature, bool useSecondaryFlow)
         {
-            IVariable dischargeVariable = function.Components.FirstOrDefault(c => c.Name == SourceAndSink.DischargeVariableName);
+            IVariable dischargeVariable = function.Components.FirstOrDefault(c => c.Name == SourceSinkVariableInfo.DischargeVariableName);
             Assert.NotNull(dischargeVariable);
 
             List<double> dischargeValues = ((MultiDimensionalArray<double>) dischargeVariable.Values).ToList();
             Assert.True(dischargeValues.All(v => v >= double.Epsilon),
                         "Possible incorrect values for Discharge");
 
-            IVariable salinityVariable = function.Components.FirstOrDefault(c => c.Name == SourceAndSink.SalinityVariableName);
+            IVariable salinityVariable = function.Components.FirstOrDefault(c => c.Name == SourceSinkVariableInfo.SalinityVariableName);
             Assert.NotNull(salinityVariable);
 
             List<double> salinityValues = ((MultiDimensionalArray<double>) salinityVariable.Values).ToList();
@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                             : salinityValues.All(v => v < double.Epsilon),
                         "Possible incorrect values for Salinity");
 
-            IVariable temperatureVariable = function.Components.FirstOrDefault(c => c.Name == SourceAndSink.TemperatureVariableName);
+            IVariable temperatureVariable = function.Components.FirstOrDefault(c => c.Name == SourceSinkVariableInfo.TemperatureVariableName);
             Assert.NotNull(temperatureVariable);
 
             List<double> temperatureValues = ((MultiDimensionalArray<double>) temperatureVariable.Values).ToList();
@@ -204,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                             : temperatureValues.All(v => v < double.Epsilon),
                         "Possible incorrect values for Temperature");
 
-            IVariable secondaryFlowVariable = function.Components.FirstOrDefault(c => c.Name == SourceAndSink.SecondaryFlowVariableName);
+            IVariable secondaryFlowVariable = function.Components.FirstOrDefault(c => c.Name == SourceSinkVariableInfo.SecondaryFlowVariableName);
             Assert.NotNull(secondaryFlowVariable);
 
             List<double> secondaryFlowValues = ((MultiDimensionalArray<double>) secondaryFlowVariable.Values).ToList();

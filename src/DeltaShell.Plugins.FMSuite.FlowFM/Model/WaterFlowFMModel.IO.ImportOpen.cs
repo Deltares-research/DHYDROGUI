@@ -167,9 +167,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 var componentSettings = new Dictionary<string, bool>()
                 {
-                    {SourceAndSink.SalinityVariableName, UseSalinity},
-                    {SourceAndSink.TemperatureVariableName, UseTemperature},
-                    {SourceAndSink.SecondaryFlowVariableName, UseSecondaryFlow}
+                    {SourceSinkVariableInfo.SalinityVariableName, UseSalinity},
+                    {SourceSinkVariableInfo.TemperatureVariableName, UseTemperature},
+                    {SourceSinkVariableInfo.SecondaryFlowVariableName, UseSecondaryFlow}
                 };
 
                 sourceAndSink.SedimentFractionNames.ForEach(sfn => componentSettings.Add(sfn, UseMorSed));

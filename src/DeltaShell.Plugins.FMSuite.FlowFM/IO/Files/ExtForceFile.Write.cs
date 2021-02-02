@@ -562,13 +562,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (!UseProperty(modelDefinition, KnownProperties.UseSalinity))
             {
-                function.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+                function.RemoveComponentByName(SourceSinkVariableInfo.SalinityVariableName);
             }
 
             if ((HeatFluxModelType) modelDefinition.GetModelProperty(KnownProperties.Temperature).Value ==
                 HeatFluxModelType.None)
             {
-                function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+                function.RemoveComponentByName(SourceSinkVariableInfo.TemperatureVariableName);
             }
 
             if (!UseProperty(modelDefinition, GuiProperties.UseMorSed))
@@ -578,7 +578,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             if (!UseProperty(modelDefinition, KnownProperties.SecondaryFlow))
             {
-                function.RemoveComponentByName(SourceAndSink.SecondaryFlowVariableName);
+                function.RemoveComponentByName(SourceSinkVariableInfo.SecondaryFlowVariableName);
             }
         }
 

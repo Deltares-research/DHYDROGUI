@@ -170,16 +170,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 switch (componentName)
                 {
-                    case SourceAndSink.DischargeVariableName:
+                    case SourceSinkVariableInfo.DischargeVariableName:
                         visibilitySettings.Add(true);
                         break;
-                    case SourceAndSink.SalinityVariableName:
+                    case SourceSinkVariableInfo.SalinityVariableName:
                         visibilitySettings.Add(Model.UseSalinity);
                         break;
-                    case SourceAndSink.TemperatureVariableName:
+                    case SourceSinkVariableInfo.TemperatureVariableName:
                         visibilitySettings.Add(Model.UseTemperature);
                         break;
-                    case SourceAndSink.SecondaryFlowVariableName:
+                    case SourceSinkVariableInfo.SecondaryFlowVariableName:
                         visibilitySettings.Add(Model.UseSecondaryFlow);
                         componentIsForTracer = true; // Tracers should come after SecondaryFlow
                         break;
