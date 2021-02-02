@@ -270,6 +270,8 @@ namespace DeltaShell.NGHS.IO.Tests
             }
 
             public void ClearOutput(bool forceClean = false) {}
+            
+            public void MarkOutputOutOfSync() {}
 
             public IEventedList<IDataItem> DataItems { get; set; }
             public IEnumerable<IDataItem> AllDataItems { get; }
@@ -353,6 +355,8 @@ namespace DeltaShell.NGHS.IO.Tests
             }
 
             public void ClearOutput(bool forceClean = false) {}
+            
+            public void MarkOutputOutOfSync() {}
 
             public IEventedList<IDataItem> DataItems { get; set; }
             public IEnumerable<IDataItem> AllDataItems { get; }
