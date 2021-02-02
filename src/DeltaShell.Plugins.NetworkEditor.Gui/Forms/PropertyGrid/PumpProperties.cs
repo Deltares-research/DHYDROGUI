@@ -72,8 +72,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Start level upstream.")]
-        [DisplayName("Start upstream")]
+        [Description("Start level delivery.")]
+        [DisplayName("Start delivery")]
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(5)]
         public double StartDelivery
@@ -83,8 +83,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Stop level upstream.")]
-        [DisplayName("Stop upstream")]
+        [Description("Stop level delivery.")]
+        [DisplayName("Stop delivery")]
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(6)]
         public double StopDelivery
@@ -94,8 +94,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Start level downstream.")]
-        [DisplayName("Start downstream")]
+        [Description("Start level suction.")]
+        [DisplayName("Start suction")]
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(7)]
         public double StartSuction
@@ -105,8 +105,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Stop level downstream.")]
-        [DisplayName("Stop downstream")]
+        [Description("Stop level suction.")]
+        [DisplayName("Stop suction")]
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [PropertyOrder(8)]
         public double StopSuction
