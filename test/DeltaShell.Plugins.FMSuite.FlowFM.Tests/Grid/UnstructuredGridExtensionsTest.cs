@@ -23,10 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Grid
         }
 
         [Test]
-        public void GenerateFlowLinks_()
+        public void GenerateFlowLinks_GeneratesTheCorrectFlowLinks()
         {
             // Setup
-            //UnstructuredGrid grid = CreateGrid(3, 3);
             UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 1, 1);
             grid.FlowLinks.Clear();
 

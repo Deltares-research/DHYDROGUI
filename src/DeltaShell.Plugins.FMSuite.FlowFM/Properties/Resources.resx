@@ -664,4 +664,19 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_temperature_but_no_meteo_data_was_specified" xml:space="preserve">
     <value>Composite Model option is selected for Temperature, however no Meteo Data was specified.</value>
   </data>
+  <data name="WaterFlowFMModel130LegacyLoader_Could_not_find_file" xml:space="preserve">
+    <value>Could not find the file: {0}</value>
+  </data>
+  <data name="WaterFlowFMModel130LegacyLoader_Could_not_determine_grid_file_location" xml:space="preserve">
+    <value>Could not determine the grid file location from the mdu file: {0}</value>
+  </data>
+  <data name="WaterFlowFMModel130LegacyLoader_Error_occurred_while_reading_file" xml:space="preserve">
+    <value>An error occurred while reading file {0}: {1}</value>
+  </data>
+  <data name="WaterFlowFMModel130LegacyLoader_An_error_occurred_while_updating_file" xml:space="preserve">
+    <value>An error occurred while updating file {0}: {1}</value>
+  </data>
+  <data name="WaterFlowFMModel130LegacyLoader_Could_not_determine_dsproj_location" xml:space="preserve">
+    <value>Could not determine dsproj location from database connection: {0}</value>
+  </data>
 </root>

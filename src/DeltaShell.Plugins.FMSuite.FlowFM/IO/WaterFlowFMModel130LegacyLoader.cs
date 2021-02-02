@@ -20,6 +20,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using log4net;
@@ -71,8 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!MigrationHelper.TryParseDatabasePath(dbConnection.ConnectionString,
                                                       out string dbPath))
             {
-                log.ErrorFormat("Could not determine dsproj location from database connection: {0}",
-                                dbConnection.ConnectionString);
+                log.ErrorFormat(Resources.WaterFlowFMModel130LegacyLoader_Could_not_determine_dsproj_location, dbConnection.ConnectionString);
                 return;
             }
 
@@ -223,9 +223,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static bool TryGetFileContent(string filePath, out List<string> content)
         {
             content = null;
-            if (!File.Exists(filePath))
+            if (!FileExists(filePath))
             {
-                log.Error($"Could not find the file: {filePath}");
                 return false;
             }
 
@@ -237,11 +236,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                       e is UnauthorizedAccessException ||
                                       e is SecurityException)
             {
-                log.Error($"An error occurred reading the file {filePath}: {e.Message}");
+                log.ErrorFormat(Resources.WaterFlowFMModel130LegacyLoader_Error_occurred_while_reading_file, filePath, e.Message);
                 return false;
             }
 
             return true;
+        }
+
+        private static bool FileExists(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                return true;
+            }
+
+            log.ErrorFormat(Resources.WaterFlowFMModel130LegacyLoader_Could_not_find_file, filePath);
+            return false;
         }
 
         private static bool HasValues(IVariable component) =>
@@ -256,23 +266,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             grid = null;
 
-            if (!File.Exists(mduFilePath))
+            if (!FileExists(mduFilePath))
             {
-                log.Error($"Could not find the file: {mduFilePath}");
                 return false;
             }
 
             if (!TryGetGridFileName(mduFilePath, out string gridFileName))
             {
-                log.ErrorFormat("Could not determine the grid file location from the mdu file: {0}",
-                                mduFilePath);
+                log.ErrorFormat(Resources.WaterFlowFMModel130LegacyLoader_Could_not_determine_grid_file_location, mduFilePath);
                 return false;
             }
 
             string gridFilePath = Path.Combine(Path.GetDirectoryName(mduFilePath), gridFileName);
-            if (!File.Exists(gridFilePath))
+            if (!FileExists(gridFilePath))
             {
-                log.Error($"Could not find the file: {gridFilePath}");
                 return false;
             }
 
@@ -300,7 +307,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             catch (Exception e)
             {
-                log.Error($"An error occurred while reading file {mduFilePath}: {e.Message}");
+                log.ErrorFormat(Resources.WaterFlowFMModel130LegacyLoader_Error_occurred_while_reading_file, mduFilePath, e.Message);
                 return false;
             }
         }
@@ -337,7 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                                       e is UnauthorizedAccessException ||
                                       e is SecurityException)
             {
-                log.Error($"An error occurred while updating file {filePath}: {e.Message}");
+                log.ErrorFormat(Resources.WaterFlowFMModel130LegacyLoader_An_error_occurred_while_updating_file, filePath, e.Message);
             }
         }
     }

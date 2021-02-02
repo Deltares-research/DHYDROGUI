@@ -1450,6 +1450,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while updating file {0}: {1}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_An_error_occurred_while_updating_file {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_An_error_occurred_while_updating_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not determine dsproj location from database connection: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Could_not_determine_dsproj_location {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Could_not_determine_dsproj_location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not determine the grid file location from the mdu file: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Could_not_determine_grid_file_location {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Could_not_determine_grid_file_location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the file: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Could_not_find_file {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Could_not_find_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while reading file {0}: {1}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Error_occurred_while_reading_file {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Error_occurred_while_reading_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No grid points defined between structure {0} and {1}.
         /// </summary>
         public static string WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_ {

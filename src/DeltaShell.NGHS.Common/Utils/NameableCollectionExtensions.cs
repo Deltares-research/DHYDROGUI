@@ -28,7 +28,6 @@ namespace DeltaShell.NGHS.Common.Utils
         /// <exception cref="InvalidOperationException">
         /// Thrown when <paramref name="comparisonType"/> is not defined.
         /// </exception>
-        /// >
         public static T GetByName<T>(this IEnumerable<T> objects, string name, StringComparison comparisonType = StringComparison.Ordinal)
             where T : INameable
         {
