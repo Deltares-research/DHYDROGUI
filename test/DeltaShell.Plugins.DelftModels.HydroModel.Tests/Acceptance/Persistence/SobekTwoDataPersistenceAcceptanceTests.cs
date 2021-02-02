@@ -23,9 +23,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private string acceptanceModelsDirectory;
         private static readonly object[] AcceptanceTests =
         {
+            // folder name, case name, expected number of branch features, expected number of catchments
             new object[] {"DarEsSalaam", "14", 177, 0},
             new object[] {"Jakarta", "3", 4148, 0},
-            new object[] {"HogeRaam", "9", 1477, 0} // todo: fill in # of expected catchments
+            new object[] {"HogeRaam", "9", 1477, 0}, // todo: fill in # of expected catchments
+            new object[] {"Tholen", "1", 0, 0} // todo: fill in # of expected branch features and catchments
             
         };
 
