@@ -77,6 +77,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             RecoverCoverageValues(model, dbPath);
+
+            base.OnAfterInitialize(entity, dbConnection);
         }
 
         /// <summary>
@@ -95,6 +97,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 RemoveAllSpatialCoverageDataItems(model);
             }
+
+            base.OnAfterProjectMigrated(project);
         }
 
         private static void RecoverCoverageValues(WaterFlowFMModel model, string dbPath)
