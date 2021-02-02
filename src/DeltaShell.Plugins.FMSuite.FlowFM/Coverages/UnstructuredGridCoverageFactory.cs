@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using NetTopologySuite.Extensions.Coverages;
@@ -22,10 +21,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static UnstructuredGridVertexCoverage CreateVertexCoverage(
             string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
         {
-            return CreateUnstructuredGridCoverage(name, grid,
-                                                  () => new UnstructuredGridVertexCoverage(new UnstructuredGrid(), false),
-                                                  () => Enumerable.Range(0, grid.Vertices.Count),
-                                                  componentValues);
+            return CreateUnstructuredGridCoverage(name, grid, new UnstructuredGridVertexCoverage(new UnstructuredGrid(), false),
+                                                  GetArgumentValues(grid.Vertices.Count), componentValues);
         }
 
         /// <summary>
@@ -38,10 +35,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static UnstructuredGridCellCoverage CreateCellCoverage(
             string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
         {
-            return CreateUnstructuredGridCoverage(name, grid,
-                                                  () => new UnstructuredGridCellCoverage(new UnstructuredGrid(), false),
-                                                  () => Enumerable.Range(0, grid.Cells.Count),
-                                                  componentValues);
+            return CreateUnstructuredGridCoverage(name, grid, new UnstructuredGridCellCoverage(new UnstructuredGrid(), false),
+                                                  GetArgumentValues(grid.Cells.Count), componentValues);
         }
 
         /// <summary>
@@ -54,31 +49,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static UnstructuredGridFlowLinkCoverage CreateFlowLinkCoverage(
             string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
         {
-            return CreateUnstructuredGridCoverage(name, grid,
-                                                  () => new UnstructuredGridFlowLinkCoverage(new UnstructuredGrid(), false),
-                                                  () => Enumerable.Range(0, grid.FlowLinks.Count),
-                                                  componentValues);
+            return CreateUnstructuredGridCoverage(name, grid, new UnstructuredGridFlowLinkCoverage(new UnstructuredGrid(), false),
+                                                  GetArgumentValues(grid.FlowLinks.Count), componentValues);
         }
 
-        public static T CreateUnstructuredGridCoverage<T>(string name, UnstructuredGrid grid, Func<T> createCoverage,
-                                                          Func<IEnumerable<int>> argumentValues,
-                                                          IEnumerable<double> componentValues = null)
+        private static T CreateUnstructuredGridCoverage<T>(string name, UnstructuredGrid grid, T coverage,
+                                                           IEnumerable<int> argumentValues,
+                                                           IEnumerable<double> componentValues = null)
             where T : UnstructuredGridCoverage
         {
-            T result = createCoverage();
+            coverage.Name = name;
+            coverage.Grid = grid;
 
-            result.Name = name;
-            result.Grid = grid;
+            coverage.Components[0].NoDataValue = -999d;
+            coverage.Components[0].DefaultValue = -999d;
 
-            result.Components[0].NoDataValue = -999d;
-            result.Components[0].DefaultValue = -999d;
+            FunctionHelper.SetValuesRaw(coverage.Arguments[0], argumentValues);
 
-            FunctionHelper.SetValuesRaw(result.Arguments[0], argumentValues());
+            IEnumerable<double> values = componentValues ?? Enumerable.Repeat(-999d, coverage.Arguments[0].Values.Count);
+            FunctionHelper.SetValuesRaw(coverage.Components[0], values);
 
-            IEnumerable<double> values = componentValues ?? Enumerable.Repeat(-999d, result.Arguments[0].Values.Count);
-            FunctionHelper.SetValuesRaw(result.Components[0], values);
-
-            return result;
+            return coverage;
         }
+
+        private static IEnumerable<int> GetArgumentValues(int count) => Enumerable.Range(0, count);
     }
 }
