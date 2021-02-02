@@ -85,6 +85,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void OnTracerAdded(string name)
         {
             SpatialData.AddTracer(CreateUnstructuredGridCellCoverage(name, Grid));
+            foreach (SourceAndSink sourceAndSink in SourcesAndSinks)
+            {
+                sourceAndSink.Function.AddTracer(name);
+            }
         }
 
         private void OnTracerRemoved(string name)
@@ -96,6 +100,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 set.BoundaryConditions.RemoveAllWhere(bc => bc is FlowBoundaryCondition flowCondition &&
                                                             flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer &&
                                                             Equals(flowCondition.TracerName, name));
+            }
+
+            foreach (SourceAndSink sourceAndSink in SourcesAndSinks)
+            {
+                sourceAndSink.Function.RemoveTracer(name);
             }
         }
 
@@ -182,7 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     sedimentFraction.UpdateSpatiallyVaryingNames();
                     sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
                     sedimentFraction.SetTransportFormulaInCurrentSedimentType();
-                    SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Add(sedimentFraction.Name));
+                    SourcesAndSinks.ForEach(ss => ss.Function.AddSedimentFraction(sedimentFraction.Name));
 
                     if (BoundaryConditionSets == null)
                     {
@@ -199,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     layersToRemove.ForEach(SpatialData.RemoveFraction);
                     RemoveSedimentFractionFromBoundaryConditionSets(name);
 
-                    SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Remove(sedimentFraction.Name));
+                    SourcesAndSinks.ForEach(ss => ss.Function.RemoveSedimentFraction(sedimentFraction.Name));
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
@@ -390,8 +399,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void SyncFractionsAndTracers(SourceAndSink sourceAndSink)
         {
-            SedimentFractions.ForEach(sf => sourceAndSink.SedimentFractionNames.Add(sf.Name));
-            TracerDefinitions.ForEach(td => sourceAndSink.TracerNames.Add(td));
+            foreach (ISedimentFraction sedimentFraction in SedimentFractions)
+            {
+                sourceAndSink.Function.AddSedimentFraction(sedimentFraction.Name);
+            }
+
+            foreach (string tracer in TracerDefinitions)
+            {
+                sourceAndSink.Function.AddTracer(tracer);
+            }
         }
 
         private void SyncInitialFractions(ISedimentFraction sedimentFraction)

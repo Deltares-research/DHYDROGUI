@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Specialized;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.Generic;
-using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Features.Generic;
 
@@ -19,17 +13,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
     /// SourceAndSink represents a timeseries on a polyline.
     /// </summary>
     [Entity]
-    public class SourceAndSink : FeatureData<IFunction, Feature2D>
+    public sealed class SourceAndSink : FeatureData<ISourceAndSinkFunction, Feature2D>
     {
-        private IEventedList<string> sedimentFractionNames;
-        private IEventedList<string> tracerNames;
-
-        public SourceAndSink()
-        {
-            Function = CreateData();
-            SedimentFractionNames = new EventedList<string>();
-            TracerNames = new EventedList<string>();
-        }
+        public SourceAndSink() => Data = new SourceAndSinkFunction();
 
         public override Feature2D Feature
         {
@@ -51,6 +37,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
             }
         }
 
+        /// <summary>
+        /// Gets all the tracer names.
+        /// </summary>
+        public IEnumerable<string> TracerNames => GetNames<TracerVariable>();
+
+        /// <summary>
+        /// Gets all the sediment fraction names.
+        /// </summary>
+        public IEnumerable<string> SedimentFractionNames => GetNames<SedimentFractionVariable>();
+
         public bool IsPointSource => Feature.Geometry.Coordinates.Count() == 1;
 
         public double Area { get; set; }
@@ -59,115 +55,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
 
         public bool CanIncludeMomentum => !IsPointSource;
 
-        public IFunction Function
-        {
-            get => Data;
-            private set => Data = value;
-        }
-
-        public IEventedList<string> SedimentFractionNames
-        {
-            get => sedimentFractionNames;
-            set
-            {
-                if (sedimentFractionNames != null)
-                {
-                    SedimentFractionNames.CollectionChanged -= SedimentFractionNamesCollectionChanged;
-                }
-
-                sedimentFractionNames = value;
-                if (sedimentFractionNames != null)
-                {
-                    SedimentFractionNames.CollectionChanged += SedimentFractionNamesCollectionChanged;
-                }
-            }
-        }
-
-        public IEventedList<string> TracerNames
-        {
-            get => tracerNames;
-            set
-            {
-                if (tracerNames != null)
-                {
-                    TracerNames.CollectionChanged -= TracerNamesCollectionChanged;
-                }
-
-                tracerNames = value;
-                if (tracerNames != null)
-                {
-                    TracerNames.CollectionChanged += TracerNamesCollectionChanged;
-                }
-            }
-        }
-
-        public void SedimentFractionNamesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var sedimentFractionName = e.GetRemovedOrAddedItem() as string;
-
-            if (sedimentFractionName == null)
-            {
-                return;
-            }
-
-            switch (e.Action)
-            {
-                //Column Order: Time | Discharge | Salinity | Temperature | SedimentFractions | Secondary Flow | Tracers
-                case NotifyCollectionChangedAction.Add:
-                    AddSedimentFractionToComponents(sedimentFractionName);
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    Function.RemoveComponentByName(sedimentFractionName);
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                    throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
-                case NotifyCollectionChangedAction.Reset:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(e));
-            }
-        }
-
-        public void TracerNamesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var tracerName = e.GetRemovedOrAddedItem() as string;
-            if (tracerName == null)
-            {
-                return;
-            }
-
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    Function.Components.Add(new Variable<double>(tracerName)
-                    {
-                        Unit = new Unit(SourceSinkVariableInfo.TracersUnitDescription,
-                                        SourceSinkVariableInfo.TracerUnitSymbol)
-                    });
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    Function.RemoveComponentByName(tracerName);
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                    var previousTracerName = e.OldItems[0] as string;
-                    if (previousTracerName == null)
-                    {
-                        break;
-                    }
-
-                    IVariable matchingComponent = Function.Components.FirstOrDefault(c => c.Name == previousTracerName);
-                    if (matchingComponent == null)
-                    {
-                        break;
-                    }
-
-                    matchingComponent.Name = tracerName;
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    break;
-                default: throw new ArgumentOutOfRangeException(nameof(e));
-            }
-        }
+        /// <summary>
+        /// The function data on this <see cref="SourceAndSink"/>.
+        /// </summary>
+        public ISourceAndSinkFunction Function => Data;
 
         private void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -178,37 +69,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
             }
         }
 
-        private void AddSedimentFractionToComponents(string name)
+        private IEnumerable<string> GetNames<T>() where T : IVariable
         {
-            IVariable secondaryFlow =
-                Function.Components.FirstOrDefault(c => c.Name.Equals(SourceSinkVariableInfo.SecondaryFlowVariableName));
-            IVariable firstTracer = tracerNames.Any()
-                                        ? Function.Components.FirstOrDefault(c => c.Name.Equals(tracerNames.First()))
-                                        : null;
-
-            if (secondaryFlow != null)
-            {
-                Function.Components.Insert(Function.Components.IndexOf(secondaryFlow),
-                                           CreateSedimentFractionVariable(name));
-            }
-            else if (firstTracer != null)
-            {
-                Function.Components.Insert(Function.Components.IndexOf(firstTracer),
-                                           CreateSedimentFractionVariable(name));
-            }
-            else
-            {
-                Function.Components.Add(CreateSedimentFractionVariable(name));
-            }
-        }
-
-        private IVariable CreateSedimentFractionVariable(string name)
-        {
-            return new Variable<double>(name)
-            {
-                Unit = new Unit(SourceSinkVariableInfo.SedimentFractionUnitDescription,
-                                SourceSinkVariableInfo.SedimentFractionUnitSymbol)
-            };
+            return Function.Components.OfType<T>().Select(v => v.Name);
         }
 
         [EditAction]
@@ -216,34 +79,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
         {
             Name = Feature.Name + " data";
             Function.Name = Name;
-        }
-
-        private static IFunction CreateData()
-        {
-            var function = new Function();
-            function.Arguments.Add(
-                new Variable<DateTime>(SourceSinkVariableInfo.TimeVariableName) {DefaultValue = DateTime.Today});
-            function.Components.Add(new Variable<double>(SourceSinkVariableInfo.DischargeVariableName)
-            {
-                Unit = new Unit(SourceSinkVariableInfo.DischargeUnitDescription,
-                                SourceSinkVariableInfo.DischargeUnitSymbol)
-            });
-            function.Components.Add(new Variable<double>(SourceSinkVariableInfo.SalinityVariableName)
-            {
-                Unit = new Unit(SourceSinkVariableInfo.SalinityUnitDescription,
-                                SourceSinkVariableInfo.SalinityUnitSymbol)
-            });
-            function.Components.Add(new Variable<double>(SourceSinkVariableInfo.TemperatureVariableName)
-            {
-                Unit = new Unit(SourceSinkVariableInfo.TemperatureUnitDescription,
-                                SourceSinkVariableInfo.TemperatureUnitSymbol)
-            });
-            function.Components.Add(new Variable<double>(SourceSinkVariableInfo.SecondaryFlowVariableName)
-            {
-                Unit = new Unit(SourceSinkVariableInfo.SecondaryFlowUnitDescription,
-                                SourceSinkVariableInfo.SecondaryFlowUnitSymbol)
-            });
-            return function;
         }
     }
 }

@@ -53,7 +53,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const int numValues = 8;
 
             SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numVariablesInFunction, numValues));
-            sourceAndSink.Data = GenerateSimpleFunction(numVariablesInFunction, 0);
+            AddExtraComponents(sourceAndSink.Data, 1);
+            PopulateValues(sourceAndSink.Data, 8);
 
             sourceAndSink.PopulateFunctionValuesFromAttributes(null);
 
@@ -74,6 +75,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.True(sourceAndSinkComponentValues.HasUniqueValues());
         }
 
+        private void AddExtraComponents(IFunction function, int n)
+        {
+            for (var i = 1; i < n; i++)
+            {
+                function.Components.Add(new Variable<double>
+                {
+                    Name = "Component" + i
+                });
+            }
+        }
+
+        private void PopulateValues(IFunction function, int n)
+        {
+            function.Arguments[0].Values = GenerateValues(n, DateTime.Now);
+            foreach (IVariable variable in function.Components)
+            {
+                variable.Values = GenerateValues(n, 1);
+            }
+        }
+
         [Test]
         public void TestPopulateFunctionValuesFromAttributes_SubsetOfComponents()
         {
@@ -81,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const int numValues = 8;
 
             SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numVariablesInFunction, numValues));
-            sourceAndSink.Data = GenerateSimpleFunction(numVariablesInFunction, 0);
+            AddExtraComponents(sourceAndSink.Data, 1);
 
             var componentSettings = new Dictionary<string, bool>();
             var previousSetting = true;
@@ -121,11 +142,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void TestPopulateFunctionValuesFromAttributes_LogsWarningWhenNumberOfColumnsFromFileIsMoreThanExpected()
         {
-            const int numAttributes = 5;
+            const int numAttributes = 6;
             const int numValues = 8;
 
             SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
-            sourceAndSink.Data = GenerateSimpleFunction(numAttributes - 1, 0);
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => sourceAndSink.PopulateFunctionValuesFromAttributes(null),
                                                            string.Format(Resources.SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_more_columns_in_the___tim_file_for__0__than_expected, sourceAndSink.Name));
@@ -138,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const int numValues = 8;
 
             SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
-            sourceAndSink.Data = GenerateSimpleFunction(numAttributes + 1, 0);
+            AddExtraComponents(sourceAndSink.Data, 2);
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => sourceAndSink.PopulateFunctionValuesFromAttributes(null),
                                                            string.Format(Resources.SourceAndSinkImportExtensions_GenerateFunctionFromAttributes_There_were_less_columns_in_the___tim_file_for__0__than_expected, sourceAndSink.Name));
@@ -151,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             const int numValues = 8;
 
             SourceAndSink sourceAndSink = GenerateSourceAndSink(GenerateAttributes(numAttributes, numValues));
-            sourceAndSink.Data = GenerateSimpleFunction(numAttributes + 1, 0);
+            AddExtraComponents(sourceAndSink.Data, 2);
 
             Assert.True(sourceAndSink.Feature.Attributes.Any(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)));
             sourceAndSink.PopulateFunctionValuesFromAttributes(null);

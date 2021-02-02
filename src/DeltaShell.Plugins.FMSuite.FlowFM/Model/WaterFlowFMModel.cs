@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (!ss.TracerNames.Contains(name))
                 {
-                    ss.TracerNames.Add(name);
+                    ss.Function.AddTracer(name);
                 }
             });
         }

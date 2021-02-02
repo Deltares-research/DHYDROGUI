@@ -100,95 +100,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
-        public void TestAddingSourceAndSinkCorrectlyUpdatesSedimentFractionAndTracerNamesForSourceAndSink()
+        public void GivenAWaterFlowFMModelWithATracerBoundaryCondition_WhenRemovingTheTracer_TheBoundaryConditionIsRemoved()
         {
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
-
-            var sourceAndSink = new SourceAndSink();
-
-            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
-            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
-
-            model.SourcesAndSinks.Add(sourceAndSink);
-
-            foreach (ISedimentFraction sedimentFraction in model.SedimentFractions)
+            // Given
+            using (var model = new WaterFlowFMModel())
             {
-                Assert.True(sourceAndSink.SedimentFractionNames.Contains(sedimentFraction.Name));
+                const string tracer = "Some Tracer";
+
+                var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty) {TracerName = tracer};
+                var boundary = new BoundaryConditionSet {BoundaryConditions = {boundaryCondition}};
+
+                model.TracerDefinitions.Add(tracer);
+                model.BoundaryConditionSets.Add(boundary);
+
+                // Precondition
+                Assert.That(boundary.BoundaryConditions, Has.Count.EqualTo(1));
+
+                // When
+                model.TracerDefinitions.Remove(tracer);
+
+                // Then
+                Assert.That(boundary.BoundaryConditions, Is.Empty);
             }
-
-            IEnumerable<string> tracerBoundaryConditionsTracerNames = model.BoundaryConditions
-                                                                           .OfType<FlowBoundaryCondition>()
-                                                                           .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                                                                           .Select(tbc => tbc.TracerName)
-                                                                           .Distinct();
-
-            foreach (string tracerName in model.TracerDefinitions.Where(t => tracerBoundaryConditionsTracerNames.Contains(t)))
-            {
-                Assert.True(sourceAndSink.TracerNames.Contains(tracerName));
-            }
-
-            foreach (string tracerName in model.TracerDefinitions.Where(t => !tracerBoundaryConditionsTracerNames.Contains(t)))
-            {
-                Assert.False(sourceAndSink.TracerNames.Contains(tracerName));
-            }
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
-        public void TestRemovingTracerBoundaryCondition_OnlyRemovesTracerNameFromSourceAndSink_IfNoOtherTracerBoundaryConditionsExistsForSameTracer()
-        {
-            var model = new WaterFlowFMModel();
-            var sourceAndSink = new SourceAndSink();
-
-            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
-            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
-
-            model.SourcesAndSinks.Add(sourceAndSink);
-
-            var tracer01 = "Tracer01";
-            var tracer02 = "Tracer02";
-            model.TracerDefinitions.AddRange(new List<string>
-            {
-                tracer01,
-                tracer02
-            });
-
-            var boundary01 = new Feature2D() {Name = "Boundary01"};
-            var set01 = new BoundaryConditionSet();
-            model.BoundaryConditionSets.Add(set01);
-
-            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary01,
-                TracerName = tracer01
-            });
-
-            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary01,
-                TracerName = tracer02
-            });
-
-            var boundary02 = new Feature2D() {Name = "Boundary02"};
-            var set02 = new BoundaryConditionSet();
-            model.BoundaryConditionSets.Add(set02);
-            set02.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary02,
-                TracerName = tracer01
-            });
-
-            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
-            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
-
-            set01.BoundaryConditions.Clear();
-
-            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
         }
 
         [Test]
@@ -199,8 +132,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var model = new WaterFlowFMModel();
             var sourceAndSink = new SourceAndSink();
 
-            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
-            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
+            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count());
+            Assert.AreEqual(0, sourceAndSink.TracerNames.Count());
 
             model.SourcesAndSinks.Add(sourceAndSink);
 
@@ -237,14 +170,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 TracerName = tracer01
             });
 
-            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
-            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
+            Assert.AreEqual(2, sourceAndSink.TracerNames.Count());
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames.ElementAt(0));
+            Assert.AreEqual(tracer02, sourceAndSink.TracerNames.ElementAt(1));
 
             model.BoundaryConditionSets.Remove(set01);
 
-            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
+            Assert.AreEqual(1, sourceAndSink.TracerNames.Count());
+            Assert.AreEqual(tracer01, sourceAndSink.TracerNames.ElementAt(0));
         }
 
         [Test]

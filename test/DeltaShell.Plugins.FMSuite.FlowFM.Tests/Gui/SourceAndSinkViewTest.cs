@@ -26,13 +26,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             var sourceSink = new SourceAndSink();
 
-            sourceSink.SedimentFractionNames.Add("SedimentFraction_1");
-            sourceSink.SedimentFractionNames.Add("SedimentFraction_2");
-            sourceSink.SedimentFractionNames.Add("Name");
+            sourceSink.Function.AddSedimentFraction("SedimentFraction_1");
+            sourceSink.Function.AddSedimentFraction("SedimentFraction_2");
+            sourceSink.Function.AddSedimentFraction("Name");
 
-            sourceSink.TracerNames.Add("Tracer_1");
-            sourceSink.TracerNames.Add("Tracer_2");
-            sourceSink.TracerNames.Add("Name");
+            sourceSink.Function.AddTracer("Tracer_1");
+            sourceSink.Function.AddTracer("Tracer_2");
+            sourceSink.Function.AddTracer("Name");
             sourceSink.Feature = new Feature2D {Geometry = new Point(0, 0)};
 
             var temperatureString = ((int) Temperature).ToString();
