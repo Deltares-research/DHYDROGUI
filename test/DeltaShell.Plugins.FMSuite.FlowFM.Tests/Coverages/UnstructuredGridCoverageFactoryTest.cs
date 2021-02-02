@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
         private readonly Random random = new Random();
 
         [Test]
-        public void CreateVertexCoverage_DefaultComponentValues_CreatesTheCorrectCoverage()
+        public void CreateVertexCoverage_CreatesTheCorrectCoverage()
         {
             // Setup
             UnstructuredGrid grid = GetGrid();
@@ -39,7 +39,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
         }
 
         [Test]
-        public void CreateVertexCoverage_CustomComponentValues_CreatesTheCorrectCoverage()
+        public void CreateVertexCoverage_DefaultValueGiven_CreatesTheCorrectCoverage()
+        {
+            // Setup
+            UnstructuredGrid grid = GetGrid();
+
+            // Call
+            UnstructuredGridVertexCoverage coverage = UnstructuredGridCoverageFactory.CreateVertexCoverage("Some coverage", grid, defaultValue: 7d);
+
+            // Assert
+            Assert.That(coverage.Name, Is.EqualTo("Some coverage"));
+            Assert.That(coverage.Grid, Is.SameAs(grid));
+            Assert.That(coverage.Components[0].NoDataValue, Is.EqualTo(-999d));
+            Assert.That(coverage.Components[0].DefaultValue, Is.EqualTo(7d));
+
+            double[] componentValues = coverage.Components[0].Values.OfType<double>().ToArray();
+            Assert.That(componentValues, Has.Length.EqualTo(16));
+            Assert.That(componentValues, Is.All.EqualTo(7d));
+
+            int[] argumentValues = coverage.Arguments[0].Values.OfType<int>().ToArray();
+            Assert.That(argumentValues, Has.Length.EqualTo(16));
+            Assert.That(argumentValues, Is.EqualTo(Enumerable.Range(0, 16)));
+        }
+
+        [Test]
+        public void CreateVertexCoverage_ComponentValuesGiven_CreatesTheCorrectCoverage()
         {
             // Setup
             UnstructuredGrid grid = GetGrid();
@@ -64,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
         }
 
         [Test]
-        public void CreateCellCoverage_DefaultComponentValues_CreatesTheCorrectCoverage()
+        public void CreateCellCoverage_CreatesTheCorrectCoverage()
         {
             // Setup
             UnstructuredGrid grid = GetGrid();
@@ -88,7 +112,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
         }
 
         [Test]
-        public void CreateCellCoverage_CustomComponentValues_CreatesTheCorrectCoverage()
+        public void CreateCellCoverage_DefaultValueGiven_CreatesTheCorrectCoverage()
+        {
+            // Setup
+            UnstructuredGrid grid = GetGrid();
+
+            // Call
+            UnstructuredGridCellCoverage coverage = UnstructuredGridCoverageFactory.CreateCellCoverage("Some coverage", grid, defaultValue: 7d);
+
+            // Assert
+            Assert.That(coverage.Name, Is.EqualTo("Some coverage"));
+            Assert.That(coverage.Grid, Is.SameAs(grid));
+            Assert.That(coverage.Components[0].NoDataValue, Is.EqualTo(-999d));
+            Assert.That(coverage.Components[0].DefaultValue, Is.EqualTo(7d));
+
+            double[] componentValues = coverage.Components[0].Values.OfType<double>().ToArray();
+            Assert.That(componentValues, Has.Length.EqualTo(9));
+            Assert.That(componentValues, Is.All.EqualTo(7d));
+
+            int[] argumentValues = coverage.Arguments[0].Values.OfType<int>().ToArray();
+            Assert.That(argumentValues, Has.Length.EqualTo(9));
+            Assert.That(argumentValues, Is.EqualTo(Enumerable.Range(0, 9)));
+        }
+
+        [Test]
+        public void CreateCellCoverage_ComponentValuesGiven_CreatesTheCorrectCoverage()
         {
             // Setup
             UnstructuredGrid grid = GetGrid();
@@ -113,7 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
         }
 
         [Test]
-        public void CreateFlowLinkCoverage_DefaultComponentValues_CreatesTheCorrectCoverage()
+        public void CreateFlowLinkCoverage_CreatesTheCorrectCoverage()
         {
             // Setup
             UnstructuredGrid grid = GetGrid();
@@ -137,7 +185,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
         }
 
         [Test]
-        public void CreateFlowLinkCoverage_CustomComponentValues_CreatesTheCorrectCoverage()
+        public void CreateFlowLinkCoverage_DefaultValueGiven_CreatesTheCorrectCoverage()
+        {
+            // Setup
+            UnstructuredGrid grid = GetGrid();
+
+            // Call
+            UnstructuredGridFlowLinkCoverage coverage = UnstructuredGridCoverageFactory.CreateFlowLinkCoverage("Some coverage", grid, defaultValue: 7d);
+
+            // Assert
+            Assert.That(coverage.Name, Is.EqualTo("Some coverage"));
+            Assert.That(coverage.Grid, Is.SameAs(grid));
+            Assert.That(coverage.Components[0].NoDataValue, Is.EqualTo(-999d));
+            Assert.That(coverage.Components[0].DefaultValue, Is.EqualTo(7d));
+
+            double[] componentValues = coverage.Components[0].Values.OfType<double>().ToArray();
+            Assert.That(componentValues, Has.Length.EqualTo(12));
+            Assert.That(componentValues, Is.All.EqualTo(7d));
+
+            int[] argumentValues = coverage.Arguments[0].Values.OfType<int>().ToArray();
+            Assert.That(argumentValues, Has.Length.EqualTo(12));
+            Assert.That(argumentValues, Is.EqualTo(Enumerable.Range(0, 12)));
+        }
+
+        [Test]
+        public void CreateFlowLinkCoverage_ComponentValuesGiven_CreatesTheCorrectCoverage()
         {
             // Setup
             UnstructuredGrid grid = GetGrid();
