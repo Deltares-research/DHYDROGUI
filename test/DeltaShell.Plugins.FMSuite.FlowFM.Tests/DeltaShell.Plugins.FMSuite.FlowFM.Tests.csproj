@@ -275,6 +275,7 @@
     <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
     <Compile Include="FeatureData\ModelFeatureCoordinateDataTest.cs" />
     <Compile Include="FeatureData\SourcesAndSinks\SedimentFractionVariableTest.cs" />
+    <Compile Include="FeatureData\SourcesAndSinks\SourceAndSinkFunctionTest.cs" />
     <Compile Include="FeatureData\SourcesAndSinks\SourceAndSinkTest.cs" />
     <Compile Include="FeatureData\SourcesAndSinks\TracerVariableTest.cs" />
     <Compile Include="FlowFMApplicationPluginTest.cs" />

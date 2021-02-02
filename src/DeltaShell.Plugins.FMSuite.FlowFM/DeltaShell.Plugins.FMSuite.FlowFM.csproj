@@ -164,8 +164,10 @@
     <Compile Include="FeatureData\FlowBoundaryConditionHelper.cs" />
     <Compile Include="FeatureData\IDataColumn.cs" />
     <Compile Include="FeatureData\ModelFeatureCoordinateData.cs" />
+    <Compile Include="FeatureData\SourcesAndSinks\ISourceAndSinkFunction.cs" />
     <Compile Include="FeatureData\SourcesAndSinks\SedimentFractionVariable.cs" />
     <Compile Include="FeatureData\SourcesAndSinks\SourceAndSink.cs" />
+    <Compile Include="FeatureData\SourcesAndSinks\SourceAndSinkFunction.cs" />
     <Compile Include="FeatureData\SourcesAndSinks\SourceSinkVariableInfo.cs" />
     <Compile Include="FeatureData\SourcesAndSinks\TracerVariable.cs" />
     <Compile Include="FeatureData\SupportedVerticalProfileTypes.cs" />
