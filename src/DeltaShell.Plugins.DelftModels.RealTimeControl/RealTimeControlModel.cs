@@ -1830,7 +1830,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 }
             }
 
-            if (Directory.Exists(expectedOutputPath))
+            if (Directory.Exists(expectedOutputPath) && IsRtcOutputPresent)
             {
                 UpdateOutputFilePaths(expectedOutputPath);
             }
