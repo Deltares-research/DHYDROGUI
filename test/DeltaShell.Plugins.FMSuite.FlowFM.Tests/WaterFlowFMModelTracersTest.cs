@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -11,6 +12,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 
@@ -161,9 +163,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(0));
             Assert.IsNotNull(newDataItem);
             Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
-            var setValueOperation =
-                ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations
-                                                                                .FirstOrDefault() as SetValueOperation;
+
+            AssertCorrectSpatialOperations(newDataItem, polygon);
+        }
+
+        private static void AssertCorrectSpatialOperations(IDataItem newDataItem, Feature2DPolygon polygon)
+        {
+            IEventedList<ISpatialOperation> operation = ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations;
+            var importOperation = ((SpatialOperationSet) operation[0]).Operations.Single() as ImportSamplesOperation;
+            Assert.That(importOperation, Is.Not.Null);
+            Assert.That(importOperation.Name, Is.EqualTo("initialtracersubstance_1"));
+
+            var interpolateOperation = operation[1] as InterpolateOperation;
+            Assert.That(interpolateOperation, Is.Not.Null);
+
+            var setValueOperation = operation[2] as SetValueOperation;
             Assert.IsNotNull(setValueOperation);
             Assert.IsNotNull(setValueOperation.Mask.Provider.GetFeature(0));
             Assert.AreEqual(polygon.Geometry.Coordinates.ToArray(), setValueOperation.Mask.Provider.GetFeature(0).Geometry.Coordinates.ToArray());
@@ -247,14 +261,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(1, newModel.SpatialData.InitialTracers.Count());
             IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(0));
             Assert.IsNotNull(newDataItem);
-            Assert.IsNotNull(newDataItem);
-            Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
-            var setValueOperation =
-                ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations
-                                                                                .FirstOrDefault() as SetValueOperation;
-            Assert.IsNotNull(setValueOperation);
-            Assert.IsNotNull(setValueOperation.Mask.Provider.GetFeature(0));
-            Assert.AreEqual(polygon.Geometry.Coordinates.ToArray(), setValueOperation.Mask.Provider.GetFeature(0).Geometry.Coordinates.ToArray());
+
+            AssertCorrectSpatialOperations(newDataItem, polygon);
         }
 
         [Test]
@@ -340,14 +348,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(2, newModel.SpatialData.InitialTracers.Count());
             IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(1));
             Assert.IsNotNull(newDataItem);
-            Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
-            var setValueOperation =
-                ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations
-                                                                                .FirstOrDefault() as SetValueOperation;
-            Assert.IsNotNull(setValueOperation);
-            Assert.IsNotNull(setValueOperation.Mask.Provider.GetFeature(0));
-            Assert.AreEqual(polygon.Geometry.Coordinates.ToArray(),
-                            setValueOperation.Mask.Provider.GetFeature(0).Geometry.Coordinates.ToArray());
+
+            AssertCorrectSpatialOperations(newDataItem, polygon);
         }
 
         private static WaterFlowFMModel CreateSimpleBoxModel()
