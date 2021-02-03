@@ -7,13 +7,9 @@
     </Component>
     <Directory Id="GridEditorPluginLib" Name="Lib">
        <Component Id='GridEditorPluginLib' Guid="F08B5320-3B96-435D-AB97-34CAF26018AD">
-            <File Id="gridgeomStateful_dll.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\gridgeomStateful_dll.dll' />
-            <File Id="GridEditor_vcomp140.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\vcomp140.dll' />
-            <File Id="GridEditor_msvcp140.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\msvcp140.dll' />
-            <File Id="GridEditor_msvcp140_1.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\msvcp140_1.dll' />
-            <File Id="GridEditor_msvcp140_2.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\msvcp140_2.dll' />
-            <File Id="GridEditorPluginLib_vcruntime140.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\vcruntime140.dll' />
-            <File Id="GridEditorPluginLib_vcruntime140_1.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\vcruntime140_1.dll' />
+            <File Id="MeshKernel.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\MeshKernel.dll' />
+            <File Id="MeshKernel.exp" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\MeshKernel.exp' />
+            <File Id="MeshKernel.lib" Source='$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.GridEditor\Lib\MeshKernel.lib' />            
         </Component>
      </Directory>
   </Directory>
