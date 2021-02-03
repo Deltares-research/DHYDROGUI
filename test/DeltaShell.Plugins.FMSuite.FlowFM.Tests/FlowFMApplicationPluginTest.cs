@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IFileImporter[] importers = plugin.GetFileImporters().ToArray();
 
             // Assert
-            Assert.That(importers, Has.Length.EqualTo(38));
+            Assert.That(importers, Has.Length.EqualTo(37));
             Contains<WaterFlowFMFileImporter>(importers);
             Contains<Area2DStructuresImporter>(importers);
             Contains<StructuresListImporter>(importers, 2);
