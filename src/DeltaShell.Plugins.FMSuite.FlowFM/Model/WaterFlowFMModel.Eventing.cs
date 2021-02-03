@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void OnTracerAdded(string name)
         {
-            SpatialData.AddTracer(UnstructuredGridCoverageFactory.CreateCellCoverage(name, Grid, defaultValue: 1d));
+            SpatialData.AddTracer(UnstructuredGridCoverageFactory.CreateCellCoverage(name, Grid, defaultValue: 0d));
             foreach (SourceAndSink sourceAndSink in SourcesAndSinks)
             {
                 sourceAndSink.Function.AddTracer(name);

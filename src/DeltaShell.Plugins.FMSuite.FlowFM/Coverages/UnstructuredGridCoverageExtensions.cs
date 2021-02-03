@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             Ensure.NotNull(coverage, nameof(coverage));
 
             var variable = (IVariable<double>) coverage.Components[0];
-            if (variable.NoDataValue.Equals(variable.DefaultValue))
+            if (Equals(variable.NoDataValue, variable.DefaultValue))
             {
                 return;
             }

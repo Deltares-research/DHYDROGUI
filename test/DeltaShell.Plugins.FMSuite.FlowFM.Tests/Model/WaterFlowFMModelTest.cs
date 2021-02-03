@@ -2208,8 +2208,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 UnstructuredGridCellCoverage tracerCoverage = model.SpatialData.InitialTracers.Single();
                 Assert.That(tracerCoverage.Name, Is.EqualTo("Some Tracer"));
                 Assert.That(tracerCoverage.Grid, Is.SameAs(model.Grid));
-                Assert.That(tracerCoverage.Components[0].DefaultValue, Is.EqualTo(1d));
-                Assert.That(tracerCoverage.Components[0].Values.OfType<double>(), Is.All.EqualTo(1d));
+                Assert.That(tracerCoverage.Components[0].DefaultValue, Is.EqualTo(0d));
+                Assert.That(tracerCoverage.Components[0].Values.OfType<double>(), Is.All.EqualTo(0d));
             }
         }
 
