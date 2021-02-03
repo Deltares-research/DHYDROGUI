@@ -164,15 +164,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(newDataItem);
             Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
 
-            AssertCorrectSpatialOperations(newDataItem, polygon);
+            AssertCorrectSpatialOperations(newDataItem, polygon, "initialtracersubstance_1");
         }
 
-        private static void AssertCorrectSpatialOperations(IDataItem newDataItem, Feature2DPolygon polygon)
+        private static void AssertCorrectSpatialOperations(IDataItem newDataItem, Feature2DPolygon polygon, string quantityName)
         {
             IEventedList<ISpatialOperation> operation = ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations;
             var importOperation = ((SpatialOperationSet) operation[0]).Operations.Single() as ImportSamplesOperation;
             Assert.That(importOperation, Is.Not.Null);
-            Assert.That(importOperation.Name, Is.EqualTo("initialtracersubstance_1"));
+            Assert.That(importOperation.Name, Is.EqualTo(quantityName));
 
             var interpolateOperation = operation[1] as InterpolateOperation;
             Assert.That(interpolateOperation, Is.Not.Null);
@@ -262,7 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(0));
             Assert.IsNotNull(newDataItem);
 
-            AssertCorrectSpatialOperations(newDataItem, polygon);
+            AssertCorrectSpatialOperations(newDataItem, polygon, "initialtracersubstance_1");
         }
 
         [Test]
@@ -349,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(1));
             Assert.IsNotNull(newDataItem);
 
-            AssertCorrectSpatialOperations(newDataItem, polygon);
+            AssertCorrectSpatialOperations(newDataItem, polygon, "initialtracersubstance_2");
         }
 
         private static WaterFlowFMModel CreateSimpleBoxModel()
