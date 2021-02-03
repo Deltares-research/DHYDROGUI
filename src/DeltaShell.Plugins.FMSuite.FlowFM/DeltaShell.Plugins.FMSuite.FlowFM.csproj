@@ -231,7 +231,6 @@
     <Compile Include="IO\Operator.cs" />
     <Compile Include="IO\Files\BcFile.cs" />
     <Compile Include="IO\Files\BndExtForceFile.cs" />
-    <Compile Include="IO\ImportExport\Importers\BoundaryConditionWpsImporter.cs" />
     <Compile Include="IO\ImportExport\Exporters\Area2DStructuresExporter.cs" />
     <Compile Include="IO\ImportExport\Exporters\BcFileExporter.cs" />
     <Compile Include="IO\ImportExport\Exporters\BoundaryDataExporterBase.cs" />

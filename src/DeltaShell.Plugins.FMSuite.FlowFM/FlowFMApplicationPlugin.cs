@@ -106,7 +106,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new FMRestartFileImporter(GetWaterFlowFMModels);
             yield return new BcFileImporter();
             yield return new BcmFileImporter();
-            yield return new BoundaryConditionWpsImporter();
             yield return new GroupablePointCloudImporter
             {
                 GetBaseFolder = list =>
