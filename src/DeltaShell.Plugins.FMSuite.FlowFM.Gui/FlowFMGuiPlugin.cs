@@ -445,21 +445,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetFeature2DImportDialogViewInfo<PointFileImporterExporter>();
             yield return GetFeature2DImportDialogViewInfo<PolFileImporterExporter>();
             yield return GetFeature2DImportDialogViewInfo<LdbFileImporterExporter>();
-
-            yield return new ViewInfo<BoundaryConditionWpsImporter, BoundaryConditionWpsDialog>
-            {
-                AfterCreate = (v, o) =>
-                {
-                    v.AllowSelectedSupportPointImport = false;
-
-                    WaterFlowFMModel model = FlowModels.FirstOrDefault();
-
-                    v.StartTime = model.StartTime;
-                    v.StopTime = model.StopTime;
-                    v.TimeStep = model.TimeStep;
-                    v.CoordinateSystem = model.CoordinateSystem;
-                }
-            };
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()

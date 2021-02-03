@@ -74,7 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Contains<FMRestartFileImporter>(importers);
             Contains<BcFileImporter>(importers);
             Contains<BcmFileImporter>(importers);
-            Contains<BoundaryConditionWpsImporter>(importers);
             Contains<GroupablePointCloudImporter>(importers);
             Contains<PliFileImporterExporter<Embankment, Embankment>>(importers);
             Contains<PlizFileImporterExporter<FixedWeir, FixedWeir>>(importers);
