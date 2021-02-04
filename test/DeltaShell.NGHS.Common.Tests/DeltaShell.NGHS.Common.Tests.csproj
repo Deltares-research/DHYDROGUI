@@ -156,6 +156,7 @@
     <Compile Include="Utils\NameableCollectionExtensionsTest.cs" />
     <Compile Include="Utils\RepeatTest.cs" />
     <Compile Include="Utils\SyncHelperTest.cs" />
+    <Compile Include="Utils\UniqueStringProviderTest.cs" />
     <Compile Include="Validation\RestartTimeRangeValidatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
