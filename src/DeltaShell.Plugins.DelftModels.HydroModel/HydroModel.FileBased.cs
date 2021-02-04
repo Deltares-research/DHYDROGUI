@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
@@ -238,7 +239,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 Region.BeginEdit(new DefaultEditAction("Removing hydro links"));
 
-                var sourceRegionsLinksGrouping = Region.Links.GroupBy(l => l.Source.Region);
+                var sourceRegionsLinksGrouping = Region.Links.Where(l => l.Source is Catchment catchment && !Equals(catchment.CatchmentType, CatchmentType.NWRW)).GroupBy(l => l.Source.Region);
                 foreach (var sourceRegionGroup in sourceRegionsLinksGrouping)
                 {
                     var sourceRegion = sourceRegionGroup.Key;
