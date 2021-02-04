@@ -2,15 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
-using GeoAPI.Extensions.Coverages;
-using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
