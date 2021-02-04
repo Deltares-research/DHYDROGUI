@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             var boundaryConditionSets = parentNodeData as IList<BoundaryConditionSet>;
             if (boundaryConditionSets != null && boundaryConditionSets.Remove(nodeData))
             {
-                Gui.Selection = null;
+                ResetGuiSelection();
                 return true;
             }
 
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 boundaryConditionSets = treeShortCut.Value as IList<BoundaryConditionSet>;
                 if (boundaryConditionSets != null && boundaryConditionSets.Remove(nodeData))
                 {
-                    Gui.Selection = null;
+                    ResetGuiSelection();
                     return true;
                 }
             }

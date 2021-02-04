@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             var sourceAndSinks = parentNodeData as IList<SourceAndSink>;
             if (sourceAndSinks != null && sourceAndSinks.Remove(nodeData))
             {
-                Gui.Selection = null;
+                ResetGuiSelection();
                 return true;
             }
 
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 sourceAndSinks = treeShortCut.Value as IList<SourceAndSink>;
                 if (sourceAndSinks != null && sourceAndSinks.Remove(nodeData))
                 {
-                    Gui.Selection = null;
+                    ResetGuiSelection();
                     return true;
                 }
             }
