@@ -534,20 +534,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     AddSamplesOperation newOperation = CreateSamplesOperation(coverage.ToPointCloud(0, true), 
                                                                               spatialOperationValueConverter.SpatialOperationSet.Name);
 
-                    if (SpatialOperations.ContainsKey(dataItem.Name))
-                    {
-                        Log.WarnFormat(
-                            Resources
-                                .WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_,
-                            dataItem.Name);
-                    }
-                    else
-                    {
-                        SpatialOperations.Add(dataItem.Name, new[]
-                        {
-                            newOperation
-                        });
-                    }
+                    AddSpatialOperation(dataItem.Name, newOperation);
                 }
             }
 
@@ -572,22 +559,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     }
 
                     AddSamplesOperation samplesOperation = CreateSamplesOperation(pointCloud, coverage.Name);
-
-                    if (SpatialOperations.ContainsKey(dataItemNameLookup[coverage]))
-                    {
-                        Log.WarnFormat(
-                            Resources
-                                .WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_,
-                            dataItemNameLookup[coverage]);
-                    }
-                    else
-                    {
-                        SpatialOperations.Add(dataItemNameLookup[coverage], new[]
-                        {
-                            samplesOperation
-                        });
-                    }
+                    AddSpatialOperation(dataItemNameLookup[coverage], samplesOperation);
                 }
+            }
+        }
+
+        private void AddSpatialOperation(string name, AddSamplesOperation newOperation)
+        {
+            if (SpatialOperations.ContainsKey(name))
+            {
+                Log.WarnFormat(
+                    Resources
+                        .WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_,
+                    name);
+            }
+            else
+            {
+                SpatialOperations.Add(name, new[]
+                {
+                    newOperation
+                });
             }
         }
 
