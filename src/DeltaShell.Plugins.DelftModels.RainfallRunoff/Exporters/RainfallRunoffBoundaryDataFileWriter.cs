@@ -49,7 +49,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                     var boundary = link.ToFeature ?? link.FromFeature;
 
                     if (rrBoundaries.Contains(boundary))
-                        continue; //alredady added
+                        continue; //already added
+
+                    if (boundary is Catchment boundaryOnTheCatchment && Equals(boundaryOnTheCatchment.CatchmentType, CatchmentType.NWRW))
+                        continue; //Nwrw catchments don't have catchment boundaries
 
                     rrBoundaries.Add(boundary);
                     var boundaryData = new RunoffBoundaryData(
