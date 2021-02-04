@@ -297,6 +297,7 @@
     <Compile Include="Gui\HarmonicConditionsDialogTest.cs" />
     <Compile Include="Gui\HarmonicConditionsDialogViewModelTest.cs" />
     <Compile Include="Gui\NodePresenters\BoundaryConditionSetNodePresenterTest.cs" />
+    <Compile Include="Gui\NodePresenters\SourceSinkNodePresenterTest.cs" />
     <Compile Include="Gui\RgfGrid\RgfConfigTest.cs" />
     <Compile Include="Gui\SourceAndSinkViewTest.cs" />
     <Compile Include="Gui\SupportPointSelectionFormTest.cs" />
