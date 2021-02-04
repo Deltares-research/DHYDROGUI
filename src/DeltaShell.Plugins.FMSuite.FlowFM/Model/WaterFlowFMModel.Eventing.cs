@@ -460,20 +460,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        private void RemoveAllSedimentFractionsFromBoundaryConditionSets()
-        {
-            foreach (BoundaryConditionSet set in BoundaryConditionSets)
-            {
-                set.BoundaryConditions.RemoveAllWhere(bc =>
-                {
-                    var flowCondition = bc as FlowBoundaryCondition;
-                    return flowCondition != null &&
-                           (flowCondition.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration
-                            || flowCondition.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLoadTransport);
-                });
-            }
-        }
-
         private void SyncInitialFractions(ISedimentFraction sedimentFraction)
         {
             foreach (string layerName in sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames())
