@@ -74,12 +74,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
             };
 
             var node = Substitute.For<ITreeNode>();
-           var nodePresenter = new BoundaryConditionSetNodePresenter();
-           
-           // Precondition
-           Assert.That(node.Image, Is.Null);
-           Assert.That(node.Text, Is.Empty);
-           
+            var nodePresenter = new BoundaryConditionSetNodePresenter();
+
+            // Precondition
+            Assert.That(node.Image, Is.Null);
+            Assert.That(node.Text, Is.Empty);
+
             // Call
             nodePresenter.UpdateNode(null, node, nodeData);
 
@@ -96,12 +96,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
 
             var node = Substitute.For<ITreeNode>();
             var nodePresenter = new BoundaryConditionSetNodePresenter();
-           
+
             // Precondition
             Assert.That(nodeData.Feature, Is.Null);
             Assert.That(node.Image, Is.Null);
             Assert.That(node.Text, Is.Empty);
-           
+
             // Call
             nodePresenter.UpdateNode(null, node, nodeData);
 
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
             Assert.That(node.Image, Is.Not.Null);
             Assert.That(node.Text, Is.EqualTo("<error>"));
         }
-        
+
         [Test]
         public void RemoveNodeData_WithParentNodeIncompatibleType_ReturnsFalseAndKeepsSelection()
         {
@@ -165,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
         }
 
         [Test]
-        public void RemoveNodeData_WithBoundaryConditionSetCollectionParentNodeContainingNodeData_ReturnsFalseAndDoesNotRemoveNodeDataAndGuiSelection()
+        public void RemoveNodeData_WithBoundaryConditionSetCollectionParentNodeNotContainingNodeData_ReturnsFalseAndDoesNotRemoveNodeDataAndGuiSelection()
         {
             // Setup
             var guiSelection = new object();
@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
         }
 
         [Test]
-        public void RemoveNodeData_WithFmModelTreeShortCutParentNodeContainingNodeData_ReturnsFalseAndDoesNotRemoveNodeDataAndGuiSelection()
+        public void RemoveNodeData_WithFmModelTreeShortCutParentNodeNotContainingNodeData_ReturnsFalseAndDoesNotRemoveNodeDataAndGuiSelection()
         {
             // Setup
             var guiSelection = new object();

@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
                 sourceAndSink
             };
 
-            var nodePresenter = new SourceSinkNodePresenter()
+            var nodePresenter = new SourceSinkNodePresenter
             {
                 GuiPlugin = guiPlugin
             };
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
         }
 
         [Test]
-        public void RemoveNodeData_WithSourceAndSinkCollectionParentNodeContainingNodeData_ReturnsFalseAndDoesNotRemoveNodeDataAndGuiSelection()
+        public void RemoveNodeData_WithSourceAndSinkCollectionParentNodeNotContainingNodeData_ReturnsFalseAndDoesNotRemoveNodeDataAndGuiSelection()
         {
             // Setup
             var guiSelection = new object();
@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
             };
             var parentNode = new FmModelTreeShortcut(null, null, null, sourceAndSinks);
 
-            var nodePresenter = new SourceSinkNodePresenter()
+            var nodePresenter = new SourceSinkNodePresenter
             {
                 GuiPlugin = guiPlugin
             };
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
         }
 
         [Test]
-        public void RemoveNodeData_WithFmModelTreeShortCutParentNodeContainingNodeData_ReturnsFalseAndDoesNotRemoveNodeDataAndGuiSelection()
+        public void RemoveNodeData_WithFmModelTreeShortCutParentNodeNotContainingNodeData_ReturnsFalseAndDoesNotRemoveNodeDataAndGuiSelection()
         {
             // Setup
             var guiSelection = new object();
@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.NodePresenters
             };
             var parentNode = new FmModelTreeShortcut(null, null, null, boundaryConditionSets);
 
-            var nodePresenter = new SourceSinkNodePresenter()
+            var nodePresenter = new SourceSinkNodePresenter
             {
                 GuiPlugin = guiPlugin
             };
