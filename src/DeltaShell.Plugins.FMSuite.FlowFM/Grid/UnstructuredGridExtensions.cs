@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Guards;
 using NetTopologySuite.Extensions.Grids;
@@ -21,58 +22,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Grid
         {
             Ensure.NotNull(grid, nameof(grid));
 
-            // optimized for performance
-            var flowLinks = new List<FlowLink>();
+            grid.FlowLinks.AddRange(GetFlowLinks(grid));
+        }
 
-            foreach (Edge gridEdge in grid.Edges)
+        private static IEnumerable<FlowLink> GetFlowLinks(UnstructuredGrid grid)
+        {
+            return grid.Edges.SelectMany(gridEdge => GetFlowLinksForEdge(grid, gridEdge));
+        }
+
+        private static IEnumerable<FlowLink> GetFlowLinksForEdge(UnstructuredGrid grid, Edge gridEdge)
+        {
+            if (!grid.VertexToCellIndices.TryGetValue(gridEdge.VertexFromIndex, out IList<int> vertexFromCellIndices))
             {
-                grid.VertexToCellIndices.TryGetValue(gridEdge.VertexFromIndex, out IList<int> gridVertexToCellIndex);
-                if (gridVertexToCellIndex == null)
-                {
-                    continue;
-                }
-
-                grid.VertexToCellIndices.TryGetValue(gridEdge.VertexToIndex, out IList<int> vertexToCellIndex);
-                if (vertexToCellIndex == null)
-                {
-                    continue;
-                }
-
-                int cellOne = -1;
-                int cellTwo = -1;
-                var moreThanTwo = false;
-                foreach (int value1 in gridVertexToCellIndex)
-                {
-                    foreach (int value2 in vertexToCellIndex)
-                    {
-                        if (value1 != value2)
-                        {
-                            continue;
-                        }
-
-                        if (cellOne == -1)
-                        {
-                            cellOne = value1;
-                            continue;
-                        }
-
-                        if (cellTwo == -1)
-                        {
-                            cellTwo = value2;
-                            continue;
-                        }
-
-                        moreThanTwo = true;
-                    }
-                }
-
-                if (!moreThanTwo && cellOne != -1 && cellTwo != -1)
-                {
-                    flowLinks.Add(new FlowLink(cellOne, cellTwo, gridEdge));
-                }
+                yield break;
             }
 
-            grid.FlowLinks.AddRange(flowLinks);
+            if (!grid.VertexToCellIndices.TryGetValue(gridEdge.VertexToIndex, out IList<int> vertexToCellIndices))
+            {
+                yield break;
+            }
+
+            int cellOne = -1;
+            int cellTwo = -1;
+            var moreThanTwo = false;
+
+            foreach (int fromCellIndex in vertexFromCellIndices)
+            foreach (int toCellIndex in vertexToCellIndices)
+            {
+                if (fromCellIndex != toCellIndex)
+                {
+                    continue;
+                }
+
+                if (cellOne == -1)
+                {
+                    cellOne = fromCellIndex;
+                    continue;
+                }
+
+                if (cellTwo == -1)
+                {
+                    cellTwo = toCellIndex;
+                    continue;
+                }
+
+                moreThanTwo = true;
+            }
+
+            if (!moreThanTwo && cellOne != -1 && cellTwo != -1)
+            {
+                yield return new FlowLink(cellOne, cellTwo, gridEdge);
+            }
         }
     }
 }
