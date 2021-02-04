@@ -265,6 +265,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                     if (rrBoundaries.Contains(boundary))
                         continue; //already added
 
+                    if (boundary is Catchment boundaryOnTheCatchment && Equals(boundaryOnTheCatchment.CatchmentType, CatchmentType.NWRW))
+                        continue; //Nwrw catchments don't have catchment boundaries
+                    
                     rrBoundaries.Add(boundary);
                     allRRNodes.Add(boundary);
                     Writer.AddBoundaryNode(link.ToId, GetWaterLevelAtBoundary(boundary), boundary.Geometry?.Coordinate.X ?? 0.0, boundary.Geometry?.Coordinate.Y ?? 0.0);
