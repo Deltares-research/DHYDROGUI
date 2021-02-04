@@ -43,10 +43,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
                 {
                     case SymbolShapeFeatureHorizontalAlignment.Left:
                         return X;
-                    default:
-                        return X - ChartCoordinateService.ToWorldWidth(Chart, Image.Width)/2;
                     case SymbolShapeFeatureHorizontalAlignment.Right:
                         return X + ChartCoordinateService.ToWorldWidth(Chart, Image.Width);
+                    default:
+                        return X - ChartCoordinateService.ToWorldWidth(Chart, Image.Width)/2;
                 }
             }
         }

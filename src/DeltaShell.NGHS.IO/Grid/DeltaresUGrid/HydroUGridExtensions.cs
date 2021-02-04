@@ -603,10 +603,10 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                         default:
                             return BranchType.SurfaceWater;
                     }
-                default:
-                    return BranchType.SurfaceWater;
                 case null:
                     throw new ArgumentNullException(nameof(branch));
+                default:
+                    return BranchType.SurfaceWater;
             }
 
         }

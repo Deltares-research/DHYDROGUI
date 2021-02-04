@@ -507,56 +507,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             }
                             else
                             {
-                                log.WarnFormat("{0} is already set; Line {1} of file {2} will be ignored.", FactorKey, LineNumber, FilePath);
+                                log.Warn($"{FactorKey} is already set; Line {LineNumber} of file {FilePath} will be ignored.");
                             }
                         }
                         
                         else if (extForceFileItem != null && line.StartsWith(OffsetKey))
                         {
                             if (extForceFileItem.Operand == null)
-                                throw new FormatException(String.Format("Unexpected keyword {0} on line {1} of file {2}", FactorKey, LineNumber, FilePath));
+                                throw new FormatException($"Unexpected keyword {FactorKey} on line {LineNumber} of file {FilePath}");
 
-                            if(double.IsNaN(extForceFileItem.Offset)) extForceFileItem.Offset = GetDouble(GetValuePart(line));
+                            if (double.IsNaN(extForceFileItem.Offset))
+                            {
+                                extForceFileItem.Offset = GetDouble(GetValuePart(line));
+                            }
                             else
                             {
-                                log.WarnFormat("{0} is already set; Line {1} of file {2} will be ignored.", OffsetKey, LineNumber, FilePath);
+                                log.Warn($"{OffsetKey} is already set; Line {LineNumber} of file {FilePath} will be ignored.");
                             }
                         }
                         else if (extForceFileItem != null && line.StartsWith(AreaKey))
                         {
                             if (extForceFileItem.Quantity != ExtForceQuantNames.SourceAndSink && extForceFileItem.Operand == null)
-                                throw new FormatException(string.Format(
-                                    "Unexpected keyword {0} on line {1} of file {2}", AreaKey, LineNumber, FilePath));
+                                throw new FormatException($"Unexpected keyword {AreaKey} on line {LineNumber} of file {FilePath}");
+
                             if (extForceFileItem.ModelData.ContainsKey(AreaKey))
                             {
-                                log.WarnFormat("{0} is already set, will be overwritten by line {1} of file {2} will be ignored.", AreaKey,
-                                    LineNumber, FilePath);
+                                log.Warn($"{AreaKey} is already set, will be overwritten by line {LineNumber} of file {FilePath} will be ignored.");
                             }
                             extForceFileItem.ModelData[AreaKey] = GetDoublePropertyValue(line);
                         }
                         else if (extForceFileItem != null && line.StartsWith(AveragingTypeKey))
                         {
                             if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation && extForceFileItem.Operand == null)
-                                throw new FormatException(string.Format(
-                                    "Unexpected keyword {0} on line {1} of file {2}", AveragingTypeKey, LineNumber,
-                                    FilePath));
+                                throw new FormatException($"Unexpected keyword {AveragingTypeKey} on line {LineNumber} of file {FilePath}");
+
                             if (extForceFileItem.ModelData.ContainsKey(AveragingTypeKey))
                             {
-                                log.WarnFormat("{0} is already set, will be overwritten by line {1} of file {2} will be ignored.", AveragingTypeKey,
-                                    LineNumber, FilePath);
+                                log.Warn($"{AveragingTypeKey} is already set, will be overwritten by line {LineNumber} of file {FilePath} will be ignored.");
                             }
                             extForceFileItem.ModelData[AveragingTypeKey] = GetIntegerPropertyValue(line);
                         }
                         else if (extForceFileItem != null && line.StartsWith(RelSearchCellSizeKey))
                         {
                             if (extForceFileItem.FileType != ExtForceQuantNames.FileTypes.Triangulation && extForceFileItem.Operand == null)
-                                throw new FormatException(string.Format(
-                                    "Unexpected keyword {0} on line {1} of file {2}", AveragingTypeKey, LineNumber,
-                                    FilePath));
+                                throw new FormatException($"Unexpected keyword {AveragingTypeKey} on line {LineNumber} of file {FilePath}");
+
                             if (extForceFileItem.ModelData.ContainsKey(RelSearchCellSizeKey))
                             {
-                                log.WarnFormat("{0} is already set, will be overwritten by line {1} of file {2} will be ignored.", RelSearchCellSizeKey,
-                                    LineNumber, FilePath);
+                                log.Warn($"{RelSearchCellSizeKey} is already set, will be overwritten by line {LineNumber} of file {FilePath} will be ignored.");
                             }
                             extForceFileItem.ModelData[RelSearchCellSizeKey] = GetDoublePropertyValue(line);
                         }
@@ -564,15 +562,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         {
                             if (extForceFileItem.ModelData.ContainsKey(FricTypeKey))
                             {
-                                log.WarnFormat("{0} is already set, will be overwritten by line {1} of file {2} will be ignored.", FricTypeKey,
-                                    LineNumber, FilePath);
+                                log.Warn($"{FricTypeKey} is already set, will be overwritten by line {LineNumber} of file {FilePath} will be ignored.");
                             }
                             extForceFileItem.ModelData[FricTypeKey] = GetIntegerPropertyValue(line);
                         }
                         else
                         {
-                            log.WarnFormat("Unexpected line \"{0}\" on line {1} in file {2} and will be ignored.", line,
-                                LineNumber, FilePath);
+                            log.Warn($"Unexpected line \"{line}\" on line {LineNumber} in file {FilePath} and will be ignored.");
                         }
                     }
                     catch (FormatException e)

@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.IO.FileReaders;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var lineFields = SplitLine(line).Take(3).ToList();
                     if (lineFields.Count != expectedLineCount)
                     {
-                        throw new Exception(string.Format("Invalid point row on line {0} in file {1}", LineNumber, path));
+                        throw new FileReadingException($"Invalid point row on line {LineNumber} in file {path}");
                     }
 
                     var observationPoint = new T

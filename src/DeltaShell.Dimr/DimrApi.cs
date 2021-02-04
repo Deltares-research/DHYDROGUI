@@ -50,7 +50,7 @@ namespace DeltaShell.Dimr
         {
             var msg = message != null ? string.Copy(message) : string.Empty;
             
-            msg = string.Format("Dimr [{0}] {1} >> {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), Enum.GetName(typeof(Level), level), msg);
+            msg = $"Dimr [{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}] {Enum.GetName(typeof(Level), level)} >> {msg}";
             if (useMessagesBuffering)
             {
                 messages.Add(msg);
@@ -266,7 +266,7 @@ namespace DeltaShell.Dimr
                 Log.Info(msg);
             }
         }
-        public int Update(double dt)
+        public int Update(double dt = -1.0)
         {
             var state = DimrApiWrapper.update(dt);
             if (state != 0) return state;

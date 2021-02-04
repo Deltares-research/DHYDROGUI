@@ -16,7 +16,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
                 return MapView.MapControl.GetToolByName(HydroRegionEditorMapTool.AddChannelScribleToolName);
             }
         }
-        protected override void OnExecute(object[] arguments)
+
+        protected override void OnExecute(params object[] arguments)
         {
             var newLineTool = (NewLineTool)CurrentTool;
             MapView.MapControl.ActivateTool(newLineTool);
