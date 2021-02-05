@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             Ensure.NotNull(restartFile, nameof(restartFile));
             Ensure.NotNull(node, nameof(node));
 
-            if (!TryGetModel(node, out RealTimeControlModel model))
+            if (!TryGetModel(node, out IRealTimeControlModel model))
             {
                 return;
             }
@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             }
         }
 
-        private void AddItemsForInputRealTimeControlRestartFile(RealTimeControlModel model)
+        private void AddItemsForInputRealTimeControlRestartFile(IRealTimeControlModel model)
         {
             ContextMenuStrip.Items.Add(GetRemoveRestartMenuItem(model));
             ContextMenuStrip.Items.Add(GetUseLastValidRestartMenuItem(model));
@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
         }
 
-        private static ClonableToolStripMenuItem GetUseLastValidRestartMenuItem(RealTimeControlModel model)
+        private static ClonableToolStripMenuItem GetUseLastValidRestartMenuItem(IRealTimeControlModel model)
         {
             var menuItem = new ClonableToolStripMenuItem
             {
@@ -67,30 +67,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             }
 
             menuItem.Enabled = true;
-            menuItem.Click += (s, e) => model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(outputRealTimeControlRestartFile.Path),
-                                                                                            File.ReadAllText(outputRealTimeControlRestartFile.Path));
+            menuItem.Click += (s, e) =>
+            {
+                model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(outputRealTimeControlRestartFile.Path),
+                                                                    File.ReadAllText(outputRealTimeControlRestartFile.Path));
+                model.MarkOutputOutOfSync();
+            };
 
             return menuItem;
         }
 
-        private static ClonableToolStripMenuItem GetRemoveRestartMenuItem(RealTimeControlModel model)
+        private static ClonableToolStripMenuItem GetRemoveRestartMenuItem(IRealTimeControlModel model)
         {
             var menuItem = new ClonableToolStripMenuItem
             {
                 Text = Resources.RemoveRestart,
                 Enabled = !model.RestartInput.IsEmpty
             };
-            menuItem.Click += (s, e) => model.RestartInput = new RealTimeControlRestartFile();
+            menuItem.Click += (s, e) =>
+            {
+                model.RestartInput = new RealTimeControlRestartFile();
+                model.MarkOutputOutOfSync();
+            };
 
             return menuItem;
         }
 
-        private static bool TryGetModel(ITreeNode node, out RealTimeControlModel result)
+        private static bool TryGetModel(ITreeNode node, out IRealTimeControlModel result)
         {
             ITreeNode parent = node.Parent;
             while (parent != null)
             {
-                if (parent.Tag is RealTimeControlModel model)
+                if (parent.Tag is IRealTimeControlModel model)
                 {
                     result = model;
                     return true;
