@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             DeltaShellGui gui,
             int expectedBranchFeaturesCount)
         {
-            var importer = new WaterFlowFMFileImporter();
+            var importer = new WaterFlowFMFileImporter(()=> TestHelper.GetTestWorkingDirectory());
             var pathToMduFile = Path.Combine(acceptanceModelsDirectory, acceptanceModelName, acceptanceModelFileName+".mdu");
             WaterFlowFMModel model = null;
             var errorMessages = TestHelper.GetAllRenderedMessages(() => model = importer.ImportItem(pathToMduFile) as WaterFlowFMModel, Level.Error);

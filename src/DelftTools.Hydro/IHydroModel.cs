@@ -2,11 +2,6 @@
 
 namespace DelftTools.Hydro
 {
-    public interface IWorkDirectoryModel : IModel
-    {
-        string ExplicitWorkingDirectory { get; set; }
-    }
-
     /// <summary>
     /// Hydro model is any model which simulates processes in the hydro region.
     /// </summary>

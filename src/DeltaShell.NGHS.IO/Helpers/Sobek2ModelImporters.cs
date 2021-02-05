@@ -9,14 +9,6 @@ namespace DeltaShell.NGHS.IO.Helpers
     {
         private static readonly IList<KeyValuePair<Type, Func<IFileImporter>>> Importers = new List<KeyValuePair<Type, Func<IFileImporter>>>();
 
-        public static IEnumerable<Func<IFileImporter>> RegisteredImporters
-        {
-            get
-            {
-                return Importers.Select(kvp => kvp.Value);
-            }
-        }
-
         public static void RegisterSobek2Importer(Func<IFileImporter> generateImporter)
         {
             foreach (var importerSupportedItemType in generateImporter().SupportedItemTypes)
@@ -29,9 +21,5 @@ namespace DeltaShell.NGHS.IO.Helpers
         {
             return Importers.Where(kvp => kvp.Key.IsAssignableFrom(targetType)).Select(kvp => kvp.Value());
         }
-
-        
-
-        
     }
 }

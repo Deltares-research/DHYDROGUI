@@ -543,6 +543,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         [EditAction]
         public virtual bool RunsInIntegratedModel{get; set;}
 
+        public string WorkingDirectory { get; }
+
         public virtual ValidationReport Validate()
         {
             var flow1DDimrModel = Flow1DModel as IDimrModel;

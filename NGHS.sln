@@ -89,6 +89,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Common.Gui"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Common.Gui.Tests", "test\DeltaShell.NGHS.Common.Gui.Tests\DeltaShell.NGHS.Common.Gui.Tests.csproj", "{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Common", "src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj", "{368694EB-CB62-4008-A27C-37AFAC0FDF14}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -259,6 +261,10 @@ Global
 		{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{368694EB-CB62-4008-A27C-37AFAC0FDF14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{368694EB-CB62-4008-A27C-37AFAC0FDF14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{368694EB-CB62-4008-A27C-37AFAC0FDF14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{368694EB-CB62-4008-A27C-37AFAC0FDF14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -305,6 +311,7 @@ Global
 		{855BC365-72E4-4BBE-997D-DC94AC58DC3F} = {09A651A9-1AA6-4534-860E-35C1302737FA}
 		{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2} = {CE217C53-5027-48E1-BE6E-2978691F6BCE}
 		{F608009D-AC1E-4A0A-8CB3-42BB2DB875E4} = {09A651A9-1AA6-4534-860E-35C1302737FA}
+		{368694EB-CB62-4008-A27C-37AFAC0FDF14} = {CE217C53-5027-48E1-BE6E-2978691F6BCE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08DB0000-7081-4B90-A760-F1705EB6D46A}

@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             data.CalculationArea = 3.45;
             folder.Add(rrModel);
 
-            rrModel.UpgradeModelIntoIntegratedModel(folder);
+            rrModel.UpgradeModelIntoIntegratedModel(folder, null);
 
             var integratedModel = folder.Models.First(m => m is HydroModel) as HydroModel;
             var imRrModel = integratedModel.Activities.OfType<RainfallRunoffModel>().First();

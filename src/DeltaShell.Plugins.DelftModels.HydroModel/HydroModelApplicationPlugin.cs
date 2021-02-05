@@ -73,9 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaving -= ApplicationProjectSaving;
                     Application.ProjectSaved -= ApplicationProjectSavedOrFailed;
                     Application.ProjectSaveFailed -= ApplicationProjectSavedOrFailed;
-
-                    Application.HybridProjectRepository.ProjectOpened -= HybridProjectRepository_ProjectOpened;
-                    Application.HybridProjectRepository.ProjectSaving -= HybridProjectRepository_ProjectOpened;
+                    Application.ProjectOpened -= ApplicationProjectOpened;
                 }
                 
                 base.Application = value;
@@ -86,9 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Application.ProjectSaving += ApplicationProjectSaving;
                     Application.ProjectSaveFailed += ApplicationProjectSavedOrFailed;
                     Application.ProjectSaved += ApplicationProjectSavedOrFailed;
-
-                    Application.HybridProjectRepository.ProjectOpened += HybridProjectRepository_ProjectOpened;
-                    Application.HybridProjectRepository.ProjectSaving += HybridProjectRepository_ProjectOpened;
+                    Application.ProjectOpened += ApplicationProjectOpened;
                 }
             }
         }
@@ -120,6 +116,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 hydroModel.RelinkHydroRegionLinks();
             }
         }
+        private void ApplicationProjectOpened(Project project)
+        {
+            // relink all dataitems (between rtc and flowFM) for all hydromodels
+            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
+            {
+                hm.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
+            });
+        }
 
         private void ActivityRunnerOnActivityStatusChanged(object sender, ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
@@ -149,7 +153,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     Category = DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D___2D___3D_Integrated_Models,
                     AdditionalOwnerCheck = owner => (Application.Project != null && !Application.GetAllModelsInProject().Any()) &&
                         !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
-                    CreateModel = owner => HydroModel.BuildModel(modelGroup)
+                    CreateModel = owner =>
+                    {
+                        var hydroModel = HydroModel.BuildModel(modelGroup);
+                        hydroModel.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
+                        return hydroModel;
+                    }
                 };
             }
         }
@@ -233,26 +242,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new DHydroConfigXmlExporter();
-        }
-
-        private void HybridProjectRepository_ProjectOpened(object sender, EventArgs e)
-        {
-            if (Application.ProjectDataDirectory == null) return;
-
-            // CreateWorkingDirectories (old DeltaShell logic)
-            if (FileUtils.PathIsRelative(Application.ProjectDataDirectory))
-            {
-                throw new InvalidDataException("ProjectDataDirectory should be absolute path");
-            }
-
-            foreach (var m in Application.Project.GetAllItemsRecursive().OfType<IWorkDirectoryModel>())
-            {
-                var explicitWorkingDirectory = Application.ProjectDataDirectory + Path.DirectorySeparatorChar +
-                                               m.Name.Replace(' ', '_') + "_output";
-
-                m.ExplicitWorkingDirectory = explicitWorkingDirectory;
-                FileUtils.CreateDirectoryIfNotExists(explicitWorkingDirectory);
-            }
         }
 
         private void InitializeModelBuilder()

@@ -30,6 +30,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
@@ -78,7 +79,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public const string CellsToFeaturesName = "CellsToFeatures";
 
-        public const string IsPartOf1D2DModelPropertyName = "IsPartOf1D2DModel";
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
         public const string GridPropertyName = "Grid";
         private DepthLayerDefinition depthLayerDefinition;
@@ -108,8 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ImportProgressChanged = progressChanged;
 
             InitializeModelProperties();
-            tempWorkingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
+            
             AddNetworkToModel();
             AddAreaToModel();
 
@@ -174,7 +173,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             boundaryNodeDataItemSet = new DataItemSet(new EventedList<Model1DBoundaryNodeData>(), WaterFlowFMModelDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.BoundaryConditionsTag, typeof(Model1DBoundaryNodeData))
             {
-                //ValueType = typeof(FeatureData<IFunction, INode>),
                 Owner = this
             };
             
@@ -235,6 +233,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ChannelInitialConditionDefinitions = new EventedList<ChannelInitialConditionDefinition>();
             RoughnessSections = new EventedList<RoughnessSection>();
         }
+
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
 
         public WaterFlowFMModelDefinition ModelDefinition
         {
@@ -2021,10 +2021,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #endregion
 
-        private readonly string tempWorkingDirectory;
         public virtual string WorkingDirectory
         {
-            get { return ExplicitWorkingDirectory ?? tempWorkingDirectory; }
+            get { return Path.Combine(WorkingDirectoryPathFunc(), Name); }
         }
 
         public string HydFilePath

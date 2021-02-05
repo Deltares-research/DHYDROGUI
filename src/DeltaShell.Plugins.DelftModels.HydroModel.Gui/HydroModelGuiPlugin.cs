@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                         {
                             Text = Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model
                         };
-                        upgradeItem.Click += (s, e) => hydroModel.UpgradeModelIntoIntegratedModel(folder);
+                        upgradeItem.Click += (s, e) => hydroModel.UpgradeModelIntoIntegratedModel(folder, Gui?.Application);
                         topItem.DropDownItems.Add(upgradeItem);
 
                         if (allCompositeHydroModels.Length > 0)

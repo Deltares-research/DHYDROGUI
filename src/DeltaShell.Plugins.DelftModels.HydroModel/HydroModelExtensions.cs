@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
@@ -63,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             targetHydroModel.Migrating = false;
         }
 
-        public static void UpgradeModelIntoIntegratedModel(this IHydroModel sourceModel, Folder folder)
+        public static void UpgradeModelIntoIntegratedModel(this IHydroModel sourceModel, Folder folder, IApplication application)
         {
             var editAction = new DefaultEditAction("Upgrade model " + sourceModel.Name + " into an integrated model.");
             ((IEditableObject)sourceModel).BeginEdit(editAction);
@@ -71,6 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             var hydroModelBuilder = new HydroModelBuilder();
             var newHydroModel = hydroModelBuilder.BuildModel(ModelGroup.Empty);
             newHydroModel.CoordinateSystem = sourceModel.Region?.CoordinateSystem;
+            newHydroModel.WorkingDirectoryPathFunc = () => application?.WorkDirectory;
 
             folder.Items.Add(newHydroModel);
             MoveActivity(sourceModel, folder, newHydroModel);

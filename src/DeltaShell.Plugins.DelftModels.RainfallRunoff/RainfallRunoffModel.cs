@@ -21,6 +21,7 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.FunctionStores;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
@@ -201,6 +202,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 timeArgument.SetValues(dates);
             }
         }
+
+        public Func<string> WorkingDirectoryPathFunc { get; set; } = () => System.IO.Path.Combine(DefaultModelSettings.DefaultDeltaShellWorkingDirectory);
 
         public override bool IsLinkAllowed(IDataItem source, IDataItem target)
         {
@@ -1021,6 +1024,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             SetPathsOfFunctionStores(outputPath);
             OutputIsEmpty = false;
         }
+
+        public virtual string WorkingDirectory
+        {
+            get { return System.IO.Path.Combine(WorkingDirectoryPathFunc(), Name); }
+        }
+
         public virtual ValidationReport Validate()
         {
             return new RainfallRunoffModelValidator().Validate(this);

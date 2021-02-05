@@ -10,7 +10,7 @@ using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
-    public interface IRealTimeControlModel : ITimeDependentModel, IWorkDirectoryModel, IEditableObject
+    public interface IRealTimeControlModel : ITimeDependentModel, IEditableObject
     {
         IEventedList<ControlGroup> ControlGroups { get; set; }
 

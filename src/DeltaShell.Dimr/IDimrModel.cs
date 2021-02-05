@@ -1,12 +1,11 @@
 ﻿using System;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Validation;
 
 namespace DeltaShell.Dimr
 {
-    public interface IDimrModel : IWorkDirectoryModel
+    public interface IDimrModel : IModel
     {
         string LibraryName { get; }
 
@@ -26,8 +25,6 @@ namespace DeltaShell.Dimr
 
         bool CanRunParallel { get; }
 
-        string MpiCommunicatorString { get; }
-
         string KernelDirectoryLocation { get; }
 
         void DisconnectOutput();
@@ -41,6 +38,8 @@ namespace DeltaShell.Dimr
 
         // TODO: temporary, need to remove when models can no longer run without Dimr
         bool RunsInIntegratedModel { get; set; }
+
+        string WorkingDirectory { get; }
 
         ValidationReport Validate();
 

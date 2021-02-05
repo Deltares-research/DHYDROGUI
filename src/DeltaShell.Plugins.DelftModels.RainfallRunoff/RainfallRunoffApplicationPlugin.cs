@@ -87,6 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
                 importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
                 rainfallRunoffModel.FileBasedModelIsLoaded = true;
+                rainfallRunoffModel.WorkingDirectoryPathFunc = () => Application?.WorkDirectory;
             }
         }
 
@@ -124,7 +125,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                             || (!((ICompositeActivity)owner).Activities.OfType<RainfallRunoffModel>().Any() && owner is IHydroModel), // Don't allow multiple rainfall runoff models in one composite activity
                     CreateModel = owner => new RainfallRunoffModel
                     {
-                        Name = "Rainfall Runoff"
+                        Name = "Rainfall Runoff",
+                        WorkingDirectoryPathFunc = ()=> Application?.WorkDirectory
                     }
                 };
         }

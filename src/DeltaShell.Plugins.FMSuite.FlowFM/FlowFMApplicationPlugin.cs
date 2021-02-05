@@ -41,7 +41,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private static ILog Log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
         public static string PluginVersion; // 1.2
         public static string PluginName; // D-Flow Flexible Mesh Plugin
-        
+        private IApplication application;
+
         public override string Name
         {
             get { return "Delft3D FM"; }
@@ -67,6 +68,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return "1.1.0.0"; }
         }
 
+        public override IApplication Application
+        {
+            get { return application; }
+            set
+            {
+                application = value;
+                application.ProjectOpened += ApplicationOnProjectOpened;
+            }
+        }
+
+        private void ApplicationOnProjectOpened(Project project)
+        {
+            project?.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().ForEach(
+                m => m.WorkingDirectoryPathFunc = () => application.WorkDirectory);
+        }
+
         public override void Activate()
         {
             base.Activate();
@@ -83,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     Image = Properties.Resources.unstrucModel,
                     AdditionalOwnerCheck = owner => !(Application?.Project != null &&
                                                       Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().Any()), // Don't allow multiple flow models
-                    CreateModel = owner => new WaterFlowFMModel()
+                    CreateModel = owner => new WaterFlowFMModel{ WorkingDirectoryPathFunc = () => Application.WorkDirectory }
                 };
         }
 
@@ -112,7 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new WaterFlowFMFileImporter();
+            yield return new WaterFlowFMFileImporter(() => Application.WorkDirectory);
             yield return new Area2DStructuresImporter { GetModelForArea = GetModelForArea };
             yield return new StructuresListImporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
             yield return new StructuresListImporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };

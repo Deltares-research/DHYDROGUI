@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             using (var gui = RainfallRunoffIntegrationTestHelper.GetRunningGuiWithRRPlugins())
             {
                 ImportModel(importPath);
-                ((HydroModel.HydroModel)compositeActivity).ExplicitWorkingDirectory = Path.Combine(tempDir, "Integrated Model");
+                ((HydroModel.HydroModel)compositeActivity).WorkingDirectoryPathFunc = ()=> Path.Combine(tempDir, "Integrated Model");
                 gui.Application.Project.RootFolder.Add(compositeActivity);
 
                 // need to show the MainWindow otherwise we get the following error when running activity:

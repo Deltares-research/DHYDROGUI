@@ -482,6 +482,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             };
         }
 
+        public virtual string WorkingDirectory
+        {
+            get { throw new NotSupportedException(); }
+        }
+
         public virtual ValidationReport Validate() // NOTE: Do not re
         {
             return new RealTimeControlModelValidator().Validate(this);

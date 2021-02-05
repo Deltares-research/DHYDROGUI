@@ -68,10 +68,10 @@ namespace DeltaShell.Dimr
             // export this model
             var exporter = (IFileExporter)Activator.CreateInstance(model.ExporterType);
 
-            model.ExplicitWorkingDirectory = ExportDimrModel(model.ExplicitWorkingDirectory, model, exporter);
+            ExportDimrModel(model.WorkingDirectory, model, exporter);
 
             // generate the dimr config xml
-            dimrFile = GenerateDimrXML(model, model.ExplicitWorkingDirectory);
+            dimrFile = GenerateDimrXML(model, model.WorkingDirectory);
 
             // initialize dimr
             log.Info(model.KernelVersions);
@@ -141,14 +141,14 @@ namespace DeltaShell.Dimr
         {
             dimrApi?.Dispose();
             dimrApi = null;
-            var validPath = model.ExplicitWorkingDirectory ?? Path.GetDirectoryName(dimrFile);
+            var validPath = model.WorkingDirectory?? Path.GetDirectoryName(dimrFile);
             if (!Directory.Exists(validPath)) return;
 
             var outputDirectory = Path.Combine(validPath, model.DirectoryName);
             if (!Directory.Exists(outputDirectory)) return;
 
             model.ConnectOutput(outputDirectory);
-            ConnectDimrRunLogFile(model);
+            ConnectDimrRunLogFile(model, model.WorkingDirectory);
         }
 
         private static readonly ILog log = LogManager.GetLogger(typeof(DimrRunner));
@@ -212,7 +212,7 @@ namespace DeltaShell.Dimr
             return dimrFile;
         }
 
-        private string ExportDimrModel(string workDirectory, object modelObject, IFileExporter exporter)
+        private void ExportDimrModel(string workDirectory, object modelObject, IFileExporter exporter)
         {
             var orgSuspendClearOutputOnInputChange = model.SuspendClearOutputOnInputChange;
             model.SuspendClearOutputOnInputChange = true;
@@ -228,7 +228,6 @@ namespace DeltaShell.Dimr
             ClearFolder(exportDir);
             exporter.Export(modelObject, model.GetExporterPath(exportDir));
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
-            return workDirectory;
         }
 
         private void ClearFolder(string FolderName)
@@ -321,9 +320,9 @@ namespace DeltaShell.Dimr
             }
         }
 
-        public static void ConnectDimrRunLogFile(IWorkDirectoryModel model)
+        public static void ConnectDimrRunLogFile(IModel model, string workingDirectory)
         {
-            var completeDimrLogFilename = Path.Combine(model.ExplicitWorkingDirectory, DIMR_RUN_LOGFILE_NAME);
+            var completeDimrLogFilename = Path.Combine(workingDirectory, DIMR_RUN_LOGFILE_NAME);
             if (!File.Exists(completeDimrLogFilename)) return;
             
             //add an dimr run log output dataitem with the log...

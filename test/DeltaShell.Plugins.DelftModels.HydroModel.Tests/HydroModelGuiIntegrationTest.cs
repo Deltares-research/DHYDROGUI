@@ -304,7 +304,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var hydroModel = new HydroModel { Activities = { rtc, flow } };
             application.Project.RootFolder.Add(hydroModel);
 
-            hydroModel.ExplicitWorkingDirectory = Path.GetFullPath(Path.Combine(".", TestHelper.GetCurrentMethodName()));
+            hydroModel.WorkingDirectoryPathFunc = ()=> Path.GetFullPath(Path.Combine(".", TestHelper.GetCurrentMethodName()));
             
             hydroModel.StopTime = hydroModel.StartTime.AddHours(0.5);
             hydroModel.TimeStep = new TimeSpan(0, 0, 1, 0);
