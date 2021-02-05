@@ -16,16 +16,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
     /// <seealso cref="IFileImporter"/>
     public class RealTimeControlRestartFileImporter : IFileImporter
     {
-        private readonly Func<IEnumerable<RealTimeControlModel>> getModels;
+        private readonly Func<IEnumerable<IRealTimeControlModel>> getModels;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RealTimeControlRestartFileImporter"/> class.
         /// </summary>
-        /// <param name="getModels">Func to retrieve the available collection of <seealso cref="RealTimeControlModel"/>.</param>
+        /// <param name="getModels">Func to retrieve the available collection of <seealso cref="IRealTimeControlModel"/>.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="getModels"/> is <c>null</c>.
         /// </exception>
-        public RealTimeControlRestartFileImporter(Func<IEnumerable<RealTimeControlModel>> getModels)
+        public RealTimeControlRestartFileImporter(Func<IEnumerable<IRealTimeControlModel>> getModels)
         {
             Ensure.NotNull(getModels, nameof(getModels));
 
@@ -112,12 +112,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import
                 throw new FileNotFoundException($"Restart file does not exist: {path}");
             }
 
-            RealTimeControlModel model = GetRealTimeControlModelWithRestartInput(target);
+            IRealTimeControlModel model = GetRealTimeControlModelWithRestartInput(target);
 
-            return model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(path), File.ReadAllText(path));
+            RealTimeControlRestartFile restartFile = model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(path), File.ReadAllText(path));
+            model.MarkOutputOutOfSync();
+            
+            return restartFile;
         }
 
-        private RealTimeControlModel GetRealTimeControlModelWithRestartInput(object obj)
+        private IRealTimeControlModel GetRealTimeControlModelWithRestartInput(object obj)
         {
             return obj is RealTimeControlRestartFile ? getModels().FirstOrDefault(m => ReferenceEquals(m.RestartInput, obj)) : null;
         }
