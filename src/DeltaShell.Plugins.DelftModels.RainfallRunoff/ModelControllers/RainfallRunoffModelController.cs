@@ -96,8 +96,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
         private string GetTempOrExplicitWorkingDirectory()
         {
-            string workingDirectory = String.Empty;
-            var explicitDir = model.ExplicitWorkingDirectory;
+            string workingDirectory;
+            var explicitDir = model.WorkingDirectory;
             if (!String.IsNullOrEmpty(explicitDir) && Directory.Exists(explicitDir) &&
                 !FileUtils.PathIsRelative(explicitDir))
             {

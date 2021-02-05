@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -6,6 +7,8 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
@@ -21,7 +24,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
     [Category(TestCategory.Integration)]
     public class RainfallRunoffModelApiControllerTest
     {
-        private RainfallRunoffModel model;
         
         [OneTimeSetUp]
         public void AssemblySetUp()
@@ -29,20 +31,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             TestHelper.SetDeltaresLicenseToEnvironmentVariable();
         }
 
-        [SetUp]
-        public void SetUp()
+        [OneTimeTearDownAttribute]
+        public void TearDown()
         {
-            model = new RainfallRunoffModel();
-            model.ModelController.GetWorkingDirectoryDelegate = () => Environment.CurrentDirectory +  "\\work\\";
+            Directory.GetDirectories(TestHelper.GetTestWorkingDirectory(), nameof(RainfallRunoffModelApiControllerTest) + "*").ForEach(FileUtils.DeleteIfExists);
+        }
+        
+        private RainfallRunoffModel CreateModel()
+        {
+            var model = new RainfallRunoffModel
+            {
+                WorkingDirectoryPathFunc = () => TestHelper.GetTestWorkingDirectory(TestHelper.GetCurrentMethodName())
+            };
             model.OutputTimeStep = model.TimeStep; // reset
             model.Basin.Catchments.Add(new Catchment());
             SetGlobalMeteoDataForTesting(model);
-        }
 
-        [TearDown]
-        public void TearDown()
-        {
-            model.Dispose();
+            return model;
         }
 
         [Test]
@@ -53,6 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 // no ground water level
                 model.OutputSettings.GetEngineParameter(QuantityType.Storage_mm, ElementSet.UnpavedElmSet).
                     AggregationOptions = AggregationOptions.Current;
@@ -113,6 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 model.OutputSettings.BoundaryDischarge = AggregationOptions.Current;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
@@ -152,6 +159,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 model.OutputSettings.BoundaryDischarge = AggregationOptions.Current;
                 model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.LinkElmSet).
                     AggregationOptions = AggregationOptions.Current;
@@ -194,6 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
 
@@ -265,6 +274,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet).
                     AggregationOptions = AggregationOptions.Current;
 
@@ -297,6 +307,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.OpenWaterElmSet).
                     AggregationOptions = AggregationOptions.Current;
                 model.OutputSettings.GetEngineParameter(QuantityType.EvaporationSurface, ElementSet.OpenWaterElmSet).
@@ -337,6 +348,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.FlowIn, ElementSet.WWTPElmSet).
                     AggregationOptions = AggregationOptions.Current;
                 model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.WWTPElmSet).
@@ -378,6 +390,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceModelElmSet).
                     AggregationOptions = AggregationOptions.Current;
                 model.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceNodeElmSet).
@@ -406,6 +419,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
 
@@ -432,7 +446,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Category("ToCheck")]
         public void RunModelTestAggregation()
         {
-            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())            {
+            using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())            
+            {
+                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet).
                     AggregationOptions = AggregationOptions.Average;
 
@@ -481,7 +497,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         public void InitializeModelWritesUserCustomizedCropFile()
         {
             const string contents = "Test contents";
-            
+            var model = CreateModel();
             model.FixedFiles.UnpavedCropFactorsFile.Content = contents;
 
             try
@@ -497,6 +513,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Category(TestCategory.Slow)]
         public void InitializeModelWritesCropFile()
         {
+            var model = CreateModel();
             try
             {
                 model.Initialize();
@@ -505,6 +522,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             var contents = File.ReadAllText(Path.Combine(model.ModelController.WorkingDirectory , "CROPFACT"));
             Assert.Greater(contents.Length, 50000); //just check something is in it
+
+            model.Dispose();
         }
 
         [Test]
@@ -541,10 +560,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Test]
         public void InitializeModelWritesModelSpecificSettingsToIniFile()
         {
-            var model = new RainfallRunoffModel();
-            model.MinimumFillingStoragePercentage = 22;
-            model.EvaporationStartActivePeriod = 9;
-            model.EvaporationEndActivePeriod = 21;
+            var model = new RainfallRunoffModel
+            {
+                WorkingDirectoryPathFunc = () => TestHelper.GetTestWorkingDirectory(TestHelper.GetCurrentMethodName()),
+                MinimumFillingStoragePercentage = 22,
+                EvaporationStartActivePeriod = 9,
+                EvaporationEndActivePeriod = 21
+            };
+
             model.Basin.Catchments.Add(new Catchment());
             SetGlobalMeteoDataForTesting(model);
 
@@ -574,6 +597,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.LinkElmSet).
                     AggregationOptions = AggregationOptions.Current;
 
@@ -606,6 +630,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.CumInNonLinks_m3, ElementSet.BalanceNodeElmSet).
                     AggregationOptions = AggregationOptions.Current;
 
@@ -665,6 +690,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
+                var model = CreateModel();
                 ConfigureSimpleModel(model);
 
                 model.StartTime = new DateTime(2005, 12, 30, 0, 0, 0);

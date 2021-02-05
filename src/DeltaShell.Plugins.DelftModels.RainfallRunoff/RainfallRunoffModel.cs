@@ -628,8 +628,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public bool FileBasedModelIsLoaded { get; set; } = false;
         
-        public string ExplicitWorkingDirectory { get; set; }
-
         public bool IsActivityOfEnumType(ModelType type)
         {
             return type == ModelType.DRR;

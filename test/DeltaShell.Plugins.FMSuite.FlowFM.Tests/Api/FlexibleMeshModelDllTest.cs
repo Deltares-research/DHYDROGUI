@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -26,6 +28,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             if(Map.CoordinateSystemFactory == null)
                 Map.CoordinateSystemFactory =new OgrCoordinateSystemFactory(); 
         }
+
+        private void DoWithLocalModelVersion(string mduPath, Action<WaterFlowFMModel> action)
+        {
+            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+
+            using (var model = new WaterFlowFMModel(localCopy)
+            {
+                WorkingDirectoryPathFunc = () => TestHelper.GetTestWorkingDirectory(TestHelper.GetCurrentMethodName())
+            })
+            {
+                action?.Invoke(model);
+            }
+
+            FileUtils.DeleteIfExists(localCopy);
+        }
+
         [Test]
         public void AssertUnstrucDllIsXpCompatible()
         {
@@ -48,24 +66,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestCallInitialize()
         {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
+            var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
 
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
-            }
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
+                }
+            });
         }
 
         [Test]
         public void TestDimrRunLogIsRetrieved()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            using (var model = new WaterFlowFMModel(localCopy))
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
                 model.Initialize();
                 model.Execute();
@@ -75,82 +91,75 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
                 Assert.NotNull(dimrLogDataItem, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
                 Assert.NotNull(dimrLogDataItem.Value, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
-            }
+            });
         }
 
         [Test]
         public void TestCallGetVariableNames()
         {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = FlexibleMeshModelApiFactory.CreateNew())
+            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
-
-                var variableNames1 = api.VariableNames;
-                Assert.NotNull(variableNames1, "FlexibleMeshModelApi should return an array of names");
-
-                api.Update();
-
-                var variableNames2 = api.VariableNames;
-                Assert.NotNull(variableNames2, "FlexibleMeshModelApi should return an array of names");
-
-                Assert.AreEqual(variableNames1.Length, variableNames2.Length, "FlexibleMeshModelApi should return the same array of names for each call");
-                for (var i = 0; i < variableNames1.Length; i++)
+                using (var api = FlexibleMeshModelApiFactory.CreateNew())
                 {
-                    Assert.AreEqual(variableNames1[i], variableNames2[i], "FlexibleMeshModelApi should return the same array of names for each call");
+                    api.Initialize(model.MduFilePath);
+
+                    var variableNames1 = api.VariableNames;
+                    Assert.NotNull(variableNames1, "FlexibleMeshModelApi should return an array of names");
+
+                    api.Update();
+
+                    var variableNames2 = api.VariableNames;
+                    Assert.NotNull(variableNames2, "FlexibleMeshModelApi should return an array of names");
+
+                    Assert.AreEqual(variableNames1.Length, variableNames2.Length, "FlexibleMeshModelApi should return the same array of names for each call");
+                    for (var i = 0; i < variableNames1.Length; i++)
+                    {
+                        Assert.AreEqual(variableNames1[i], variableNames2[i], "FlexibleMeshModelApi should return the same array of names for each call");
+                    }
                 }
-            }
+            });
         }
 
         [Test]
         public void TestCallGetVariableLocations()
         {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = FlexibleMeshModelApiFactory.CreateNew())
+            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
-
-                var variableNames = api.VariableNames;
-                Assert.NotNull(variableNames, "FlexibleMeshModelApi should return an array of names");
-                Assert.IsTrue(variableNames.Length > 0);
-
-                Dictionary<string, string> namesAndLocations = new Dictionary<string, string>();
-                foreach (var variable in variableNames)
+                using (var api = FlexibleMeshModelApiFactory.CreateNew())
                 {
-                    var location = api.GetVariableLocation(variable);
-                    Assert.NotNull(location, string.Format("FlexibleMeshModelApi should return a location for Variable {0}", variable));
-                    if(location != "") namesAndLocations.Add(variable, location); // ignore those variables without a location
-                }
+                    api.Initialize(model.MduFilePath);
 
-                api.Update();
+                    var variableNames = api.VariableNames;
+                    Assert.NotNull(variableNames, "FlexibleMeshModelApi should return an array of names");
+                    Assert.IsTrue(variableNames.Length > 0);
 
-                foreach (var variableNameAndLocation in namesAndLocations)
-                {
-                    var location = api.GetVariableLocation(variableNameAndLocation.Key);
-                    Assert.AreEqual(variableNameAndLocation.Value, location, "FlexibleMeshModelApi should return the same Variable location for each call");
+                    Dictionary<string, string> namesAndLocations = new Dictionary<string, string>();
+                    foreach (var variable in variableNames)
+                    {
+                        var location = api.GetVariableLocation(variable);
+                        Assert.NotNull(location, string.Format("FlexibleMeshModelApi should return a location for Variable {0}", variable));
+                        if (location != "") namesAndLocations.Add(variable, location); // ignore those variables without a location
+                    }
+
+                    api.Update();
+
+                    foreach (var variableNameAndLocation in namesAndLocations)
+                    {
+                        var location = api.GetVariableLocation(variableNameAndLocation.Key);
+                        Assert.AreEqual(variableNameAndLocation.Value, location, "FlexibleMeshModelApi should return the same Variable location for each call");
+                    }
                 }
-            }
+            });
         }
 
         [Test]
         [Category("Quarantine")]
         public void TestCallGetValuePumpCapacity()
         {
-            var mduPath =
-                TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            using (var model = new WaterFlowFMModel(localCopy))
+            var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
                 model.Initialize();
                 var pump = model.Area.Pumps.First(o => o.Name == "pump01");
@@ -158,13 +167,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var cat = model.GetFeatureCategory(pump);
                 var result = model.GetVar(cat, pump.Name, "capacity");
 
-                Assert.AreEqual(100.0, ((double[]) result)[0]);
+                Assert.AreEqual(100.0, ((double[])result)[0]);
 
                 model.Execute();
                 result = model.GetVar(cat, pump.Name, "capacity");
-                Assert.AreEqual(95.0, ((double[]) result)[0],0.1);
-            }
-
+                Assert.AreEqual(95.0, ((double[])result)[0], 0.1);
+            });
         }
 
         [Test]
@@ -172,9 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         public void TestCallSetValueWeirCrestLevel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            using (var model = new WaterFlowFMModel(localCopy))
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
                 model.Initialize();
                 // get weir02
@@ -188,17 +194,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.SetVar(new[] { -3.0 }, cat, weir.Name, "crest_level");
                 result = model.GetVar(cat, weir.Name, "crest_level");
                 Assert.AreEqual(-3.0, ((double[])result)[0]);
-                
-            }
+            });
         }
 
         [Test]
         public void TestCallGetValuesWaterLevelsCount()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            using (var model = new WaterFlowFMModel(localCopy))
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
                 model.Initialize();
 
@@ -208,23 +211,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 //Assert.AreEqual(waterLevels.Length, model.Grid.Cells.Count);
                 Assert.AreEqual(1, waterLevels.Length); //dimr getvar can only get 1 value!
-            }
+            });
         }
 
         [Test]
         public void TestCallSetValuesWaterLevels()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            using (var model = new WaterFlowFMModel(localCopy))
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
                 model.Initialize();
                 var waterLevels = model.GetVar("s0") as double[];
 
                 Assert.IsNotNull(waterLevels);
 
-                var newWaterLevels = waterLevels.Select(s => 1.5*(s+1)).ToArray();
+                var newWaterLevels = waterLevels.Select(s => 1.5 * (s + 1)).ToArray();
 
                 model.SetVar(newWaterLevels, "s0");
 
@@ -233,29 +234,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Assert.IsNotNull(waterLevels);
 
                 Assert.AreEqual(waterLevels, newWaterLevels);
-            }
+            });
         }
 
         [Test]
         public void TestCallGetNonExistingValues()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            using (var model = new WaterFlowFMModel(localCopy))
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
                 model.Initialize();
                 Assert.AreEqual(Dimr.DimrApiDataSet.DIMR_FILL_VALUE, ((double[])model.GetVar("party", "at", "myplace"))[0], 0.01d);
-            }
+            });
         }
 
         [Test]
         public void TestGetObservationPointWaterLevel()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            using (var model = new WaterFlowFMModel(localCopy))
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
                 model.Initialize();
                 // get 13
@@ -265,26 +262,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 var result = model.GetVar(cat, pump.Name, "water_level");
 
                 // the water level should be found on an observation point, so it is not NaN
-                Assert.AreEqual(0.0, ((double[]) result)[0]);
-            }
+                Assert.AreEqual(0.0, ((double[])result)[0]);
+            });
         }
 
         [Test]
         public void TestWriteNetGeomFileHarlingen()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                api.WriteNetGeometry("netgeom.nc");
+                    api.WriteNetGeometry("netgeom.nc");
 
-                Assert.IsTrue(File.Exists(Path.Combine(Path.GetDirectoryName(model.MduFilePath), "netgeom.nc")));
-            }
+                    Assert.IsTrue(File.Exists(Path.Combine(Path.GetDirectoryName(model.MduFilePath), "netgeom.nc")));
+                }
+            });
         }
 
         [Test]
@@ -292,69 +288,68 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         public void TestGetSnappedFeatures()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
 
-                var gridExtent = model.GridExtent;
+                    api.Initialize(model.MduFilePath);
 
-                var center = gridExtent.Centre;
-                var snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
-                var snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
-                    new LineString(new[] {center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0)}));
-                var snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var gridExtent = model.GridExtent;
 
-                var snappedWaterLevelBnd =
-                    model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
-                var snappedVelocityBnd =
-                    model.GetGridSnappedGeometry(UnstrucGridOperationApi.VelocityBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
-                var snappedDischargeBnd =
-                    model.GetGridSnappedGeometry(UnstrucGridOperationApi.DischargeBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                    var center = gridExtent.Centre;
+                    var snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
+                    var snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedPoint));
-                Assert.IsTrue(model.SnapsToGrid(snappedThinDam));
-                Assert.IsTrue(model.SnapsToGrid(snappedFixedWeir));
-                Assert.IsTrue(model.SnapsToGrid(snappedCrossSection));
-                Assert.IsTrue(model.SnapsToGrid(snappedWeir));
-                Assert.IsTrue(model.SnapsToGrid(snappedGate));
-                Assert.IsTrue(model.SnapsToGrid(snappedPump));
-                Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
-                Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
-                Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
-                Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
-            }
+                    var snappedWaterLevelBnd =
+                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
+                            model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                    var snappedVelocityBnd =
+                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.VelocityBnd,
+                            model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                    var snappedDischargeBnd =
+                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.DischargeBnd,
+                            model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+
+                    Assert.IsTrue(model.SnapsToGrid(snappedPoint));
+                    Assert.IsTrue(model.SnapsToGrid(snappedThinDam));
+                    Assert.IsTrue(model.SnapsToGrid(snappedFixedWeir));
+                    Assert.IsTrue(model.SnapsToGrid(snappedCrossSection));
+                    Assert.IsTrue(model.SnapsToGrid(snappedWeir));
+                    Assert.IsTrue(model.SnapsToGrid(snappedGate));
+                    Assert.IsTrue(model.SnapsToGrid(snappedPump));
+                    Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
+                    Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
+                    Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
+                    Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedFeaturesWorksAfterFailure()
         {
-            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
             MockRepository mocks = new MockRepository();
-
-            using (var model = new WaterFlowFMModel(localCopy))
+            var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
+
                 var gridExtent = model.GridExtent;
                 var center = gridExtent.Centre;
                 // Defined test geometries
@@ -394,175 +389,167 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 mocks.ReplayAll();
 
                 // Try to snap with a 'failed' mocked process.
-                var snappedThinDamGeometries = mockedUgridApi.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams, new[]{thinDamGeom1, thinDamGeom2}).ToList();
-                
+                var snappedThinDamGeometries = mockedUgridApi.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams, new[] { thinDamGeom1, thinDamGeom2 }).ToList();
+
                 //If it returns the same geometry means nothing has actually been snapped.
                 Assert.AreEqual(thinDamGeom1, snappedThinDamGeometries.First());
                 Assert.AreNotEqual(thinDamGeom1, snappedThinDamGeometries.Last());
-            }
+            });
         }
 
         [Test]
         public void TestGetSnappedThinDamFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                    var gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
-                
-                Assert.IsTrue(model.SnapsToGrid(snappedThinDam));
-            }
+                    var center = gridExtent.Centre;
+                    var snappedThinDam = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+
+                    Assert.IsTrue(model.SnapsToGrid(snappedThinDam));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedFixedWeirFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                    var gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var center = gridExtent.Centre;
+                    var snappedFixedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.FixedWeir,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedFixedWeir));
-            }
+                    Assert.IsTrue(model.SnapsToGrid(snappedFixedWeir));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedLeveeBreachkFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                    var gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedLeveeBreach = model.GetGridSnappedGeometry(
-                    UnstrucGridOperationApi.LeveeBreach, 
-                    new List<IGeometry>() {
-                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 1000.0, center.Y + 1000.0) }),
-                        new Point(new Coordinate(center.X + 500.0, center.Y + 500.0))}
+                    var center = gridExtent.Centre;
+                    var snappedLeveeBreach = model.GetGridSnappedGeometry(
+                        UnstrucGridOperationApi.LeveeBreach,
+                        new List<IGeometry>() {
+                            new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 1000.0, center.Y + 1000.0) }),
+                            new Point(new Coordinate(center.X + 500.0, center.Y + 500.0))}
                     );
-                Assert.AreEqual(2, snappedLeveeBreach.Count());
-                var snappedLeveeGeometry = snappedLeveeBreach.First() as ILineString;
-                var snappedBreachGeometry = snappedLeveeBreach.Last() as IPoint;
+                    Assert.AreEqual(2, snappedLeveeBreach.Count());
+                    var snappedLeveeGeometry = snappedLeveeBreach.First() as ILineString;
+                    var snappedBreachGeometry = snappedLeveeBreach.Last() as IPoint;
 
-                Assert.IsNotNull(snappedLeveeGeometry);
-                Assert.IsNotNull(snappedBreachGeometry);
-
-            }
+                    Assert.IsNotNull(snappedLeveeGeometry);
+                    Assert.IsNotNull(snappedBreachGeometry);
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedCrossSectionFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                    var gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var center = gridExtent.Centre;
+                    var snappedCrossSection = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsCrossSection,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedCrossSection));
-            }
+                    Assert.IsTrue(model.SnapsToGrid(snappedCrossSection));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedWeirFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                    var gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var center = gridExtent.Centre;
+                    var snappedWeir = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Weir,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedWeir));
-            }
+                    Assert.IsTrue(model.SnapsToGrid(snappedWeir));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedGateFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                    var gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var center = gridExtent.Centre;
+                    var snappedGate = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Gate,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedGate));
-            }
+                    Assert.IsTrue(model.SnapsToGrid(snappedGate));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedPumpFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                    var gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var center = gridExtent.Centre;
+                    var snappedPump = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Pump,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedPump));
-            }
+                    Assert.IsTrue(model.SnapsToGrid(snappedPump));
+                }
+            });
         }
 
         [Test]
@@ -570,134 +557,128 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         public void TestGetSnappedEmbankmentFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                    var gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
-                    new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
+                    var center = gridExtent.Centre;
+                    var snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
+                        new LineString(new[] { center.CoordinateValue, new Coordinate(center.X + 100.0, center.Y + 100.0) }));
 
-                Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
-            }
+                    Assert.IsTrue(model.SnapsToGrid(snappedEmbankment));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedObservationPointFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var gridExtent = model.GridExtent;
+                    var gridExtent = model.GridExtent;
 
-                var center = gridExtent.Centre;
-                var snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
-                Assert.IsTrue(model.SnapsToGrid(snappedPoint));
-            }
+                    var center = gridExtent.Centre;
+                    var snappedPoint = model.GetGridSnappedGeometry(UnstrucGridOperationApi.ObsPoint, new Point(center));
+                    Assert.IsTrue(model.SnapsToGrid(snappedPoint));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedWaterLevelBndFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
-                
-                var snappedWaterLevelBnd =
-                    model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
-                
-                Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
-            }
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
+
+                    var snappedWaterLevelBnd =
+                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
+                            model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+
+                    Assert.IsTrue(model.SnapsToGrid(snappedWaterLevelBnd));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedVelocityBndFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                var snappedVelocityBnd =
-                    model.GetGridSnappedGeometry(UnstrucGridOperationApi.VelocityBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                    var snappedVelocityBnd =
+                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.VelocityBnd,
+                            model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
 
-                 Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
-            }
+                    Assert.IsTrue(model.SnapsToGrid(snappedVelocityBnd));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedDischargeBndFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
-                
-                var snappedDischargeBnd =
-                    model.GetGridSnappedGeometry(UnstrucGridOperationApi.DischargeBnd,
-                        model.BoundaryConditions.OfType<FlowBoundaryCondition>()
-                            .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+                using (var api = new RemoteFlexibleMeshModelApi())
+                {
+                    api.Initialize(model.MduFilePath);
 
-                 Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
-            }
+                    var snappedDischargeBnd =
+                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.DischargeBnd,
+                            model.BoundaryConditions.OfType<FlowBoundaryCondition>()
+                                .First(bc => bc.FlowQuantity == FlowBoundaryQuantityType.WaterLevel).Feature.Geometry);
+
+                    Assert.IsTrue(model.SnapsToGrid(snappedDischargeBnd));
+                }
+            });
         }
 
         [Test]
         public void TestGetSnappedSourceSinkFeature()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-            var model = new WaterFlowFMModel(localCopy);
-
-            using (var api = new RemoteFlexibleMeshModelApi())
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
-                api.Initialize(model.MduFilePath);
-
-                Assert.True(model.Grid.Cells.Count > 1);
-                var geometry = new LineString(new[]
+                using (var api = new RemoteFlexibleMeshModelApi())
                 {
-                    model.Grid.Cells.First().Center,
-                    model.Grid.Cells.Last().Center
-                });
+                    api.Initialize(model.MduFilePath);
 
-                model.SourcesAndSinks.Add(new SourceAndSink { Feature = new Feature2D { Geometry = geometry } });
+                    Assert.True(model.Grid.Cells.Count > 1);
+                    var geometry = new LineString(new[]
+                    {
+                        model.Grid.Cells.First().Center,
+                        model.Grid.Cells.Last().Center
+                    });
 
-                var snappedSourceAndSink =
-                    model.GetGridSnappedGeometry(UnstrucGridOperationApi.SourceSink,
-                        model.SourcesAndSinks.First().Feature.Geometry);
+                    model.SourcesAndSinks.Add(new SourceAndSink { Feature = new Feature2D { Geometry = geometry } });
 
-                Assert.IsTrue(model.SnapsToGrid(snappedSourceAndSink));
-            }
+                    var snappedSourceAndSink =
+                        model.GetGridSnappedGeometry(UnstrucGridOperationApi.SourceSink,
+                            model.SourcesAndSinks.First().Feature.Geometry);
+
+                    Assert.IsTrue(model.SnapsToGrid(snappedSourceAndSink));
+                }
+            });
         }
 
         /// <summary>
@@ -712,9 +693,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         public void TestRunHarlingen()
         {
             var mduPath = TestHelper.GetTestFilePath(@"structures_all_types\har.mdu");
-            var localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            using (var model = new WaterFlowFMModel(localCopy))
+            DoWithLocalModelVersion(mduPath, (model) =>
             {
                 var obsSeg9 = model.Area.ObservationPoints.First(o => o.Name == "9_040.seg_9");
                 var obCrWeir02 = model.Area.ObservationCrossSections.First(o => o.Name == "weir02");
@@ -728,7 +707,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
 
                 Assert.AreEqual(0, report.ErrorCount, errorReport);
                 model.Initialize();
-                
+
                 var startTime = model.BMIEngine.StartTime;
                 var currentTime = model.BMIEngine.CurrentTime;
 
@@ -760,7 +739,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     currentTime = model.BMIEngine.CurrentTime;
                     diffTime = currentTime - startTime;
                 }
-            }
+            });
         }
     }
 }
