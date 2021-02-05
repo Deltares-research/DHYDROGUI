@@ -55,26 +55,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Grid
             var moreThanTwo = false;
 
             foreach (int fromCellIndex in vertexFromCellIndices)
-            foreach (int toCellIndex in vertexToCellIndices)
             {
-                if (fromCellIndex != toCellIndex)
+                foreach (int toCellIndex in vertexToCellIndices)
                 {
-                    continue;
-                }
+                    if (fromCellIndex != toCellIndex)
+                    {
+                        continue;
+                    }
 
-                if (cellOne == -1)
-                {
-                    cellOne = fromCellIndex;
-                    continue;
-                }
+                    if (cellOne == -1)
+                    {
+                        cellOne = fromCellIndex;
+                        continue;
+                    }
 
-                if (cellTwo == -1)
-                {
-                    cellTwo = toCellIndex;
-                    continue;
-                }
+                    if (cellTwo == -1)
+                    {
+                        cellTwo = toCellIndex;
+                        continue;
+                    }
 
-                moreThanTwo = true;
+                    moreThanTwo = true;
+                }
             }
 
             if (!moreThanTwo && cellOne != -1 && cellTwo != -1)
