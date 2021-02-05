@@ -356,7 +356,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
         private static ExtForceFileItem GetInitialConditionsSamplesItem(
             ImportSamplesSpatialOperation spatialOperation, string extForceFileQuantityName, string prefix,
-            IDictionary<ExtForceFileItem, object> existingForceFileItems, string targetDirectory, UniqueFileNameProvider uniqueFileNameProvider)
+            IDictionary<ExtForceFileItem, object> existingForceFileItems, UniqueFileNameProvider uniqueFileNameProvider)
         {
             if (spatialOperation == null)
             {
