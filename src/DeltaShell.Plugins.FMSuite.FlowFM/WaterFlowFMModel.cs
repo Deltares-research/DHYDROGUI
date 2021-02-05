@@ -2693,14 +2693,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
-                var outputDirectory = ExplicitWorkingDirectory;
-                if (outputDirectory == null)
-                {
-                    //We might still be working in the temp folder.
-                    outputDirectory = WorkingDirectory;
-                }
-
-                return Path.Combine(outputDirectory, DirectoryName, ModelDefinition.OutputDirectory, SnappedFeaturesDirectoryName);
+                return Path.Combine(WorkingDirectory, DirectoryName, ModelDefinition.OutputDirectory, SnappedFeaturesDirectoryName);
             }
         }
 
@@ -3845,10 +3838,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void ReadDiaFile()
         {
-            var validPath = ExplicitWorkingDirectory ?? Path.GetDirectoryName(OutputSnappedFeaturesPath);
-            if (!Directory.Exists(validPath)) return;
+            if (!Directory.Exists(WorkingDirectory)) return;
 
-            var outputDirectory = Path.Combine(validPath, DirectoryName);
+            var outputDirectory = Path.Combine(WorkingDirectory, DirectoryName);
             if (!Directory.Exists(outputDirectory)) return;
 
             ReportProgressText("Reading dia file");
@@ -4084,8 +4076,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 FileUtils.CopyFile(sourcePath, targetPath);
             }
         }
-
-        public string ExplicitWorkingDirectory { get; set; }
 
         internal void OnPropertyChanged(string propertyName)
         {

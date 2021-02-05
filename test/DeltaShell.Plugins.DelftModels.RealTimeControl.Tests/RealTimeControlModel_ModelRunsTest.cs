@@ -2907,8 +2907,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             RealTimeControlModel realTimeControlModel;
             RealTimeControlTestHelper.SetupControlledTestModel(out controlledModel, out realTimeControlModel);
             RealTimeControlTestHelper.SetupHydraulicRuleControlGroup(controlledModel, realTimeControlModel, true);
-            realTimeControlModel.ExplicitWorkingDirectory = rtcRunDir;
-
+            
             // Run the models
             realTimeControlModel.Initialize();
             controlledModel.Initialize();

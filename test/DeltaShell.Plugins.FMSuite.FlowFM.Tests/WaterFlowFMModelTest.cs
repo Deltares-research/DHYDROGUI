@@ -548,11 +548,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void HydFileNameShouldBeBasedOnMduFileName()
         {
-            var model = new WaterFlowFMModel {ExplicitWorkingDirectory = @"C:\TestWorkDir"};
+            var model = new WaterFlowFMModel {WorkingDirectoryPathFunc = ()=> @"C:\TestWorkDir"};
 
             TypeUtils.SetPrivatePropertyValue(model, nameof(model.MduFilePath), "Test.mdu");
 
-            Assert.That(model.HydFilePath, Is.EqualTo(@"C:\TestWorkDir\DFM_DELWAQ_Test\Test.hyd"));
+            Assert.That(model.HydFilePath, Is.EqualTo($@"C:\TestWorkDir\{model.Name}\DFM_DELWAQ_Test\Test.hyd"));
         }
 
         [Test]
@@ -1624,7 +1624,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             try
             {
                 var counter = 0;
-                var fmModel = new WaterFlowFMModel(mduFilePath);
+                var fmModel = new WaterFlowFMModel(mduFilePath){WorkingDirectoryPathFunc = ()=> TestHelper.GetTestWorkingDirectory(TestHelper.GetCurrentMethodName())};
                 fmModel.ReferenceTime = fmModel.StartTime;
                 fmModel.ProgressChanged += (sender, args) =>
                 {

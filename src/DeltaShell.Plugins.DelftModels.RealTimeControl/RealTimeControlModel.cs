@@ -1226,8 +1226,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         }
         #endregion
 
-        public virtual string ExplicitWorkingDirectory { get; set; }
-
         public void Dispose()
         {
             Dispose(true);

@@ -234,7 +234,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var filePath = TestHelper.GetTestFilePath(@"outputSnappedFeatures\outputSnappedFeatures.dsproj");
             var newSavePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             filePath = TestHelper.CreateLocalCopy(filePath);
-            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
+            using (var app = new DeltaShellApplication
+            {
+                IsProjectCreatedInTemporaryDirectory = true
+            })
             {
                 app.Plugins.Add(new NHibernateDaoApplicationPlugin());
                 app.Plugins.Add(new CommonToolsApplicationPlugin());
@@ -250,6 +253,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     app.SaveProjectAs(newSavePath);
                 }
                 var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                loadedModel.WorkingDirectoryPathFunc = () => TestHelper.GetTestWorkingDirectory(TestHelper.GetCurrentMethodName());
 
                 try
                 {

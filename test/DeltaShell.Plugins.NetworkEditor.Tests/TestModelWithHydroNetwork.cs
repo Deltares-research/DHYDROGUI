@@ -41,37 +41,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             get { throw new NotImplementedException(); }
             set { throw new NotImplementedException(); }
         }
-
-        public string ExplicitWorkingDirectory
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
-
-        public void LoadDataFromDirectory(string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SaveDataToDirectory(string path)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public void UpdateLink(object data)
         {
             throw new NotImplementedException();
         }
 
-        public void ClearLogFile()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void WriteToLogFile(string logMessages)
-        {
-            throw new NotImplementedException();
-        }
 
         public IDataItem GetDataItemByValue(object value)
         {
@@ -80,16 +55,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         public bool SuspendClearOutputOnInputChange { get; set; }
 
-        public void ClearOutput()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IList<ModelDataItem> UsedByModelDataItems
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
-        }
         public HydroNetwork HydroNetwork { get; set; }
 
         public INetworkCoverage WaterLevel { get; set; }
