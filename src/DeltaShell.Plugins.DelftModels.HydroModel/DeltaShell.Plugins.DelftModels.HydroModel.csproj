@@ -54,7 +54,6 @@
     <Compile Include="Export\Iterative1D2DCouplerFileWriter.cs" />
     <Compile Include="HydroModelSettings.cs" />
     <Compile Include="ModelExchanges\IHydroModelExchangeInfo.cs" />
-    <Compile Include="Iterative1D2DCouplerDataAccessListener.cs" />
     <Compile Include="ModelExchanges\ModelExchange.cs" />
     <Compile Include="ModelExchanges\RegionExchange.cs" />
     <Compile Include="ModelExchanges\RegionExchangeInfo.cs" />
@@ -67,9 +66,6 @@
     <Compile Include="HydroModel.FileBased.cs" />
     <Compile Include="IHydroModelWorkFlow.cs" />
     <Compile Include="IHydroModelWorkFlowData.cs" />
-    <Compile Include="Iterative1D2DCouplerAppender.cs" />
-    <Compile Include="Iterative1D2DCoupler.cs" />
-    <Compile Include="Iterative1D2DCouplerData.cs" />
     <Compile Include="Iterative1D2DCouplerLink.cs" />
     <Compile Include="ModelExchanges\HydroModelExchangeJsonFileExtensions.cs" />
     <Compile Include="ModelExchanges\ModelExchangeInfo.cs" />
@@ -235,9 +231,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="IHydroModelWorkFlow.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Iterative1D2DCouplerData.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HydroModel.1.0.0.hbm.xml">

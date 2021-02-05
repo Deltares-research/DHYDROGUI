@@ -3,7 +3,6 @@ using System.IO;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using NUnit.Framework;
-using System.Threading;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {

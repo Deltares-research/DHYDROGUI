@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using DelftTools.Shell.Core;
-using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
-using log4net;
-
-namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
+﻿namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 {
-    public class Iterative1D2DCouplerExporter : IFileExporter
+    /*public class Iterative1D2DCouplerExporter : IFileExporter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(Iterative1D2DCouplerExporter));
 
@@ -64,5 +56,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         public Bitmap Icon { get { return Resources.coupled_1d2d; } }
 
         #endregion
-    }
+    }*/
 }

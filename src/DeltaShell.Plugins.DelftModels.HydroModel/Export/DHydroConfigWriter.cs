@@ -51,14 +51,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             
             var allDHydroActivities = workFlow.GetAllActivitiesRecursive<IActivity>().Select(UnwrapActivity).OfType<IDimrModel>().ToList();
             
-            var iterative1d2dCoupler = allDHydroActivities.OfType<Iterative1D2DCoupler>().FirstOrDefault();
-            if (iterative1d2dCoupler != null)
-            {
-                //skip writing of models in iterative1d2dCoupler.
-                allDHydroActivities.Remove(iterative1d2dCoupler.Flow1DModel as IDimrModel);
-                allDHydroActivities.Remove(iterative1d2dCoupler.Flow2DModel as IDimrModel);
-            }
-
             foreach (var dHydroActivity in allDHydroActivities)
             {
                 int nodeCount;
@@ -316,12 +308,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 }
 
                 control.Add(parallelBlock);
-            }
-            else if (compositeActivity is Iterative1D2DCoupler)
-            {
-                var activity = (ICompositeActivity) compositeActivity.DeepClone();
-                activity.Activities.Clear();
-                RecursivelyAddControlNodes(control, activity, null);
             }
             else
             {

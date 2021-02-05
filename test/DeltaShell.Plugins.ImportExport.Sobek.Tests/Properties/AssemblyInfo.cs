@@ -4,7 +4,6 @@
 
 using System.Reflection;
 using System.Runtime.InteropServices;
-using NUnit.Framework;
 
 [assembly: AssemblyTitle("DeltaShell.Plugins.SobekImport.Tests")]
 [assembly: AssemblyDescription("")]

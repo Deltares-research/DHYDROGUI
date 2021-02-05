@@ -1,18 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DelftTools.Utils.IO;
-using DeltaShell.Dimr;
-using DeltaShell.NGHS.IO.FileWriters;
-using DeltaShell.NGHS.IO.FileWriters.General;
-using DeltaShell.NGHS.IO.Helpers;
-using NetTopologySuite.Extensions.Features;
-using SharpMap.Data.Providers;
-
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 {
-    public static class Iterative1D2DCouplerFileWriter
+    /*public static class Iterative1D2DCouplerFileWriter
     {
         public static void Write(string file, Iterative1D2DCoupler iterative1D2DCoupler)
         {
@@ -103,5 +91,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
             new IniFileWriter().WriteIniFile(categories, file);
         }
-    }
+    }*/
 }

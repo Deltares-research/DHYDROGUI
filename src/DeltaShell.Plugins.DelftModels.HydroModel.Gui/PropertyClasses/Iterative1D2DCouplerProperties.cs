@@ -1,10 +1,6 @@
-﻿using DelftTools.Utils;
-using DeltaShell.Plugins.CommonTools.Gui.Property;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
-
-namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.PropertyClasses
+﻿namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.PropertyClasses
 {
-    [ResourcesDisplayName(typeof (Resources), "Iterative1D2DCouplerProperties_DisplayName")]
+    /*[ResourcesDisplayName(typeof (Resources), "Iterative1D2DCouplerProperties_DisplayName")]
     public class Iterative1D2DCouplerProperties : CompositeActivityProperties
     {
         private Iterative1D2DCouplerData CouplerData { get { return (Iterative1D2DCouplerData)((Iterative1D2DCoupler)data).Data; } }
@@ -44,5 +40,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.PropertyClasses
             get { return CouplerData.Refresh1D2DLinks; }
             set { CouplerData.Refresh1D2DLinks = value; }
         }
-    }
+    }*/
 }

@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Validation
             if (model.CurrentWorkflow != null)
             {
                 var dimrModels = model.CurrentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
-                    .Where(dm => dm != null && !(dm is Iterative1D2DCoupler)).ToList();
+                    .Where(dm => dm != null).ToList();
                 foreach (var dimrModel in dimrModels)
                 {
                     subModelReports.Add(dimrModel.Validate());

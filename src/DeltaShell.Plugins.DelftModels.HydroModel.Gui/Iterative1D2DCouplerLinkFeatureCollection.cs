@@ -1,13 +1,7 @@
-﻿using System.Collections;
-using System.ComponentModel;
-using SharpMap.Data.Providers;
-
-namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
+﻿namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 {
-    public class Iterative1D2DCouplerLinkFeatureCollection : FeatureCollection
+    /*public class Iterative1D2DCouplerLinkFeatureCollection : FeatureCollection
     {
-        private Iterative1D2DCoupler coupler;
-
         public Iterative1D2DCouplerLinkFeatureCollection(IList features): base(features, typeof(Iterative1D2DCouplerLink))
         {
         }
@@ -48,5 +42,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             Coupler = null;
             base.Dispose(disposing);
         }
-    }
+    }*/
 }

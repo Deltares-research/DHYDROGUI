@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,14 +10,12 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
 using DeltaShell.Gui;
 using DeltaShell.Gui.Forms.MainWindow;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
@@ -199,11 +196,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Console.WriteLine("1");
             };
             WpfTestHelper.ShowModal((MainWindow)gui.MainWindow, mainWindowShown);
-        }
-
-        private IEnumerable<IFileExporter> GetApplicationFileExportersForDimr()
-        {
-            return app.Plugins.SelectMany(p => p.GetFileExporters()).Plus(new Iterative1D2DCouplerExporter());
         }
 
         [Test]

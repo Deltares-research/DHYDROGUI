@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using log4net;
-using log4net.Appender;
-using log4net.Repository.Hierarchy;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {
     [Extension(typeof(IPlugin))]
-    public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
+    public class HydroModelApplicationPlugin : ApplicationPlugin
     {
         public const string RHUINTEGRATEDMODEL_TEMPLATE_ID = "RHUIntegratedModel";
         public static int MainThreadId;
@@ -88,8 +82,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
             }
         }
-
-        public static Iterative1D2DCouplerAppender IterativeCouplerAppender { get; set; }
 
         private void ApplicationProjectSaving(Project project)
         {
@@ -162,11 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 };
             }
         }
-        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
-        {
-            yield return new Iterative1D2DCouplerDataAccessListener();
-        }
-
+        
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
             yield return GetType().Assembly;
@@ -177,30 +165,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             var initializeThread = new Thread(InitializeModelBuilder) { Priority = ThreadPriority.BelowNormal };
             initializeThread.Start();
 
-            // register Iterative1D2DCoupler log appender
-            IterativeCouplerAppender = new Iterative1D2DCouplerAppender();
-
-            var rootLogger = ((Hierarchy)LogManager.GetRepository()).Root;
-            if (!rootLogger.Appenders.Cast<IAppender>().Any(a => a is Iterative1D2DCouplerAppender))
-            {
-                rootLogger.AddAppender(IterativeCouplerAppender);
-            }
-
             base.Activate();
         }
 
-        public override void Deactivate()
-        {
-            // unregister Iterative1D2DCoupler log appender
-            var rootLogger = ((Hierarchy)LogManager.GetRepository()).Root;
-            if (IterativeCouplerAppender != null)
-            {
-                rootLogger.RemoveAppender(IterativeCouplerAppender);
-                IterativeCouplerAppender = null;
-            }
-
-            base.Deactivate();
-        }
         public override IEnumerable<ProjectTemplate> ProjectTemplates()
         {
             yield return new ProjectTemplate

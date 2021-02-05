@@ -10,7 +10,6 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
 
 namespace DelftTools.Hydro.Tests.Validators
 {

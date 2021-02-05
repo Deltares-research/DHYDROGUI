@@ -1,10 +1,4 @@
-﻿using System.IO;
-using System.Linq;
-using DelftTools.TestUtils;
-using DelftTools.Utils.IO;
-using DeltaShell.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+﻿using DelftTools.TestUtils;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
