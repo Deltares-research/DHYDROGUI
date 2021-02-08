@@ -100,7 +100,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     WriteNetFile(NetFilePath, Grid);
                 }
 
-                UnstructuredGrid newGrid = ReadGridFromNetFile(NetFilePath); //may throw...
+                var fileOperations = new UnstructuredGridFileOperations(NetFilePath); //may throw...
+                UnstructuredGrid newGrid = fileOperations.GetGrid(callCreateCells: true); 
+                
                 if (newGrid == null)
                 {
                     Grid = new UnstructuredGrid();
@@ -124,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         }
                     }
 
-                    UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
+                    fileOperations.DoIfUgrid(uGridAdaptor =>
                     {
                         if (1 > uGridAdaptor.uGrid.GetNumberOf2DMeshes())
                         {
@@ -375,11 +377,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FunctionHelper.SetValuesRaw(result.Components[0], values);
 
             return result;
-        }
-
-        private static UnstructuredGrid ReadGridFromNetFile(string netFilePath)
-        {
-            return UnstructuredGridFileHelper.LoadFromFile(netFilePath, callCreateCells: true);
         }
 
         // Can be further optimized by letting InsertGrid accept lists of coverages
