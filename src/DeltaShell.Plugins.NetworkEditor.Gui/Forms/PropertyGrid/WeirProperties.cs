@@ -81,7 +81,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Allow negative flow")]
         [PropertyOrder(8)]
-        [DynamicReadOnly]
         public bool AllowNegativeFlow
         {
             get { return data.AllowNegativeFlow; }
@@ -92,7 +91,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Allow positive flow")]
         [PropertyOrder(9)]
-        [DynamicReadOnly]
         public bool AllowPositiveFlow
         {
             get { return data.AllowPositiveFlow; }
