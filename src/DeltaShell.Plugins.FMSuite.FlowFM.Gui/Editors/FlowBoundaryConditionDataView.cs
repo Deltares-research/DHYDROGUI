@@ -270,8 +270,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private DateTime ModelStopTime => Model == null ? ModelStartTime.AddDays(1) : Model.StopTime;
 
-        private TimeSpan ModelTimeStep => Model == null ? new TimeSpan(0, 1, 0, 0) : Model.TimeStep;
-
         private bool FourierDataType =>
             BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
             BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection ||
@@ -586,13 +584,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private IRowValidationResult ValidateTableRow(int arg1, object[] arg2)
         {
-            if (BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
-                BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection)
+            if ((BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
+                 BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection) &&
+                (!(arg2[0] is string field) || field.StartsWith("zzz") || !AstroComponents.ContainsKey(field)))
             {
-                if (!(arg2[0] is string field) || field.StartsWith("zzz") || !AstroComponents.ContainsKey(field))
-                {
-                    return new RowValidationResult(0, "Astronomic component not recognized");
-                }
+                return new RowValidationResult(0, "Astronomic component not recognized");
             }
 
             if (BoundaryCondition.DataType == BoundaryConditionDataType.Harmonics ||

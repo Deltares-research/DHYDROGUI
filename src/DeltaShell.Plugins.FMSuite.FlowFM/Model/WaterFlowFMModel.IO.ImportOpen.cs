@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
@@ -284,18 +285,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     }
                 }
 
-                bool eventBubblingEnabled = EventSettings.BubblingEnabled;
-                try
+                MakeOperationNamesUnique(valueConverter.SpatialOperationSet);
+                ExecuteOperations(valueConverter);
+            }
+        }
+
+        private static void ExecuteOperations(SpatialOperationSetValueConverter valueConverter)
+        {
+            bool eventBubblingEnabled = EventSettings.BubblingEnabled;
+            try
+            {
+                // while opening, bubbling of events is disabled,
+                // which will prevent the execution of spatial operations.
+                EventSettings.BubblingEnabled = true;
+                valueConverter.SpatialOperationSet.Execute();
+            }
+            finally
+            {
+                EventSettings.BubblingEnabled = eventBubblingEnabled;
+            }
+        }
+
+        private static void MakeOperationNamesUnique(ISpatialOperationSet operationSet)
+        {
+            var uniqueStringProvider = new UniqueStringProvider();
+            foreach (ISpatialOperation operation in operationSet.Operations)
+            {
+                if (operation is ISpatialOperationSet subOperationSet)
                 {
-                    // while opening, bubbling of events is disabled,
-                    // which will prevent the execution of spatial operations.
-                    EventSettings.BubblingEnabled = true;
-                    valueConverter.SpatialOperationSet.Execute();
+                    operation.Name = uniqueStringProvider.GetUniqueStringFor("set");
+                    MakeOperationNamesUnique(subOperationSet);
+                    continue;
                 }
-                finally
-                {
-                    EventSettings.BubblingEnabled = eventBubblingEnabled;
-                }
+
+                operation.Name = uniqueStringProvider.GetUniqueStringFor(operation.Name);
             }
         }
 

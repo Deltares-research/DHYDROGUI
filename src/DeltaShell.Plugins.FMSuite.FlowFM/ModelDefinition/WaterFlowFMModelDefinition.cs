@@ -516,17 +516,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
                 {
                     // unsupported operations are converted to sample operations that are saved with an xyz file via the model definition.
-                    var coverage =
-                        spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
-                            UnstructuredGridCoverage;
-
-                    // In the event that the coverage is comprised entirely of non-data values, ignore it and continue
-                    // (This can happen when exporting spatial operations that comprise of added points but no interpolation
-                    // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
-                    if (coverage == null || coverage.Components[0].NoDataValues != null &&
-                        coverage.GetValues<double>().All(v => coverage.Components[0].NoDataValues.Contains(v)) &&
-                        spatialOperationValueConverter.SpatialOperationSet.Operations.Any(op => !(op is EraseOperation))
-                    )
+                    var coverage = spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as UnstructuredGridCoverage;
+                    if (ShouldSkipCoverage(coverage, spatialOperationValueConverter))
                     {
                         continue;
                     }
@@ -534,20 +525,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     AddSamplesOperation newOperation = CreateSamplesOperation(coverage.ToPointCloud(0, true), 
                                                                               spatialOperationValueConverter.SpatialOperationSet.Name);
 
-                    if (SpatialOperations.ContainsKey(dataItem.Name))
-                    {
-                        Log.WarnFormat(
-                            Resources
-                                .WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_,
-                            dataItem.Name);
-                    }
-                    else
-                    {
-                        SpatialOperations.Add(dataItem.Name, new[]
-                        {
-                            newOperation
-                        });
-                    }
+                    AddSpatialOperation(dataItem.Name, newOperation);
                 }
             }
 
@@ -561,33 +539,44 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                                             .Select(o => o.FirstOrDefault()) //Removing duplicates.
                                                             .ToDictionary(di => di.Value, di => di.Name);
 
-            foreach (IGrouping<Type, UnstructuredGridCoverage> coverageGrouping in coverageByType)
+            foreach (UnstructuredGridCoverage coverage in coverageByType.SelectMany(c => c))
             {
-                foreach (UnstructuredGridCoverage coverage in coverageGrouping)
+                IPointCloud pointCloud = coverage.ToPointCloud(skipMissingValues: true);
+                if (pointCloud.PointValues.Count == 0)
                 {
-                    IPointCloud pointCloud = coverage.ToPointCloud(skipMissingValues: true);
-                    if (pointCloud.PointValues.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    AddSamplesOperation samplesOperation = CreateSamplesOperation(pointCloud, coverage.Name);
-
-                    if (SpatialOperations.ContainsKey(dataItemNameLookup[coverage]))
-                    {
-                        Log.WarnFormat(
-                            Resources
-                                .WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_,
-                            dataItemNameLookup[coverage]);
-                    }
-                    else
-                    {
-                        SpatialOperations.Add(dataItemNameLookup[coverage], new[]
-                        {
-                            samplesOperation
-                        });
-                    }
+                    continue;
                 }
+
+                AddSamplesOperation samplesOperation = CreateSamplesOperation(pointCloud, coverage.Name);
+                AddSpatialOperation(dataItemNameLookup[coverage], samplesOperation);
+            }
+        }
+
+        private static bool ShouldSkipCoverage(UnstructuredGridCoverage coverage, SpatialOperationSetValueConverter spatialOperationValueConverter)
+        {
+            // In the event that the coverage is comprised entirely of non-data values, ignore it and continue
+            // (This can happen when exporting spatial operations that comprise of added points but no interpolation
+            // - we're not interested in these for the mdu, they will be saved as dataitems to the dsproj)
+            return coverage == null || coverage.Components[0].NoDataValues != null &&
+                   coverage.GetValues<double>().All(v => coverage.Components[0].NoDataValues.Contains(v)) &&
+                   spatialOperationValueConverter.SpatialOperationSet.Operations.Any(op => !(op is EraseOperation));
+        }
+
+        private void AddSpatialOperation(string name, AddSamplesOperation newOperation)
+        {
+            if (SpatialOperations.ContainsKey(name))
+            {
+                Log.WarnFormat(
+                    Resources
+                        .WaterFlowFMModelDefinition_SelectSpatialOperations_Duplication_of_spatial_operations_for__0___Please_verify_the_model_after_saving_,
+                    name);
+            }
+            else
+            {
+                SpatialOperations.Add(name, new[]
+                {
+                    newOperation
+                });
             }
         }
 

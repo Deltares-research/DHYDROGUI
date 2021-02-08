@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
@@ -145,39 +146,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             extForceFileItems.AddRange(WriteSourcesAndSinks(modelDefinition).Distinct());
 
+            var uniqueFileNameProvider = new UniqueFileNameProvider();
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialWaterLevel,
                                                         modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.InitialWaterLevelDataItemName)).Distinct());
+                                                            WaterFlowFMModelDefinition.InitialWaterLevelDataItemName), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialSalinity,
                                                         modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.InitialSalinityDataItemName)).Distinct());
+                                                            WaterFlowFMModelDefinition.InitialSalinityDataItemName), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialSalinity,
                                                         modelDefinition.GetSpatialOperations(
                                                             WaterFlowFMModelDefinition.InitialSalinityDataItemName +
-                                                            " (layer 1)")).Distinct());
+                                                            " (layer 1)"), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialSalinityTop,
                                                         modelDefinition.GetSpatialOperations(
                                                             WaterFlowFMModelDefinition.InitialSalinityDataItemName +
-                                                            " (layer 2)")).Distinct());
+                                                            " (layer 2)"), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.InitialTemperature,
                                                         modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.InitialTemperatureDataItemName)).Distinct());
+                                                            WaterFlowFMModelDefinition.InitialTemperatureDataItemName), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.FrictCoef,
                                                         modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.RoughnessDataItemName)).Distinct());
+                                                            WaterFlowFMModelDefinition.RoughnessDataItemName), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.HorEddyViscCoef,
                                                         modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.ViscosityDataItemName)).Distinct());
+                                                            WaterFlowFMModelDefinition.ViscosityDataItemName), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteSpatialData(ExtForceQuantNames.HorEddyDiffCoef,
                                                         modelDefinition.GetSpatialOperations(
-                                                            WaterFlowFMModelDefinition.DiffusivityDataItemName)).Distinct());
+                                                            WaterFlowFMModelDefinition.DiffusivityDataItemName), uniqueFileNameProvider).Distinct());
 
             extForceFileItems.AddRange(WriteWindItems(modelDefinition).Distinct());
 
@@ -193,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 extForceFileItems.AddRange(
                     WriteSpatialData(ExtForceQuantNames.InitialTracerPrefix + tracerName,
-                                     modelDefinition.GetSpatialOperations(tracerName))
+                                     modelDefinition.GetSpatialOperations(tracerName), uniqueFileNameProvider)
                         .Distinct());
             }
 
@@ -226,7 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 }
 
                 List<ExtForceFileItem> forceFileItems = WriteSpatialData(spatiallyVaryingSedimentPropertyName,
-                                                                         spatialOperations,
+                                                                         spatialOperations, uniqueFileNameProvider,
                                                                          ExtForceQuantNames
                                                                              .InitialSpatialVaryingSedimentPrefix)
                                                         .Distinct().ToList();
@@ -396,11 +398,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations,
+        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations, UniqueFileNameProvider fileNameProvider,
                                                                string prefix = null)
         {
             IDictionary<ISpatialOperation, ExtForceFileItem> spatialDataItems =
-                ExtForceFileItemFactory.GetSpatialDataItems(quantity, spatialOperations, ExistingForceFileItems, extFilePath,
+                ExtForceFileItemFactory.GetSpatialDataItems(quantity, spatialOperations, ExistingForceFileItems, extFilePath, fileNameProvider,
                                                             prefix);
 
             foreach (KeyValuePair<ISpatialOperation, ExtForceFileItem> spatialDataItem in spatialDataItems)
@@ -437,17 +439,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 try
                 {
-                    importSamplesOperation.SwitchToDirectory(targetDirectory);
-                    extForceFileItem.FileName =
-                        targetDirectory != null
-                            ? importSamplesOperation.FilePath.Replace(targetDirectory + "\\", "")
-                            : importSamplesOperation.FilePath;
+                    CopyImportSamplesOperation(importSamplesOperation, targetDirectory, extForceFileItem.FileName);
                 }
                 catch (Exception e)
                 {
-                    log.Warn("Unable to import samples " + e.Message);
+                    log.Warn("Unable to export samples " + e.Message);
                 }
             }
+        }
+
+        private static void CopyImportSamplesOperation(ImportSamplesOperation operation, string targetDir, string newFileName)
+        {
+            string targetPath = Path.Combine(targetDir, newFileName);
+            File.Copy(operation.FilePath, targetPath);
+            operation.FilePath = targetPath;
         }
 
         private void WriteInitialConditionsUnsupported(SampleSpatialOperation spatialOperation,
