@@ -3972,10 +3972,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             DataItems.RemoveAllWhere(di => di.Tag == WaterFlowFMModelDataSet.DiaFileDataItemTag);
             boundaryConditionDataList = BoundaryConditions1D.ToList();
 
-            var mduPath = Path.Combine(WorkingDirectory, Path.GetFileName(MduFilePath));
-
-            ReportProgressText("Exporting to mdu file");
-            ExportTo(mduPath, false);
             
             ReportProgressText("Initializing");
             runner.OnInitialize();
