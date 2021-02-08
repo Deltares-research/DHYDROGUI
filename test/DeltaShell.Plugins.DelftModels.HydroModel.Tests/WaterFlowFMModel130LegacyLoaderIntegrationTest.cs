@@ -41,6 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 AssertCorrectFile("horizontaleddyviscositycoefficient_samples.xyz");
                 AssertCorrectFile("horizontaleddydiffusivitycoefficient_samples.xyz");
                 AssertCorrectFile("initialtracerSomeTracer_samples.xyz");
+                AssertCorrectFile("initialtracerSomeTracer.xyz");
 
                 void AssertCorrectFile(string fileName)
                 {
