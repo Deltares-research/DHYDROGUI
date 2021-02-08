@@ -398,34 +398,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations, UniqueFileNameProvider fileNameProvider,
+        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations, UniqueFileNameProvider uniqueFileNameProvider,
                                                                string prefix = null)
         {
             IDictionary<ISpatialOperation, ExtForceFileItem> spatialDataItems =
-                ExtForceFileItemFactory.GetSpatialDataItems(quantity, spatialOperations, ExistingForceFileItems, extFilePath, fileNameProvider,
+                ExtForceFileItemFactory.GetSpatialDataItems(quantity, spatialOperations, ExistingForceFileItems, extFilePath, uniqueFileNameProvider,
                                                             prefix);
 
             foreach (KeyValuePair<ISpatialOperation, ExtForceFileItem> spatialDataItem in spatialDataItems)
             {
                 ExtForceFileItem extForceFileItem = spatialDataItem.Value;
-                Action writeAction;
+
                 switch (spatialDataItem.Key)
                 {
                     case ImportSamplesSpatialOperation importSamplesOperation:
-                        writeAction = () => WriteInitialConditionsSamples(importSamplesOperation, extForceFileItem);
+                        WriteInitialConditionsSamples(importSamplesOperation, extForceFileItem);
                         break;
                     case SetValueOperation polygonOperation:
-                        writeAction = () => WriteInitialConditionsPolygon(polygonOperation, extForceFileItem);
+                        WriteInitialConditionsPolygon(polygonOperation, extForceFileItem);
                         break;
                     case AddSamplesOperation addSamplesOperation:
-                        writeAction = () => WriteInitialConditionsUnsupported(addSamplesOperation, extForceFileItem);
+                        WriteInitialConditionsUnsupported(addSamplesOperation, extForceFileItem);
                         break;
                     default:
                         throw new NotImplementedException(
                             $"Cannot serialize operation of type {spatialDataItem.Key.GetType()} to external forcings file");
                 }
-
-                writeAction();
+                
                 yield return extForceFileItem;
             }
         }
@@ -451,7 +450,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static void CopyImportSamplesOperation(ImportSamplesOperation operation, string targetDir, string newFileName)
         {
             string targetPath = Path.Combine(targetDir, newFileName);
-            File.Copy(operation.FilePath, targetPath);
+            File.Copy(operation.FilePath, targetPath, true);
             operation.FilePath = targetPath;
         }
 
