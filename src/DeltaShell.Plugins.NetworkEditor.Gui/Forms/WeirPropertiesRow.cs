@@ -154,7 +154,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             set { Weir.CrestShape = value; }
         }
 
-        [DynamicReadOnly]
         [DisplayName("Flow direction")]
         public FlowDirection FlowDirection
         {

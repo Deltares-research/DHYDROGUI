@@ -120,7 +120,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         public virtual bool HasFlowDirection
         {
-            get { return false; }
+            get { return true; }
         }
 
         /// <summary>
