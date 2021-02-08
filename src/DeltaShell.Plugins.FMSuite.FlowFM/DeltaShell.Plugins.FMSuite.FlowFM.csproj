@@ -148,6 +148,7 @@
     <Compile Include="Api\UnstrucGridOperationApi.cs" />
     <Compile Include="Api\WriteNetGeomApi.cs" />
     <Compile Include="Coverages\ISpatialData.cs" />
+    <Compile Include="Coverages\PointValueArrayComparer.cs" />
     <Compile Include="Coverages\SpatialData.cs" />
     <Compile Include="Coverages\UnstructuredGridCoverageFactory.cs" />
     <Compile Include="FeatureData\BridgePillarFmModelFeatureCoordinateDataSyncExtensions.cs" />
