@@ -90,14 +90,6 @@ OPERAND=O
 VALUE=3
 
 QUANTITY=initialtracerSomeTracer
-FILENAME=initialtracerSomeTracer.xyz
-FILETYPE=7
-METHOD=6
-OPERAND=O
-AVERAGINGTYPE=2
-RELATIVESEARCHCELLSIZE=1
-
-QUANTITY=initialtracerSomeTracer
 FILENAME=initialtracerSomeTracer_samples.xyz
 FILETYPE=7
 METHOD=6
