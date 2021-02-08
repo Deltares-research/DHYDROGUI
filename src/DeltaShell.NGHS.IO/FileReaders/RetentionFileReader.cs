@@ -59,10 +59,21 @@ namespace DeltaShell.NGHS.IO.FileReaders
                             //euh loggen ofzo?
                         }
                         retention.Data.Arguments[0].InterpolationType = t;
-                        var levels = c.ReadPropertiesToListOfType<double>(RetentionRegion.Levels.Key);
-                        retention.Data.Arguments[0].SetValues(levels);
-                        var storageAreas = c.ReadPropertiesToListOfType<double>(RetentionRegion.StorageArea.Key);
-                        retention.Data.Components[0].SetValues(storageAreas);
+                        System.Collections.Generic.IList<double> levels = null;
+                        if (c.GetPropertyValue(RetentionRegion.Levels.Key, null) != null)
+                        {
+                            levels = c.ReadPropertiesToListOfType<double>(RetentionRegion.Levels.Key);
+                        }
+                        System.Collections.Generic.IList<double> storageAreas = null;
+                        if (c.GetPropertyValue(RetentionRegion.StorageArea.Key, null) != null)
+                        {
+                            storageAreas = c.ReadPropertiesToListOfType<double>(RetentionRegion.StorageArea.Key);
+                        }
+                        if (levels != null && storageAreas != null)
+                        {
+                            retention.Data.Arguments[0].SetValues(levels);
+                            retention.Data.Components[0].SetValues(storageAreas);
+                        }
                     }
                     else
                     {
