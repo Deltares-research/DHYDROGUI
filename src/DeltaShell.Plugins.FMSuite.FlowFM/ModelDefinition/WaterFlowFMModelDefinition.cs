@@ -495,8 +495,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     SpatialOperations[dataItem.Name] = new List<ISpatialOperation>();
 
                     var originalCoverage = (UnstructuredGridCoverage) spatialOperationValueConverter.OriginalValue;
-                    IPointCloud samples = originalCoverage?.ToPointCloud(skipMissingValues: true);
-                    if (samples?.PointValues.Any() == true)
+                    IPointCloud samples = originalCoverage.ToPointCloud(skipMissingValues: true);
+                    if (samples.PointValues.Any())
                     {
                         AddSamplesOperation samplesOperation = CreateSamplesOperation(samples, originalCoverage.Name);
                         SpatialOperations[dataItem.Name].Add(samplesOperation);
