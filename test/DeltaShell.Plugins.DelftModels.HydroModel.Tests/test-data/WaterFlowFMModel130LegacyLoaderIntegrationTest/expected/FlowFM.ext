@@ -1,6 +1,6 @@
 
 QUANTITY=initialwaterlevel
-FILENAME=initialwaterlevel.xyz
+FILENAME=initialwaterlevel_samples.xyz
 FILETYPE=7
 METHOD=6
 OPERAND=O
@@ -15,7 +15,7 @@ OPERAND=O
 VALUE=3
 
 QUANTITY=initialsalinity
-FILENAME=initialsalinity.xyz
+FILENAME=initialsalinity_samples.xyz
 FILETYPE=7
 METHOD=6
 OPERAND=O
@@ -30,7 +30,7 @@ OPERAND=O
 VALUE=3
 
 QUANTITY=initialtemperature
-FILENAME=initialtemperature.xyz
+FILENAME=initialtemperature_samples.xyz
 FILETYPE=7
 METHOD=6
 OPERAND=O
@@ -45,7 +45,7 @@ OPERAND=O
 VALUE=3
 
 QUANTITY=frictioncoefficient
-FILENAME=frictioncoefficient.xyz
+FILENAME=frictioncoefficient_samples.xyz
 FILETYPE=7
 METHOD=6
 OPERAND=O
@@ -60,7 +60,7 @@ OPERAND=O
 VALUE=3
 
 QUANTITY=horizontaleddyviscositycoefficient
-FILENAME=horizontaleddyviscositycoefficient.xyz
+FILENAME=horizontaleddyviscositycoefficient_samples.xyz
 FILETYPE=7
 METHOD=6
 OPERAND=O
@@ -75,7 +75,7 @@ OPERAND=O
 VALUE=3
 
 QUANTITY=horizontaleddydiffusivitycoefficient
-FILENAME=horizontaleddydiffusivitycoefficient.xyz
+FILENAME=horizontaleddydiffusivitycoefficient_samples.xyz
 FILETYPE=7
 METHOD=6
 OPERAND=O
@@ -91,6 +91,14 @@ VALUE=3
 
 QUANTITY=initialtracerSomeTracer
 FILENAME=initialtracerSomeTracer.xyz
+FILETYPE=7
+METHOD=6
+OPERAND=O
+AVERAGINGTYPE=2
+RELATIVESEARCHCELLSIZE=1
+
+QUANTITY=initialtracerSomeTracer
+FILENAME=initialtracerSomeTracer_samples.xyz
 FILETYPE=7
 METHOD=6
 OPERAND=O

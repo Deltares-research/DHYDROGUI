@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 coverage.Grid = grid;
 
-                string fileName = uniqueFileNameProvider.GetUniqueFileNameFor(quantity + ".xyz");
+                string fileName = uniqueFileNameProvider.GetUniqueFileNameFor(quantity + "_samples.xyz");
                 WriteSamples(coverage, inputDirectory, fileName);
                 UpdateExtFileContent(extFileContent, quantity, fileName);
             }
