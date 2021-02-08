@@ -2739,54 +2739,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void SaveOutput()
         {
-            var mapFilePath2D = File.Exists(OutputMapFileStore?.Path)
+            var oldMapFilePath = File.Exists(OutputMapFileStore?.Path)
                 ? OutputMapFileStore?.Path
-                : null;
+                : File.Exists(Output1DFileStore?.Path)
+                    ? Output1DFileStore?.Path
+                    : null;
 
-            var mapFilePath1D = File.Exists(Output1DFileStore?.Path)
-                ? Output1DFileStore?.Path
-                : null;
-
-            var oldMapFilePath = mapFilePath2D ?? mapFilePath1D;
-
-            var oldFM1DFilePath = oldMapFilePath != null || Output1DFileStore == null ? null : Output1DFileStore.Path;
             var oldHisFilePath = OutputHisFileStore == null ? null : OutputHisFileStore.Path;
 
             DisconnectOutput();
 
-            if (oldMapFilePath != null && Path.GetFullPath(oldMapFilePath).ToLower() != Path.GetFullPath(MapFilePath).ToLower() )
-                
+            if (oldMapFilePath != null && !string.Equals(Path.GetFullPath(oldMapFilePath), Path.GetFullPath(MapFilePath), StringComparison.CurrentCultureIgnoreCase) )
             {
-                var directory = Path.GetDirectoryName(MapFilePath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                if (!File.Exists(MapFilePath) && File.Exists(oldMapFilePath)) //saveas filestore copies to new location and deletes in old location via the ProjectFileBasedItemRepository. no need to copy
-                    File.Copy(oldMapFilePath, MapFilePath, true);
+                FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(MapFilePath));
+                File.Copy(oldMapFilePath, MapFilePath, true);
             }
-            else if (oldMapFilePath == null && oldFM1DFilePath != null && Path.GetFullPath(oldFM1DFilePath).ToLower() != Path.GetFullPath(MapFilePath).ToLower())
+            else if (oldMapFilePath == null && File.Exists(MapFilePath))
             {
-                var directory = Path.GetDirectoryName(MapFilePath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                if (!File.Exists(MapFilePath) && File.Exists(oldFM1DFilePath))
-                    File.Copy(oldFM1DFilePath, MapFilePath, true);
-            }
-            else if (oldMapFilePath == null && oldFM1DFilePath == null && File.Exists(MapFilePath))
-            {
+                // delete old map file
                 File.Delete(MapFilePath);
             }
 
             if (oldHisFilePath != null && Path.GetFullPath(oldHisFilePath).ToLower() != Path.GetFullPath(HisFilePath).ToLower())
             {
-                var directory = Path.GetDirectoryName(HisFilePath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
+                FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(HisFilePath));
                 File.Copy(oldHisFilePath, HisFilePath, true);
             }
             else if (oldHisFilePath == null && File.Exists(HisFilePath))
