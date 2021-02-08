@@ -534,16 +534,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private List<ISpatialOperation> GetSpatialOperations(SpatialOperationSetValueConverter spatialOperationValueConverter, IDataItem dataItem)
+        private static List<ISpatialOperation> GetSpatialOperations(SpatialOperationSetValueConverter spatialOperationValueConverter, IDataItem dataItem)
         {
-            var originalCoverage = (UnstructuredGridCoverage) spatialOperationValueConverter.OriginalValue;
-            IPointCloud samples = originalCoverage.ToPointCloud(skipMissingValues: true);
-            if (samples.PointValues.Any())
-            {
-                AddSamplesOperation samplesOperation = CreateSamplesOperation(samples, originalCoverage.Name);
-                SpatialOperations[dataItem.Name].Add(samplesOperation);
-            }
-
             // put in everything except spatial operation sets,
             // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
             List<ISpatialOperation> spatialOperations = spatialOperationValueConverter
@@ -551,7 +543,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                                         .Where(s => !(s is ISpatialOperationSet))
                                                         .Select(ConvertSpatialOperation)
                                                         .ToList();
+            
+            var originalCoverage = (UnstructuredGridCoverage) spatialOperationValueConverter.OriginalValue;
+            IPointCloud samples = originalCoverage.ToPointCloud(skipMissingValues: true);
+            
+            if (!samples.PointValues.Any() || SamplesAreEqual(samples, spatialOperations[0]))
+            {
+                return spatialOperations;
+            }
+            
+            AddSamplesOperation samplesOperation = CreateSamplesOperation(samples, originalCoverage.Name);
+            spatialOperations.Insert(0, samplesOperation);
+            
             return spatialOperations;
+        }
+
+        private static bool SamplesAreEqual(IPointCloud samples, ISpatialOperation operation)
+        {
+            if (!(operation is ImportSamplesOperation importSamplesOperation))
+            {
+                return false;
+            }
+
+            return new PointValueArrayComparer().Equals(samples.PointValues.ToArray(), 
+                                                        importSamplesOperation.GetPoints().ToArray());
+
         }
 
         private static bool ShouldSkipCoverage(UnstructuredGridCoverage coverage, SpatialOperationSetValueConverter spatialOperationValueConverter)
