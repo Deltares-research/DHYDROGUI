@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                         extForceFileItem = GetInitialConditionsSamplesItem(
                             importSamplesOperation, quantity,
                             prefix, existingForceFileItems,
-                            Path.GetDirectoryName(Path.GetFullPath(filePath)), uniqueFileNameProvider);
+                            uniqueFileNameProvider);
                         break;
                     case SetValueOperation polygonOperation:
                         extForceFileItem = GetInitialConditionsPolygonItem(polygonOperation, quantity, prefix, existingForceFileItems, uniqueFileNameProvider);
