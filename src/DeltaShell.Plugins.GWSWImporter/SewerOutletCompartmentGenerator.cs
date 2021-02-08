@@ -7,19 +7,20 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     {
         public override ISewerFeature Generate(GwswElement gwswElement)
         {
-            return gwswElement.IsValidGwswStructure() 
-                ? CreateCompartment<GwswStructureOutletCompartment>(gwswElement) 
-                : CreateCompartment<GwswPointOutletCompartment>(gwswElement);
+            bool validGwswStructure = gwswElement.IsValidGwswStructure();
+
+            if (validGwswStructure)
+            {
+                return CreateCompartment<GwswStructureOutletCompartment>(gwswElement);
+            }
+
+            return CreateCompartment<GwswPointOutletCompartment>(gwswElement);
         }
 
         protected override void SetCompartmentProperties(Compartment compartment, GwswElement gwswElement)
         {
             if (!gwswElement.IsValidGwswCompartment()) return;
 
-            compartment.ManholeLength = 0.8d;
-            compartment.ManholeWidth = 0.8d;
-            compartment.FloodableArea = 100;
-            
             double auxDouble;
             var outletCompartment = compartment as OutletCompartment;
             if (outletCompartment != null)
@@ -28,6 +29,17 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 if (surfaceWaterLevelAttribute.TryGetValueAsDouble(out auxDouble))
                     outletCompartment.SurfaceWaterLevel = auxDouble;
             }
+            
+            if (compartment is GwswStructureOutletCompartment)
+            {
+                compartment.ManholeLength = 0.8d;
+                compartment.ManholeWidth = 0.8d;
+                compartment.FloodableArea = 100;
+
+                return;
+            }
+
+            SetBaseCompartmentProperties(compartment, gwswElement);
         }
     }
 }
