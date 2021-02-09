@@ -1537,7 +1537,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var messageList = new List<string>
             {
-                "Exporting to mdu file",
                 "Initializing",
                 "0,00%",
                 "(1,39%)",
