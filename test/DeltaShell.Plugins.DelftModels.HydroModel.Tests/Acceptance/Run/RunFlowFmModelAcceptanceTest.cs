@@ -10,7 +10,6 @@ using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net.Core;
 using NUnit.Framework;
 
@@ -61,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
         [Test]
         [TestCaseSource(nameof(AcceptanceTests))]
-        public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
+        public void GivenRunningDeltaShellGuiWithImportedFlowFmModel_WhenRunningImportedModel_ThenImportedModelHasSuccessfullyRunAndOutputIsSameAsExpectedOutput(
             string acceptanceModelName,
             string acceptanceModelFileName,
             ActualCountFuncDelegate actualCountFunc,
@@ -77,8 +76,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                                             actualCountFunc,
                                             gui,
                                             preconditionExpectedBranchFeaturesCount);
-
-                SetModelSettings(fmModel);
                 
                 // [When]
                 Console.WriteLine("Running model");
@@ -121,11 +118,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         {
             RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, acceptanceModelsReferenceOutputDirectory,
                                                              tempDirectory, keepOutput);
-        }
-        
-        private static void SetModelSettings(WaterFlowFMModel fmModel)
-        {
-            RunModelAcceptanceTestHelper.SetFlowFMModelSettings(fmModel);
         }
     }
 }

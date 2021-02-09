@@ -231,6 +231,7 @@
     <Compile Include="Acceptance\Run\RunFlowFmModelAcceptanceTest.cs" />
     <Compile Include="Acceptance\Run\RunGwswModelAcceptanceTests.cs" />
     <Compile Include="Acceptance\Run\RunModelAcceptanceTestHelper.cs" />
+    <Compile Include="Acceptance\Run\RunSobekTwoModelAcceptanceTests.cs" />
     <Compile Include="DimrApiWrapperIntegrationTest.cs" />
     <Compile Include="Export\DHydroConfigXmlExporterTest.cs" />
     <Compile Include="DHydroConfigModelCouplerTest.cs" />

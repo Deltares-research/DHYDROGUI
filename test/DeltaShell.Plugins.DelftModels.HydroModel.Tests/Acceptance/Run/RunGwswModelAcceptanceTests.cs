@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions.Filters;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
@@ -8,6 +9,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
@@ -56,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         [Test]
         [TestCaseSource(nameof(AcceptanceTests))]
         public void
-            GivenRunningDeltaShellGuiWithImportedGwswModel_WhenRunningRhuHydroModel_ThenHydroModelHasSuccessfullyRun(
+            GivenRunningDeltaShellGuiWithImportedGwswModel_WhenRunningImportedModel_ThenImportedModelHasSuccessfullyRunAndOutputIsSameAsExpectedOutput(
                 string acceptanceModelName,
                 int preconditionExpectedBranchFeaturesCount,
                 int preconditionExpectedCatchmentsCount)
@@ -104,9 +106,43 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             WaterFlowFMModel fmModel = hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>()?.FirstOrDefault();
             Assert.That(fmModel, Is.Not.Null);
 
-            RunModelAcceptanceTestHelper.SetHydroModelSettings(hydroModel);
-            RunModelAcceptanceTestHelper.SetFlowFMModelSettings(fmModel);
-            RunModelAcceptanceTestHelper.SetRrModelSettings(rrModel);
+            SetHydroModelSettings(hydroModel);
+            SetFlowFmModelSettings(fmModel);
+            SetRrModelSettings(rrModel);
+        }
+        
+        private static void SetHydroModelSettings(HydroModel hydroModel)
+        {
+            hydroModel.StartTime = new DateTime(2020, 01, 01, 0, 0, 0);
+            hydroModel.StopTime = new DateTime(2020, 01, 01, 1, 0, 0);
+            hydroModel.TimeStep = new TimeSpan(1, 0, 0);
+        }
+
+        private static void SetFlowFmModelSettings(WaterFlowFMModel fmModel)
+        {
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.RefDate, "20200101000000");
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, "3600");
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, "3600");
+        }
+        
+        private static void SetRrModelSettings(RainfallRunoffModel rrModel)
+        {
+            rrModel.Precipitation.Data.SetValues(
+                new[] { 0.0 },
+                new VariableValueFilter<DateTime>(rrModel.Precipitation.Data.Arguments[0],
+                                                  new DateTime(2020, 01, 01, 0, 0, 0)));
+            rrModel.Precipitation.Data.SetValues(
+                new[] { 0.0 },
+                new VariableValueFilter<DateTime>(rrModel.Precipitation.Data.Arguments[0],
+                                                  new DateTime(2020, 01, 01, 1, 0, 0)));
+            rrModel.Evaporation.Data.SetValues(
+                new[] { 0.0 },
+                new VariableValueFilter<DateTime>(rrModel.Evaporation.Data.Arguments[0],
+                                                  new DateTime(2020, 01, 01, 0, 0, 0)));
+            rrModel.Evaporation.Data.SetValues(
+                new[] { 0.0 },
+                new VariableValueFilter<DateTime>(rrModel.Evaporation.Data.Arguments[0],
+                                                  new DateTime(2020, 01, 01, 1, 0, 0)));
         }
     }
 }
