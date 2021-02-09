@@ -12,9 +12,11 @@ using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.SharpMapGis;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
@@ -43,17 +45,40 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         [Test]
         public void SupportedItemTypesTypesPropertyTest()
         {
-            var expected = new List<Type> {typeof(CurvilinearCoverage)};
+            var expected = new List<Type>
+            {
+                typeof(CurvilinearCoverage)
+            };
             importer = new WaveDepthFileImporter("Waves Model", null);
             Assert.AreEqual(expected, importer.SupportedItemTypes);
         }
 
         [Test]
-        public void CanImportOnPropertyTest()
+        public void CanImportOnRootLevel_Always_ReturnsFalse()
         {
+            // Setup
             importer = new WaveDepthFileImporter("Waves Model", null);
-            Assert.IsTrue(importer.CanImportOn(new object()));
-            Assert.IsFalse(importer.CanImportOnRootLevel);
+
+            // Call 
+            bool canImportOnRootLevel = importer.CanImportOnRootLevel;
+
+            // Assert
+            Assert.That(canImportOnRootLevel, Is.False);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetCurvilinearCoverageConfigurations))]
+        public void CanImportOn_WithVariousCurvilinearCoverageConfigurations_ReturnsExpectedValue(
+            object argument, bool expectedValue)
+        {
+            // Setup
+            importer = new WaveDepthFileImporter("Waves Model", null);
+
+            // Call
+            bool canImport = importer.CanImportOn(argument);
+
+            // Assert
+            Assert.That(canImport, Is.EqualTo(expectedValue));
         }
 
         [Test]
@@ -137,14 +162,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         public void TargetDataDirectory()
         {
             const string targetDataDirectory = "dir";
-            importer = new WaveDepthFileImporter("Waves Model", null) {TargetDataDirectory = targetDataDirectory};
+            importer = new WaveDepthFileImporter("Waves Model", null)
+            {
+                TargetDataDirectory = targetDataDirectory
+            };
             Assert.AreEqual(targetDataDirectory, importer.TargetDataDirectory);
         }
 
         [Test]
         public void ShouldCancelTest()
         {
-            importer = new WaveDepthFileImporter("Waves Model", null) {ShouldCancel = true};
+            importer = new WaveDepthFileImporter("Waves Model", null)
+            {
+                ShouldCancel = true
+            };
             Assert.AreEqual(true, importer.ShouldCancel);
             importer.ShouldCancel = false;
             Assert.AreEqual(false, importer.ShouldCancel);
@@ -155,7 +186,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         {
             importer = new WaveDepthFileImporter("Waves Model", null);
             var success = false;
-            importer.ProgressChanged = (name, current, total) => { success = true; };
+            importer.ProgressChanged = (name, current, total) =>
+            {
+                success = true;
+            };
             importer.ProgressChanged("Importing depth file...", 1, 2);
             Assert.IsTrue(success);
         }
@@ -173,7 +207,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
         {
             // Given
             var model = new WaveModel();
-            Func<IEnumerable<WaveModel>> getModelsFunc = () => new List<WaveModel>() {model};
+            Func<IEnumerable<WaveModel>> getModelsFunc = () => new List<WaveModel>()
+            {
+                model
+            };
             var importerWithFunc = new WaveDepthFileImporter("Waves Model", getModelsFunc);
             string fileDataPath = Path.Combine(TestHelper.GetTestDataDirectory(), "SimpleBathemetry");
 
@@ -227,9 +264,32 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess.Importers
             });
         }
 
+        private static IEnumerable<TestCaseData> GetCurvilinearCoverageConfigurations()
+        {
+            yield return new TestCaseData(null, true)
+                .SetName("Null value");
+            yield return new TestCaseData(new object(), true)
+                .SetName("Not CurvilinearCoverage");
+
+            yield return new TestCaseData(new CurvilinearCoverage
+                {
+                    Store = new WavmFileFunctionStore(string.Empty)
+                }, false)
+                .SetName("CurvilinearCoverage with WavmFileFunctionStore");
+
+            yield return new TestCaseData(new CurvilinearCoverage
+                {
+                    Store = Substitute.For<IFunctionStore>()
+                }, true)
+                .SetName("CurvilinearCoverage with generic FunctionStore");
+        }
+
         private static DeltaShellApplication GetRunningApplication(string savePath)
         {
-            var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true};
+            var app = new DeltaShellApplication
+            {
+                IsProjectCreatedInTemporaryDirectory = true
+            };
             app.Plugins.Add(new NHibernateDaoApplicationPlugin());
             app.Plugins.Add(new CommonToolsApplicationPlugin());
             app.Plugins.Add(new SharpMapGisApplicationPlugin());

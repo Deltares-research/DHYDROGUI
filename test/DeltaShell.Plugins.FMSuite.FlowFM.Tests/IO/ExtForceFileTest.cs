@@ -371,7 +371,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     doubleSpatProp.SpatiallyVaryingName,
                     thickProp.SpatiallyVaryingName
                 };
-                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.AllDataItems.ToList(), fmModel.TracerDefinitions, initialSpatialOps);
 
                 // create an interpolate operation using the samples added earlier
                 var intOpSedConc = new InterpolateOperation();
@@ -382,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsNotNull(valueConvertThick.SpatialOperationSet.AddOperation(intOpThick));
 
                 // update model definition (called during export)
-                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.AllDataItems.ToList(), fmModel.TracerDefinitions, initialSpatialOps);
 
                 /* Save ext file */
                 var extFile = new ExtForceFile();
@@ -446,7 +446,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 ISpatiallyVaryingSedimentProperty sedConcProp = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().FirstOrDefault(p => p.Name == "SedConc");
                 var initialSpatialOps = new List<string> {sedConcProp.SpatiallyVaryingName};
                 //Add another spatially varying prop -> Warning should be given.
-                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.AllDataItems.ToList(), fmModel.TracerDefinitions, initialSpatialOps);
                 TestHelper.AssertAtLeastOneLogMessagesContains(
                     () => extFile.Write(extForceFile, fmModel.ModelDefinition, true, true),
                     string.Format(
@@ -490,7 +490,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 valueConverter.SpatialOperationSet.Execute();
 
                 // update model definition (called during export)
-                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.AllDataItems.ToList(), fmModel.TracerDefinitions, initialSpatialOps);
                 //New warning should be given.
                 TestHelper.AssertAtLeastOneLogMessagesContains(
                     () => extFile.Write(extForceFile, fmModel.ModelDefinition, true, true),

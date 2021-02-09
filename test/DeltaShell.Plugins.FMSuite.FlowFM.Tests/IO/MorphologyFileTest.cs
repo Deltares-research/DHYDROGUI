@@ -290,7 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(morWritten, Does.Contain("[" + MorphologyFile.Header + "]"));
                 Assert.That(morWritten, Does.Contain("myprop"));
                 Assert.That(morWritten, Does.Contain("801"));
-                Assert.That(morWritten, Does.Contain(MorphologyFile.BcFile));
+                Assert.That(morWritten, Does.Contain(MorphologyFile.BcFileIniEntry));
                 Assert.That(morWritten, Does.Contain(modelDefinition.ModelName + BcmFile.Extension));
                 Assert.That(morWritten, Does.Contain(modelDefinition.ModelName + BcmFile.Extension));
                 Assert.That(morWritten, Does.Contain("[" + MorphologyFile.BoundaryHeader + "]"));

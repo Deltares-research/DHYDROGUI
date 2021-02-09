@@ -11,7 +11,7 @@ using SharpMap.UI.Forms;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 {
     [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_DisplayName")]
-    public class RealTimeControlModelProperties : ObjectProperties<RealTimeControlModel>
+    public class RealTimeControlModelProperties : ObjectProperties<IRealTimeControlModel>
     {
         [PropertyOrder(1)]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
@@ -19,14 +19,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_Name_Description")]
         public string Name
         {
-            get
-            {
-                return data.Name;
-            }
-            set
-            {
-                data.Name = value;
-            }
+            get => data.Name;
+            set => data.Name = value;
         }
 
         [PropertyOrder(2)]
@@ -37,14 +31,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [Editor(typeof(CoordinateSystemTypeEditor), typeof(UITypeEditor))]
         public ICoordinateSystem CoordinateSystem
         {
-            get
-            {
-                return data.CoordinateSystem;
-            }
-            set
-            {
-                data.CoordinateSystem = value;
-            }
+            get => data.CoordinateSystem;
+            set => data.CoordinateSystem = value;
         }
 
         [PropertyOrder(0)]
@@ -52,13 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
         [ResourcesDisplayName(typeof(Resources), "RealTimeControlModelProperties_UseRestart_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_UseRestart_Description")]
-        public bool UseRestart
-        {
-            get
-            {
-                return data.UseRestart;
-            }
-        }
+        public bool UseRestart => data.UseRestart;
 
         [PropertyOrder(1)]
         [ResourcesCategory(typeof(Resources), "RealTimeControlModelProperties_Category_RunParameters")]
@@ -66,13 +48,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_WriteRestart_Description")]
         public bool WriteRestart
         {
-            get
-            {
-                return data.WriteRestart;
-            }
+            get => data.WriteRestart;
             set
             {
+                if (data.WriteRestart == value)
+                {
+                    return;
+                }
+                
                 data.WriteRestart = value;
+                data.MarkOutputOutOfSync();
             }
         }
 
@@ -84,13 +69,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_SaveStateStartTime_Description")]
         public DateTime SaveStateStartTime
         {
-            get
-            {
-                return data.SaveStateStartTime;
-            }
+            get => data.SaveStateStartTime;
             set
             {
+                if (data.SaveStateStartTime == value)
+                {
+                    return;
+                }
+                
                 data.SaveStateStartTime = value;
+                data.MarkOutputOutOfSync();
             }
         }
 
@@ -102,13 +90,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_SaveStateTimeStep_Description")]
         public TimeSpan SaveStateTimeStep
         {
-            get
-            {
-                return data.SaveStateTimeStep;
-            }
+            get => data.SaveStateTimeStep;
             set
             {
+                if (data.SaveStateTimeStep == value)
+                {
+                    return;
+                }
+                
                 data.SaveStateTimeStep = value;
+                data.MarkOutputOutOfSync();
             }
         }
 
@@ -120,13 +111,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         [ResourcesDescription(typeof(Resources), "RealTimeControlModelProperties_SaveStateStopTime_Description")]
         public DateTime SaveStateStopTime
         {
-            get
-            {
-                return data.SaveStateStopTime;
-            }
+            get => data.SaveStateStopTime;
             set
             {
+                if (data.SaveStateStopTime == value)
+                {
+                    return;
+                }
+                
                 data.SaveStateStopTime = value;
+                data.MarkOutputOutOfSync();
             }
         }
 

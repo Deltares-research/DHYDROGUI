@@ -106,6 +106,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 ReconnectRtcToFmOutputFile(outputFileFunctionStore.Path);
             }
+
+            SuspendClearOutputOnInputChange = true;
         }
 
         public virtual RealTimeControlOutputFileFunctionStore OutputFileFunctionStore
@@ -159,22 +161,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ? outputFileFunctionStore.Functions.OfType<IFeatureCoverage>()
                 : Enumerable.Empty<IFeatureCoverage>();
 
+        /// <summary>
+        /// Gets or sets the output text documents.
+        /// </summary>
+        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; protected set; }
+
         public virtual bool UseRestart => !RestartInput.IsEmpty;
 
-        public virtual bool WriteRestart
-        {
-            get => writeRestart;
-            set
-            {
-                if (value == writeRestart)
-                {
-                    return;
-                }
-
-                writeRestart = value;
-                MarkOutputOutOfSync();
-            }
-        }
+        public virtual bool WriteRestart { get; set; }
 
         /// <summary>
         /// Gets or sets the input restart file.
@@ -184,14 +178,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             get => restartInput;
             set
             {
-                if (value == null || restartInput == value)
+                if (value == null)
                 {
                     return;
                 }
 
                 restartInput = value;
-
-                MarkOutputOutOfSync();
             }
         }
 
@@ -199,11 +191,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// Gets or sets the restart output files.
         /// </summary>
         public virtual IEventedList<RestartFile> RestartOutput { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the output text documents.
-        /// </summary>
-        public virtual IEventedList<ReadOnlyTextFileData> OutputDocuments { get; protected set; }
 
         public override bool CanRun => false;
 
@@ -377,7 +364,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             suspendUpdateFeatureAndParameter = true;
 
             clonedModel.cloning = true;
-            clonedModel.SuspendClearOutputOnInputChange = true;
             clonedModel.OutputOutOfSync = OutputOutOfSync;
             clonedModel.LimitMemory = LimitMemory;
 
@@ -418,12 +404,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             clonedModel.RelinkInternalDataItemLinks(this); // should reconnect all data items
 
             clonedModel.cloning = false;
-            clonedModel.SuspendClearOutputOnInputChange = false;
-
-            foreach (IModel model in clonedModel.ControlledModels)
-            {
-                model.SuspendClearOutputOnInputChange = false;
-            }
 
             if (outputFileFunctionStore != null && File.Exists(outputFileFunctionStore.Path))
             {
@@ -437,6 +417,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             return AllDataItems.Where(di => di.Role == role);
         }
+
+        public virtual string GetUpToDateDataItemName(string oldDataItemName) => oldDataItemName;
 
         public void Dispose()
         {
@@ -701,8 +683,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                         if (controlGroupDataItem != null)
                         {
-                            SuspendClearOutputOnInputChange = true;
-
                             foreach (IDataItem dataItem in controlGroupDataItem.Children)
                             {
                                 dataItem.Unlink();
@@ -710,8 +690,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                             controlGroupDataItem.Children.Clear();
                             DataItems.Remove(controlGroupDataItem);
-
-                            SuspendClearOutputOnInputChange = false;
                         }
 
                         break;
@@ -736,9 +714,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 AddConnectionDataItem(controlGroupDataItem, output, DataItemRole.Output);
             }
 
-            SuspendClearOutputOnInputChange = true;
             DataItems.Add(controlGroupDataItem);
-            SuspendClearOutputOnInputChange = false;
         }
 
         private static void AddConnectionDataItem(IDataItem controlGroupDataItem, ConnectionPoint connectionPoint, DataItemRole role)
@@ -1618,7 +1594,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             linkedDataItemsOriginalValues.Clear();
 
-            SuspendClearOutputOnInputChange = false;
             outputWriteTimesQueue = null;
 
             // Clear the explicit value converter lookup if relevant
@@ -1639,7 +1614,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private string persistentOutputDirectory;
         private string oldPersistentOutputDirectory = string.Empty;
         private bool removeSourceOutputFolder;
-        private bool writeRestart;
 
         /// <summary>
         /// The persistent output directory to which output files
@@ -1748,7 +1722,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             currentOutputDirectoryPath = expectedOutputPath;
             if (Directory.Exists(expectedOutputPath))
             {
+                bool originalOutputOutOfSync = OutputOutOfSync;
                 ConnectOutput(expectedOutputPath);
+                OutputOutOfSync = originalOutputOutOfSync;
             }
         }
 

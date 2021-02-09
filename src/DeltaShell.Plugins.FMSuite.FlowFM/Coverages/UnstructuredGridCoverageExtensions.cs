@@ -36,18 +36,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                         .UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_coverage_component_to_a_point_cloud_is_not_supported);
             }
 
-            List<Coordinate> coordinates = coverage.Coordinates.ToList();
+            Coordinate[] coordinates = coverage.Coordinates.ToArray();
             IMultiDimensionalArray<double> values = component.Values;
             var noDataValue = (double) component.NoDataValue;
 
-            if (coordinates.Count != values.Count)
+            if (coordinates.Length != values.Count)
             {
                 throw new InvalidOperationException(
                     Resources
                         .UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__number_of_coordinate_does_not_match_number_of_values);
             }
 
-            for (var i = 0; i < coordinates.Count; i++)
+            for (var i = 0; i < coordinates.Length; i++)
             {
                 if (skipMissingValues && values[i] == noDataValue)
                 {

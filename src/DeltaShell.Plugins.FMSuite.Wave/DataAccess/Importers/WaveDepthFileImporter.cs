@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers
@@ -47,6 +48,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers
 
         public bool CanImportOn(object targetObject)
         {
+            var coverage = targetObject as CurvilinearCoverage;
+            if (coverage?.Store is WavmFileFunctionStore)
+            {
+                return false;
+            }
+            
             return true;
         }
 

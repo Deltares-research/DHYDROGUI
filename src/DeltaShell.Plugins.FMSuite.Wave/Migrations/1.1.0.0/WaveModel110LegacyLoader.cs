@@ -6,6 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 using log4net;
 
@@ -31,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Migrations._1._1._0._0
                 return;
             }
 
-            if (!WaveDirectoryStructureMigrationHelper.TryParseDatabasePath(
+            if (!MigrationHelper.TryParseDatabasePath(
                     dbConnection.ConnectionString,
                     out string dbPath))
             {

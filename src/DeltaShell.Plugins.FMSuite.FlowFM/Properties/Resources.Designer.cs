@@ -1216,6 +1216,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Composite Model option is selected for Temperature, however no Meteo Data was specified..
+        /// </summary>
+        public static string ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_temperature_but_no_meteo_data_was_specified {
+            get {
+                return ResourceManager.GetString("ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_t" +
+                        "emperature_but_no_meteo_data_was_specified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to thin dam &apos;{0}&apos; not within grid extent.
         /// </summary>
         public static string WaterFlowFMArea2DValidator_Validate_thin_dam___0___not_within_grid_extent {
@@ -1436,6 +1446,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WaterFlowFMModel_Save_project_after_model_run_with_write_restart {
             get {
                 return ResourceManager.GetString("WaterFlowFMModel_Save_project_after_model_run_with_write_restart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while updating file {0}: {1}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_An_error_occurred_while_updating_file {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_An_error_occurred_while_updating_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not determine dsproj location from database connection: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Could_not_determine_dsproj_location {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Could_not_determine_dsproj_location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not determine the grid file location from the mdu file: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Could_not_determine_grid_file_location {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Could_not_determine_grid_file_location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the file: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Could_not_find_file {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Could_not_find_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while reading file {0}: {1}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Error_occurred_while_reading_file {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Error_occurred_while_reading_file", resourceCulture);
             }
         }
         

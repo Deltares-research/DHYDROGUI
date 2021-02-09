@@ -20,8 +20,10 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
@@ -464,27 +466,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             var model = new WaterFlowFMModel(); // empty model
             Assert.IsTrue(model.Grid.IsEmpty);
-            Assert.IsNotNull(model.Bathymetry);
-            Assert.AreEqual(0, model.Bathymetry.ToPointCloud().PointValues.Count);
-        }
-
-        [Test]
-        public void AddInitialSalinityTest()
-        {
-            // this test checks for SpatialDataLayersChanged() in WaterFlowFMModel.
-            var model = new WaterFlowFMModel();
-
-            Assert.AreEqual(1, model.InitialSalinity.Coverages.Count);
-            IDataItem originalDataItem = model.GetDataItemByValue(model.InitialSalinity.Coverages[0]);
-            string originalName = originalDataItem.Name;
-
-            model.InitialSalinity.VerticalProfile = new VerticalProfileDefinition(VerticalProfileType.TopBottom);
-
-            Assert.AreEqual(2, model.InitialSalinity.Coverages.Count);
-            Assert.IsNotNull(model.GetDataItemByValue(model.InitialSalinity.Coverages[1]));
-            // check if a data item was created
-
-            Assert.AreNotEqual(originalName, model.GetDataItemByValue(model.InitialSalinity.Coverages[0]).Name);
+            Assert.IsNotNull(model.SpatialData.Bathymetry);
+            Assert.AreEqual(0, model.SpatialData.Bathymetry.ToPointCloud().PointValues.Count);
         }
 
         [Test]
@@ -508,9 +491,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             model.TransformCoordinates(transformation);
 
             Assert.AreEqual(model.CoordinateSystem, newCoordinateSystem);
-            Assert.AreEqual(model.Roughness.CoordinateSystem, newCoordinateSystem);
+            Assert.AreEqual(model.SpatialData.Roughness.CoordinateSystem, newCoordinateSystem);
 
-            IDataItem roughnessDataItem = model.GetDataItemByValue(model.Roughness);
+            IDataItem roughnessDataItem = model.GetDataItemByValue(model.SpatialData.Roughness);
             var valueConverter = (SpatialOperationSetValueConverter) roughnessDataItem.ValueConverter;
 
             Assert.AreEqual(model.CoordinateSystem, valueConverter.SpatialOperationSet.CoordinateSystem);
@@ -937,7 +920,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
 
-            IValueConverter valueConverter = model.GetDataItemByValue(model.Roughness).ValueConverter;
+            IValueConverter valueConverter = model.AllDataItems.First(d => d.Value == model.SpatialData.Roughness).ValueConverter;
             var spatialOperationValueConverter = valueConverter as SpatialOperationSetValueConverter;
 
             Assert.IsNotNull(spatialOperationValueConverter);
@@ -955,10 +938,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
 
             UnstructuredGrid originalGrid = model.Grid;
-            IDataItem bathymetryDataItem = model.GetDataItemByValue(model.Bathymetry);
+            IDataItem bathymetryDataItem = model.GetDataItemByValue(model.SpatialData.Bathymetry);
             SpatialOperationSetValueConverter spatialOperationValueConverter =
                 SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(bathymetryDataItem,
-                                                                                                model.Bathymetry.Name);
+                                                                                                model.SpatialData.Bathymetry.Name);
 
             Assert.IsNotNull(spatialOperationValueConverter);
 
@@ -1007,13 +990,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             try
             {
-                Assert.That(model.Bathymetry.Components[0].NoDataValue, Is.EqualTo(-999.0).Within(0.01));
+                Assert.That(model.SpatialData.Bathymetry.Components[0].NoDataValue, Is.EqualTo(-999.0).Within(0.01));
                 TypeUtils.SetPrivatePropertyValue(model, "MduFilePath", @".\");
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = localCopyOfTestFile;
                 model.ReloadGrid(false);
                 Assert.That(model.Grid.Cells.Count, Is.GreaterThan(0));
 
-                Assert.That(model.Bathymetry.Components[0].NoDataValue, Is.EqualTo(-999.0).Within(0.01));
+                Assert.That(model.SpatialData.Bathymetry.Components[0].NoDataValue, Is.EqualTo(-999.0).Within(0.01));
             }
             finally
             {
@@ -1770,32 +1753,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAModelWithADataItem_WhenAddingNewTracerWithSameName_ThenValueOfThisDataItemIsSetAndNoExtraDataItemIsCreated()
-        {
-            // Given
-            const string tracerName = "tracer";
-            var dataItem = new DataItem(null, tracerName, typeof(UnstructuredGridCellCoverage), DataItemRole.Input, "");
-            using (var model = new WaterFlowFMModel())
-            {
-                model.DataItems.Add(dataItem);
-                int dataItemCountBefore = model.DataItems.Count;
-
-                // Pre-condition
-                Assert.That(dataItem.Value, Is.Null);
-
-                // When
-                model.TracerDefinitions.Add(tracerName);
-
-                // Then
-                Assert.That(dataItem.Value, Is.SameAs(model.InitialTracers.Single()),
-                            "Value of data item was not as expected.");
-                Assert.That(model.DataItems.Count, Is.EqualTo(dataItemCountBefore),
-                            "No data items should have been added.");
-            }
-        }
-
-        [Test]
         public void Constructor_CorrectRestartData()
         {
             // Call
@@ -1808,6 +1765,97 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.That(model.RestartInput.Path, Is.Null);
             Assert.That(model.RestartOutput, Is.Not.Null);
             Assert.That(model.RestartOutput, Is.Empty);
+        }
+
+        [Test]
+        public void Constructor_InitializesSpatialData()
+        {
+            // Call
+            using (var model = new WaterFlowFMModel())
+            {
+                // Assert
+                Assert.That(model.SpatialData, Is.Not.Null);
+                Assert.That(model.SpatialDataItems, Is.Not.Empty);
+                Assert.That(model.SpatialDataItems, Is.EqualTo(model.SpatialData.DataItems));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void Constructor_SubscribesToSpatialDataDataItems_WhenAddingItemToSpatialData_PropagatesEvents()
+        {
+            var dataItemsObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+            var modelObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                model.SpatialDataItems.CollectionChanged += dataItemsObserver.OnEventFired;
+                ((INotifyCollectionChanged) model).CollectionChanged += modelObserver.OnEventFired;
+
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false) {Name = "Some tracer"};
+
+                // When
+                model.SpatialData.AddTracer(coverage);
+
+                // Then
+                IDataItem dataItem = model.SpatialData.DataItems.First(d => d.Value == coverage);
+                Assert.That(model.SpatialDataItems, Does.Contain(dataItem));
+                Assert.That(model.SpatialDataItems, Is.EquivalentTo(model.SpatialData.DataItems));
+
+                Assert.That(dataItemsObserver.NCalls, Is.EqualTo(1));
+                Assert.That(dataItemsObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(dataItemsObserver.EventArgses[0].NewItems, Has.Count.EqualTo(1));
+                Assert.That(dataItemsObserver.EventArgses[0].NewItems[0], Is.SameAs(dataItem));
+                Assert.That(dataItemsObserver.EventArgses[0].OldItems, Is.Null);
+
+                Assert.That(modelObserver.NCalls, Is.EqualTo(1));
+                Assert.That(modelObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(modelObserver.EventArgses[0].NewItems, Has.Count.EqualTo(1));
+                Assert.That(modelObserver.EventArgses[0].NewItems[0], Is.SameAs(dataItem));
+                Assert.That(modelObserver.EventArgses[0].OldItems, Is.Null);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void Constructor_SubscribesToSpatialDataDataItems_WhenRemovingItemFromSpatialData_PropagatesEvents()
+        {
+            var dataItemsObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+            var modelObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false) {Name = "Some fraction"};
+                model.SpatialData.AddFraction(coverage);
+                IDataItem dataItem = model.SpatialData.DataItems.First(d => d.Value == coverage);
+
+                model.SpatialDataItems.CollectionChanged += dataItemsObserver.OnEventFired;
+                ((INotifyCollectionChanged) model).CollectionChanged += modelObserver.OnEventFired;
+
+                // Precondition
+                Assert.That(model.SpatialDataItems, Does.Contain(dataItem));
+
+                // When
+                model.SpatialData.RemoveFraction("Some fraction");
+
+                // Then
+                Assert.That(model.SpatialDataItems, Does.Not.Contain(dataItem));
+                Assert.That(model.SpatialDataItems, Is.EquivalentTo(model.SpatialData.DataItems));
+
+                Assert.That(dataItemsObserver.NCalls, Is.EqualTo(1));
+                Assert.That(dataItemsObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(dataItemsObserver.EventArgses[0].NewItems, Is.Null);
+                Assert.That(dataItemsObserver.EventArgses[0].OldItems, Has.Count.EqualTo(1));
+                Assert.That(dataItemsObserver.EventArgses[0].OldItems[0], Is.SameAs(dataItem));
+
+                Assert.That(modelObserver.NCalls, Is.EqualTo(1));
+                Assert.That(modelObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(modelObserver.EventArgses[0].NewItems, Is.Null);
+                Assert.That(modelObserver.EventArgses[0].OldItems, Has.Count.EqualTo(1));
+                Assert.That(modelObserver.EventArgses[0].OldItems[0], Is.SameAs(dataItem));
+            }
         }
 
         [Test]
@@ -2042,7 +2090,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             for (var i = 0; i < bedLevelLocations.Length; i++)
             {
                 TypeUtils.CallPrivateMethod(fmModel, "UpdateBathymetryCoverage", bedLevelLocations[i]);
-                Assert.AreEqual(coverageTypes[i], fmModel.Bathymetry.GetType());
+                Assert.AreEqual(coverageTypes[i], fmModel.SpatialData.Bathymetry.GetType());
             }
         }
 
@@ -2063,10 +2111,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             bedLevelTypeProperty.SetValueAsString(((int) bedLevelLocation).ToString());
 
             // execution
-            TypeUtils.CallPrivateMethod(fmModel, "InitializeUnstructuredGridCoverages");
+            TypeUtils.CallPrivateMethod(fmModel, "SetSpatialCoverages");
 
             // check result
-            Assert.AreEqual(coverageType, fmModel.Bathymetry.GetType());
+            Assert.AreEqual(coverageType, fmModel.SpatialData.Bathymetry.GetType());
         }
 
         [TestCase(true)]
@@ -2220,17 +2268,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var model = new WaterFlowFMModel())
             {
-                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
-                coverage.Components[0].NoDataValue = -999d;
-
-                model.DataItems.Add(new DataItem(coverage, "Some Tracer"));
-
                 // When
                 model.TracerDefinitions.Add("Some Tracer");
 
                 // Then
-                Assert.That(model.InitialTracers.Single(), Is.SameAs(coverage));
-                Assert.That(coverage.Grid, Is.SameAs(model.Grid));
+                UnstructuredGridCellCoverage tracerCoverage = model.SpatialData.InitialTracers.Single();
+                Assert.That(tracerCoverage.Name, Is.EqualTo("Some Tracer"));
+                Assert.That(tracerCoverage.Grid, Is.SameAs(model.Grid));
             }
         }
 
@@ -2241,17 +2285,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var model = new WaterFlowFMModel())
             {
-                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
-                coverage.Components[0].NoDataValue = -999d;
-
-                model.DataItems.Add(new DataItem(coverage, "Some Sediment Fraction_SedConc"));
-
                 // When
                 model.SedimentFractions.Add(new SedimentFraction {Name = "Some Sediment Fraction"});
 
                 // Then
-                Assert.That(model.InitialFractions.Single(), Is.SameAs(coverage));
+                UnstructuredGridCellCoverage coverage = model.SpatialData.InitialFractions.Single();
+                Assert.That(coverage.Name, Is.EqualTo("Some Sediment Fraction_SedConc"));
                 Assert.That(coverage.Grid, Is.SameAs(model.Grid));
+            }
+        }
+
+        [Test]
+        [TestCase("structure01.levelcenter", "structure01.CrestLevel")]
+        [TestCase("structure01.sill_level", "structure01.CrestLevel")]
+        [TestCase("structure01.crest_level", "structure01.CrestLevel")]
+        [TestCase("structure01.gateheight", "structure01.GateLowerEdgeLevel")]
+        [TestCase("structure01.lower_edge_level", "structure01.GateLowerEdgeLevel")]
+        [TestCase("structure01.door_opening_width", "structure01.GateOpeningWidth")]
+        [TestCase("structure01.opening_width", "structure01.GateOpeningWidth")]
+        [TestCase("structure.one.sill_level", "structure.one.CrestLevel")]
+        [TestCase("structure01_sill_level.sill_level", "structure01_sill_level.CrestLevel")]
+        [TestCase("structure01_sill_level", "structure01_sill_level")]
+        [TestCase("structure01.CrestLevel", "structure01.CrestLevel")]
+        [TestCase("structure01.GateLowerEdgeLevel", "structure01.GateLowerEdgeLevel")]
+        [TestCase("structure01.GateOpeningWidth", "structure01.GateOpeningWidth")]
+        public void GetUpToDateDataItemName_ReturnsExpectedValue(string oldTargetName, string expectedCorrectedTargetName)
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                string correctedTargetName = model.GetUpToDateDataItemName(oldTargetName);
+                Assert.That(correctedTargetName, 
+                            Is.EqualTo(expectedCorrectedTargetName), 
+                            "The retrieved corrected target name {0} is not the same as the expected corrected target name {1} for target name {2}", correctedTargetName, expectedCorrectedTargetName, oldTargetName);
             }
         }
     }
