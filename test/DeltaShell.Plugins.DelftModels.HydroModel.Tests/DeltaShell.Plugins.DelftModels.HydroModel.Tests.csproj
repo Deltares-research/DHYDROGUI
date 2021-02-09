@@ -224,8 +224,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AcceptanceModelsTest.cs" />
+    <Compile Include="Acceptance\FileComparerHelper.cs" />
     <Compile Include="Acceptance\GwswAcceptanceModelTestHelper.cs" />
     <Compile Include="Acceptance\Persistence\FlowFmDataPersistenceAcceptanceTests.cs" />
+    <Compile Include="Acceptance\Run\OutputFileComparer.cs" />
     <Compile Include="Acceptance\Run\RunGwswModelAcceptanceTests.cs" />
     <Compile Include="DimrApiWrapperIntegrationTest.cs" />
     <Compile Include="Export\DHydroConfigXmlExporterTest.cs" />

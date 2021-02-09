@@ -18,8 +18,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
     /// </summary>
     public static class FlowFmFileComparer
     {
-        private static readonly string NcDumpExecutablePath;
-
         private static readonly string[] MduLinesToIgnore =
         {
             "# Generated on",                            // Timestamp dependent
@@ -39,14 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             ":history = \"Created on",
             ":source = \"D-Flow Flexible Mesh Plugin"
         };
-
-        private static readonly string VerticalLine = $"==================================================================================={Environment.NewLine}";
-
-        static FlowFmFileComparer()
-        {
-            NcDumpExecutablePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "TestUtils", "NetCDF", "ncdump.exe");
-        }
-
+        
         /// <summary>
         /// Compares the contents of two FlowFM file directories.
         /// </summary>
@@ -62,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             var actualFlowFmFileNames = actualFlowFmFiles.Select(Path.GetFileName);
             var expectedFlowFmFileNames = expectedFlowFmFiles.Select(Path.GetFileName);
             var allFileNames = actualFlowFmFileNames.Union(expectedFlowFmFileNames).ToArray();
-            var overallErrorMessage = $"{Environment.NewLine}{VerticalLine}";
+            var overallErrorMessage = $"{Environment.NewLine}{FileComparerHelper.VerticalLine}";
 
             foreach (var fileName in allFileNames)
             {
@@ -71,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 string expectedFlowFmFile = expectedFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
                 string actualFlowFmFile = actualFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
 
-                if (!FileNameIsEqual(fileName, expectedFlowFmFile, actualFlowFmFile, ref overallErrorMessage))
+                if (!FileComparerHelper.FileNameIsEqual(fileName, expectedFlowFmFile, actualFlowFmFile, ref overallErrorMessage))
                 {
                     identical = false;
                     continue;
@@ -92,8 +83,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                         expectedFlowFmFile = Path.Combine(tempDirectory, "ncdump", "expected", fileName);
                         actualFlowFmFile = Path.Combine(tempDirectory, "ncdump", "actual", fileName);
 
-                        DumpNetCdfToTextFile(expectedFlowFmFile, expectedFlowFmFile);
-                        DumpNetCdfToTextFile(actualFlowFmFile, actualFlowFmFile);
+                        FileComparerHelper.DumpNetCdfToTextFile(expectedFlowFmFile, expectedFlowFmFile);
+                        FileComparerHelper.DumpNetCdfToTextFile(actualFlowFmFile, actualFlowFmFile);
 
                         break;
                     }
@@ -101,11 +92,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
                 SortScrambledFiles(expectedFlowFmFile, actualFlowFmFile);
 
-                identical = CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out var errorMessage) && identical;
+                identical = FileComparerHelper.CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out var errorMessage) && identical;
 
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    overallErrorMessage += $"{errorMessage}{VerticalLine}";
+                    overallErrorMessage += $"{errorMessage}{FileComparerHelper.VerticalLine}";
                 }
             }
 
@@ -114,26 +105,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 Assert.Fail(overallErrorMessage);
             }
         }
-
-        private static bool FileNameIsEqual(string fileName, string expectedFlowFmFile, string actualFlowFmFile, ref string overallErrorMessage)
-        {
-            if (expectedFlowFmFile == null)
-            {
-                overallErrorMessage += $"The actual FlowFM file collection contains a file with name '{fileName}'; this file is not part of the expected collection of FlowFm files.{Environment.NewLine}{VerticalLine}";
-
-                return false;
-            }
-
-            if (actualFlowFmFile == null)
-            {
-                overallErrorMessage += $"The expected FlowFM file collection contains a file with name '{fileName}'; this file is not part of the actual collection of FlowFm files.{Environment.NewLine}{VerticalLine}";
-
-                return false;
-            }
-
-            return true;
-        }
-
+        
         private static void SortScrambledFiles(string expectedFlowFmFile, string actualFlowFmFile)
         {
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(expectedFlowFmFile);
@@ -180,182 +152,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
             new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(iniHeader)).OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
-        }
-
-        private static bool CompareFiles(
-            string filePathExpected,
-            string filePathActual,
-            string[] linesToIgnore,
-            out string errorMessage)
-        {
-            errorMessage = string.Empty;
-
-            ParseFile(filePathExpected, linesToIgnore, out var relevantLinesInExpectedText, out var ignoredLinesInExpectedText);
-            ParseFile(filePathActual, linesToIgnore, out var relevantLinesInActualText, out var ignoredLinesInActualText);
-            
-            GetMismatchingLines(relevantLinesInExpectedText, relevantLinesInActualText, out var mismatchingLinesInExpected, out var mismatchingLinesInActual);
-            
-            RemoveEquivalentLines(mismatchingLinesInExpected, mismatchingLinesInActual);
-
-            if (mismatchingLinesInExpected.Any())
-            {
-                errorMessage = $"Mismatch for FlowFM file '{Path.GetFileName(filePathExpected)}':" +
-                               $"{Environment.NewLine}" +
-                               $"{CreateErrorMessage(mismatchingLinesInExpected.First(), mismatchingLinesInActual.First(), ignoredLinesInExpectedText, ignoredLinesInActualText)}";
-
-                return false;
-            }
-
-            return true;
-        }
-
-        private static void ParseFile(
-            string filePath,
-            string[] linesToIgnore,
-            out List<Tuple<int, string>> relevantLines,
-            out List<Tuple<int, string>> ignoredLines)
-        {
-            relevantLines = new List<Tuple<int, string>>();
-            ignoredLines = new List<Tuple<int, string>>();
-
-            var text = ReadFile(filePath).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            for (var i = 0; i < text.Length; i++)
-            {
-                var lineNumber = i + 1;
-                var lineWithoutTabs = RemoveTabs(text[i]);
-
-                if (linesToIgnore.Any(ignore => lineWithoutTabs.StartsWith(ignore)))
-                {
-                    ignoredLines.Add(new Tuple<int, string>(lineNumber, lineWithoutTabs));
-                }
-                else
-                {
-                    relevantLines.Add(new Tuple<int, string>(lineNumber, lineWithoutTabs));
-                }
-            }
-        }
-
-        private static void GetMismatchingLines(
-            IReadOnlyCollection<Tuple<int, string>> relevantLinesInExpectedText,
-            IReadOnlyCollection<Tuple<int, string>> relevantLinesInActualText,
-            out List<Tuple<int, string>> mismatchingLinesInExpected,
-            out List<Tuple<int, string>> mismatchingLinesInActual)
-        {
-            mismatchingLinesInExpected = new List<Tuple<int, string>>();
-            mismatchingLinesInActual = new List<Tuple<int, string>>();
-
-            for (var i = 0; i < Math.Max(relevantLinesInExpectedText.Count, relevantLinesInActualText.Count); i++)
-            {
-                var expectedLine = relevantLinesInExpectedText.ElementAtOrDefault(i) ?? CreateDummyLine();
-                var actualLine = relevantLinesInActualText.ElementAtOrDefault(i) ?? CreateDummyLine();
-
-                if (string.CompareOrdinal(expectedLine.Item2, actualLine.Item2) != 0)
-                {
-                    mismatchingLinesInExpected.Add(expectedLine);
-                    mismatchingLinesInActual.Add(actualLine);
-                }
-            }
-        }
-
-        private static Tuple<int, string> CreateDummyLine()
-        {
-            return new Tuple<int, string>(-1, "<end of file>");
-        }
-
-        private static void RemoveEquivalentLines(
-            ICollection<Tuple<int, string>> mismatchingLinesInExpected,
-            ICollection<Tuple<int, string>> mismatchingLinesInActual)
-        {
-            var lineEqualityComparer = new LineEqualityComparer();
-            var equivalentLinesInExpected = mismatchingLinesInExpected.Intersect(mismatchingLinesInActual, lineEqualityComparer).ToList();
-            var equivalentLinesInActual = mismatchingLinesInActual.Intersect(mismatchingLinesInExpected, lineEqualityComparer).ToList();
-
-            if (equivalentLinesInExpected.Count != equivalentLinesInActual.Count)
-            {
-                throw new NotSupportedException("Extend comparison algorithm when getting here...");
-            }
-
-            foreach (var equivalentLineInExpected in equivalentLinesInExpected)
-            {
-                mismatchingLinesInExpected.Remove(equivalentLineInExpected);
-            }
-
-            foreach (var equivalentLineInActual in equivalentLinesInActual)
-            {
-                mismatchingLinesInActual.Remove(equivalentLineInActual);
-            }
-        }
-
-        private class LineEqualityComparer : IEqualityComparer<Tuple<int, string>>
-        {
-            public bool Equals(Tuple<int, string> first, Tuple<int, string> second)
-            {
-                return first.Item2.Equals(second.Item2);
-            }
-
-            public int GetHashCode(Tuple<int, string> obj)
-            {
-                return obj.Item2.GetHashCode();
-            }
-        }
-
-        private static string CreateErrorMessage(
-            Tuple<int, string> expectedLine,
-            Tuple<int, string> actualLine,
-            IReadOnlyCollection<Tuple<int, string>> ignoredLinesInExpectedText,
-            IEnumerable<Tuple<int, string>> ignoredLinesInActualText)
-        {
-            var errorMessage = $"Expected: {expectedLine.Item2} [Line {expectedLine.Item1}]{Environment.NewLine}Actual:   {actualLine.Item2} [Line {actualLine.Item1}]{Environment.NewLine}";
-
-            if (ignoredLinesInExpectedText.Any())
-            {
-                errorMessage += $"{Environment.NewLine}Note that the following lines are ignored in the expected file:{Environment.NewLine}";
-                errorMessage = ignoredLinesInExpectedText.Aggregate(errorMessage, (current, ignoredLine) => current + $"[Line {ignoredLine.Item1}] {ignoredLine.Item2}{Environment.NewLine}");
-            }
-
-            if (ignoredLinesInExpectedText.Any())
-            {
-                errorMessage += $"{Environment.NewLine}Note that the following lines are ignored in the actual file:{Environment.NewLine}";
-                errorMessage = ignoredLinesInActualText.Aggregate(errorMessage, (current, ignoredLine) => current + $"[Line {ignoredLine.Item1}] {ignoredLine.Item2}{Environment.NewLine}");
-            }
-
-            return errorMessage;
-        }
-
-        private static string ReadFile(string filePath)
-        {
-            string buffer;
-
-            using (var fileStream = new StreamReader(filePath))
-            {
-                buffer = fileStream.ReadToEnd();
-            }
-
-            return buffer;
-        }
-
-        private static string RemoveTabs(string originalText)
-        {
-            return Regex.Replace(originalText, "[\t]", string.Empty);
-        }
-
-        private static void DumpNetCdfToTextFile(string netCdfFilePath, string targetFilePath)
-        {
-            using (var process = new Process())
-            {
-                process.StartInfo.FileName = NcDumpExecutablePath;
-                process.StartInfo.Arguments = netCdfFilePath;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.Start();
-
-                Directory.CreateDirectory(Path.GetDirectoryName(targetFilePath));
-                File.WriteAllText(targetFilePath, process.StandardOutput.ReadToEnd());
-
-                process.WaitForExit();
-            }
         }
     }
 }
