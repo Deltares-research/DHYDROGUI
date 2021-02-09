@@ -424,7 +424,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.306-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ AcceptanceModels  $(SolutionDir)AcceptanceModels
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.315-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ AcceptanceModels  $(SolutionDir)AcceptanceModels
 
 cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.315-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.2.0.0.315-beta\test-data\DelftTools.TestUtils
 
