@@ -84,7 +84,11 @@ namespace DelftTools.Hydro.Structures
                 }
                 return crestWidth;
             }
-            set { crestWidth = value; }
+            set
+            {
+                crestWidth = value;
+                OnCrestWidthChanged();
+            }
         }
 
         public virtual bool UseCrestLevelTimeSeries
@@ -137,6 +141,15 @@ namespace DelftTools.Hydro.Structures
             if (WeirFormula is GeneralStructureWeirFormula)
             {
                 (WeirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre = crestLevel;
+            }
+        }
+
+        [EditAction]
+        private void OnCrestWidthChanged()
+        {
+            if (WeirFormula is GeneralStructureWeirFormula)
+            {
+                (WeirFormula as GeneralStructureWeirFormula).WidthStructureCentre = crestWidth;
             }
         }
 
