@@ -1713,42 +1713,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(expectedString, resultedString,
                             $"When the model definition does not contain the 'OutputDir' property, then the expected OutputDirectoryName is \"{expectedString}\", but it was \"{resultedString}\".");
         }
-
-        [Test]
-        public void
-            SelectSpatialOperations_WithTwoDataItemsWithSameName_OneWithASpatialOperation_ThenOnlyThisOneIsTakenIntoAccountAndNoWarningIsGiven()
-        {
-            // Set-up
-            const string name = "tracer";
-            IDataItem dataItemWithoutConverter = CreateCoverageDataItem(name, false);
-            IDataItem dataItemWithConverter = CreateCoverageDataItem(name, true);
-
-            var modelDefinition = new WaterFlowFMModelDefinition();
-
-            // Pre-condition
-            Assert.That(modelDefinition.SpatialOperations, Is.Empty);
-
-            // Action
-            void TestAction()
-            {
-                modelDefinition.SelectSpatialOperations(
-                    new[]
-                    {
-                        dataItemWithConverter,
-                        dataItemWithoutConverter
-                    },
-                    new[]
-                    {
-                        name
-                    }
-                );
-            }
-
-            IEnumerable<string> renderedMessages = TestHelper.GetAllRenderedMessages(TestAction);
-            Assert.That(renderedMessages, Is.Empty);
-            Assert.That(modelDefinition.SpatialOperations, Has.Count.EqualTo(1));
-        }
-
+        
         [Test]
         public void SetUseMorphologySediment_True_ThenSedimentModelNumberIsEqualTo4()
         {
@@ -1902,40 +1867,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 Assert.AreEqual(expectedValue, modelDefinition.GetModelProperty(testProp).Value);
             }
-        }
-
-        private static IDataItem CreateCoverageDataItem(string name, bool withValueConverter)
-        {
-            var grid = new UnstructuredGrid
-            {
-                Cells = new List<Cell>
-                {
-                    new Cell(new int[]
-                                 {})
-                }
-            };
-
-            var coverage = new UnstructuredGridCellCoverage(grid, false) {Name = name};
-            var dataItem = MockRepository.GenerateStub<IDataItem>();
-            dataItem.Value = coverage;
-            dataItem.Name = name;
-
-            if (withValueConverter)
-            {
-                dataItem.ValueConverter = GetStubbedValueConverter();
-            }
-
-            return dataItem;
-        }
-
-        private static SpatialOperationSetValueConverter GetStubbedValueConverter()
-        {
-            var operation = new SetValueOperation {OperationType = PointwiseOperationType.Overwrite};
-            var converter = MockRepository.GenerateStub<SpatialOperationSetValueConverter>();
-            var operationSet = MockRepository.GenerateStub<ISpatialOperationSet>();
-            operationSet.Operations = new EventedList<ISpatialOperation> {operation};
-            converter.Stub(c => c.SpatialOperationSet).Return(operationSet);
-            return converter;
         }
     }
 }
