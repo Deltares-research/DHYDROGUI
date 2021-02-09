@@ -14,10 +14,7 @@
                  column="feature_id"/>
     
     <property name ="DataType"/>    
-    <!--<many-to-one name="Data"
-                 cascade="all-delete-orphan"
-                 class="DelftTools.Functions.IFunction, DelftTools.Functions"
-                 column="function_id"/>-->
+
     <many-to-one name="SeriesDataItem" cascade="all"
                  class="DelftTools.Shell.Core.Workflow.DataItems.DataItem, DelftTools.Shell.Core"
                  column="datadataitem_id"/>
