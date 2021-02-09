@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Files.Helpers
             Assert.That(importOperation.FilePath, Is.EqualTo(operation.FilePath));
 
             InterpolateOperation interpolateOperation = result.Item2;
-            Assert.That(interpolateOperation.Name, Is.EqualTo("Interpolation"));
+            Assert.That(interpolateOperation.Name, Is.EqualTo("Interpolate"));
             Assert.That(interpolateOperation.Dirty, Is.True);
             Assert.That(interpolateOperation.Enabled, Is.EqualTo(operation.Enabled));
             Assert.That(interpolateOperation.RelativeSearchCellSize, Is.EqualTo(operation.RelativeSearchCellSize));

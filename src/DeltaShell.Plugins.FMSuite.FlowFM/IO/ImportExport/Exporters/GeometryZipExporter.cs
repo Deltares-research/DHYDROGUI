@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
                 return false;
             }
 
-            return GetModelForGrid?.Invoke(unstructuredGridCoverage.Grid)?.Bathymetry == unstructuredGridCoverage;
+            return GetModelForGrid?.Invoke(unstructuredGridCoverage.Grid)?.SpatialData.Bathymetry == unstructuredGridCoverage;
         }
 
         #endregion

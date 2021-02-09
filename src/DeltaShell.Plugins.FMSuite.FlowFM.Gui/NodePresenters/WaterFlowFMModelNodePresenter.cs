@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new FmModelTreeShortcut("General", NumParamIcon, model, "General");
             yield return model.GetDataItemByValue(model.Area);
             yield return new FmModelTreeShortcut("Grid", UnstrucIcon, model, model.Grid, ShortCutType.Grid);
-            yield return new FmModelTreeShortcut("Bed Level", Resources.unstrucWater, model, model.Bathymetry, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut("Bed Level", Resources.unstrucWater, model, model.SpatialData.Bathymetry, ShortCutType.SpatialCoverage);
             yield return new FmModelTreeShortcut("Time Frame", TimeFrameIcon, model, "Time Frame");
             yield return new FmModelTreeShortcut("Processes", ProcessesIcon, model, "Processes");
             yield return new FmModelTreeShortcut("Initial Conditions", InitialConditionsIcon, model, "Initial Conditions", childObjects: GetInitialConditionsItems(model));
@@ -155,19 +155,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         {
             yield return model.RestartInput;
 
-            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model, model.InitialWaterLevel, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Resources.waterLayers, model, model.SpatialData.InitialWaterLevel, ShortCutType.SpatialCoverage);
 
             if (model.UseSalinity)
             {
-                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Resources.salt, model, model.InitialSalinity.Coverages[0], ShortCutType.SpatialCoverage);
+                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Resources.salt, model, model.SpatialData.InitialSalinity, ShortCutType.SpatialCoverage);
             }
 
             if (model.HeatFluxModelType != HeatFluxModelType.None)
             {
-                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Resources.thermometer, model, model.InitialTemperature, ShortCutType.SpatialCoverage);
+                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Resources.thermometer, model, model.SpatialData.InitialTemperature, ShortCutType.SpatialCoverage);
             }
 
-            foreach (UnstructuredGridCellCoverage tracer in model.InitialTracers)
+            foreach (UnstructuredGridCellCoverage tracer in model.SpatialData.InitialTracers)
             {
                 yield return new FmModelTreeShortcut(tracer.Name, Resources.pipette, model, tracer, ShortCutType.SpatialCoverage);
             }
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 yield break;
             }
 
-            foreach (UnstructuredGridCellCoverage fraction in model.InitialFractions)
+            foreach (UnstructuredGridCellCoverage fraction in model.SpatialData.InitialFractions)
             {
                 yield return new FmModelTreeShortcut(fraction.Name, Resources.pipette, model, fraction, ShortCutType.SpatialCoverage);
             }
@@ -185,9 +185,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
         private static IEnumerable<object> GetPhysicalSubItems(WaterFlowFMModel model)
         {
-            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.RoughnessDataItemName, Resources.Roughness, model, model.Roughness, ShortCutType.SpatialCoverage);
-            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.ViscosityDataItemName, Resources.tube, model, model.Viscosity, ShortCutType.SpatialCoverage);
-            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.DiffusivityDataItemName, Resources.drop, model, model.Diffusivity, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.RoughnessDataItemName, Resources.Roughness, model, model.SpatialData.Roughness, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.ViscosityDataItemName, Resources.tube, model, model.SpatialData.Viscosity, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.DiffusivityDataItemName, Resources.drop, model, model.SpatialData.Diffusivity, ShortCutType.SpatialCoverage);
 
             if (IsUniformHeatFluxModel(model.ModelDefinition.HeatFluxModel))
             {

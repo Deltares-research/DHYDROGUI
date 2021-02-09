@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion => "1.3.0.0";
+        public override string FileFormatVersion => "1.4.0.0";
 
         public override IApplication Application
         {
@@ -105,7 +105,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new FMRestartFileImporter(GetWaterFlowFMModels);
             yield return new BcFileImporter();
             yield return new BcmFileImporter();
-            yield return new BoundaryConditionWpsImporter();
             yield return new GroupablePointCloudImporter
             {
                 GetBaseFolder = list =>

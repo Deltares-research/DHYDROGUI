@@ -30,8 +30,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Pre-condition
                 Assert.That(viewModel.CrestLevel, Is.EqualTo(weir.CrestLevel));
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.CrestLevel)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
             }
         }
 
@@ -62,8 +62,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Pre-condition
                 Assert.That(viewModel.CrestWidth, Is.EqualTo(weir.CrestWidth));
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.CrestWidth)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
             }
         }
 
@@ -105,8 +105,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Pre-condition
                 Assert.That(viewModel.UseCrestLevelTimeSeries, Is.EqualTo(weir.UseCrestLevelTimeSeries));
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                 Assert.That(useCrestLevelTimeSeriesEventArg, Is.Not.Null);
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
             }
         }
 
@@ -156,8 +156,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
 
             using (var viewModel = new WeirPropertiesViewModel(weir))
             {
-                var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
-                viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+                var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
+                viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
                 // Pre-condition
                 Assert.That(viewModel.StructureName, Is.EqualTo(weir.Name));
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
                             Is.EqualTo(nameof(viewModel.StructureName)));
 
                 // Clean up
-                viewModel.PropertyChanged -= propertyChangedObserver.OnPropertyChanged;
+                viewModel.PropertyChanged -= propertyChangedObserver.OnEventFired;
             }
         }
     }

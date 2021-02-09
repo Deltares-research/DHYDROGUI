@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Utils;
 using DeltaShell.NGHS.Common.Utils;
@@ -124,6 +125,47 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(exception.ParamName, Is.EqualTo("objects"));
+        }
+
+        [TestCase(StringComparison.Ordinal, 2)]
+        [TestCase(StringComparison.CurrentCulture, 2)]
+        [TestCase(StringComparison.InvariantCulture, 2)]
+        [TestCase(StringComparison.OrdinalIgnoreCase, 0)]
+        [TestCase(StringComparison.CurrentCultureIgnoreCase, 0)]
+        [TestCase(StringComparison.InvariantCultureIgnoreCase, 0)]
+        public void GetByName_WithStringComparison_ReturnsCorrectResult(StringComparison comparisonType, int expIndex)
+        {
+            INameable[] nameables =
+            {
+                GetNameable("NAME"),
+                GetNameable("Name"),
+                GetNameable("name")
+            };
+
+            // Call
+            INameable result = nameables.GetByName("name", comparisonType);
+
+            // Assert
+            Assert.That(result, Is.SameAs(nameables[expIndex]));
+        }
+
+        [Test]
+        public void GetByName_ComparisonTypeNotDefined_ThrowsInvalidEnumArgumentException()
+        {
+            // Setup
+            INameable[] nameables =
+            {
+                GetNameable("a"),
+                GetNameable("b"),
+                GetNameable("c")
+            };
+
+            // Call
+            void Call() => nameables.GetByName("b", (StringComparison) 100);
+
+            // Assert
+            var exception = Assert.Throws<InvalidEnumArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("comparisonType"));
         }
 
         private IEnumerable<INameable> GetNameableCollection(int n)

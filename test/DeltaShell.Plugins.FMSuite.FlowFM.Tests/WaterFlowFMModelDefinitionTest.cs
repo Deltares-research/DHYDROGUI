@@ -34,12 +34,14 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -931,14 +933,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ImportFromMdu(mduPath);
 
             // update model definition (called during export)
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             IDictionary<string, IList<ISpatialOperation>> mduSpatialOperations = model.ModelDefinition.SpatialOperations;
             Assert.AreEqual(3, mduSpatialOperations.Count);
 
             // retrieve value converter for InitialWaterLevel dataitem
             SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                model.GetDataItemByValue(model.InitialWaterLevel), model.InitialWaterLevel.Name);
+                model.AllDataItems.First(d => d.Value == model.SpatialData.InitialWaterLevel), model.SpatialData.InitialWaterLevel.Name);
 
             // Generate samples to add
             var samples = new AddSamplesOperation(false);
@@ -986,11 +988,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(samples));
 
             // update model definition (called during export)
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             // assert that the incomplete spatial operation has not been added
             Assert.AreEqual(3, mduSpatialOperations.Count);
-            Assert.IsFalse(mduSpatialOperations.Any(o => o.Key == model.InitialWaterLevel.Name));
+            Assert.IsFalse(mduSpatialOperations.Any(o => o.Key == model.SpatialData.InitialWaterLevel.Name));
 
             // create an interpolate operation using the samples added earlier
             var interpolateOperation = new InterpolateOperation();
@@ -998,11 +1000,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(interpolateOperation));
 
             // update model definition (called during export)
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             // assert that the complete spatial operation has now been added
             Assert.AreEqual(4, mduSpatialOperations.Count);
-            Assert.IsTrue(mduSpatialOperations.Any(o => o.Key == model.InitialWaterLevel.Name));
+            Assert.IsTrue(mduSpatialOperations.Any(o => o.Key == model.SpatialData.InitialWaterLevel.Name));
+        }
+
+        [Test]
+        public void SelectSpatialOperations_DataItemHasValueConverter_CreatedAddSamplesOperationForOriginalValue()
+        {
+            // Setup
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 1, 1);
+
+            var originalCoverage = new UnstructuredGridCellCoverage(grid, false);
+            originalCoverage.Components[0].NoDataValue = -999d;
+            originalCoverage.SetValues(new[]
+            {
+                1d,
+                2d,
+                3d
+            });
+
+            var setValueOperation = new SetValueOperation();
+            var valueConverter = Substitute.For<SpatialOperationSetValueConverter>();
+            valueConverter.OriginalValue = originalCoverage;
+            valueConverter.SpatialOperationSet.Operations.Returns(new EventedList<ISpatialOperation> {setValueOperation});
+
+            var dataItem = new DataItem(new UnstructuredGridCellCoverage(grid, false), "Some spatial coverage") {ValueConverter = valueConverter};
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Call
+            modelDefinition.SelectSpatialOperations(new List<IDataItem> {dataItem}, Enumerable.Empty<string>());
+
+            // Assert
+            IList<ISpatialOperation> spatialOperations = modelDefinition.SpatialOperations["Some spatial coverage"];
+            Assert.That(spatialOperations, Has.Count.EqualTo(2));
+            Assert.That(spatialOperations[0], Is.TypeOf<AddSamplesOperation>());
+            Assert.That(spatialOperations[1], Is.SameAs(setValueOperation));
         }
 
         [Test]
@@ -1016,14 +1052,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ImportFromMdu(mduPath);
 
             // Set values in coverage
-            model.Viscosity.SetValues(new[]
+            model.SpatialData.Viscosity.SetValues(new[]
             {
                 500.0
             });
 
             // create a spatial operation set on bathymetry
             SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                model.GetDataItemByValue(model.Viscosity), model.Viscosity.Name);
+                model.AllDataItems.First(d => d.Value == model.SpatialData.Viscosity), model.SpatialData.Viscosity.Name);
 
             // add an unsupported operation (erase for example)
             var polygons = new[]
@@ -1045,14 +1081,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             eraseOperation.SetInputData(SpatialOperation.MaskInputName, mask);
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(eraseOperation));
 
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
-            IList<ISpatialOperation> viscosityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.Viscosity.Name).Value;
+            IList<ISpatialOperation> viscosityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.SpatialData.Viscosity.Name).Value;
 
             Assert.AreEqual(1, viscosityOperations.Count);
             Assert.IsTrue(viscosityOperations[0] is AddSamplesOperation);
 
-            IList<ISpatialOperation> salinityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.InitialSalinity.Name).Value;
+            IList<ISpatialOperation> salinityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.SpatialData.InitialSalinity.Name).Value;
 
             Assert.AreEqual(2, salinityOperations.Count);
             Assert.IsTrue(salinityOperations[0] is SetValueOperation);

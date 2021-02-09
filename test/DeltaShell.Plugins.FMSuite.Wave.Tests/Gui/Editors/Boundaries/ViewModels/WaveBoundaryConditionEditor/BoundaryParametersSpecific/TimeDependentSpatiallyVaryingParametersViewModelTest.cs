@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Functions;
@@ -155,8 +156,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                                              parameters,
                                                                                              allParameters);
 
-            var observer = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += observer.OnPropertyChanged;
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += observer.OnEventFired;
 
             var stateIsValid = false;
 

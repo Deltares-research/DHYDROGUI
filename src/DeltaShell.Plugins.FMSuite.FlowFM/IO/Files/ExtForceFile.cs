@@ -19,11 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         // general keywords in file
         private const string disabledQuantityKey = "DISABLED_QUANTITY";
-        private const string quantityKey = "QUANTITY";
-        private const string fileNameKey = "FILENAME";
-        private const string fileTypeKey = "FILETYPE";
-        private const string methodKey = "METHOD";
-        private const string operandKey = "OPERAND";
 
         // keywords in file used for polygons (*.pol files)
         private const string valueKey = "VALUE";

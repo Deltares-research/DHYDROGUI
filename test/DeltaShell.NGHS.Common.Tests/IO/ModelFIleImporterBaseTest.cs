@@ -4,7 +4,10 @@ using System.Drawing;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.IO;
+using NSubstitute;
 using NUnit.Framework;
+using Rhino.Mocks;
+using Arg = NSubstitute.Arg;
 
 namespace DeltaShell.NGHS.Common.Tests.IO
 {
@@ -69,16 +72,33 @@ namespace DeltaShell.NGHS.Common.Tests.IO
         }
 
         [Test]
-        public void ImportItem_Always_LogsExpectedMessage()
+        public void ImportItem_ImporterReturnsNull_LogsExpectedFailureMessage()
         {
             // Setup
             var importer = new TestModelFileImporterBase();
 
             // Call
-            Action call = () => importer.ImportItem(null);
+            void Call() => importer.ImportItem(null);
 
             // Assert
-            TestHelper.AssertLogMessagesAreGenerated(call, new[]
+            TestHelper.AssertLogMessagesAreGenerated(Call, new[]
+            {
+                "Start importing model data.",
+                "Importing model data failed."
+            }, 2);
+        }
+        
+        [Test]
+        public void ImportItem_ImporterReturnsResult_LogsExpectedFailureMessage()
+        {
+            // Setup
+            var importer = new TestModelFileImporterBase {ImportedItem = new object()};
+
+            // Call
+            void Call() => importer.ImportItem(null);
+
+            // Assert
+            TestHelper.AssertLogMessagesAreGenerated(Call, new[]
             {
                 "Start importing model data.",
                 "Importing model data successful."

@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
@@ -18,10 +20,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
-using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
-using SharpMap;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.SpatialOperations;
 
@@ -47,8 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             LoadInputStateFromMdu(mduFilePath);
             LoadOutputStateFromMdu(mduFilePath);
 
-            ImportSpatialOperationsAfterLoading();
-
             InitializeSyncers();
         }
 
@@ -72,8 +69,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             TracerDefinitions.Clear();
 
             LoadInputStateFromMdu(mduFilePath);
-            AddSpatialDataItems();
-            ImportSpatialOperationsAfterCreating();
 
             if (clearWaqOutputDirProperty)
             {
@@ -153,10 +148,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FireImportProgressChanged("Renaming sub files", 6, TotalImportSteps);
             RenameSubFilesIfApplicable();
 
-            FireImportProgressChanged("Initialize input spatial data", 7, TotalImportSteps);
-            InitializeUnstructuredGridCoverages();
-
             CoordinateSystem = UnstructuredGridFileHelper.GetCoordinateSystem(NetFilePath);
+
+            SetSpatialCoverages();
 
             // read depth layer definition
             DepthLayerDefinition = ModelDefinition.Kmx == 0
@@ -186,6 +180,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             FireImportProgressChanged("Reading model output", 9, TotalImportSteps);
 
             LoadRestartFile(mduFilePath);
+
+            ImportSpatialOperationsAfterCreating();
         }
 
         private string RetrieveOutputDirectory(string mduFilePath)
@@ -235,47 +231,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             RestartInput = new RestartFile(restartFilePath);
         }
 
-        public void ImportSpatialOperationsAfterLoading()
-        {
-            foreach (KeyValuePair<string, IList<ISpatialOperation>> spatialOperation in ModelDefinition
-                .SpatialOperations)
-            {
-                string dataItemName = spatialOperation.Key;
-                IList<ISpatialOperation> spatialOperationList = spatialOperation.Value;
-                IDataItem dataItem = DataItems.FirstOrDefault(di => di.Name == dataItemName);
-
-                // when only one operation is found and it has the same name as when you would generate it from saving,
-                // it will not override the operations found in the database. Assuming that we are loading a dsproj file.
-                // Goes wrong when you change the file name of the quantity and you only have one quantity.
-                if (spatialOperationList.Count != 1 || !(spatialOperationList[0] is ImportSamplesOperation) ||
-                    dataItem == null || dataItem.ValueConverter != null ||
-                    !(dataItem.Value is UnstructuredGridCoverage))
-                {
-                    continue;
-                }
-
-                var samplesOperation = (ImportSamplesOperation) spatialOperationList[0];
-                var coverage = (UnstructuredGridCoverage) dataItem.Value;
-                List<IPointValue> xyzFile = XyzFile.Read(samplesOperation.FilePath).ToList();
-
-                int componentValueCount =
-                    coverage.Arguments.Aggregate(
-                        0,
-                        (total, arguments) =>
-                            total == 0 ? arguments.Values.Count : total * arguments.Values.Count);
-
-                IEnumerable<double> valuesToSet = xyzFile.Count != componentValueCount
-                                                      ? new InterpolateOperation().InterpolateToGrid(
-                                                          xyzFile, coverage, coverage.Grid)
-                                                      : xyzFile.Select(p => p.Value);
-
-                if (valuesToSet.Any())
-                {
-                    coverage.SetValues(valuesToSet);
-                }
-            }
-        }
-
         private void ImportSpatialOperationsAfterCreating()
         {
             FireImportProgressChanged("Reading spatial operations", 9, TotalImportSteps);
@@ -285,7 +240,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 string dataItemName = spatialOperation.Key;
                 IList<ISpatialOperation> spatialOperationList = spatialOperation.Value;
-                IDataItem dataItem = DataItems.FirstOrDefault(di => di.Name == dataItemName);
+                IDataItem dataItem = SpatialData.DataItems.FirstOrDefault(di => di.Name == dataItemName);
 
                 if (!spatialOperationList.Any())
                 {
@@ -328,6 +283,41 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         valueConverter.SpatialOperationSet.AddOperation(operation);
                     }
                 }
+
+                MakeOperationNamesUnique(valueConverter.SpatialOperationSet);
+                ExecuteOperations(valueConverter);
+            }
+        }
+
+        private static void ExecuteOperations(SpatialOperationSetValueConverter valueConverter)
+        {
+            bool eventBubblingEnabled = EventSettings.BubblingEnabled;
+            try
+            {
+                // while opening, bubbling of events is disabled,
+                // which will prevent the execution of spatial operations.
+                EventSettings.BubblingEnabled = true;
+                valueConverter.SpatialOperationSet.Execute();
+            }
+            finally
+            {
+                EventSettings.BubblingEnabled = eventBubblingEnabled;
+            }
+        }
+
+        private static void MakeOperationNamesUnique(ISpatialOperationSet operationSet)
+        {
+            var uniqueStringProvider = new UniqueStringProvider();
+            foreach (ISpatialOperation operation in operationSet.Operations)
+            {
+                if (operation is ISpatialOperationSet subOperationSet)
+                {
+                    operation.Name = uniqueStringProvider.GetUniqueStringFor("set");
+                    MakeOperationNamesUnique(subOperationSet);
+                    continue;
+                }
+
+                operation.Name = uniqueStringProvider.GetUniqueStringFor(operation.Name);
             }
         }
 

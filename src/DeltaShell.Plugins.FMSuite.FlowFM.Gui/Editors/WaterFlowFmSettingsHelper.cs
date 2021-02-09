@@ -105,26 +105,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 generalCategory.AddWpfGuiProperty(coordSys);
             }
 
-            WpfGuiCategory icCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("initial conditions"));
-            if (icCategory != null)
-            {
-                var coverageLayers = new WpfGuiProperty(new FieldUIDescription(d => EditCoverageLayersHelper.DepthLayersToString(model), null, o => true, o => true)
-                {
-                    Category = "Initial Conditions",
-                    SubCategory = "Salinity",
-                    ToolTip = EditCoverageLayersHelper.ToolTip,
-                    Label = EditCoverageLayersHelper.Label,
-                    ValueType = typeof(string),
-                    HasMaxValue = false,
-                    HasMinValue = false
-                });
-                coverageLayers.CustomCommand.TextBoxEnabled = false;
-                coverageLayers.CustomCommand.ButtonFunction = (o) => EditCoverageLayersHelper.ButtonAction(o);
-                coverageLayers.CustomCommand.ButtonImage = EditCoverageLayersHelper.ButtonImage;
-
-                icCategory.AddWpfGuiProperty(coverageLayers);
-            }
-
             //Add more settings
             //Use the FieldUIDescription to generate the getters and the enable / disable functions.
             Func<object, bool> isEnabledFunc = o => true;

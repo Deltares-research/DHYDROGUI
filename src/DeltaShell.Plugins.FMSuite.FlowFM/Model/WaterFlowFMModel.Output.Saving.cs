@@ -79,15 +79,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     FileUtils.CopyAll(sourceOutputDirectory, targetOutputDirectory, string.Empty);
                 }
             }
+            
+            currentOutputDirectoryPath = targetOutputDirectoryPath;
+            ReconnectOutputFiles(currentOutputDirectoryPath, true);
 
             if (sourceIsWorkingDir)
             {
                 CleanDirectory(WorkingDirectoryPath);
             }
-
-            currentOutputDirectoryPath = targetOutputDirectoryPath;
-
-            ReconnectOutputFiles(currentOutputDirectoryPath, true);
         }
 
         private static void MoveAllContentDirectory(DirectoryInfo sourceDirectory, string targetDirectoryPath)
