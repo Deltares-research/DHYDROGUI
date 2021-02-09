@@ -291,7 +291,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private static void ExecuteOperations(SpatialOperationSetValueConverter valueConverter)
         {
-            bool eventBubblingEnabled = EventSettings.BubblingEnabled;
+            if (EventSettings.BubblingEnabled)
+            {
+                return;
+            }
+
             try
             {
                 // while opening, bubbling of events is disabled,
@@ -301,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
             finally
             {
-                EventSettings.BubblingEnabled = eventBubblingEnabled;
+                EventSettings.BubblingEnabled = false;
             }
         }
 
