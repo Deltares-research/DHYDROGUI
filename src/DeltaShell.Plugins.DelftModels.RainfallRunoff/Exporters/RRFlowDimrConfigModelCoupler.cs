@@ -23,8 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             {
                 if (!(target is IDimrModel targetDimr)) return;
 
-                var links = sourceRainfallRunoffModel.Basin.Catchments.Where(c => !Equals(c.CatchmentType, CatchmentType.NWRW)).SelectMany(c => c.Links);
-                //var links = sourceRainfallRunoffModel.Basin.Catchments.SelectMany(c => c.Links);
+                var links = sourceRainfallRunoffModel.Basin.Catchments.SelectMany(c => c.Links);
                 SetCouplingInformation(sourceRainfallRunoffModel, targetDimr, links, FunctionAttributes.StandardNames.WaterDischarge);
             }
 
