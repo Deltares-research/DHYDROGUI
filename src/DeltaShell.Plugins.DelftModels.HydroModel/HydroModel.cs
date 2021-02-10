@@ -247,6 +247,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get
             {
+                // Force reset when model is being reinitialized
+                if (Status == ActivityStatus.Initializing || Status == ActivityStatus.None)
+                {
+                    return GetProgressTextCore(0);
+                }
+                
                 TimeDependentModelBase[] timeDependentModelBases = Activities.GetActivitiesOfType<TimeDependentModelBase>().ToArray();
                 return timeDependentModelBases.Any()
                            ? GetProgressTextCore(timeDependentModelBases.Average(m => m.ProgressPercentage))
@@ -779,6 +785,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnInitialize()
         {
+            OnProgressChanged();
+            
             ValidationReport validationReport = Validate();
             if (validationReport.ErrorCount > 0)
             {
@@ -1128,7 +1136,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual void AutoAddRequiredLinks(IActivity activity, bool relinking = false)
         {
-            builder.AutoAddRequiredLinks(this, activity, relinking);
+            builder.AutoAddRequiredLinks(this, activity, relinking); 
         }
 
         public static HydroModel BuildModel(ModelGroup modelGroup)
