@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
@@ -205,7 +206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="coverage"/> is <c>null</c>.
         /// </exception>
-        public static void ReplaceMissingValues(this UnstructuredGridCoverage coverage)
+        public static void ReplaceMissingValuesWithDefaultValues(this UnstructuredGridCoverage coverage)
         {
             Ensure.NotNull(coverage, nameof(coverage));
 
@@ -216,15 +217,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             }
 
             coverage.BeginEdit(new DefaultEditAction($"Replacing missing values for coverage {coverage.Name}"));
-            List<double> values = ReplaceMissingValues(variable).ToList();
+            List<double> values = GenerateCollectionWithReplacedValues(variable).ToList();
             variable.Values.Clear();
 
-            FunctionHelper.SetValuesRaw(variable, (IEnumerable<double>) values);
+            FunctionHelper.SetValuesRaw(variable, (IList) values);
 
             coverage.EndEdit();
         }
 
-        private static IEnumerable<T> ReplaceMissingValues<T>(IVariable<T> variable)
+        private static IEnumerable<T> GenerateCollectionWithReplacedValues<T>(IVariable<T> variable)
         {
             foreach (T value in variable.Components[0].Values)
             {

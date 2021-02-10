@@ -403,7 +403,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
             }
 
-            coverage.ReplaceMissingValues();
+            coverage.ReplaceMissingValuesWithDefaultValues();
         }
 
         private static void ClearVariable(IVariable variable)

@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [TestCase(-1d)]
         [TestCase(7d)]
-        public void ReplaceMissingValues_ReplacesNoDataValuesWithDefaultValues(double defaultValue)
+        public void ReplaceMissingValuesWithDefaultValues_ReplacesNoDataValuesWithDefaultValues(double defaultValue)
         {
             // Setup
             const double noDataValue = -1d;
@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             component.Values[3] = 3d;
 
             // Call
-            coverage.ReplaceMissingValues();
+            coverage.ReplaceMissingValuesWithDefaultValues();
 
             // Assert
             Assert.That(coverage.Components[0].Values[0], Is.EqualTo(defaultValue));
@@ -212,10 +212,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void ReplaceMissingValues_CoverageNull_ThrowsArgumentNullException()
+        public void ReplaceMissingValuesWithDefaultValues_CoverageNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => ((UnstructuredGridCoverage) null).ReplaceMissingValues();
+            void Call() => ((UnstructuredGridCoverage) null).ReplaceMissingValuesWithDefaultValues();
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
