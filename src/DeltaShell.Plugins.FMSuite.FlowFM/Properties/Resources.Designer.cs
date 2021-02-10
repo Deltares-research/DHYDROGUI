@@ -1011,6 +1011,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} already contains a component with name &apos;{1}&apos;..
+        /// </summary>
+        public static string SourceAndSinkFunction_AddTracer_Already_contains_a_component_with_name {
+            get {
+                return ResourceManager.GetString("SourceAndSinkFunction_AddTracer_Already_contains_a_component_with_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Additional values detected for one or more physical processes.
         /// </summary>
         public static string SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes {

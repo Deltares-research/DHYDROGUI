@@ -5,6 +5,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
 {
@@ -70,10 +71,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
         /// </summary>
         /// <param name="name">The name of the tracer.</param>
         /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="name"/> is <c>null</c> or empty.
+        /// Thrown when <paramref name="name"/> is <c>null</c> or empty or when a component already exists with this name.
         /// </exception>
         public void AddTracer(string name)
         {
+            ThrowIfContains(name);
+
             Components.Add(new TracerVariable(name));
         }
 
@@ -82,13 +85,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
         /// </summary>
         /// <param name="name">The name of the sediment fraction.</param>
         /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="name"/> is <c>null</c> or empty.
+        /// Thrown when <paramref name="name"/> is <c>null</c> or empty or when a component already exists with this name.
         /// </exception>
         public void AddSedimentFraction(string name)
         {
+            ThrowIfContains(name);
+
             int index = Components.FindIndex(c => c.Name == SourceSinkVariableInfo.SecondaryFlowVariableName);
 
             Components.Insert(index, new SedimentFractionVariable(name));
+        }
+
+        private void ThrowIfContains(string name)
+        {
+            if (Components.Select(c => c.Name).Contains(name))
+            {
+                throw new ArgumentException(string.Format(Resources.SourceAndSinkFunction_AddTracer_Already_contains_a_component_with_name, nameof(SourceAndSinkFunction), name));
+            }
         }
 
         private T GetVariable<T>(string name) where T : IVariable

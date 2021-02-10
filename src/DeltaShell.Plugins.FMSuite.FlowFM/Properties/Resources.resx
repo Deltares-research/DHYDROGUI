@@ -679,4 +679,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="WaterFlowFMModel130LegacyLoader_Could_not_determine_dsproj_location" xml:space="preserve">
     <value>Could not determine dsproj location from database connection: {0}</value>
   </data>
+  <data name="SourceAndSinkFunction_AddTracer_Already_contains_a_component_with_name" xml:space="preserve">
+    <value>{0} already contains a component with name '{1}'.</value>
+  </data>
 </root>
