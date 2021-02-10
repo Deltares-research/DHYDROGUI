@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static UnstructuredGridVertexCoverage CreateVertexCoverage(
             string name, UnstructuredGrid grid, IEnumerable<double> componentValues)
         {
-            return CreateUnstructuredGridCoverage(name, grid, new UnstructuredGridVertexCoverage(new UnstructuredGrid(), false),
+            return ConfigureUnstructuredGridCoverage(name, grid, new UnstructuredGridVertexCoverage(new UnstructuredGrid(), false),
                                                   GetArgumentValues(grid.Vertices.Count), componentValues, noDataValue);
         }
 
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static UnstructuredGridCellCoverage CreateCellCoverage(
             string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null, double defaultValue = noDataValue)
         {
-            return CreateUnstructuredGridCoverage(name, grid, new UnstructuredGridCellCoverage(new UnstructuredGrid(), false),
+            return ConfigureUnstructuredGridCoverage(name, grid, new UnstructuredGridCellCoverage(new UnstructuredGrid(), false),
                                                   GetArgumentValues(grid.Cells.Count), componentValues, defaultValue);
         }
 
@@ -51,11 +51,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static UnstructuredGridFlowLinkCoverage CreateFlowLinkCoverage(
             string name, UnstructuredGrid grid)
         {
-            return CreateUnstructuredGridCoverage(name, grid, new UnstructuredGridFlowLinkCoverage(new UnstructuredGrid(), false),
+            return ConfigureUnstructuredGridCoverage(name, grid, new UnstructuredGridFlowLinkCoverage(new UnstructuredGrid(), false),
                                                   GetArgumentValues(grid.FlowLinks.Count), null, noDataValue);
         }
 
-        private static T CreateUnstructuredGridCoverage<T>(string name, UnstructuredGrid grid, T coverage,
+        private static T ConfigureUnstructuredGridCoverage<T>(string name, UnstructuredGrid grid, T coverage,
                                                            IEnumerable<int> argumentValues,
                                                            IEnumerable<double> componentValues,
                                                            double defaultValue)
