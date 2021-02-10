@@ -4,9 +4,9 @@ using GeoAPI.Extensions.Coverages;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 {
     /// <summary>
-    /// This <see cref="PointValueArrayComparer"/> compares <see cref="IPointValue"/> arrays.
+    /// This <see cref="PointValueArrayEqualityComparer"/> compares <see cref="IPointValue"/> arrays on equality.
     /// </summary>
-    public class PointValueArrayComparer : IEqualityComparer<IPointValue[]>
+    public class PointValueArrayEqualityComparer : IEqualityComparer<IPointValue[]>
     {
         public bool Equals(IPointValue[] x, IPointValue[] y)
         {
@@ -15,12 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 return true;
             }
 
-            if (ReferenceEquals(x, null))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(y, null))
+            if (x == null || y == null)
             {
                 return false;
             }
@@ -35,17 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                 IPointValue pointValueX = x[i];
                 IPointValue pointValueY = y[i];
 
-                if (!pointValueX.Value.Equals(pointValueY.Value))
-                {
-                    return false;
-                }
-
-                if (!pointValueX.X.Equals(pointValueY.X))
-                {
-                    return false;
-                }
-
-                if (!pointValueX.Y.Equals(pointValueY.Y))
+                if (!ArePointValuesEqual(pointValueX, pointValueY))
                 {
                     return false;
                 }
@@ -69,6 +54,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                     return hashCode;
                 }
             }
+        }
+
+        private static bool ArePointValuesEqual(IPointValue pointValueX, IPointValue pointValueY)
+        {
+            if (!pointValueX.Value.Equals(pointValueY.Value))
+            {
+                return false;
+            }
+
+            if (!pointValueX.X.Equals(pointValueY.X))
+            {
+                return false;
+            }
+
+            if (!pointValueX.Y.Equals(pointValueY.Y))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private static int GetHashCode(IPointValue pointValue)

@@ -565,7 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 return false;
             }
 
-            return new PointValueArrayComparer().Equals(samples.PointValues.ToArray(), 
+            return new PointValueArrayEqualityComparer().Equals(samples.PointValues.ToArray(), 
                                                         importSamplesOperation.GetPoints().ToArray());
 
         }
