@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace DeltaShell.NGHS.Common.Tests.Utils
 {
     [TestFixture]
-    public class ListExtensionsTest
+    public class IEnumerableExtensionsTest
     {
         [TestCaseSource(nameof(ArgumentNullCases))]
         public void FindIndex_ArgumentNull_ThrowsArgumentNullException(IList<int> source, Func<int, bool> predicate, string expParamName)
@@ -19,6 +19,7 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
             Assert.That(e.ParamName, Is.EqualTo(expParamName));
         }
 
+        [Test]
         [TestCase(1, 0)]
         [TestCase(2, -1)]
         [TestCase(3, 1)]

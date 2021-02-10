@@ -152,7 +152,7 @@
     <Compile Include="Layers\MapLayerProviderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\EnumUtilsTest.cs" />
-    <Compile Include="Utils\ListExtensionsTest.cs" />
+    <Compile Include="Utils\IEnumerableExtensionsTest.cs" />
     <Compile Include="Utils\MigrationHelperTest.cs" />
     <Compile Include="Utils\NameableCollectionExtensionsTest.cs" />
     <Compile Include="Utils\RepeatTest.cs" />
