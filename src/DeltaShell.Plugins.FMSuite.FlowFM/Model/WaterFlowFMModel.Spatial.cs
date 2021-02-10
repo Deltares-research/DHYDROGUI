@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
@@ -386,10 +387,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void UpdateSpatialDataAfterGridSet(UnstructuredGrid newGrid, bool nodesChanged, bool cellsChanged,
                                                    bool linksChanged)
         {
-            foreach (IDataItem spatialDataItem in SpatialData.DataItems)
-            {
-                UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, spatialDataItem);
-            }
+            Parallel.ForEach(SpatialData.DataItems, d => UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, d ));
+            
         }
 
         private void UpdateCoverageGrid(UnstructuredGrid newGrid,
