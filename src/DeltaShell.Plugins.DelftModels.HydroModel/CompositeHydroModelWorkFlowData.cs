@@ -39,14 +39,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        public IEnumerable<IHydroModelWorkFlowData> WorkFlowDatas
-        {
-            get { return hydroModelWorkFlowDataLookUp.Keys; }
-        }
-
         public IEnumerable<IDataItem> OutputDataItems
         {
-            get { return WorkFlowDatas.SelectMany(d => d.OutputDataItems); }
+            get { return hydroModelWorkFlowDataLookUp.Keys.SelectMany(d => d.OutputDataItems); }
         }
 
         public void TryRestoreData(ICompositeActivity currentWorkflow)
