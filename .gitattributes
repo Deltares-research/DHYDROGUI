@@ -3521,10 +3521,6 @@ test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/ViewModels/TimeDependentMod
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/WaterFlowFMModelRtcTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/WaterFlowFmModelDirectoryStructureTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/packages.config -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModelsReferenceOutput/GWSW/KorteWoerden/FlowFM/FlowFM_his.nc -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModelsReferenceOutput/GWSW/KorteWoerden/FlowFM/FlowFM_map.nc -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModelsReferenceOutput/SOBEK2/DarEsSalaam/FlowFM/FlowFM_his.nc -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/AcceptanceModelsReferenceOutput/SOBEK2/DarEsSalaam/FlowFM/FlowFM_map.nc -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/dimrExport/expected.xml -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/fmFloodingBoundary1/bank.pliz -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/test-data/fmFloodingBoundary1/flooding1d2d_bnd.ext -text
