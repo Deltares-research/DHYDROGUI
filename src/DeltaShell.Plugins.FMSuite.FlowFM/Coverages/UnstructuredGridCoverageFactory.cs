@@ -19,13 +19,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         /// <param name="name"> The name of the coverage. </param>
         /// <param name="grid"> The unstructured grid. </param>
         /// <param name="componentValues"> Optional parameter; the component values to set the coverage with. </param>
-        /// <param name="defaultValue"> Optional parameter; the default component value to set the coverage with. </param>
         /// <returns> The created <see cref="UnstructuredGridVertexCoverage"/>. </returns>
         public static UnstructuredGridVertexCoverage CreateVertexCoverage(
-            string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null, double defaultValue = -999d)
+            string name, UnstructuredGrid grid, IEnumerable<double> componentValues)
         {
             return CreateUnstructuredGridCoverage(name, grid, new UnstructuredGridVertexCoverage(new UnstructuredGrid(), false),
-                                                  GetArgumentValues(grid.Vertices.Count), componentValues, defaultValue);
+                                                  GetArgumentValues(grid.Vertices.Count), componentValues, noDataValue);
         }
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         /// <param name="defaultValue"> Optional parameter; the default component value to set the coverage with. </param>
         /// <returns> The created <see cref="UnstructuredGridCellCoverage"/>. </returns>
         public static UnstructuredGridCellCoverage CreateCellCoverage(
-            string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null, double defaultValue = -999d)
+            string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null, double defaultValue = noDataValue)
         {
             return CreateUnstructuredGridCoverage(name, grid, new UnstructuredGridCellCoverage(new UnstructuredGrid(), false),
                                                   GetArgumentValues(grid.Cells.Count), componentValues, defaultValue);
@@ -48,14 +47,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         /// </summary>
         /// <param name="name"> The name of the coverage. </param>
         /// <param name="grid"> The unstructured grid. </param>
-        /// <param name="componentValues"> Optional parameter; the component values to set the coverage with. </param>
-        /// <param name="defaultValue"> Optional parameter; the default component value to set the coverage with. </param>
         /// <returns> The created <see cref="UnstructuredGridFlowLinkCoverage"/>. </returns>
         public static UnstructuredGridFlowLinkCoverage CreateFlowLinkCoverage(
-            string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null, double defaultValue = -999d)
+            string name, UnstructuredGrid grid)
         {
             return CreateUnstructuredGridCoverage(name, grid, new UnstructuredGridFlowLinkCoverage(new UnstructuredGrid(), false),
-                                                  GetArgumentValues(grid.FlowLinks.Count), componentValues, defaultValue);
+                                                  GetArgumentValues(grid.FlowLinks.Count), null, noDataValue);
         }
 
         private static T CreateUnstructuredGridCoverage<T>(string name, UnstructuredGrid grid, T coverage,
