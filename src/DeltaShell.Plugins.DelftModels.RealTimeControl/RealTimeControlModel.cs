@@ -1767,7 +1767,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 if (Directory.Exists(expectedOutputPath))
                 {
+                    bool originalOutputOutOfSync = OutputOutOfSync;
                     ConnectOutput(expectedOutputPath);
+                    OutputOutOfSync = originalOutputOutOfSync;
                     return;
                 }
             }
