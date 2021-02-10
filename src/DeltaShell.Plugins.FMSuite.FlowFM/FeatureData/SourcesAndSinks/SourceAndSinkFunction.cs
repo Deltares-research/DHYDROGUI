@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
     /// <remarks>
     /// This variables of this function should not be changed from outside this class.
     /// </remarks>
-    public sealed class SourceAndSinkFunction : Function, ISourceAndSinkFunction
+    public sealed class SourceAndSinkFunction : Function
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SourceAndSinkFunction"/> class.

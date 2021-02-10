@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
     /// SourceAndSink represents a timeseries on a polyline.
     /// </summary>
     [Entity]
-    public sealed class SourceAndSink : FeatureData<ISourceAndSinkFunction, Feature2D>
+    public sealed class SourceAndSink : FeatureData<SourceAndSinkFunction, Feature2D>
     {
         public SourceAndSink() => Data = new SourceAndSinkFunction();
 
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
         /// <summary>
         /// The function data on this <see cref="SourceAndSink"/>.
         /// </summary>
-        public ISourceAndSinkFunction Function => Data;
+        public SourceAndSinkFunction Function => Data;
 
         private void FeaturePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
