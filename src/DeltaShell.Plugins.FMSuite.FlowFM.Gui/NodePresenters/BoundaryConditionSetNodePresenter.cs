@@ -39,18 +39,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         protected override bool RemoveNodeData(object parentNodeData, BoundaryConditionSet nodeData)
         {
             var boundaryConditionSets = parentNodeData as IList<BoundaryConditionSet>;
-            if (boundaryConditionSets != null)
+            if (boundaryConditionSets != null && boundaryConditionSets.Remove(nodeData))
             {
-                return boundaryConditionSets.Remove(nodeData);
+                ResetGuiSelection();
+                return true;
             }
 
             var treeShortCut = parentNodeData as FmModelTreeShortcut;
             if (treeShortCut != null)
             {
                 boundaryConditionSets = treeShortCut.Value as IList<BoundaryConditionSet>;
-                if (boundaryConditionSets != null)
+                if (boundaryConditionSets != null && boundaryConditionSets.Remove(nodeData))
                 {
-                    return boundaryConditionSets.Remove(nodeData);
+                    ResetGuiSelection();
+                    return true;
                 }
             }
 
