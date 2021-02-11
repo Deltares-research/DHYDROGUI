@@ -1,4 +1,5 @@
 ﻿using System;
+using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using NUnit.Framework;
 
@@ -14,6 +15,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
             var variable = new SedimentFractionVariable("Some name");
 
             // Assert
+            Assert.That(variable, Is.InstanceOf<Variable<double>>());
             Assert.That(variable.Name, Is.EqualTo("Some name"));
             Assert.That(variable.Unit.Name, Is.EqualTo(""));
             Assert.That(variable.Unit.Symbol, Is.EqualTo(""));
