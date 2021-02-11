@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 {
@@ -14,6 +15,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
     /// </summary>
     public class RRFlowDimrConfigModelCoupler : IDimrConfigModelCoupler
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(RRFlowDimrConfigModelCoupler));
+
         private readonly IList<DimrCoupleInfo> coupleInfos = new List<DimrCoupleInfo>();
 
         public RRFlowDimrConfigModelCoupler(IModel source, IModel target, ICompositeActivity sourceCoupler, ICompositeActivity targetCoupler)
@@ -76,7 +79,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
                 if (sourceString == null || targetString == null)
                 {
-                    throw new ArgumentException($"Cannot serialize hydrolink {link} to d-hydro xml");
+                    log.Warn($"Cannot serialize hydrolink {link} to d-hydro xml. This is probably because this is an internal link of the model");
+                    continue;
                 }
 
                 coupleInfos.Add(new DimrCoupleInfo {Source = sourceString, Target = targetString});
