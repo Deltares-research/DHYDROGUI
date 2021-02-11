@@ -109,13 +109,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             using (var fileStream = new FileStream(mduFilePath, FileMode.Open, FileAccess.Read))
             {
                 IList<DelftIniCategory> categories = new MduDelftIniReader().ReadDelftIniFile(fileStream, filePath);
-                
-                DelftIniCategory geometryCategory = 
+
+                DelftIniCategory geometryCategory =
                     categories.FirstOrDefault(x => x.Name.ToLowerInvariant() == "geometry");
-                DelftIniProperty netFileProperty = 
+                DelftIniProperty netFileProperty =
                     geometryCategory?.Properties
                                     .FirstOrDefault(x => x.Name.ToLowerInvariant() == KnownProperties.NetFile);
-                
+
                 string netFileRelativePath = netFileProperty?.Value;
                 return netFileRelativePath != null ? Path.Combine(mduFileDir, netFileRelativePath) : null;
             }
@@ -238,6 +238,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             Parallel.ForEach(ModelDefinition.SpatialOperations, LoadSpatialOperations);
 
+            ExecuteSpatialOperations();
         }
 
         private void LoadSpatialOperations(KeyValuePair<string, IList<ISpatialOperation>> spatialOperation)
@@ -289,10 +290,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
 
             MakeOperationNamesUnique(valueConverter.SpatialOperationSet);
-            ExecuteOperations(valueConverter);
         }
 
-        private static void ExecuteOperations(SpatialOperationSetValueConverter valueConverter)
+        private void ExecuteSpatialOperations()
         {
             if (EventSettings.BubblingEnabled)
             {
@@ -304,11 +304,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 // while opening, bubbling of events is disabled,
                 // which will prevent the execution of spatial operations.
                 EventSettings.BubblingEnabled = true;
-                valueConverter.SpatialOperationSet.Execute();
+                Parallel.ForEach(SpatialData.DataItems, ExecuteSpatialOperations);
             }
             finally
             {
                 EventSettings.BubblingEnabled = false;
+            }
+        }
+
+        private static void ExecuteSpatialOperations(IDataItem dataItem)
+        {
+            if (dataItem.ValueConverter is SpatialOperationSetValueConverter valueConverter)
+            {
+                valueConverter.SpatialOperationSet.Execute();
             }
         }
 
