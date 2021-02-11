@@ -167,22 +167,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             AssertCorrectSpatialOperations(newDataItem, polygon, "initialtracersubstance_1");
         }
 
-        private static void AssertCorrectSpatialOperations(IDataItem newDataItem, Feature2DPolygon polygon, string quantityName)
-        {
-            IEventedList<ISpatialOperation> operation = ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations;
-            var importOperation = ((SpatialOperationSet) operation[0]).Operations.Single() as ImportSamplesOperation;
-            Assert.That(importOperation, Is.Not.Null);
-            Assert.That(importOperation.Name, Is.EqualTo(quantityName));
-
-            var interpolateOperation = operation[1] as InterpolateOperation;
-            Assert.That(interpolateOperation, Is.Not.Null);
-
-            var setValueOperation = operation[2] as SetValueOperation;
-            Assert.IsNotNull(setValueOperation);
-            Assert.IsNotNull(setValueOperation.Mask.Provider.GetFeature(0));
-            Assert.AreEqual(polygon.Geometry.Coordinates.ToArray(), setValueOperation.Mask.Provider.GetFeature(0).Geometry.Coordinates.ToArray());
-        }
-
         [Test]
         public void AddInitialTracerOperationsAndBoundaryAndReload()
         {
@@ -350,6 +334,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(newDataItem);
 
             AssertCorrectSpatialOperations(newDataItem, polygon, "initialtracersubstance_2");
+        }
+
+        private static void AssertCorrectSpatialOperations(IDataItem newDataItem, Feature2DPolygon polygon, string quantityName)
+        {
+            IEventedList<ISpatialOperation> operation = ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations;
+            var importOperation = ((SpatialOperationSet) operation[0]).Operations.Single() as ImportSamplesOperation;
+            Assert.That(importOperation, Is.Not.Null);
+            Assert.That(importOperation.Name, Is.EqualTo(quantityName));
+
+            var interpolateOperation = operation[1] as InterpolateOperation;
+            Assert.That(interpolateOperation, Is.Not.Null);
+
+            var setValueOperation = operation[2] as SetValueOperation;
+            Assert.IsNotNull(setValueOperation);
+            Assert.IsNotNull(setValueOperation.Mask.Provider.GetFeature(0));
+
+            CollectionAssert.AreEqual(polygon.Geometry.Coordinates, setValueOperation.Mask.Provider.GetFeature(0).Geometry.Coordinates);
         }
 
         private static WaterFlowFMModel CreateSimpleBoxModel()
