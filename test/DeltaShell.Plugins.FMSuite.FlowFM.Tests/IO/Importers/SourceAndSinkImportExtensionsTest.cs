@@ -75,26 +75,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.True(sourceAndSinkComponentValues.HasUniqueValues());
         }
 
-        private void AddExtraComponents(IFunction function, int n)
-        {
-            for (var i = 1; i < n; i++)
-            {
-                function.Components.Add(new Variable<double>
-                {
-                    Name = "Component" + i
-                });
-            }
-        }
-
-        private void PopulateValues(IFunction function, int n)
-        {
-            function.Arguments[0].Values = GenerateValues(n, DateTime.Now);
-            foreach (IVariable variable in function.Components)
-            {
-                variable.Values = GenerateValues(n, 1);
-            }
-        }
-
         [Test]
         public void TestPopulateFunctionValuesFromAttributes_SubsetOfComponents()
         {
@@ -176,6 +156,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.True(sourceAndSink.Feature.Attributes.Any(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)));
             sourceAndSink.PopulateFunctionValuesFromAttributes(null);
             Assert.False(sourceAndSink.Feature.Attributes.Any(a => a.Key.StartsWith(SourceAndSinkImportExtensions.TimFileColumnAttributePrefix)));
+        }
+
+        private void AddExtraComponents(IFunction function, int n)
+        {
+            for (var i = 1; i < n; i++)
+            {
+                function.Components.Add(new Variable<double> {Name = "Component" + i});
+            }
+        }
+
+        private void PopulateValues(IFunction function, int n)
+        {
+            function.Arguments[0].Values = GenerateValues(n, DateTime.Now);
+            foreach (IVariable variable in function.Components)
+            {
+                variable.Values = GenerateValues(n, 1);
+            }
         }
 
         private SourceAndSink GenerateSourceAndSink(DictionaryFeatureAttributeCollection attributes = null)
