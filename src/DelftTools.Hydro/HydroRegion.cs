@@ -149,7 +149,7 @@ namespace DelftTools.Hydro
 
             // allowed links
             if ((source is Catchment || source is WasteWaterTreatmentPlant)
-                && (target is Catchment || target is WasteWaterTreatmentPlant || target is RunoffBoundary || target is LateralSource || target is HydroNode))
+                && (target is Catchment || target is WasteWaterTreatmentPlant || target is RunoffBoundary || target is LateralSource))
             {
                 var catchmentSource = source as Catchment;
                 if (catchmentSource != null)
