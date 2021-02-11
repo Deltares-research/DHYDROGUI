@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -211,6 +212,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
 
                     INode node = nodes[retention.Name];
+                    if (node is IManhole manhole)
+                    {
+                        manhole?
+                            .Compartments
+                            .Where(c => c.Name.Equals(retention.Name, StringComparison.InvariantCultureIgnoreCase))
+                            .ForEach(compartment => SetRetentionDataOnCompartmentInManhole(compartment, retention));
+                        continue;
+                    }
                     retention.Geometry = (IGeometry)node.Geometry.Clone();
 
                     if (node.OutgoingBranches.Count > 0)
@@ -225,6 +234,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                 }
             }
+        }
+
+        private void SetRetentionDataOnCompartmentInManhole(ICompartment compartment, IRetention retention)
+        {
+            compartment.BottomLevel = retention.BedLevel;
+            compartment.SurfaceLevel = retention.StreetLevel; 
+            compartment.FloodableArea = retention.StreetStorageArea;
+            compartment.CompartmentStorageType =
+                retention.Type == RetentionType.Closed
+                    ? CompartmentStorageType.Closed
+                    : retention.Type == RetentionType.Reservoir
+                        ? CompartmentStorageType.Reservoir
+                        : retention.Type == RetentionType.Loss
+                            ? default(CompartmentStorageType) // we don't have loss yet
+                            : default(CompartmentStorageType);
         }
 
         private IList<SobekValveData> GetSobekValveData()
