@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart;
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
         {
             // Setup
             var node = Substitute.For<ITreeNode>();
-            var model = new RealTimeControlModel();
+            var model = Substitute.For<IRealTimeControlModel>();
             node.Parent.Parent.Tag.Returns(model);
             model.RestartInput = new RealTimeControlRestartFile("restart.file", "file content");
 
@@ -99,6 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
 
             // Assert
             Assert.That(model.RestartInput.IsEmpty, Is.True);
+            model.Received().MarkOutputOutOfSync();
         }
 
         [Test]
@@ -108,15 +110,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
             using (var temp = new TemporaryDirectory())
             {
                 var node = Substitute.For<ITreeNode>();
-                var model = new RealTimeControlModel();
+                var model = Substitute.For<IRealTimeControlModel>();
                 node.Parent.Parent.Tag.Returns(model);
                 model.RestartInput = new RealTimeControlRestartFile();
-                model.RestartOutput.AddRange(new[]
+                model.RestartOutput.Returns(new EventedList<RestartFile>(new[]
                 {
                     new RestartFile(temp.CreateFile("restart_a.file", "content a")),
                     new RestartFile(temp.CreateFile("restart_b.file", "content b")),
                     new RestartFile(temp.CreateFile("restart_c.file", "content c")),
-                });
+                }));
 
                 var menu = new RealTimeControlInputRestartFileContextMenu(model.RestartInput, node);
 
@@ -133,6 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui.Restart
                 Assert.That(model.RestartInput.IsEmpty, Is.False);
                 Assert.That(model.RestartInput.Name, Is.EqualTo("restart_c.file"));
                 Assert.That(model.RestartInput.Content, Is.EqualTo("content c"));
+                model.Received().MarkOutputOutOfSync();
             }
         }
 

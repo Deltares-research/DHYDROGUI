@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             Ensure.NotNull(project, nameof(project));
 
-            foreach (WaterFlowFMModel model in GetAllWaveModelsFromProject(project))
+            foreach (WaterFlowFMModel model in GetModelsFromProject(project))
             {
                 RemoveAllSpatialCoverageDataItems(model);
             }
@@ -107,6 +107,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             string mduFilePath = Path.Combine($"{dbPath}_data", relMduFilePath);
             string extFilePath = Path.ChangeExtension(mduFilePath, "ext");
             string inputDirectory = Path.GetDirectoryName(mduFilePath);
+
+            var uniqueFileNameProvider = new UniqueFileNameProvider();
+            uniqueFileNameProvider.AddFiles(GetExistingFileNames(inputDirectory));
 
             UnstructuredGrid grid = null;
             List<string> extFileContent = null;
@@ -145,14 +148,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 coverage.Grid = grid;
 
-                WriteSamples(coverage, inputDirectory, quantity);
-                UpdateExtFileContent(extFileContent, quantity);
+                string fileName = uniqueFileNameProvider.GetUniqueFileNameFor(quantity + "_samples.xyz");
+                WriteSamples(coverage, inputDirectory, fileName);
+                UpdateExtFileContent(extFileContent, quantity, fileName);
             }
 
             UpdateFile(extFilePath, extFileContent);
         }
 
-        private static IEnumerable<WaterFlowFMModel> GetAllWaveModelsFromProject(Project project) =>
+        private static IEnumerable<WaterFlowFMModel> GetModelsFromProject(Project project) =>
             project.GetAllItemsRecursive().OfType<WaterFlowFMModel>();
 
         private static void RemoveAllSpatialCoverageDataItems(WaterFlowFMModel model)
@@ -211,11 +215,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void WriteSamples(UnstructuredGridCoverage originalCoverage, string inputDirectory, string quantity)
+        private static void WriteSamples(UnstructuredGridCoverage originalCoverage, string inputDirectory, string fileName)
         {
             IPointCloud pointCloud = originalCoverage.ToPointCloud(skipMissingValues: true);
 
-            string filePath = Path.Combine(inputDirectory, quantity + ".xyz");
+            string filePath = Path.Combine(inputDirectory, fileName);
 
             XyzFile.Write(filePath, pointCloud.PointValues);
         }
@@ -312,13 +316,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void UpdateExtFileContent(List<string> fileContent, string quantity)
+        private static void UpdateExtFileContent(List<string> fileContent, string quantity, string fileName)
         {
             int index = fileContent.FindIndex(l => ContainsQuantity(l, quantity));
             var lines = new List<string>
             {
                 $"{ExtForceFileConstants.QuantityKey}={quantity}",
-                $"{ExtForceFileConstants.FileNameKey}={quantity}.xyz",
+                $"{ExtForceFileConstants.FileNameKey}={fileName}",
                 $"{ExtForceFileConstants.FileTypeKey}={ExtForceQuantNames.FileTypes.Triangulation}",
                 $"{ExtForceFileConstants.MethodKey}=6",
                 $"{ExtForceFileConstants.OperandKey}={ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite]}",
@@ -347,5 +351,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 log.ErrorFormat(Resources.WaterFlowFMModel130LegacyLoader_An_error_occurred_while_updating_file, filePath, e.Message);
             }
         }
+
+        private static IEnumerable<string> GetExistingFileNames(string inputDirectory) => Directory.GetFiles(inputDirectory).Select(Path.GetFileName);
     }
 }

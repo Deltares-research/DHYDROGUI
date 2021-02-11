@@ -5,6 +5,7 @@ using DelftTools.TestUtils;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Import
@@ -78,7 +79,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Import
             using (var tempDir = new TemporaryDirectory())
             {
                 // Setup
-                var model = new RealTimeControlModel();
+                var model = Substitute.For<IRealTimeControlModel>();
+                model.RestartInput = new RealTimeControlRestartFile();
+                
                 var importer = new RealTimeControlRestartFileImporter(() => new[]
                 {
                     model
@@ -94,6 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Import
                 Assert.That(result, Is.SameAs(model.RestartInput));
                 Assert.That(model.RestartInput.Name, Is.EqualTo(Path.GetFileName(filePath)));
                 Assert.That(model.RestartInput.Content, Is.EqualTo(fileContent));
+                model.Received().MarkOutputOutOfSync();
             }
         }
 

@@ -34,13 +34,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string expectedDir = Path.Combine(tempDir, "expected");
 
                 AssertCorrectFile("FlowFM.ext");
-                AssertCorrectFile("initialwaterlevel.xyz");
-                AssertCorrectFile("initialsalinity.xyz");
-                AssertCorrectFile("initialtemperature.xyz");
-                AssertCorrectFile("frictioncoefficient.xyz");
-                AssertCorrectFile("horizontaleddyviscositycoefficient.xyz");
-                AssertCorrectFile("horizontaleddydiffusivitycoefficient.xyz");
-                AssertCorrectFile("initialtracerSomeTracer.xyz");
+                AssertCorrectFile("initialwaterlevel_samples.xyz");
+                AssertCorrectFile("initialsalinity_samples.xyz");
+                AssertCorrectFile("initialtemperature_samples.xyz");
+                AssertCorrectFile("frictioncoefficient_samples.xyz");
+                AssertCorrectFile("horizontaleddyviscositycoefficient_samples.xyz");
+                AssertCorrectFile("horizontaleddydiffusivitycoefficient_samples.xyz");
+                AssertCorrectFile("initialtracerSomeTracer_samples.xyz");
 
                 void AssertCorrectFile(string fileName)
                 {
