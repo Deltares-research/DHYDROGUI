@@ -25,6 +25,9 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
+using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
+using GeoAPI.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 {
@@ -276,8 +279,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     v.OnValidate = d => new RainfallRunoffModelValidator().Validate(d as RainfallRunoffModel);
                 }
             };
+            yield return new ViewInfo<IFeatureCoverage, CoverageTableView>
+            {
+                Description = "Output",
+                AdditionalDataCheck = o => GetModelForFeatureCoverage(o, rainfallRunoffGuiPlugin.Gui) != null,
+                CompositeViewType = typeof(ProjectItemMapView),
+                GetCompositeViewData = o => GetModelForFeatureCoverage(o, rainfallRunoffGuiPlugin.Gui)
+            };
         }
-
+        private static RainfallRunoffModel GetModelForFeatureCoverage(IFeatureCoverage featureCoverage, IGui gui)
+        {
+            return gui.Application.GetAllModelsInProject()
+                .OfType<RainfallRunoffModel>()
+                .FirstOrDefault(m =>
+                    m.OutputCoverages != null &&
+                    m.OutputCoverages.Contains(featureCoverage));
+        }
         private static IEnumerable<IDataRowProvider> GetInitialConditionsWrapperDataRowProviders(RRInitialConditionsWrapper wrapper)
         {
             switch (wrapper.Type)
