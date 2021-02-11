@@ -245,7 +245,7 @@ namespace DelftTools.Hydro.Tests
             [Test]
             public void CanLinkCatchmentToNode()
             {
-                region.CanLinkTo(catchment, node1).Should().Be.True();
+                region.CanLinkTo(catchment, node1).Should().Be.False();
             }
 
             [Test]
