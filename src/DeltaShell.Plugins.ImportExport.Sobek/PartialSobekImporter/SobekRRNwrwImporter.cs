@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
+using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -356,14 +358,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     listOfWarnings.Add($"Could not import nwrw catchment, no lateral was found for the nwrw catchment '{readNwrwDefinition.Id}.");
                     continue;
                 }
-
+                var targetLateralSource = lateralSourceDictionary[readNwrwDefinition.Id];
+                fmModel.LateralSourcesData
+                    .Where(lsd => lsd.Feature.Equals(targetLateralSource) && !lsd.DataType.Equals(Model1DLateralDataType.FlowRealTime))
+                    .ForEach(lsd => lsd.DataType = Model1DLateralDataType.FlowRealTime);
                 if (catchmentModelData.ContainsKey(readNwrwDefinition.Id))
                 {
                     UpdateNwrwCatchmentData(catchmentModelData, readNwrwDefinition);
                 }
                 else
                 {
-                    var targetLateralSource = lateralSourceDictionary[readNwrwDefinition.Id];
+                    
                     AddNwrwCatchmentDataToModel(readNwrwDefinition, targetLateralSource, helper);
                 }
             }
