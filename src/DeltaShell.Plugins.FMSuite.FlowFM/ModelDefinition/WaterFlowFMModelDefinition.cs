@@ -492,7 +492,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 var spatialOperationValueConverter = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
                 if (spatialOperationValueConverter.SpatialOperationSet.Operations.All(SupportedByExtForceFile))
                 {
-                    SpatialOperations[dataItem.Name] = GetSpatialOperations(spatialOperationValueConverter, dataItem);
+                    SpatialOperations[dataItem.Name] = GetSpatialOperations(spatialOperationValueConverter);
                 }
                 // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
                 else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
@@ -534,7 +534,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
-        private static List<ISpatialOperation> GetSpatialOperations(SpatialOperationSetValueConverter spatialOperationValueConverter, IDataItem dataItem)
+        private static List<ISpatialOperation> GetSpatialOperations(SpatialOperationSetValueConverter spatialOperationValueConverter)
         {
             // put in everything except spatial operation sets,
             // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
@@ -565,9 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 return false;
             }
 
-            return new PointValueArrayEqualityComparer().Equals(samples.PointValues.ToArray(), 
-                                                        importSamplesOperation.GetPoints().ToArray());
-
+            return samples.PointValues.SequenceEqual(importSamplesOperation.GetPoints(), new PointValueEqualityComparer());
         }
 
         private static bool ShouldSkipCoverage(UnstructuredGridCoverage coverage, SpatialOperationSetValueConverter spatialOperationValueConverter)
