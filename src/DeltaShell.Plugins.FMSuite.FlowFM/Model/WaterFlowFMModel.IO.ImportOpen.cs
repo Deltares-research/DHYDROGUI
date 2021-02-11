@@ -236,9 +236,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             FireImportProgressChanged("Reading spatial operations", 9, TotalImportSteps);
 
-            Parallel.ForEach(ModelDefinition.SpatialOperations, LoadSpatialOperations);
-
+            LoadSpatialOperations();
             ExecuteSpatialOperations();
+        }
+
+        private void LoadSpatialOperations()
+        {
+            Parallel.ForEach(ModelDefinition.SpatialOperations, LoadSpatialOperations);
         }
 
         private void LoadSpatialOperations(KeyValuePair<string, IList<ISpatialOperation>> spatialOperation)
