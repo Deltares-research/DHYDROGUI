@@ -7,18 +7,16 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
-using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using log4net.Core;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
+namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 {
     [TestFixture]
-    [Category("Build.Acceptance.Run.mdu")]
-    [Category(TestCategory.Slow)]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategories.AcceptanceCategory)]
+    [Category("Run.mdu")]
     public class RunFlowFmAcceptanceTests
     {
         private bool keepOutput = true;
@@ -41,8 +39,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelsDirectory = TestHelper.GetTestFilePath(@"AcceptanceModels\FlowFM");
-            acceptanceModelsReferenceOutputDirectory = TestHelper.GetTestFilePath(@"AcceptanceModelsReferenceOutput\FlowFM");
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModels\FlowFM");
+            acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModelsReferenceOutput\FlowFM");
         }
 
         [SetUp]

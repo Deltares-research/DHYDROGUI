@@ -14,9 +14,8 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 {
     [TestFixture]
-    [Category("Build.Acceptance.Run.SOBEK")]
-    [Category(TestCategory.Slow)]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategories.AcceptanceCategory)]
+    [Category("Run.SOBEK")]
     public class RunSobekTwoModelAcceptanceTests
     {
         private bool keepOutput = false;
@@ -34,8 +33,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelsDirectory = TestHelper.GetTestFilePath(@"AcceptanceModels\SOBEK2");
-            acceptanceModelsReferenceOutputDirectory = TestHelper.GetTestFilePath(@"AcceptanceModelsReferenceOutput\SOBEK2");
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModels\SOBEK2");
+            acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModelsReferenceOutput\SOBEK2");
         }
 
         [SetUp]

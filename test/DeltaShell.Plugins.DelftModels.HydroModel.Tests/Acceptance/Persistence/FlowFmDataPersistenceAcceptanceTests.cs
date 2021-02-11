@@ -14,9 +14,8 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
     [TestFixture]
-    [Category("Build.Acceptance.SaveLoad.mdu")]
-    [Category(TestCategory.Slow)]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategories.AcceptanceCategory)]
+    [Category("SaveLoad.mdu")]
     public class FlowFmDataPersistenceAcceptanceTests
     {
         private string tempDirectory;
@@ -41,7 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelsDirectory = Path.Combine(TestHelper.GetTestDataDirectory(), "AcceptanceModels", "FlowFM");
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModels\FlowFM");
         }
 
         [SetUp]

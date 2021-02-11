@@ -15,9 +15,9 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 {
     [TestFixture]
-    [Category("Build.Acceptance.Run.GWSW")]
-    [Category(TestCategory.Slow)]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategories.AcceptanceCategory)]
+    [Category("Run.GWSW")]
+
     public class RunGwswModelAcceptanceTests
     {
         private bool keepOutput = true;
@@ -38,8 +38,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelsDirectory = TestHelper.GetTestFilePath(@"AcceptanceModels\GWSW");
-            acceptanceModelsReferenceOutputDirectory = TestHelper.GetTestFilePath(@"AcceptanceModelsReferenceOutput\GWSW");
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModels\GWSW");
+            acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModelsReferenceOutput\GWSW");
         }
 
         [SetUp]

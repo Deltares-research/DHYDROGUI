@@ -7,9 +7,8 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
     [TestFixture]
-    [Category("Build.Acceptance.SaveLoad.GWSW")]
-    [Category(TestCategory.Slow)]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategories.AcceptanceCategory)]
+    [Category("SaveLoad.GWSW")]
     public class GwswDataPersistenceAcceptanceTests
     {
         private string tempDirectory;
@@ -32,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelsDirectory = TestHelper.GetTestFilePath(@"AcceptanceModels\GWSW");
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModels\GWSW");
         }
 
         [SetUp]
