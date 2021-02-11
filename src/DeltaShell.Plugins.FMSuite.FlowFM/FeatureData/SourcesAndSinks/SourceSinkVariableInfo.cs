@@ -1,5 +1,8 @@
 ﻿namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
 {
+    /// <summary>
+    /// Contains constant variable descriptions contained in a <see cref="SourceAndSinkFunction"/>.
+    /// </summary>
     public static class SourceSinkVariableInfo
     {
         public const string TimeVariableName = "Time";
