@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
         }
 
         [Test]
-        public void AddTracer_ComponentExistsWithSameName_ThrowsArgumentException()
+        public void AddTracer_TracerComponentExistsWithSameName_ThrowsArgumentException()
         {
             // Setup
             var function = new SourceAndSinkFunction();
@@ -63,6 +63,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
             // Assert
             var e = Assert.Throws<ArgumentException>(Call);
             Assert.That(e.Message, Is.EqualTo("SourceAndSinkFunction already contains a component with name 'Some Tracer'."));
+        }
+
+        [Test]
+        public void AddTracer_SedimentFractionComponentExistsWithSameName_AddsCorrectVariable()
+        {
+            // Setup
+            var function = new SourceAndSinkFunction();
+            function.AddSedimentFraction("Some Variable");
+
+            // Call
+            function.AddTracer("Some Variable");
+
+            // Assert
+            AssertComponent<SedimentFractionVariable>(function.Components[3], "Some Variable", "", "");
+            AssertComponent<TracerVariable>(function.Components[5], "Some Variable", "kilograms per cubic meter", "kg/m3");
         }
 
         [Test]
@@ -84,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
         }
 
         [Test]
-        public void AddSedimentFraction_ComponentExistsWithSameName_ThrowsArgumentException()
+        public void AddSedimentFraction_SedimentFractionComponentExistsWithSameName_ThrowsArgumentException()
         {
             // Setup
             var function = new SourceAndSinkFunction();
@@ -96,6 +111,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
             // Assert
             var e = Assert.Throws<ArgumentException>(Call);
             Assert.That(e.Message, Is.EqualTo("SourceAndSinkFunction already contains a component with name 'Some Sediment Fraction'."));
+        }
+
+        [Test]
+        public void AddSedimentFraction_TracerComponentExistsWithSameName_AddsCorrectVariable()
+        {
+            // Setup
+            var function = new SourceAndSinkFunction();
+            function.AddTracer("Some Variable");
+
+            // Call
+            function.AddSedimentFraction("Some Variable");
+
+            // Assert
+            AssertComponent<SedimentFractionVariable>(function.Components[3], "Some Variable", "", "");
+            AssertComponent<TracerVariable>(function.Components[5], "Some Variable", "kilograms per cubic meter", "kg/m3");
         }
 
         [Test]
@@ -117,12 +147,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
         }
 
         [Test]
+        public void RemoveTracer_TracerComponentDoesNotExist_DoesNotModifyComponentCollection()
+        {
+            // Setup
+            var function = new SourceAndSinkFunction();
+            function.AddTracer("Some Tracer 1");
+            function.AddTracer("Some Tracer 3");
+
+            // Call
+            function.RemoveTracer("Some Tracer 2");
+
+            // Assert
+            Assert.That(function.Components, Has.Count.EqualTo(6));
+            AssertComponent<TracerVariable>(function.Components[4], "Some Tracer 1", "kilograms per cubic meter", "kg/m3");
+            AssertComponent<TracerVariable>(function.Components[5], "Some Tracer 3", "kilograms per cubic meter", "kg/m3");
+        }
+
+        [Test]
         public void RemoveSedimentFraction_RemovesCorrectVariable()
         {
             // Setup
             var function = new SourceAndSinkFunction();
             function.AddSedimentFraction("Some Sediment Fraction 1");
             function.AddSedimentFraction("Some Sediment Fraction 2");
+            function.AddSedimentFraction("Some Sediment Fraction 3");
+
+            // Call
+            function.RemoveSedimentFraction("Some Sediment Fraction 2");
+
+            // Assert
+            Assert.That(function.Components, Has.Count.EqualTo(6));
+            AssertComponent<SedimentFractionVariable>(function.Components[3], "Some Sediment Fraction 1", "", "");
+            AssertComponent<SedimentFractionVariable>(function.Components[4], "Some Sediment Fraction 3", "", "");
+        }
+
+        [Test]
+        public void RemoveSedimentFraction_SedimentFractionComponentDoesNotExist_DoesNotModifyComponentCollection()
+        {
+            // Setup
+            var function = new SourceAndSinkFunction();
+            function.AddSedimentFraction("Some Sediment Fraction 1");
             function.AddSedimentFraction("Some Sediment Fraction 3");
 
             // Call
