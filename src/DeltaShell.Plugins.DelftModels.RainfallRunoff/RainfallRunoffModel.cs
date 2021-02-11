@@ -867,7 +867,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public override IEnumerable<object> GetDirectChildren()
         {
-            return base.GetDirectChildren().Concat(GetRainfallRunoffMDEData());
+            return base.GetDirectChildren()
+                .Concat(GetRainfallRunoffMDEData())
+                .Concat(OutputCoverages
+                            .Where(oc => oc.Store is ReadOnlyMapHisFileFunctionStore osFileStore && osFileStore.Functions != null)
+                            .SelectMany(oc => ((ReadOnlyMapHisFileFunctionStore)oc.Store).Functions.OfType<IFeatureCoverage>()));
         }
 
         public Func<IEnumerable<object>> GetRainfallRunoffMDEData { get; set; } = Enumerable.Empty<object>;
