@@ -39,8 +39,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             line.Append($"{NwrwKeywords.Pluv_tp_mt} 1 '{DEFAULT_MODEL_NODETYPE}' ");
             line.Append($"{NwrwKeywords.Pluv_tp_nt} {DEFAULT_NETTER_NODETYPE} ");
             line.Append($"{NwrwKeywords.Pluv_tp_ObId} '{DEFAULT_OBJECT_ID}' ");
-            line.AppendFormat($"{NwrwKeywords.Pluv_tp_px} {DEFAULT_POSITION_X:F1} ");
-            line.AppendFormat($"{NwrwKeywords.Pluv_tp_py} {DEFAULT_POSITION_Y:F1} ");
+            line.AppendFormat($"{NwrwKeywords.Pluv_tp_px} {nwrwData.Catchment?.InteriorPoint?.X ?? DEFAULT_POSITION_X:F1} ");
+            line.AppendFormat($"{NwrwKeywords.Pluv_tp_py} {nwrwData.Catchment?.InteriorPoint?.Y ?? DEFAULT_POSITION_Y:F1} ");
             line.Append(NwrwKeywords.Pluv_tp_node);
 
             return line.ToString();
