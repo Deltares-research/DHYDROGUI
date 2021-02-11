@@ -138,6 +138,73 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public const string ModelBalanceStorageChangeRRRunoff = @"Storage change RRRunoff (bm)";
         public const string ModelBalanceError = @"Balance error RR Rural (bm)";
 
+        public const string NwrwModelBalanceRainfall = @"Rainfall NWRW (bm)";
+        public const string NwrwModelBalanceEvaporation = @"Evaporation NWRW (bm)";
+        public const string NwrwModelBalanceInfiltrStorage = @"Infiltr.storage NWRW (bm)";
+        public const string NwrwModelBalanceInfiltrRunOff = @"Infiltr.runoff NWRW (bm)";
+        public const string NwrwModelBalanceStorage = @"Storage NWRW (bm)";
+        public const string NwrwModelBalanceRWF = @"RWF NWRW (bm)";
+        public const string NwrwModelBalanceDWFPeople = @"DWF people NWRW (bm)";
+        public const string NwrwModelBalanceDWFCompanies = @"DWF companies NWRW (bm)";
+        public const string NwrwModelBalanceRWFAndDWF = @"RWF+DWF NWRW (bm)";
+        public const string NwrwModelBalanceError = @"Balance error NWRW (bm)";
+
+        //NWRW
+        public const string NwrwInflowSewer = @"Inflow sewer (nwrw)";
+        public const string NwrwInfilDepress = @"Infiltration Depression (nwrw)";
+        public const string NwrwInfilRunoff = @"Infiltration Runoff (nwrw)";
+        public const string NwrwRainfall = @"Rainfall (nwrw)";
+        public const string NwrwEvaporation = @"Evaporation (nwrw)";
+        public const string NwrwRWF = @"RWF (nwrw)";
+        public const string NwrwDWFPeople = @"DWF people (nwrw)";
+        public const string NwrwDWFCompanies = @"DWF companies (nwrw)";
+        public const string NwrwStorageDepress = @"Storage Depression (nwrw)";
+        public const string NwrwDynamicStorage = @"Dynamic storage (nwrw)";
+        public const string NwrwInfCapSurf = @"Infiltration capacity surface (nwrw)";
+        public const string NwrwInfCapDyn = @"Infiltration capacity dynamic (nwrw)";
+        public const string NwrwInflSewer1 = @"Inflow Sewer 1 (nwrw)";
+        public const string NwrwInflSewer2 = @"Inflow Sewer 2 (nwrw)";
+        public const string NwrwInflSewer3 = @"Inflow Sewer 3 (nwrw)";
+        public const string NwrwInflSewer4 = @"Inflow Sewer 4 (nwrw)";
+        public const string NwrwInflSewer5 = @"Inflow Sewer 5 (nwrw)";
+        public const string NwrwInflSewer6 = @"Inflow Sewer 6 (nwrw)";
+        public const string NwrwInflSewer7 = @"Inflow Sewer 7 (nwrw)";
+        public const string NwrwInflSewer8 = @"Inflow Sewer 8 (nwrw)";
+        public const string NwrwInflSewer9 = @"Inflow Sewer 9 (nwrw)";
+        public const string NwrwInflSewer10 = @"Inflow Sewer 10 (nwrw)";
+        public const string NwrwInflSewer11 = @"Inflow Sewer 11 (nwrw)";
+        public const string NwrwInflSewer12 = @"Inflow Sewer 12 (nwrw)";
+        public const string NwrwInflSewerSp1 = @"Inflow Sewer Special 1 (nwrw)";
+        public const string NwrwInflSewerSp2 = @"Inflow Sewer Special 2 (nwrw)";
+        public const string NwrwInflSewerSp3 = @"Inflow Sewer Special 3 (nwrw)";
+        public const string NwrwInflSewerSp4 = @"Inflow Sewer Special 4 (nwrw)";
+        public const string NwrwInflSewerSp5 = @"Inflow Sewer Special 5 (nwrw)";
+        public const string NwrwInflSewerSp6 = @"Inflow Sewer Special 6 (nwrw)";
+        public const string NwrwInflSewerSp7 = @"Inflow Sewer Special 7 (nwrw)";
+        public const string NwrwInflSewerSp8 = @"Inflow Sewer Special 8 (nwrw)";
+        public const string NwrwInflSewerSp9 = @"Inflow Sewer Special 9 (nwrw)";
+        public const string NwrwInflSewerSp10 = @"Inflow Sewer Special 10 (nwrw)";
+        public const string NwrwInflSewerSp11 = @"Inflow Sewer Special 11 (nwrw)";
+        public const string NwrwInflSewerSp12 = @"Inflow Sewer Special 12 (nwrw)";
+        public const string NwrwStorageSp1 = @"Storage Special 1 (nwrw)";
+        public const string NwrwStorageSp2 = @"Storage Special 2 (nwrw)";
+        public const string NwrwStorageSp3 = @"Storage Special 3 (nwrw)";
+        public const string NwrwStorageSp4 = @"Storage Special 4 (nwrw)";
+        public const string NwrwStorageSp5 = @"Storage Special 5 (nwrw)";
+        public const string NwrwStorageSp6 = @"Storage Special 6 (nwrw)";
+        public const string NwrwStorageSp7 = @"Storage Special 7 (nwrw)";
+        public const string NwrwStorageSp8 = @"Storage Special 8 (nwrw)";
+        public const string NwrwStorageSp9 = @"Storage Special 9 (nwrw)";
+        public const string NwrwStorageSp10 = @"Storage Special 10 (nwrw)";
+        public const string NwrwStorageSp11 = @"Storage Special 11 (nwrw)";
+        public const string NwrwStorageSp12 = @"Storage Special 12 (nwrw)";
+        public const string NwrwWadiInflow = @"Wadi inflow (nwrw)";
+        public const string NwrwWadiInfiltr = @"Wadi infiltr (nwrw)";
+        public const string NwrwWadiSpill = @"Wadi spill (nwrw)";
+        public const string NwrwWadiDrain = @"Wadi drain (nwrw)";
+        public const string NwrwWadiStorage = @"Wadi storage (nwrw)";
+        public const string NwrwWadiLevel = @"Wadi level (nwrw)";
+        
         // link
         public const string LinkFlowOut = @"Link flow (lnk)";
 
@@ -164,6 +231,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private const string BalansPerNodeHisFileName = "balansdt.his";
         private const string WaterBalanceModelHisFileName = "rrbalans.his";
         private const string linkHisFileName = "3blinks.his";
+        private const string NwrwNodesHisFileName = "plvstrdt.his";
 
         private const string boundaryHisFileName = "bndflodt.his";
 
@@ -314,7 +382,79 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 {RainfallRunoffModelParameterNames.ModelBalanceExternalInFlowRRRunoff,new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "External inflow RRRu"} },
                 {RainfallRunoffModelParameterNames.ModelBalanceStorageChangeRRRunoff ,new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "Storage change RRRun"} },
                 {RainfallRunoffModelParameterNames.ModelBalanceError ,new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "Balance error RR Rur"} },
+                
+                #endregion
 
+                #region nwrw model balance
+
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceRainfall, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "Rainfall NWRW"} },
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceEvaporation, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "Evaporation NWRW"} },
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceInfiltrStorage, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "Infiltr.storage NWRW"} },
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceInfiltrRunOff, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "Infiltr.runoff NWRW"} },
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceStorage, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "Storage NWRW"} },
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceRWF, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "RWF NWRW"} },
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceDWFPeople, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "DWF people NWRW"} },
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceDWFCompanies, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "DWF companies NWRW"} },
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceRWFAndDWF, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "RWF+DWF NWRW"} },
+                {RainfallRunoffModelParameterNames.NwrwModelBalanceError, new HisFileParameter {HisFileName = WaterBalanceModelHisFileName, ParameterName = "Balance error NWRW"} },
+                
+                #endregion
+
+                #region nwrw
+                {RainfallRunoffModelParameterNames.NwrwInflowSewer, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Inflow sewer [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInfilDepress, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infil.Depress.[m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInfilRunoff, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infil.Runoff [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwRainfall, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Rainfall [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwEvaporation, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Evaporation [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwRWF, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "RWF [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwDWFPeople, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "DWF people [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageDepress, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "StorageDepress.[m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwDynamicStorage, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Dynamic storage [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInfCapSurf, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Inf.cap.Surf.[mm/hr]"} },
+                {RainfallRunoffModelParameterNames.NwrwInfCapDyn, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Inf.cap.Dyn.[mm/hr]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer1, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 1 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer2, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 2 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer3, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 3 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer4, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 4 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer5, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 5 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer6, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 6 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer7, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 7 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer8, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 8 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer9, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 9 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer10, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 10 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer11, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 11 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewer12, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer 12 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp1, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp1 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp2, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp2 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp3, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp3 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp4, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp4 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp5, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp5 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp6, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp6 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp7, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp7 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp8, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp8 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp9, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp9 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp10, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp10 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp11, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp11 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwInflSewerSp12, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Infl.sewer sp12 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp1, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp1 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp2, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp2 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp3, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp3 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp4, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp4 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp5, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp5 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp6, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp6 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp7, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp7 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp8, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp8 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp9, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp9 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp10, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp10 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp11, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp11 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwStorageSp12, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Storage sp12 [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwWadiInflow, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Wadi inflow  [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwWadiInfiltr, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Wadi infiltr [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwWadiSpill, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Wadi spill   [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwWadiDrain, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Wadi drain   [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwWadiStorage, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Wadi storage [m3]"} },
+                {RainfallRunoffModelParameterNames.NwrwWadiLevel, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "Wadi level   [m]"} },
+                {RainfallRunoffModelParameterNames.NwrwDWFCompanies, new HisFileParameter {HisFileName = NwrwNodesHisFileName, ParameterName = "DWF companies [m3]"} },
                 #endregion
 
                 #region link

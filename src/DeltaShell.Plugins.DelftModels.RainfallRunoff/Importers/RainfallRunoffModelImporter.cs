@@ -102,6 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
             conditionalActivateOutput(rrModel, settings.OutputRRLinkFlows, ElementSet.LinkElmSet);
             conditionalActivateOutput(rrModel, settings.OutputRRBalance, ElementSet.BalanceModelElmSet);
             conditionalActivateOutput(rrModel, settings.OutputRRBalance, ElementSet.BalanceNodeElmSet);
+            conditionalActivateOutput(rrModel, settings.OutputRRNWRW, ElementSet.NWRWElmSet);
         }
 
         private void conditionalActivateOutput(RainfallRunoffModel rrModel, bool add, ElementSet e)

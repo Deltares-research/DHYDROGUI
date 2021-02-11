@@ -49,6 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             conditionalActivateOutput(settings.OutputRRGreenhouse, ElementSet.GreenhouseElmSet); 
             conditionalActivateOutput(settings.OutputRROpenWater, ElementSet.OpenWaterElmSet); 
             conditionalActivateOutput(settings.OutputRRBoundary, ElementSet.BoundaryElmSet); 
+            conditionalActivateOutput(settings.OutputRRNWRW, ElementSet.NWRWElmSet); 
             conditionalActivateOutput(settings.OutputRRWWTP, ElementSet.WWTPElmSet); 
             conditionalActivateOutput(settings.OutputRRSacramento, ElementSet.SacramentoElmSet); 
             conditionalActivateOutput(settings.OutputRRLinkFlows, ElementSet.LinkElmSet); 

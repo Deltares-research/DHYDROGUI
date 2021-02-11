@@ -96,6 +96,7 @@
     <Compile Include="FileWriter\RRModelHybridFileWriterFactory.cs" />
     <Compile Include="Importers\RainfallRunoffModelImporter.cs" />
     <Compile Include="Importers\NWRWCatchmentFrom3BImporter.cs" />
+    <Compile Include="ModelControllers\Concepts\NwrwModelController.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="RainfallRunoffModel.FileBased.cs" />

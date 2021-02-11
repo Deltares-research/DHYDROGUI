@@ -22,6 +22,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         public bool OutputRROpenWater { get; set; }
         public bool OutputRRStructure { get; set; }
         public bool OutputRRBoundary { get; set; }
+        public bool OutputRRNWRW { get; set; }
         public bool OutputRRWWTP { get; set; }
         public bool OutputRRIndustry { get; set; }
         public bool OutputRRSacramento { get; set; }

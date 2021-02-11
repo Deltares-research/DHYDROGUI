@@ -1243,6 +1243,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/AggregationBu
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/ConceptModelController.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/Concepts/GreenhouseModelController.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/Concepts/HbvModelController.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/Concepts/NwrwModelController.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/Concepts/OpenWaterModelController.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/Concepts/PavedModelController.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/ModelControllers/Concepts/SacramentoModelController.cs -text

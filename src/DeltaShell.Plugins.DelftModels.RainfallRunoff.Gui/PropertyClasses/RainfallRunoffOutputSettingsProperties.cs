@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         private const string BalanceTotalCategoryName = "\t\tWater balance total";
         private const string LinkCategoryName = "\tLink";
         private const string BoundaryCategoryName = "Boundary";
+        private const string NWRWCategoryName = "NWRW";
 
         [PropertyOrder(0)]
         [Category(GeneralCategory)]
@@ -1258,6 +1259,116 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
             get { return data.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceModelElmSet).AggregationOptions; }
             set { data.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
         }
+        
+        [PropertyOrder(814)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("Rainfall NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceRainfall)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceRainfall
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceRainfall, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceRainfall, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(815)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("Evaporation NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceEvaporation)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceEvaporation
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceEvaporation, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceEvaporation, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(816)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("Infiltration Storage NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceInfiltrStorage)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceInfiltrationStorage
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceInfiltrStorage, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceInfiltrStorage, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(817)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("Infiltration Runoff NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceInfiltrRunOff)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceInfiltrationRunOff
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceInfiltrRunOff, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceInfiltrRunOff, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(818)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("Storage NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceStorage)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceStorage
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceStorage, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceStorage, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(819)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("RWF NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceRWF)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceRWF
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceRWF, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceRWF, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(820)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("DWF People NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceDWFPeople)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceDWFPeople
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceDWFPeople, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceDWFPeople, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(821)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("DWF Companies NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceDWFCompanies)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceDWFCompanies
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceDWFCompanies, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceDWFCompanies, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(822)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("RWF + DWF NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceRWFAndDWF)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceRWFAndDWF
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceRWFAndDWF, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceRWFAndDWF, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(823)]
+        [Category(BalanceTotalCategoryName)]
+        [DisplayName("Balance error NWRW [m³] (bm)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwModelBalanceError)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwModelBalanceError
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceError, ElementSet.BalanceModelElmSet)?.AggregationOptions ?? AggregationOptions.None; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwModelBalanceError, ElementSet.BalanceModelElmSet).AggregationOptions = value; }
+        }
 
         #endregion
 
@@ -1297,6 +1408,610 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
 
                 data.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet).AggregationOptions = value;
             }
+        }
+
+        #endregion
+        #region NWRW
+
+
+        [PropertyOrder(899)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("    All NWRW output")] //tab to make sure it shows on top of list
+        [Description("Toggles all NWRW aggregation options")]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions? NWRW
+        {
+            get { return GetCommonAggregationOption(ElementSet.NWRWElmSet); }
+            set { SetAggregationOptionForElementSet(value, ElementSet.NWRWElmSet); }
+        }
+
+        [PropertyOrder(900)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Rainfall [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwRainfall)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwRainfall
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(901)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Evaporation [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwEvaporation)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwEvaporation
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.RunoffActEvap, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.RunoffActEvap, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(902)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow sewer [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflowSewer)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflowSewer
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflowSewer, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflowSewer, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(903)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Infiltration Depression [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInfilDepress)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInfilDepress
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInfilDepress, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInfilDepress, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(904)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Infiltration Runoff [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInfilRunoff)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInfilRunoff
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInfilRunoff, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInfilRunoff, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(905)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("RWF [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwRWF)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwRWF
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwRWF, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwRWF, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(906)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("DWF People [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwDWFPeople)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwDWFPeople
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwDWFPeople, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwDWFPeople, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(907)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("DWF Companies [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwDWFCompanies)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwDWFCompanies
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwDWFCompanies, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwDWFCompanies, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(908)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Depression [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageDepress)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageDepress
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageDepress, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageDepress, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(909)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Dynamic Storage [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwDynamicStorage)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwDynamicStorage
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwDynamicStorage, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwDynamicStorage, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(910)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Infiltration capacity surface [mm/hr] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInfCapSurf)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInfCapSurf
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInfCapSurf, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInfCapSurf, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(911)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Infiltration capacity dynamic [mm/hr] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInfCapDyn)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInfCapDyn
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInfCapDyn, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInfCapDyn, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(912)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 1 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer1)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer1
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer1, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer1, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(913)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 2 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer2)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer2
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer2, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer2, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(914)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 3 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer3)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer3
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer3, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer3, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(914)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 4 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer4)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer4
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer4, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer4, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(915)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 5 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer5)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer5
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer5, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer5, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(916)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 6 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer6)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer6
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer6, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer6, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(917)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 7 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer7)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer7
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer7, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer7, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(918)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 8 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer8)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer8
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer8, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer8, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(919)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 9 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer9)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer9
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer9, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer9, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(920)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 10 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer10)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer10
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer10, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer10, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(921)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 11 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer11)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer11
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer11, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer11, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(922)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer 12 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewer12)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewer12
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer12, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewer12, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(923)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 1 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp1)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp1
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp1, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp1, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(924)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 2 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp2)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp2
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp2, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp2, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(925)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 3 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp3)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp3
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp3, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp3, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(926)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 4 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp4)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp4
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp4, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp4, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(927)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 5 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp5)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp5
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp5, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp5, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(928)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 6 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp6)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp6
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp6, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp6, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(929)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 7 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp7)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp7
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp7, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp7, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(930)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 8 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp8)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp8
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp8, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp8, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(931)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 9 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp9)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp9
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp9, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp9, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(932)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 10 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp10)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp10
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp10, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp10, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(933)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 11 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp11)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp11
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp11, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp11, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(934)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Inflow Sewer Special 12 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwInflSewerSp12)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwInflSewerSp12
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp12, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwInflSewerSp12, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(935)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 1 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp1)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp1
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp1, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp1, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(936)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 2 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp2)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp2
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp2, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp2, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(937)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 3 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp3)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp3
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp3, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp3, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(938)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 4 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp4)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp4
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp4, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp4, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(939)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 5 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp5)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp5
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp5, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp5, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(940)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 6 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp6)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp6
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp6, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp6, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        [PropertyOrder(941)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 7 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp7)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp7
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp7, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp7, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        [PropertyOrder(942)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 8 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp8)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp8
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp8, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp8, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        [PropertyOrder(943)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 9 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp9)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp9
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp9, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp9, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        [PropertyOrder(944)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 10 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp10)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp10
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp10, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp10, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        [PropertyOrder(945)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 11 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp11)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp11
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp11, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp11, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(946)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Storage Special 12 [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwStorageSp12)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwStorageSp12
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp12, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwStorageSp12, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(947)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Wadi inflow [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwWadiInflow)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwWadiInflow
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiInflow, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiInflow, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+        
+        [PropertyOrder(948)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Wadi infiltration [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwWadiInfiltr)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwWadiInfiltr
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiInfiltr, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiInfiltr, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(949)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Wadi spill [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwWadiSpill)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwWadiSpill
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiSpill, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiSpill, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(950)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Wadi drain [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwWadiDrain)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwWadiDrain
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiDrain, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiDrain, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(951)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Wadi storage [m³] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwWadiStorage)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwWadiStorage
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiStorage, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiStorage, ElementSet.NWRWElmSet).AggregationOptions = value; }
+        }
+
+        [PropertyOrder(952)]
+        [Category(NWRWCategoryName)]
+        [DisplayName("Wadi level [m] (nwrw)")]
+        [Description(RainfallRunoffModelParameterNames.NwrwWadiLevel)]
+        [DefaultValue(typeof(AggregationOptions), "None")]
+        public AggregationOptions NwrwWadiLevel
+        {
+            get { return data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiLevel, ElementSet.NWRWElmSet).AggregationOptions; }
+            set { data.OutputSettings.GetEngineParameter(QuantityType.NwrwWadiLevel, ElementSet.NWRWElmSet).AggregationOptions = value; }
         }
 
         #endregion

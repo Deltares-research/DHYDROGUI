@@ -876,7 +876,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                         new DelftTools.Utils.Tuple<string, string>("OutputRROpenWater","-1"),
                         new DelftTools.Utils.Tuple<string, string>("OutputRRStructure","0"),
                         new DelftTools.Utils.Tuple<string, string>("OutputRRBoundary","-1"),
-                        new DelftTools.Utils.Tuple<string, string>("OutputRRNWRW","0"),
+                        new DelftTools.Utils.Tuple<string, string>("OutputRRNWRW","-1"),
                         new DelftTools.Utils.Tuple<string, string>("OutputRRWWTP","-1"),
                         new DelftTools.Utils.Tuple<string, string>("OutputRRIndustry","0"),
                         new DelftTools.Utils.Tuple<string, string>("OutputRRSacramento","-1"),

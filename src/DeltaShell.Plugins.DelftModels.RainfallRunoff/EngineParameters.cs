@@ -16,6 +16,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             return new Unit("cubic meter per second", "m³/s");
         }
+        private static Unit GetMilliMeterPerHourUnit()
+        {
+            return new Unit("millimeter per hour", "mm/hr");
+        }
 
         private static Unit GetMillimeterUnit()
         {
@@ -24,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private static Unit GetMeterUnit()
         {
-            return new Unit("meter", "mm");
+            return new Unit("meter", "m");
         }
 
         private static Unit GetDegreeCelsiusUnit()
@@ -327,6 +331,86 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     new EngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceModelElmSet, DataItemRole.Output,
                                         RainfallRunoffModelParameterNames.ModelBalanceError, GetCubicMeterUnit()),
 
+                    // NWRW balance
+                    new EngineParameter(QuantityType.NwrwModelBalanceRainfall, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceRainfall, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwModelBalanceEvaporation, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceEvaporation, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwModelBalanceInfiltrStorage, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceInfiltrStorage, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwModelBalanceInfiltrRunOff, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceInfiltrRunOff, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwModelBalanceStorage, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceStorage, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwModelBalanceRWF, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceRWF, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwModelBalanceDWFPeople, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceDWFPeople, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwModelBalanceDWFCompanies, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceDWFCompanies, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwModelBalanceRWFAndDWF, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceRWFAndDWF, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwModelBalanceError, ElementSet.BalanceModelElmSet, DataItemRole.Output,
+                                        RainfallRunoffModelParameterNames.NwrwModelBalanceError, GetCubicMeterUnit()),
+                    
+                    // NWRW 
+                    new EngineParameter(QuantityType.Rainfall, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwRainfall, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.RunoffActEvap, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwEvaporation, GetCubicMeterUnit()),
+                                        new EngineParameter(QuantityType.NwrwInflowSewer, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflowSewer, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInfilDepress, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInfilDepress, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInfilRunoff, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInfilRunoff, GetCubicMeterUnit()),
+                    //new EngineParameter(QuantityType.NwrwRainfall, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwRainfall, GetCubicMeterUnit()),
+                    //new EngineParameter(QuantityType.NwrwEvaporation, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwEvaporation, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwRWF, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwRWF, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwDWFPeople, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwDWFPeople, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwDWFCompanies, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwDWFCompanies, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageDepress, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageDepress, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwDynamicStorage, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwDynamicStorage, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInfCapSurf, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInfCapSurf, GetMilliMeterPerHourUnit()),
+                    new EngineParameter(QuantityType.NwrwInfCapDyn, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInfCapDyn, GetMilliMeterPerHourUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer1, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer1, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer2, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer2, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer3, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer3, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer4, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer4, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer5, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer5, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer6, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer6, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer7, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer7, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer8, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer8, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer9, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer9, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer10, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer10, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer11, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer11, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewer12, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewer12, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp1, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp1, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp2, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp2, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp3, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp3, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp4, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp4, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp5, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp5, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp6, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp6, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp7, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp7, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp8, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp8, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp9, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp9, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp10, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp10, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp11, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp11, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwInflSewerSp12, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwInflSewerSp12, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp1, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp1, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp2, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp2, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp3, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp3, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp4, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp4, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp5, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp5, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp6, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp6, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp7, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp7, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp8, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp8, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp9, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp9, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp10, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp10, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp11, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp11, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwStorageSp12, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwStorageSp12, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwWadiInflow, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwWadiInflow, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwWadiInfiltr, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwWadiInfiltr, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwWadiSpill, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwWadiSpill, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwWadiDrain, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwWadiDrain, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwWadiStorage, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwWadiStorage, GetCubicMeterUnit()),
+                    new EngineParameter(QuantityType.NwrwWadiLevel, ElementSet.NWRWElmSet, DataItemRole.Output, RainfallRunoffModelParameterNames.NwrwWadiLevel, GetMeterUnit()),
+					
 
                     //link
                     new EngineParameter(QuantityType.Flow, ElementSet.LinkElmSet, DataItemRole.Output,

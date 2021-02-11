@@ -33,7 +33,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
         private readonly IEnumerable<IConceptModelController> conceptControllers = new IConceptModelController[]
             {
                 new PavedModelController(), new UnpavedModelController(), new OpenWaterModelController(),
-                new GreenhouseModelController(), new SacramentoModelController(), new HbvModelController()
+                new GreenhouseModelController(), new SacramentoModelController(), new HbvModelController(), 
+                new NwrwModelController(), 
             };
 
         private readonly RainfallRunoffModel model;

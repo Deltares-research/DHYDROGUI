@@ -158,6 +158,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
                     {"OutputRRStructure", (bool b) => settings.OutputRRStructure = b},
                     {"OutputRRBoundary", (bool b) => settings.OutputRRBoundary = b},
                     {"OutputRRWWTP", (bool b) => settings.OutputRRWWTP = b},
+                    {"OutputRRNWRW", (bool b) => settings.OutputRRNWRW = b},
                     {"OutputRRIndustry", (bool b) => settings.OutputRRIndustry = b},
                     {"OutputRRSacramento", (bool b) => settings.OutputRRSacramento = b},
                     {"OutputRRRunoff", (bool b) => settings.OutputRRRunoff = b},
