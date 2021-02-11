@@ -3463,6 +3463,7 @@ test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/RunFlowFmMod
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/RunGwswModelAcceptanceTests.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/RunModelAcceptanceTestHelper.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/RunSobekTwoModelAcceptanceTests.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/TestCategories.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/AcceptanceModelsTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/App.config -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/DHydroConfigModelCouplerTest.cs -text

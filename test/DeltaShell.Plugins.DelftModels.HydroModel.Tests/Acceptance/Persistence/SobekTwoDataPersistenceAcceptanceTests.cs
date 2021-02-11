@@ -12,9 +12,8 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 {
     [TestFixture]
-    [Category("Build.Acceptance.SaveLoad.SOBEK")]
-    [Category(TestCategory.Slow)]
-    [Category(TestCategory.WindowsForms)]
+    [Category(TestCategories.AcceptanceCategory)]
+    [Category( "SaveLoad.SOBEK")]
     public class SobekTwoDataPersistenceAcceptanceTests
     {
         private string tempDirectory;
