@@ -12,6 +12,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Extensions.Features.Generic;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
@@ -20,6 +21,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
     [TestFixture]
     internal class SourceAndSinkTest
     {
+        [Test]
+        public void Constructor_ExpectedValues()
+        {
+            // Call
+            var sourceAndSink = new SourceAndSink();
+
+            // Assert
+            Assert.That(sourceAndSink, Is.InstanceOf<FeatureData<SourceAndSinkFunction, Feature2D>>());
+            Assert.That(sourceAndSink.Data, Is.TypeOf<SourceAndSinkFunction>());
+            Assert.That(sourceAndSink.Feature, Is.Null);
+            Assert.That(sourceAndSink.Function, Is.SameAs(sourceAndSink.Data));
+            Assert.That(sourceAndSink.TracerNames, Is.Empty);
+            Assert.That(sourceAndSink.SedimentFractionNames, Is.Empty);
+            Assert.That(sourceAndSink.Area, Is.Zero);
+            Assert.That(sourceAndSink.MomentumSource, Is.False);
+        }
+
         [Test]
         public void IsPointSourceTest()
         {
@@ -118,178 +136,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
-        public void GivenAWaterFlowFMModelWithTracers_WhenAddingASourceAndSink_TheTracersAreAddedToTheSourceAndSink()
-        {
-            // Given
-            using (var model = new WaterFlowFMModel())
-            {
-                var tracers = Create.For<IList<string>>();
-                model.TracerDefinitions.AddRange(tracers);
-
-                var sourceAndSink = new SourceAndSink();
-
-                // When
-                model.SourcesAndSinks.Add(sourceAndSink);
-
-                // Then
-                IEventedList<IVariable> variables = sourceAndSink.Data.Components;
-                Assert.That(variables, Has.Count.EqualTo(7));
-                Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
-                Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
-                Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
-                Assert.That(variables[3].Name, Is.EqualTo("Secondary Flow"));
-                Assert.That(variables[4].Name, Is.EqualTo(tracers[0]));
-                Assert.That(variables[5].Name, Is.EqualTo(tracers[1]));
-                Assert.That(variables[6].Name, Is.EqualTo(tracers[2]));
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void GivenAWaterFlowFMModelWithSourcesAndSinks_WhenAddingATracer_TheTracerIsAddedToTheSourcesAndSinks()
-        {
-            // Given
-            using (var model = new WaterFlowFMModel())
-            {
-                List<SourceAndSink> sourcesAndSinks = CreateSourcesAndSinks().ToList();
-                model.SourcesAndSinks.AddRange(sourcesAndSinks);
-
-                // When
-                model.TracerDefinitions.Add("Some Tracer");
-
-                // Then
-                foreach (SourceAndSink sourceAndSink in sourcesAndSinks)
-                {
-                    IEventedList<IVariable> variables = sourceAndSink.Data.Components;
-                    Assert.That(variables, Has.Count.EqualTo(5));
-                    Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
-                    Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
-                    Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
-                    Assert.That(variables[3].Name, Is.EqualTo("Secondary Flow"));
-                    Assert.That(variables[4].Name, Is.EqualTo("Some Tracer"));
-                }
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void GivenAWaterFlowFMModelWithSourcesAndSinks_WhenRemovingATracer_TheTracerIsRemovedFromTheSourcesAndSinks()
-        {
-            // Given
-            using (var model = new WaterFlowFMModel())
-            {
-                List<SourceAndSink> sourcesAndSinks = CreateSourcesAndSinks().ToList();
-                model.SourcesAndSinks.AddRange(sourcesAndSinks);
-
-                model.TracerDefinitions.Add("Some Tracer 1");
-                model.TracerDefinitions.Add("Some Tracer 2");
-
-                // When
-                model.TracerDefinitions.Remove("Some Tracer 1");
-
-                // Then
-                foreach (SourceAndSink sourceAndSink in sourcesAndSinks)
-                {
-                    IEventedList<IVariable> variables = sourceAndSink.Data.Components;
-                    Assert.That(variables, Has.Count.EqualTo(5));
-                    Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
-                    Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
-                    Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
-                    Assert.That(variables[3].Name, Is.EqualTo("Secondary Flow"));
-                    Assert.That(variables[4].Name, Is.EqualTo("Some Tracer 2"));
-                }
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void GivenAWaterFlowFMModelWithSedimentFractions_WhenAddingASourceAndSink_TheSedimentFractionsAreAddedToTheSourceAndSink()
-        {
-            // Given
-            using (var model = new WaterFlowFMModel())
-            {
-                List<SedimentFraction> sedimentFractions = CreateSedimentFractions().ToList();
-                model.SedimentFractions.AddRange(sedimentFractions);
-
-                var sourceAndSink = new SourceAndSink();
-
-                // When
-                model.SourcesAndSinks.Add(sourceAndSink);
-
-                // Then
-                IEventedList<IVariable> variables = sourceAndSink.Data.Components;
-                Assert.That(variables, Has.Count.EqualTo(7));
-                Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
-                Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
-                Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
-                Assert.That(variables[3].Name, Is.EqualTo(sedimentFractions[0].Name));
-                Assert.That(variables[4].Name, Is.EqualTo(sedimentFractions[1].Name));
-                Assert.That(variables[5].Name, Is.EqualTo(sedimentFractions[2].Name));
-                Assert.That(variables[6].Name, Is.EqualTo("Secondary Flow"));
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void GivenAWaterFlowFMModelWithSourcesAndSinks_WhenAddingASedimentFraction_TheSedimentFractionIsAddedToTheSourcesAndSinks()
-        {
-            // Given
-            using (var model = new WaterFlowFMModel())
-            {
-                List<SourceAndSink> sourcesAndSinks = CreateSourcesAndSinks().ToList();
-                model.SourcesAndSinks.AddRange(sourcesAndSinks);
-
-                // When
-                model.SedimentFractions.Add(new SedimentFraction {Name = "Some Sediment Fraction"});
-
-                // Then
-                foreach (SourceAndSink sourceAndSink in sourcesAndSinks)
-                {
-                    IEventedList<IVariable> variables = sourceAndSink.Data.Components;
-                    Assert.That(variables, Has.Count.EqualTo(5));
-                    Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
-                    Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
-                    Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
-                    Assert.That(variables[3].Name, Is.EqualTo("Some Sediment Fraction"));
-                    Assert.That(variables[4].Name, Is.EqualTo("Secondary Flow"));
-                }
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void GivenAWaterFlowFMModelWithSourcesAndSinks_WhenRemovingASedimentFraction_TheSedimentFractionIsRemovedFromTheSourcesAndSinks()
-        {
-            // Given
-            using (var model = new WaterFlowFMModel())
-            {
-                List<SourceAndSink> sourcesAndSinks = CreateSourcesAndSinks().ToList();
-                model.SourcesAndSinks.AddRange(sourcesAndSinks);
-
-                var sedimentFraction1 = new SedimentFraction {Name = "Some Sediment Fraction 1"};
-                var sedimentFraction2 = new SedimentFraction {Name = "Some Sediment Fraction 2"};
-                model.SedimentFractions.Add(sedimentFraction1);
-                model.SedimentFractions.Add(sedimentFraction2);
-
-                // When
-                model.SedimentFractions.Remove(sedimentFraction1);
-
-                // Then
-                foreach (SourceAndSink sourceAndSink in sourcesAndSinks)
-                {
-                    IEventedList<IVariable> variables = sourceAndSink.Data.Components;
-                    Assert.That(variables, Has.Count.EqualTo(5));
-                    Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
-                    Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
-                    Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
-                    Assert.That(variables[3].Name, Is.EqualTo("Some Sediment Fraction 2"));
-                    Assert.That(variables[4].Name, Is.EqualTo("Secondary Flow"));
-                }
-            }
-        }
-
-        [Test]
         public void GetTracerNames_ReturnsCorrectNames()
         {
             // Setup
@@ -325,20 +171,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
             Assert.That(names[0], Is.EqualTo("Some Sediment Fraction 1"));
             Assert.That(names[1], Is.EqualTo("Some Sediment Fraction 2"));
             Assert.That(names[2], Is.EqualTo("Some Sediment Fraction 3"));
-        }
-
-        private static IEnumerable<SourceAndSink> CreateSourcesAndSinks()
-        {
-            yield return new SourceAndSink();
-            yield return new SourceAndSink();
-            yield return new SourceAndSink();
-        }
-
-        private static IEnumerable<SedimentFraction> CreateSedimentFractions()
-        {
-            yield return new SedimentFraction {Name = "Fraction_1"};
-            yield return new SedimentFraction {Name = "Fraction_2"};
-            yield return new SedimentFraction {Name = "Fraction_3"};
         }
     }
 }
