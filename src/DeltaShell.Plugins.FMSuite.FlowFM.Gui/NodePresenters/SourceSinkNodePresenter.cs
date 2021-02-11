@@ -7,7 +7,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 {
-    internal class SourceSinkNodePresenter : FMSuiteNodePresenterBase<SourceAndSink>
+    public class SourceSinkNodePresenter : FMSuiteNodePresenterBase<SourceAndSink>
     {
         private static readonly Bitmap SourceSinkIcon = Resources.SourceSink;
         private static readonly Bitmap SourceIcon = Resources.LateralSourceMap;
@@ -40,18 +40,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         protected override bool RemoveNodeData(object parentNodeData, SourceAndSink nodeData)
         {
             var sourceAndSinks = parentNodeData as IList<SourceAndSink>;
-            if (sourceAndSinks != null)
+            if (sourceAndSinks != null && sourceAndSinks.Remove(nodeData))
             {
-                return sourceAndSinks.Remove(nodeData);
+                ResetGuiSelection();
+                return true;
             }
 
             var treeShortCut = parentNodeData as FmModelTreeShortcut;
             if (treeShortCut != null)
             {
                 sourceAndSinks = treeShortCut.Value as IList<SourceAndSink>;
-                if (sourceAndSinks != null)
+                if (sourceAndSinks != null && sourceAndSinks.Remove(nodeData))
                 {
-                    return sourceAndSinks.Remove(nodeData);
+                    ResetGuiSelection();
+                    return true;
                 }
             }
 
