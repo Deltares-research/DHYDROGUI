@@ -1019,7 +1019,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             var messageList = new List<string>
             {
+                "0,00%",
                 "Initializing",
+                "0,00%",
                 "0,00%",
                 "0,00%",
                 "Initializing",
