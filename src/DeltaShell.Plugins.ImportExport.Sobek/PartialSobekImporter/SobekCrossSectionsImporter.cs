@@ -400,7 +400,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var crossSectionStandardShapeRound = new CrossSectionStandardShapeCircle
                                                      {
-                                                         Diameter = sobekCrossSectionDefinition.Radius
+                                                         Diameter = sobekCrossSectionDefinition.Radius*2
                                                      };
             var crossSectionDefinitionClosedCircle = new CrossSectionDefinitionStandard(crossSectionStandardShapeRound)
             {
