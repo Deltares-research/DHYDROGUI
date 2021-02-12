@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -28,7 +29,6 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap;
-using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -327,8 +327,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 $"{ExtForceFileConstants.FileTypeKey}={AddSamplesDefaults.FileType}",
                 $"{ExtForceFileConstants.MethodKey}={AddSamplesDefaults.Method}",
                 $"{ExtForceFileConstants.OperandKey}={ExtForceQuantNames.OperatorToStringMapping[AddSamplesDefaults.Operand]}",
-                $"{ExtForceFileConstants.AveragingTypeKey}={(int )AddSamplesDefaults.AveragingType}",
-                $"{ExtForceFileConstants.RelSearchCellSizeKey}={AddSamplesDefaults.RelSearchCellSize}",
+                $"{ExtForceFileConstants.AveragingTypeKey}={(int) AddSamplesDefaults.AveragingType}",
+                $"{ExtForceFileConstants.RelSearchCellSizeKey}={AddSamplesDefaults.RelSearchCellSize.ToString(CultureInfo.InvariantCulture)}",
                 ""
             };
             fileContent.InsertRange(index, lines);
