@@ -442,14 +442,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return new ExtForceFileItem(quantityName)
             {
                 FileName = fileNameProvider.GetUniqueFileNameFor(fileName),
-                FileType = ExtForceQuantNames.FileTypes.Triangulation,
-                Method = 6,
+                FileType = AddSamplesDefaults.FileType,
+                Method = AddSamplesDefaults.Method,
                 Enabled = spatialOperation.Enabled,
-                Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite],
+                Operand = ExtForceQuantNames.OperatorToStringMapping[AddSamplesDefaults.Operand],
                 ModelData =
                 {
-                    [ExtForceFileConstants.AveragingTypeKey] = (int) GridCellAveragingMethod.ClosestPoint,
-                    [ExtForceFileConstants.RelSearchCellSizeKey] = 1.0
+                    [ExtForceFileConstants.AveragingTypeKey] = (int) AddSamplesDefaults.AveragingType,
+                    [ExtForceFileConstants.RelSearchCellSizeKey] = AddSamplesDefaults.RelSearchCellSize
                 },
             };
         }
