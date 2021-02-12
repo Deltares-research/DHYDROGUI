@@ -13,6 +13,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -167,9 +168,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 var componentSettings = new Dictionary<string, bool>()
                 {
-                    {SourceAndSink.SalinityVariableName, UseSalinity},
-                    {SourceAndSink.TemperatureVariableName, UseTemperature},
-                    {SourceAndSink.SecondaryFlowVariableName, UseSecondaryFlow}
+                    {SourceSinkVariableInfo.SalinityVariableName, UseSalinity},
+                    {SourceSinkVariableInfo.TemperatureVariableName, UseTemperature},
+                    {SourceSinkVariableInfo.SecondaryFlowVariableName, UseSecondaryFlow}
                 };
 
                 sourceAndSink.SedimentFractionNames.ForEach(sfn => componentSettings.Add(sfn, UseMorSed));

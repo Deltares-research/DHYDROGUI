@@ -3,7 +3,7 @@ using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using GeoAPI.Geometries;
