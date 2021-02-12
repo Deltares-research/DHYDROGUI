@@ -1141,11 +1141,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             var messageList = new List<string>
             {
-                "Initializing",
-                "0,00%",
                 "0,00%",
                 "Initializing",
                 "0,00%",
+                "Reading dia file",
+                "0,00%",
+                "0,00%",
+                "Initializing",
+                "0,00%",
+                "Reading dia file",
                 "0,00%"
             };
 
