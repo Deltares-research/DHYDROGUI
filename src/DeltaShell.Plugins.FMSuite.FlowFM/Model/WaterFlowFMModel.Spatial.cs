@@ -340,8 +340,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void UpdateSpatialDataAfterGridSet(UnstructuredGrid newGrid, bool nodesChanged, bool cellsChanged,
                                                    bool linksChanged)
         {
-            Parallel.ForEach(SpatialData.DataItems, d => UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, d ));
-            
+            foreach (IDataItem di in SpatialData.DataItems)
+            {
+                UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, di);
+            }
         }
 
         private void UpdateCoverageGrid(UnstructuredGrid newGrid,
