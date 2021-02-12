@@ -1144,12 +1144,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 "0,00%",
                 "Initializing",
                 "0,00%",
-                "Reading dia file",
                 "0,00%",
                 "0,00%",
                 "Initializing",
                 "0,00%",
-                "Reading dia file",
                 "0,00%"
             };
 
