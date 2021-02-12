@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAWaterFlowFMModelWithATracerBoundaryCondition_WhenRemovingTheTracer_TheBoundaryConditionIsRemoved()
+        public void GivenAWaterFlowFMModelWithATracerBoundaryCondition_WhenRemovingTheTracer_ThenBoundaryConditionIsRemoved()
         {
             // Given
             using (var model = new WaterFlowFMModel())

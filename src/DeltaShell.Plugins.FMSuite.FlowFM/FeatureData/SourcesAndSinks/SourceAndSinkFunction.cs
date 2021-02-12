@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks
         {
             if (GetVariable<T>(name) != null)
             {
-                throw new ArgumentException(string.Format(Resources.SourceAndSinkFunction_AddTracer_Already_contains_a_component_with_name, nameof(SourceAndSinkFunction), name));
+                throw new ArgumentException(string.Format(Resources.SourceAndSinkFunction_Already_contains_a_component_with_name, nameof(SourceAndSinkFunction), name));
             }
         }
 

@@ -23,8 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static UnstructuredGridVertexCoverage CreateVertexCoverage(
             string name, UnstructuredGrid grid, IEnumerable<double> componentValues)
         {
-            return ConfigureUnstructuredGridCoverage(name, grid, new UnstructuredGridVertexCoverage(new UnstructuredGrid(), false),
-                                                  GetArgumentValues(grid.Vertices.Count), componentValues, noDataValue);
+            var coverage = new UnstructuredGridVertexCoverage(new UnstructuredGrid(), false);
+            ConfigureUnstructuredGridCoverage(coverage, grid, name, GetArgumentValues(grid.Vertices.Count), componentValues, noDataValue);
+            return coverage;
         }
 
         /// <summary>
@@ -38,8 +39,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static UnstructuredGridCellCoverage CreateCellCoverage(
             string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null, double defaultValue = noDataValue)
         {
-            return ConfigureUnstructuredGridCoverage(name, grid, new UnstructuredGridCellCoverage(new UnstructuredGrid(), false),
-                                                  GetArgumentValues(grid.Cells.Count), componentValues, defaultValue);
+            var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
+            ConfigureUnstructuredGridCoverage(coverage, grid, name, GetArgumentValues(grid.Cells.Count), componentValues, defaultValue);
+            return coverage;
         }
 
         /// <summary>
@@ -51,15 +53,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         public static UnstructuredGridFlowLinkCoverage CreateFlowLinkCoverage(
             string name, UnstructuredGrid grid)
         {
-            return ConfigureUnstructuredGridCoverage(name, grid, new UnstructuredGridFlowLinkCoverage(new UnstructuredGrid(), false),
-                                                  GetArgumentValues(grid.FlowLinks.Count), null, noDataValue);
+            var coverage = new UnstructuredGridFlowLinkCoverage(new UnstructuredGrid(), false);
+            ConfigureUnstructuredGridCoverage(coverage, grid, name, GetArgumentValues(grid.FlowLinks.Count), null, noDataValue);
+            return coverage;
         }
 
-        private static T ConfigureUnstructuredGridCoverage<T>(string name, UnstructuredGrid grid, T coverage,
-                                                           IEnumerable<int> argumentValues,
-                                                           IEnumerable<double> componentValues,
-                                                           double defaultValue)
-            where T : UnstructuredGridCoverage
+        private static void ConfigureUnstructuredGridCoverage(UnstructuredGridCoverage coverage,
+                                                              UnstructuredGrid grid, string name,
+                                                              IEnumerable<int> argumentValues,
+                                                              IEnumerable<double> componentValues,
+                                                              double defaultValue)
         {
             coverage.Name = name;
             coverage.Grid = grid;
@@ -71,8 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
             IEnumerable<double> values = componentValues ?? Enumerable.Repeat(defaultValue, coverage.Arguments[0].Values.Count);
             FunctionHelper.SetValuesRaw(coverage.Components[0], values);
-
-            return coverage;
         }
 
         private static IEnumerable<int> GetArgumentValues(int count) => Enumerable.Range(0, count);

@@ -1013,9 +1013,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} already contains a component with name &apos;{1}&apos;..
         /// </summary>
-        public static string SourceAndSinkFunction_AddTracer_Already_contains_a_component_with_name {
+        public static string SourceAndSinkFunction_Already_contains_a_component_with_name {
             get {
-                return ResourceManager.GetString("SourceAndSinkFunction_AddTracer_Already_contains_a_component_with_name", resourceCulture);
+                return ResourceManager.GetString("SourceAndSinkFunction_Already_contains_a_component_with_name", resourceCulture);
             }
         }
         

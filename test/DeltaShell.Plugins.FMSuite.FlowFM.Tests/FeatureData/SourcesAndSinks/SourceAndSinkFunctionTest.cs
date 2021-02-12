@@ -103,10 +103,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData.SourcesAndSinks
         {
             // Setup
             var function = new SourceAndSinkFunction();
-            function.AddTracer("Some Sediment Fraction");
+            function.AddSedimentFraction("Some Sediment Fraction");
 
             // Call
-            void Call() => function.AddTracer("Some Sediment Fraction");
+            void Call() => function.AddSedimentFraction("Some Sediment Fraction");
 
             // Assert
             var e = Assert.Throws<ArgumentException>(Call);
