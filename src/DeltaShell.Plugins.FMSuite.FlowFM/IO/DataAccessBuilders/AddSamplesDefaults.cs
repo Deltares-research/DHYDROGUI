@@ -30,6 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// <summary>
         /// The default relative search cell size.
         /// </summary>
-        public const double RelSearchCellSize = 1.0;
+        public const double RelSearchCellSize = 1.01;
     }
 }
