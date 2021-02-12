@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation.Area;
 using GeoAPI.Geometries;
