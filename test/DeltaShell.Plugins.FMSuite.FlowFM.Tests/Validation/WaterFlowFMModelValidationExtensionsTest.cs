@@ -57,7 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var report = model.Validate();
 
             Assert.NotNull(report.SubReports.First(r => r.Category.Equals(WaterFlowFMModelComputationalGridValidator.CategoryName)));
-            Assert.NotNull(report.SubReports.First(r => r.Category.Equals(WaterFlowFMModelNetworkValidator.CategoryName)));
         }
 
         [Test]

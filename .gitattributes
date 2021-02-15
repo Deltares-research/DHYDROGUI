@@ -2143,7 +2143,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMGridValidator.cs -te
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMMeteoValidation.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMModelComputationalGridValidator.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMModelDefinitionValidator.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMModelNetworkValidator.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMModelTimersValidator.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMRoughnessValidator.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Validation/WaterFlowFMSedimentMorphologyValidator.cs -text
@@ -4808,7 +4807,6 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMEnclosureVali
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMMeteoValidationTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelComputationalGridValidatorTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelDefinitionValidatorTest.cs -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelNetworkValidatorTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelTimersValidatorTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelValidationExtensionsTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMRoughnessValidatorTest.cs -text

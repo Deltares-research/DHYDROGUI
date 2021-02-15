@@ -4,6 +4,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Link1d2d;
+using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -18,9 +20,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var validationReports = new[]
             {
                 ValidateSpatiallyVaryingSedimentCoverage(model),
-                ValidateCoordinateSystem(model),
                 WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model),
-                WaterFlowFMModelNetworkValidator.Validate(model.Network, model.NetworkDiscretization),
+                HydroNetworkValidator.Validate(model.Network),
+                StructuresValidator.Validate(model.Network),
+                ExtraResistanceValidator.Validate(model.Network.Structures.Where(s => s is IExtraResistance)),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateLinks(model.Links),
                 ValidateBathymetry(model),
