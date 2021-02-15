@@ -324,12 +324,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.WindowsForms)]
-        public void ShowHydroRegionWithDrainageBasinAndNetworkAndCatchmentLinkedToNode()
+        public void ShowHydroRegionWithDrainageBasinAndNetworkAndCatchmentLinkedToLateral()
         {
             var wktReader = new WKTReader();
             var node1 = new HydroNode { Name = "node1", Geometry = wktReader.Read("POINT(10 0)") };
             var node2 = new HydroNode { Name = "node2", Geometry = wktReader.Read("POINT(0 0)") };
             var branch1 = new Channel { Name = "branch1", Source = node1, Target = node2, Geometry = wktReader.Read("LINESTRING(0 0,10 0)") };
+            var lateral = new LateralSource() {Name = "lateral1", Branch = branch1, Chainage = 5.0, Geometry = wktReader.Read("POINT(5 0)")};
+            branch1.BranchFeatures.Add(lateral);
             var network = new HydroNetwork { Branches = { branch1 }, Nodes = { node1, node2 } };
 
             var catchment = Catchment.CreateDefault();
@@ -344,7 +346,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 // add link using drainage basin map layer (link between features of the drainage basin map layer)
                 var linkLayer = ((GroupLayer) layer).Layers.First(l => l.DataSource != null && l.DataSource.FeatureType == typeof (HydroLink));
-                linkLayer.DataSource.Add(new LineString(new[] { catchment.Geometry.Centroid.Coordinate, node1.Geometry.Coordinate }));
+                linkLayer.DataSource.Add(new LineString(new[] { catchment.Geometry.Centroid.Coordinate, lateral.Geometry.Coordinate }));
 
                 // asserts
                 region.Links.Count
@@ -354,7 +356,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                     .Should().Be.SameInstanceAs(catchment);
 
                 region.Links[0].Target
-                    .Should().Be.SameInstanceAs(node1);
+                    .Should().Be.SameInstanceAs(lateral);
 
                 WindowsFormsTestHelper.ShowModal(mapView, delegate
                 {
