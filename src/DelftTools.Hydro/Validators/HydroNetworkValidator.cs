@@ -52,7 +52,7 @@ namespace DelftTools.Hydro.Validators
                     string.Format(
                         "No Coordinate System selected for Network. Default map projection will be used for distance calculations."), target.CoordinateSystem);
 
-                return new ValidationReport("Coordinate system", new[] { issue });
+                return new ValidationReport("Network Coordinate system", new[] { issue });
             }
 
             if (target.CoordinateSystem != null && target.CoordinateSystem.IsGeographic)

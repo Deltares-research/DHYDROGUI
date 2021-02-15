@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var validationReports = new[]
             {
                 ValidateSpatiallyVaryingSedimentCoverage(model),
+                ValidateCoordinateSystem(model),
                 WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model),
                 HydroNetworkValidator.Validate(model.Network),
                 StructuresValidator.Validate(model.Network),
@@ -153,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
                     "The geographic coordinate system specified may lead to incorrect results in the calculation. The calculation kernel only supports the WGS84 spherical system."));
             }
-            return new ValidationReport("Coordinate System", issues);
+            return new ValidationReport("Model Coordinate System", issues);
         }
 
         private static ValidationReport ValidateRestartInput(WaterFlowFMModel model)

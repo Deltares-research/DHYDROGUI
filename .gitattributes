@@ -4807,6 +4807,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMEnclosureVali
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMMeteoValidationTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelComputationalGridValidatorTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelDefinitionValidatorTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelNetworkValidatorTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelTimersValidatorTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMModelValidationExtensionsTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/WaterFlowFMRoughnessValidatorTest.cs -text
