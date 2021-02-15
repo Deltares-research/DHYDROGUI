@@ -246,9 +246,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     ? CompartmentStorageType.Closed
                     : retention.Type == RetentionType.Reservoir
                         ? CompartmentStorageType.Reservoir
-                        : retention.Type == RetentionType.Loss
-                            ? default(CompartmentStorageType) // we don't have loss yet
-                            : default(CompartmentStorageType);
+                        : default(CompartmentStorageType);
         }
 
         private IList<SobekValveData> GetSobekValveData()
