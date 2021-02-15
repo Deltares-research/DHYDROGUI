@@ -357,6 +357,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
             if (valueConverter?.SpatialOperationSet.Operations.Any() == true)
             {
+                object originalValue = dataItem.Value;
                 dataItem.ValueConverter = null;
                 dataItem.Value = null;
                 try
@@ -385,6 +386,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 }
                 finally
                 {
+                    dataItem.Value = originalValue;
                     dataItem.ValueConverter = valueConverter;
                     valueConverter.SpatialOperationSet.SetDirty();
                 }
