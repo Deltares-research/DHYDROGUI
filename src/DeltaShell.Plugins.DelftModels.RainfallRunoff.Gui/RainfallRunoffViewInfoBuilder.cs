@@ -206,8 +206,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     {
                         Description = "Multiple data editor (D-RR)",
                         GetViewName = (v, o) => "Multiple data editor (D-RR)",
+                        ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => drp.Model == o), 
                         GetViewData = o => GetInitialConditionsWrapperDataRowProviders(o),
                         AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
+                        /*AfterCreate = (v, o) =>
+                        {
+                            v.GenerateInitialConditionsWrapperDataRowProvidersFunc = GetInitialConditionsWrapperDataRowProviders;
+                            DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui);
+                        }*/
                     };
             yield return new ViewInfo<IEnumerable<Catchment>, IEnumerable<IDataRowProvider>, MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitions>
                 {
@@ -222,6 +228,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                                     .FirstOrDefault(rrm => rrm.Basin.Catchments == o);
                                 return model != null;
                             },
+                    ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => drp.Model == o),
                     GetViewData = o =>
                         {
                             var model = o.Any()
@@ -254,6 +261,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     GetViewName = (v, o) => "Multiple data editor (D-RR)",
                     AdditionalDataCheck = o => (o.Parent is RainfallRunoffModel &&
                                                 o.Text == RainfallRunoffModelProjectNodePresenter.CatchmentDataFolderName),
+                    ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => drp.Model == o),
                     GetViewData = o =>
                     {
                         var model = (RainfallRunoffModel) o.Parent;
@@ -297,6 +305,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
         }
         private static IEnumerable<IDataRowProvider> GetInitialConditionsWrapperDataRowProviders(RRInitialConditionsWrapper wrapper)
         {
+            if (wrapper == null) return null;
             switch (wrapper.Type)
             {
                 case RRInitialConditionsWrapper.InitialConditionsType.Unpaved:
