@@ -9,6 +9,7 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using log4net;
@@ -50,8 +51,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 log.DebugFormat("Importing evaporation data...");
                 ReadAndSetEvaporation();
 
-                log.DebugFormat("Importing temperature data...");
-                ReadAndSetTemperature();
+                if (rainfallRunoffModel.GetAllModelData().OfType<HbvData>().Any())
+                {
+                    log.DebugFormat("Importing temperature data...");
+                    ReadAndSetTemperature();
+                }
             }
             else
             {
@@ -69,11 +73,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     ReadAndSetEvaporation();
                 }
 
-                if (File.Exists(GetFilePath("default.tmp")))
+                if (rainfallRunoffModel.GetAllModelData().OfType<HbvData>().Any())
                 {
-                    filePathTemperature = GetFilePath("default.tmp");
-                    log.DebugFormat("Importing precipitation data...");
-                    ReadAndSetTemperature();
+                    if (File.Exists(GetFilePath("default.tmp")))
+                    {
+                        filePathTemperature = GetFilePath("default.tmp");
+                        log.DebugFormat("Importing precipitation data...");
+                        ReadAndSetTemperature();
+                    }
                 }
             }
 
