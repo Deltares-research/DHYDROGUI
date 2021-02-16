@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             GC.Collect();
         }
         
-        [Test]
+        [Test, Ignore("Needs to be reviewed"), Category("ToCheck")]
         public void LinkCatchmentToBoundaryNode()
         {
             onMainWindowShown = () =>
@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             WpfTestHelper.ShowModal(mainWindow);
         }
 
-        [Test]
+        [Test, Ignore("Needs to be reviewed"), Category("ToCheck")]
         public void LinkCatchmentToBoundaryNodeCreatesValidGeometry()
         {
             onMainWindowShown = () =>
