@@ -32,16 +32,17 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
                 var branch = branches[i];
                 branchLength[i] = branch.Length;
 
+                object source = branch.Source;
+                object target = branch.Target;
+
                 if (branch is SewerConnection connection)
                 {
-                    sourcenodeid[i] = nodesIndexLookup[connection.SourceCompartment];
-                    targetnodeid[i] = nodesIndexLookup[connection.TargetCompartment];
+                    source = (object) connection.SourceCompartment ?? connection.Source;
+                    target = (object) connection.TargetCompartment ?? connection.Target;
                 }
-                else
-                {
-                    sourcenodeid[i] = nodesIndexLookup[branch.Source];
-                    targetnodeid[i] = nodesIndexLookup[branch.Target];
-                }
+
+                sourcenodeid[i] = nodesIndexLookup[source];
+                targetnodeid[i] = nodesIndexLookup[target];
             }
 
             nMeshPoints = discretisationPoints.Count;
