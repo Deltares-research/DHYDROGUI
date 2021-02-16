@@ -206,14 +206,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     {
                         Description = "Multiple data editor (D-RR)",
                         GetViewName = (v, o) => "Multiple data editor (D-RR)",
-                        ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => drp.Model == o), 
-                        GetViewData = o => GetInitialConditionsWrapperDataRowProviders(o),
+                        ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => ReferenceEquals(drp.Model, o)), 
+                        GetViewData = GetInitialConditionsWrapperDataRowProviders,
                         AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
-                        /*AfterCreate = (v, o) =>
-                        {
-                            v.GenerateInitialConditionsWrapperDataRowProvidersFunc = GetInitialConditionsWrapperDataRowProviders;
-                            DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui);
-                        }*/
                     };
             yield return new ViewInfo<IEnumerable<Catchment>, IEnumerable<IDataRowProvider>, MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitions>
                 {
@@ -228,7 +223,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                                     .FirstOrDefault(rrm => rrm.Basin.Catchments == o);
                                 return model != null;
                             },
-                    ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => drp.Model == o),
+                    ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => ReferenceEquals(drp.Model, o)),
                     GetViewData = o =>
                         {
                             var model = o.Any()
@@ -261,7 +256,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     GetViewName = (v, o) => "Multiple data editor (D-RR)",
                     AdditionalDataCheck = o => (o.Parent is RainfallRunoffModel &&
                                                 o.Text == RainfallRunoffModelProjectNodePresenter.CatchmentDataFolderName),
-                    ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => drp.Model == o),
+                    ViewDataContainsData = (v, o) => v.Data is IEnumerable<IDataRowProvider> dataRowProviders && dataRowProviders.All(drp => ReferenceEquals(drp.Model, o)),
                     GetViewData = o =>
                     {
                         var model = (RainfallRunoffModel) o.Parent;
@@ -305,7 +300,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
         }
         private static IEnumerable<IDataRowProvider> GetInitialConditionsWrapperDataRowProviders(RRInitialConditionsWrapper wrapper)
         {
-            if (wrapper == null) return null;
+            if (wrapper == null) 
+                return Enumerable.Empty<IDataRowProvider>();
+
             switch (wrapper.Type)
             {
                 case RRInitialConditionsWrapper.InitialConditionsType.Unpaved:
@@ -323,60 +320,37 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
 
         private static void DefaultAfterCreate(IView view, object actualData, IGui gui)
         {
-            var unitAwareView = view as IRRUnitAwareView;
-            if (unitAwareView != null)
+            var model = GetModelForData(actualData, gui);
+            if (model == null)
             {
-                if (!(actualData is CatchmentModelData))
-                {
-                    throw new NotImplementedException();
-                }
-
-                var model = GetModelForModelData(actualData as CatchmentModelData, gui);
-                if (model != null)
-                {
-                    SyncAreaUnitChanges(model, unitAwareView);
-                }
+                return;
             }
 
-            var modelTimeAwareView = view as IRRModelTimeAwareView;
-            if (modelTimeAwareView != null)
+            switch (view)
             {
-                var model = GetModelForData(actualData, gui);
-                if (model != null)
-                {
+                case IRRUnitAwareView unitAwareView:
+                    SyncAreaUnitChanges(model, unitAwareView);
+                    break;
+                
+                case IRRModelTimeAwareView modelTimeAwareView: 
                     modelTimeAwareView.StartTime = model.StartTime;
                     modelTimeAwareView.StopTime = model.StopTime;
                     modelTimeAwareView.TimeStep = model.TimeStep;
-                }
-            }
-
-            var stationAwareView = view as IRRMeteoStationAwareView;
-            if (stationAwareView != null)
-            {
-                var model = GetModelForData(actualData, gui);
-                if (model != null)
-                {
+                    break;
+                
+                case IRRMeteoStationAwareView stationAwareView:
                     stationAwareView.MeteoStations = model.MeteoStations;
                     SyncUseMeteoStationChanges(model, stationAwareView);
-                }
-            }
+                    break;
 
-            var tempStationAwareView = view as IRRTemperatureStationAwareView;
-            if (tempStationAwareView != null)
-            {
-                var model = GetModelForData(actualData, gui);
-                if (model != null)
-                {
+                case IRRTemperatureStationAwareView tempStationAwareView:
                     tempStationAwareView.TemperatureStations = model.TemperatureStations;
                     SyncUseTemperatureStationChanges(model, tempStationAwareView);
-                }
-            }
+                    break;
 
-            var modelModeAwareView = view as IRRModelRunModeAwareView;
-            if (modelModeAwareView != null)
-            {
-                var model = GetModelForData(actualData, gui);
-                modelModeAwareView.GetIsModelRunningParallelWithFlowFunc = model.IsRunningParallelWithFlow;
+                case IRRModelRunModeAwareView modelModeAwareView:
+                    modelModeAwareView.GetIsModelRunningParallelWithFlowFunc = model.IsRunningParallelWithFlow;
+                    break;
             }
         }
 
