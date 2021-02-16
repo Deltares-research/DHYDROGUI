@@ -3,6 +3,8 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.UndoRedo;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
+using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.IO;
 using NUnit.Framework;
 using SharpTestsEx;
@@ -16,11 +18,13 @@ namespace DelftTools.Hydro.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void LinkCatchmentToHydroNode()
+        public void LinkCatchmentToLateral()
         {
             var node1 = new HydroNode { Name = "node1", Geometry = wktReader.Read("POINT(10 0)") };
             var node2 = new HydroNode { Name = "node2", Geometry = wktReader.Read("POINT(0 0)") };
             var branch1 = new Channel { Name = "branch1", Source = node1, Target = node2, Geometry = wktReader.Read("LINESTRING(0 0, 10 0)") };
+            var lateral = new LateralSource() { Name = "lateral1", Branch = branch1, Chainage = 5.0, Geometry = new NetTopologySuite.Geometries.Point(new Coordinate(500, 0, 0)) };
+            branch1.BranchFeatures.Add(lateral);
             var network = new HydroNetwork { Branches = { branch1 }, Nodes = { node1, node2 } };
 
             var catchment = Catchment.CreateDefault();
@@ -29,7 +33,7 @@ namespace DelftTools.Hydro.Tests
             var region = new HydroRegion { SubRegions = { network, basin } };
 
             // catchment -> node1
-            catchment.LinkTo(node1);
+            catchment.LinkTo(lateral);
 
             // checks
             region.Links.Count
@@ -39,7 +43,7 @@ namespace DelftTools.Hydro.Tests
                 .Should().Be.SameInstanceAs(catchment);
         
             region.Links[0].Target
-                .Should().Be.SameInstanceAs(node1);
+                .Should().Be.SameInstanceAs(lateral);
         }
 
         [Test]
@@ -106,15 +110,18 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void RemoveLink()
         {
-            var node1 = new HydroNode { Name = "node1" };
-            var network = new HydroNetwork { Nodes = { node1 } };
+            var b1 = new Branch();
+            var lateral = new LateralSource() { Name = "lateral1", Branch = b1, Chainage = 5.0, Geometry = new NetTopologySuite.Geometries.Point(new Coordinate(500, 0, 0)) };
+            b1.BranchFeatures.Add(lateral);
+
+            var network = new HydroNetwork { Branches = { b1 } };
 
             var catchment = new Catchment();
             var basin = new DrainageBasin { Catchments = { catchment } };
 
             IHydroRegion region = new HydroRegion { SubRegions = { network, basin } };
 
-            var link = catchment.LinkTo(node1); // external link between basin and network
+            var link = catchment.LinkTo(lateral); // external link between basin and network
 
             region.RemoveLink(link.Source, link.Target);
 
@@ -124,22 +131,25 @@ namespace DelftTools.Hydro.Tests
             catchment.Links
                 .Should().Be.Empty();
 
-            node1.Links
+            lateral.Links
                 .Should().Be.Empty();
         }
 
         [Test]
         public void RemoveLinkOnFeatureRemove()
         {
-            var node1 = new HydroNode { Name = "node1" };
-            var network = new HydroNetwork { Nodes = { node1 } };
+            var b1 = new Branch();
+            var lateral = new LateralSource() { Name = "lateral1", Branch = b1, Chainage = 5.0, Geometry = new NetTopologySuite.Geometries.Point(new Coordinate(500, 0, 0)) };
+            b1.BranchFeatures.Add(lateral);
+
+            var network = new HydroNetwork { Branches = { b1 } };
 
             var catchment = new Catchment();
             var basin = new DrainageBasin { Catchments = { catchment } };
 
             IHydroRegion region = new HydroRegion { SubRegions = { network, basin } };
 
-            catchment.LinkTo(node1); // external link between basin and network
+            catchment.LinkTo(lateral); // external link between basin and network
 
             basin.Catchments.Clear(); // should trigger link remove
 
@@ -149,7 +159,7 @@ namespace DelftTools.Hydro.Tests
             catchment.Links
                 .Should().Be.Empty();
 
-            node1.Links
+            lateral.Links
                 .Should().Be.Empty();
         }
 

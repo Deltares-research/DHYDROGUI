@@ -66,6 +66,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             var node1 = new HydroNode();
             var node2 = new HydroNode();
             var branch = new Channel {Source = node1, Target = node2};
+            var lateral = new LateralSource() {Branch = branch};
             var network = new HydroNetwork {Branches = {branch}, Nodes = {node1, node2}};
 
             var region = new HydroRegion() {SubRegions = {basin, network}};
@@ -75,7 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             basin.Catchments.Add(c1);
             basin.Catchments.Add(c2);
 
-            var link1 = c1.LinkTo(node1);
+            var link1 = c1.LinkTo(lateral);
             var link2 = c2.LinkTo(c1);
 
             link1.Name = "link1";

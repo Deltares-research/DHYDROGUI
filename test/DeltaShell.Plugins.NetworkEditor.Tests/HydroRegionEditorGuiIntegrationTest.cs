@@ -98,32 +98,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             GC.Collect();
         }
         
-        [Test, Ignore("Needs to be reviewed"), Category("ToCheck")]
-        public void LinkCatchmentToBoundaryNode()
+        [Test]
+        public void LinkCatchmentToLateral()
         {
             onMainWindowShown = () =>
                 {
                     var b1 = AddBranch(new[] { new Coordinate(0, 0, 0), new Coordinate(1000, 0, 0) });
+                    var lateral = new LateralSource() { Name = "lateral1", Branch = b1, Chainage = 5.0, Geometry = new NetTopologySuite.Geometries.Point(new Coordinate(500, 0, 0))  };
+                    b1.BranchFeatures.Add(lateral);
                     var c1 = AddCatchment(new Coordinate(500, 1000, 0), CatchmentType.Unpaved);
 
-                    var link = AddLink(c1.InteriorPoint.Coordinate, new Coordinate(0, 0, 0));
+                    var link = AddLink(c1.InteriorPoint.Coordinate, new Coordinate(500, 0, 0));
 
                     Assert.AreEqual(1, c1.Links.Count);
                     Assert.AreEqual(c1, link.Source);
-                    Assert.AreEqual(b1.Source, link.Target);
+                    Assert.AreEqual(lateral, link.Target);
                 };
 
             WpfTestHelper.ShowModal(mainWindow);
         }
 
-        [Test, Ignore("Needs to be reviewed"), Category("ToCheck")]
-        public void LinkCatchmentToBoundaryNodeCreatesValidGeometry()
+        [Test]
+        public void LinkCatchmentToLateralCreatesValidGeometry()
         {
             onMainWindowShown = () =>
             {
                 var c1 = AddCatchment(new Coordinate(500, 1000, 0), CatchmentType.Unpaved);
                 var b1 = AddBranch(new[] { new Coordinate(0, 0, 0), new Coordinate(1000, 0, 0) });
-                var link = AddLink(c1.InteriorPoint.Coordinate, new Coordinate(0, 0, 0));
+                var lateral = new LateralSource() { Name = "lateral1", Branch = b1, Chainage = 5.0, Geometry = new NetTopologySuite.Geometries.Point(new Coordinate(500, 0, 0)) };
+                b1.BranchFeatures.Add(lateral);
+                var link = AddLink(c1.InteriorPoint.Coordinate, new Coordinate(500, 0, 0));
 
                 Assert.IsTrue(link.Geometry.Coordinates.All(c => c.Z == 0.0));
             };

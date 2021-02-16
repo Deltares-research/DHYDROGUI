@@ -16,7 +16,6 @@ using SharpTestsEx;
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
 {
     [TestFixture]
-    [Ignore("converter was made explicit; tests no longer match")]
     public class HydroLinksFeatureCoverageValueConverterTest
     {
         private static readonly WKTReader wktReader = new WKTReader();
@@ -29,6 +28,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
 
         private IHydroNode node1;
         private IHydroNode node2;
+        private ILateralSource lateralSource1;
+        private ILateralSource lateralSource2;
         private IDrainageBasin basin;
         private IHydroNetwork network;
         private IChannel branch1;
@@ -40,6 +41,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
             node1 = new HydroNode { Name = "node1", Geometry = wktReader.Read("POINT(10 0)") };
             node2 = new HydroNode { Name = "node2", Geometry = wktReader.Read("POINT(0 0)") };
             branch1 = new Channel { Name = "branch1", Source = node1, Target = node2, Geometry = wktReader.Read("LINESTRING(0 0, 10 0)") };
+            lateralSource1 = new LateralSource() { Name = "lateral1", Branch = branch1, Chainage = 5.0, Geometry = wktReader.Read("POINT(5 0)") }; ;
+            lateralSource2 = new LateralSource() { Name = "lateral2", Branch = branch1, Chainage = 7.0, Geometry = wktReader.Read("POINT(7 0)") }; ;
             network = new HydroNetwork { Branches = { branch1 }, Nodes = { node1, node2 } };
 
             var c1 = new Catchment();
@@ -48,16 +51,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
 
             region = new HydroRegion { SubRegions = { network, basin } };
 
-            c1.LinkTo(node1);
-            c2.LinkTo(node2);
+            c1.LinkTo(lateralSource1);
+            c2.LinkTo(lateralSource2);
 
             // setup coverages
             featureCoverageTarget = new FeatureCoverage("q to boundaries");
             featureCoverageTarget.Arguments.Add(new Variable<DateTime>());
             featureCoverageTarget.Arguments.Add(new Variable<IFeature>());
             featureCoverageTarget.Components.Add(new Variable<double>("h"));
-            featureCoverageTarget.Features.AddRange(new[] {node1, node2});
-            featureCoverageTarget.FeatureVariable.Values.AddRange(new[] { node1, node2 });
+            featureCoverageTarget.Features.AddRange(new[] { lateralSource1, lateralSource2 });
+            featureCoverageTarget.FeatureVariable.Values.AddRange(new[] { lateralSource1, lateralSource2 });
 
             featureCoverageSource = new FeatureCoverage("q from catchments");
             featureCoverageSource.Arguments.Add(new Variable<DateTime>());
@@ -72,10 +75,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
-        [Category("ToCheck")]
         public void TargetCoverageIsInitializedCorrectly()
         {
-            new HydroLinksFeatureCoverageValueConverter
+            var convertor = new HydroLinksFeatureCoverageValueConverter
                 {
                     OriginalValue = featureCoverageTarget,
                     ConvertedValue = featureCoverageSource,
@@ -83,17 +85,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
                 };
 
             // assert
-            featureCoverageTarget[time0, node1].Should().Be.EqualTo(1.0);
-            featureCoverageTarget[time1, node1].Should().Be.EqualTo(2.0);
-            featureCoverageTarget[time0, node2].Should().Be.EqualTo(3.0);
-            featureCoverageTarget[time1, node2].Should().Be.EqualTo(4.0);
+            convertor.Update(time0);
+            featureCoverageTarget[time0, lateralSource1].Should().Be.EqualTo(1.0);
+            featureCoverageTarget[time0, lateralSource2].Should().Be.EqualTo(3.0);
+            
+            convertor.Update(time1);
+            featureCoverageTarget[time1, lateralSource1].Should().Be.EqualTo(2.0);
+            featureCoverageTarget[time1, lateralSource2].Should().Be.EqualTo(4.0);
         }
 
         [Test]
-        [Category("ToCheck")]
         public void TargetCoverageIsUpdatedCorrectly()
         {
-            new HydroLinksFeatureCoverageValueConverter
+            var convertor = new HydroLinksFeatureCoverageValueConverter
             {
                 OriginalValue = featureCoverageTarget,
                 ConvertedValue = featureCoverageSource,
@@ -103,14 +107,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
             // modify network coverage
             var time2 = new DateTime(2000, 1, 3);
             featureCoverageSource[time2] = new[] { 5.0, 6.0 };
-            
+            convertor.Update(time2);
             // assert
-            featureCoverageTarget[time2, node1].Should().Be.EqualTo(5.0);
-            featureCoverageTarget[time2, node2].Should().Be.EqualTo(6.0);
+            featureCoverageTarget[time2, lateralSource1].Should().Be.EqualTo(5.0);
+            featureCoverageTarget[time2, lateralSource2].Should().Be.EqualTo(6.0);
         }
         
         [Test]
-        [Category("ToCheck")]
         public void TargetCoverageIsUpdatedCorrectlyOnClearOfSourceCoverage()
         {
             new HydroLinksFeatureCoverageValueConverter
@@ -128,10 +131,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
         }
 
         [Test]
-        [Category("ToCheck")]
         public void TargetCoverageIsRebuildWhenItsFeaturesAreChanged()
         {
-            new HydroLinksFeatureCoverageValueConverter
+            var convertor = new HydroLinksFeatureCoverageValueConverter
             {
                 OriginalValue = featureCoverageTarget,
                 ConvertedValue = featureCoverageSource,
@@ -142,18 +144,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
             featureCoverageTarget.Clear(); //clear: no more features
 
             // set features again: we expect it to be rebuild
-            featureCoverageTarget.Features = new EventedList<IFeature>(new[] {node1, node2});
-            featureCoverageTarget.FeatureVariable.Values.AddRange(new[] { node1, node2 });
-
-            Assert.AreEqual(2, featureCoverageTarget.Time.Values.Count);
+            featureCoverageTarget.Features = new EventedList<IFeature>(new[] {lateralSource1, lateralSource2});
+            featureCoverageTarget.FeatureVariable.Values.AddRange(new[] { lateralSource1, lateralSource2 });
+            Assert.AreEqual(0, featureCoverageTarget.Time.Values.Count); 
+            convertor.Update(time0);
+            Assert.AreEqual(1, featureCoverageTarget.Time.Values.Count);
         }
 
         [Test]
         [Category(TestCategory.Performance)]
-        [Category("ToCheck")]
         public void RebuildIsQuick()
         {
-            new HydroLinksFeatureCoverageValueConverter
+            var convertor = new HydroLinksFeatureCoverageValueConverter
             {
                 OriginalValue = featureCoverageTarget,
                 ConvertedValue = featureCoverageSource,
@@ -168,13 +170,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
             var numValues = 200;
 
             var catchments = Enumerable.Range(0, numValues).Select(i => new Catchment()).ToList();
-            var nodes = Enumerable.Range(0, numValues).Select(i => new LateralSource()).ToList();
+            var lateralSources = Enumerable.Range(0, numValues).Select(i => new LateralSource()).ToList();
             for (int i = 0; i < numValues; i++)
             {
                 basin.Catchments.Add(catchments[i]);
-                branch1.BranchFeatures.Add(nodes[i]);
+                branch1.BranchFeatures.Add(lateralSources[i]);
 
-                catchments[i].LinkTo(nodes[i]);
+                catchments[i].LinkTo(lateralSources[i]);
             }
             featureCoverageSource.Features = new EventedList<IFeature>(catchments.OfType<IFeature>());
             featureCoverageSource.FeatureVariable.Values.AddRange(catchments);
@@ -184,19 +186,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
             featureCoverageSource.Time.SetValues(times);
             
             // set features again: we expect it to be rebuild
-            featureCoverageTarget.Features = new EventedList<IFeature>(nodes.OfType<IFeature>());
+            featureCoverageTarget.Features = new EventedList<IFeature>(lateralSources.OfType<IFeature>());
 
             TestHelper.AssertIsFasterThan(500, () => //this action triggers a Convert
-                                               featureCoverageTarget.FeatureVariable.Values.AddRange(nodes));
-
-            Assert.AreEqual(numValues, featureCoverageTarget.Time.Values.Count);
+            {
+                featureCoverageTarget.FeatureVariable.Values.AddRange(lateralSources);
+                times.ForEach(t => convertor.Update(t));
+            });
+            ;
+            Assert.AreEqual(1, featureCoverageTarget.Time.Values.Count);
+            Assert.AreEqual(times.LastOrDefault(), featureCoverageTarget.Time.Values[0]);
         }
 
         [Test]
-        [Category("ToCheck")]
         public void NumberOfConvertOperationsShouldBeMinimal()
         {
-            new HydroLinksFeatureCoverageValueConverter
+            var convertor = new HydroLinksFeatureCoverageValueConverter
             {
                 OriginalValue = featureCoverageTarget,
                 ConvertedValue = featureCoverageSource,
@@ -210,27 +215,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
             featureCoverageSource[new DateTime(2000, 1, 5)] = new[] { 1.0, 2.0 };
             featureCoverageSource[new DateTime(2000, 1, 6)] = new[] { 1.0, 2.0 };
             featureCoverageSource[lastTime] = new[] { 1.0, 2.0 };
-
-            featureCoverageTarget[lastTime, node1].Should().Be.EqualTo(1.0);
+            convertor.Update(lastTime);
+            featureCoverageTarget[lastTime, lateralSource1].Should().Be.EqualTo(1.0);
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("ToCheck")]
         public void LinkWithDataItems()
         {
             // setup dataitems
             var targetDataItem = new DataItem(featureCoverageTarget);
             var sourceDataItem = new DataItem(featureCoverageSource);
 
+            var convertor = new HydroLinksFeatureCoverageValueConverter
+            {
+                OriginalValue = featureCoverageTarget, //do we have to set this manually?!?!
+                HydroRegion = region
+            };
             var childDataItem = new DataItem
                 {
                     ValueType = typeof (IFeatureCoverage),
-                    ValueConverter = new HydroLinksFeatureCoverageValueConverter
-                        {
-                            OriginalValue = featureCoverageTarget, //do we have to set this manually?!?!
-                            HydroRegion = region
-                        }
+                    ValueConverter = convertor
                 };
             targetDataItem.Children.Add(childDataItem);
 
@@ -238,8 +243,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ValueConverters
             childDataItem.LinkTo(sourceDataItem);
 
             // asserts
-            featureCoverageTarget[time0, node1].Should().Be.EqualTo(1.0);
-            featureCoverageTarget[time1, node2].Should().Be.EqualTo(4.0);
+            convertor.Update(time0);
+            featureCoverageTarget[time0, lateralSource1].Should().Be.EqualTo(1.0);
+            convertor.Update(time1); 
+            featureCoverageTarget[time1, lateralSource2].Should().Be.EqualTo(4.0);
         }
     }
 }

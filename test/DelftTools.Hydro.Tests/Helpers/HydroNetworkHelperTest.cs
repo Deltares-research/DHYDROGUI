@@ -2232,8 +2232,8 @@ namespace DelftTools.Hydro.Tests.Helpers
         [Test]
         public void CreateUniqueHydroObjectNameInSubregion()
         {
-            var sourceObject = new HydroNode("source");
-            var targetObject = new HydroNode("target");
+            var sourceObject = new Catchment() {Name = "source"};
+            var targetObject = new LateralSource() { Name = "target" };
             var link = new HydroLink(sourceObject, targetObject) {Name = "HydroLink1"};
 
             var region = new HydroRegion();
@@ -2250,8 +2250,8 @@ namespace DelftTools.Hydro.Tests.Helpers
         {
             const string uniquehydrolinkName1 = "UniqueHydroLink1";
             const string uniquehydrolinkName2 = "UniqueHydroLink2"; 
-            var sourceObject = new HydroNode("source");
-            var targetObject = new HydroNode("target");
+            var sourceObject = new Catchment() { Name = "source" };
+            var targetObject = new LateralSource() { Name = "target" };
             var link = new HydroLink(sourceObject, targetObject) { Name = uniquehydrolinkName1 };
 
             var region = new HydroRegion();
@@ -2268,7 +2268,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             const string uniquehydrolinkName = "UniqueHydroLink";
 
             var sourceObject = new HydroNode("source");
-            var targetObject = new HydroNode("target");
+            var targetObject = new LateralSource() { Name = "target" };
             var link = new HydroLink(sourceObject, targetObject) { Name = uniquehydrolinkName };
 
             var region = new HydroRegion();
@@ -2284,7 +2284,7 @@ namespace DelftTools.Hydro.Tests.Helpers
             const string uniquehydrolinkName = "UniqueHydroLink";
 
             var sourceObject = new HydroNode("source");
-            var targetObject = new HydroNode("target");
+            var targetObject = new LateralSource() { Name = "target" };
             var link = new HydroLink(sourceObject, targetObject) { Name = uniquehydrolinkName };
 
             var region = new HydroRegion();
