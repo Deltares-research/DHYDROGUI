@@ -578,20 +578,10 @@
     <EmbeddedResource Include="HydroNetwork.3.5.1.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Roughness\ReverseRoughnessSection.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Roughness\RoughnessNetworkCoverage.3.1.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Roughness\RoughnessNetworkCoverage.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Roughness\RoughnessSection.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="WasteWaterTreatmentPlant.hbm.xml" />

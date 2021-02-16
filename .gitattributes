@@ -448,7 +448,6 @@ src/DelftTools.Hydro/Retention.hbm.xml -text svneol=unset#application/octet-stre
 src/DelftTools.Hydro/RoofArea.cs -text
 src/DelftTools.Hydro/Roughness/IModelWithRoughnessSections.cs -text
 src/DelftTools.Hydro/Roughness/ReverseRoughnessSection.cs -text
-src/DelftTools.Hydro/Roughness/ReverseRoughnessSection.hbm.xml -text
 src/DelftTools.Hydro/Roughness/RoughnessDataSet.cs -text
 src/DelftTools.Hydro/Roughness/RoughnessFunction.cs -text
 src/DelftTools.Hydro/Roughness/RoughnessNetworkCoverage.3.1.hbm.xml -text
@@ -456,7 +455,6 @@ src/DelftTools.Hydro/Roughness/RoughnessNetworkCoverage.cs -text
 src/DelftTools.Hydro/Roughness/RoughnessNetworkCoverage.hbm.xml -text
 src/DelftTools.Hydro/Roughness/RoughnessNetworkCoverage31LegacyLoader.cs -text
 src/DelftTools.Hydro/Roughness/RoughnessSection.cs -text
-src/DelftTools.Hydro/Roughness/RoughnessSection.hbm.xml -text
 src/DelftTools.Hydro/Roughness/RoughnessSectionChangeBranchFunction.cs -text
 src/DelftTools.Hydro/Roughness/RoughnessSectionExtensions.cs -text
 src/DelftTools.Hydro/RoughnessHelper.cs -text
