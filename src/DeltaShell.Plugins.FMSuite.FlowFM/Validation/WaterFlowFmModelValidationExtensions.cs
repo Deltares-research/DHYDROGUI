@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var initCondCategory = model.ModelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalValue1D).PropertyDefinition.Category;
             string restartFileName = model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
 
-            if (String.IsNullOrWhiteSpace(restartFileName))
+            if (string.IsNullOrWhiteSpace(restartFileName))
             {
                 return new ValidationReport("Initial Conditions", issues);
             }
@@ -178,12 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             var splitFileName = restartFileName.Split(new[] { '_', '.' }, StringSplitOptions.RemoveEmptyEntries);
             var length = splitFileName.Length;
 
-            bool nameOK = true;
-            if (splitFileName.Last() != "nc")
-            {
-                nameOK = false;
-            }
-
+            bool nameOK = splitFileName.Last() == "nc";
             if (length < 5 || length > 2 && splitFileName[length - 2] != "rst")
             {
                 nameOK = false;
@@ -206,16 +201,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     $"Invalid restart file name \"{restartFileName}\": your file should be formatted as <name>_yyyyMMdd_HHmmss_rst.nc", validationShortcut));
             }
 
-            if (!string.IsNullOrWhiteSpace(model.ModelDefinition.ModelDirectory) && 
-                !string.IsNullOrWhiteSpace(restartFileName))
+            if (string.IsNullOrWhiteSpace(model.ModelDefinition.ModelDirectory)) 
+                return new ValidationReport("Initial Conditions", issues);
+
+            // model has been saved, restart file can be checked
+            string restartFilePath = Path.Combine(model.ModelDefinition.ModelDirectory, restartFileName);
+            if (!File.Exists(restartFilePath))
             {
-                // model has been saved, restart file can be checked
-                string restartFilePath = Path.Combine(model.ModelDefinition.ModelDirectory, restartFileName);
-                if (!File.Exists(restartFilePath))
-                {
-                    issues.Add(new ValidationIssue(initCondCategory, ValidationSeverity.Error,
-                        $"Restart file {restartFileName} does not exist (full path: {restartFilePath}).", validationShortcut));
-                }
+                issues.Add(new ValidationIssue(initCondCategory, ValidationSeverity.Error,
+                    $"Restart file {restartFileName} does not exist (full path: {restartFilePath}).", validationShortcut));
             }
 
             return new ValidationReport("Initial Conditions", issues);
