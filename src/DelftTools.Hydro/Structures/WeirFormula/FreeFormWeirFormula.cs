@@ -12,6 +12,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     {
         private IGeometry shape;
         private double crestLevel;
+        private double dischargeCoefficient;
 
         public FreeFormWeirFormula()
         {
@@ -21,7 +22,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         private void Initialize()
         {
             SetDefaultShape();
-            DischargeCoefficient = 1.0;
         }
 
         /// <summary>
@@ -111,7 +111,11 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// <summary>
         /// Discharge coefficient Ce
         /// </summary>
-        public virtual double DischargeCoefficient { get; set; }
+        public virtual double DischargeCoefficient
+        {
+            get { return dischargeCoefficient; }
+            set { dischargeCoefficient = value; }
+        }
 
         public virtual object Clone()
         {

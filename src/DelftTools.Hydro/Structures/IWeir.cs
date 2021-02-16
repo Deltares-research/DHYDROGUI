@@ -56,6 +56,10 @@ namespace DelftTools.Hydro.Structures
         /// </summary>
         double CrestLevel { get; set; }
         /// <summary>
+        /// Crest level
+        /// </summary>
+        double DischargeCoefficient { get; set; }
+        /// <summary>
         /// Time varying crest level. Will be null when <see cref="CanBeTimedependent"/> is false.
         /// </summary>
         TimeSeries CrestLevelTimeSeries { get; }

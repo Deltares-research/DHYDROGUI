@@ -93,7 +93,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         {
             get { return Weir.WeirFormula; }
         }
-
+        
+        [DynamicReadOnly]
+        [DisplayName("Discharge coefficient")]
+        public string DischargeCoefficient
+        {
+            get
+            {
+                return weir.DischargeCoefficient.ToString("0.00", CultureInfo.CurrentCulture);
+            }
+            set
+            {
+                weir.DischargeCoefficient = double.Parse(value, CultureInfo.CurrentCulture);
+            }
+        }
+        
         protected string CrestWidthTimeSeriesString = "Time series";
         [DynamicReadOnly]
         [DisplayName("Crest width")]
@@ -344,7 +358,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 return Formula != FormulaEnum.SimpleWeir;
             }
-
+            if (propertyName == nameof(DischargeCoefficient))
+            {
+                return Formula != FormulaEnum.FreeFormWeir;
+            }
             if (propertyName == nameof(GLowerEdge) || propertyName == nameof(GGateOpening))
             {
                 if (Weir is IOrifice)
