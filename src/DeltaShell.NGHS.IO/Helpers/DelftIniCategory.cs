@@ -264,11 +264,14 @@ namespace DeltaShell.NGHS.IO.Helpers
                     ? StandardSeperators.Concat(new[] { customSeparator }).ToArray()
                     : new[] { customSeparator };
 
-                return iniProperty.Value.Split(separators, StringSplitOptions.RemoveEmptyEntries).Select(elementValue => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(elementValue)).ToList();
+                return iniProperty.Value?
+                    .Split(separators, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(elementValue => (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(elementValue))
+                    .ToList();
             }
 
             if (!isOptional)
-                throw new PropertyNotFoundInFileException(String.Format("Property {0} is not found in the file", key));
+                throw new PropertyNotFoundInFileException($"Property {key} is not found in the file");
             
             return defaultValue;
         }
