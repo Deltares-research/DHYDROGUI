@@ -876,13 +876,11 @@ src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/GraphicsProviders/HydroModelGu
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/GraphicsProviders/HydroModelGuiGraphicsProvider.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/HydroModelGuiPlugin.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/HydroModelMapLayerProvider.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Iterative1D2DCouplerLinkFeatureCollection.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Properties/AssemblyInfo.cs.svn -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Properties/Resources.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Properties/Resources.nl-NL.resx -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Properties/Resources.resx -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/PropertyClasses/Iterative1D2DCouplerProperties.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Resources/brick.png -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Resources/cog.png -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Resources/cog_active.png -text
@@ -907,8 +905,6 @@ src/DeltaShell.Plugins.DelftModels.HydroModel/Export/DimrConfigModelCouplerFacto
 src/DeltaShell.Plugins.DelftModels.HydroModel/Export/FeatureExtensions.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/Export/IDimrConfigModelCoupler.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/Export/IDimrConfigModelCouplerProvider.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel/Export/Iterative1D2DCouplerExporter.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel/Export/Iterative1D2DCouplerFileWriter.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModel.1.0.0.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModel.FileBased.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModel.cs -text

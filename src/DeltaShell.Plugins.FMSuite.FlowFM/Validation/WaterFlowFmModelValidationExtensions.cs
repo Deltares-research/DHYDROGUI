@@ -206,8 +206,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     $"Invalid restart file name \"{restartFileName}\": your file should be formatted as <name>_yyyyMMdd_HHmmss_rst.nc", validationShortcut));
             }
 
-            if (!String.IsNullOrWhiteSpace(model.ModelDefinition.ModelDirectory) && 
-                !String.IsNullOrWhiteSpace(restartFileName))
+            if (!string.IsNullOrWhiteSpace(model.ModelDefinition.ModelDirectory) && 
+                !string.IsNullOrWhiteSpace(restartFileName))
             {
                 // model has been saved, restart file can be checked
                 string restartFilePath = Path.Combine(model.ModelDefinition.ModelDirectory, restartFileName);

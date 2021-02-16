@@ -783,8 +783,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             return new HydroModelValidator().Validate(this);
         }
 
-        //public virtual bool Sobek2CompareTest { get; set; }
-        
         protected override void OnProgressChanged()
         {
             if (dimrApi != null) dimrApi.ProcessMessages();

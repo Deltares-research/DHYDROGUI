@@ -471,11 +471,6 @@ src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Properties/AssemblyInfo.cs
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Properties/bin
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Properties/obj
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Properties/packages
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/PropertyClasses/*.suo
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/PropertyClasses/*.user
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/PropertyClasses/bin
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/PropertyClasses/obj
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/PropertyClasses/packages
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Resources/*.suo
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Resources/*.user
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Resources/bin

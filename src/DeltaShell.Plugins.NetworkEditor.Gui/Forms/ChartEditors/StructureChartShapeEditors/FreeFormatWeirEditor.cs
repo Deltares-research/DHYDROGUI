@@ -251,10 +251,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         public override void Start()
         {
+            // No start logic needed
         }
 
         public override void Stop()
         {
+            // No stop logic needed
         }
     }
 }
