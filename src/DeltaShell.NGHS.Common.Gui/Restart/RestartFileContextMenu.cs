@@ -78,7 +78,11 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             }
 
             menuItem.Enabled = true;
-            menuItem.Click += (s, e) => model.RestartInput = outputRestartFile.Clone();
+            menuItem.Click += (s, e) =>
+            {
+                model.RestartInput = outputRestartFile.Clone();
+                model.MarkOutputOutOfSync();
+            };
 
             return menuItem;
         }
@@ -90,7 +94,11 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
                 Text = Resources.RemoveRestart,
                 Enabled = model.UseRestart
             };
-            menuItem.Click += (s, e) => model.RestartInput = new RestartFile();
+            menuItem.Click += (s, e) =>
+            {
+                model.RestartInput = new RestartFile();
+                model.MarkOutputOutOfSync();
+            };
 
             return menuItem;
         }

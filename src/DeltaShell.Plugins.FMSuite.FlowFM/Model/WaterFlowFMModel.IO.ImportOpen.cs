@@ -52,7 +52,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void LoadOutputStateFromMdu(string mduFilePath)
         {
             string existingOutputDirectory = RetrieveOutputDirectory(mduFilePath);
+            
+            bool originalOutputOutOfSync = OutputOutOfSync;
             ReconnectOutputFiles(existingOutputDirectory);
+            OutputOutOfSync = originalOutputOutOfSync;
         }
 
         /// <summary>

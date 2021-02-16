@@ -416,9 +416,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     TriggerPropertyChanged("Switching Waq output end time", GuiProperties.SpecifyWaqOutputStopTime,
                                            o => SpecifyWaqOutputStopTime = (bool) o);
                 }
+                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.RestartFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.LandBoundaryFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ThinDamFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BridgePillarFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ObsFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ObsCrsFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.StructuresFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.EnclosureFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.DryPointsFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.PathsRelativeToParent,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.OutputDir,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaqOutputDir,
+                                                                        StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return;
+                }
+
+                BeginEdit(new DefaultEditAction(""));
+                MarkOutputOutOfSync();
+                EndEdit();
             }
         }
-
+        
         private void TriggerPropertyChanged(string defaultEditActionName, string propertyName,
                                             Action<object> setPropertyAction)
         {
@@ -550,6 +583,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            MarkOutputOutOfSync();
+
             object removedOrAddedItem = e.GetRemovedOrAddedItem();
             if (!isLoading)
             {
@@ -676,6 +711,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            MarkOutputOutOfSync();
+
             if (sender is IWeir weir && e.PropertyName == nameof(Weir.WeirFormula))
             {
                 bool isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
@@ -810,8 +847,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             base.OnDataItemUnlinking(sender, e);
         }
 
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {}
-        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e) {}
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+         //   MarkOutputOutOfSync();
+        }
+
+        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+         //   MarkOutputOutOfSync();
+        }
 
         /// <summary>
         /// Called when [clear output]. Clears all output of the model.

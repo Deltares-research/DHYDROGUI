@@ -242,6 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private IEventedList<BoundaryConditionSet> boundaryConditionSets;
         private IEventedList<string> tracerDefinitions;
         private IEventedList<SourceAndSink> sourcesAndSinks;
+        private IEventedList<Feature2D> pipes;
         private IDataItem areaDataItem;
         private DepthLayerDefinition depthLayerDefinition;
 
@@ -611,7 +612,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        public IEventedList<Feature2D> Pipes { get; private set; }
+        public IEventedList<Feature2D> Pipes
+        {
+            get => pipes;
+            private set
+            {
+                if (pipes != null)
+                {
+                    Pipes.CollectionChanged -= OnInputCollectionChanged;
+                    ((INotifyPropertyChanged) Pipes).PropertyChanged -= OnInputPropertyChanged;
+                }
+
+                pipes = value;
+
+                if (pipes != null)
+                {
+                    Pipes.CollectionChanged += OnInputCollectionChanged;
+                    ((INotifyPropertyChanged) Pipes).PropertyChanged += OnInputPropertyChanged;
+                }
+            }
+        }
+
+
 
         public IEventedList<SourceAndSink> SourcesAndSinks
         {
@@ -621,12 +643,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (sourcesAndSinks != null)
                 {
                     SourcesAndSinks.CollectionChanged -= SourcesAndSinksCollectionChanged;
+                    SourcesAndSinks.CollectionChanged -= OnInputCollectionChanged;
+                    ((INotifyPropertyChanged) SourcesAndSinks).PropertyChanged -= OnInputPropertyChanged;
                 }
 
                 sourcesAndSinks = value;
+
                 if (sourcesAndSinks != null)
                 {
                     SourcesAndSinks.CollectionChanged += SourcesAndSinksCollectionChanged;
+                    SourcesAndSinks.CollectionChanged += OnInputCollectionChanged;
+                    ((INotifyPropertyChanged)SourcesAndSinks).PropertyChanged += OnInputPropertyChanged;
                 }
             }
         }

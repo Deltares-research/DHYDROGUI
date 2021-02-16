@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using DelftTools.Shell.Core.Workflow;
 
 namespace DeltaShell.NGHS.Common.IO.RestartFiles
 {
     /// <summary>
     /// <see cref="IRestartModel"/> provides the interface for models supporting restart files.
     /// </summary>
-    public interface IRestartModel
+    public interface IRestartModel : IModel
     {
         /// <summary>
         /// Gets the value indicating whether or not this model uses a restart file.

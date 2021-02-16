@@ -116,7 +116,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             WaterFlowFMModel model = GetModel(target);
 
-            return model.RestartInput = new RestartFile(path);
+            model.RestartInput = new RestartFile(path);
+
+            model.MarkOutputOutOfSync();
+
+            return model.RestartInput;
         }
 
         private WaterFlowFMModel GetModel(object obj)
