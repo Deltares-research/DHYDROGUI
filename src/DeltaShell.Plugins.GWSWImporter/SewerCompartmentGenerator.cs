@@ -1,7 +1,4 @@
-using System;
-using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
-using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
