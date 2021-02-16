@@ -166,6 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         model.Precipitation.DataDistributionType = MeteoDataDistributionType.PerStation;
                         model.Evaporation.DataDistributionType = MeteoDataDistributionType.PerStation;
                         model.Temperature.DataDistributionType = MeteoDataDistributionType.PerStation;
+                        model.ModelData.Add(new HbvData(new Catchment()));// meteo stations are only for HBV
                         model.MeteoStations.Add("Station A");
                         model.MeteoStations.Add("Station B");
                         model.MeteoStations.Add("Station C");
