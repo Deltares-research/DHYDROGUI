@@ -40,11 +40,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             yield return new ViewInfo<IEventedList<NwrwDryWeatherFlowDefinition>, NwrwDryWeatherFlowDefinitionView>
                 {
                     Description = "Dryweather flow view",
+                    ViewDataContainsData = (v, o) =>
+                    {
+                        var model = GetModelForData(o, rainfallRunoffGuiPlugin.Gui);
+                        if (model == null) return false;
+
+                        return v.Data is IEventedList<NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitions  && ReferenceEquals(model.NwrwDryWeatherFlowDefinitions, nwrwDryWeatherFlowDefinitions);
+                    },
                     GetViewName = (v, o) => "Dryweather Flow Definitions"
                 };
             yield return new ViewInfo<IEventedList<NwrwDefinition>, NwrwDefinitionView>
             {
                 Description = "Nwrw surface settings view",
+                ViewDataContainsData = (v, o) =>
+                {
+                    var model = GetModelForData(o, rainfallRunoffGuiPlugin.Gui);
+                    if (model == null) return false;
+
+                    return v.Data is IEventedList<NwrwDefinition> nwrwDefinitions && ReferenceEquals(model.NwrwDefinitions, nwrwDefinitions);
+                },
                 GetViewName = (v, o) => "Nwrw Surface Settings",
             };
             yield return new ViewInfo<UnpavedData, UnpavedDataView>
