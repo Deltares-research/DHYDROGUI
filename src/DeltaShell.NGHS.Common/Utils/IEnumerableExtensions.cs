@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Guards;
 
 namespace DeltaShell.NGHS.Common.Utils
@@ -40,6 +41,14 @@ namespace DeltaShell.NGHS.Common.Utils
             }
 
             return -1;
+        }
+
+        public static IEnumerable<T> Except<T>(this IEnumerable<T> source, T item)
+        {
+            return source.Except(new[]
+            {
+                item
+            });
         }
     }
 }
