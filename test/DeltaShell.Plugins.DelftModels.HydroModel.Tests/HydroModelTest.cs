@@ -20,6 +20,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMapTestUtils;
@@ -798,6 +799,60 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.Activities.Add(model2);
 
             Assert.That(hydroModel.CanRun, Is.True);
+        }
+
+        [Test]
+        public void ResetActivity_CurrentWorkFlowNotEligibleForDIMRRun_CallsResetActivity()
+        {
+            // Setup
+            var workFlowActivity = Substitute.For<IModel>();
+            var workflow = Substitute.For<ICompositeActivity>();
+            workflow.Activities.Returns(new EventedList<IActivity>
+            {
+                workFlowActivity
+            });
+            
+            using (var model = new HydroModel
+            {
+                CurrentWorkflow = workflow
+            })
+            {
+                // Call
+                model.ResetActivity();
+
+                // Assert
+                workflow.Received(1).ResetActivity();
+                workFlowActivity.DidNotReceive().ResetActivity();
+            }
+        }
+        
+        
+        [Test]
+        public void ResetActivity_CurrentWorkFlowEligibleForDIMRRun_CallsResetActivityOfWorkFlowActivities()
+        {
+            // Setup
+            var workFlowActivityOne = Substitute.For<IDimrModel>();
+            var workFlowActivityTwo = Substitute.For<IDimrModel>();
+            var workflow = Substitute.For<ICompositeActivity>();
+            workflow.Activities.Returns(new EventedList<IActivity>
+            {
+                workFlowActivityOne,
+                workFlowActivityTwo
+            });
+            
+            using (var model = new HydroModel
+            {
+                CurrentWorkflow = workflow
+            })
+            {
+                // Call
+                model.ResetActivity();
+
+                // Assert
+                workflow.DidNotReceive().ResetActivity();
+                workFlowActivityOne.Received(1).ResetActivity();
+                workFlowActivityTwo.Received(1).ResetActivity();
+            }
         }
 
         private static void SetUpHydroModelWithActivity(HydroModel hydroModel, 

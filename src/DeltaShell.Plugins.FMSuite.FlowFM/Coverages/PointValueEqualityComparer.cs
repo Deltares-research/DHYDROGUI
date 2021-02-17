@@ -42,12 +42,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         {
             unchecked
             {
-                {
-                    int hashCode = obj.X.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.Y.GetHashCode();
-                    hashCode = (hashCode * 397) ^ obj.Value.GetHashCode();
-                    return hashCode;
-                }
+                int hashCode = obj.X.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj.Y.GetHashCode();
+                hashCode = (hashCode * 397) ^ obj.Value.GetHashCode();
+                return hashCode;
             }
         }
     }
