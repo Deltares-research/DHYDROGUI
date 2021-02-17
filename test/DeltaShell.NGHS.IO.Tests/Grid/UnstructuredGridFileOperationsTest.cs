@@ -13,35 +13,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     public class UnstructuredGridFileOperationsTest
     {
         [Test]
-        [TestCase("")]
-        [TestCase("fileDoesNotExist.nc")]
-        public void Constructor_WithInvalidFile_ThrowsArgumentExceptionAndLogsMessage(string filePath)
-        {
-            // Setup
-            string testFilePath = GetTestFilePath(filePath);
-
-            var isArgumentExceptionThrown = false;
-
-            // Call
-            Action call = () =>
-            {
-                try
-                {
-                    new UnstructuredGridFileOperations(testFilePath);
-                }
-                catch (ArgumentException)
-                {
-                    isArgumentExceptionThrown = true;
-                }
-            };
-
-            // Assert
-            var expectedMessage = $"Could not find grid at \"{testFilePath}\"";
-            TestHelper.AssertLogMessageIsGenerated(call, expectedMessage, 1);
-            Assert.That(isArgumentExceptionThrown, Is.True);
-        }
-
-        [Test]
         [TestCase(@"ugrid\Custom_Ugrid.nc", GridApiDataSet.DataSetConventions.CONV_UGRID)]
         [TestCase(@"nonUgrid\TAK3_net.nc", GridApiDataSet.DataSetConventions.CONV_OTHER)]
         public void Constructor_WithArguments_ExpectedValues(string filePath,

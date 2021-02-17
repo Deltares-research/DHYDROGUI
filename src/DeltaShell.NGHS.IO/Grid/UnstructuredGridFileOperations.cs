@@ -20,13 +20,11 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Creates a new instance of <see cref="UnstructuredGridFileOperations"/>.
         /// </summary>
         /// <param name="filePath">The file path to the file containing an unstructured grid.</param>
-        /// <exception cref="ArgumentException">Thrown when the <paramref name="filePath"/> is invalid.</exception>
         public UnstructuredGridFileOperations(string filePath)
         {
             if (!File.Exists(filePath) || Path.GetFileName(filePath) == null)
             {
                 log.ErrorFormat("Could not find grid at \"{0}\"", filePath);
-                throw new ArgumentException($"{filePath} is invalid.");
             }
 
             this.filePath = filePath;
