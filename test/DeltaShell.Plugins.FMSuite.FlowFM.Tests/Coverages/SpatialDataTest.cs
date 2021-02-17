@@ -417,7 +417,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
             data.SwitchTo(@"the\new\directory");
 
             // Assert
-            foreach (ImportSamplesOperation operation in operations)
+            Assert.That(operations[0].FilePath, Is.EqualTo("the\\original\\directory\\file.xyz"));
+            foreach (ImportSamplesOperation operation in operations.Skip(1))
             {
                 Assert.That(operation.FilePath, Is.EqualTo(@"the\new\directory\file.xyz"));
             }
@@ -482,7 +483,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Coverages
         {
             foreach (IDataItem dataItem in dataItems)
             {
-                var operation = new ImportSamplesOperation(false) {FilePath = @"path\to\the\file.xyz"};
+                var operation = new ImportSamplesOperation(false) {FilePath = @"the\original\directory\file.xyz"};
                 dataItem.ValueConverter = GetConverterWith(operation);
 
                 yield return operation;
