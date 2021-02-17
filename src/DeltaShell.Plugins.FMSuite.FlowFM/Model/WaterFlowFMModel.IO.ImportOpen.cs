@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Aop;
@@ -109,13 +110,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             using (var fileStream = new FileStream(mduFilePath, FileMode.Open, FileAccess.Read))
             {
                 IList<DelftIniCategory> categories = new MduDelftIniReader().ReadDelftIniFile(fileStream, filePath);
-                
-                DelftIniCategory geometryCategory = 
+
+                DelftIniCategory geometryCategory =
                     categories.FirstOrDefault(x => x.Name.ToLowerInvariant() == "geometry");
-                DelftIniProperty netFileProperty = 
+                DelftIniProperty netFileProperty =
                     geometryCategory?.Properties
                                     .FirstOrDefault(x => x.Name.ToLowerInvariant() == KnownProperties.NetFile);
-                
+
                 string netFileRelativePath = netFileProperty?.Value;
                 return netFileRelativePath != null ? Path.Combine(mduFileDir, netFileRelativePath) : null;
             }
@@ -236,73 +237,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             FireImportProgressChanged("Reading spatial operations", 9, TotalImportSteps);
 
-            foreach (KeyValuePair<string, IList<ISpatialOperation>> spatialOperation in ModelDefinition
-                .SpatialOperations)
-            {
-                string dataItemName = spatialOperation.Key;
-                IList<ISpatialOperation> spatialOperationList = spatialOperation.Value;
-                IDataItem dataItem = SpatialData.DataItems.FirstOrDefault(di => di.Name == dataItemName);
-
-                if (!spatialOperationList.Any())
-                {
-                    continue;
-                }
-
-                if (dataItem == null)
-                {
-                    Log.Error("No data item found with name " + dataItemName);
-                    continue;
-                }
-
-                if (dataItem.ValueConverter == null)
-                {
-                    dataItem.ValueConverter =
-                        SpatialOperationValueConverterFactory.Create(dataItem.Value, dataItem.ValueType);
-                }
-
-                var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
-                if (valueConverter == null)
-                {
-                    continue;
-                }
-
-                valueConverter.SpatialOperationSet.Operations.Clear();
-
-                foreach (ISpatialOperation operation in spatialOperationList)
-                {
-                    // samples should directly be applied to the coverage with an interpolate operation
-                    var importSamplesSpatialOperation = operation as ImportSamplesSpatialOperation;
-                    if (importSamplesSpatialOperation != null)
-                    {
-                        Tuple<ImportSamplesOperation, InterpolateOperation> operations =
-                            importSamplesSpatialOperation.CreateOperations();
-                        valueConverter.SpatialOperationSet.AddOperation(operations.Item1);
-                        valueConverter.SpatialOperationSet.AddOperation(operations.Item2);
-                    }
-                    else
-                    {
-                        valueConverter.SpatialOperationSet.AddOperation(operation);
-                    }
-                }
-
-                MakeOperationNamesUnique(valueConverter.SpatialOperationSet);
-                ExecuteOperations(valueConverter);
-            }
+            LoadSpatialOperations();
+            ExecuteSpatialOperations();
         }
 
-        private static void ExecuteOperations(SpatialOperationSetValueConverter valueConverter)
+        private void LoadSpatialOperations()
         {
-            bool eventBubblingEnabled = EventSettings.BubblingEnabled;
+            Parallel.ForEach(ModelDefinition.SpatialOperations, LoadSpatialOperations);
+        }
+
+        private void LoadSpatialOperations(KeyValuePair<string, IList<ISpatialOperation>> spatialOperation)
+        {
+            string dataItemName = spatialOperation.Key;
+            IList<ISpatialOperation> spatialOperationList = spatialOperation.Value;
+            IDataItem dataItem = SpatialData.DataItems.FirstOrDefault(di => di.Name == dataItemName);
+
+            if (!spatialOperationList.Any())
+            {
+                return;
+            }
+
+            if (dataItem == null)
+            {
+                Log.Error("No data item found with name " + dataItemName);
+                return;
+            }
+
+            if (dataItem.ValueConverter == null)
+            {
+                dataItem.ValueConverter =
+                    SpatialOperationValueConverterFactory.Create(dataItem.Value, dataItem.ValueType);
+            }
+
+            var valueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
+            if (valueConverter == null)
+            {
+                return;
+            }
+
+            valueConverter.SpatialOperationSet.Operations.Clear();
+
+            foreach (ISpatialOperation operation in spatialOperationList)
+            {
+                // samples should directly be applied to the coverage with an interpolate operation
+                var importSamplesSpatialOperation = operation as ImportSamplesSpatialOperation;
+                if (importSamplesSpatialOperation != null)
+                {
+                    Tuple<ImportSamplesOperation, InterpolateOperation> operations =
+                        importSamplesSpatialOperation.CreateOperations();
+                    valueConverter.SpatialOperationSet.AddOperation(operations.Item1);
+                    valueConverter.SpatialOperationSet.AddOperation(operations.Item2);
+                }
+                else
+                {
+                    valueConverter.SpatialOperationSet.AddOperation(operation);
+                }
+            }
+
+            MakeOperationNamesUnique(valueConverter.SpatialOperationSet);
+        }
+
+        private void ExecuteSpatialOperations()
+        {
+            if (EventSettings.BubblingEnabled)
+            {
+                return;
+            }
+
             try
             {
                 // while opening, bubbling of events is disabled,
                 // which will prevent the execution of spatial operations.
                 EventSettings.BubblingEnabled = true;
-                valueConverter.SpatialOperationSet.Execute();
+                Parallel.ForEach(SpatialData.DataItems, ExecuteSpatialOperations);
             }
             finally
             {
-                EventSettings.BubblingEnabled = eventBubblingEnabled;
+                EventSettings.BubblingEnabled = false;
+            }
+        }
+
+        private static void ExecuteSpatialOperations(IDataItem dataItem)
+        {
+            if (dataItem.ValueConverter is SpatialOperationSetValueConverter valueConverter)
+            {
+                valueConverter.SpatialOperationSet.Execute();
             }
         }
 

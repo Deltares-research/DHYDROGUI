@@ -339,9 +339,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void UpdateSpatialDataAfterGridSet(UnstructuredGrid newGrid, bool nodesChanged, bool cellsChanged,
                                                    bool linksChanged)
         {
-            foreach (IDataItem spatialDataItem in SpatialData.DataItems)
+            foreach (IDataItem di in SpatialData.DataItems)
             {
-                UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, spatialDataItem);
+                UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, di);
             }
         }
 
