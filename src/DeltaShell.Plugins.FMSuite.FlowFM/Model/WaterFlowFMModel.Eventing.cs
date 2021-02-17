@@ -441,6 +441,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                          prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.OutputDir,
                                                                         StringComparison.InvariantCultureIgnoreCase) ||
                          prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaqOutputDir,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ExtForceFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BndExtForceFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MorFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.HisInterval,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MapInterval,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.RstInterval,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaqInterval,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ClassMapInterval,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Version,
+                                                                        StringComparison.InvariantCultureIgnoreCase) ||
+                         prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.GuiVersion,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     return;
