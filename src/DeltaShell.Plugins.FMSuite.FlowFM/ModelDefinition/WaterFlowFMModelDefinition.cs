@@ -542,6 +542,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                                         .Where(s => !(s is ISpatialOperationSet))
                                                         .Select(ConvertSpatialOperation)
                                                         .ToList();
+
+            if (!spatialOperations.Any())
+            {
+                return spatialOperations;
+            }
             
             var originalCoverage = (UnstructuredGridCoverage) spatialOperationValueConverter.OriginalValue;
             IPointCloud samples = originalCoverage.ToPointCloud(skipMissingValues: true);
