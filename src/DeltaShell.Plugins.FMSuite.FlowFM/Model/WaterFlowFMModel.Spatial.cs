@@ -190,9 +190,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     }
 
                     zValues = GetZValuesFromNetFile(bedLevelType);
-                    SpatialData.Bathymetry =
-                        CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid,
-                                                           zValues);
+                    SpatialData.Bathymetry = UnstructuredGridCoverageFactory.CreateCellCoverage(
+                        WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.CellEdges:
                     Log.WarnFormat(
@@ -205,9 +204,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     }
 
                     zValues = GetZValuesFromNetFile(bedLevelType);
-                    SpatialData.Bathymetry =
-                        CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid,
-                                                             zValues);
+                    SpatialData.Bathymetry = UnstructuredGridCoverageFactory.CreateVertexCoverage(
+                        WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMeanLev:
                 case UnstructuredGridFileHelper.BedLevelLocation.NodesMinLev:
@@ -218,9 +216,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     }
 
                     zValues = GetZValuesFromNetFile(bedLevelType);
-                    SpatialData.Bathymetry =
-                        CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName, Grid,
-                                                             zValues);
+                    SpatialData.Bathymetry = UnstructuredGridCoverageFactory.CreateVertexCoverage(
+                        WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(bedLevelType), bedLevelType, null);
@@ -273,12 +270,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private void SetSpatialCoverages()
         {
             LoadBathymetry();
-            SpatialData.InitialWaterLevel = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
-            SpatialData.InitialSalinity = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialSalinityDataItemName, Grid);
-            SpatialData.InitialTemperature = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Grid);
-            SpatialData.Viscosity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.ViscosityDataItemName, Grid);
-            SpatialData.Diffusivity = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.DiffusivityDataItemName, Grid);
-            SpatialData.Roughness = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.RoughnessDataItemName, Grid);
+            SpatialData.InitialWaterLevel = UnstructuredGridCoverageFactory.CreateCellCoverage(
+                WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, Grid);
+            SpatialData.InitialSalinity = UnstructuredGridCoverageFactory.CreateCellCoverage(
+                WaterFlowFMModelDefinition.InitialSalinityDataItemName, Grid);
+            SpatialData.InitialTemperature = UnstructuredGridCoverageFactory.CreateCellCoverage(
+                WaterFlowFMModelDefinition.InitialTemperatureDataItemName, Grid);
+            SpatialData.Viscosity = UnstructuredGridCoverageFactory.CreateFlowLinkCoverage(
+                WaterFlowFMModelDefinition.ViscosityDataItemName, Grid);
+            SpatialData.Diffusivity = UnstructuredGridCoverageFactory.CreateFlowLinkCoverage(
+                WaterFlowFMModelDefinition.DiffusivityDataItemName, Grid);
+            SpatialData.Roughness = UnstructuredGridCoverageFactory.CreateFlowLinkCoverage(
+                WaterFlowFMModelDefinition.RoughnessDataItemName, Grid);
         }
 
         private void LoadBathymetry()
@@ -302,8 +305,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 double[] zValues = GetZValuesFromNetFile(bedLevelType);
                 if (bedLevelLocationsForUnstructuredGridCellCoverage.Contains(bedLevelType))
                 {
-                    SpatialData.Bathymetry = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName,
-                                                                                Grid, zValues);
+                    SpatialData.Bathymetry = UnstructuredGridCoverageFactory.CreateCellCoverage(
+                        WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                 }
                 else
                 {
@@ -312,8 +315,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         zValues = grid.Vertices.Count > 0 ? grid.Vertices.Select(v => v.Z).ToArray() : null;
                     }
 
-                    SpatialData.Bathymetry = CreateUnstructuredGridVertexCoverage(WaterFlowFMModelDefinition.BathymetryDataItemName,
-                                                                                  Grid, zValues);
+                    SpatialData.Bathymetry = UnstructuredGridCoverageFactory.CreateVertexCoverage(
+                        WaterFlowFMModelDefinition.BathymetryDataItemName, Grid, zValues);
                 }
             }
         }
@@ -329,63 +332,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             return zValuesFromNetFile.Length > 0 ? zValuesFromNetFile : null;
         }
 
-        private static UnstructuredGridVertexCoverage CreateUnstructuredGridVertexCoverage(
-            string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
-        {
-            return CreateUnstructuredGridCoverage(name, grid,
-                                                  () => new UnstructuredGridVertexCoverage(
-                                                      new UnstructuredGrid(), false),
-                                                  () => Enumerable.Range(0, grid.Vertices.Count),
-                                                  componentValues);
-        }
-
-        private static UnstructuredGridCellCoverage CreateUnstructuredGridCellCoverage(
-            string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
-        {
-            return CreateUnstructuredGridCoverage(name, grid,
-                                                  () => new UnstructuredGridCellCoverage(new UnstructuredGrid(), false),
-                                                  () => Enumerable.Range(0, grid.Cells.Count),
-                                                  componentValues);
-        }
-
-        private static UnstructuredGridFlowLinkCoverage CreateUnstructuredGridFlowLinkCoverage(
-            string name, UnstructuredGrid grid, IEnumerable<double> componentValues = null)
-        {
-            return CreateUnstructuredGridCoverage(name, grid,
-                                                  () => new UnstructuredGridFlowLinkCoverage(
-                                                      new UnstructuredGrid(), false),
-                                                  () => Enumerable.Range(0, grid.FlowLinks.Count),
-                                                  componentValues);
-        }
-
-        private static T CreateUnstructuredGridCoverage<T>(string name, UnstructuredGrid grid, Func<T> createCoverage,
-                                                           Func<IEnumerable<int>> argumentValues,
-                                                           IEnumerable<double> componentValues = null)
-            where T : UnstructuredGridCoverage
-        {
-            T result = createCoverage();
-
-            result.Name = name;
-            result.Grid = grid;
-
-            result.Components[0].NoDataValue = -999d;
-            result.Components[0].DefaultValue = -999d;
-
-            FunctionHelper.SetValuesRaw(result.Arguments[0], argumentValues());
-
-            IEnumerable<double> values = componentValues ?? Enumerable.Repeat(-999d, result.Arguments[0].Values.Count);
-            FunctionHelper.SetValuesRaw(result.Components[0], values);
-
-            return result;
-        }
-
         // Can be further optimized by letting InsertGrid accept lists of coverages
         private void UpdateSpatialDataAfterGridSet(UnstructuredGrid newGrid, bool nodesChanged, bool cellsChanged,
                                                    bool linksChanged)
         {
-            foreach (IDataItem spatialDataItem in SpatialData.DataItems)
+            foreach (IDataItem di in SpatialData.DataItems)
             {
-                UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, spatialDataItem);
+                UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, di);
             }
         }
 
@@ -446,6 +399,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     dataItem.Value = coverage;
                 }
             }
+
+            coverage.ReplaceMissingValuesWithDefaultValues();
         }
 
         private static void ClearVariable(IVariable variable)

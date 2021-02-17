@@ -120,7 +120,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         {
             Ensure.NotNullOrEmpty(targetDir, nameof(targetDir));
 
-            foreach (ImportSamplesOperation operation in DataItems.SelectMany(GetImportSamplesOperations))
+            foreach (ImportSamplesOperation operation in DataItems.Except(bathymetryDataItem)
+                                                                  .SelectMany(GetImportSamplesOperations))
             {
                 string fileName = Path.GetFileName(operation.FilePath);
                 operation.FilePath = Path.Combine(targetDir, fileName);
