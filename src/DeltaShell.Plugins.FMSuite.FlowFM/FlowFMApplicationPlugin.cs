@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     Image = Properties.Resources.unstrucModel,
                     AdditionalOwnerCheck = owner => !(Application?.Project != null &&
                                                       Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().Any()), // Don't allow multiple flow models
-                    CreateModel = owner => new WaterFlowFMModel{ WorkingDirectoryPathFunc = () => Application.WorkDirectory }
+                    CreateModel = owner => new WaterFlowFMModel{ WorkingDirectoryPathFunc = () => Application?.WorkDirectory }
                 };
         }
 
@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
-            yield return new WaterFlowFMFileImporter(() => Application.WorkDirectory);
+            yield return new WaterFlowFMFileImporter(() => Application?.WorkDirectory);
             yield return new Area2DStructuresImporter { GetModelForArea = GetModelForArea };
             yield return new StructuresListImporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
             yield return new StructuresListImporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };

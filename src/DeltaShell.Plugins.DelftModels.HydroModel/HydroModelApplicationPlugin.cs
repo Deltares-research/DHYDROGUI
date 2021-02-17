@@ -110,7 +110,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
         private void ApplicationProjectOpened(Project project)
         {
-            // relink all dataitems (between rtc and flowFM) for all hydromodels
             Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
             {
                 hm.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
