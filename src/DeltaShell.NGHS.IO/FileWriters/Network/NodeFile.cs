@@ -4,15 +4,19 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Network
 {
     public static class NodeFile
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(NodeFile));
+
         public static void Write(string filePath, IEnumerable<ICompartment> compartments, IEnumerable<IRetention> retentions)
         {
 
@@ -48,18 +52,18 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         private static DelftIniCategory CreateCompartmentIniCategory(ICompartment compartment)
         {
             var iniCategory = new DelftIniCategory("StorageNode");
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Id, compartment.Name, string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Name, compartment.Name, string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.NodeId, compartment.Name, string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.ManholeId, compartment.ParentManhole.Name, string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.UseTable, "0", string.Empty));
+            iniCategory.AddProperty(RetentionRegion.Id, compartment.Name);
+            iniCategory.AddProperty(RetentionRegion.Name.Key, compartment.Name);
+            iniCategory.AddProperty(RetentionRegion.NodeId.Key, compartment.Name);
+            iniCategory.AddProperty(KnownPropertyNames.ManholeId, compartment.ParentManhole.Name);
+            iniCategory.AddProperty(RetentionRegion.UseTable.Key, false);
 
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.BedLevel, GetValueAsStringWithFormat(compartment.BottomLevel, "{0:0.000}"), string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.Area, GetValueAsStringWithFormat(compartment.ManholeLength * compartment.ManholeWidth, "{0:0.0000000}"), string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetLevel, GetValueAsStringWithFormat(compartment.SurfaceLevel, "{0:0.000}"), string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StorageType, compartment.CompartmentStorageType.GetDisplayName(), string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.StreetStorageArea, GetValueAsStringWithFormat(compartment.FloodableArea, "{0:0.000}"), string.Empty));
-            iniCategory.AddProperty(new DelftIniProperty(KnownPropertyNames.CompartmentShape, compartment.Shape.ToString(), String.Empty));
+            iniCategory.AddProperty(RetentionRegion.BedLevel, GetValueAsStringWithFormat(compartment.BottomLevel, "{0:0.000}"));
+            iniCategory.AddProperty(RetentionRegion.Area, GetValueAsStringWithFormat(compartment.ManholeLength * compartment.ManholeWidth, "{0:0.0000000}"));
+            iniCategory.AddProperty(RetentionRegion.StreetLevel, GetValueAsStringWithFormat(compartment.SurfaceLevel, "{0:0.000}"));
+            iniCategory.AddProperty(RetentionRegion.StorageType, compartment.CompartmentStorageType.GetDisplayName());
+            iniCategory.AddProperty(RetentionRegion.StreetStorageArea, GetValueAsStringWithFormat(compartment.FloodableArea, "{0:0.000}"));
+            iniCategory.AddProperty(KnownPropertyNames.CompartmentShape, compartment.Shape.ToString());
             return iniCategory;
         }
 
@@ -79,41 +83,56 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                       && category.ReadProperty<bool>(RetentionRegion.IsRetention.Key)))
                 .Select(category =>
                 {
+                    var compartmentId = category.ReadProperty<string>(RetentionRegion.Id.Key);
+                    var name = category.ReadProperty<string>(RetentionRegion.Name.Key);
+                    var nodeId = category.ReadProperty<string>(RetentionRegion.NodeId.Key);
+                    var manholeId = category.ReadProperty<string>(KnownPropertyNames.ManholeId);
+                    var useTable = category.ReadProperty<bool>(RetentionRegion.UseTable.Key, true) ||
+                                       category.ReadProperty<int>(RetentionRegion.UseTable.Key, true) != 0;
+                    if (useTable)
+                    {
+                        log.Warn($"compartments with storage tables are not supported, using DEFAULT VALUES for " +
+                                 $"compartment id {compartmentId} ({name}) on " +
+                                 $"node id {nodeId} and " +
+                                 $"manhole id {manholeId} is NOT read from the file {filePath}");
+                        return new CompartmentProperties
+                        {
+                            CompartmentId = compartmentId,
+                            Name = name,
+                            NodeId = nodeId,
+                            ManholeId = manholeId,
+                            UseTable = false,
+                            BedLevel = -10,
+                            Area = 0.64,
+                            StreetLevel = 0,
+                            StreetStorageArea = 500,
+                            CompartmentShape = CompartmentShape.Unknown,
+                            CompartmentStorageType = CompartmentStorageType.Reservoir
+                        };
+                    }
+
                     return new CompartmentProperties
                     {
-                        CompartmentId = category.GetPropertyValue(KnownPropertyNames.Id),
-                        Name = category.GetPropertyValue(KnownPropertyNames.Name),
-                        NodeId = category.GetPropertyValue(KnownPropertyNames.NodeId),
-                        ManholeId = category.GetPropertyValue(KnownPropertyNames.ManholeId),
-                        UseTable = false, // use category.GetPropertyValue(KnownPropertyNames.UseTable)
-                        BedLevel = GetPropertyValueAsDouble(KnownPropertyNames.BedLevel, category),
-                        Area = GetPropertyValueAsDouble(KnownPropertyNames.Area, category),
-                        StreetLevel = GetPropertyValueAsDouble(KnownPropertyNames.StreetLevel, category),
-                        StreetStorageArea = GetPropertyValueAsDouble(KnownPropertyNames.StreetStorageArea, category),
-                        CompartmentShape = (CompartmentShape)Enum.Parse(typeof(CompartmentShape), category.ReadProperty<string>(KnownPropertyNames.CompartmentShape, true, "Unknown")),
-                        CompartmentStorageType = (CompartmentStorageType)Enum.Parse(typeof(CompartmentStorageType), category.ReadProperty<string>(KnownPropertyNames.StorageType, true, "Reservoir"))
+                        CompartmentId = compartmentId,
+                        Name = name,
+                        NodeId = nodeId,
+                        ManholeId = manholeId,
+                        UseTable = false,
+                        BedLevel = category.ReadProperty<double>(RetentionRegion.BedLevel.Key),
+                        Area = category.ReadProperty<double>(RetentionRegion.Area.Key),
+                        StreetLevel = category.ReadProperty<double>(RetentionRegion.StreetLevel.Key),
+                        StreetStorageArea = category.ReadProperty<double>(RetentionRegion.StreetStorageArea.Key),
+                        CompartmentShape = category.ReadProperty<CompartmentShape>(KnownPropertyNames.CompartmentShape,true), 
+                        CompartmentStorageType = category.ReadProperty<CompartmentStorageType>(RetentionRegion.StorageType.Key, true)
                     };
+
                 })
                 .ToList();
         }
-
-        private static double GetPropertyValueAsDouble(string propertyName, IDelftIniCategory category)
-        {
-            return double.Parse(category.GetPropertyValue(propertyName), CultureInfo.InvariantCulture);
-        }
-
+        
         private static class KnownPropertyNames
         {
-            public const string Id = "Id";
-            public const string Name = "Name";
-            public const string NodeId = "NodeId";
             public const string ManholeId = "ManholeId";
-            public const string UseTable = "UseTable";
-            public const string BedLevel = "BedLevel";
-            public const string Area = "Area";
-            public const string StreetLevel = "StreetLevel";
-            public const string StorageType = "StorageType";
-            public const string StreetStorageArea = "StreetStorageArea";
             public const string CompartmentShape = "CompartmentShape";
         }
 
