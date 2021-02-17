@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Utils.Guards;
 
 namespace DeltaShell.NGHS.Common.Utils
@@ -43,12 +42,30 @@ namespace DeltaShell.NGHS.Common.Utils
             return -1;
         }
 
+        /// <summary>
+        /// Produces a sequence equal to the <paramref name="source"/> excluding the <paramref name="item"/>,
+        /// using the default equality comparer to compare values.
+        /// </summary>
+        /// <param name="source">The source <see cref="IEnumerable{T}"/> from which to exclude the <paramref name="item"/> from.</param>
+        /// <param name="item"> The item the will be excluded from the <paramref name="source"/>.</param>
+        /// <typeparam name="T"> The type of the elements of the source sequence.</typeparam>
+        /// <returns>
+        /// A sequence equal to the <paramref name="source"/> excluding the <paramref name="item"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/> is <c>null</c>.
+        /// </exception>
         public static IEnumerable<T> Except<T>(this IEnumerable<T> source, T item)
         {
-            return source.Except(new[]
+            Ensure.NotNull(source, nameof(source));
+
+            foreach (T sourceItem in source)
             {
-                item
-            });
+                if (!Equals(sourceItem, item))
+                {
+                    yield return sourceItem;
+                }
+            }
         }
     }
 }
