@@ -360,15 +360,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
                 var targetLateralSource = lateralSourceDictionary[readNwrwDefinition.Id];
                 fmModel.LateralSourcesData
-                    .Where(lsd => lsd.Feature.Equals(targetLateralSource) && !lsd.DataType.Equals(Model1DLateralDataType.FlowRealTime))
+                    .Where(lsd => Equals(lsd.Feature,targetLateralSource) && 
+                                  !Equals(lsd.DataType, Model1DLateralDataType.FlowRealTime))
                     .ForEach(lsd => lsd.DataType = Model1DLateralDataType.FlowRealTime);
+
                 if (catchmentModelData.ContainsKey(readNwrwDefinition.Id))
                 {
                     UpdateNwrwCatchmentData(catchmentModelData, readNwrwDefinition);
                 }
                 else
                 {
-                    
                     AddNwrwCatchmentDataToModel(readNwrwDefinition, targetLateralSource, helper);
                 }
             }
