@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -384,10 +385,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 ExcludedQuantities =
                     Enum.GetValues(typeof(FlowBoundaryQuantityType))
                         .Cast<FlowBoundaryQuantityType>()
-                        .Except(new[]
-                        {
-                            flowBoundaryQuantityType
-                        })
+                        .Except(flowBoundaryQuantityType)
                         .ToList(),
                 OverwriteExistingData = true,
                 CanCreateNewBoundaryCondition = true,

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -245,10 +246,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             List<FlowBoundaryQuantityType> excludedQuantities = Enum.GetValues(typeof(FlowBoundaryQuantityType))
                                                                     .Cast<FlowBoundaryQuantityType>()
-                                                                    .Except(new[]
-                                                                    {
-                                                                        quantity
-                                                                    })
+                                                                    .Except(quantity)
                                                                     .ToList();
 
             BcFileFlowBoundaryDataBuilder builder = IsMorphologyRelatedProperty(quantity)
