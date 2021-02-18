@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateCoordinateSystem(model),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateBathymetry(model),
-                WaterFlowFMProcessesValidator.Validate(model, model.ModelDefinition.HeatFluxModel),
+                WaterFlowFMProcessesValidator.Validate(model),
                 WaterFlowFMWindValidator.Validate(model),
                 WaterFlowFMModelDefinitionValidator.Validate(model),
                 WaterFlowFMBoundaryConditionValidator.Validate(model),

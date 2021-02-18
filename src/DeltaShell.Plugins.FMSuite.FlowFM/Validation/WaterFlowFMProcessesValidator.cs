@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class WaterFlowFMProcessesValidator
     {
-        public static ValidationReport Validate(WaterFlowFMModel model, HeatFluxModel heatFluxModel)
+        public static ValidationReport Validate(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                                "Diffusivity contains unspecified points, the calculation kernel will replace these with default values"));
             }
 
+            HeatFluxModel heatFluxModel = model.ModelDefinition.HeatFluxModel;
             if (model.HeatFluxModelType == HeatFluxModelType.Composite
                 && !heatFluxModel.MeteoData.GetValues<double>().Any())
             {
