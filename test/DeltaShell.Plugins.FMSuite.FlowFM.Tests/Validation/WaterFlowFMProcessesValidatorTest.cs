@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Validation;
-using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using NUnit.Framework;
-using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 {
     [TestFixture]
     public class WaterFlowFMProcessesValidatorTest
     {
-        private static readonly Random random = new Random();
-
         [Test]
         public void Validate_ModelNull_ThrowsArgumentNUllException()
         {
@@ -35,12 +33,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Setup
             using (var model = new WaterFlowFMModel())
             {
-                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 1, 1);
+                ConfigureValidModel(model);
 
                 model.ModelDefinition.HeatFluxModel.Type = HeatFluxModelType.Composite;
-                SetValues(model.SpatialData.Roughness);
-                SetValues(model.SpatialData.Viscosity);
-                SetValues(model.SpatialData.Diffusivity);
 
                 // Precondition
                 Assert.That(model.ModelDefinition.HeatFluxModel.MeteoData.GetValues<double>(), Is.Empty);
@@ -61,29 +56,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             }
         }
 
-        [TestCase(HeatFluxModelType.None)]
-        [TestCase(HeatFluxModelType.TransportOnly)]
-        [TestCase(HeatFluxModelType.ExcessTemperature)]
-        [TestCase(HeatFluxModelType.Composite)]
-        public void Validate_ValidModel_ReturnsEmptyValidationReport(HeatFluxModelType heatFluxModelType)
+        [Test]
+        public void Validate_DefaultTracerCoverageAndBoundaryConditionsDoNotContainTracer_ReturnsValidationReportWithCorrectIssue()
         {
             // Setup
             using (var model = new WaterFlowFMModel())
             {
-                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 1, 1);
+                ConfigureValidModel(model);
 
-                model.ModelDefinition.HeatFluxModel.Type = heatFluxModelType;
-                SetValues(model.ModelDefinition.HeatFluxModel.MeteoData, heatFluxModelType);
-                SetValues(model.SpatialData.Roughness);
-                SetValues(model.SpatialData.Viscosity);
-                SetValues(model.SpatialData.Diffusivity);
+                model.TracerDefinitions.Add("Some tracer");
 
                 // Call
                 ValidationReport report = WaterFlowFMProcessesValidator.Validate(model);
 
                 // Assert
                 Assert.That(report.Category, Is.EqualTo("Physical Processes"));
-                Assert.That(report.Issues, Is.Empty);
+                Assert.That(report.Issues, Has.Count.EqualTo(1));
+                Assert.That(report.WarningCount, Is.EqualTo(1));
+
+                ValidationIssue issue = report.Issues.Single();
+                Assert.That(issue.ViewData, Is.SameAs(model));
+                Assert.That(issue.Subject, Is.SameAs(model));
+                Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Warning));
+                Assert.That(issue.Message, Is.EqualTo("Tracer 'Some tracer' concentration has not been set in any boundary condition nor initial field. It is now set to default value 0."));
             }
         }
 
@@ -93,18 +88,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             // Setup
             using (var model = new WaterFlowFMModel())
             {
-                model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 1, 1);
-
-                var heatFluxModelType = random.NextEnumValue<HeatFluxModelType>();
-                model.ModelDefinition.HeatFluxModel.Type = heatFluxModelType;
-                SetValues(model.ModelDefinition.HeatFluxModel.MeteoData, heatFluxModelType);
-                SetValues(model.SpatialData.Roughness);
-                SetValues(model.SpatialData.Viscosity);
-                SetValues(model.SpatialData.Diffusivity);
+                ConfigureValidModel(model);
 
                 IFunction coverage = getCoverage(model.SpatialData);
-
-                coverage.Components[0].Values[6] = -999d;
+                SetOneValueWith(coverage, -999d);
 
                 // Call
                 ValidationReport report = WaterFlowFMProcessesValidator.Validate(model);
@@ -129,9 +116,73 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             yield return new TestCaseData((Func<ISpatialData, IFunction>) (data => data.Diffusivity));
         }
 
-        private static void SetValues(IFunction function)
+        [TestCaseSource(nameof(ConfigureValidModels))]
+        public void Validate_ValidModel_ReturnsEmptyValidationReport(Action<WaterFlowFMModel> configureValidModel)
         {
-            function.SetValues(Enumerable.Repeat(7d, function.GetValues().Count));
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                configureValidModel(model);
+
+                // Call
+                ValidationReport report = WaterFlowFMProcessesValidator.Validate(model);
+
+                // Assert
+                Assert.That(report.Category, Is.EqualTo("Physical Processes"));
+                Assert.That(report.Issues, Is.Empty);
+            }
+        }
+
+        private static IEnumerable<Action<WaterFlowFMModel>> ConfigureValidModels()
+        {
+            foreach (HeatFluxModelType heatFluxModelType in (HeatFluxModelType[]) Enum.GetValues(typeof(HeatFluxModelType)))
+            {
+                yield return model =>
+                {
+                    ConfigureValidModel(model, heatFluxModelType);
+
+                    model.TracerDefinitions.Add("Some tracer");
+                    SetValues(model.SpatialData.InitialTracers.Single(), 7d);
+                };
+
+                yield return model =>
+                {
+                    ConfigureValidModel(model, heatFluxModelType);
+
+                    model.TracerDefinitions.Add("Some tracer");
+                    BoundaryConditionSet boundaryConditionSet = CreateBoundaryConditionSetWithTracer("Some tracer");
+                    model.BoundaryConditionSets.Add(boundaryConditionSet);
+                };
+            }
+        }
+
+        private static BoundaryConditionSet CreateBoundaryConditionSetWithTracer(string tracer)
+        {
+            var boundaryConditionSet = new BoundaryConditionSet();
+            var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty) {TracerName = tracer};
+            boundaryConditionSet.BoundaryConditions.Add(boundaryCondition);
+
+            return boundaryConditionSet;
+        }
+
+        private static void ConfigureValidModel(IWaterFlowFMModel model, HeatFluxModelType heatFluxModelType = HeatFluxModelType.None)
+        {
+            SetValues(model.SpatialData.Roughness, 7d);
+            SetValues(model.SpatialData.Viscosity, 7d);
+            SetValues(model.SpatialData.Diffusivity, 7d);
+
+            model.ModelDefinition.HeatFluxModel.Type = heatFluxModelType;
+            SetValues(model.ModelDefinition.HeatFluxModel.MeteoData, heatFluxModelType);
+        }
+
+        private static void SetOneValueWith(IFunction function, double value)
+        {
+            function.Components[0].Values[3] = value;
+        }
+
+        private static void SetValues(IFunction function, double value)
+        {
+            FunctionHelper.SetValuesRaw(function.Components[0], Enumerable.Repeat(value, 10));
         }
 
         private static void SetValues(IFunction function, HeatFluxModelType heatFluxModelType)
@@ -141,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 return;
             }
 
-            FunctionHelper.SetValuesRaw(function.Components[0], Enumerable.Repeat(7d, 3));
+            FunctionHelper.SetValuesRaw(function.Components[0], Enumerable.Repeat(7d, 10));
         }
     }
 }

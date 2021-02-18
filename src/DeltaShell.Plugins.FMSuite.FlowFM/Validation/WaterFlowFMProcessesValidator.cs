@@ -5,6 +5,10 @@ using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Utils;
+using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -37,9 +41,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             ValidateCoverage(model.SpatialData.Roughness, model, issues);
             ValidateCoverage(model.SpatialData.Viscosity, model, issues);
             ValidateCoverage(model.SpatialData.Diffusivity, model, issues);
+            ValidateTracer(model, issues);
             ValidateHeatFluxModel(model, issues);
 
             return new ValidationReport(title, issues);
+        }
+
+        private static void ValidateTracer(WaterFlowFMModel model, ICollection<ValidationIssue> issues)
+        {
+            foreach (string tracer in model.TracerDefinitions)
+            {
+                if (model.BoundaryConditionSets.ContainsTracer(tracer))
+                {
+                    return;
+                }
+
+                if (model.SpatialData.HasCustomTracerCoverage(tracer))
+                {
+                    return;
+                }
+
+                issues.Add(model, ValidationSeverity.Warning,
+                           $"Tracer '{tracer}' concentration has not been set in any boundary condition nor initial field. It is now set to default value 0.");
+            }
+        }
+
+        private static bool HasCustomTracerCoverage(this ISpatialData spatialData, string tracer)
+        {
+            IVariable component = spatialData.InitialTracers.GetByName(tracer).Components[0];
+            return !component.Values.OfType<double>().All(value => value.Equals(component.DefaultValue));
+        }
+
+        private static bool ContainsTracer(this IEnumerable<BoundaryConditionSet> boundaryConditionSets, string tracer)
+        {
+            foreach (IBoundaryCondition boundaryCondition in boundaryConditionSets.SelectMany(s => s.BoundaryConditions))
+            {
+                if (boundaryCondition is FlowBoundaryCondition flowCondition &&
+                    flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer &&
+                    Equals(flowCondition.TracerName, tracer))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static void ValidateHeatFluxModel(WaterFlowFMModel model, ICollection<ValidationIssue> issues)
