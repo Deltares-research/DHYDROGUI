@@ -1694,6 +1694,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} contains unspecified points, the calculation kernel will replace these with default values.
+        /// </summary>
+        public static string WaterFlowFMProcessesValidator_Coverage_contains_unspecified_points {
+            get {
+                return ResourceManager.GetString("WaterFlowFMProcessesValidator_Coverage_contains_unspecified_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least one sediment fraction is required when using morphology..
         /// </summary>
         public static string WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology {

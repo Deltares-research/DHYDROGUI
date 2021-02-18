@@ -682,4 +682,7 @@ Manhole with unique id '{4}' is not imported.</value>
   <data name="SourceAndSinkFunction_Already_contains_a_component_with_name" xml:space="preserve">
     <value>{0} already contains a component with name '{1}'.</value>
   </data>
+  <data name="WaterFlowFMProcessesValidator_Coverage_contains_unspecified_points" xml:space="preserve">
+    <value>{0} contains unspecified points, the calculation kernel will replace these with default values</value>
+  </data>
 </root>
