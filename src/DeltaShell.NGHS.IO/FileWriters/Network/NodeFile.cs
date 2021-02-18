@@ -81,55 +81,50 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 .Where(category => //Don't read retentions here
                     !(category.Properties.Any(p => p.Name.Equals(RetentionRegion.IsRetention.Key, StringComparison.InvariantCultureIgnoreCase)) 
                       && category.ReadProperty<bool>(RetentionRegion.IsRetention.Key)))
-                .Select(category =>
-                {
-                    var compartmentId = category.ReadProperty<string>(RetentionRegion.Id.Key);
-                    var name = category.ReadProperty<string>(RetentionRegion.Name.Key);
-                    var nodeId = category.ReadProperty<string>(RetentionRegion.NodeId.Key);
-                    var manholeId = category.ReadProperty<string>(KnownPropertyNames.ManholeId);
-                    var useTable = category.ReadProperty<bool>(RetentionRegion.UseTable.Key, true) ||
-                                       category.ReadProperty<int>(RetentionRegion.UseTable.Key, true) != 0;
-                    if (useTable)
-                    {
-                        log.Warn($"compartments with storage tables are not supported, using DEFAULT VALUES for " +
-                                 $"compartment id {compartmentId} ({name}) on " +
-                                 $"node id {nodeId} and " +
-                                 $"manhole id {manholeId} is NOT read from the file {filePath}");
-                        return new CompartmentProperties
-                        {
-                            CompartmentId = compartmentId,
-                            Name = name,
-                            NodeId = nodeId,
-                            ManholeId = manholeId,
-                            UseTable = false,
-                            BedLevel = -10,
-                            Area = 0.64,
-                            StreetLevel = 0,
-                            StreetStorageArea = 500,
-                            CompartmentShape = CompartmentShape.Unknown,
-                            CompartmentStorageType = CompartmentStorageType.Reservoir
-                        };
-                    }
-
-                    return new CompartmentProperties
-                    {
-                        CompartmentId = compartmentId,
-                        Name = name,
-                        NodeId = nodeId,
-                        ManholeId = manholeId,
-                        UseTable = false,
-                        BedLevel = category.ReadProperty<double>(RetentionRegion.BedLevel.Key),
-                        Area = category.ReadProperty<double>(RetentionRegion.Area.Key),
-                        StreetLevel = category.ReadProperty<double>(RetentionRegion.StreetLevel.Key),
-                        StreetStorageArea = category.ReadProperty<double>(RetentionRegion.StreetStorageArea.Key),
-                        CompartmentShape = category.ReadProperty<CompartmentShape>(KnownPropertyNames.CompartmentShape,true), 
-                        CompartmentStorageType = category.ReadProperty<CompartmentStorageType>(RetentionRegion.StorageType.Key, true)
-                    };
-
-                })
+                .Select(category => CreateCompartmentProperties(filePath, category))
                 .ToList();
         }
-        
+
+        private static CompartmentProperties CreateCompartmentProperties(string filePath, DelftIniCategory category)
+        {
+            var properties = new CompartmentProperties
+            {
+                CompartmentId = category.ReadProperty<string>(RetentionRegion.Id.Key),
+                Name = category.ReadProperty<string>(RetentionRegion.Name.Key),
+                NodeId = category.ReadProperty<string>(RetentionRegion.NodeId.Key),
+                ManholeId = category.ReadProperty<string>(KnownPropertyNames.ManholeId),
+                UseTable = false
+            };
+            
+            var useTable = category.ReadProperty<bool>(RetentionRegion.UseTable.Key, true) ||
+                           category.ReadProperty<int>(RetentionRegion.UseTable.Key, true) != 0;
+            if (useTable)
+            {
+                log.Warn($"compartments with storage tables are not supported, using DEFAULT VALUES for " +
+                         $"compartment id {properties.CompartmentId} ({properties.Name}) on " +
+                         $"node id {properties.NodeId} and " +
+                         $"manhole id {properties.ManholeId} is NOT read from the file {filePath}");
+                
+                properties.BedLevel = -10;
+                properties.Area = 0.64;
+                properties.StreetLevel = 0;
+                properties.StreetStorageArea = 500;
+                properties.CompartmentShape = CompartmentShape.Unknown;
+                properties.CompartmentStorageType = CompartmentStorageType.Reservoir;
+            }
+            else
+            {
+                properties.BedLevel = category.ReadProperty<double>(RetentionRegion.BedLevel.Key);
+                properties.Area = category.ReadProperty<double>(RetentionRegion.Area.Key);
+                properties.StreetLevel = category.ReadProperty<double>(RetentionRegion.StreetLevel.Key);
+                properties.StreetStorageArea = category.ReadProperty<double>(RetentionRegion.StreetStorageArea.Key);
+                properties.CompartmentShape = category.ReadProperty<CompartmentShape>(KnownPropertyNames.CompartmentShape, true);
+                properties.CompartmentStorageType = category.ReadProperty<CompartmentStorageType>(RetentionRegion.StorageType.Key, true);
+            }
+
+            return properties;
+        }
+
         private static class KnownPropertyNames
         {
             public const string ManholeId = "ManholeId";
