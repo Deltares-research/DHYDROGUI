@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             boundaryCellValues.Clear();
 
-            Grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true);
+            Grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true, false);
             Links = UGridFileHelper.Read1D2DLinks(netCdfFile.Path);
             Network = new HydroNetwork();
             Discretization = new Discretization { Network = Network };

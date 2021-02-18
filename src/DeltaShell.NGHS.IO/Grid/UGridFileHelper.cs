@@ -217,11 +217,12 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <param name="path">Path to the UGrid file</param>
         /// <param name="loadFlowLinksAndCells">Also read flow links and cell information (Applies to NetFile only).
-        /// With a UGrid file the cell information is always read but not the flow links</param>
+        ///     With a UGrid file the cell information is always read but not the flow links</param>
+        /// <param name="recreateCells">Recreates the cell information by calling FindCells instead of reading it from file</param>
         /// <returns>The first <see cref="UnstructuredGrid"/> in the UGrid file</returns>
         /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
         /// returned from a native function</exception>
-        public static UnstructuredGrid ReadUnstructuredGrid(string path, bool loadFlowLinksAndCells = false)
+        public static UnstructuredGrid ReadUnstructuredGrid(string path, bool loadFlowLinksAndCells = false, bool recreateCells = true)
         {
             if (!IsValidPath(path))
             {
@@ -242,7 +243,7 @@ namespace DeltaShell.NGHS.IO.Grid
                         return null;
                     }
 
-                    var unstructuredGrid = api.GetMesh2D(meshIds2d[0]).CreateUnstructuredGrid();
+                    var unstructuredGrid = api.GetMesh2D(meshIds2d[0]).CreateUnstructuredGrid(recreateCells);
                     unstructuredGrid.CoordinateSystem = GetCoordinateSystemFromApi(api);
                     return unstructuredGrid;
                 }

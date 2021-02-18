@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             try
             {
-                grid = UGridFileHelper.ReadUnstructuredGrid(Path);
+                grid = UGridFileHelper.ReadUnstructuredGrid(Path, recreateCells: false);
             }
             catch (Exception e)
             {

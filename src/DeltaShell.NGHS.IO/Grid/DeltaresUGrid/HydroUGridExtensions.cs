@@ -18,6 +18,8 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using SharpMap.Api;
+using SharpMap.Api.GridGeom;
 
 namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 {
@@ -37,10 +39,10 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// </summary>
         /// <param name="meshGeometry">Mesh geometry</param>
         /// <returns>Unstructured grid based on <see cref="meshGeometry"/></returns>
-        public static UnstructuredGrid CreateUnstructuredGrid(this Disposable2DMeshGeometry meshGeometry)
+        public static UnstructuredGrid CreateUnstructuredGrid(this Disposable2DMeshGeometry meshGeometry, bool recreateCells)
         {
             var grid = new UnstructuredGrid();
-            grid.SetMesh2DGeometry(meshGeometry);
+            grid.SetMesh2DGeometry(meshGeometry, recreateCells);
             return grid;
         }
 
@@ -49,7 +51,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// </summary>
         /// <param name="grid">Grid to reset</param>
         /// <param name="meshGeometry">Mesh geometry to use</param>
-        public static void SetMesh2DGeometry(this UnstructuredGrid grid, Disposable2DMeshGeometry meshGeometry)
+        public static void SetMesh2DGeometry(this UnstructuredGrid grid, Disposable2DMeshGeometry meshGeometry, bool recreateCells)
         {
             if (!grid.IsEmpty)
             {
@@ -58,7 +60,19 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             grid.Vertices = meshGeometry.CreateVertices();
             grid.Edges = meshGeometry.CreateEdges();
-            grid.Cells = meshGeometry.CreateCells();
+            if (recreateCells)
+            {
+                using (var api = new RemoteGridGeomApi())
+                using (var mesh = new DisposableMeshGeometry(grid))
+                {
+                    DisposableMeshGeometry resultMesh = api.CreateCells(mesh);
+                    grid.Cells = resultMesh.CreateCells();
+                }
+            }
+            else
+            {
+                grid.Cells = meshGeometry.CreateCells();
+            }
         }
 
         /// <summary>

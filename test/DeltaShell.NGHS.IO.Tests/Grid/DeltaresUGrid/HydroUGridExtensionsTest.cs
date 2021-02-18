@@ -53,7 +53,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
 
             // Act
 
-            var grid = disposable2DMeshGeometry.CreateUnstructuredGrid();
+            var grid = disposable2DMeshGeometry.CreateUnstructuredGrid(false);
 
             // Assert
             Assert.AreEqual(9, grid.Vertices.Count);
