@@ -1703,6 +1703,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tracer &apos;{0}&apos; concentration has not been set in any boundary condition nor initial field. It is now set to default value 0..
+        /// </summary>
+        public static string WaterFlowFMProcessesValidator_Tracer_concentration_has_not_been_set_in_any_boundary_condition_nor_initial_field {
+            get {
+                return ResourceManager.GetString("WaterFlowFMProcessesValidator_Tracer_concentration_has_not_been_set_in_any_bounda" +
+                        "ry_condition_nor_initial_field", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to At least one sediment fraction is required when using morphology..
         /// </summary>
         public static string WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology {

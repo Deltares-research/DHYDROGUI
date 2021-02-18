@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 }
 
                 issues.Add(model, ValidationSeverity.Warning,
-                           $"Tracer '{tracer}' concentration has not been set in any boundary condition nor initial field. It is now set to default value 0.");
+                           string.Format(Resources.WaterFlowFMProcessesValidator_Tracer_concentration_has_not_been_set_in_any_boundary_condition_nor_initial_field, tracer));
             }
         }
 
