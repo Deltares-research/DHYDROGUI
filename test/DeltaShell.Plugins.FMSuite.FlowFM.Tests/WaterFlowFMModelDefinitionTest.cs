@@ -1799,6 +1799,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
         }
         
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void SelectSpatialOperations_DataItemOnlyContainsSpatialOperationSet_SpatialOperationsEmpty()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            UnstructuredGridCellCoverage coverage = CreateGridCoverageWithValue(7d);
+            var operationSet = Substitute.For<ISpatialOperationSet>();
+            operationSet.Operations.Returns(new EventedList<ISpatialOperation> {new ImportSamplesOperation(false)});
+            IDataItem dataItem = CreateDataItem(coverage, operationSet);
+
+            // Call
+            modelDefinition.SelectSpatialOperations(new List<IDataItem> {dataItem},
+                                                    Enumerable.Empty<string>(),
+                                                    Enumerable.Empty<string>()); 
+            
+            // Assert
+            Assert.That(modelDefinition.SpatialOperations.ContainsKey("initial_condition")); 
+            IList<ISpatialOperation> operations = modelDefinition.SpatialOperations["initial_condition"];
+            Assert.That(operations, Is.Empty);
+        }
+        
         private static UnstructuredGridCellCoverage CreateGridCoverageWithValue(double value)
         {
             UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 1, 1);
@@ -1827,7 +1849,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return interpolateOperation;
         }
         
-        private static IDataItem CreateDataItem(UnstructuredGridCellCoverage coverage, InterpolateOperation interpolateOperation)
+        private static IDataItem CreateDataItem(UnstructuredGridCellCoverage coverage, ISpatialOperation operation)
         {
             IDataItem dataItem = new DataItem(coverage, DataItemRole.Input) {Name = "initial_condition"};
             var valueConverter = Substitute.For<SpatialOperationSetValueConverter>();
@@ -1835,7 +1857,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var set = Substitute.For<ISpatialOperationSet>();
             valueConverter.OriginalValue = coverage;
             valueConverter.SpatialOperationSet.Returns(set);
-            set.Operations = new EventedList<ISpatialOperation> {interpolateOperation};
+            set.Operations = new EventedList<ISpatialOperation> {operation};
             
             return dataItem;
         }

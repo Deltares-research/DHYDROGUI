@@ -369,10 +369,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         valueConverter.SpatialOperationSet.GetAllFeatureProviders()
                                       .OfType<CoverageFeatureProvider>()
                                       .Select(fp => fp.Coverage)
-                                      .OfType<UnstructuredGridCoverage>().Except(new[]
-                                      {
-                                          originalCoverage
-                                      }))
+                                      .OfType<UnstructuredGridCoverage>().Except(originalCoverage))
                     {
                         UpdateCoverageAfterGridSet(cov, newGrid, nodesChanged, cellsChanged, linksChanged, false);
                     }
