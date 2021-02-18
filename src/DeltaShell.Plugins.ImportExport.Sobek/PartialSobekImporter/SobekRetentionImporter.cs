@@ -203,50 +203,63 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             foreach (var retention in sobekRetsobekRetentions)
             {
-                if (nodes.ContainsKey(retention.Name))
+                if (!nodes.TryGetValue(retention.Name, out var node)||
+                    readNodeTypes != null && 
+                    readNodeTypes.ContainsKey(retention.Name) && 
+                    (SobekNetworkNetterReader.IsConnectionNode(readNodeTypes[retention.Name]) || 
+                     SobekNetworkNetterReader.IsLateralSourceNode(readNodeTypes[retention.Name]) || 
+                     SobekNetworkNetterReader.IsFlowConnectionNode(readNodeTypes[retention.Name])))
                 {
-                    if (readNodeTypes != null && readNodeTypes.ContainsKey(retention.Name) && (SobekNetworkNetterReader.IsConnectionNode(readNodeTypes[retention.Name]) || SobekNetworkNetterReader.IsLateralSourceNode(readNodeTypes[retention.Name]) || SobekNetworkNetterReader.IsFlowConnectionNode(readNodeTypes[retention.Name])))
-                    {
-                        //verification if node is declared in netter file as lateral source or connection node
-                        continue;
-                    }
+                    //verification if node is declared in netter file as lateral source or connection node
+                    continue;   
+                }
 
-                    INode node = nodes[retention.Name];
-                    if (node is IManhole manhole)
-                    {
-                        manhole?
-                            .Compartments
-                            .Where(c => c.Name.Equals(retention.Name, StringComparison.InvariantCultureIgnoreCase))
-                            .ForEach(compartment => SetRetentionDataOnCompartmentInManhole(compartment, retention));
-                        continue;
-                    }
-                    retention.Geometry = (IGeometry)node.Geometry.Clone();
+                if (node is IManhole manhole)
+                {
+                    manhole.Compartments?
+                        .Where(c => string.Equals(retention.Name, c.Name, StringComparison.InvariantCultureIgnoreCase))
+                        .ForEach(compartment => SetRetentionDataOnCompartmentInManhole(compartment, retention));
+                    continue;
+                }
 
-                    if (node.OutgoingBranches.Count > 0)
-                    {
-                        retention.Chainage = 0;
-                        AddOrReplaceRetention(node.OutgoingBranches[0], retention, retentions);
-                    }
-                    else if (node.IncomingBranches.Count > 0)
-                    {
-                        retention.Chainage = node.IncomingBranches[0].Length;
-                        AddOrReplaceRetention(node.IncomingBranches[0], retention, retentions);
-                    }
+                retention.Geometry = (IGeometry)node.Geometry.Clone();
+
+                if (node.OutgoingBranches.Count > 0)
+                {
+                    retention.Chainage = 0;
+                    AddOrReplaceRetention(node.OutgoingBranches[0], retention, retentions);
+                }
+                else if (node.IncomingBranches.Count > 0)
+                {
+                    retention.Chainage = node.IncomingBranches[0].Length;
+                    AddOrReplaceRetention(node.IncomingBranches[0], retention, retentions);
                 }
             }
         }
 
-        private void SetRetentionDataOnCompartmentInManhole(ICompartment compartment, IRetention retention)
+        private static void SetRetentionDataOnCompartmentInManhole(ICompartment compartment, IRetention retention)
         {
             compartment.BottomLevel = retention.BedLevel;
             compartment.SurfaceLevel = retention.StreetLevel; 
             compartment.FloodableArea = retention.StreetStorageArea;
-            compartment.CompartmentStorageType =
-                retention.Type == RetentionType.Closed
-                    ? CompartmentStorageType.Closed
-                    : retention.Type == RetentionType.Reservoir
-                        ? CompartmentStorageType.Reservoir
-                        : default(CompartmentStorageType);
+            compartment.CompartmentStorageType = GetCompartmentStorageType(retention.Type);
+        }
+
+        private static CompartmentStorageType GetCompartmentStorageType(RetentionType retentionType)
+        {
+            switch (retentionType)
+            {
+                case RetentionType.Closed:
+                    return CompartmentStorageType.Closed;
+
+                case RetentionType.Loss:
+                case RetentionType.Reservoir: 
+                    return CompartmentStorageType.Reservoir;
+
+                default:
+                    log.Warn($"Can not resolve RetentionType {retentionType} to CompartmentStorageType. Using default Reservoir type");
+                    return CompartmentStorageType.Reservoir;
+            }
         }
 
         private IList<SobekValveData> GetSobekValveData()
