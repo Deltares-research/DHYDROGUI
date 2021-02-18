@@ -15,7 +15,9 @@ using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -60,50 +62,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            IEnumerable<FlowBoundaryCondition> tracerBoundaryConditions = Enumerable.Empty<FlowBoundaryCondition>();
-
-            object removedOrAddedItem = e.GetRemovedOrAddedItem();
-            var boundaryConditionSet = removedOrAddedItem as BoundaryConditionSet;
-            if (boundaryConditionSet == null)
-            {
-                var flowBoundaryCondition = removedOrAddedItem as FlowBoundaryCondition;
-                if (flowBoundaryCondition != null &&
-                    flowBoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                {
-                    tracerBoundaryConditions = new List<FlowBoundaryCondition> {flowBoundaryCondition};
-                }
-            }
-            else
-            {
-                tracerBoundaryConditions = boundaryConditionSet.BoundaryConditions
-                                                               .OfType<FlowBoundaryCondition>()
-                                                               .Where(fbc => fbc.FlowQuantity ==
-                                                                             FlowBoundaryQuantityType.Tracer);
-            }
-
-            foreach (FlowBoundaryCondition tracerBoundaryCondition in tracerBoundaryConditions)
-            {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        AddTracerToSourcesAndSink(tracerBoundaryCondition.TracerName);
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        RemoveTracerFromSourcesAndSink(tracerBoundaryCondition.TracerName);
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        throw new NotImplementedException("Renaming of Tracers is not yet supported");
-                    case NotifyCollectionChangedAction.Reset:
-                        SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
-                        return;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(e));
-                }
-            }
-        }
-
         private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var name = (string) e.GetRemovedOrAddedItem();
@@ -127,7 +85,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void OnTracerAdded(string name)
         {
-            SpatialData.AddTracer(CreateUnstructuredGridCellCoverage(name, Grid));
+            SpatialData.AddTracer(UnstructuredGridCoverageFactory.CreateCellCoverage(name, Grid, defaultValue: 0d));
+            foreach (SourceAndSink sourceAndSink in SourcesAndSinks)
+            {
+                sourceAndSink.Function.AddTracer(name);
+            }
         }
 
         private void OnTracerRemoved(string name)
@@ -139,6 +101,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 set.BoundaryConditions.RemoveAllWhere(bc => bc is FlowBoundaryCondition flowCondition &&
                                                             flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer &&
                                                             Equals(flowCondition.TracerName, name));
+            }
+
+            foreach (SourceAndSink sourceAndSink in SourcesAndSinks)
+            {
+                sourceAndSink.Function.RemoveTracer(name);
             }
         }
 
@@ -225,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     sedimentFraction.UpdateSpatiallyVaryingNames();
                     sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
                     sedimentFraction.SetTransportFormulaInCurrentSedimentType();
-                    SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Add(sedimentFraction.Name));
+                    SourcesAndSinks.ForEach(ss => ss.Function.AddSedimentFraction(sedimentFraction.Name));
 
                     if (BoundaryConditionSets == null)
                     {
@@ -242,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     layersToRemove.ForEach(SpatialData.RemoveFraction);
                     RemoveSedimentFractionFromBoundaryConditionSets(name);
 
-                    SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Remove(sedimentFraction.Name));
+                    SourcesAndSinks.ForEach(ss => ss.Function.RemoveSedimentFraction(sedimentFraction.Name));
                     break;
                 case NotifyCollectionChangedAction.Replace:
                     throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
@@ -488,30 +455,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void SyncFractionsAndTracers(SourceAndSink sourceAndSink)
         {
-            SedimentFractions.ForEach(sf => sourceAndSink.SedimentFractionNames.Add(sf.Name));
-
-            BoundaryConditionSets.ForEach(bcs =>
+            foreach (ISedimentFraction sedimentFraction in SedimentFractions)
             {
-                bcs.BoundaryConditions.ForEach(bc =>
-                {
-                    var flowCondition = bc as FlowBoundaryCondition;
-                    if (flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                    {
-                        string tracerName = flowCondition.TracerName;
-                        if (!sourceAndSink.TracerNames.Contains(tracerName))
-                        {
-                            sourceAndSink.TracerNames.Add(tracerName);
-                        }
-                    }
-                });
-            });
-        }
+                sourceAndSink.Function.AddSedimentFraction(sedimentFraction.Name);
+            }
 
-        private void RemoveTracerFromSourcesAndSink(string name)
-        {
-            if (BoundaryConditions.OfType<FlowBoundaryCondition>().All(bc => bc.TracerName != name))
+            foreach (string tracer in TracerDefinitions)
             {
-                SourcesAndSinks.ForEach(ss => ss.TracerNames.Remove(name));
+                sourceAndSink.Function.AddTracer(tracer);
             }
         }
 

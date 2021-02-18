@@ -1606,7 +1606,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                                                          IEnumerable<string> saveInputFiles)
         {
             List<string> importFiles = importInputFiles.Select(Path.GetFileName).Where(p => p != "restart.meta").ToList();
-            List<string> saveFiles = saveInputFiles.Select(Path.GetFileName).ToList();
+            List<string> saveFiles = saveInputFiles.Select(Path.GetFileName).Where(p => p != "initialtracertracer.xyz").ToList();
 
             Assert.That(saveFiles.Count, Is.EqualTo(importFiles.Count), "Expected the number of saved input files to be equal to the original number of input files.");
 

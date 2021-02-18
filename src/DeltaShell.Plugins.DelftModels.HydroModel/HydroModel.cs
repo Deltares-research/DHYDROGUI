@@ -726,6 +726,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().Count();
         }
 
+        protected override void OnReset()
+        {
+            base.OnReset();
+            if (DoDimrRun())
+            {
+                currentWorkflow.Activities
+                               .GetActivitiesOfType<IDimrModel>()
+                               .ForEach(a => a.ResetActivity());
+            }
+            else
+            {
+                CurrentWorkflow.ResetActivity();
+            }
+        }
+
         protected override void OnExecute()
         {
             if (CurrentWorkflow == null)
