@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateCoordinateSystem(model),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateBathymetry(model),
-                ValidatePhysicalProcesses(model, model.ModelDefinition.HeatFluxModel),
+                WaterFlowFMProcessesValidator.Validate(model, model.ModelDefinition.HeatFluxModel),
                 WaterFlowFMWindValidator.Validate(model),
                 WaterFlowFMModelDefinitionValidator.Validate(model),
                 WaterFlowFMBoundaryConditionValidator.Validate(model),
@@ -106,45 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             return sedimentThicknessDataItems.Select(di => di.Value as UnstructuredGridCoverage).Where(c => c != null);
         }
-
-        private static ValidationReport ValidatePhysicalProcesses(WaterFlowFMModel model, HeatFluxModel heatFluxModel)
-        {
-            var issues = new List<ValidationIssue>();
-
-            var spatialData = model.SpatialData;
-            IMultiDimensionalArray<double> roughnessValues = spatialData.Roughness.GetValues<double>();
-            if (roughnessValues.Contains(spatialData.Roughness.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               "Roughness contains unspecified points, the calculation kernel will replace these with default values"));
-            }
-
-            IMultiDimensionalArray<double> viscosityValues = spatialData.Viscosity.GetValues<double>();
-            if (viscosityValues.Contains(spatialData.Viscosity.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               "Viscosity contains unspecified points, the calculation kernel will replace these with default values"));
-            }
-
-            IMultiDimensionalArray<double> diffusivityValues = spatialData.Diffusivity.GetValues<double>();
-            if (diffusivityValues.Contains(spatialData.Diffusivity.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               "Diffusivity contains unspecified points, the calculation kernel will replace these with default values"));
-            }
-
-            if (model.HeatFluxModelType == HeatFluxModelType.Composite
-                && !heatFluxModel.MeteoData.GetValues<double>().Any())
-            {
-                issues.Add(new ValidationIssue(model, 
-                                               ValidationSeverity.Error, 
-                                               Resources.ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_temperature_but_no_meteo_data_was_specified, 
-                                               heatFluxModel));
-            }
-            
-            return new ValidationReport("Physical Processes", issues);
-        }
-
+        
         private static ValidationReport ValidateBathymetry(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
