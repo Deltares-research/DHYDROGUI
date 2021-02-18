@@ -57,11 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 if (grid == value) return;
 
-                bool verticesEqual;
-                bool cellsEqual;
-                bool linksEqual;
-
-                var gridsAreEqual = UnstructuredGridHelper.CompareGrids(grid, value, out verticesEqual, out cellsEqual, out linksEqual);
+                var gridsAreEqual = UnstructuredGridHelper.CompareGrids(grid, value, out var verticesEqual, out var cellsEqual, out var linksEqual);
                 ((INotifyPropertyChanged)this).PropertyChanged -= OnGridChanged;
                 if (grid != null)
                 {
@@ -116,13 +112,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 var gridEdge = grid.Edges[index];
 
-                IList<int> gridVertexToCellIndex;
-                grid.VertexToCellIndices.TryGetValue(gridEdge.VertexFromIndex, out gridVertexToCellIndex);
+                grid.VertexToCellIndices.TryGetValue(gridEdge.VertexFromIndex, out var gridVertexToCellIndex);
                 if (gridVertexToCellIndex == null)
                     continue;
 
-                IList<int> vertexToCellIndex;
-                grid.VertexToCellIndices.TryGetValue(gridEdge.VertexToIndex, out vertexToCellIndex);
+                grid.VertexToCellIndices.TryGetValue(gridEdge.VertexToIndex, out var vertexToCellIndex);
                 if (vertexToCellIndex == null)
                     continue;
 
@@ -956,15 +950,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return;
             }
 
-            IDictionary<IPointCloud, bool> coveragePointClouds = null;
-
             coverage.BeginEdit(new DefaultEditAction("new grid state, do coverage update"));
 
             ClearVariable(coverage.Components[0]);
             ClearVariable(coverage.Arguments[0]);
 
-
-            if (gridEditingCacheOfCoverageWithItsOwnPointCloudValues.TryGetValue(coverage, out coveragePointClouds))
+            if (gridEditingCacheOfCoverageWithItsOwnPointCloudValues.TryGetValue(coverage, out var coveragePointClouds))
             {
                 coverage.SetPointCloudsOnCoverageGrid(coveragePointClouds);
             }
