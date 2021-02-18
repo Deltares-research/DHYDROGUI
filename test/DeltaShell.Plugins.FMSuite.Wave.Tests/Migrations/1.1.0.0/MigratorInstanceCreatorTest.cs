@@ -375,7 +375,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         [TestCase("grw.zip")]
         [TestCase("waddenzee.zip")]
         [TestCase("westerscheldt.zip")]
-        [Repeat(100)]
         public void CreateMdwMigration_ExpectedResults(string testFileName)
         {
             // Setup
