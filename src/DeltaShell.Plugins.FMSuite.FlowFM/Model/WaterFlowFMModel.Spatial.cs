@@ -77,6 +77,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     }
 
                     UpdateSpatialDataAfterGridSet(grid, !verticesEqual, !cellsEqual, !linksEqual);
+
+                    MarkOutputOutOfSync();
                 }
                 else
                 {
