@@ -360,6 +360,7 @@
     <Compile Include="IO\Importers\BcFileImporterTest.cs" />
     <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
     <Compile Include="IO\Importers\CmpFileImporterTest.cs" />
+    <Compile Include="IO\Importers\FlowFMNetFileImporterTest.cs" />
     <Compile Include="IO\Importers\FMMapFileImporterTest.cs" />
     <Compile Include="IO\Importers\IniImporterTest.cs" />
     <Compile Include="IO\Importers\QhFileImporterTest.cs" />

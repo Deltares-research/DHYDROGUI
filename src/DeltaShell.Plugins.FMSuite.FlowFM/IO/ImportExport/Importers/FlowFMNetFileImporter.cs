@@ -126,6 +126,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
                 flowModel.ReloadGrid(false, true);
 
+                flowModel.MarkOutputOutOfSync();
+
                 return flowModel.Grid;
             }
 
