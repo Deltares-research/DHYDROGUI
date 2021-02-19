@@ -402,6 +402,7 @@
     <Compile Include="ModelSchema\ModelPropertySchemaExtensionsTest.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.DimrModel.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.CacheFile.cs" />
+    <Compile Include="Model\WaterFlowFMModelTest.Eventing.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.IO.Import.cs" />
     <Compile Include="QuantityGeneratorTest.cs" />
     <Compile Include="ScriptingTest\FlowFlexibleMeshFunctionsScriptTest.cs" />
