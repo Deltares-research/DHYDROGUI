@@ -242,6 +242,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private IEventedList<string> tracerDefinitions;
         private IEventedList<SourceAndSink> sourcesAndSinks;
         private IEventedList<Feature2D> pipes;
+        private IEventedList<Feature2D> boundaries;
         private IDataItem areaDataItem;
         private DepthLayerDefinition depthLayerDefinition;
 
@@ -590,7 +591,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        public IEventedList<Feature2D> Boundaries { get; private set; }
+        public IEventedList<Feature2D> Boundaries 
+        {
+            get => boundaries;
+            private set
+            {
+                if (boundaries != null)
+                {
+                    boundaries.CollectionChanged -= FMRegionCollectionChanged;
+                }
+
+                boundaries = value;
+
+                if (boundaries != null)
+                {
+                    boundaries.CollectionChanged += FMRegionCollectionChanged;
+                }
+            }
+        }
 
         public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
 
@@ -601,16 +619,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (pipes != null)
                 {
-                    Pipes.CollectionChanged -= OnInputCollectionChanged;
-                    ((INotifyPropertyChanged) Pipes).PropertyChanged -= OnInputPropertyChanged;
+                    Pipes.CollectionChanged -= FMRegionCollectionChanged;
                 }
 
                 pipes = value;
 
                 if (pipes != null)
                 {
-                    Pipes.CollectionChanged += OnInputCollectionChanged;
-                    ((INotifyPropertyChanged) Pipes).PropertyChanged += OnInputPropertyChanged;
+                    Pipes.CollectionChanged += FMRegionCollectionChanged;
                 }
             }
         }
@@ -625,8 +641,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (sourcesAndSinks != null)
                 {
                     SourcesAndSinks.CollectionChanged -= SourcesAndSinksCollectionChanged;
-                    SourcesAndSinks.CollectionChanged -= OnInputCollectionChanged;
-                    ((INotifyPropertyChanged) SourcesAndSinks).PropertyChanged -= OnInputPropertyChanged;
+                    SourcesAndSinks.CollectionChanged -= FMRegionCollectionChanged;
                 }
 
                 sourcesAndSinks = value;
@@ -634,8 +649,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (sourcesAndSinks != null)
                 {
                     SourcesAndSinks.CollectionChanged += SourcesAndSinksCollectionChanged;
-                    SourcesAndSinks.CollectionChanged += OnInputCollectionChanged;
-                    ((INotifyPropertyChanged)SourcesAndSinks).PropertyChanged += OnInputPropertyChanged;
+                    SourcesAndSinks.CollectionChanged += FMRegionCollectionChanged;
+                        ;
                 }
             }
         }

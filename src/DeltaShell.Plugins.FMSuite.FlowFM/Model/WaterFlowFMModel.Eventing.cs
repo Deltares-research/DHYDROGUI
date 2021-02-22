@@ -855,15 +855,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             base.OnDataItemUnlinking(sender, e);
         }
 
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void FMRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-         //   MarkOutputOutOfSync();
+            MarkOutputOutOfSync();
         }
 
-        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-         //   MarkOutputOutOfSync();
-        }
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {}
+
+        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e) {}
 
         /// <summary>
         /// Called when [clear output]. Clears all output of the model.

@@ -2373,7 +2373,145 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 }
             }
         }
-        
+
+        [Test]
+        public void AddingABoundary_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Boundaries.Add(new Feature2D());
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void RemovingABoundary_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                var boundary = new Feature2D();
+                model.Boundaries.Add(boundary);
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Boundaries.Remove(boundary);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void AddingAPipe_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Pipes.Add(new Feature2D());
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void RemovingAPipe_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                var pipe = new Feature2D();
+                model.Pipes.Add(pipe);
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Pipes.Remove(pipe);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void AddingASourceAndSink_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.SourcesAndSinks.Add(new SourceAndSink());
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void RemovingASourceAndSink_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                var sourceAndSink = new SourceAndSink();
+                model.SourcesAndSinks.Add(sourceAndSink);
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.SourcesAndSinks.Remove(sourceAndSink);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
         private static IEnumerable<SourceAndSink> CreateSourcesAndSinks()
         {
             yield return new SourceAndSink();
