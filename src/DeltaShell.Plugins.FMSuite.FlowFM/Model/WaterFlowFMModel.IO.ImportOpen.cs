@@ -42,6 +42,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// <param name="mduFilePath">The path to the mdu file.</param>
         public void LoadFromMdu(string mduFilePath)
         {
+            bool originalOutputOutOfSync = OutputOutOfSync;
+
             ClearSyncers();
             TracerDefinitions.Clear();
 
@@ -49,15 +51,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             LoadOutputStateFromMdu(mduFilePath);
 
             InitializeSyncers();
+
+            OutputOutOfSync = originalOutputOutOfSync;
         }
 
         private void LoadOutputStateFromMdu(string mduFilePath)
         {
             string existingOutputDirectory = RetrieveOutputDirectory(mduFilePath);
-            
-            bool originalOutputOutOfSync = OutputOutOfSync;
             ReconnectOutputFiles(existingOutputDirectory);
-            OutputOutOfSync = originalOutputOutOfSync;
         }
 
         /// <summary>

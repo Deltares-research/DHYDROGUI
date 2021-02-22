@@ -41,6 +41,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [Category(TestCategory.DataAccess)]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void LoadFromMdu_ForModelWithOutput_ShouldNotChangeOutOfSyncSetByDatabaseEarlier(bool outputOutOfSync)
+        {
+            // Setup
+            string testFolder = TestHelper.GetTestFilePath(@"Model\Output\FlowFM");
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                var model = new WaterFlowFMModel
+                {
+                    OutputOutOfSync = outputOutOfSync
+                };
+                string modelFolder = tempDir.CopyDirectoryToTempDirectory(testFolder);
+                
+                string mduFilePath = Path.Combine(modelFolder, "input", "FlowFM.mdu");
+                
+                // Precondition
+                Assert.AreEqual(outputOutOfSync, model.OutputOutOfSync);
+
+                // Call
+                model.LoadFromMdu(mduFilePath);
+
+                // Assert
+                Assert.AreEqual(outputOutOfSync, model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
         public void LoadFromMdu_WithRelativeRestartFile_DoesNotExist_GivesWarning()
         {
             // Setup
