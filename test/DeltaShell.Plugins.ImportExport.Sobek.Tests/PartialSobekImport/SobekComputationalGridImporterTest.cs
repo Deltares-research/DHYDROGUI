@@ -15,9 +15,9 @@ using NUnit.Framework;
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 {
     [TestFixture]
-    public class
-        SobekComputationalGridImporterTest
+    public class SobekComputationalGridImporterTest
     {
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ImportComputationalGrid()
@@ -39,14 +39,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(721, waterFlowFmModel.NetworkDiscretization.Locations.Values.Count);
         }
 
+        [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        [Test]
         public void ImportComputationalGridLeiderdorp()
         {
+            string testDataFilePath = TestHelper.GetTestFilePath(@"Leiddrp.lit.zip");
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                string testDataFilePath = TestHelper.GetTestFilePath(@"Leiddrp.lit.zip");
                 ZipFileUtils.Extract(testDataFilePath, tempDir);
                 var pathToSobekNetwork = Path.Combine(tempDir, "Leiddrp.lit","11", "NETWORK.tp");
                 var waterFlowFmModel = new WaterFlowFMModel();
@@ -66,19 +66,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             });
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
         [TestCase(1, 3531)]
         [TestCase(2, 3531)]
         [TestCase(3, 2)]
         [TestCase(4, 3531)]
         [TestCase(10, 3498)]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        [Test]
         public void ImportComputationalGridHeemskerk(int sobekCase, int points)
         {
+            string testDataFilePath = TestHelper.GetTestFilePath(@"Heemsker.lit.zip");
+
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
             {
-                string testDataFilePath = TestHelper.GetTestFilePath(@"Heemsker.lit.zip");
                 ZipFileUtils.Extract(testDataFilePath, tempDir);
                 var pathToSobekNetwork = Path.Combine(tempDir, "Heemsker.lit", sobekCase.ToString(), "NETWORK.tp");
                 var waterFlowFmModel = new WaterFlowFMModel();
