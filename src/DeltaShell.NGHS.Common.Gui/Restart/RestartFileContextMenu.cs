@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             Ensure.NotNull(restartFile, nameof(restartFile));
             Ensure.NotNull(node, nameof(node));
 
-            if (!TryGetModel(node, out IRestartModel model))
+            if (!TryGetModel(node, out ITimeDependentRestartModel model))
             {
                 return;
             }
@@ -42,7 +42,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             }
         }
 
-        private void AddItemsForInputRestartFile(IRestartModel model)
+        private void AddItemsForInputRestartFile(ITimeDependentRestartModel model)
         {
             ContextMenuStrip.Items.Add(GetRemoveRestartMenuItem(model));
             ContextMenuStrip.Items.Add(GetUseLastValidRestartMenuItem(model));
@@ -50,20 +50,24 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
         }
 
-        private void AddItemsForOutputRestartFile(IRestartModel model, RestartFile restartFile)
+        private void AddItemsForOutputRestartFile(ITimeDependentRestartModel model, RestartFile restartFile)
         {
             ContextMenuStrip.Items.Add(GetUseAsRestartMenuItem(model, restartFile));
         }
 
-        private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(IRestartModel model, RestartFile restartFile)
+        private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(ITimeDependentRestartModel model, RestartFile restartFile)
         {
             var menuItem = new ClonableToolStripMenuItem {Text = Resources.UseAsRestart};
-            menuItem.Click += (s, e) => model.RestartInput = restartFile.Clone();
+            menuItem.Click += (s, e) =>
+            {
+                model.RestartInput = restartFile.Clone();
+                model.MarkOutputOutOfSync();
+            };
 
             return menuItem;
         }
 
-        private static ClonableToolStripMenuItem GetUseLastValidRestartMenuItem(IRestartModel model)
+        private static ClonableToolStripMenuItem GetUseLastValidRestartMenuItem(ITimeDependentRestartModel model)
         {
             var menuItem = new ClonableToolStripMenuItem
             {
@@ -87,7 +91,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             return menuItem;
         }
 
-        private static ClonableToolStripMenuItem GetRemoveRestartMenuItem(IRestartModel model)
+        private static ClonableToolStripMenuItem GetRemoveRestartMenuItem(ITimeDependentRestartModel model)
         {
             var menuItem = new ClonableToolStripMenuItem
             {
@@ -103,12 +107,12 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             return menuItem;
         }
 
-        private static bool TryGetModel(ITreeNode node, out IRestartModel result)
+        private static bool TryGetModel(ITreeNode node, out ITimeDependentRestartModel result)
         {
             ITreeNode parent = node.Parent;
             while (parent != null)
             {
-                if (parent.Tag is IRestartModel model)
+                if (parent.Tag is ITimeDependentRestartModel model)
                 {
                     result = model;
                     return true;

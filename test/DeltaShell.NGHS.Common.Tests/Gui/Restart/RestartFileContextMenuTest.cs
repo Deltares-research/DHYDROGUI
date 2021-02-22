@@ -62,7 +62,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             // Setup
             var restartFile = new RestartFile();
             var node = Substitute.For<ITreeNode>();
-            var model = Substitute.For<IRestartModel>();
+            var model = Substitute.For<ITimeDependentRestartModel>();
             node.Parent.Parent.Tag.Returns(model);
             model.RestartInput.Returns(restartFile);
 
@@ -83,7 +83,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             // Setup
             var restartFile = new RestartFile();
             var node = Substitute.For<ITreeNode>();
-            var model = Substitute.For<IRestartModel>();
+            var model = Substitute.For<ITimeDependentRestartModel>();
             node.Parent.Parent.Tag.Returns(model);
             model.RestartOutput.Returns(new List<RestartFile> {restartFile});
 
@@ -100,7 +100,7 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
         public void ClickingRemoveRestartToolStripItem_RestartInputIsEmptied()
         {
             // Setup
-            var model = Substitute.For<IRestartModel>();
+            var model = Substitute.For<ITimeDependentRestartModel>();
             model.UseRestart.Returns(true);
             model.RestartInput = new RestartFile("path/to/restart.file");
 
@@ -120,13 +120,14 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
 
             // Assert
             Assert.That(model.RestartInput.IsEmpty, Is.True);
+            model.Received().MarkOutputOutOfSync();
         }
 
         [Test]
         public void ClickingUseLastRestart_RestartInputIsSetWithLastOutputRestart()
         {
             // Setup
-            var model = Substitute.For<IRestartModel>();
+            var model = Substitute.For<ITimeDependentRestartModel>();
             model.RestartInput = new RestartFile();
             model.RestartOutput.Returns(new List<RestartFile>
             {
@@ -152,13 +153,15 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             Assert.That(model.RestartInput.IsEmpty, Is.False);
             Assert.That(model.RestartInput, Is.Not.SameAs(model.RestartOutput.Last()));
             Assert.That(model.RestartInput.Path, Is.EqualTo(model.RestartOutput.Last().Path));
+
+            model.Received().MarkOutputOutOfSync();
         }
 
         [Test]
         public void ClickingUseAsRestart_RestartInputIsSetWithSelectedOutputRestart()
         {
             // Setup
-            var model = Substitute.For<IRestartModel>();
+            var model = Substitute.For<ITimeDependentRestartModel>();
             var restartOutputFile = new RestartFile("path/to/restart.file");
             model.RestartOutput.Returns(new List<RestartFile> {restartOutputFile});
 
@@ -179,6 +182,8 @@ namespace DeltaShell.NGHS.Common.Tests.Gui.Restart
             Assert.That(model.RestartInput.IsEmpty, Is.False);
             Assert.That(model.RestartInput, Is.Not.SameAs(restartOutputFile));
             Assert.That(model.RestartInput.Path, Is.EqualTo(restartOutputFile.Path));
+
+            model.Received().MarkOutputOutOfSync();
         }
     }
 }

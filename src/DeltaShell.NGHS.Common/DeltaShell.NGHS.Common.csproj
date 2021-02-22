@@ -64,6 +64,7 @@
     <Compile Include="IO\ModelFileImporterBase.cs" />
     <Compile Include="IO\RestartFiles\IRestartModel.cs" />
     <Compile Include="IO\RestartFiles\RestartFile.cs" />
+    <Compile Include="ITimeDependentRestartModel.cs" />
     <Compile Include="Logging\ILogHandler.cs" />
     <Compile Include="Logging\LogHandler.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
