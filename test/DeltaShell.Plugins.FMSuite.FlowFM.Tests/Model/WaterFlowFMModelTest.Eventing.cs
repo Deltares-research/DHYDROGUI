@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -332,6 +333,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 // Act
                 model.Area.Weirs.Remove(structure);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void ChangingAStructureProperty_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                var structure = new Weir2D
+                {
+                    WeirFormula = new SimpleWeirFormula()
+                };
+                model.Area.Weirs.Add(structure);
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                structure.WeirFormula = new GeneralStructureWeirFormula();
 
                 // Assert
                 Assert.IsTrue(model.OutputOutOfSync);
