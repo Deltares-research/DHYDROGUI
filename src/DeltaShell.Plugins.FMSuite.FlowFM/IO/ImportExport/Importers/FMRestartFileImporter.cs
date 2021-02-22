@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     /// <seealso cref="IFileImporter"/>
     public class FMRestartFileImporter : IFileImporter
     {
-        private readonly Func<IEnumerable<WaterFlowFMModel>> getModels;
+        private readonly Func<IEnumerable<IWaterFlowFMModel>> getModels;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FMRestartFileImporter"/> class.
@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="getModels"/> is <c>null</c>.
         /// </exception>
-        public FMRestartFileImporter(Func<IEnumerable<WaterFlowFMModel>> getModels)
+        public FMRestartFileImporter(Func<IEnumerable<IWaterFlowFMModel>> getModels)
         {
             Ensure.NotNull(getModels, nameof(getModels));
 
@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 throw new FileNotFoundException($"Restart file does not exist: {path}");
             }
 
-            WaterFlowFMModel model = GetModel(target);
+            IWaterFlowFMModel model = GetModel(target);
 
             model.RestartInput = new RestartFile(path);
 
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             return model.RestartInput;
         }
 
-        private WaterFlowFMModel GetModel(object obj)
+        private IWaterFlowFMModel GetModel(object obj)
         {
             return getModels().FirstOrDefault(m => m.RestartInput == obj);
         }
