@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     ISpatiallyVaryingSedimentProperty;
             Assert.IsNotNull(spatvaryingProp);
             Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
-            IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
+            IDataItem dataItem = model.AllDataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
             Assert.IsNotNull(dataItem);
             var coverage = dataItem.Value as UnstructuredGridCellCoverage;
             Assert.IsNotNull(coverage);

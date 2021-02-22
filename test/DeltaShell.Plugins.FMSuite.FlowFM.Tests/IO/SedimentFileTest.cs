@@ -463,7 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     doubleSpatProp.SpatiallyVaryingName,
                     doubleSpatProp2.SpatiallyVaryingName
                 };
-                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.AllDataItems.ToList(), fmModel.TracerDefinitions, initialSpatialOps);
                 var extFile = new ExtForceFile();
                 extFile.Write(sedFile, fmModel.ModelDefinition, false, false);
                 Assert.IsTrue(File.Exists(generatedXyzFile));
@@ -563,7 +563,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // update model definition (called during export)
                 var initialSpatialOps = new List<string>() {randomSVProp.SpatiallyVaryingName};
-                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.AllDataItems.ToList(), fmModel.TracerDefinitions, initialSpatialOps);
 
                 // New Warning should be given.
 
@@ -670,7 +670,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(interpolateOperation));
 
                 // update model definition (called during export)
-                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.DataItems, fmModel.TracerDefinitions, initialSpatialOps);
+                fmModel.ModelDefinition.SelectSpatialOperations(fmModel.AllDataItems.ToList(), fmModel.TracerDefinitions, initialSpatialOps);
 
                 WaterFlowFMModelDefinition modelDefinition = fmModel.ModelDefinition;
                 SedimentFile.Save(sedFile, modelDefinition, fmModel);
@@ -715,7 +715,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var spatvaryingProp = fraction.CurrentSedimentType.Properties.FirstOrDefault(p => p.Name == "IniSedThick") as ISpatiallyVaryingSedimentProperty;
                 Assert.IsNotNull(spatvaryingProp);
                 Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
-                IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Name == "mudFraction_IniSedThick");
+                IDataItem dataItem = model.AllDataItems.FirstOrDefault(di => di.Name == "mudFraction_IniSedThick");
                 Assert.IsNotNull(dataItem);
                 var coverage = dataItem.Value as UnstructuredGridCellCoverage;
                 Assert.IsNotNull(coverage);
@@ -735,7 +735,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 spatvaryingProp = fraction.CurrentFormulaType.Properties.FirstOrDefault(p => p.Name == "TcrSed") as ISpatiallyVaryingSedimentProperty;
                 Assert.IsNotNull(spatvaryingProp);
                 Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
-                dataItem = model.DataItems.FirstOrDefault(di => di.Name == "mudFraction_TcrSed");
+                dataItem = model.AllDataItems.FirstOrDefault(di => di.Name == "mudFraction_TcrSed");
                 Assert.IsNotNull(dataItem);
                 coverage = dataItem.Value as UnstructuredGridCellCoverage;
                 Assert.IsNotNull(coverage);
@@ -755,7 +755,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 spatvaryingProp = fraction.CurrentFormulaType.Properties.FirstOrDefault(p => p.Name == "TcrEro") as ISpatiallyVaryingSedimentProperty;
                 Assert.IsNotNull(spatvaryingProp);
                 Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
-                dataItem = model.DataItems.FirstOrDefault(di => di.Name == "mudFraction_TcrEro");
+                dataItem = model.AllDataItems.FirstOrDefault(di => di.Name == "mudFraction_TcrEro");
                 Assert.IsNotNull(dataItem);
                 coverage = dataItem.Value as UnstructuredGridCellCoverage;
                 Assert.IsNotNull(coverage);
@@ -791,7 +791,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                                           ISpatiallyVaryingSedimentProperty;
                 Assert.IsNotNull(spatvaryingProp);
                 Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
-                IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
+                IDataItem dataItem = model.AllDataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
                 Assert.IsNotNull(dataItem);
                 var coverage = dataItem.Value as UnstructuredGridCellCoverage;
                 Assert.IsNotNull(coverage);
@@ -992,7 +992,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     ISpatiallyVaryingSedimentProperty;
             Assert.IsNotNull(spatvaryingProp);
             Assert.IsTrue(spatvaryingProp.IsSpatiallyVarying);
-            IDataItem dataItem = model.DataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
+            IDataItem dataItem = model.AllDataItems.FirstOrDefault(di => di.Name == "gouwe_IniSedThick");
             Assert.IsNotNull(dataItem);
             var coverage = dataItem.Value as UnstructuredGridCellCoverage;
             Assert.IsNotNull(coverage);

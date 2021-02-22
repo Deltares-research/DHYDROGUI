@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -337,7 +338,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             modelDefinition.GetModelProperty(GuiProperties.UseMorSed).Value = useMorSed;
             modelDefinition.GetModelProperty(KnownProperties.SecondaryFlow).Value = useSecFlow;
 
-            IVariable timeVariable = sourceAndSink.Function.Arguments.FirstOrDefault(c => c.Name == SourceAndSink.TimeVariableName);
+            IVariable timeVariable = sourceAndSink.Function.Arguments.FirstOrDefault(c => c.Name == SourceSinkVariableInfo.TimeVariableName);
             Assert.NotNull(timeVariable);
             var timeIndex0 = new DateTime(2018, 07, 11, 00, 00, 00, DateTimeKind.Utc);
             timeVariable.Values.AddRange(new List<DateTime>
@@ -347,12 +348,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
                 timeIndex0.AddYears(2)
             });
 
-            AddVariableWithRange(sourceAndSink, SourceAndSink.DischargeVariableName, 1, 2, 3);
-            AddVariableWithRange(sourceAndSink, SourceAndSink.SalinityVariableName, 2, 3, 4);
-            AddVariableWithRange(sourceAndSink, SourceAndSink.TemperatureVariableName, 3, 4, 5);
+            AddVariableWithRange(sourceAndSink, SourceSinkVariableInfo.DischargeVariableName, 1, 2, 3);
+            AddVariableWithRange(sourceAndSink, SourceSinkVariableInfo.SalinityVariableName, 2, 3, 4);
+            AddVariableWithRange(sourceAndSink, SourceSinkVariableInfo.TemperatureVariableName, 3, 4, 5);
             AddVariableWithRange(sourceAndSink, "Fraction_1", 4, 5, 6);
             AddVariableWithRange(sourceAndSink, "Fraction_2", 44, 55, 66);
-            AddVariableWithRange(sourceAndSink, SourceAndSink.SecondaryFlowVariableName, 5, 6, 7);
+            AddVariableWithRange(sourceAndSink, SourceSinkVariableInfo.SecondaryFlowVariableName, 5, 6, 7);
             if (tracersPresent)
             {
                 AddVariableWithRange(sourceAndSink, "Tracer_1", 6, 7, 8);

@@ -2,7 +2,7 @@
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 using log4net;

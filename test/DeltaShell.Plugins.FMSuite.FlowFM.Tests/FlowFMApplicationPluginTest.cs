@@ -12,7 +12,7 @@ using DeltaShell.Gui;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.NetworkEditor.Import;
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IFileImporter[] importers = plugin.GetFileImporters().ToArray();
 
             // Assert
-            Assert.That(importers, Has.Length.EqualTo(38));
+            Assert.That(importers, Has.Length.EqualTo(37));
             Contains<WaterFlowFMFileImporter>(importers);
             Contains<Area2DStructuresImporter>(importers);
             Contains<StructuresListImporter>(importers, 2);
@@ -76,7 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Contains<FMRestartFileImporter>(importers);
             Contains<BcFileImporter>(importers);
             Contains<BcmFileImporter>(importers);
-            Contains<BoundaryConditionWpsImporter>(importers);
             Contains<GroupablePointCloudImporter>(importers);
             Contains<PliFileImporterExporter<Embankment, Embankment>>(importers);
             Contains<PlizFileImporterExporter<FixedWeir, FixedWeir>>(importers);

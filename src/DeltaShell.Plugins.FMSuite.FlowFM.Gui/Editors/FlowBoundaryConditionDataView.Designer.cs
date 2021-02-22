@@ -38,7 +38,6 @@
             this.boundaryDataSplitContainer = new System.Windows.Forms.SplitContainer();
             this.functionView = new DeltaShell.Plugins.CommonTools.Gui.Forms.Functions.FunctionView();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.wpsImportButton = new System.Windows.Forms.Button();
             this.drawButton = new System.Windows.Forms.Button();
             this.fileImportButton = new System.Windows.Forms.Button();
             this.fileExportButton = new System.Windows.Forms.Button();
@@ -107,16 +106,14 @@
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 5;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.wpsImportButton, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.drawButton, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.fileImportButton, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.fileExportButton, 3, 0);
+            this.tableLayoutPanel1.ColumnCount = 4;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel1.Controls.Add(this.drawButton, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.fileImportButton, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.fileExportButton, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.genDataButton, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
@@ -127,18 +124,6 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1036, 38);
             this.tableLayoutPanel1.TabIndex = 21;
-            // 
-            // wpsImportButton
-            // 
-            this.wpsImportButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.wpsImportButton.Image = ((System.Drawing.Image)(resources.GetObject("wpsImportButton.Image")));
-            this.wpsImportButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.wpsImportButton.Location = new System.Drawing.Point(210, 3);
-            this.wpsImportButton.Name = "wpsImportButton";
-            this.wpsImportButton.Size = new System.Drawing.Size(201, 32);
-            this.wpsImportButton.TabIndex = 18;
-            this.wpsImportButton.Text = "Import from WPS...";
-            this.wpsImportButton.UseVisualStyleBackColor = true;
             // 
             // drawButton
             // 
@@ -214,7 +199,6 @@
         #endregion
 
         private System.Windows.Forms.Button genDataButton;
-        private System.Windows.Forms.Button wpsImportButton;
         private System.Windows.Forms.Button drawButton;
         private System.Windows.Forms.Label noDataLabel;
         private CommonTools.Gui.Forms.Functions.FunctionView functionView;

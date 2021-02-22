@@ -74,8 +74,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         .OfType<ISpatiallyVaryingSedimentProperty>()
                                                                         .Where(p => p.IsSpatiallyVarying))
                                                               .Select(p => p.SpatiallyVaryingName).ToList());
-                ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions, spatVarSedPropNames);
-                ModelDefinition.Bathymetry = Bathymetry;
+
+                ModelDefinition.SelectSpatialOperations(SpatialData.DataItems.ToList(), TracerDefinitions, spatVarSedPropNames);
             }
 
             InitializeAreaDataColumns();
@@ -112,6 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 MduFilePath = mduPath;
                 CacheFile.UpdatePathToMduLocation(mduPath);
+                SpatialData.SwitchTo(Path.GetDirectoryName(mduPath));
 
                 SaveOutput();
             }

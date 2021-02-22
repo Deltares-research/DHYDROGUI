@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.NGHS.TestUtils;
@@ -91,8 +92,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new TimeDependentUniformParametersViewModel<TSpreading>(generateSeries,
                                                                                     parameters);
 
-            var observer = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += observer.OnPropertyChanged;
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += observer.OnEventFired;
 
             var stateIsValid = false;
 

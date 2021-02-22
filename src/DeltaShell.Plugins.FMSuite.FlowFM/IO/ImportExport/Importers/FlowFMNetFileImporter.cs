@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 flowModel = GetModelForGrid(grid);
                 /* DELFT3DFM-453 */
                 Log.WarnFormat("Importing bathymetry. Existing grid will be overwritten with grid from {0}.", path);
-                flowModel = GetModelForGrid(flowModel.Bathymetry.Grid);
+                flowModel = GetModelForGrid(flowModel.SpatialData.Bathymetry.Grid);
             }
 
             if (flowModel != null && flowModel.NetFilePath != null)

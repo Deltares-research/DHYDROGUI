@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,6 +18,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     /// <seealso cref="LegacyLoader"/>
     public class WaterFlowFMModel120LegacyLoader : LegacyLoader
     {
+        private readonly LegacyLoader nextLegacyLoader = new WaterFlowFMModel130LegacyLoader();
+
+        public override void OnAfterInitialize(object entity, IDbConnection dbConnection)
+        {
+            nextLegacyLoader.OnAfterInitialize(entity, dbConnection);
+        }
+
         /// <summary>
         /// Called after the project migrated.
         /// Unpacks the state files, moves them to the correct location and cleans up the project folder.
@@ -37,6 +45,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 OrganizeRestartFiles(paths);
                 model.ConnectOutput(paths.OutputDir);
             }
+
+            nextLegacyLoader.OnAfterProjectMigrated(project);
         }
 
         private static void OrganizeRestartFiles(Paths paths)

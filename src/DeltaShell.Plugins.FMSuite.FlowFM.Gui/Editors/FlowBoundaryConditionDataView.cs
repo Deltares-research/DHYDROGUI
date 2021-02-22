@@ -5,11 +5,8 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Net;
-using System.Runtime.Remoting;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Controls.Swf.Table;
@@ -28,11 +25,8 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using GeoAPI.Extensions.CoordinateSystems;
 using log4net;
-using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
@@ -91,12 +85,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             seriesFactory = new FlowBoundaryConditionSeriesFactory {AstroComponents = AstroComponents};
             functionView.CreateSeriesMethod = seriesFactory.CreateSeries;
             genDataButton.Click += GenerateDataButtonClick;
-            wpsImportButton.Click += WpsImportButtonClick;
             boundaryDataListBox.CheckOnClick = true;
-            boundaryDataListBox.Format += boundaryDataListBoxFormat;
+            boundaryDataListBox.Format += BoundaryDataListBoxFormat;
             boundaryDataListBox.ItemCheck += BoundaryDataListBoxOnItemCheck;
-            var chartView = functionView.ChartView as ChartView;
-            if (chartView != null)
+            if (functionView.ChartView is ChartView chartView)
             {
                 var customDateTimeFormatInfo = (DateTimeFormatInfo) CultureInfo.CurrentCulture.DateTimeFormat.Clone();
                 customDateTimeFormatInfo.LongTimePattern = "HH:mm:ss";
@@ -278,10 +270,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private DateTime ModelStopTime => Model == null ? ModelStartTime.AddDays(1) : Model.StopTime;
 
-        private TimeSpan ModelTimeStep => Model == null ? new TimeSpan(0, 1, 0, 0) : Model.TimeStep;
-
-        private ICoordinateSystem ModelCoordinateSystem => Model == null ? null : Model.CoordinateSystem;
-
         private bool FourierDataType =>
             BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
             BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection ||
@@ -303,8 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void BoundaryDataListBoxOnItemCheck(object sender, ItemCheckEventArgs itemCheckEventArgs)
         {
-            var bc = boundaryDataListBox.SelectedItem as IBoundaryCondition;
-            if (bc == null)
+            if (!(boundaryDataListBox.SelectedItem is IBoundaryCondition bc))
             {
                 return;
             }
@@ -457,10 +444,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        private void boundaryDataListBoxFormat(object sender, ListControlConvertEventArgs e)
+        private void BoundaryDataListBoxFormat(object sender, ListControlConvertEventArgs e)
         {
-            var item = e.ListItem as IBoundaryCondition;
-            if (item == null)
+            if (!(e.ListItem is IBoundaryCondition item))
             {
                 return;
             }
@@ -598,14 +584,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private IRowValidationResult ValidateTableRow(int arg1, object[] arg2)
         {
-            if (BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
-                BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection)
+            if ((BoundaryCondition.DataType == BoundaryConditionDataType.AstroComponents ||
+                 BoundaryCondition.DataType == BoundaryConditionDataType.AstroCorrection) &&
+                (!(arg2[0] is string field) || field.StartsWith("zzz") || !AstroComponents.ContainsKey(field)))
             {
-                var field = arg2[0] as string;
-                if (field == null || field.StartsWith("zzz") || !AstroComponents.ContainsKey(field))
-                {
-                    return new RowValidationResult(0, "Astronomic component not recognized");
-                }
+                return new RowValidationResult(0, "Astronomic component not recognized");
             }
 
             if (BoundaryCondition.DataType == BoundaryConditionDataType.Harmonics ||
@@ -623,8 +606,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void UnsubscribeFunctionViewData()
         {
-            var function = functionView.Data as IFunction;
-            if (function != null)
+            if (functionView.Data is IFunction function)
             {
                 function.ValuesChanged -= FunctionValuesChanged;
                 ((INotifyPropertyChanged) function).PropertyChanged -= FunctionPropertyChanged;
@@ -633,8 +615,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void SubscribeFunctionViewData()
         {
-            var function = functionView.Data as IFunction;
-            if (function != null)
+            if (functionView.Data is IFunction function)
             {
                 function.ValuesChanged += FunctionValuesChanged;
                 ((INotifyPropertyChanged) function).PropertyChanged += FunctionPropertyChanged;
@@ -717,10 +698,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     genDataButton.Enabled = false;
                 }
             }
-
-            wpsImportButton.Enabled = BoundaryCondition != null &&
-                                      BoundaryCondition.DataType == BoundaryConditionDataType.TimeSeries &&
-                                      BoundaryCondition.VariableName == "WaterLevel";
 
             fileImportButton.Enabled = BoundaryCondition != null &&
                                        BoundaryCondition.DataType != BoundaryConditionDataType.Empty;
@@ -945,64 +922,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                                                        "Generate/modify astro component values");
         }
 
-        private void WpsImportButtonClick(object sender, EventArgs e)
-        {
-            var importDialog = new BoundaryConditionWpsDialog
-            {
-                AllowCreateNewBoundaryCondition = false,
-                AllowSelectedSupportPointImport = true,
-                StartTime = ModelStartTime,
-                StopTime = ModelStopTime,
-                TimeStep = ModelTimeStep,
-                CoordinateSystem = ModelCoordinateSystem
-            };
-            if (importDialog.ShowModal() != DelftDialogResult.OK)
-            {
-                return;
-            }
-
-            BoundaryConditionWpsImporter importer = importDialog.CreateImporter();
-            importer.SupportPointIndex = SupportPointIndex;
-            ClearFunctionView();
-            BoundaryCondition.BeginEdit(new DefaultEditAction("Import data from WPS"));
-            try
-            {
-                ProgressBarDialog.PerformTask("Importing data from WPS...",
-                                              () => importer.Import(BoundaryConditionSet));
-            }
-            catch (Exception exception)
-            {
-                if (exception is ServerException)
-                {
-                    MessageBox.Show(exception.Message.Replace("\\", ""), "Import failed",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
-                }
-
-                if (exception is WebException)
-                {
-                    MessageBox.Show("Server timeout encountered", "Import failed",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
-                }
-
-                if (exception is ArgumentException)
-                {
-                    MessageBox.Show(exception.Message, "Import failed",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
-                }
-            }
-            finally
-            {
-                BoundaryCondition.EndEdit();
-            }
-
-            RefreshBoundaryData();
-            ConfigureSeriesFactory();
-            FillFunctionView();
-        }
-
         private void UpdateFunctionViewMode()
         {
             if (mode == ViewMode.Single)
@@ -1076,10 +995,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 set
                 {
                     active = value;
-                    if (ActiveChanged != null)
-                    {
-                        ActiveChanged(this, EventArgs.Empty);
-                    }
+                    ActiveChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
 
@@ -1152,10 +1068,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     BoundaryConditionSet.BoundaryConditions.FirstOrDefault(
                         bc => bc.Name == ((ToolStripMenuItem) sender).Text);
                 AddedBoundaryConditions.Remove(boundaryCondition);
-                if (RemoveSeriesFromView != null)
-                {
-                    RemoveSeriesFromView(boundaryCondition);
-                }
+                RemoveSeriesFromView?.Invoke(boundaryCondition);
             }
         }
     }

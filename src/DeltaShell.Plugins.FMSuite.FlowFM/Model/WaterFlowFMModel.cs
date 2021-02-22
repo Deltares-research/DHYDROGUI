@@ -24,6 +24,7 @@ using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
@@ -31,7 +32,6 @@ using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
@@ -98,12 +98,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
             SynchronizeModelDefinitions();
 
+            SpatialData = new SpatialData(this);
+            InitializeSpatialDataItems();
+
             Grid = new UnstructuredGrid();
 
-            InitializeUnstructuredGridCoverages();
-
-            AddSpatialDataItems();
-
+            SetSpatialCoverages();
             RenameSubFilesIfApplicable();
 
             InitializeSyncers();
@@ -140,6 +140,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         #region Implementation of IWaterFlowFMModel
+
+        public ISpatialData SpatialData { get; }
 
         public bool DisableFlowNodeRenumbering { get; set; }
 
@@ -207,141 +209,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (!ss.TracerNames.Contains(name))
                 {
-                    ss.TracerNames.Add(name);
+                    ss.Function.AddTracer(name);
                 }
             });
         }
 
-        private void AddToInitialCoverages(IList<UnstructuredGridCellCoverage> initialCoverages, string spatiallyVaryingName)
-        {
-            if (initialCoverages == null)
-            {
-                return;
-            }
-
-            IDataItem t = DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingName);
-            if (t == null)
-            {
-                UnstructuredGridCellCoverage unstructuredGridCellCoverage =
-                    CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
-                initialCoverages.Add(unstructuredGridCellCoverage);
-            }
-            else
-            {
-                var unstrGridCellCoverage = t.Value as UnstructuredGridCellCoverage;
-                if (unstrGridCellCoverage == null)
-                {
-                    t.Value = CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid);
-                    initialCoverages.Add((UnstructuredGridCellCoverage) t.Value);
-                    /* DELFT3DFM-1077 
-                     * Apparently the spatial operation is not being executed after being added (which should be)
-                     * We can force it here.
-                     */
-                    var spOperationSet = t.ValueConverter as SpatialOperationSetValueConverter;
-                    if (spOperationSet != null)
-                    {
-                        spOperationSet.SpatialOperationSet.Execute();
-                    }
-                }
-                else
-                {
-                    unstrGridCellCoverage.Grid = Grid;
-                    if (!initialCoverages.Contains(unstrGridCellCoverage))
-                    {
-                        initialCoverages.Add(unstrGridCellCoverage);
-                    }
-                }
-            }
-        }
-
         private void AddToInitialFractions(string spatiallyVaryingName)
         {
-            AddToInitialCoverages(InitialFractions, spatiallyVaryingName);
-        }
-
-        private void AddToInitialTracers(string spatiallyVaryingName)
-        {
-            AddToInitialCoverages(InitialTracers, spatiallyVaryingName);
-        }
-
-        private void AddSpatialDataItems()
-        {
-            AddOrRenameDataItem(Bathymetry, WaterFlowFMModelDefinition.BathymetryDataItemName);
-
-            // Backwards compatibility
-            // BedLevel dataitem value used to be exclusively UnstructuredGridVertexCoverages, now it needs to be more generic
-            IDataItem bedLevelDataItem =
-                DataItems.FirstOrDefault(di => di.Name == WaterFlowFMModelDefinition.BathymetryDataItemName);
-            if (bedLevelDataItem != null)
-            {
-                bedLevelDataItem.ValueType = typeof(UnstructuredGridCoverage);
-            }
-
-            AddOrRenameDataItem(InitialWaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName);
-            AddOrRenameDataItem(Roughness, WaterFlowFMModelDefinition.RoughnessDataItemName);
-            AddOrRenameDataItem(Viscosity, WaterFlowFMModelDefinition.ViscosityDataItemName);
-            AddOrRenameDataItem(Diffusivity, WaterFlowFMModelDefinition.DiffusivityDataItemName);
-            AddOrRenameDataItem(InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
-            AddOrRenameDataItems(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
-            AddOrRenameTracerDataItems();
-            AddOrRenameFractionDataItems();
-        }
-
-        private void AddOrRenameTracerDataItems()
-        {
-            foreach (UnstructuredGridCellCoverage initialTracer in InitialTracers)
-            {
-                AddOrRenameDataItem(initialTracer, initialTracer.Name);
-            }
-        }
-
-        private void AddOrRenameFractionDataItems()
-        {
-            foreach (UnstructuredGridCellCoverage initialFraction in InitialFractions)
-            {
-                AddOrRenameDataItem(initialFraction, initialFraction.Name);
-            }
-        }
-
-        private void AddOrRenameDataItem(ICoverage coverage, string name)
-        {
-            IDataItem existingDataItemByValue = GetDataItemByValue(coverage);
-            IDataItem existingDataItemByName = GetDataItemByName(name);
-
-            if (existingDataItemByValue != null && existingDataItemByName != null)
-            {
-                return;
-            }
-
-            if (existingDataItemByValue != null)
-            {
-                existingDataItemByValue.Name = name;
-            }
-            else if (existingDataItemByName != null)
-            {
-                existingDataItemByName.Value = coverage;
-            }
-            else
-            {
-                DataItems.Add(new DataItem(coverage, name) {Role = DataItemRole.Input});
-            }
-        }
-
-        private IDataItem GetDataItemByName(string dataItemName)
-        {
-            return AllDataItems.FirstOrDefault(di => di.Name == dataItemName);
-        }
-
-        private void AddOrRenameDataItems(CoverageDepthLayersList coverageDepthLayersList, string name)
-        {
-            var i = 1;
-            bool uniform = coverageDepthLayersList.VerticalProfile.Type == VerticalProfileType.Uniform;
-
-            foreach (ICoverage coverage in coverageDepthLayersList.Coverages)
-            {
-                string numberedName = uniform ? name : name + "_" + i++;
-                AddOrRenameDataItem(coverage, numberedName);
-            }
+            SpatialData.AddFraction(UnstructuredGridCoverageFactory.CreateCellCoverage(spatiallyVaryingName, Grid));
         }
 
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)
@@ -364,7 +239,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         #region Model Data
 
         private IEventedList<ISedimentFraction> sedimentFractions;
-        private IEventedList<BoundaryConditionSet> boundaryConditionSets;
         private IEventedList<string> tracerDefinitions;
         private IEventedList<SourceAndSink> sourcesAndSinks;
         private IDataItem areaDataItem;
@@ -717,24 +591,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public IEventedList<Feature2D> Boundaries { get; private set; }
 
-        public IEventedList<BoundaryConditionSet> BoundaryConditionSets
-        {
-            get => boundaryConditionSets;
-            private set
-            {
-                if (boundaryConditionSets != null)
-                {
-                    BoundaryConditionSets.CollectionChanged -= BoundaryConditionSetsCollectionChanged;
-                }
-
-                boundaryConditionSets = value;
-
-                if (boundaryConditionSets != null)
-                {
-                    BoundaryConditionSets.CollectionChanged += BoundaryConditionSetsCollectionChanged;
-                }
-            }
-        }
+        public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
 
         public IEventedList<Feature2D> Pipes { get; private set; }
 
@@ -806,7 +663,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             IDataItem[] dataItemsFound = SedimentModelDataItem
                                          .SpacialVariableNames
                                          .SelectMany(
-                                             spaceVarName => DataItems.Where(di => di.Name.Equals(spaceVarName)))
+                                             spaceVarName => AllDataItems.Where(di => di.Name.Equals(spaceVarName)))
                                          .ToArray();
             List<IDataItem> dataItemsWithConverter =
                 dataItemsFound.Where(d => d.ValueConverter is SpatialOperationSetValueConverter).ToList();

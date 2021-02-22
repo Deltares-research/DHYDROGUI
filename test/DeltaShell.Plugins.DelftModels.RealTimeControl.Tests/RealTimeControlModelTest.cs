@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Functions;
@@ -1759,6 +1760,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
 
                 // Then
                 AssertsPersistentFolderStructure(projectDirectoryPersistentFolder, rtcModel, workingDirectoryOutputFileName, workingDirectoryOutputSubDirectoryName);
+                
+                Thread.Sleep(3000);
             }
         }
 

@@ -319,38 +319,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                 yield return model.Grid;
 
-                yield return model.InitialWaterLevel;
-                yield return model.Roughness;
-                yield return model.Viscosity;
-                yield return model.Diffusivity;
+                yield return model.SpatialData.InitialWaterLevel;
+                yield return model.SpatialData.Roughness;
+                yield return model.SpatialData.Viscosity;
+                yield return model.SpatialData.Diffusivity;
 
                 if (model.HeatFluxModelType != HeatFluxModelType.None)
                 {
-                    yield return model.InitialTemperature;
+                    yield return model.SpatialData.InitialTemperature;
                 }
 
                 if (model.UseSalinity)
                 {
-                    foreach (ICoverage coverage in model.InitialSalinity.Coverages)
-                    {
-                        yield return coverage;
-                    }
+                    yield return model.SpatialData.InitialSalinity;
                 }
 
-                foreach (UnstructuredGridCellCoverage tracer in model.InitialTracers)
+                foreach (UnstructuredGridCellCoverage tracer in model.SpatialData.InitialTracers)
                 {
                     yield return tracer;
                 }
 
                 if (model.UseMorSed)
                 {
-                    foreach (UnstructuredGridCellCoverage fraction in model.InitialFractions)
+                    foreach (UnstructuredGridCellCoverage fraction in model.SpatialData.InitialFractions)
                     {
                         yield return fraction;
                     }
                 }
 
-                yield return model.Bathymetry;
+                yield return model.SpatialData.Bathymetry;
 
                 if (model.OutputMapFileStore != null)
                 {

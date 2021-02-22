@@ -23,6 +23,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -139,15 +140,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave
 
             WaveOutputData = new WaveOutputData(new WaveOutputDataHarvester(FeatureContainer),
                                                 new WaveOutputDataCopyHandler());
-            
-            WaveOutputData.DiagnosticFiles.CollectionChanged += 
-                GetOutputSyncNotifyCollectionChangedEventHandler(OutputDiagnosticFiles);
+
+            WaveOutputData.DiagnosticFiles.CollectionChanged +=
+                SyncHelper.GetSyncNotifyCollectionChangedEventHandler(OutputDiagnosticFiles);
             WaveOutputData.SpectraFiles.CollectionChanged +=
-                GetOutputSyncNotifyCollectionChangedEventHandler(OutputSpectraFiles);
+                SyncHelper.GetSyncNotifyCollectionChangedEventHandler(OutputSpectraFiles);
             WaveOutputData.WavmFileFunctionStores.CollectionChanged +=
-                GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavmFileFunctionStores);
+                SyncHelper.GetSyncNotifyCollectionChangedEventHandler(OutputWavmFileFunctionStores);
             WaveOutputData.WavhFileFunctionStores.CollectionChanged +=
-                GetOutputSyncNotifyCollectionChangedEventHandler(OutputWavhFileFunctionStores);
+                SyncHelper.GetSyncNotifyCollectionChangedEventHandler(OutputWavhFileFunctionStores);
         }
 
         private void SynchronizeOuterDomainWithModelDefinition()
@@ -443,18 +444,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         [Aggregation]
         public IEventedList<IWavhFileFunctionStore> OutputWavhFileFunctionStores { get; private set; }
 
-        private static NotifyCollectionChangedEventHandler GetOutputSyncNotifyCollectionChangedEventHandler<T>(IEventedList<T> list) =>
-            (sender, e) =>
-            {
-                IEnumerable<T> itemsToRemove = e.OldItems?.Cast<T>() ?? Enumerable.Empty<T>();
-                foreach (T data in itemsToRemove)
-                {
-                    list.Remove(data);
-                }
-
-                IEnumerable<T> itemsToAdd = e.NewItems?.Cast<T>() ?? Enumerable.Empty<T>();
-                list.AddRange(itemsToAdd);
-            };
         #endregion
 
         public MdwFile MdwFile { get; } = new MdwFile();
@@ -850,6 +839,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        protected override void OnReset()
+        {
+            base.OnReset();
+            ReportProgressText(); // Reset the progress text
+        }
+        
         protected override void OnInitialize()
         {
             previousProgress = 0;

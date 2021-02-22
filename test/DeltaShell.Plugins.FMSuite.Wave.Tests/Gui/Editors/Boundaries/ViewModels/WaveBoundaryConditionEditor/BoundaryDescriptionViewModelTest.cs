@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.SpatiallyDefinedDataComponents;
@@ -89,8 +90,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                                  SpatialDefinitionViewType.SpatiallyVarying);
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
-            var observer = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += observer.OnPropertyChanged;
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += observer.OnEventFired;
 
             // Call
             viewModel.Name = expectedName;
@@ -115,8 +116,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
                                                                                  SpatialDefinitionViewType.SpatiallyVarying);
 
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
-            var observer = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += observer.OnPropertyChanged;
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += observer.OnEventFired;
 
             boundary.ClearReceivedCalls();
 
@@ -154,8 +155,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
 
-            var observer = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += observer.OnPropertyChanged;
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += observer.OnEventFired;
 
             boundary.ConditionDefinition.ClearReceivedCalls();
             // Call
@@ -185,8 +186,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
 
-            var observer = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += observer.OnPropertyChanged;
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += observer.OnEventFired;
 
             // Call
             viewModel.ForcingType = ForcingViewType.Constant;
@@ -221,8 +222,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
 
-            var observer = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += observer.OnPropertyChanged;
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += observer.OnEventFired;
 
             boundary.ConditionDefinition.ClearReceivedCalls();
             // Call
@@ -252,8 +253,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             var viewModel = new BoundaryDescriptionViewModel(boundary, factory, converter);
             viewModel.SetMediator(announceDataComponentChanged);
 
-            var observer = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += observer.OnPropertyChanged;
+            var observer = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += observer.OnEventFired;
 
             // Call
             viewModel.SpatialDefinition = SpatialDefinitionViewType.SpatiallyVarying;

@@ -1,9 +1,11 @@
-﻿namespace DeltaShell.NGHS.IO.DelftIniObjects
+﻿using DelftTools.Utils;
+
+namespace DeltaShell.NGHS.IO.DelftIniObjects
 {
     /// <summary>
     /// Representation of a property in a .ini file.
     /// </summary>
-    public class DelftIniProperty
+    public class DelftIniProperty : INameable
     {
         /// <summary>
         /// Creates a new instance of <see cref="DelftIniProperty"/>.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         public const string BoundaryHeader = "Boundary";
         public const string BoundaryName = "Name";
         public const string BoundaryBedCondition = "IBedCond";
-        public const string BcFile = "BcFil";
+        public const string BcFileIniEntry = "BcFil";
         private static SedMorDelftIniWriter writer;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MorphologyFile));
@@ -86,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                      ? modelDefinition.ModelName + BcmFile.Extension
                                      : string.Empty;
 
-            WaterFlowFMProperty bcFilenameProperty = modelDefinition.GetModelProperty(BcFile);
+            WaterFlowFMProperty bcFilenameProperty = modelDefinition.GetModelProperty(KnownProperties.BcmFile);
             if (bcFilenameProperty == null)
             {
                 Log.WarnFormat("Cannot set the boundary conditions property in the model definition");
@@ -96,7 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 bcFilenameProperty.Value = bcmFilePath;
             }
 
-            delftIniCategory.AddProperty(BcFile, bcmFilePath);
+            delftIniCategory.AddProperty(BcFileIniEntry, bcmFilePath);
         }
 
         private static IEnumerable<DelftIniCategory> CreateMorphologyBoundaryCategories(
@@ -141,7 +142,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             WaterFlowFMPropertyDefinition propertyDefinition = property.PropertyDefinition;
 
-            return propertyDefinition.FilePropertyName != BcFile
+            return propertyDefinition.FilePropertyName != KnownProperties.BcmFile
                    && propertyDefinition.FileCategoryName != GuiProperties.GUIonly
                    && (propertyDefinition.FileCategoryName.ToLower().Equals(KnownProperties.morphology)
                        || propertyDefinition.UnknownPropertySource.Equals(PropertySource.MorphologyFile));
@@ -384,10 +385,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 ExcludedQuantities =
                     Enum.GetValues(typeof(FlowBoundaryQuantityType))
                         .Cast<FlowBoundaryQuantityType>()
-                        .Except(new[]
-                        {
-                            flowBoundaryQuantityType
-                        })
+                        .Except(flowBoundaryQuantityType)
                         .ToList(),
                 OverwriteExistingData = true,
                 CanCreateNewBoundaryCondition = true,

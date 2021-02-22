@@ -30,6 +30,7 @@ using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor;
@@ -446,21 +447,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetFeature2DImportDialogViewInfo<PointFileImporterExporter>();
             yield return GetFeature2DImportDialogViewInfo<PolFileImporterExporter>();
             yield return GetFeature2DImportDialogViewInfo<LdbFileImporterExporter>();
-
-            yield return new ViewInfo<BoundaryConditionWpsImporter, BoundaryConditionWpsDialog>
-            {
-                AfterCreate = (v, o) =>
-                {
-                    v.AllowSelectedSupportPointImport = false;
-
-                    WaterFlowFMModel model = FlowModels.FirstOrDefault();
-
-                    v.StartTime = model.StartTime;
-                    v.StopTime = model.StopTime;
-                    v.TimeStep = model.TimeStep;
-                    v.CoordinateSystem = model.CoordinateSystem;
-                }
-            };
         }
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
@@ -668,7 +654,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     continue;
                 }
 
-                UnstructuredGridCoverage bathymetry = fmModel.Bathymetry;
+                UnstructuredGridCoverage bathymetry = fmModel.SpatialData.Bathymetry;
 
                 var viewContext = (project.ViewContextManager as GuiContextManager)?
                                   .GetViewContext(typeof(ProjectItemMapView), fmModel) as ProjectItemMapViewContext;

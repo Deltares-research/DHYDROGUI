@@ -3,6 +3,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -11,6 +12,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 
@@ -28,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.TracerDefinitions.Add("substance_1");
             model.TracerDefinitions.Add("substance_2");
 
-            Assert.AreEqual(2, model.InitialTracers.Count);
+            Assert.AreEqual(2, model.SpatialData.InitialTracers.Count());
 
             //add tracer bc
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
@@ -36,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.TracerDefinitions.RemoveAt(1);
 
-            Assert.AreEqual(1, model.InitialTracers.Count);
+            Assert.AreEqual(1, model.SpatialData.InitialTracers.Count());
             Assert.IsEmpty(
                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                      .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
@@ -44,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.TracerDefinitions.Clear();
 
-            Assert.IsEmpty(model.InitialTracers.ToList());
+            Assert.IsEmpty(model.SpatialData.InitialTracers.ToList());
             Assert.IsEmpty(
                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                      .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
@@ -119,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             timeSeries[model.StopTime] = 140.0;
             model.BoundaryConditionSets[0].BoundaryConditions.Add(
                 flowBoundaryCondition);
-            IDataItem dataItem = model.DataItems.First(di => ReferenceEquals(di.Value, model.InitialTracers[0]));
+            IDataItem dataItem = model.AllDataItems.First(di => ReferenceEquals(di.Value, model.SpatialData.InitialTracers.ElementAt(0)));
             SpatialOperationSetValueConverter valueConverter =
                 SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem);
             var overwriteValueOperation = new SetValueOperation
@@ -157,16 +159,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 "substance_1"
             }, newModel.TracerDefinitions);
-            Assert.AreEqual(1, newModel.InitialTracers.Count);
-            IDataItem newDataItem = newModel.DataItems.FirstOrDefault(di => di.Value == newModel.InitialTracers[0]);
+            Assert.AreEqual(1, newModel.SpatialData.InitialTracers.Count());
+            IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(0));
             Assert.IsNotNull(newDataItem);
             Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
-            var setValueOperation =
-                ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations
-                                                                                .FirstOrDefault() as SetValueOperation;
-            Assert.IsNotNull(setValueOperation);
-            Assert.IsNotNull(setValueOperation.Mask.Provider.GetFeature(0));
-            Assert.AreEqual(polygon.Geometry.Coordinates.ToArray(), setValueOperation.Mask.Provider.GetFeature(0).Geometry.Coordinates.ToArray());
+
+            AssertCorrectSpatialOperations(newDataItem, polygon, "initialtracersubstance_1");
         }
 
         [Test]
@@ -191,7 +189,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 flowBoundaryCondition);
 
             // add init tracer
-            IDataItem dataItem = model.DataItems.First(di => ReferenceEquals(di.Value, model.InitialTracers[0]));
+            IDataItem dataItem = model.AllDataItems.First(di => ReferenceEquals(di.Value, model.SpatialData.InitialTracers.ElementAt(0)));
             SpatialOperationSetValueConverter valueConverter =
                 SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem);
             var overwriteValueOperation = new SetValueOperation
@@ -244,16 +242,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 120.0,
                 140.0
             }, boundaryCondition.GetDataAtPoint(0).GetValues<double>());
-            Assert.AreEqual(1, newModel.InitialTracers.Count);
-            IDataItem newDataItem = newModel.DataItems.FirstOrDefault(di => di.Value == newModel.InitialTracers[0]);
+            Assert.AreEqual(1, newModel.SpatialData.InitialTracers.Count());
+            IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(0));
             Assert.IsNotNull(newDataItem);
-            Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
-            var setValueOperation =
-                ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations
-                                                                                .FirstOrDefault() as SetValueOperation;
-            Assert.IsNotNull(setValueOperation);
-            Assert.IsNotNull(setValueOperation.Mask.Provider.GetFeature(0));
-            Assert.AreEqual(polygon.Geometry.Coordinates.ToArray(), setValueOperation.Mask.Provider.GetFeature(0).Geometry.Coordinates.ToArray());
+
+            AssertCorrectSpatialOperations(newDataItem, polygon, "initialtracersubstance_1");
         }
 
         [Test]
@@ -282,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 flowBoundaryCondition);
 
             // add init tracer
-            IDataItem dataItem = model.DataItems.First(di => ReferenceEquals(di.Value, model.InitialTracers[1]));
+            IDataItem dataItem = model.AllDataItems.First(di => ReferenceEquals(di.Value, model.SpatialData.InitialTracers.ElementAt(1)));
             SpatialOperationSetValueConverter valueConverter =
                 SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem);
             var overwriteValueOperation = new SetValueOperation
@@ -336,17 +329,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 120.0,
                 140.0
             }, boundaryCondition.GetDataAtPoint(0).GetValues<double>());
-            Assert.AreEqual(2, newModel.InitialTracers.Count);
-            IDataItem newDataItem = newModel.DataItems.FirstOrDefault(di => di.Value == newModel.InitialTracers[1]);
+            Assert.AreEqual(2, newModel.SpatialData.InitialTracers.Count());
+            IDataItem newDataItem = newModel.AllDataItems.FirstOrDefault(di => di.Value == newModel.SpatialData.InitialTracers.ElementAt(1));
             Assert.IsNotNull(newDataItem);
-            Assert.IsNotNull(newDataItem.ValueConverter as SpatialOperationSetValueConverter);
-            var setValueOperation =
-                ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations
-                                                                                .FirstOrDefault() as SetValueOperation;
+
+            AssertCorrectSpatialOperations(newDataItem, polygon, "initialtracersubstance_2");
+        }
+
+        private static void AssertCorrectSpatialOperations(IDataItem newDataItem, Feature2DPolygon polygon, string quantityName)
+        {
+            IEventedList<ISpatialOperation> operation = ((SpatialOperationSetValueConverter) newDataItem.ValueConverter).SpatialOperationSet.Operations;
+            var importOperation = ((SpatialOperationSet) operation[0]).Operations.Single() as ImportSamplesOperation;
+            Assert.That(importOperation, Is.Not.Null);
+            Assert.That(importOperation.Name, Is.EqualTo(quantityName));
+
+            var interpolateOperation = operation[1] as InterpolateOperation;
+            Assert.That(interpolateOperation, Is.Not.Null);
+
+            var setValueOperation = operation[2] as SetValueOperation;
             Assert.IsNotNull(setValueOperation);
             Assert.IsNotNull(setValueOperation.Mask.Provider.GetFeature(0));
-            Assert.AreEqual(polygon.Geometry.Coordinates.ToArray(),
-                            setValueOperation.Mask.Provider.GetFeature(0).Geometry.Coordinates.ToArray());
+
+            CollectionAssert.AreEqual(polygon.Geometry.Coordinates, setValueOperation.Mask.Provider.GetFeature(0).Geometry.Coordinates);
         }
 
         private static WaterFlowFMModel CreateSimpleBoxModel()

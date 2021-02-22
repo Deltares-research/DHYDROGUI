@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -162,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void DimrExportDirectoryPath_ShouldAlwaysBeUpToDate()
         {
             // Setup
@@ -186,8 +187,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void ReadTestModelFromFile()
         {
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw");
@@ -202,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ReadTestModelWithFlowCouplingFromFile()
         {
             string mdwPath = TestHelper.GetTestFilePath(@"flow_coupled/wave.mdw");
@@ -220,7 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void TransformModelCoordinateSystemUpdatesGridCoordinateSystem()
         {
             const int wgs84CS = 4326;
@@ -248,8 +249,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.Slow)]
         public void TransformModelCoordinateSystem()
         {
             const int nad27_utm16N = 26916;
@@ -500,7 +501,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ConnectOutput_ShouldConnectWavmFileAndReadSwanDiagFile()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -524,7 +525,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void ConnectOutput_WhenModelHasMultipleDomains_ShouldConnectWavmFileAndReadSwanDiagFile()
         {
             using (var tempDirectory = new TemporaryDirectory())
@@ -752,7 +753,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         [TestCase(false, false)]
         [TestCase(true, false)]
         [TestCase(false, true)]
@@ -785,7 +786,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void Constructor_FromMdwPath_ConnectsToOutputDir()
         {
             using (var tempDir = new TemporaryDirectory())
@@ -814,7 +815,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAValidModelWithNoDataAvailable_WhenTheModelIsSavedAtTheSameLocation_ThenTheOutputFolderIsCleared()
         {
             // Given
@@ -852,7 +853,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAValidModelWithNoDataAvailable_WhenTheModelIsSavedAtADifferentLocation_ThenTheOutputFolderIsEmpty()
         {
             // Given
@@ -896,7 +897,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAValidModelWithDataAvailableFromTheWorkingDirectory_WhenTheModelIsSavedAtTheSameLocation_ThenTheOutputFolderContainsTheDataFromTheWorkingLocation()
         {
             // Given
@@ -946,7 +947,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAValidModelWithDataAvailableInTheWorkingDirectory_WhenTheModelIsSavedAtADifferentLocation_ThenTheOutputFolderContainsTheDataFromTheWorkingLocation()
         {
             // Given
@@ -1001,7 +1002,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAValidModelWithDataAvailableInTheModelOutputPath_WhenTheModelIsSavedAtInADifferentLocation_ThenTheOutputFolderContainsTheSameData()
         {
             // Given
@@ -1049,7 +1050,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAValidModelWithDataAvailableInTheModelOutputPath_WhenTheModelIsSavedAtTheSameLocation_ThenTheOutputFolderContainsTheSameData()
         {
             // Given
@@ -1186,7 +1187,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAValidModelWithDataAvailableInTheModelOutputPathButTheFolderIsRemoved_WhenTheModelIsSavedAtInADifferentLocation_ThenTheOutputFolderContainsTheSameData()
         {
             // Given
@@ -1231,7 +1232,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAValidModelWithDataAvailableInTheModelOutputPathButTheFolderIsRemoved_WhenTheModelIsSavedAtTheSameLocation_ThenTheOutputFolderContainsTheSameData()
         {
             // Given
@@ -1272,7 +1273,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
         public void WaveOutputData_EventsAreProperlyPropagated()
         {
             // Setup
@@ -1282,8 +1283,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 string modelOutputPath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output");
                 string connectDirectoryPath = tempDir.CopyDirectoryToTempDirectory(modelOutputPath);
 
-                var observer = new NotifyPropertyChangedTestObserver();
-                ((INotifyPropertyChange) model).PropertyChanged += observer.OnPropertyChanged;
+                var observer = new EventTestObserver<PropertyChangedEventArgs>();
+                ((INotifyPropertyChange) model).PropertyChanged += observer.OnEventFired;
 
                 // Call
                 model.WaveOutputData.ConnectTo(connectDirectoryPath, true);
@@ -1295,7 +1296,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenAValidModelWithDataAvailableInTheWorkingDirectoryWithADifferentMdwName_WhenTheModelIsSaved_ThenTheOutputFolderContainsTheDataFromTheWorkingLocation()
         {
             // Given
@@ -1397,7 +1398,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
+        [NUnit.Framework.Category(TestCategory.Integration)]
         public void GivenASavedModel_WhenTheModelIsRenamedAndSaved_ThenTheModelDirectoryIsUpdatedCorrectly()
         {
             // Setup

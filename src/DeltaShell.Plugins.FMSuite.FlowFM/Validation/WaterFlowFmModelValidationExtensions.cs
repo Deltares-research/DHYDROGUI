@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateCoordinateSystem(model),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateBathymetry(model),
-                ValidatePhysicalProcesses(model, model.ModelDefinition.HeatFluxModel),
+                WaterFlowFMProcessesValidator.Validate(model),
                 WaterFlowFMWindValidator.Validate(model),
                 WaterFlowFMModelDefinitionValidator.Validate(model),
                 WaterFlowFMBoundaryConditionValidator.Validate(model),
@@ -99,57 +99,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                                                                              .Select(p => p.SpatiallyVaryingName);
 
             IEnumerable<IDataItem> sedimentThicknessDataItems = spatiallyVaryingSedimentPropertyNames
-                                                                .Select(n => model.DataItems.FirstOrDefault(
+                                                                .Select(n => model.AllDataItems.FirstOrDefault(
                                                                             di => di.Name == n &&
                                                                                   di.Name.Contains(tag)))
                                                                 .Where(di => di != null);
 
             return sedimentThicknessDataItems.Select(di => di.Value as UnstructuredGridCoverage).Where(c => c != null);
         }
-
-        private static ValidationReport ValidatePhysicalProcesses(WaterFlowFMModel model, HeatFluxModel heatFluxModel)
-        {
-            var issues = new List<ValidationIssue>();
-
-            IMultiDimensionalArray<double> roughnessValues = model.Roughness.GetValues<double>();
-            if (roughnessValues.Contains(model.Roughness.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               "Roughness contains unspecified points, the calculation kernel will replace these with default values"));
-            }
-
-            IMultiDimensionalArray<double> viscosityValues = model.Viscosity.GetValues<double>();
-            if (viscosityValues.Contains(model.Viscosity.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               "Viscosity contains unspecified points, the calculation kernel will replace these with default values"));
-            }
-
-            IMultiDimensionalArray<double> diffusivityValues = model.Diffusivity.GetValues<double>();
-            if (diffusivityValues.Contains(model.Diffusivity.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               "Diffusivity contains unspecified points, the calculation kernel will replace these with default values"));
-            }
-
-            if (model.HeatFluxModelType == HeatFluxModelType.Composite
-                && !heatFluxModel.MeteoData.GetValues<double>().Any())
-            {
-                issues.Add(new ValidationIssue(model, 
-                                               ValidationSeverity.Error, 
-                                               Resources.ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_temperature_but_no_meteo_data_was_specified, 
-                                               heatFluxModel));
-            }
-            
-            return new ValidationReport("Physical Processes", issues);
-        }
-
+        
         private static ValidationReport ValidateBathymetry(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
-            IMultiDimensionalArray<double> values = model.Bathymetry.GetValues<double>();
-            if (values.Contains(model.Bathymetry.Components[0].NoDataValue))
+            IMultiDimensionalArray<double> values = model.SpatialData.Bathymetry.GetValues<double>();
+            if (values.Contains(model.SpatialData.Bathymetry.Components[0].NoDataValue))
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
                                                "Bathymetry contains unspecified points, the calculation kernel will replace these with default values"));
