@@ -48,6 +48,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
 
         public IFeatureAttributeCollection Attributes { get; set; }
 
+        [FeatureAttribute]
         public string GroupName
         {
             get => groupName;
@@ -56,23 +57,18 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
 
         public bool IsDefaultGroup { get; set; } = false;
 
-        [DisplayName("Name")]
-        [FeatureAttribute(Order = 1)]
+        [FeatureAttribute]
         public string Name { get; set; } = "Structure";
 
         /// <summary>
         /// Gets the name of the formula.
         /// </summary>
+        [FeatureAttribute]
         public string FormulaName => Formula?.Name;
 
         public IStructureFormula Formula { get; set; }
         
-        [ReadOnly(true)]
-        [DisplayName("Formula")]
-        [FeatureAttribute(Order = 5)]
-        public string WeirFormula => Formula?.Name;
-
-        [FeatureAttribute(Order = 6)]
+        [FeatureAttribute]
         public double CrestWidth
         {
             get => Formula is GeneralStructureFormula formula 
@@ -91,7 +87,7 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
 
         public bool UseCrestLevelTimeSeries { get; set; }
 
-        [FeatureAttribute(Order = 7)]
+        [FeatureAttribute]
         public double CrestLevel
         {
             get => Formula is GeneralStructureFormula formula

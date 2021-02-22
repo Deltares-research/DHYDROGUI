@@ -36,7 +36,6 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
         public IGeometry Geometry { get; set; }
 
         [FeatureAttribute]
-        [DisplayName("Group name")]
         public string GroupName
         {
             get => groupName;
@@ -45,13 +44,12 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects
 
         public bool IsDefaultGroup { get; set; } = false;
 
-        [DisplayName("Name")]
-        [FeatureAttribute(Order = 1)]
+        [FeatureAttribute]
         public string Name { get; set; } = "Pump";
 
         public bool UseCapacityTimeSeries { get; set; } = false;
 
-        [FeatureAttribute(Order = 6)]
+        [FeatureAttribute]
         public double Capacity { get; set; } = 1.0;
 
         public TimeSeries CapacityTimeSeries { get; }
