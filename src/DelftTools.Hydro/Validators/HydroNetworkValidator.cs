@@ -28,7 +28,13 @@ namespace DelftTools.Hydro.Validators
                         StructuresValidator.Validate(target),
                         ExtraResistanceValidator.Validate(target.Structures.Where(s => s is IExtraResistance)),
                     });
-
+                }
+                if (target.Compartments.Any() && target.Pipes.Any() && target.Manholes.Any())
+                {
+                    subReports.AddRange(new[]
+                    {
+                        ValidateCompartments(target)
+                    });
                 }
             }
             return new ValidationReport("Network", new List<ValidationIssue>(),
@@ -230,6 +236,31 @@ namespace DelftTools.Hydro.Validators
                 var msg = string.Format("Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({0})", string.Join(",",chainOfChannels.Select(c => c.Name).ToArray()));
                 yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, msg, network);
             }
+        }
+
+        private static ValidationReport ValidateCompartments(IHydroNetwork target)
+        {
+            var issues = new List<ValidationIssue>();
+
+            foreach (var compartment in target.Compartments)
+            {
+                if (compartment.ManholeWidth <= 0)
+                {
+                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Error, "Width / diameter must be larger than 0"));
+                }
+
+                if (compartment.ManholeLength <= 0)
+                {
+                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Error, "Length must be larger than 0"));
+                }
+
+                if (compartment.FloodableArea <= 0)
+                {
+                    issues.Add(new ValidationIssue(compartment, ValidationSeverity.Warning, "Street storage area is set to 0. Recommended to use storage type closed instead of reservoir"));
+                }
+            }
+
+            return new ValidationReport("Compartments", issues);
         }
 
         private static IEnumerable<ValidationIssue> GetCorrectCrossSectionIssue(ICrossSection crossSection, IHydroNetwork network)
