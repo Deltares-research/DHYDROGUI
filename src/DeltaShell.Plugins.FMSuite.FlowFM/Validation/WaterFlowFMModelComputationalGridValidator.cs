@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -76,7 +77,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if(segmentIssues.Any())
                         subReports = subReports.Concat(new[] { new ValidationReport("Segment issues", segmentIssues) });
                 }
+
+                if (flowFmModel.Network.HydroNodes.Any())
+                {
+                    subReports = subReports.Concat(new[]
+                    {
+                        DiscretizationValidator.Validate(networkDiscretization),
+                    });
+                }
             }
+
             return new ValidationReport(CategoryName, issues, subReports);
         }
 
