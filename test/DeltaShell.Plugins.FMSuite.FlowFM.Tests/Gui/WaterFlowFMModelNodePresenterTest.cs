@@ -256,5 +256,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             Assert.That(restartTreeFolders.Length, Is.EqualTo(1));
         }
+
+        [Test]
+        public void GetChildNodeObjects_ShouldUpdateModelReferenceIfNeeded()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string mapFilePath = TestHelper.GetTestFilePath(@"output_mapfiles\FlowFMWithTimeZones_map.nc");
+                tempDirectory.CopyTestDataFileToTempDirectory(mapFilePath);
+
+                // Setup
+                var nodePresenter = new WaterFlowFMModelNodePresenter(null);
+                var firstModel = new WaterFlowFMModel();
+                firstModel.ConnectOutput(tempDirectory.Path);
+
+                IEnumerable childObjectsRetrievedForFirstModel = nodePresenter.GetChildNodeObjects(firstModel, null);
+
+                TreeFolder outputTreeFolderFirstModel = childObjectsRetrievedForFirstModel.OfType<TreeFolder>().Single(f => f.Text == "Output");
+                DataItem[] coverageItemsFirstModel = outputTreeFolderFirstModel.ChildItems.OfType<DataItem>().ToArray();
+
+                // check pre-condition
+                foreach (DataItem coverageItem in coverageItemsFirstModel)
+                {
+                    Assert.AreEqual(firstModel, coverageItem.Owner);
+                }
+                
+                var newModel = new WaterFlowFMModel();
+                newModel.ConnectOutput(tempDirectory.Path);
+
+                // Call
+                IEnumerable childObjectsRetrievedForNewModel = nodePresenter.GetChildNodeObjects(newModel, null);
+
+                TreeFolder outputTreeFolderNewModel = childObjectsRetrievedForNewModel.OfType<TreeFolder>().Single(f => f.Text == "Output");
+                DataItem[] coverageItemsNewModel = outputTreeFolderNewModel.ChildItems.OfType<DataItem>().ToArray();
+                
+                // Assert
+                foreach (DataItem coverageItem in coverageItemsNewModel)
+                {
+                    Assert.AreEqual(newModel, coverageItem.Owner);
+                }
+            }
+        }
     }
 }
