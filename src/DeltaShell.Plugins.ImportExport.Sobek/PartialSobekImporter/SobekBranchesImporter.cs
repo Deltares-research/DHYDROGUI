@@ -174,9 +174,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             foreach (var channel in createdChannels.Values)
             {
-                if (branchesLookUp.ContainsKey(channel.Name))
+                if(branchesLookUp.TryGetValue(channel.Name, out var existingBranch))
                 {
-                    var existingBranch = branchesLookUp[channel.Name];
                     existingBranch.Geometry = channel.Geometry;
                     existingBranch.Length = channel.Length;
                     existingBranch.IsLengthCustom = channel.IsLengthCustom;
@@ -195,9 +194,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             foreach (var node in createdNodes.Values)
             {
-                if (nodesLookup.ContainsKey(node.Name))
+                if (nodesLookup.TryGetValue(node.Name, out var existingNode))
                 {
-                    var existingNode = nodesLookup[node.Name];
                     existingNode.Geometry = node.Geometry;
                 }
                 else

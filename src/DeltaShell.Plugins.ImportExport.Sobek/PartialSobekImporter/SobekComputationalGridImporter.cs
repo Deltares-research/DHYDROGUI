@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -120,14 +122,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     NamingHelper.MakeNamesUnique(locations);
                 }
+                // remember network locations the user has fixed.
+                var fixedOffsetNetworkLocations = networkDiscretization
+                    .Locations
+                    .Values
+                    .Where(networkDiscretization.IsFixedPoint)
+                    .ToArray();
 
-                // Remove locations with the same geometry
-                locations = locations
+                // Merge existing locations and remove locations with the same geometry
+                var locationsMerged = locations
+                    .Union(networkDiscretization.Locations.Values)
                     .GroupBy(lv => lv.Geometry.Coordinate)
-                    .Select(crdGroup => crdGroup.First())
-                    .ToList();
-
-                networkDiscretization.Locations.SetValues(locations);
+                    .Select(crdGroup => crdGroup.Min())
+                    .OrderBy(l => l)
+                    .ToArray();
+                networkDiscretization.BeginEdit(new DefaultEditAction("Setting values"));
+                networkDiscretization.Clear();
+                FunctionHelper.SetValuesRaw<INetworkLocation>(networkDiscretization.Locations, locationsMerged);
+                FunctionHelper.SetValuesRaw(networkDiscretization.Components[0], Enumerable.Repeat(0d, locationsMerged.Length));
+                fixedOffsetNetworkLocations.ForEach(networkDiscretization.ToggleFixedPoint); 
+                networkDiscretization.EndEdit();
+                
             }
             else
             {

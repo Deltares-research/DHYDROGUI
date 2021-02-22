@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
@@ -15,11 +21,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
     {
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
         public void ImportComputationalGrid()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
+            var waterFlowFmModel = new WaterFlowFMModel();
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
                 waterFlowFmModel,
@@ -32,10 +37,66 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             importer.Import();
 
             Assert.IsNotNull(waterFlowFmModel.NetworkDiscretization);
-            Assert.AreEqual(751, waterFlowFmModel.NetworkDiscretization.Locations.Values.Count);
-
+            Assert.AreEqual(721, waterFlowFmModel.NetworkDiscretization.Locations.Values.Count);
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportComputationalGridLeiderdorp()
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                string testDataFilePath = TestHelper.GetTestFilePath(@"Leiddrp.lit.zip");
+                ZipFileUtils.Extract(testDataFilePath, tempDir);
+                var pathToSobekNetwork = Path.Combine(tempDir, "Leiddrp.lit","11", "NETWORK.tp");
+                var waterFlowFmModel = new WaterFlowFMModel();
+
+                var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
+                    waterFlowFmModel,
+                    new IPartialSobekImporter[]
+                    {
+                        new SobekBranchesImporter(),
+                        new SobekComputationalGridImporter()
+                    });
+
+                importer.Import();
+
+                Assert.IsNotNull(waterFlowFmModel.NetworkDiscretization);
+                Assert.AreEqual(6646, waterFlowFmModel.NetworkDiscretization.Locations.Values.Count);
+            });
+        }
+
+        [TestCase(1, 3531)]
+        [TestCase(2, 3531)]
+        [TestCase(3, 2)]
+        [TestCase(4, 3531)]
+        [TestCase(10, 3498)]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportComputationalGridHeemskerk(int sobekCase, int points)
+        {
+            TestHelper.PerformActionInTemporaryDirectory(tempDir =>
+            {
+                string testDataFilePath = TestHelper.GetTestFilePath(@"Heemsker.lit.zip");
+                ZipFileUtils.Extract(testDataFilePath, tempDir);
+                var pathToSobekNetwork = Path.Combine(tempDir, "Heemsker.lit", sobekCase.ToString(), "NETWORK.tp");
+                var waterFlowFmModel = new WaterFlowFMModel();
+
+                var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
+                    waterFlowFmModel,
+                    new IPartialSobekImporter[]
+                    {
+                        new SobekBranchesImporter(),
+                        new SobekComputationalGridImporter()
+                    });
+
+                importer.Import();
+
+                Assert.IsNotNull(waterFlowFmModel.NetworkDiscretization);
+                Assert.AreEqual(points, waterFlowFmModel.NetworkDiscretization.Locations.Values.Count);
+            });
+        }
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ImportComputationalGridReWithOptionOnCrossSectionsOnly()
@@ -82,12 +143,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void ImportComputationalGrid_ShouldNotRemoveTheGridPointsOfPipes_OnlyGridPointsOfChannels()
+        public void ImportComputationalGrid_ShouldNotRemoveTheGridPointsOfPipes_OnlyGridPointsOfChannels_AndRetainTheFixedGridPoints()
         {
             //initialize
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Groesbeek.lit\Network.TP";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
+            var waterFlowFmModel = new WaterFlowFMModel();
 
             var pipeImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
                 waterFlowFmModel,
@@ -97,17 +157,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
                 });
             pipeImporter.Import();
 
-            var nPipeCalculationPoints = 866;
+            var nPipeCalculationPoints = 868;
 
             Assert.AreEqual(nPipeCalculationPoints, waterFlowFmModel.NetworkDiscretization.Locations.AllValues.Count);
-
-            //add channel location which should be removed
-            var tmp15Channel = waterFlowFmModel.Network.Channels.FirstOrDefault(c => c.Name == "tmp5");
-            Assert.IsNotNull(tmp15Channel);
-            var channelLocation = new NetworkLocation(tmp15Channel, 0.12345);
-            waterFlowFmModel.NetworkDiscretization.Locations.AllValues.Add(channelLocation);
+            
+            for (int i = 5; i < 10; i++)
+            {
+                waterFlowFmModel.NetworkDiscretization.ToggleFixedPoint(waterFlowFmModel.NetworkDiscretization.Locations.Values[i]);
+            }
+            //add channel & nodes
+            var node1 = new HydroNode("node1"){Geometry = new Point(0,0)};
+            var node2 = new HydroNode("node2"){Geometry = new Point(10,0)};
+            var channel = new Channel("channel1", node1, node2){Geometry = new LineString(new Coordinate[]{ new Coordinate(0,0), new Coordinate(10, 0) })};
+            waterFlowFmModel.Network.Branches.Add(channel);
+            ////add channel location which should be removed
+            var channelLocation = new NetworkLocation(channel, 0.12345);
+            waterFlowFmModel.NetworkDiscretization.Locations.Values.Add(channelLocation);
             Assert.AreEqual(1, waterFlowFmModel.NetworkDiscretization.Locations.AllValues.Count(l => l.Equals(channelLocation)));
-
+            for (int i = 5; i < 10; i++)
+            {
+                Assert.IsTrue(waterFlowFmModel.NetworkDiscretization.IsFixedPoint(waterFlowFmModel.NetworkDiscretization.Locations.Values[i]));
+            }
 
             //action
             var calculationPointsImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
@@ -123,6 +193,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.GreaterOrEqual(waterFlowFmModel.NetworkDiscretization.Locations.AllValues.Count,
                 nPipeCalculationPoints);
             Assert.AreEqual(0,waterFlowFmModel.NetworkDiscretization.Locations.AllValues.Count(l => l.Equals(channelLocation)));
+            for (int i = 5; i < 10; i++)
+            {
+                Assert.IsTrue(waterFlowFmModel.NetworkDiscretization.IsFixedPoint(waterFlowFmModel.NetworkDiscretization.Locations.Values[i]));
+            }
         }
     }
 }

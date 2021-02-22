@@ -19416,6 +19416,7 @@ test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/HKV_RE_ref_model_11/s
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/HKV_RE_ref_model_11/sobekrst.nda -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/HKV_RE_ref_model_11/sobekrst.ndf -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/HKV_RE_ref_model_11/struchis.his -text
+test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/Heemsker.lit.zip -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/HisData/155_000_calcpnt.his -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/HisData/CALCPNT.HIS -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/HisData/HisAndNetwork/CALCDIM.HIS -text
@@ -20393,6 +20394,7 @@ test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/LMW_LinkageNodes/WWTP
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/LMW_LinkageNodes/casedesc.cmt -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/LMW_LinkageNodes/ods2xls.dlf -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/LMW_LinkageNodes/tables.lst -text
+test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/Leiddrp.lit.zip -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/LinkageNodes/NODES.DAT -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/LinkageNodes/STRUCT.DAT -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/LinkageNodes/TestConnectionNode/NETWORK.CN -text
