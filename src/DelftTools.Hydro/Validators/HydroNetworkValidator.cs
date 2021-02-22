@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Networks;
@@ -12,15 +13,26 @@ namespace DelftTools.Hydro.Validators
     {
         public static ValidationReport Validate(IHydroNetwork target)
         {
+            var subReports = new List<ValidationReport>();
+            if (target != null)
+            {
+                if (target.HydroNodes.Any())
+                {
+                    subReports.AddRange(new[]
+                    {
+                        ValidateCoordinateSystem(target),
+                        ValidateIds(target),
+                        ValidateCulverts(target),
+                        ValidateBranches(target),
+                        ValidateCrossSections(target),
+                        StructuresValidator.Validate(target),
+                        ExtraResistanceValidator.Validate(target.Structures.Where(s => s is IExtraResistance)),
+                    });
+
+                }
+            }
             return new ValidationReport("Network", new List<ValidationIssue>(),
-                                        new[]
-                                            {
-                                                ValidateCoordinateSystem(target),
-                                                ValidateIds(target),
-                                                ValidateCulverts(target),
-                                                ValidateBranches(target),
-                                                ValidateCrossSections(target)
-                                            });
+                                        subReports);
         }
 
         private static ValidationReport ValidateCulverts(IHydroNetwork target)

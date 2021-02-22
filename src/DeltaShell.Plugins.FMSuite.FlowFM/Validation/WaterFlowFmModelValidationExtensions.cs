@@ -23,8 +23,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateCoordinateSystem(model),
                 WaterFlowFMModelComputationalGridValidator.Validate(model.NetworkDiscretization, model),
                 HydroNetworkValidator.Validate(model.Network),
-                StructuresValidator.Validate(model.Network),
-                ExtraResistanceValidator.Validate(model.Network.Structures.Where(s => s is IExtraResistance)),
                 WaterFlowFMGridValidator.Validate(model),
                 ValidateLinks(model.Links),
                 ValidateBathymetry(model),
