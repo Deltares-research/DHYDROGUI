@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Arrange
-                CreateOutputFile(tempDirectory.Path);
+                CreateRestartOutputFile(tempDirectory.Path);
 
                 var model = new WaterFlowFMModel();
                 model.ConnectOutput(tempDirectory.Path);

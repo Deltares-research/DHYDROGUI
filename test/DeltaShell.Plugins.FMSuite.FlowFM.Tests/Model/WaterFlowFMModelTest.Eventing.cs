@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using DelftTools.Hydro;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -56,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Arrange
-                CreateOutputFile(tempDirectory.Path);
+                CreateRestartOutputFile(tempDirectory.Path);
                 var model = new WaterFlowFMModel();
                 model.ConnectOutput(tempDirectory.Path);
                 // Check pre-condition
@@ -124,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Arrange
-                CreateOutputFile(tempDirectory.Path);
+                CreateRestartOutputFile(tempDirectory.Path);
                 WaterFlowFMModel model = new WaterFlowFMModel();
                 model.ConnectOutput(tempDirectory.Path);
                 // Check pre-condition
@@ -156,7 +158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Arrange
-                CreateOutputFile(tempDirectory.Path);
+                CreateRestartOutputFile(tempDirectory.Path);
                 WaterFlowFMModel model = new WaterFlowFMModel();
                 model.ConnectOutput(tempDirectory.Path);
                 // Check pre-condition
@@ -182,9 +184,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             using (var tempDirectory = new TemporaryDirectory())
             {
                 // Arrange
-                CreateOutputFile(tempDirectory.Path);
+                CreateRestartOutputFile(tempDirectory.Path);
                 WaterFlowFMModel model = new WaterFlowFMModel();
                 model.ConnectOutput(tempDirectory.Path);
+
                 // Check pre-condition
                 Assert.IsFalse(model.OutputOutOfSync);
                 Assert.IsFalse(model.OutputIsEmpty);
@@ -196,9 +199,238 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.IsTrue(model.OutputOutOfSync);
             }
         }
-        
 
-        private void CreateOutputFile(string tempDirectoryPath)
+        [Test]
+        public void AddingAnObservationPoint_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint());
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void RemovingAnObservationPoint_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                var observationPoint = new GroupableFeature2DPoint();
+                model.Area.ObservationPoints.Add(observationPoint);
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.ObservationPoints.Remove(observationPoint);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void AddingAFixedWeir_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.FixedWeirs.Add(new FixedWeir());
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void RemovingAFixedWeir_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                var fixedWeir = new FixedWeir();
+                model.Area.FixedWeirs.Add(fixedWeir);
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.FixedWeirs.Remove(fixedWeir);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void AddingAStructure_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.Weirs.Add(new Weir2D());
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void RemovingAStructure_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                var structure = new Weir2D();
+                model.Area.Weirs.Add(structure);
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.Weirs.Remove(structure);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void AddingAnObservationCrossSection_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.ObservationCrossSections.Add(new ObservationCrossSection2D());
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void RemovingAnObservationCrossSection_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                var observationCrossSection = new ObservationCrossSection2D();
+                model.Area.ObservationCrossSections.Add(observationCrossSection);
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.ObservationCrossSections.Remove(observationCrossSection);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void AddingAPump_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.Pumps.Add(new Pump2D());
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+
+        [Test]
+        public void RemovingAPump_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                CreateRestartOutputFile(tempDirectory.Path);
+                var model = new WaterFlowFMModel();
+                var pump = new Pump2D();
+                model.Area.Pumps.Add(pump);
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Act
+                model.Area.Pumps.Remove(pump);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
+        
+        private void CreateRestartOutputFile(string tempDirectoryPath)
         {
             string restartFilePath = Path.Combine(tempDirectoryPath, "test_rst.nc");
             const string text = "This is some text in the file.";
