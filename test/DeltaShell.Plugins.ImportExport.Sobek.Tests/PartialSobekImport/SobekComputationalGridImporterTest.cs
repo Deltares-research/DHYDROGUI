@@ -7,7 +7,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
@@ -40,9 +39,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             Assert.AreEqual(721, waterFlowFmModel.NetworkDiscretization.Locations.Values.Count);
         }
 
-        [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Test]
         public void ImportComputationalGridLeiderdorp()
         {
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
@@ -74,6 +73,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         [TestCase(10, 3498)]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
+        [Test]
         public void ImportComputationalGridHeemskerk(int sobekCase, int points)
         {
             TestHelper.PerformActionInTemporaryDirectory(tempDir =>
