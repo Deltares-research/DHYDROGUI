@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -146,10 +148,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             var model = new WaterFlowFMModel();
 
-            var weir = new Weir2D()
+            var weir = new Structure()
             {
                 Name = "weir01",
-                WeirFormula = new SimpleWeirFormula()
+                Formula = new SimpleWeirFormula()
             };
 
             var collectionChangedCount = 0;
@@ -166,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var weirFormulaChangeCount = 0;
             ((INotifyPropertyChanged) model).PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName != nameof(Weir.WeirFormula))
+                if (e.PropertyName != nameof(Structure.Formula))
                 {
                     return;
                 }
@@ -174,11 +176,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 weirFormulaChangeCount++;
             };
             // add weir to model
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
             Assert.AreEqual(1, collectionChangedCount);
 
             // change weirformula
-            weir.WeirFormula = new GeneralStructureWeirFormula();
+            weir.Formula = new GeneralStructureFormula();
             Assert.AreEqual(1, weirFormulaChangeCount);
         }
 
@@ -187,12 +189,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             var model = new WaterFlowFMModel();
 
-            var weir = new Weir2D
+            var weir = new Structure
             {
                 Name = "weir01",
-                WeirFormula = new SimpleWeirFormula()
+                Formula = new SimpleWeirFormula()
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             List<IDataItem> dataItems = model.GetChildDataItems(weir).ToList();
 
@@ -206,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.AreEqual(KnownStructureProperties.CrestLevel, ((WaterFlowFMFeatureValueConverter) dataItems[0].ValueConverter).ParameterName);
 
             // change weir formula
-            weir.WeirFormula = new GeneralStructureWeirFormula();
+            weir.Formula = new GeneralStructureFormula();
             dataItems = model.GetChildDataItems(weir).ToList();
             Assert.AreEqual(3, dataItems.Count);
 
@@ -964,12 +966,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Pumps.Add(new Pump2D {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
-            fmModel.Area.Weirs.Add(new Weir2D {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
+            fmModel.Area.Pumps.Add(new Pump {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
+            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.Pumps.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
-            Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
+            Assert.That(fmModel.Area.Structures.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
         }
 
         [Test]
@@ -984,10 +986,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Weirs.Add(new Weir2D {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")});
+            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")});
 
             // Check that group name gives a relative path from the mdu folder
-            Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
+            Assert.That(fmModel.Area.Structures.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
         }
 
         [Test]
@@ -1502,12 +1504,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [TestCase(typeof(SimpleWeirFormula), KnownFeatureCategories.Weirs)]
-        [TestCase(typeof(GatedWeirFormula), KnownFeatureCategories.Gates)]
-        [TestCase(typeof(GeneralStructureWeirFormula), KnownFeatureCategories.GeneralStructures)]
+        [TestCase(typeof(SimpleGateFormula), KnownFeatureCategories.Gates)]
+        [TestCase(typeof(GeneralStructureFormula), KnownFeatureCategories.GeneralStructures)]
         public void GivenAWeirFeature_WhenGettingFeatureCategory_ThenTheCorrectStringIsReturned(Type weirType, string expectedString)
         {
             // Given
-            var feature = new Weir("myStructure") {WeirFormula = (IWeirFormula) Activator.CreateInstance(weirType, false)};
+            var feature = new Structure() {Name = "myStructure", Formula = (IStructureFormula) Activator.CreateInstance(weirType, false)};
             var model = new WaterFlowFMModel();
 
             // When
@@ -1578,10 +1580,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 dataItemWaterFlowFmModel.LinkedTo.Parent.ToString());
 
             // When and Then
-            Weir2D feature = model.Area.Weirs.FirstOrDefault();
+            IStructure feature = model.Area.Structures.FirstOrDefault();
             Assert.NotNull(feature);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature.WeirFormula = new GatedWeirFormula(),
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature.Formula = new SimpleGateFormula(),
                                                            expectedMessage);
 
             Assert.IsNull(dataItemWaterFlowFmModel.LinkedTo, "The DataItem of the structure is still linked after changing the weir formula");
@@ -1597,9 +1599,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             WaterFlowFMModel model = CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel);
 
             // When
-            model.Area.Weirs.Clear();
+            model.Area.Structures.Clear();
 
-            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
+            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is IStructure);
             Assert.IsNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not removed after removing the weir");
             Assert.AreEqual(0, rtcDataItem.LinkedBy.Count, "The DataItem of the RTC component is still linked after removing the weir");
         }
@@ -1859,8 +1861,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             // Arrange
             var fmModel = new WaterFlowFMModel();
-            var weir = new Weir2D();
-            fmModel.Area.Weirs.Add(weir);
+            var weir = new Structure();
+            fmModel.Area.Structures.Add(weir);
 
             // Act
             IList<IDataItem> couplingDataItems = ((ICoupledModel) fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Input).ToList();
@@ -2079,15 +2081,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
         {
-            var feature = new Weir2D() {WeirFormula = new SimpleWeirFormula()};
+            var feature = new Structure {Formula = new SimpleWeirFormula()};
 
             var model = new WaterFlowFMModel();
 
             rtcDataItem = new DataItem() {Parent = new DataItem() {Name = "Control Group 1"}};
 
-            model.Area.Weirs.Add(feature);
+            model.Area.Structures.Add(feature);
 
-            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
+            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is IStructure);
 
             Assert.IsNotNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not created");
 

@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using NUnit.Framework;
 using Rhino.Mocks;

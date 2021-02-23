@@ -1,4 +1,3 @@
-using System;
 using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
 
@@ -15,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         /// </summary>
         /// <param name="waveModel">The wave model that is used as data for the view that is to be opened.</param>
         /// <param name="selectedDomainData">The domain data that has to be selected in the view.</param>
-        /// <exception cref="ArgumentNullException">
+        /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="waveModel"/> or <paramref name="selectedDomainData"/> is <c>null</c>.
         /// </exception>
         public DomainSpecificValidationShortcut(WaveModel waveModel, IWaveDomainData selectedDomainData)

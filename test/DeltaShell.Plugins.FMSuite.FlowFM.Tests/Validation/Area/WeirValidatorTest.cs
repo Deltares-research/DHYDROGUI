@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -22,21 +23,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 
         private static DateTime modelStartTime;
         private static DateTime modelStopTime;
-        private IList<Weir2D> weirs;
+        private IList<IStructure> weirs;
 
         [SetUp]
         public void SetUp()
         {
             modelStartTime = DateTime.Today;
             modelStopTime = DateTime.Today.AddDays(1);
-            weirs = new List<Weir2D>();
+            weirs = new List<IStructure>();
         }
 
         [Test]
         public void GivenAWeirWithAGeometryThatDoesNotSnapToGrid_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
-            var weir = new Weir2D
+            var weir = new Structure
             {
                 CrestWidth = 1.0d,
                 Geometry = new Point(new Coordinate(10, 10))
@@ -59,10 +60,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAWeirWithAnInvalidLateralContraction_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
-            var weir = new Weir2D
+            var weir = new Structure
             {
                 CrestWidth = 1.0d,
-                WeirFormula = new SimpleWeirFormula {LateralContraction = -1.0d}
+                Formula = new SimpleWeirFormula {LateralContraction = -1.0d}
             };
             weirs.Add(weir);
 
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAWeirWithThatUsesCrestLevelTimeSeriesAndCrestLevelHasNoTimeSeries_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
-            var weir = new Weir2D
+            var weir = new Structure
             {
                 CrestWidth = 1.0d,
                 UseCrestLevelTimeSeries = true
@@ -104,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAWeirWithACrestWidthWithAValueOfZero_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
-            var weir = new Weir2D {CrestWidth = 0.0d};
+            var weir = new Structure {CrestWidth = 0.0d};
             weirs.Add(weir);
 
             // When
@@ -115,9 +116,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Error, issue.Severity, MessageValidationSeverityErrorExpected);
             string expectedMessage = string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_,
-                                                   WeirValidator.CrestWidthPropertyName,
+                                                   StructureValidator.CrestWidthPropertyName,
                                                    weir.Name,
-                                                   weir.WeirFormula.GetName2D());
+                                                   weir.Formula.Name);
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
         }
 
@@ -125,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAWeirWithACrestWidthWithANaNValue_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
-            var weir = new Weir2D {CrestWidth = double.NaN};
+            var weir = new Structure {CrestWidth = double.NaN};
             weirs.Add(weir);
 
             // When
@@ -136,9 +137,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             ValidationIssue issue = issues.Single();
             Assert.AreEqual(ValidationSeverity.Info, issue.Severity, "The severity of this validation issue should have been of type Info.");
             string expectedMessage = string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calculated_by_the_computational_core_,
-                                                   WeirValidator.CrestWidthPropertyName,
+                                                   StructureValidator.CrestWidthPropertyName,
                                                    weir.Name,
-                                                   weir.WeirFormula.GetName2D());
+                                                   weir.Formula.Name);
             Assert.AreEqual(expectedMessage, issue.Message, MessageDifferentLogMessageExpected);
         }
 
@@ -146,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAWeirWithCrestLevelTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
-            var weir = new Weir2D
+            var weir = new Structure
             {
                 CrestWidth = 1.0d,
                 UseCrestLevelTimeSeries = true
@@ -169,9 +170,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGeneralStructureWithAnInvalidHorizontalDoorOpeningDirection_WhenValidateIsCalled_ThenExpectedValidationIssueIsReturned()
         {
             // Given
-            var weir = new Weir2D
+            var weir = new Structure
             {
-                WeirFormula = new GeneralStructureWeirFormula
+                Formula = new GeneralStructureFormula
                 {
                     WidthStructureCentre = 1.0,
                     WidthLeftSideOfStructure = 1.0,
@@ -199,9 +200,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGeneralStructureWithInvalidCrestWidths_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var weir = new Weir2D
+            var weir = new Structure
             {
-                WeirFormula = new GeneralStructureWeirFormula
+                Formula = new GeneralStructureFormula
                 {
                     WidthStructureCentre = -1.0d,
                     WidthLeftSideOfStructure = -1.0d,
@@ -217,21 +218,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
 
             // Then
             Assert.AreEqual(5, issues.Count, "Exactly 5 log messages were expected when validating this weir.");
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.CrestWidthPropertyName);
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.Downstream1WidthPropertyName);
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.Downstream2WidthPropertyName);
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.Upstream1WidthPropertyName);
-            AssertCrestWidthErrorExists(weir, issues, WeirValidator.Upstream2WidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.CrestWidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.Downstream1WidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.Downstream2WidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.Upstream1WidthPropertyName);
+            AssertCrestWidthErrorExists(weir, issues, StructureValidator.Upstream2WidthPropertyName);
         }
 
         [Test]
         public void GivenAGatedWeirWithAnInvalidDoorHeight_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var weir = new Weir2D
+            var weir = new Structure
             {
                 CrestWidth = 1.0d,
-                WeirFormula = new GatedWeirFormula {DoorHeight = -1.0d}
+                Formula = new SimpleGateFormula {DoorHeight = -1.0d}
             };
             weirs.Add(weir);
 
@@ -251,10 +252,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGatedWeirWithAnInvalidHorizontalDoorOpeningWidth_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var weir = new Weir2D
+            var weir = new Structure
             {
                 CrestWidth = 1.0d,
-                WeirFormula = new GatedWeirFormula {HorizontalDoorOpeningWidth = -1.0d}
+                Formula = new SimpleGateFormula {HorizontalDoorOpeningWidth = -1.0d}
             };
             weirs.Add(weir);
 
@@ -274,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesWithAtLeastOneValueSmallerThanZero_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var gatedWeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
+            var gatedWeirFormula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
             gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.AddValues(new[]
             {
                 modelStartTime,
@@ -286,10 +287,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 1.0d
             });
 
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
                 CrestWidth = 1.0d,
-                WeirFormula = gatedWeirFormula
+                Formula = gatedWeirFormula
             };
             weirs.Add(weir);
 
@@ -309,10 +310,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesWithoutValues_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
                 CrestWidth = 1.0d,
-                WeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true}
+                Formula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true}
             };
             weirs.Add(weir);
 
@@ -332,13 +333,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGatedWeirWithHorizontalDoorOpeningWidthTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var gatedWeirFormula = new GatedWeirFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
+            var gatedWeirFormula = new SimpleGateFormula(true) {UseHorizontalDoorOpeningWidthTimeSeries = true};
             gatedWeirFormula.HorizontalDoorOpeningWidthTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
 
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
                 CrestWidth = 1.0d,
-                WeirFormula = gatedWeirFormula
+                Formula = gatedWeirFormula
             };
             weirs.Add(weir);
 
@@ -358,13 +359,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGatedWeirWithLowerEdgeLevelTimeSeriesThatDoesNotSpanTheModelRunInterval_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var gatedWeirFormula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true};
+            var gatedWeirFormula = new SimpleGateFormula(true) {UseLowerEdgeLevelTimeSeries = true};
             gatedWeirFormula.LowerEdgeLevelTimeSeries.Time.Values.Add(modelStartTime.AddHours(1));
 
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
                 CrestWidth = 1.0d,
-                WeirFormula = gatedWeirFormula
+                Formula = gatedWeirFormula
             };
             weirs.Add(weir);
 
@@ -384,10 +385,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         public void GivenAGatedWeirWithLowerEdgeLevelTimeSeriesWithoutValues_WhenValidateIsCalled_ThenExpectedValidationIssuesAreReturned()
         {
             // Given
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
                 CrestWidth = 1.0d,
-                WeirFormula = new GatedWeirFormula(true) {UseLowerEdgeLevelTimeSeries = true}
+                Formula = new SimpleGateFormula(true) {UseLowerEdgeLevelTimeSeries = true}
             };
             weirs.Add(weir);
 
@@ -406,11 +407,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
         [Test]
         public void GivenAWeirValidator_WhenPropertyNamesAreCalled_ThenExpectedStringsAreReturned()
         {
-            Assert.AreEqual(WeirValidator.CrestWidthPropertyName, "Crest Width");
-            Assert.AreEqual(WeirValidator.Upstream1WidthPropertyName, "Upstream 1 Width");
-            Assert.AreEqual(WeirValidator.Upstream2WidthPropertyName, "Upstream 2 Width");
-            Assert.AreEqual(WeirValidator.Downstream1WidthPropertyName, "Downstream 1 Width");
-            Assert.AreEqual(WeirValidator.Downstream2WidthPropertyName, "Downstream 2 Width");
+            Assert.AreEqual(StructureValidator.CrestWidthPropertyName, "Crest Width");
+            Assert.AreEqual(StructureValidator.Upstream1WidthPropertyName, "Upstream 1 Width");
+            Assert.AreEqual(StructureValidator.Upstream2WidthPropertyName, "Upstream 2 Width");
+            Assert.AreEqual(StructureValidator.Downstream1WidthPropertyName, "Downstream 1 Width");
+            Assert.AreEqual(StructureValidator.Downstream2WidthPropertyName, "Downstream 2 Width");
         }
 
         /// <summary>
@@ -435,7 +436,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                                                                                                                                                                                                        bool validDownstream2)
         {
             // Given
-            var formula = new GeneralStructureWeirFormula
+            var formula = new GeneralStructureFormula
             {
                 HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
                 WidthStructureLeftSide = validUpstream2 ? 1.0 : -1.0,
@@ -444,9 +445,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 WidthRightSideOfStructure = validDownstream2 ? 1.0 : -1.0
             };
 
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = validCrestWidth ? 1.0 : -1.0
             };
             weirs.Add(weir);
@@ -455,11 +456,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             List<ValidationIssue> validationIssues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.CrestWidthPropertyName, weir, validCrestWidth);
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.Upstream2WidthPropertyName, weir, validUpstream2);
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.Upstream1WidthPropertyName, weir, validUpstream1);
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.Downstream1WidthPropertyName, weir, validDownstream1);
-            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, WeirValidator.Downstream2WidthPropertyName, weir, validDownstream2);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.CrestWidthPropertyName, weir, validCrestWidth);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.Upstream2WidthPropertyName, weir, validUpstream2);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.Upstream1WidthPropertyName, weir, validUpstream1);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.Downstream1WidthPropertyName, weir, validDownstream1);
+            AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(validationIssues, StructureValidator.Downstream2WidthPropertyName, weir, validDownstream2);
 
             int nExpectedMessages = GetNumberOfExpectedMessagesInvalid(new[]
             {
@@ -473,11 +474,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.That(validationIssues.Count, Is.EqualTo(nExpectedMessages));
         }
 
-        private static void AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(IEnumerable<ValidationIssue> issues, string propertyName, IWeir weir, bool isValid)
+        private static void AssertThatValidationErrorIssueOnlyExistsInIssuesIfNotValid(IEnumerable<ValidationIssue> issues, string propertyName, IStructure weir, bool isValid)
         {
             var expectedIssue = new ValidationIssue(weir,
                                                     ValidationSeverity.Error,
-                                                    string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_, propertyName, weir.Name, weir.WeirFormula.GetName2D()),
+                                                    string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_, propertyName, weir.Name, weir.Formula.Name),
                                                     weir);
 
             Assert.That(issues.Contains(expectedIssue), Is.EqualTo(!isValid));
@@ -509,7 +510,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                                                                                                                                                                                                      bool emptyDownstream2)
         {
             // Given
-            var formula = new GeneralStructureWeirFormula
+            var formula = new GeneralStructureFormula
             {
                 HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
                 WidthStructureLeftSide = emptyUpstream2 ? double.NaN : 1.0,
@@ -518,9 +519,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
                 WidthRightSideOfStructure = emptyDownstream2 ? double.NaN : 1.0
             };
 
-            var weir = new Weir2D(true)
+            var weir = new Structure()
             {
-                WeirFormula = formula,
+                Formula = formula,
                 CrestWidth = emptyCrestWidth ? double.NaN : 1.0
             };
             weirs.Add(weir);
@@ -529,11 +530,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             List<ValidationIssue> validationIssues = weirs.Validate(null, modelStartTime, modelStopTime).ToList();
 
             // Then
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.CrestWidthPropertyName, weir, emptyCrestWidth);
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.Upstream2WidthPropertyName, weir, emptyUpstream2);
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.Upstream1WidthPropertyName, weir, emptyUpstream1);
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.Downstream1WidthPropertyName, weir, emptyDownstream1);
-            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, WeirValidator.Downstream2WidthPropertyName, weir, emptyDownstream2);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.CrestWidthPropertyName, weir, emptyCrestWidth);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.Upstream2WidthPropertyName, weir, emptyUpstream2);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.Upstream1WidthPropertyName, weir, emptyUpstream1);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.Downstream1WidthPropertyName, weir, emptyDownstream1);
+            AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(validationIssues, StructureValidator.Downstream2WidthPropertyName, weir, emptyDownstream2);
 
             int nExpectedMessages = GetNumberOfExpectedMessagesEmpty(new[]
             {
@@ -547,12 +548,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             Assert.That(validationIssues.Count, Is.EqualTo(nExpectedMessages));
         }
 
-        private static void AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(IEnumerable<ValidationIssue> issues, string propertyName, IWeir weir, bool isEmpty)
+        private static void AssertThatValidationInfoIssueOnlyExistsInIssuesIfEmpty(IEnumerable<ValidationIssue> issues, string propertyName, IStructure weir, bool isEmpty)
         {
             string expectedMessage = string.Format(Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___will_be_calculated_by_the_computational_core_,
                                                    propertyName,
                                                    weir.Name,
-                                                   weir.WeirFormula.GetName2D());
+                                                   weir.Formula.Name);
             var expectedIssue = new ValidationIssue(weir, ValidationSeverity.Info, expectedMessage, weir);
 
             Assert.That(issues.Contains(expectedIssue), Is.EqualTo(isEmpty));
@@ -563,13 +564,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation.Area
             return values.Count(e => e);
         }
 
-        private static void AssertCrestWidthErrorExists(IWeir weir, IEnumerable<ValidationIssue> issues, string propertyName)
+        private static void AssertCrestWidthErrorExists(IStructure weir, IEnumerable<ValidationIssue> issues, string propertyName)
         {
             string expectedMessage = string.Format(
                 Resources.WeirValidator_ValidateCrestWidth__0__for___1___structure_type___2___must_be_greater_than_0_,
                 propertyName,
                 weir.Name,
-                weir.WeirFormula.GetName2D());
+                weir.Formula.Name);
 
             ValidationIssue expectedIssue = issues.FirstOrDefault(i => i.Message == expectedMessage);
             Assert.NotNull(expectedIssue, $"The following message was expected in the returned validation messages: '{expectedMessage}'");

@@ -7,216 +7,131 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
 {
     public static class HydroAreaLayerStyles
     {
-        public static VectorStyle LandBoundaryStyle
-        {
-            get
+        public static VectorStyle LandBoundaryStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.Black, 1f),
-                    GeometryType = typeof(ILineString)
-                };
-            }
-        }
+                Line = new Pen(Color.Black, 1f),
+                GeometryType = typeof(ILineString)
+            };
 
-        public static VectorStyle ThinDamStyle
-        {
-            get
+        public static VectorStyle ThinDamStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.Red, 3f),
-                    GeometryType = typeof(ILineString)
-                };
-            }
-        }
+                Line = new Pen(Color.Red, 3f),
+                GeometryType = typeof(ILineString)
+            };
 
-        public static VectorStyle FixedWeirStyle
-        {
-            get
+        public static VectorStyle FixedWeirStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.Purple, 3f),
-                    GeometryType = typeof(ILineString)
-                };
-            }
-        }
+                Line = new Pen(Color.Purple, 3f),
+                GeometryType = typeof(ILineString)
+            };
 
-        public static VectorStyle ObservationPointStyle
-        {
-            get
+        public static VectorStyle ObservationPointStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    GeometryType = typeof(IPoint),
-                    Symbol = Resources.Observation
-                };
-            }
-        }
+                GeometryType = typeof(IPoint),
+                Symbol = Resources.Observation
+            };
 
-        public static VectorStyle ObsCrossSectionStyle
-        {
-            get
+        public static VectorStyle ObsCrossSectionStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.DeepPink, 3f),
-                    GeometryType = typeof(ILineString)
-                };
-            }
-        }
+                Line = new Pen(Color.DeepPink, 3f),
+                GeometryType = typeof(ILineString)
+            };
 
-        public static VectorStyle PumpStyle
-        {
-            get
+        public static VectorStyle PumpStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.Aquamarine, 3f),
-                    GeometryType = typeof(ILineString)
-                };
-            }
-        }
+                Line = new Pen(Color.Aquamarine, 3f),
+                GeometryType = typeof(ILineString)
+            };
 
-        public static VectorStyle WeirStyle
-        {
-            get
+        public static VectorStyle WeirStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.LightSteelBlue, 3f),
-                    GeometryType = typeof(ILineString)
-                };
-            }
-        }
+                Line = new Pen(Color.LightSteelBlue, 3f),
+                GeometryType = typeof(ILineString)
+            };
 
-        public static VectorStyle BoundariesStyle
-        {
-            get
+        public static VectorStyle BoundariesStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.DarkBlue, 3f),
-                    GeometryType = typeof(ILineString)
-                };
-            }
-        }
+                Line = new Pen(Color.DarkBlue, 3f),
+                GeometryType = typeof(ILineString)
+            };
 
-        public static VectorStyle BoundariesWaterLevelPointsStyle
-        {
-            get
+        public static VectorStyle BoundariesWaterLevelPointsStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.LightBlue, 3f),
-                    Fill = new SolidBrush(Color.DarkBlue),
-                    GeometryType = typeof(IPoint),
-                    ShapeSize = 8
-                };
-            }
-        }
+                Line = new Pen(Color.LightBlue, 3f),
+                Fill = new SolidBrush(Color.DarkBlue),
+                GeometryType = typeof(IPoint),
+                ShapeSize = 8
+            };
 
-        public static VectorStyle BoundariesVelocityPointsStyle
-        {
-            get
+        public static VectorStyle BoundariesVelocityPointsStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.IndianRed, 3f),
-                    Fill = new SolidBrush(Color.Red),
-                    GeometryType = typeof(IPoint),
-                    ShapeSize = 8
-                };
-            }
-        }
+                Line = new Pen(Color.IndianRed, 3f),
+                Fill = new SolidBrush(Color.Red),
+                GeometryType = typeof(IPoint),
+                ShapeSize = 8
+            };
 
-        public static VectorStyle DryPointStyle
-        {
-            get
+        public static VectorStyle DryPointStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    GeometryType = typeof(IPoint),
-                    Symbol = Resources.dry_point
-                };
-            }
-        }
+                GeometryType = typeof(IPoint),
+                Symbol = Resources.dry_point
+            };
 
-        public static VectorStyle DryAreaStyle
-        {
-            get
+        public static VectorStyle DryAreaStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    GeometryType = typeof(IPolygon),
-                    Fill = new SolidBrush(Color.FromArgb(50, Color.SandyBrown)),
-                    Outline = new Pen(Color.FromArgb(100, Color.SaddleBrown), 2f)
-                };
-            }
-        }
+                GeometryType = typeof(IPolygon),
+                Fill = new SolidBrush(Color.FromArgb(50, Color.SandyBrown)),
+                Outline = new Pen(Color.FromArgb(100, Color.SaddleBrown), 2f)
+            };
 
-        public static VectorStyle SourcesAndSinksStyle
-        {
-            get
+        public static VectorStyle SourcesAndSinksStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.Tomato, 3f),
-                    GeometryType = typeof(ILineString),
-                    Symbol = Resources.LateralSourceMap
-                };
-            }
-        }
+                Line = new Pen(Color.Tomato, 3f),
+                GeometryType = typeof(ILineString),
+                Symbol = Resources.LateralSourceMap
+            };
 
-        public static VectorStyle SnappedSourcesAndSinksStyle
-        {
-            get
+        public static VectorStyle SnappedSourcesAndSinksStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    GeometryType = typeof(IMultiPoint),
-                    Fill = new SolidBrush(Color.Tomato),
-                    ShapeSize = 8
-                };
-            }
-        }
+                GeometryType = typeof(IMultiPoint),
+                Fill = new SolidBrush(Color.Tomato),
+                ShapeSize = 8
+            };
 
-        public static VectorStyle EmbankmentStyle
-        {
-            get
+        public static VectorStyle EmbankmentStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.SandyBrown, 1f),
-                    GeometryType = typeof(ILineString)
-                };
-            }
-        }
+                Line = new Pen(Color.SandyBrown, 1f),
+                GeometryType = typeof(ILineString)
+            };
 
-        public static VectorStyle EnclosureStyle
-        {
-            get
+        public static VectorStyle EnclosureStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    GeometryType = typeof(IPolygon),
-                    Fill = new SolidBrush(Color.Transparent),
-                    Outline = new Pen(Color.FromArgb(100, Color.CornflowerBlue), 2f)
-                };
-            }
-        }
+                GeometryType = typeof(IPolygon),
+                Fill = new SolidBrush(Color.Transparent),
+                Outline = new Pen(Color.FromArgb(100, Color.CornflowerBlue), 2f)
+            };
 
-        public static VectorStyle BridgePillarStyle
-        {
-            get
+        public static VectorStyle BridgePillarStyle =>
+            new VectorStyle
             {
-                return new VectorStyle
-                {
-                    Line = new Pen(Color.LightSeaGreen, 3f),
-                    GeometryType = typeof(ILineString)
-                };
-            }
-        }
+                Line = new Pen(Color.LightSeaGreen, 3f),
+                GeometryType = typeof(ILineString)
+            };
     }
 }

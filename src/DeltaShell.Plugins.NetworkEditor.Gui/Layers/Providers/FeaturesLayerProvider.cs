@@ -79,7 +79,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         protected abstract string GetFeatureTypeName();
 
         /// <summary>
-        /// Gets the <see cref="IGroupableFeature"/> objects that are shown in the provided layer.
+        /// Gets the <see cref="DelftTools.Hydro.GroupableFeatures.IGroupableFeature"/>
+        /// objects that are shown in the provided layer.
         /// </summary>
         /// <param name="hydroArea"> The hydro area that owns the features. </param>
         /// <returns> The requested features. </returns>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;

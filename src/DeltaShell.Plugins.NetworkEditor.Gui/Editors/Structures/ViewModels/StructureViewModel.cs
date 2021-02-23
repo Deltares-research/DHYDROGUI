@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Utils.Guards;
-using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.WeirFormulaViewModels;
+using DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels.StructureFormulaViewModels;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
 {
@@ -15,10 +15,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
     /// </summary>
     public sealed class StructureViewModel : INotifyPropertyChanged, IDisposable
     {
-        private readonly IWeir weir;
-        private readonly WeirPropertiesViewModel weirPropertiesViewModel;
+        private readonly IStructure structure;
+        private readonly StructurePropertiesViewModel structurePropertiesViewModel;
 
-        private WeirViewModel weirViewModel;
+        private StructureFormulaViewModel structureFormulaViewModel;
 
         private bool hasDisposed = false;
 
@@ -27,33 +27,35 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
         /// <summary>
         /// Creates a new <see cref="StructureViewModel"/>.
         /// </summary>
-        /// <param name="weir">The weir.</param>
+        /// <param name="structure">The structure.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="weir"/> is <c>null</c>.
+        /// Thrown when <paramref name="structure"/> is <c>null</c>.
         /// </exception>
-        public StructureViewModel(Weir2D weir)
+        public StructureViewModel(IStructure structure)
         {
-            Ensure.NotNull(weir, nameof(weir));
-            this.weir = weir;
+            Ensure.NotNull(structure, nameof(structure));
+            this.structure = structure;
 
-            weirPropertiesViewModel = new WeirPropertiesViewModel(weir);
-            WeirViewModel = ConstructWeirViewModel(weir.WeirFormula, weirPropertiesViewModel);
+            structurePropertiesViewModel = new StructurePropertiesViewModel(structure);
+            StructureFormulaViewModel = 
+                ConstructStructureFormulaViewModel(structure.Formula, 
+                                                   structurePropertiesViewModel);
         }
 
         /// <summary>
-        /// Gets the weir formula view model.
+        /// Gets the structure formula view model.
         /// </summary>
-        public WeirViewModel WeirViewModel
+        public StructureFormulaViewModel StructureFormulaViewModel
         {
-            get => weirViewModel;
+            get => structureFormulaViewModel;
             private set
             {
-                if (weirViewModel == value)
+                if (structureFormulaViewModel == value)
                 {
                     return;
                 }
 
-                weirViewModel = value;
+                structureFormulaViewModel = value;
                 OnPropertyChanged();
             }
         }
@@ -64,20 +66,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
         public IReadOnlyList<Type> FormulaTypeList { get; } =
             new[]
             {
-                typeof(SimpleWeirViewModel),
-                typeof(GatedWeirViewModel),
-                typeof(GeneralStructureViewModel)
+                typeof(SimpleWeirFormulaViewModel),
+                typeof(SimpleGateFormulaViewModel),
+                typeof(GeneralStructureFormulaViewModel)
             };
 
         /// <summary>
         /// Gets or sets the type of the FormulaType.
         /// </summary>
         /// <remarks>
-        /// This value is expected to be a child class of <see cref="WeirViewModel"/>.
+        /// This value is expected to be a child class of <see cref="StructureFormulaViewModel"/>.
         /// </remarks>
         public Type FormulaType
         {
-            get => WeirViewModel.GetType();
+            get => StructureFormulaViewModel.GetType();
             set
             {
                 if (value == FormulaType)
@@ -85,8 +87,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
                     return;
                 }
 
-                weir.WeirFormula = GetFormulaOfType(value);
-                WeirViewModel = ConstructWeirViewModel(weir.WeirFormula, WeirViewModel.WeirPropertiesViewModel);
+                structure.Formula = GetFormulaOfType(value);
+                StructureFormulaViewModel = 
+                    ConstructStructureFormulaViewModel(structure.Formula, 
+                                                       StructureFormulaViewModel.StructurePropertiesViewModel);
                 OnPropertyChanged();
             }
         }
@@ -105,48 +109,49 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
                 return;
             }
 
-            weirPropertiesViewModel.Dispose();
-            (weirViewModel as IDisposable)?.Dispose();
+            structurePropertiesViewModel.Dispose();
+            (structureFormulaViewModel as IDisposable)?.Dispose();
             hasDisposed = true;
         }
 
-        private static WeirViewModel ConstructWeirViewModel(IWeirFormula weirFormula,
-                                                            WeirPropertiesViewModel weirProperties)
+        private static StructureFormulaViewModel ConstructStructureFormulaViewModel(
+            IStructureFormula structureFormula,
+            StructurePropertiesViewModel structureProperties)
         {
-            switch (weirFormula)
+            switch (structureFormula)
             {
                 case SimpleWeirFormula simpleWeirFormula:
-                    return new SimpleWeirViewModel(simpleWeirFormula,
-                                                   weirProperties);
-                case GatedWeirFormula gatedWeirFormula:
-                    return new GatedWeirViewModel(gatedWeirFormula,
-                                                  weirProperties);
-                case GeneralStructureWeirFormula generalStructureWeirFormula:
-                    return new GeneralStructureViewModel(generalStructureWeirFormula,
-                                                         weirProperties);
+                    return new SimpleWeirFormulaViewModel(simpleWeirFormula,
+                                                   structureProperties);
+                case SimpleGateFormula gatedWeirFormula:
+                    return new SimpleGateFormulaViewModel(gatedWeirFormula,
+                                                  structureProperties);
+                case GeneralStructureFormula generalStructureWeirFormula:
+                    return new GeneralStructureFormulaViewModel(generalStructureWeirFormula,
+                                                         structureProperties);
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(weirFormula));
+                    throw new ArgumentOutOfRangeException(nameof(structureFormula));
             }
         }
 
-        private IWeirFormula GetFormulaOfType(Type value)
+        private IStructureFormula GetFormulaOfType(Type value)
         {
-            if (value == typeof(SimpleWeirViewModel))
+            if (value == typeof(SimpleWeirFormulaViewModel))
             {
                 return new SimpleWeirFormula();
             }
 
-            if (value == typeof(GatedWeirViewModel))
+            if (value == typeof(SimpleGateFormulaViewModel))
             {
-                return new GatedWeirFormula(true);
+                return new SimpleGateFormula(true);
             }
 
-            if (value == typeof(GeneralStructureViewModel))
+            if (value == typeof(GeneralStructureFormulaViewModel))
             {
-                return new GeneralStructureWeirFormula()
+                return new GeneralStructureFormula()
                 {
-                    BedLevelStructureCentre = weir.CrestLevel,
-                    WidthStructureCentre = weir.CrestWidth,
+                    BedLevelStructureCentre = structure.CrestLevel,
+                    WidthStructureCentre = structure.CrestWidth,
                     WidthStructureLeftSide = double.NaN,
                     WidthStructureRightSide = double.NaN,
                     WidthLeftSideOfStructure = double.NaN,
@@ -154,7 +159,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.ViewModels
                 };
             }
 
-            throw new ArgumentException($"Type {value.FullName} is not a supported {nameof(WeirViewModel)}");
+            throw new ArgumentException($"Type {value.FullName} is not a supported {nameof(StructureFormulaViewModel)}");
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

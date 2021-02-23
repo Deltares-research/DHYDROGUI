@@ -7,7 +7,8 @@ using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Functions;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -124,7 +125,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Given
             var input = new Input
             {
-                Feature = new Weir2D(),
+                Feature = new Structure(),
                 ParameterName = "CrestLevel",
                 UnitName = "[m]"
             };
@@ -184,7 +185,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Given
             var output = new Output
             {
-                Feature = new Weir2D(),
+                Feature = new Structure(),
                 ParameterName = "CrestLevel",
                 UnitName = "[m]"
             };
@@ -862,7 +863,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void FeatureIsPropagatedToInputAfterLinking()
         {
             // Create domain objects
-            var weir = new Weir();
+            var weir = new Structure();
 
             var input = new Input();
             var realTimeControlModel = new RealTimeControlModel {ControlGroups = {new ControlGroup {Inputs = {input}}}};
@@ -885,7 +886,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void FeatureIsPropagatedToOutputAfterLinking()
         {
             // Create domain objects
-            var weir = new Weir();
+            var weir = new Structure();
 
             var output = new Output();
             var realTimeControlModel = new RealTimeControlModel {ControlGroups = {new ControlGroup {Outputs = {output}}}};
@@ -908,7 +909,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void ClearFeatureInInputOnUnlink()
         {
             // Create domain objects
-            var weir = new Weir();
+            var weir = new Structure();
 
             var input = new Input();
             var realTimeControlModel = new RealTimeControlModel {ControlGroups = {new ControlGroup {Inputs = {input}}}};
@@ -933,7 +934,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void ClearFeatureInOutputOnUnlink()
         {
             // Create domain objects
-            var weir = new Weir();
+            var weir = new Structure();
 
             var output = new Output();
             var realTimeControlModel = new RealTimeControlModel {ControlGroups = {new ControlGroup {Outputs = {output}}}};

@@ -21,45 +21,15 @@ namespace DeltaShell.Plugins.NetworkEditor
     [Extension(typeof(IPlugin))]
     public class NetworkEditorApplicationPlugin : ApplicationPlugin
     {
-        public override string Name
-        {
-            get
-            {
-                return "Network";
-            }
-        }
+        public override string Name => "Network";
 
-        public override string DisplayName
-        {
-            get
-            {
-                return Properties.Resources.NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin;
-            }
-        }
+        public override string DisplayName => Properties.Resources.NetworkEditorApplicationPlugin_DisplayName_Hydro_Region_Plugin;
 
-        public override string Description
-        {
-            get
-            {
-                return Properties.Resources.NetworkEditorApplicationPlugin_Description;
-            }
-        }
+        public override string Description => Properties.Resources.NetworkEditorApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get
-            {
-                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
-            }
-        }
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
-        public override string FileFormatVersion
-        {
-            get
-            {
-                return "3.5.2.0";
-            }
-        }
+        public override string FileFormatVersion => "3.5.2.0";
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
@@ -208,9 +178,7 @@ namespace DeltaShell.Plugins.NetworkEditor
 
         private static void AddChildRegionDataItems(IDataItem regionDataItem)
         {
-            var region = regionDataItem.Value as IRegion;
-
-            if (region == null)
+            if (!(regionDataItem.Value is IRegion region))
             {
                 return;
             }
