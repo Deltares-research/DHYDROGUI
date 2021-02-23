@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils.Collections;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData

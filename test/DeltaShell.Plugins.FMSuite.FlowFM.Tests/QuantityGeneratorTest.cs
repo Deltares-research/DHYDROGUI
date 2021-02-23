@@ -1,8 +1,10 @@
 ﻿using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using NUnit.Framework;
@@ -35,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenSimpleWeir_WhenGettingQuantitiesForSimpleWeir_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            IWeir weir = GetWeirStubWithWeirFormulaType<SimpleWeirFormula>();
+            IStructure weir = GetWeirStubWithWeirFormulaType<SimpleWeirFormula>();
 
             // When
             string[] quantities = QuantityGenerator.GetQuantitiesForFeature(weir, useSalinity).ToArray();
@@ -50,7 +52,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenGeneralStructure_WhenGettingQuantitiesForGeneralStructure_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            IWeir generalStructure = GetWeirStubWithWeirFormulaType<GeneralStructureWeirFormula>();
+            IStructure generalStructure = GetWeirStubWithWeirFormulaType<GeneralStructureFormula>();
 
             // When
             string[] quantities = QuantityGenerator.GetQuantitiesForFeature(generalStructure, useSalinity).ToArray();
@@ -67,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenGate_WhenGettingQuantitiesForGate_ThenExpectedQuantitiesAreReturned(bool useSalinity)
         {
             // Given
-            IWeir gate = GetWeirStubWithWeirFormulaType<GatedWeirFormula>();
+            IStructure gate = GetWeirStubWithWeirFormulaType<SimpleGateFormula>();
 
             // When
             string[] quantities = QuantityGenerator.GetQuantitiesForFeature(gate, useSalinity).ToArray();
@@ -116,11 +118,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(quantities.Contains("velocity"));
         }
 
-        private IWeir GetWeirStubWithWeirFormulaType<TWeirFormulaType>()
-            where TWeirFormulaType : IWeirFormula, new()
+        private IStructure GetWeirStubWithWeirFormulaType<TWeirFormulaType>()
+            where TWeirFormulaType : IStructureFormula, new()
         {
-            var weir = mocks.Stub<IWeir>();
-            weir.WeirFormula = new TWeirFormulaType();
+            var weir = mocks.Stub<IStructure>();
+            weir.Formula = new TWeirFormulaType();
             return weir;
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
@@ -86,14 +88,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var area = new HydroArea();
 
-            var pump2DFeature = new Pump2D
+            var pump2DFeature = new Pump
             {
                 Capacity = 2.0,
-                StartDelivery = 0.0,
-                StopDelivery = 0.0,
-                StartSuction = 0.001,
-                StopSuction = 0.0,
-                DirectionIsPositive = true,
                 Name = "pump2D01",
                 Geometry = new LineString(new[]
                 {
@@ -119,7 +116,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var area = new HydroArea();
 
-            var gate2DFeature = new Weir2D
+            var gate2DFeature = new Structure
             {
                 Name = "Gate2D01",
                 Geometry = new LineString(new[]
@@ -129,11 +126,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 })
             };
 
-            area.Weirs.Add(gate2DFeature);
+            area.Structures.Add(gate2DFeature);
 
             using (var mapView = new MapView())
             {
-                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Weirs, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Structures, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
                 mapView.Map.Layers.Add(layer);
 
                 WindowsFormsTestHelper.ShowModal(mapView, delegate { mapView.Map.ZoomToExtents(); });
@@ -146,7 +143,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         {
             var area = new HydroArea();
 
-            var weir2DFeature = new Weir2D
+            var weir2DFeature = new Structure
             {
                 Name = "weir2D01",
                 Geometry = new LineString(new[]
@@ -156,11 +153,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 })
             };
 
-            area.Weirs.Add(weir2DFeature);
+            area.Structures.Add(weir2DFeature);
 
             using (var mapView = new MapView())
             {
-                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Weirs, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
+                ILayer layer = MapLayerProviderHelper.CreateLayersRecursive(area.Structures, area, new List<IMapLayerProvider> {NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider()});
                 mapView.Map.Layers.Add(layer);
 
                 WindowsFormsTestHelper.ShowModal(mapView, delegate { mapView.Map.ZoomToExtents(); });

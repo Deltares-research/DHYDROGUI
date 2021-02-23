@@ -1,7 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -61,9 +63,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
         }
 
-        public static Weir2D GetNewWeir2DWithGateFormula(string groupName, string featureName)
+        public static Structure GetNewWeir2DWithGateFormula(string groupName, string featureName)
         {
-            return new Weir2D()
+            return new Structure()
             {
                 GroupName = groupName,
                 Name = featureName,
@@ -73,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     new Coordinate(0, 100),
                     new Coordinate(50, 50)
                 }),
-                WeirFormula = new GatedWeirFormula()
+                Formula = new SimpleGateFormula()
             };
         }
 

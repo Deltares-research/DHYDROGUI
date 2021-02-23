@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;

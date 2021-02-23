@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             public static void TryAddCrestWidth<TFeature2D>(IFeature srcFeature,
                                                             TFeature2D targetFeature,
                                                             IEnumerable<TFeature2D> _)
-                where TFeature2D : Weir2D
+                where TFeature2D : IStructure
             {
                 if (TryGetValue(srcFeature, "CrestWidth", out double crestWidth))
                 {
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             public static void TryAddCrestLevel<TFeature2D>(IFeature srcFeature,
                                                             TFeature2D targetFeature,
                                                             IEnumerable<TFeature2D> _)
-                where TFeature2D : Weir2D
+                where TFeature2D : IStructure
             {
                 if (TryGetValue(srcFeature, "CrestLevel", out double crestLevel))
                 {
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
 
             /// <summary>
-            /// An action to try and add the <see cref="IWeirFormula"/> described
+            /// An action to try and add the <see cref="IStructureFormula"/> described
             /// by the "FormulaName" attribute of <paramref name="srcFeature"/>
             /// to <paramref name="targetFeature"/>.WeirFormula.
             /// </summary>
@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             public static void TryAddWeirFormula<TFeature2D>(IFeature srcFeature,
                                                              TFeature2D targetFeature,
                                                              IEnumerable<TFeature2D> _)
-                where TFeature2D : Weir2D
+                where TFeature2D : IStructure
             {
                 if (!TryGetValue(srcFeature, "FormulaName", out string formulaName))
                 {
@@ -199,14 +199,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
                 switch (formulaName)
                 {
-                    case "Simple weir (Weir)":
-                        targetFeature.WeirFormula = new SimpleWeirFormula();
+                    case "Simple Weir":
+                        targetFeature.Formula = new SimpleWeirFormula();
                         break;
-                    case "Gated weir (Orifice)":
-                        targetFeature.WeirFormula = new GatedWeirFormula(true);
+                    case "Simple Gate":
+                        targetFeature.Formula = new SimpleGateFormula(true);
                         break;
-                    case "General structure":
-                        targetFeature.WeirFormula = new GeneralStructureWeirFormula();
+                    case "General Structure":
+                        targetFeature.Formula = new GeneralStructureFormula();
                         break;
                 }
             }
@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             public static void TryAddCapacity<TFeature2D>(IFeature srcFeature,
                                                           TFeature2D targetFeature,
                                                           IEnumerable<TFeature2D> _)
-                where TFeature2D : Pump2D
+                where TFeature2D : IPump
             {
                 if (TryGetValue(srcFeature, "Capacity", out double capacity))
                 {

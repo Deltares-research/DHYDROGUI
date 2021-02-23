@@ -1,70 +1,104 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
 {
+    /// <summary>
+    /// <see cref="FMPumpPropertiesRow"/> defines a single row within the
+    /// multi-data editor of a single <see cref="IPump"/>.
+    /// </summary>
+    /// <seealso cref="IDisposable" />
+    /// <seealso cref="INotifyPropertyChange" />
+    /// <seealso cref="IFeatureRowObject" />
     public class FMPumpPropertiesRow : IDisposable, INotifyPropertyChange, IFeatureRowObject
     {
         private IPump pump;
 
+        /// <summary>
+        /// Creates a new <see cref="FMPumpPropertiesRow"/>.
+        /// </summary>
+        /// <param name="pump">The pump.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="pump"/> is <c>null</c>.
+        /// </exception>
         public FMPumpPropertiesRow(IPump pump)
         {
+            Ensure.NotNull(pump, nameof(pump));
             Pump = pump;
         }
 
-        public string Name
+        /// <summary>
+        /// Gets or sets the group name.
+        /// </summary>
+        [DisplayName("Group Name")]
+        public string GroupName
         {
-            get
-            {
-                return pump.Name;
-            }
-            set
-            {
-                pump.Name = value;
-            }
+            get => Pump.GroupName;
+            set => Pump.GroupName = value;
         }
 
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        [DisplayName("Name")]
+        public string Name
+        {
+            get => Pump.Name;
+            set => Pump.Name = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the capacity.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <c>Pump.UseCapacityTimeSeries</c> is <c>true</c>.
+        /// </exception>
+        [DisplayName(nameof(Capacity) + " [m3/s]")]
         [DynamicReadOnly]
         public virtual string Capacity
         {
-            get
-            {
-                if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
-                {
-                    return string.Format("{0}_{1}.tim", pump.Name, KnownStructureProperties.Capacity);
-                }
-
-                return pump.Capacity.ToString(CultureInfo.CurrentCulture);
-            }
+            get => Pump.UseCapacityTimeSeries 
+                       ? $"{Pump.Name}_{KnownStructureProperties.Capacity}.tim"
+                       : Pump.Capacity.ToString(CultureInfo.CurrentCulture);
             set
             {
-                if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
+                if (Pump.UseCapacityTimeSeries)
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent pump capacity.");
                 }
 
-                pump.Capacity = double.Parse(value, CultureInfo.CurrentCulture);
+                Pump.Capacity = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
 
+        /// <summary>
+        /// Determines whether the specified <paramref name="propertyName"/>
+        /// is currently read-only.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="propertyName"/> is currently read-only;
+        /// otherwise, <c>false</c>.
+        /// </returns>
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if (pump == null)
+            if (Pump == null)
             {
                 return false;
             }
 
-            if (propertyName == "Capacity")
+            if (propertyName == nameof(Capacity))
             {
-                return pump.CanBeTimedependent && pump.UseCapacityTimeSeries;
+                return Pump.UseCapacityTimeSeries;
             }
 
             return false;
@@ -80,16 +114,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
         {
             if (disposing)
             {
+                // Unsubscribe from property changed.
                 Pump = null;
             }
         }
 
         private IPump Pump
         {
-            get
-            {
-                return pump;
-            }
+            get => pump;
             set
             {
                 if (pump != null)
@@ -98,6 +130,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
                 }
 
                 pump = value;
+
                 if (pump != null)
                 {
                     ((INotifyPropertyChanged) pump).PropertyChanged += PumpPropertiesRowPropertyChanged;
@@ -107,13 +140,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
 
         private void PumpPropertiesRowPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, e);
-            }
+            PropertyChanged?.Invoke(this, e);
         }
-
-        #region INotificPropertyChange
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangingEventHandler PropertyChanging;
@@ -121,11 +149,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
         [Browsable(false)]
         public bool HasParent { get; set; }
 
-        public IFeature GetFeature()
-        {
-            return pump;
-        }
-
-        #endregion
+        /// <summary>
+        /// Gets the underlying feature.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="IPump"/> feature.
+        /// </returns>
+        public IFeature GetFeature() => Pump;
     }
 }

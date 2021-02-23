@@ -32,8 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 foreach (Embankment embankment in intersectingEmbankments)
                 {
                     issues.Add(new ValidationIssue(model.GetDataItemByValue(model.Area), ValidationSeverity.Error,
-                                                   string.Format("Embankment {0} intersects with other embankments",
-                                                                 embankment.Name)));
+                                                   $"Embankment {embankment.Name} intersects with other embankments"));
                 }
             }
 
@@ -70,8 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 foreach (Embankment embankment in intersectingEmbankments)
                 {
                     issues.Add(new ValidationIssue(model.GetDataItemByValue(model.Area), ValidationSeverity.Error,
-                                                   string.Format("Embankment {0} intersects with itself",
-                                                                 embankment.Name)));
+                                                   $"Embankment {embankment.Name} intersects with itself"));
                 }
             }
 

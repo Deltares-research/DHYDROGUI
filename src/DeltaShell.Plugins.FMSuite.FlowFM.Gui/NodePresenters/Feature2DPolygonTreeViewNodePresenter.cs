@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using DelftTools.Controls;
 using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;

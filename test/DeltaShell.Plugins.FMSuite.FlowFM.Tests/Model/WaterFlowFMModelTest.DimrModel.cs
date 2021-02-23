@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.TestUtils;
@@ -27,12 +28,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             var fmModel = new WaterFlowFMModel();
             const string gateName = "structure01";
-            var gate = new Weir2D
+            var gate = new Structure
             {
                 Name = gateName,
-                WeirFormula = new GatedWeirFormula()
+                Formula = new SimpleGateFormula()
             };
-            fmModel.Area.Weirs.Add(gate);
+            fmModel.Area.Structures.Add(gate);
 
             // When
             var itemStringComponents = new List<string>(new[]
@@ -101,12 +102,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             // Given
             var fmModel = new WaterFlowFMModel();
-            var gate = new Weir2D
+            var gate = new Structure
             {
                 Name = "structure01",
-                WeirFormula = new GatedWeirFormula()
+                Formula = new SimpleGateFormula()
             };
-            fmModel.Area.Weirs.Add(gate);
+            fmModel.Area.Structures.Add(gate);
 
             // When
             const string parameterName = "NotExisting";
@@ -272,7 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
-        private static void AssertDataItemIsGate(IDataItem dataItem, Weir2D gate)
+        private static void AssertDataItemIsGate(IDataItem dataItem, Structure gate)
         {
             const string messageDifferentFeatureInDataItem = "The retrieved dataItem is not correct, since the features are not the same";
             const string messageDifferentParameterInDataItem = "The retrieved dataItem is not correct, since the parameters are not the same";
