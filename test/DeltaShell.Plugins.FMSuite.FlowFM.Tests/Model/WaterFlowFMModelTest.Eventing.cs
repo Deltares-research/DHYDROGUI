@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -308,7 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.IsFalse(model.OutputIsEmpty);
 
                 // Act
-                model.Area.Weirs.Add(new Weir2D());
+                model.Area.Structures.Add(new Structure());
 
                 // Assert
                 Assert.IsTrue(model.OutputOutOfSync);
@@ -323,8 +324,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
                 var model = new WaterFlowFMModel();
-                var structure = new Weir2D();
-                model.Area.Weirs.Add(structure);
+                var structure = new Structure();
+                model.Area.Structures.Add(structure);
                 model.ConnectOutput(tempDirectory.Path);
 
                 // Check pre-condition
@@ -332,7 +333,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.IsFalse(model.OutputIsEmpty);
 
                 // Act
-                model.Area.Weirs.Remove(structure);
+                model.Area.Structures.Remove(structure);
 
                 // Assert
                 Assert.IsTrue(model.OutputOutOfSync);
@@ -347,11 +348,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
                 var model = new WaterFlowFMModel();
-                var structure = new Weir2D
+                var structure = new Structure
                 {
-                    WeirFormula = new SimpleWeirFormula()
+                    Formula = new SimpleWeirFormula()
                 };
-                model.Area.Weirs.Add(structure);
+                model.Area.Structures.Add(structure);
                 model.ConnectOutput(tempDirectory.Path);
 
                 // Check pre-condition
@@ -359,7 +360,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.IsFalse(model.OutputIsEmpty);
 
                 // Act
-                structure.WeirFormula = new GeneralStructureWeirFormula();
+                structure.Formula = new GeneralStructureFormula();
 
                 // Assert
                 Assert.IsTrue(model.OutputOutOfSync);
@@ -427,7 +428,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.IsFalse(model.OutputIsEmpty);
 
                 // Act
-                model.Area.Pumps.Add(new Pump2D());
+                model.Area.Pumps.Add(new Pump());
 
                 // Assert
                 Assert.IsTrue(model.OutputOutOfSync);
@@ -442,7 +443,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
                 var model = new WaterFlowFMModel();
-                var pump = new Pump2D();
+                var pump = new Pump();
                 model.Area.Pumps.Add(pump);
                 model.ConnectOutput(tempDirectory.Path);
 

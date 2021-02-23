@@ -722,9 +722,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            MarkOutputOutOfSync();            
-            if (sender is IStructure weir && 
-                e.PropertyName == nameof(IStructure.Formula))
+            MarkOutputOutOfSync();     
+            
+            if (sender is IStructure weir && e.PropertyName == nameof(IStructure.Formula))
             {
                 bool isInputSender = Area.Structures.Any(w => w.Name == weir.Name);
                 UpdateAreaDataItems(weir, isInputSender);
