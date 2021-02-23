@@ -1,4 +1,4 @@
-﻿using DelftTools.Hydro.Structures.KnownStructureProperties;
+﻿using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Helpers;
 

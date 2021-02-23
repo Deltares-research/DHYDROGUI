@@ -48,7 +48,7 @@
         /// <summary>
         /// The structures layer name
         /// </summary>
-        public const string WeirsPluralName = "Structures";
+        public const string StructuresPluralName = "Structures";
 
         /// <summary>
         /// The embankments layer name

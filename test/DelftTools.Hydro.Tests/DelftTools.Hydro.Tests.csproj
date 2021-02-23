@@ -37,18 +37,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GroupableFeatureComparerTest.cs" />
-    <Compile Include="GroupableFeatureExtensionsTest.cs" />
-    <Compile Include="GroupablePointFeatureTest.cs" />
+    <Compile Include="Area\Objects\AreaObjectTest.cs" />
+    <Compile Include="Area\Objects\StructureObjects\PumpTest.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\GateOpeningDirectionTest.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\GeneralStructureFormulaTest.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\SimpleGateFormulaTest.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\SimpleWeirFormulaTest.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureTest.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeatureComparerTest.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeatureExtensionsTest.cs" />
+    <Compile Include="GroupableFeatures\GroupablePointFeatureTest.cs" />
     <Compile Include="HydroAreaTest.cs" />
     <Compile Include="HydroRegionTest.cs" />
     <Compile Include="HydroTimeSeriesFactoryTest.cs" />
     <Compile Include="NameableFeatureComparerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Structures\BridgePillarTest.cs" />
-    <Compile Include="Structures\PumpTest.cs" />
-    <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormulaTest.cs" />
-    <Compile Include="Structures\WeirTest.cs" />
     <Compile Include="TestClassSetup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +199,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

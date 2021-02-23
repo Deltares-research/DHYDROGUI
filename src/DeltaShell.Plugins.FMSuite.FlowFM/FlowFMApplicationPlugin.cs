@@ -6,7 +6,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
@@ -140,7 +142,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         Name = name1,
                         Geometry = LineStringCreator.CreateLineString(points1)
                     };
-                    feature1.InitializeAttributes();
                     return feature1;
                 },
                 EqualityComparer = new GroupableFeatureComparer<FixedWeir>(),
@@ -262,38 +263,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.ObservationCrossSections)),
                 GetEditableObject = target => GetModelFor(target, a => a.ObservationCrossSections).Area
             };
-            yield return new PliFileImporterExporter<Weir2D, Weir2D>
+            yield return new PliFileImporterExporter<Structure, Structure>
             {
                 Mode = Feature2DImportExportMode.Import,
-                CreateFromFeature = f => new Weir2D(f.Name, true) {Geometry = f.Geometry},
-                GetFeature = w => new Weir2D
+                CreateFromFeature = f => new Structure() {Name = f.Name, Geometry = f.Geometry},
+                GetFeature = w => new Structure()
                 {
                     Name = w.Name,
                     Geometry = w.Geometry
                 },
-                EqualityComparer = new GroupableFeatureComparer<Weir2D>(),
-                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Weirs)),
-                GetEditableObject = target => GetModelFor(target, a => a.Weirs).Area
+                EqualityComparer = new GroupableFeatureComparer<Structure>(),
+                AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Structures)),
+                GetEditableObject = target => GetModelFor(target, a => a.Structures).Area
             };
-            yield return new PliFileImporterExporter<Pump2D, Pump2D>
+            yield return new PliFileImporterExporter<Pump, Pump>
             {
                 Mode = Feature2DImportExportMode.Import,
-                CreateFromFeature = f => new Pump2D(f.Name, true) {Geometry = f.Geometry},
-                CreateDelegate = delegate(List<Coordinate> points1, string name1)
+                CreateFromFeature = f => new Pump() {Name = f.Name, Geometry = f.Geometry},
+                CreateDelegate = (points1, name1) =>
                 {
-                    var pump2D = new Pump2D(true)
+                    var pump = new Pump()
                     {
                         Name = name1,
                         Geometry = LineStringCreator.CreateLineString(points1)
                     };
-                    return pump2D;
+                    return pump;
                 },
-                GetFeature = w => new Pump2D()
+                GetFeature = w => new Pump()
                 {
                     Name = w.Name,
                     Geometry = w.Geometry
                 },
-                EqualityComparer = new GroupableFeatureComparer<Pump2D>(),
+                EqualityComparer = new GroupableFeatureComparer<Pump>(),
                 AfterCreateAction = (target, w) => w.UpdateGroupName(GetModelFor(target, a => a.Pumps)),
                 GetEditableObject = target => GetModelFor(target, a => a.Pumps).Area
             };
@@ -382,12 +383,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
             yield return ShapeFileImporterFactory.Construct<ILineString, BridgePillar>(
                 ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
-            yield return ShapeFileImporterFactory.Construct<ILineString, Pump2D>(
-                ShapeFileImporterFactory.AfterFeatureCreateActions.Chain<Pump2D>(
+            yield return ShapeFileImporterFactory.Construct<ILineString, Pump>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.Chain<Pump>(
                     ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName,
                     ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCapacity));
-            yield return ShapeFileImporterFactory.Construct<ILineString, Weir2D>(
-                ShapeFileImporterFactory.AfterFeatureCreateActions.Chain<Weir2D>(
+            yield return ShapeFileImporterFactory.Construct<ILineString, Structure>(
+                ShapeFileImporterFactory.AfterFeatureCreateActions.Chain<Structure>(
                     ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName,
                     ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddWeirFormula,
                     ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddCrestWidth,
@@ -492,21 +493,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> {Mode = Feature2DImportExportMode.Export};
             yield return
                 new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D> {Mode = Feature2DImportExportMode.Export};
-            yield return new PliFileImporterExporter<Weir2D, Weir2D>
+            yield return new PliFileImporterExporter<Structure, Structure>
             {
                 Mode = Feature2DImportExportMode.Export,
-                CreateFromFeature = f => new Weir2D(f.Name, true) {Geometry = f.Geometry},
-                GetFeature = w => new Weir2D
+                CreateFromFeature = f => new Structure() {Name = f.Name, Geometry = f.Geometry},
+                GetFeature = w => new Structure
                 {
                     Name = w.Name,
                     Geometry = w.Geometry
                 }
             };
-            yield return new PliFileImporterExporter<Pump2D, Pump2D>
+            yield return new PliFileImporterExporter<Pump, Pump>
             {
                 Mode = Feature2DImportExportMode.Export,
-                CreateFromFeature = f => new Pump2D(f.Name, true) {Geometry = f.Geometry},
-                GetFeature = w => new Pump2D
+                CreateFromFeature = f => new Pump() {Name = f.Name, Geometry = f.Geometry},
+                GetFeature = w => new Pump
                 {
                     Name = w.Name,
                     Geometry = w.Geometry
@@ -638,7 +639,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private static bool GetAvailableLists(WaterFlowFMModel model, IEnumerable list)
         {
-            if (Equals(model.Area.Weirs, list))
+            if (Equals(model.Area.Structures, list))
             {
                 return true;
             }

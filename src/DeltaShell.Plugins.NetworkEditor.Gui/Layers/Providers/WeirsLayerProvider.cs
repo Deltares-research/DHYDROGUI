@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Api.Layers;
@@ -10,9 +10,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
     /// <summary>
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
-    /// of <see cref="Weir2D"/> objects.
+    /// of <see cref="IStructure"/> objects.
     /// </summary>
-    internal sealed class WeirsLayerProvider : FeaturesLayerProvider<Weir2D>
+    internal sealed class WeirsLayerProvider : FeaturesLayerProvider<Structure>
     {
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         /// <inheritdoc/>
         protected override string GetLayerName()
         {
-            return HydroAreaLayerNames.WeirsPluralName;
+            return HydroAreaLayerNames.StructuresPluralName;
         }
 
         /// <inheritdoc/>
@@ -42,9 +42,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         }
 
         /// <inheritdoc/>
-        protected override IEventedList<Weir2D> GetLayerFeatures(HydroArea hydroArea)
+        protected override IEventedList<Structure> GetLayerFeatures(HydroArea hydroArea)
         {
-            return hydroArea.Weirs;
+            return hydroArea.Structures;
         }
     }
 }

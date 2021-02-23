@@ -5,8 +5,10 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -518,29 +520,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             {
                 {featureNameStations, typeof(GroupableFeature2DPoint)},
                 {featureNameCrossSection, typeof(ObservationCrossSection2D)},
-                {featureNameGeneralStructures, typeof(IWeir)},
-                {featureNameWeirgens, typeof(IWeir)},
-                {featureNameGategens, typeof(IWeir)},
+                {featureNameGeneralStructures, typeof(IStructure)},
+                {featureNameWeirgens, typeof(IStructure)},
+                {featureNameGategens, typeof(IStructure)},
                 {featureNamePumps, typeof(IPump)}
             };
 
         // Mapping dictionary used to relate under which name are FeatureTypes are mapped.
-        private readonly IDictionary<string, Func<IWeirFormula>> weirFormulaByDimensionName =
-            new Dictionary<string, Func<IWeirFormula>>()
+        private readonly IDictionary<string, Func<IStructureFormula>> weirFormulaByDimensionName =
+            new Dictionary<string, Func<IStructureFormula>>()
             {
-                {featureNameGeneralStructures, () => new GeneralStructureWeirFormula()},
+                {featureNameGeneralStructures, () => new GeneralStructureFormula()},
                 {featureNameWeirgens, () => new SimpleWeirFormula()},
-                {featureNameGategens, () => new GatedWeirFormula()},
+                {featureNameGategens, () => new SimpleGateFormula()},
             };
 
         // Mapping dictionary used to create features under which name are FeatureTypes are mapped.
-        private readonly IDictionary<Type, Func<string, IGeometry, IWeirFormula, IFeature>> mapTypeGenerateDictionary =
-            new Dictionary<Type, Func<string, IGeometry, IWeirFormula, IFeature>>()
+        private readonly IDictionary<Type, Func<string, IGeometry, IStructureFormula, IFeature>> mapTypeGenerateDictionary =
+            new Dictionary<Type, Func<string, IGeometry, IStructureFormula, IFeature>>()
             {
                 {typeof(GroupableFeature2DPoint), (name, geometry, _) => CreateFeature2D(name, geometry)},
                 {typeof(ObservationCrossSection2D), (name, geometry, _) => CreateFeature2D(name, geometry)},
-                {typeof(IWeir), CreateGeneralStructureFromNetCdf},
-                {typeof(IPump), (name, geometry, _) => new Pump2D(name) {Geometry = geometry}}
+                {typeof(IStructure), CreateGeneralStructureFromNetCdf},
+                {typeof(IPump), (name, geometry, _) => new Pump() {Name = name, Geometry = geometry}}
             };
 
         // Mapping dictionary used to read feature names for backwards compatibility.
@@ -725,7 +727,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
-        private IFeature CreateFeatureFromNetCdf(string name, Type type, IGeometry geometry, IWeirFormula formula)
+        private IFeature CreateFeatureFromNetCdf(string name, Type type, IGeometry geometry, IStructureFormula formula)
         {
             if (type != null && mapTypeGenerateDictionary.ContainsKey(type))
             {
@@ -838,12 +840,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             };
         }
 
-        private static Weir2D CreateGeneralStructureFromNetCdf(string name, IGeometry geometry, IWeirFormula formula)
+        private static Structure CreateGeneralStructureFromNetCdf(string name, IGeometry geometry, IStructureFormula formula)
         {
-            return new Weir2D
+            return new Structure
             {
                 Name = name,
-                WeirFormula = formula,
+                Formula = formula,
                 Geometry = geometry
             };
         }

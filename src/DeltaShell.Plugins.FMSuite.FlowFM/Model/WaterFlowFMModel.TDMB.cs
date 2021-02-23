@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             get
             {
                 yield return Area.Pumps;
-                yield return Area.Weirs;
+                yield return Area.Structures;
             }
         }
 

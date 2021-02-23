@@ -7,7 +7,9 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -91,16 +93,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             hydroModel.Activities.Add(new WaveModel());
             hydroModel.Activities.Add(realTimeControlModel);
 
-            var pump = new Pump2D("pomp")
+            var pump = new Pump()
             {
+                Name = "pomp",
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(-50, -100),
                     new Coordinate(50, -100)
                 })
             };
-            var gate = new Weir2D("poort")
+            var gate = new Structure()
             {
+                Name = "poort",
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(-50, 100),
@@ -114,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             };
 
             waterFlowFMModel.Area.Pumps.Add(pump);
-            waterFlowFMModel.Area.Weirs.Add(gate);
+            waterFlowFMModel.Area.Structures.Add(gate);
             waterFlowFMModel.Area.ObservationPoints.Add(obserVationPoint);
 
             realTimeControlModel.ControlGroups.Add(RealTimeControlModelHelper.CreateStandardControlGroup("InvertorRule"));

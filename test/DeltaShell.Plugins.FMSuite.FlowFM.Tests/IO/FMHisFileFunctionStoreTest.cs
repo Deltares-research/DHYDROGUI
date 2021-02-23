@@ -6,8 +6,10 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -81,6 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         public void GivenNewCreatedFMModelWith2dGridAndPumpAndWeirAndStationsAndGateAndGeneralStructureAndCrossSection2DWhenModelRanThenFunctionsCorrectlyInitialized()
         {
             using (var model = new WaterFlowFMModel())
@@ -92,6 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 AddFlowBoundaryConditionsForValues(model);
 
                 ActivityRunner.RunActivity(model);
+                Assert.That(model.Status, Is.EqualTo(ActivityStatus.Cleaned), "Model should have run correctly.");
 
                 IFMHisFileFunctionStore store = model.OutputHisFileStore;
 
@@ -361,8 +365,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 model.ImportFromMdu(localMduFilePath);
 
-                var weir = new Weir2D("weir1")
+                var weir = new Structure()
                 {
+                    Name = "weir1",
                     Geometry = new LineString(new[]
                     {
                         new Coordinate(51.0, -180.0),
@@ -375,16 +380,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 weir.CrestLevelTimeSeries[model.StartTime.AddHours(1)] = 7.5;
                 weir.CrestLevelTimeSeries[model.StartTime.AddHours(2)] = 2.5;
                 weir.CrestLevelTimeSeries[model.StopTime.AddSeconds(1)] = 5.5;
-                model.Area.Weirs.Add(weir);
+                model.Area.Structures.Add(weir);
 
-                var gate = new Weir2D("weir2")
+                var gate = new Structure()
                 {
+                    Name = "weir2",
                     Geometry = new LineString(new[]
                     {
                         new Coordinate(-149.1, -180.0),
                         new Coordinate(-50.1, -180.0)
                     }),
-                    WeirFormula = new GatedWeirFormula(true)
+                    Formula = new SimpleGateFormula(true)
                     {
                         UseHorizontalDoorOpeningWidthTimeSeries = true,
                         UseLowerEdgeLevelTimeSeries = true
@@ -393,7 +399,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     CrestWidth = 42.0
                 };
 
-                var gatedWeirFormula = gate.WeirFormula as GatedWeirFormula;
+                var gatedWeirFormula = gate.Formula as SimpleGateFormula;
 
                 Assert.NotNull(gatedWeirFormula);
 
@@ -406,10 +412,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(1)] = 6.5;
                 gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StartTime.AddHours(2)] = 0.0;
                 gatedWeirFormula.LowerEdgeLevelTimeSeries[model.StopTime.AddSeconds(1)] = -10.0;
-                model.Area.Weirs.Add(gate);
+                model.Area.Structures.Add(gate);
 
-                var pump = new Pump2D("pump", true)
+                var pump = new Pump()
                 {
+                    Name = "pump",
                     Geometry = new LineString(new[]
                     {
                         new Coordinate(0.0, 51.5),
@@ -555,31 +562,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Name = "ObservationPoint02",
                 Geometry = new Point(model.GridExtent.MaxX - 1, model.GridExtent.MinY + 5)
             });
-            model.Area.Weirs.Add(new Weir2D("structure01")
+            model.Area.Structures.Add(new Structure()
             {
+                Name = "structure01",
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(model.GridExtent.MinX + 1, model.GridExtent.MinY + 4),
                     new Coordinate(model.GridExtent.MinX + 2, model.GridExtent.MinY + 4)
                 })
             });
-            model.Area.Weirs.Add(new Weir2D("structure02")
+            model.Area.Structures.Add(new Structure()
             {
+                Name = "structure02",
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(model.GridExtent.MinX + 3, model.GridExtent.MinY + 4),
                     new Coordinate(model.GridExtent.MinX + 4, model.GridExtent.MinY + 4)
                 }),
-                WeirFormula = new GatedWeirFormula()
+                Formula = new SimpleGateFormula()
             });
-            model.Area.Weirs.Add(new Weir2D("structure03")
+            model.Area.Structures.Add(new Structure()
             {
+                Name = "structure03",
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(model.GridExtent.MinX + 5, model.GridExtent.MinY + 4),
                     new Coordinate(model.GridExtent.MinX + 6, model.GridExtent.MinY + 4)
                 }),
-                WeirFormula = new GeneralStructureWeirFormula
+                Formula = new GeneralStructureFormula
                 {
                     HorizontalDoorOpeningDirection = GateOpeningDirection.Symmetric,
                     WidthStructureCentre = 0.5d,
@@ -589,8 +599,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     WidthRightSideOfStructure = 1.0,
                 }
             });
-            model.Area.Pumps.Add(new Pump2D("pump01")
+            model.Area.Pumps.Add(new Pump()
             {
+                Name = "pump01",
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(model.GridExtent.MinX + 6, model.GridExtent.MinY + 5),

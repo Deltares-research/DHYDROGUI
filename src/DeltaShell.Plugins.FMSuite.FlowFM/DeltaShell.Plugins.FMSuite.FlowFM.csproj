@@ -321,8 +321,9 @@
     <Compile Include="Validation\Area\PumpValidator.cs" />
     <Compile Include="Validation\Area\SourceAndSinkValidator.cs" />
     <Compile Include="Validation\Area\ThinDamValidator.cs" />
-    <Compile Include="Validation\Area\WeirValidator.cs" />
+    <Compile Include="Validation\Area\StructureValidator.cs" />
     <Compile Include="Validation\FmValidationShortcut.cs" />
+    <Compile Include="Validation\WaterFlowFMProcessesValidator.cs" />
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\FMStructuresValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />
@@ -341,7 +342,6 @@
     <Compile Include="ModelDefinition\WaterFlowFMModelDefinition.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMProperty.cs" />
     <Compile Include="ModelDefinition\WaterFlowFMPropertyDefinition.cs" />
-    <Compile Include="FeatureData\WeirFormula2DExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -465,9 +465,6 @@
     <Content Include="Resources\GateSmall.png" />
     <Resource Include="Resources\hurricane2.png" />
     <Resource Include="Resources\grid_2d.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Api\TempImpl\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

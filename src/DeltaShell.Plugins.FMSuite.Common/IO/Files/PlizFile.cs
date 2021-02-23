@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
@@ -124,7 +124,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
             if (fixedWeir != null)
             {
                 boolSwitch = 0;
-                fixedWeir.SetupAttributeToPropertyLinks();
             }
 
             if (bridgePillar != null)
