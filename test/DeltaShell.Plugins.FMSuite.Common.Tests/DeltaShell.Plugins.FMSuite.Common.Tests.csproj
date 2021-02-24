@@ -95,6 +95,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.375-beta\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.SharpMapGis, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.372-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.375-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
       <Private>False</Private>
@@ -188,6 +192,7 @@
     <Compile Include="IO\Feature2DAttributesTestHelper.cs" />
     <Compile Include="IO\FeatureGroupExtensionsTest.cs" />
     <Compile Include="IO\FunctionExtentionsTest.cs" />
+    <Compile Include="IO\ImportExport\Feature2DImportExportBaseTest.cs" />
     <Compile Include="IO\LineStringCreatorTest.cs" />
     <Compile Include="IO\HtcFileReaderTest.cs" />
     <Compile Include="IO\HtcFileTest.cs" />
