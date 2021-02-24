@@ -53,12 +53,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 if (model.BoundaryConditionSets.ContainsTracer(tracer))
                 {
-                    return;
+                    continue;
                 }
 
                 if (model.SpatialData.HasCustomTracerCoverage(tracer))
                 {
-                    return;
+                    continue;
                 }
 
                 issues.Add(model, ValidationSeverity.Warning,
