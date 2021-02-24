@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.CoordinateSystems;
+using log4net.Core;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
 
@@ -12,6 +15,33 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     [Category(TestCategory.DataAccess)]
     public class UnstructuredGridFileOperationsTest
     {
+        [Test]
+        [TestCase("")]
+        [TestCase(null)]
+        [TestCase("    ")]
+        public void Constructor_FilePathNullOrEmpty_ThrowsArgumentException(string invalidFilePath)
+        {
+            // Call
+            TestDelegate call = () => new UnstructuredGridFileOperations(invalidFilePath);
+
+            // Assert
+            Assert.That(call, Throws.TypeOf<ArgumentException>()
+                                    .With.Property(nameof(ArgumentException.ParamName))
+                                    .EqualTo("filePath"));
+        }
+
+        [Test]
+        public void Constructor_WithNonExistingFileParameter_LogsErrorMessage()
+        {
+            // Setup
+            string notExistingFile = GetTestFilePath(@"ugrid\DoesNotExist.nc");
+
+            void Call() => new UnstructuredGridFileOperations(notExistingFile);
+
+            IEnumerable<string> errors = TestHelper.GetAllRenderedMessages(Call, Level.Error);
+            Assert.That(errors.Single(), Is.EqualTo($"Could not find grid at \"{notExistingFile}\""));
+        }
+
         [Test]
         [TestCase(@"ugrid\Custom_Ugrid.nc", GridApiDataSet.DataSetConventions.CONV_UGRID)]
         [TestCase(@"nonUgrid\TAK3_net.nc", GridApiDataSet.DataSetConventions.CONV_OTHER)]

@@ -20,8 +20,14 @@ namespace DeltaShell.NGHS.IO.Grid
         /// Creates a new instance of <see cref="UnstructuredGridFileOperations"/>.
         /// </summary>
         /// <param name="filePath">The file path to the file containing an unstructured grid.</param>
+        /// <exception cref="ArgumentException">Thrown when <paramref name="filePath"/> is <c>null</c>, empty or consists of whitespaces.</exception>
         public UnstructuredGridFileOperations(string filePath)
         {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException("Value cannot be null or whitespace.", nameof(filePath));
+            }
+
             if (!File.Exists(filePath) || Path.GetFileName(filePath) == null)
             {
                 log.ErrorFormat("Could not find grid at \"{0}\"", filePath);
