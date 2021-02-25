@@ -41,13 +41,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 Name = WaterFlowFMModel.DiscretizationObjectName,
                 Network = network,
-                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered
             };
 
             var offsets1 = new double[] { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 };
             HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization, (IChannel)network.Branches[0], offsets1);
 
-            var offsets2 = new double[] { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150 };
+            var offsets2 = new double[] { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150 };
             HydroNetworkHelper.GenerateDiscretization(model.NetworkDiscretization, (IChannel)network.Branches[1], offsets2);
 
             var now = DateTime.Now;
