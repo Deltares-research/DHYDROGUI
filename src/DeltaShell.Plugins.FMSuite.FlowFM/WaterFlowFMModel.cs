@@ -205,7 +205,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (e.PropertyName == nameof(Name) && fmRegion.Name != Name)
             {
                 fmRegion.Name = Name;
-                ModelDefinition.ModelName = Name;
+                if (ModelDefinition != null) ModelDefinition.ModelName = Name;
                 if (!OutputIsEmpty)
                 {
                     OnClearOutput();
