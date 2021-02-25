@@ -202,10 +202,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if(!(sender is WaterFlowFMModel )) return;
             MarkDirty();
-            if (e.PropertyName == nameof(Name) && fmRegion.Name != Name)
+            if (e.PropertyName == nameof(Name))
             {
-                fmRegion.Name = Name;
-                if (ModelDefinition != null) ModelDefinition.ModelName = Name;
+                if (fmRegion.Name != Name)
+                {
+                    fmRegion.Name = Name;
+                }
+
+                if (ModelDefinition != null)
+                {
+                    ModelDefinition.ModelName = Name;
+                    RenameSubFilesIfApplicable();
+                }
                 if (!OutputIsEmpty)
                 {
                     OnClearOutput();
@@ -2129,7 +2137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     {KnownProperties.NetFile, NetFile.FullExtension},
                     {KnownProperties.ExtForceFile, ExtForceFile.Extension},
-                    {KnownProperties.BndExtForceFile, ExtForceFile.Extension},
+                    {KnownProperties.BndExtForceFile, $"_bnd{ExtForceFile.Extension}"},
                     {KnownProperties.LandBoundaryFile, MduFile.LandBoundariesExtension},
                     {KnownProperties.ThinDamFile, MduFile.ThinDamExtension},
                     {KnownProperties.FixedWeirFile, MduFile.FixedWeirExtension},
@@ -2150,7 +2158,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     var currentFileName = Path.GetFileName(propertyValue);
                     if (modelDefinitionName == null ||
-                        (modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile)
+                        !(modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile)
                     {
                         propertyValue = Name + pair.Value;
                     }
