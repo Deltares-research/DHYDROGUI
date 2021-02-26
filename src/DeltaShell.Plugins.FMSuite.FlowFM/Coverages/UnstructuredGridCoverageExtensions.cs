@@ -93,7 +93,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             coverage.EndEdit();
         }
 
-        public static void LoadGrid(this UnstructuredGridCoverage coverage, UnstructuredGrid grid,
+        /// <summary>
+        /// Loads the specified <paramref name="grid"/> onto this <see cref="UnstructuredGridCoverage"/>.
+        /// </summary>
+        /// <param name="coverage">The coverage.</param>
+        /// <param name="grid">The grid.</param>
+        /// <param name="reInterpolate">if set to <c>true</c> [re interpolate].</param>
+        public static void LoadGrid(this UnstructuredGridCoverage coverage, 
+                                    UnstructuredGrid grid,
                                     bool reInterpolate = false)
         {
             if (coverage.Grid == grid)
@@ -103,7 +110,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
             coverage.BeginEdit(new DefaultEditAction("Inserting new grid in coverage"));
             List<Coordinate> newLocations = coverage.GetCoordinatesForGrid(grid).ToList();
-            int count = newLocations.Count();
+
+            int count = newLocations.Count;
+
             IVariable locationIndexVariable = coverage.Arguments.Last();
 
             if (!reInterpolate)
