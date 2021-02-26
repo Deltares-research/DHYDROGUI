@@ -1,11 +1,11 @@
-using DeltaShell.NGHS.Common;
+using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
-    public interface IWaterFlowFMModel : ITimeDependentRestartModel
+    public interface IWaterFlowFMModel : ITimeDependentModel
     {
         UnstructuredGrid Grid { get; set; }
         bool DisableFlowNodeRenumbering { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using DelftTools.Hydro.Area.Objects;
@@ -16,6 +17,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
     public partial class WaterFlowFMModelTest
     {
         [Test]
+        [Category(TestCategory.DataAccess)]
         [TestCase(KnownProperties.RestartFile, "test")]
         [TestCase(KnownProperties.ThinDamFile, "test")]
         [TestCase(KnownProperties.LandBoundaryFile, "test")]
@@ -58,10 +60,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void GivenAModelDefinitionPropertyChanged_ForADataAccessInputProperty_ShouldNotMarkOutputOutOfSync(string propertyName, string value)
         {
             using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
-                var model = new WaterFlowFMModel();
+              
                 model.ConnectOutput(tempDirectory.Path);
                 // Check pre-condition
                 Assert.IsFalse(model.OutputOutOfSync);
@@ -76,6 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [TestCase(KnownProperties.FixedWeirScheme, "0")]
         [TestCase(KnownProperties.Kmx, "0")]
         [TestCase(KnownProperties.DtUser, "1")]
@@ -126,10 +130,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void GivenAModelDefinitionPropertyChanged_ForARealInputProperty_ShouldMarkOutputOutOfSync(string propertyName, string value)
         {
             using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
-                WaterFlowFMModel model = new WaterFlowFMModel();
                 model.ConnectOutput(tempDirectory.Path);
                 // Check pre-condition
                 Assert.IsFalse(model.OutputOutOfSync);
@@ -144,6 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [TestCase(GuiProperties.StartTime)]
         [TestCase(GuiProperties.StopTime)]
         [TestCase(KnownProperties.RefDate)]
@@ -158,11 +163,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void GivenAModelDefinitionPropertyChanged_ForARealInputDateTimeProperty_ShouldMarkOutputOutOfSync(string propertyName)
         {
             using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
-                WaterFlowFMModel model = new WaterFlowFMModel();
                 model.ConnectOutput(tempDirectory.Path);
+                
                 // Check pre-condition
                 Assert.IsFalse(model.OutputOutOfSync);
                 Assert.IsFalse(model.OutputIsEmpty);
@@ -176,6 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         [TestCase(GuiProperties.HisOutputDeltaT)]
         [TestCase(GuiProperties.MapOutputDeltaT)]
         [TestCase(GuiProperties.ClassMapOutputDeltaT)]
@@ -184,10 +191,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void GivenAModelDefinitionPropertyChanged_ForARealInputTimeSpanProperty_ShouldMarkOutputOutOfSync(string propertyName)
         {
             using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
-                WaterFlowFMModel model = new WaterFlowFMModel();
                 model.ConnectOutput(tempDirectory.Path);
 
                 // Check pre-condition
@@ -201,153 +208,106 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Assert.IsTrue(model.OutputOutOfSync);
             }
         }
-
+        
         [Test]
-        public void AddingAnObservationPoint_ShouldMarkOutputOutOfSync()
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(GetTimeStepsForHydroAreaObjects))]
+        public void AddingOrRemovingAHydroAreaObject_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data)
         {
-            using (var tempDirectory = new TemporaryDirectory())
+            MarkingOutputOutOfSyncWhenInputChangedTest(data);
+        }
+
+        private void MarkingOutputOutOfSyncWhenInputChangedTest(ITestStepsForModelOutputOutOfSync data)
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
-                // Arrange
-                CreateRestartOutputFile(tempDirectory.Path);
-                var model = new WaterFlowFMModel();
-                model.ConnectOutput(tempDirectory.Path);
+                CreateRestartOutputFile(tempDir.Path);
+
+                data.Arrange(model);
+                model.ConnectOutput(tempDir.Path);
 
                 // Check pre-condition
                 Assert.IsFalse(model.OutputOutOfSync);
                 Assert.IsFalse(model.OutputIsEmpty);
 
-                // Act
-                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint());
+                // Call
+                data.Act(model);
 
                 // Assert
                 Assert.IsTrue(model.OutputOutOfSync);
             }
         }
 
-        [Test]
-        public void RemovingAnObservationPoint_ShouldMarkOutputOutOfSync()
+        public interface ITestStepsForModelOutputOutOfSync
         {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Arrange
-                CreateRestartOutputFile(tempDirectory.Path);
-                var model = new WaterFlowFMModel();
-                var observationPoint = new GroupableFeature2DPoint();
-                model.Area.ObservationPoints.Add(observationPoint);
-                model.ConnectOutput(tempDirectory.Path);
-
-                // Check pre-condition
-                Assert.IsFalse(model.OutputOutOfSync);
-                Assert.IsFalse(model.OutputIsEmpty);
-
-                // Act
-                model.Area.ObservationPoints.Remove(observationPoint);
-
-                // Assert
-                Assert.IsTrue(model.OutputOutOfSync);
-            }
+            void Arrange(WaterFlowFMModel model);
+            void Act(WaterFlowFMModel model);
         }
 
-        [Test]
-        public void AddingAFixedWeir_ShouldMarkOutputOutOfSync()
+        private static IEnumerable<TestCaseData> GetTimeStepsForHydroAreaObjects()
         {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Arrange
-                CreateRestartOutputFile(tempDirectory.Path);
-                var model = new WaterFlowFMModel();
-                model.ConnectOutput(tempDirectory.Path);
-
-                // Check pre-condition
-                Assert.IsFalse(model.OutputOutOfSync);
-                Assert.IsFalse(model.OutputIsEmpty);
-
-                // Act
-                model.Area.FixedWeirs.Add(new FixedWeir());
-
-                // Assert
-                Assert.IsTrue(model.OutputOutOfSync);
-            }
+            yield return new TestCaseData(new AddingObservationPointTestSteps());
+            yield return new TestCaseData(new RemovingObservationPointTestSteps());
+            yield return new TestCaseData(new AddingFixedWeirTestSteps());
+            yield return new TestCaseData(new RemovingFixedWeirTestSteps());
+            yield return new TestCaseData(new AddingStructureTestSteps());
+            yield return new TestCaseData(new RemovingStructureTestSteps());
         }
 
-        [Test]
-        public void RemovingAFixedWeir_ShouldMarkOutputOutOfSync()
+        private class AddingObservationPointTestSteps : ITestStepsForModelOutputOutOfSync
         {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Arrange
-                CreateRestartOutputFile(tempDirectory.Path);
-                var model = new WaterFlowFMModel();
-                var fixedWeir = new FixedWeir();
-                model.Area.FixedWeirs.Add(fixedWeir);
-                model.ConnectOutput(tempDirectory.Path);
-
-                // Check pre-condition
-                Assert.IsFalse(model.OutputOutOfSync);
-                Assert.IsFalse(model.OutputIsEmpty);
-
-                // Act
-                model.Area.FixedWeirs.Remove(fixedWeir);
-
-                // Assert
-                Assert.IsTrue(model.OutputOutOfSync);
-            }
+            public void Arrange(WaterFlowFMModel model) { }
+            public void Act(WaterFlowFMModel model) => model.Area.ObservationPoints.Add(new GroupableFeature2DPoint());
         }
 
-        [Test]
-        public void AddingAStructure_ShouldMarkOutputOutOfSync()
+        private class RemovingObservationPointTestSteps : ITestStepsForModelOutputOutOfSync
         {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Arrange
-                CreateRestartOutputFile(tempDirectory.Path);
-                var model = new WaterFlowFMModel();
-                model.ConnectOutput(tempDirectory.Path);
+            private readonly GroupableFeature2DPoint observationPoint = new GroupableFeature2DPoint();
 
-                // Check pre-condition
-                Assert.IsFalse(model.OutputOutOfSync);
-                Assert.IsFalse(model.OutputIsEmpty);
-
-                // Act
-                model.Area.Structures.Add(new Structure());
-
-                // Assert
-                Assert.IsTrue(model.OutputOutOfSync);
-            }
+            public void Arrange(WaterFlowFMModel model) => model.Area.ObservationPoints.Add(observationPoint);
+            public void Act(WaterFlowFMModel model) => model.Area.ObservationPoints.Remove(observationPoint);
         }
 
-        [Test]
-        public void RemovingAStructure_ShouldMarkOutputOutOfSync()
+        private class AddingFixedWeirTestSteps : ITestStepsForModelOutputOutOfSync
         {
-            using (var tempDirectory = new TemporaryDirectory())
-            {
-                // Arrange
-                CreateRestartOutputFile(tempDirectory.Path);
-                var model = new WaterFlowFMModel();
-                var structure = new Structure();
-                model.Area.Structures.Add(structure);
-                model.ConnectOutput(tempDirectory.Path);
-
-                // Check pre-condition
-                Assert.IsFalse(model.OutputOutOfSync);
-                Assert.IsFalse(model.OutputIsEmpty);
-
-                // Act
-                model.Area.Structures.Remove(structure);
-
-                // Assert
-                Assert.IsTrue(model.OutputOutOfSync);
-            }
+            public void Arrange(WaterFlowFMModel model) { }
+            public void Act(WaterFlowFMModel model) => model.Area.FixedWeirs.Add(new FixedWeir());
         }
 
+        private class RemovingFixedWeirTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            private readonly FixedWeir fixedWeir = new FixedWeir();
+
+            public void Arrange(WaterFlowFMModel model) => model.Area.FixedWeirs.Add(fixedWeir);
+            public void Act(WaterFlowFMModel model) => model.Area.FixedWeirs.Remove(fixedWeir);
+        }
+
+        private class AddingStructureTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            public void Arrange(WaterFlowFMModel model) { }
+            public void Act(WaterFlowFMModel model) => model.Area.Structures.Add(new Structure());
+        }
+        
+        private class RemovingStructureTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            private readonly Structure structure = new Structure();
+
+            public void Arrange(WaterFlowFMModel model) => model.Area.Structures.Add(structure);
+            public void Act(WaterFlowFMModel model) => model.Area.Structures.Remove(structure);
+        }
+        
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ChangingAStructureProperty_ShouldMarkOutputOutOfSync()
         {
             using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
-                var model = new WaterFlowFMModel();
+               
                 var structure = new Structure
                 {
                     Formula = new SimpleWeirFormula()

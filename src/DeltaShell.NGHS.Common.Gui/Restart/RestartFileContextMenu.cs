@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Gui.Properties;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
@@ -27,7 +28,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             Ensure.NotNull(restartFile, nameof(restartFile));
             Ensure.NotNull(node, nameof(node));
 
-            if (!TryGetModel(node, out ITimeDependentRestartModel model))
+            if (!TryGetModel(node, out IRestartModel model))
             {
                 return;
             }
@@ -42,7 +43,7 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             }
         }
 
-        private void AddItemsForInputRestartFile(ITimeDependentRestartModel model)
+        private void AddItemsForInputRestartFile(IRestartModel model)
         {
             ContextMenuStrip.Items.Add(GetRemoveRestartMenuItem(model));
             ContextMenuStrip.Items.Add(GetUseLastValidRestartMenuItem(model));
@@ -50,24 +51,27 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
         }
 
-        private void AddItemsForOutputRestartFile(ITimeDependentRestartModel model, RestartFile restartFile)
+        private void AddItemsForOutputRestartFile(IRestartModel model, RestartFile restartFile)
         {
             ContextMenuStrip.Items.Add(GetUseAsRestartMenuItem(model, restartFile));
         }
 
-        private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(ITimeDependentRestartModel model, RestartFile restartFile)
+        private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(IRestartModel model, RestartFile restartFile)
         {
             var menuItem = new ClonableToolStripMenuItem {Text = Resources.UseAsRestart};
             menuItem.Click += (s, e) =>
             {
                 model.RestartInput = restartFile.Clone();
-                model.MarkOutputOutOfSync();
+                if (model is ITimeDependentModel timeDependentModel)
+                {
+                    timeDependentModel.MarkOutputOutOfSync();
+                }
             };
 
             return menuItem;
         }
 
-        private static ClonableToolStripMenuItem GetUseLastValidRestartMenuItem(ITimeDependentRestartModel model)
+        private static ClonableToolStripMenuItem GetUseLastValidRestartMenuItem(IRestartModel model)
         {
             var menuItem = new ClonableToolStripMenuItem
             {
@@ -85,13 +89,16 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             menuItem.Click += (s, e) =>
             {
                 model.RestartInput = outputRestartFile.Clone();
-                model.MarkOutputOutOfSync();
+                if (model is ITimeDependentModel timeDependentModel)
+                {
+                    timeDependentModel.MarkOutputOutOfSync();
+                }
             };
 
             return menuItem;
         }
 
-        private static ClonableToolStripMenuItem GetRemoveRestartMenuItem(ITimeDependentRestartModel model)
+        private static ClonableToolStripMenuItem GetRemoveRestartMenuItem(IRestartModel model)
         {
             var menuItem = new ClonableToolStripMenuItem
             {
@@ -101,18 +108,21 @@ namespace DeltaShell.NGHS.Common.Gui.Restart
             menuItem.Click += (s, e) =>
             {
                 model.RestartInput = new RestartFile();
-                model.MarkOutputOutOfSync();
+                if (model is ITimeDependentModel timeDependentModel)
+                {
+                    timeDependentModel.MarkOutputOutOfSync();
+                }
             };
 
             return menuItem;
         }
 
-        private static bool TryGetModel(ITreeNode node, out ITimeDependentRestartModel result)
+        private static bool TryGetModel(ITreeNode node, out IRestartModel result)
         {
             ITreeNode parent = node.Parent;
             while (parent != null)
             {
-                if (parent.Tag is ITimeDependentRestartModel model)
+                if (parent.Tag is IRestartModel model)
                 {
                     result = model;
                     return true;

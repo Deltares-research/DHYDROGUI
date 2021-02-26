@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void Constructor_InitializesInstanceCorrectly()
         {
             // Call
-            var importer = new FMRestartFileImporter(Enumerable.Empty<IWaterFlowFMModel>);
+            var importer = new FMRestartFileImporter(Enumerable.Empty<IRestartModel>);
 
             // Assert
             Assert.That(importer.Name, Is.EqualTo("Restart File"));
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         [Test]
         public void CanImportOn_IsRestartInputForModel_ReturnsTrue()
         {
-            var model = Substitute.For<IWaterFlowFMModel>();
+            var model = Substitute.For<IRestartModel>();
             var importer = new FMRestartFileImporter(() => new[]
             {
                 model
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void CanImportOn_IsNotRestartInputForModel_ReturnsFalse()
         {
             // Setup
-            var model = Substitute.For<IWaterFlowFMModel>();
+            var model = Substitute.For<IRestartModel>();
             var importer = new FMRestartFileImporter(() => new[]
             {
                 model
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void ImportItem_TargetNull_ThrowsArgumentNullException()
         {
             // Setup
-            var importer = new FMRestartFileImporter(Enumerable.Empty<IWaterFlowFMModel>);
+            var importer = new FMRestartFileImporter(Enumerable.Empty<IRestartModel>);
 
             // Call
             void Call() => importer.ImportItem("path/to/the.file", null);
@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void ImportItem_FileDoesNotExist_ThrowsFileNotFoundException()
         {
             // Setup
-            var importer = new FMRestartFileImporter(Enumerable.Empty<IWaterFlowFMModel>);
+            var importer = new FMRestartFileImporter(Enumerable.Empty<IRestartModel>);
 
             // Call
             void Call() => importer.ImportItem("path/to/the.file", new RestartFile());
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             using (var tempDir = new TemporaryDirectory())
             {
                 // Setup
-                var model = Substitute.For<IWaterFlowFMModel>();
+                var model = Substitute.For<IRestartModel, ITimeDependentModel>();
                 model.RestartInput = new RestartFile();
 
                 var importer = new FMRestartFileImporter(() => new[]
@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.That(result, Is.SameAs(model.RestartInput));
                 Assert.That(model.RestartInput.Path, Is.EqualTo(filePath));
                 
-                model.Received().MarkOutputOutOfSync();
+                ((ITimeDependentModel)model).Received(1).MarkOutputOutOfSync();
             }
         }
 
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void ImportItem_PathNullOrEmpty_ThrowsArgumentException(string path)
         {
             // Setup
-            var importer = new FMRestartFileImporter(Enumerable.Empty<IWaterFlowFMModel>);
+            var importer = new FMRestartFileImporter(Enumerable.Empty<IRestartModel>);
 
             // Call
             void Call() => importer.ImportItem(path, new RestartFile());

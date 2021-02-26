@@ -12,11 +12,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         public void SettingADifferentGrid_ShouldMarkOutputOutOfSync()
         {
             using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
-
-                var model = new WaterFlowFMModel();
                 model.ConnectOutput(tempDirectory.Path);
 
                 // check pre-condition

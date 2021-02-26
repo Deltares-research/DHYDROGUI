@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DelftTools.Shell.Core.Workflow;
 
 namespace DeltaShell.NGHS.Common.IO.RestartFiles
 {

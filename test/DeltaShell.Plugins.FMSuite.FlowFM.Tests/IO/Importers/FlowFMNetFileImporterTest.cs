@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         public void ImportItem_ForANewGrid_ShouldMarkOutputOutOfSync()
         {
             using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
                 // Arrange
                 string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                     fs.Write(info, 0, info.Length);
                 }
 
-                var model = new WaterFlowFMModel();
+                
                 model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
                 model.ConnectOutput(tempDirectory.Path);
 

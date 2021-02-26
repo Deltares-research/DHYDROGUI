@@ -49,15 +49,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             string testFolder = TestHelper.GetTestFilePath(@"Model\Output\FlowFM");
 
             using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
-                var model = new WaterFlowFMModel
-                {
-                    OutputOutOfSync = outputOutOfSync
-                };
+                model.OutputOutOfSync = outputOutOfSync;
+
                 string modelFolder = tempDir.CopyDirectoryToTempDirectory(testFolder);
-                
+
                 string mduFilePath = Path.Combine(modelFolder, "input", "FlowFM.mdu");
-                
+
                 // Precondition
                 Assert.AreEqual(outputOutOfSync, model.OutputOutOfSync);
 

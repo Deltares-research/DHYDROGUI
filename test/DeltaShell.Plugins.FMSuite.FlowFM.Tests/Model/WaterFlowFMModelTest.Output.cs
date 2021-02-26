@@ -248,9 +248,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
             {
                 CreateRestartFiles(tempDir).ToArray();
-                var model = new WaterFlowFMModel();
+              
                 model.ConnectOutput(tempDir.Path);
                 model.OutputOutOfSync = outOfSync;
                 

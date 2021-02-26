@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
@@ -2512,6 +2511,65 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 // Assert
                 Assert.IsTrue(model.OutputOutOfSync);
             }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(GetTimeStepsForFMRegionObjects))]
+        public void AddingOrRemovingAFMRegionObject_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data)
+        {
+            MarkingOutputOutOfSyncWhenInputChangedTest(data);
+        }
+
+        private static IEnumerable<TestCaseData> GetTimeStepsForFMRegionObjects()
+        {
+            yield return new TestCaseData(new AddingBoundaryTestSteps());
+            yield return new TestCaseData(new RemovingBoundaryTestSteps());
+            yield return new TestCaseData(new AddingPipeTestSteps());
+            yield return new TestCaseData(new RemovingPipeTestSteps());
+            yield return new TestCaseData(new AddingSourceAndSinkTestSteps());
+            yield return new TestCaseData(new RemovingSourceAndSinkTestSteps());
+        }
+        private class AddingBoundaryTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            public void Arrange(WaterFlowFMModel model) { }
+            public void Act(WaterFlowFMModel model) => model.Boundaries.Add(new Feature2D());
+        }
+
+        private class RemovingBoundaryTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            private readonly Feature2D boundary = new Feature2D();
+
+            public void Arrange(WaterFlowFMModel model) => model.Boundaries.Add(boundary);
+            public void Act(WaterFlowFMModel model) => model.Boundaries.Remove(boundary);
+        }
+
+        private class AddingPipeTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            public void Arrange(WaterFlowFMModel model) { }
+            public void Act(WaterFlowFMModel model) => model.Pipes.Add(new Feature2D());
+        }
+
+        private class RemovingPipeTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            private readonly Feature2D pipe = new Feature2D();
+
+            public void Arrange(WaterFlowFMModel model) => model.Pipes.Add(pipe);
+            public void Act(WaterFlowFMModel model) => model.Pipes.Remove(pipe);
+        }
+
+        private class AddingSourceAndSinkTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            public void Arrange(WaterFlowFMModel model) { }
+            public void Act(WaterFlowFMModel model) => model.SourcesAndSinks.Add(new SourceAndSink());
+        }
+
+        private class RemovingSourceAndSinkTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            private readonly SourceAndSink sourceAndSink = new SourceAndSink();
+
+            public void Arrange(WaterFlowFMModel model) => model.SourcesAndSinks.Add(sourceAndSink);
+            public void Act(WaterFlowFMModel model) => model.SourcesAndSinks.Remove(sourceAndSink);
         }
 
         private static IEnumerable<SourceAndSink> CreateSourcesAndSinks()

@@ -267,6 +267,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         
         [Test]
         [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void GivenARunningGui_WhenSavingClosingAndOpeningTheSameProject_ShouldReturnAProjectTreeWithOutputReferencedToTheLastInstanceOfTheModel()
         {
