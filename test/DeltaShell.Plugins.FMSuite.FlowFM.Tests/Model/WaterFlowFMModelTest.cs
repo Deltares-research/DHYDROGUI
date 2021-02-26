@@ -828,6 +828,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.IsNotNull(spatialOperationValueConverter.SpatialOperationSet.AddOperation(eraseOperation));
 
             model.ReloadGrid(true);
+
+            Assert.That(spatialOperationValueConverter.SpatialOperationSet.Dirty, Is.False);
             
             var cov =
                 spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
