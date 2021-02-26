@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security;
@@ -16,6 +17,7 @@ using DeltaShell.NGHS.IO.DelftIniObjects;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Grid;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DelftIniReaders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -27,7 +29,6 @@ using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap;
-using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -323,11 +324,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 $"{ExtForceFileConstants.QuantityKey}={quantity}",
                 $"{ExtForceFileConstants.FileNameKey}={fileName}",
-                $"{ExtForceFileConstants.FileTypeKey}={ExtForceQuantNames.FileTypes.Triangulation}",
-                $"{ExtForceFileConstants.MethodKey}=6",
-                $"{ExtForceFileConstants.OperandKey}={ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite]}",
-                $"{ExtForceFileConstants.AveragingTypeKey}={(int) GridCellAveragingMethod.ClosestPoint}",
-                $"{ExtForceFileConstants.RelSearchCellSizeKey}=1",
+                $"{ExtForceFileConstants.FileTypeKey}={AddSamplesDefaults.FileType}",
+                $"{ExtForceFileConstants.MethodKey}={AddSamplesDefaults.Method}",
+                $"{ExtForceFileConstants.OperandKey}={ExtForceQuantNames.OperatorToStringMapping[AddSamplesDefaults.Operand]}",
+                $"{ExtForceFileConstants.AveragingTypeKey}={(int) AddSamplesDefaults.AveragingType}",
+                $"{ExtForceFileConstants.RelSearchCellSizeKey}={AddSamplesDefaults.RelSearchCellSize.ToString(CultureInfo.InvariantCulture)}",
                 ""
             };
             fileContent.InsertRange(index, lines);

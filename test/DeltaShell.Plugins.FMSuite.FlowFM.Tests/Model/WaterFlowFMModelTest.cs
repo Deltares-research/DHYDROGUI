@@ -829,9 +829,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             model.ReloadGrid(true);
 
-            Assert.IsTrue(spatialOperationValueConverter.SpatialOperationSet.Dirty);
-
-            spatialOperationValueConverter.SpatialOperationSet.Execute();
+            Assert.That(spatialOperationValueConverter.SpatialOperationSet.Dirty, Is.False);
+            
             var cov =
                 spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
                     UnstructuredGridCoverage;

@@ -82,6 +82,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             }
         }
 
+        [Test]
+        public void Validate_OneValidTracer_OneInvalidTracer_ReturnsValidationReportWithCorrectIssue()
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                ConfigureValidModel(model);
+
+                model.TracerDefinitions.Add("Some tracer 1");
+                model.TracerDefinitions.Add("Some tracer 2");
+                SetValues(model.SpatialData.InitialTracers.First(), 7d);
+
+                // Call
+                ValidationReport report = WaterFlowFMProcessesValidator.Validate(model);
+
+                // Assert
+                Assert.That(report.Category, Is.EqualTo("Physical Processes"));
+                Assert.That(report.Issues, Has.Count.EqualTo(1));
+                Assert.That(report.WarningCount, Is.EqualTo(1));
+
+                ValidationIssue issue = report.Issues.Single();
+                Assert.That(issue.ViewData, Is.SameAs(model));
+                Assert.That(issue.Subject, Is.SameAs(model));
+                Assert.That(issue.Severity, Is.EqualTo(ValidationSeverity.Warning));
+                Assert.That(issue.Message, Is.EqualTo("Tracer 'Some tracer 2' concentration has not been set in any boundary condition nor initial field. It is now set to default value 0."));
+            }
+        }
+
         [TestCaseSource(nameof(ValidateCoverageCases))]
         public void Validate_CoverageContainsNoDataValue_ReturnsValidationReportWithCorrectIssue(Func<ISpatialData, IFunction> getCoverage)
         {

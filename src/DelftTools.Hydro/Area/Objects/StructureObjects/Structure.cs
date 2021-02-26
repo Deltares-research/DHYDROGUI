@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Aop;
