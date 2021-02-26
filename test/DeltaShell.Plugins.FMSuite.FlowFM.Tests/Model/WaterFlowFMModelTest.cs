@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
