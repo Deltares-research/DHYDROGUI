@@ -90,6 +90,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             GridExtent = grid == null ? null : grid.GetExtents();
         }
 
+        private static double GetBathymetryNoDataValue(UnstructuredGridCoverage bathymetry) =>
+            double.TryParse(bathymetry.Components[0].NoDataValue.ToString(), out double noDataValue) 
+                ? noDataValue 
+                : -999D;
+
         public void ReloadGrid(bool writeNetFile = true, bool loadBathymetry = false)
         {
             try
@@ -111,30 +116,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     {
                         UnstructuredGridCoverage originalBathymetry = GetOriginalCoverage(SpatialData.Bathymetry);
                         originalBathymetry.Arguments[0].Clear();
-                        originalBathymetry.Components[0]
-                                          .Clear(); //HACK: signals the interpolation method to use the grid node z-values...
-                        double ndv;
-                        if (!double.TryParse(originalBathymetry.Components[0].NoDataValue.ToString(), out ndv))
-                        {
-                            bathymetryNoDataValue = -999.0d;
-                        }
-                        else
-                        {
-                            bathymetryNoDataValue = ndv;
-                        }
+                        //HACK: signals the interpolation method to use the grid node z-values...
+                        originalBathymetry.Components[0].Clear(); 
+
+                        bathymetryNoDataValue = GetBathymetryNoDataValue(originalBathymetry);
                     }
 
-                    UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdaptor =>
+                    UnstructuredGridFileHelper.DoIfUgrid(NetFilePath, uGridAdapter =>
                     {
-                        if (1 > uGridAdaptor.uGrid.GetNumberOf2DMeshes())
+                        if (1 > uGridAdapter.uGrid.GetNumberOf2DMeshes())
                         {
                             bathymetryNoDataValue = -999.0d;
                             return;
                         }
 
-                        uGridAdaptor.uGrid.GetAllNodeCoordinatesForMeshId(1);
+                        uGridAdapter.uGrid.GetAllNodeCoordinatesForMeshId(1);
 
-                        bathymetryNoDataValue = uGridAdaptor.uGrid.ZCoordinateFillValue;
+                        bathymetryNoDataValue = uGridAdapter.uGrid.ZCoordinateFillValue;
                     });
                     Grid = newGrid;
                 }
