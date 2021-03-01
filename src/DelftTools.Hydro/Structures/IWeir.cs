@@ -56,7 +56,7 @@ namespace DelftTools.Hydro.Structures
         /// </summary>
         double CrestLevel { get; set; }
         /// <summary>
-        /// Crest level
+        /// Discharge coefficient.
         /// </summary>
         double DischargeCoefficient { get; set; }
         /// <summary>
