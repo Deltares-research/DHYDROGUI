@@ -120,22 +120,6 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="dimr_xsd\dimr.xsd" />
-    <Content Include="drtc_xsd\pi_diag.xsd" />
-    <Content Include="drtc_xsd\pi_modelparameters.xsd" />
-    <Content Include="drtc_xsd\pi_run.xsd" />
-    <Content Include="drtc_xsd\pi_sharedtypes.xsd" />
-    <Content Include="drtc_xsd\pi_state.xsd" />
-    <Content Include="drtc_xsd\pi_timeseries.xsd" />
-    <Content Include="drtc_xsd\rtcDataConfig.xsd" />
-    <Content Include="drtc_xsd\rtcObjectiveConfig.xsd" />
-    <Content Include="drtc_xsd\rtcRuntimeConfig.xsd" />
-    <Content Include="drtc_xsd\rtcSharedTypes.xsd" />
-    <Content Include="drtc_xsd\rtcStateConfig.xsd" />
-    <Content Include="drtc_xsd\rtcToolsConfig.xsd" />
-    <Content Include="drtc_xsd\treeVector.xsd" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -143,8 +127,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Dimr.Libs.2.14.9\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.2.14.9\build\net40\Dimr.Libs.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.436-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.436-beta\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Dimr.Libs.2.15.14\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.2.15.14\build\net40\Dimr.Libs.targets'))" />
   </Target>
   <PropertyGroup>
     <PreBuildEvent>cd "$(ProjectDir)\drtc_xsd"
@@ -154,8 +138,8 @@ cd "$(ProjectDir)\dimr_xsd"
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\Dimr.Libs.2.14.9\build\net40\Dimr.Libs.targets" Condition="Exists('..\..\packages\Dimr.Libs.2.14.9\build\net40\Dimr.Libs.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.436-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.436-beta\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\Dimr.Libs.2.15.14\build\net40\Dimr.Libs.targets" Condition="Exists('..\..\packages\Dimr.Libs.2.15.14\build\net40\Dimr.Libs.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
