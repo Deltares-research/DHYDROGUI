@@ -137,7 +137,116 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 process.WaitForExit();
             }
         }
-        
+
+        /// <summary>
+        /// Parses the provided file.
+        /// </summary>
+        /// <param name="filePath">The file to parse.</param>
+        /// <param name="linesToIgnore">Any lines to ignore,</param>
+        /// <param name="relevantLines">The relevant parsed lines as output variable.</param>
+        /// <param name="ignoredLines">The ignored parsed lines as output variable.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="filePath"/> or <paramref name="linesToIgnore"/> is <c>null</c>.</exception>
+        public static void ParseFile(
+            string filePath,
+            string[] linesToIgnore,
+            out List<Tuple<int, string>> relevantLines,
+            out List<Tuple<int, string>> ignoredLines)
+        {
+            if (filePath == null)
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
+
+            if (linesToIgnore == null)
+            {
+                throw new ArgumentNullException(nameof(linesToIgnore));
+            }
+
+            relevantLines = new List<Tuple<int, string>>();
+            ignoredLines = new List<Tuple<int, string>>();
+
+            var text = ReadFile(filePath).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                var lineNumber = i + 1;
+                var lineWithoutTabs = RemoveTabs(text[i]);
+
+                if (linesToIgnore.Any(ignore => lineWithoutTabs.StartsWith(ignore)))
+                {
+                    ignoredLines.Add(new Tuple<int, string>(lineNumber, lineWithoutTabs));
+                }
+                else
+                {
+                    relevantLines.Add(new Tuple<int, string>(lineNumber, lineWithoutTabs));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Creates an error message based on an expected and actual parsed line.
+        /// </summary>
+        /// <param name="expectedLine">The expected parsed line.</param>
+        /// <param name="actualLine">The actual parsed line.</param>
+        /// <returns>The error message.</returns>
+        /// <exception cref="ArgumentNullException">When any parameter is <c>null</c> or when the string value of either tuple is <c>null</c>.</exception>
+        public static string CreateErrorMessage(
+            Tuple<int, string> expectedLine,
+            Tuple<int, string> actualLine)
+        {
+            if (expectedLine?.Item2 == null)
+            {
+                throw new ArgumentNullException(nameof(expectedLine));
+            }
+
+            if (actualLine?.Item2 == null)
+            {
+                throw new ArgumentNullException(nameof(actualLine));
+            }
+
+            return CreateErrorMessage(expectedLine, actualLine, new List<Tuple<int, string>>(), new List<Tuple<int, string>>());
+        }
+
+        /// <summary>
+        /// Gets mismatching lines between a collection of expected lines and a collection of actual lines.
+        /// </summary>
+        /// <param name="relevantLinesInExpectedText">The collection of expected lines.</param>
+        /// <param name="relevantLinesInActualText">The collection of actual lines.</param>
+        /// <param name="mismatchingLinesInExpected">A collection of mismatching lines in the collection of expected lines as output variable.</param>
+        /// <param name="mismatchingLinesInActual">A collection of mismatching lines in the collection of actual lines as output variable.</param>
+        /// <exception cref="ArgumentNullException">When <paramref name="relevantLinesInExpectedText"/> or <paramref name="relevantLinesInActualText"/> is <c>null</c>.</exception>
+        public static void GetMismatchingLines(
+            IReadOnlyCollection<Tuple<int, string>> relevantLinesInExpectedText,
+            IReadOnlyCollection<Tuple<int, string>> relevantLinesInActualText,
+            out List<Tuple<int, string>> mismatchingLinesInExpected,
+            out List<Tuple<int, string>> mismatchingLinesInActual)
+        {
+            if (relevantLinesInExpectedText == null)
+            {
+                throw new ArgumentNullException(nameof(relevantLinesInExpectedText));
+            }
+
+            if (relevantLinesInActualText == null)
+            {
+                throw new ArgumentNullException(nameof(relevantLinesInActualText));
+            }
+
+            mismatchingLinesInExpected = new List<Tuple<int, string>>();
+            mismatchingLinesInActual = new List<Tuple<int, string>>();
+
+            for (var i = 0; i < Math.Max(relevantLinesInExpectedText.Count, relevantLinesInActualText.Count); i++)
+            {
+                var expectedLine = relevantLinesInExpectedText.ElementAtOrDefault(i) ?? CreateDummyLine();
+                var actualLine = relevantLinesInActualText.ElementAtOrDefault(i) ?? CreateDummyLine();
+
+                if (string.CompareOrdinal(expectedLine.Item2, actualLine.Item2) != 0)
+                {
+                    mismatchingLinesInExpected.Add(expectedLine);
+                    mismatchingLinesInActual.Add(actualLine);
+                }
+            }
+        }
+
         private static string CreateErrorMessage(
             Tuple<int, string> expectedLine,
             Tuple<int, string> actualLine,
@@ -160,11 +269,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
             return errorMessage;
         }
-        
-        private static void RemoveEquivalentLines(
+
+        /// <summary>
+        /// Removes equivalent lines from a collection of expected lines and a collection of actual lines.
+        /// </summary>
+        /// <param name="mismatchingLinesInExpected">The collection of mismatching lines in the collection of expected lines.</param>
+        /// <param name="mismatchingLinesInActual">The collection of mismatching lines in the collection of actual lines.</param>
+        /// <exception cref="ArgumentNullException">When any parameter is <c>null</c>.</exception>
+        /// <exception cref="NotSupportedException">When the intersect of both collections is not the same.</exception>
+        public static void RemoveEquivalentLines(
             ICollection<Tuple<int, string>> mismatchingLinesInExpected,
             ICollection<Tuple<int, string>> mismatchingLinesInActual)
         {
+            if (mismatchingLinesInExpected == null)
+            {
+                throw new ArgumentNullException(nameof(mismatchingLinesInExpected));
+            }
+
+            if (mismatchingLinesInActual == null)
+            {
+                throw new ArgumentNullException(nameof(mismatchingLinesInActual));
+            }
+
             var lineEqualityComparer = new LineEqualityComparer();
             var equivalentLinesInExpected = mismatchingLinesInExpected.Intersect(mismatchingLinesInActual, lineEqualityComparer).ToList();
             var equivalentLinesInActual = mismatchingLinesInActual.Intersect(mismatchingLinesInExpected, lineEqualityComparer).ToList();
@@ -198,60 +324,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             }
         }
         
-        private static void GetMismatchingLines(
-            IReadOnlyCollection<Tuple<int, string>> relevantLinesInExpectedText,
-            IReadOnlyCollection<Tuple<int, string>> relevantLinesInActualText,
-            out List<Tuple<int, string>> mismatchingLinesInExpected,
-            out List<Tuple<int, string>> mismatchingLinesInActual)
-        {
-            mismatchingLinesInExpected = new List<Tuple<int, string>>();
-            mismatchingLinesInActual = new List<Tuple<int, string>>();
-
-            for (var i = 0; i < Math.Max(relevantLinesInExpectedText.Count, relevantLinesInActualText.Count); i++)
-            {
-                var expectedLine = relevantLinesInExpectedText.ElementAtOrDefault(i) ?? CreateDummyLine();
-                var actualLine = relevantLinesInActualText.ElementAtOrDefault(i) ?? CreateDummyLine();
-
-                if (string.CompareOrdinal(expectedLine.Item2, actualLine.Item2) != 0)
-                {
-                    mismatchingLinesInExpected.Add(expectedLine);
-                    mismatchingLinesInActual.Add(actualLine);
-                }
-            }
-        }
-        
         private static Tuple<int, string> CreateDummyLine()
         {
             return new Tuple<int, string>(-1, "<end of file>");
         }
-        
-        private static void ParseFile(
-            string filePath,
-            string[] linesToIgnore,
-            out List<Tuple<int, string>> relevantLines,
-            out List<Tuple<int, string>> ignoredLines)
-        {
-            relevantLines = new List<Tuple<int, string>>();
-            ignoredLines = new List<Tuple<int, string>>();
 
-            var text = ReadFile(filePath).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            for (var i = 0; i < text.Length; i++)
-            {
-                var lineNumber = i + 1;
-                var lineWithoutTabs = RemoveTabs(text[i]);
-
-                if (linesToIgnore.Any(ignore => lineWithoutTabs.StartsWith(ignore)))
-                {
-                    ignoredLines.Add(new Tuple<int, string>(lineNumber, lineWithoutTabs));
-                }
-                else
-                {
-                    relevantLines.Add(new Tuple<int, string>(lineNumber, lineWithoutTabs));
-                }
-            }
-        }
-        
         private static string RemoveTabs(string originalText)
         {
             return Regex.Replace(originalText, "[\t]", string.Empty);
