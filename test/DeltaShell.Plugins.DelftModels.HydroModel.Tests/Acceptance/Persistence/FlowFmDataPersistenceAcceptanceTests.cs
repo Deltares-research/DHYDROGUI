@@ -40,7 +40,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModels\FlowFM");
+            string acceptanceModelPath = GuiTestHelper.IsBuildServer
+                ? @"..\..\AcceptanceModels\FlowFM"
+                : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModels\FlowFM";
+
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
         }
 
         [SetUp]

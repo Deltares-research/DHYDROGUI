@@ -39,8 +39,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModels\FlowFM");
-            acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, @"..\..\AcceptanceModelsReferenceOutput\FlowFM");
+            string acceptanceModelPath = GuiTestHelper.IsBuildServer
+                ? @"..\..\AcceptanceModels\FlowFM"
+                : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModels\FlowFM";
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
+
+            string acceptanceModelReferenceOutputPath = GuiTestHelper.IsBuildServer
+                ? @"..\..\AcceptanceModels\FlowFM"
+                : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModelsReferenceOutput\FlowFM";
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
         }
 
         [SetUp]
