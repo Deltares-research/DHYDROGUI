@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             string acceptanceModelReferenceOutputPath = GuiTestHelper.IsBuildServer
                 ? @"..\..\AcceptanceModels\FlowFM"
                 : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModelsReferenceOutput\SOBEK2";
-            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
+            acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
         }
 
         [SetUp]
