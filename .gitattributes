@@ -3618,6 +3618,7 @@ test/DeltaShell.NGHS.TestUtils/packages.config -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/AcceptanceModelTestHelper.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/FileComparerHelper.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/GwswAcceptanceModelTestHelper.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/CustomComparers/CrossSectionDefinitionFileComparer.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/FlowFmDataPersistenceAcceptanceTests.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/FlowFmFileComparer.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/GwswDataPersistenceAcceptanceTests.cs -text

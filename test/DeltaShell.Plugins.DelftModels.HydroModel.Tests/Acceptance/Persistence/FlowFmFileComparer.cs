@@ -9,6 +9,7 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence.CustomComparers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
@@ -92,8 +93,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
                 SortScrambledFiles(expectedFlowFmFile, actualFlowFmFile);
 
-                identical = FileComparerHelper.CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out var errorMessage) && identical;
-
+                string errorMessage = string.Empty;
+                
+                // crsdef.ini requires custom comparison because of rounding errors for coordinates when saving and loading
+                if (Path.GetFileNameWithoutExtension(expectedFlowFmFile).Equals("crsdef", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    identical = CrossSectionDefinitionFileComparer.CompareFiles(expectedFlowFmFile, actualFlowFmFile, out errorMessage) && identical;
+                }
+                else
+                {
+                    identical = FileComparerHelper.CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out errorMessage) && identical;
+                }
+                
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
                     overallErrorMessage += $"{errorMessage}{FileComparerHelper.VerticalLine}";
