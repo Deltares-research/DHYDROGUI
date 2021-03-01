@@ -10,23 +10,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class FmMapFile1DOutputFileReader
     {
-        private readonly string timeVariableNameInNetCdfFile;
-        private readonly string timeDimensionNameInNetCdfFile;
-        private readonly string unitsAttributeKeyNameInNetCdfFile;
-        private readonly string timeVariableUnitValuePrefixInNetCdfFile;
-        private readonly string dateTimeFormat;
-        private readonly string longNameAttributeKeyNameInNetCdfFile;
-
-        public FmMapFile1DOutputFileReader()
-        {
-            timeVariableNameInNetCdfFile = "time";
-            timeDimensionNameInNetCdfFile = "time";
-
-            unitsAttributeKeyNameInNetCdfFile = "units";
-            timeVariableUnitValuePrefixInNetCdfFile = "seconds since";
-            dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
-            longNameAttributeKeyNameInNetCdfFile = "long_name";
-        }
+        private const string timeVariableNameInNetCdfFile = "time";
+        private const string timeDimensionNameInNetCdfFile = "time";
+        private const string unitsAttributeKeyNameInNetCdfFile = "units";
+        private const string timeVariableUnitValuePrefixInNetCdfFile = "seconds since";
+        private const string dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        private string dateTimeFormatWithZone = $"{dateTimeFormat} zzz";
+        private const string longNameAttributeKeyNameInNetCdfFile = "long_name";
 
         public virtual OutputFile1DMetaData ReadMetaData(string path, bool doValidation = true)
         {
@@ -171,18 +161,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private DateTime ParseReferenceTime(NetCdfFile outputFile, NetCdfVariable timeVariable)
         {
-            var attributes = outputFile.GetAttributes(timeVariable);
+            Dictionary<string, object> attributes = outputFile.GetAttributes(timeVariable);
 
-            var unit = attributes.FirstOrDefault(a => a.Key == unitsAttributeKeyNameInNetCdfFile).Value;
-            var unitString = unit == null 
-                ? string.Empty 
-                : unit.ToString().Replace(timeVariableUnitValuePrefixInNetCdfFile, "").Trim();
-            
-            DateTime referenceTime;
-            if (DateTime.TryParseExact(unitString, $"{dateTimeFormat} zzz",
-                CultureInfo.InvariantCulture, DateTimeStyles.None, out referenceTime) || DateTime.TryParseExact(
-                unitString, dateTimeFormat,
-                CultureInfo.InvariantCulture, DateTimeStyles.None, out referenceTime)) return referenceTime;
+            object unit = attributes.FirstOrDefault(a => a.Key == unitsAttributeKeyNameInNetCdfFile).Value;
+            string unitString = unit == null 
+                                    ? string.Empty 
+                                    : unit.ToString().Replace(timeVariableUnitValuePrefixInNetCdfFile, "").Trim();
+
+            if (DateTime.TryParseExact(unitString,
+                                       new[]
+                                       {
+                                           dateTimeFormat,
+                                           dateTimeFormatWithZone
+                                       },
+                                       CultureInfo.InvariantCulture,
+                                       DateTimeStyles.AdjustToUniversal,
+                                       out DateTime referenceTime))
+            {
+                return referenceTime;
+            }
 
             var errorMessage = $"Unable to parse DateTime {unitString} from file {outputFile.Path}";
 

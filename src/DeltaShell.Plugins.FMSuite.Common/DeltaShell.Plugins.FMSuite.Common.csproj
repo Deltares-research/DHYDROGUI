@@ -162,6 +162,7 @@
     <Compile Include="IO\Feature2DImportExportBase.cs" />
     <Compile Include="IO\FMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\FunctionExtensions.cs" />
+    <Compile Include="IO\IFMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\ObsFile.cs" />
     <Compile Include="IO\PlizFile.cs" />
     <Compile Include="IO\PolFile.cs" />
@@ -191,6 +192,11 @@
     <Compile Include="Toolboxes\ScriptCommand.cs" />
     <Compile Include="Toolboxes\ToolboxCommands.cs" />
     <Compile Include="WindDefinitionType.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -207,6 +213,13 @@
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
