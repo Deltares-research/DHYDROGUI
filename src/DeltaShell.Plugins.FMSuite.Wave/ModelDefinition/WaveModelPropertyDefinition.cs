@@ -81,6 +81,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
         public const string MeteoXComponentValue = "x_wind";
         public const string MeteoYComponentValue = "y_wind";
 
+        public const string NetCdfSinglePrecision = "NetCDFSinglePrecision";
+
         #region Wave boundary conditions
 
         public const string Name = "Name";

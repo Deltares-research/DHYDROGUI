@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -821,6 +821,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Properties {
             get {
                 return ResourceManager.GetString("WaveOutputFileHelper_CollectInputFileNamesFromWorkingDirectoryMdw_The_specified__" +
                         "0__at__1__does_not_exist_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabling &apos;Use NetCDF single precision&apos; might lead to unexpected behavior when inspecting the netCDF model output data..
+        /// </summary>
+        public static string WaveOutputParametersValidator_Validate_Enabling__Use_NetCDF_single_precision__might_lead_to_unexpected_behavior_when_inspecting_the_NetCDF_model_output_data_ {
+            get {
+                return ResourceManager.GetString("WaveOutputParametersValidator_Validate_Enabling__Use_NetCDF_single_precision__mig" +
+                        "ht_lead_to_unexpected_behavior_when_inspecting_the_NetCDF_model_output_data_", resourceCulture);
             }
         }
         
