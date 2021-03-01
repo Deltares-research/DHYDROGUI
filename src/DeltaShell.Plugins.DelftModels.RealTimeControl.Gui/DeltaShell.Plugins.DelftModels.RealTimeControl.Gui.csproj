@@ -41,6 +41,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -71,33 +72,38 @@
     <Compile Include="Forms\InputSelectionDialog.Designer.cs">
       <DependentUpon>InputSelectionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PropertyGrid\ControlGroupProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\DirectionalConditionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\FactorRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\HydraulicRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\InputProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\IntervalRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\LookupSignalProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\OutputProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\PIDRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\RelativeTimeRuleProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\StandardConditionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\TimeConditionProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\TimeRuleProperties.cs" />
+    <Compile Include="Forms\Properties\ControlGroupProperties.cs" />
+    <Compile Include="Forms\Properties\DirectionalConditionProperties.cs" />
+    <Compile Include="Forms\Properties\FactorRuleProperties.cs" />
+    <Compile Include="Forms\Properties\HydraulicRuleProperties.cs" />
+    <Compile Include="Forms\Properties\InputProperties.cs" />
+    <Compile Include="Forms\Properties\IntervalRuleProperties.cs" />
+    <Compile Include="Forms\Properties\KeyValuePairArrayConverter.cs" />
+    <Compile Include="Forms\Properties\KeyValuePairPropertyDescriptor.cs" />
+    <Compile Include="Forms\Properties\LookupSignalProperties.cs" />
+    <Compile Include="Forms\Properties\MathematicalExpressionProperties.cs" />
+    <Compile Include="Forms\Properties\OutputProperties.cs" />
+    <Compile Include="Forms\Properties\PIDRuleProperties.cs" />
+    <Compile Include="Forms\Properties\RelativeTimeRuleProperties.cs" />
+    <Compile Include="Forms\Properties\RuleProperties.cs" />
+    <Compile Include="Forms\Properties\StandardConditionProperties.cs" />
+    <Compile Include="Forms\Properties\TimeConditionProperties.cs" />
+    <Compile Include="Forms\Properties\TimeRuleProperties.cs" />
     <Compile Include="Forms\Connection.cs" />
     <Compile Include="Forms\RtcExporterDialog.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\ShapeConnectionsRulesController.cs" />
     <Compile Include="Helpers\RTCModelCoordinateConvertor.cs" />
     <Compile Include="NodePresenters\ControlGroupCollectionNodePresenter.cs" />
     <Compile Include="NodePresenters\ControlGroupNodePresenter.cs" />
-    <Compile Include="NodePresenters\InputNodePresenter.cs" />
-    <Compile Include="NodePresenters\OutputNodePresenter.cs" />
+    <Compile Include="NodePresenters\OutputTreeFolderNodePresenter.cs" />
     <Compile Include="NodePresenters\RealTimeControlModelNodePresenter.cs" />
     <Compile Include="NodePresenters\RtcObjectNodePresenter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NodePresenters\RtcOutputFileFunctionStoreNodePresenter.cs" />
+    <Compile Include="OutputTreeFolder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -109,6 +115,10 @@
     <Compile Include="RealTimeControlMapLayerProvider.cs" />
     <Compile Include="RealTimeControlModelCopyPasteHelper.cs" />
     <Compile Include="RealTimeControlModelProperties.cs" />
+    <Compile Include="Restart\RealTimeControlInputRestartFileContextMenu.cs" />
+    <Compile Include="Restart\RealTimeControlInputRestartFileNodePresenter.cs" />
+    <Compile Include="Restart\RealTimeControlOutputRestartFileContextMenu.cs" />
+    <Compile Include="Restart\RealTimeControlOutputRestartFileNodePresenter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Controls">
@@ -142,6 +152,10 @@
     </Reference>
     <Reference Include="DelftTools.Utils">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.ProjectExplorer">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
@@ -196,16 +210,24 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
+    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d">
       <HintPath>..\..\packages\ValidationAspects.dll.2.2.0\lib\net461\ValidationAspects.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="ValidationAspects.PostSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
+    <Reference Include="ValidationAspects.PostSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d">
       <HintPath>..\..\packages\ValidationAspects.dll.2.2.0\lib\net461\ValidationAspects.PostSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -223,7 +245,6 @@
       <DependentUpon>InputSelectionDialog.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -309,6 +330,16 @@
       <Name>DeltaShell.Dimr</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{368694eb-cb62-4008-a27c-37afac0fdf14}</Project>      
+      <Name>DeltaShell.NGHS.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj">
       <Project>{7dad8091-178d-43b1-97a7-d47a5c5faaea}</Project>
       <Name>DeltaShell.Plugins.DelftModels.RealTimeControl</Name>
@@ -321,10 +352,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\propertieshs1.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="Resources\textdocument.png" />
+    <None Include="Resources\table.png" />
     <None Include="Resources\region.png" />
+    <None Include="Resources\mathexpression.png" />
+    <None Include="Resources\folder_output.png" />
     <Content Include="Resources\signal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

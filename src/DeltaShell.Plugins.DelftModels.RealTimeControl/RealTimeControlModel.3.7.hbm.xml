@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" auto-import="true"
+                   namespace="DeltaShell.Plugins.DelftModels.RealTimeControl"
+                   assembly="DeltaShell.Plugins.DelftModels.RealTimeControl">
+  <!-- map as subclass -->
+  <joined-subclass name="RealTimeControlModel" extends="DelftTools.Shell.Core.Workflow.IModel, DelftTools.Shell.Core" table="rtc_models"
+                   persister="DeltaShell.Plugins.Data.NHibernate.LegacyLoaderInjector`1[[DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy.RtcLegacyLoader37, DeltaShell.Plugins.DelftModels.RealTimeControl]], DeltaShell.Plugins.Data.NHibernate">
+    <key column="project_item_id" />
+    <list name="ControlGroups"
+          lazy="false"
+          cascade="all"
+          collection-type="DeltaShell.Plugins.Data.NHibernate.Collections.Generic.PersistentEventedListType`1[[DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.ControlGroup]], DeltaShell.Plugins.Data.NHibernate">
+      <key column="rtc_model_ctrlgrp_id" />
+      <index column="rtc_model_ctrlgrp_list_index" />
+      <one-to-many class="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.ControlGroup" />
+    </list>
+    <property name="LimitMemory" column="limit_memory" />
+
+    <property name="SaveStateStartTime" />
+    <property name="SaveStateStopTime" />
+    <property name="SaveStateTimeStep" />
+
+    <property name="WriteRestart" />
+
+    <many-to-one access="property" name="RestartInput" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart.RealTimeControlRestartFile, DeltaShell.Plugins.DelftModels.RealTimeControl" />
+    
+    <property name="CoordinateSystem" column="coordinate_system" type="DeltaShell.Plugins.SharpMapGis.HibernateMappings.CoordinateSystemUserType, DeltaShell.Plugins.SharpMapGis" />
+    <many-to-one name="OutputFileFunctionStore" cascade="save-update" class="DeltaShell.Plugins.DelftModels.RealTimeControl.IO.RealTimeControlOutputFileFunctionStore, DeltaShell.Plugins.DelftModels.RealTimeControl" />
+  </joined-subclass>
+</hibernate-mapping>

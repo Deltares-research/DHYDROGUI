@@ -72,7 +72,7 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, IFileBased, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData
+    public partial class WaterFlowFMModel : TimeDependentModelBase, IFileBased, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData, ICoupledModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
         private readonly DimrRunner runner;
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         public WaterFlowFMModel(string mduFilePath, ImportProgressChangedDelegate progressChanged = null) : base("FlowFM")
         {
-            runner = new DimrRunner(this);
+            runner = new DimrRunner(this, new DimrApiFactory());
             ImportProgressChanged = progressChanged;
 
             InitializeModelProperties();
@@ -3581,6 +3581,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return type == ModelType.DFlowFM;
         }
 
+        public void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath) {}
+
+        public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory => new HashSet<string>();
+
         public Type SupportedRegionType
         {
             get { return typeof (HydroArea); }
@@ -3734,6 +3738,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return "flow"; }
         }
 
+        public virtual string DimrModelRelativeOutputDirectory => DirectoryName;
+
         public virtual string GetItemString(IDataItem dataItem)
         {
             var category = GetFeatureCategory(dataItem.GetFeature());
@@ -3878,6 +3884,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
+
+        public virtual string DimrExportDirectoryPath => WorkingDirectory;
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
@@ -4064,6 +4072,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         internal void OnPropertyChanged(string propertyName)
         {
             OnPropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public IEnumerable<IDataItem> GetDataItemsUsedForCouplingModel(DataItemRole role)
+        {
+            return GetChildDataItemLocations(role).SelectMany(GetChildDataItems);
+        }
+        
+        private static readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
+        {
+            {"levelcenter", KnownStructureProperties.CrestLevel},
+            {"sill_level", KnownStructureProperties.CrestLevel},
+            {"crest_level", KnownStructureProperties.CrestLevel},
+            {"gateheight", KnownStructureProperties.GateLowerEdgeLevel},
+            {"lower_edge_level", KnownStructureProperties.GateLowerEdgeLevel},
+            {"door_opening_width", KnownStructureProperties.GateOpeningWidth},
+            {"opening_width", KnownStructureProperties.GateOpeningWidth}
+        };
+
+        public string GetUpToDateDataItemName(string oldDataItemName)
+        {
+            string[] partsTargetName = oldDataItemName.Split('.');
+
+            if (partsTargetName.Length <= 1 || 
+                !backwardsCompatibilityMapping.TryGetValue(partsTargetName.Last(), out string newName))
+            {
+                return oldDataItemName;
+            }
+
+            partsTargetName[partsTargetName.Length - 1] = newName;
+            return string.Join(".", partsTargetName);
         }
     }
 }

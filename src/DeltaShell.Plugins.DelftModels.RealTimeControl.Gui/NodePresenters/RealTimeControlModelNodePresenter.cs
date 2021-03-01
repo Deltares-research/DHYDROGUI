@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,16 +10,18 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Shell.Gui.Swf.Validation;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
+using DeltaShell.Plugins.CommonTools.TextData;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
+using GeoAPI.Extensions.Coverages;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 {
     public class RealTimeControlModelNodePresenter : ModelNodePresenterBase<RealTimeControlModel>
     {
-        private static readonly string InputFolderName = "Input";
-        private static readonly string OutputFolderName = "Output";
-        
+        public static readonly string InputFolderName = "Input";
+        public static readonly string OutputFolderName = "Output";
+
         private IGui gui;
 
         public RealTimeControlModelNodePresenter(GuiPlugin guiPlugin)
@@ -27,19 +30,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             gui = guiPlugin.Gui;
         }
 
-        public override Type NodeTagType
-        {
-            get { return typeof (RealTimeControlModel); }
-        }
+        public override Type NodeTagType => typeof(RealTimeControlModel);
 
-        public override bool CanRenameNode(ITreeNode node)
-        {
-            return true;
-        }
+        public override bool CanRenameNode(ITreeNode node) => true;
 
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
-            var contextMenu = base.GetContextMenu(sender, nodeData);
+            IMenuItem contextMenu = base.GetContextMenu(sender, nodeData);
 
             var subMenu = new ContextMenuStrip();
 
@@ -49,46 +46,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             {
                 var validateItem = new ClonableToolStripMenuItem
                 {
-                    Text = Properties.Resources.RealTimeControlModelNodePresenter_GetContextMenu_Validate___, 
-                    Tag = model, 
-                    Image = Resources.validation
+                    Text = Resources.RealTimeControlModelNodePresenter_GetContextMenu_Validate___,
+                    Tag = model,
+                    Image = RealTimeControl.Properties.Resources.validation
                 };
                 validateItem.Click += OnValidateClicked;
                 subMenu.Items.Add(validateItem);
             }
 
-            var item = new ClonableToolStripMenuItem
-            {
-                Text = Properties.Resources.RealTimeControlModelNodePresenter_GetContextMenu_Open_Last_Working_Directory___
-            };
+            var item = new ClonableToolStripMenuItem {Text = Resources.RealTimeControlModelNodePresenter_GetContextMenu_Open_Last_Working_Directory___};
             item.Click += (o, e) => OnOpenLastWorkingDirectoryClicked(nodeData as RealTimeControlModel);
             subMenu.Items.Add(item);
 
             contextMenu.Add(new MenuItemContextMenuStripAdapter(subMenu));
 
             return contextMenu;
-        }
-
-        private void OnValidateClicked(object sender, EventArgs e)
-        {
-            var model = (RealTimeControlModel)((ToolStripItem)sender).Tag;
-            Gui.DocumentViewsResolver.OpenViewForData(model, typeof (ValidationView));
-        }
-
-        private void OnOpenLastWorkingDirectoryClicked(RealTimeControlModel model)
-        {
-            var workingDir = model.LastWorkingDirectory;
-            if (String.IsNullOrEmpty(workingDir))
-            {
-                MessageBox.Show(Properties.Resources.RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Working_directory_not_created_yet__Model_must_run_first_,
-                                Properties.Resources.RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Cannot_open_working_directory,
-                                MessageBoxButtons.OK, 
-                                MessageBoxIcon.Information);
-            }
-            else
-            {
-                Process.Start(workingDir); //open directory in explorer
-            }
         }
 
         public override DragOperations CanDrop(object item, ITreeNode sourceNode, ITreeNode targetNode,
@@ -98,39 +70,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             {
                 return DragOperations.None;
             }
+
             var rtcModel = (RealTimeControlModel) targetNode.Tag;
             //can accept only one model which is IEIP
-            if (((item is IModel) && (!rtcModel.ControlledModels.Any())))
+            if (item is IModel && !rtcModel.ControlledModels.Any())
             {
                 return GetDefaultDropOperation(TreeView, item, sourceNode, targetNode, validOperations);
             }
+
             return DragOperations.None;
-
-        }
-    
-        public override IEnumerable GetChildNodeObjects(RealTimeControlModel rtcModel, ITreeNode node)
-        {
-            yield return new TreeFolder(rtcModel, GetInputItems(rtcModel), InputFolderName, FolderImageType.Input);
-            yield return new TreeFolder(rtcModel, GetOutputItems(rtcModel), OutputFolderName, FolderImageType.Output);
         }
 
-        private IEnumerable GetInputItems(RealTimeControlModel rtcModel)
+        /// <summary>
+        /// Gets the child node objects.
+        /// </summary>
+        /// <param name="parentNodeData">The RTC model.</param>
+        /// <param name="node">The node.</param>
+        /// <returns></returns>
+        public override IEnumerable GetChildNodeObjects(RealTimeControlModel parentNodeData, ITreeNode node)
         {
-            yield return rtcModel.ControlGroups;
+            yield return new TreeFolder(parentNodeData, GetInputItems(parentNodeData), InputFolderName, FolderImageType.Input);
+            yield return new OutputTreeFolder(parentNodeData, GetOutputItems(parentNodeData), OutputFolderName);
         }
 
-        private static IEnumerable GetOutputItems(RealTimeControlModel model)
+        protected override void OnPropertyChanged(RealTimeControlModel item, ITreeNode node, PropertyChangedEventArgs e)
         {
-            foreach (var outputFeatureCoverage in model.OutputFeatureCoverages)
+            base.OnPropertyChanged(item, node, e);
+
+            if (e.PropertyName == nameof(RealTimeControlModel.RestartInput))
             {
-                yield return outputFeatureCoverage;
-            }
-
-            //find a better way :(
-            var logItem = model.DataItems.FirstOrDefault(di => di.Tag == "lastRunLogFileDataItem");
-            if (logItem != null)
-            {
-                yield return logItem;
+                TreeView.RefreshChildNodes(node);
             }
         }
 
@@ -142,6 +111,59 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         protected override bool RemoveNodeData(object parentNodeData, RealTimeControlModel nodeData)
         {
             return gui.CommandHandler.DeleteCurrentProjectItem();
+        }
+
+        private void OnValidateClicked(object sender, EventArgs e)
+        {
+            var model = (RealTimeControlModel) ((ToolStripItem) sender).Tag;
+            Gui.DocumentViewsResolver.OpenViewForData(model, typeof(ValidationView));
+        }
+
+        private static void OnOpenLastWorkingDirectoryClicked(RealTimeControlModel model)
+        {
+            string workingDir = model.LastWorkingDirectory;
+            if (string.IsNullOrEmpty(workingDir))
+            {
+                MessageBox.Show(Resources.RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Working_directory_not_created_yet__Model_must_run_first_,
+                                Resources.RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Cannot_open_working_directory,
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+            }
+            else
+            {
+                Process.Start(workingDir); //open directory in explorer
+            }
+        }
+
+        private static IEnumerable GetInputItems(RealTimeControlModel rtcModel)
+        {
+            yield return new TreeFolder(rtcModel, GetInitialConditions(rtcModel), "Initial Conditions", FolderImageType.None);
+            yield return rtcModel.ControlGroups;
+        }
+
+        private static IEnumerable GetInitialConditions(RealTimeControlModel rtcModel)
+        {
+            yield return rtcModel.RestartInput;
+        }
+
+        private static IEnumerable GetOutputItems(RealTimeControlModel model)
+        {
+            yield return GetRestartFolder(model);
+
+            foreach (IFeatureCoverage outputFeatureCoverage in model.OutputFeatureCoverages)
+            {
+                yield return outputFeatureCoverage;
+            }
+
+            foreach (ReadOnlyTextFileData textDocument in model.OutputDocuments)
+            {
+                yield return textDocument;
+            }
+        }
+
+        private static object GetRestartFolder(RealTimeControlModel model)
+        {
+            return new TreeFolder(model, model.RestartOutput, NGHS.Common.Gui.Properties.Resources.RestartFolderName, FolderImageType.None);
         }
     }
 }

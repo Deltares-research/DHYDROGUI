@@ -128,20 +128,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void ImportControllerWithHeadDifference()
-        {
-            rtcMmodel = GetRtcModel(@"\164_000.lit\2\network.tp");
-
-            var controlGroup = GetControlGroupOfStructure("5");
-            Assert.IsNotNull(controlGroup);
-            var rule = controlGroup.Rules.FirstOrDefault(r => r.Name == "CTR_##1");
-            Assert.IsNotNull(rule);
-            Assert.AreEqual("5", rule.Inputs[0].LocationName);
-            Assert.AreEqual("Head Difference (s)", rule.Inputs[0].ParameterName);
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
         public void ImportPidControllerFrom212()
         {
             rtcMmodel = GetRtcModel(@"\171_001.lit\2\network.tp");

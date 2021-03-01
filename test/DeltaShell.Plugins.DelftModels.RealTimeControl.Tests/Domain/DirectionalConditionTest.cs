@@ -1,38 +1,32 @@
-﻿using System.Xml.Linq;
+﻿using System.Linq;
+using System.Xml.Linq;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 {
     public class DirectionalConditionTest
     {
-        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
-
-        private const string Implicit = "IMPLICIT";
+        private const string Implicit = StandardCondition.ReferenceType.Implicit;
         private const string Name = "Trigger31";
         private const string InputName = "AlarmREGEN";
         private const string InputParameterName = "DeadBandTime";
         private const string TrueReference = "REGEN-ORANGE";
-        private const string TrueAndFalseReference = "Thunersee Messung";
         private const string FalseReference = "REGEN-ROT";
+        private static readonly XNamespace Fns = "http://www.wldelft.nl/fews";
 
-        private MockRepository mocks;
-        private IControlGroup controlGroup;
         private PIDRule trueRule;
         private PIDRule falseRule;
-        private PIDRule trueAndFalseRule;
         private DirectionalCondition directionalCondition;
 
         [SetUp]
         public void SetUp()
         {
-            mocks = new MockRepository();
-            controlGroup = mocks.StrictMock<IControlGroup>();
-            trueRule = new PIDRule { Name = TrueReference };
-            falseRule = new PIDRule { Name = FalseReference };
-            trueAndFalseRule = new PIDRule { Name = TrueAndFalseReference };
+            trueRule = new PIDRule {Name = TrueReference};
+            falseRule = new PIDRule {Name = FalseReference};
 
             directionalCondition = new DirectionalCondition
             {
@@ -40,10 +34,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
                 Reference = Implicit,
                 Operation = Operation.Greater,
                 Input = new Input
-                    {
-                        ParameterName = InputParameterName,
-                        Feature = new RtcTestFeature { Name = InputName }
-                    },
+                {
+                    ParameterName = InputParameterName,
+                    Feature = new RtcTestFeature {Name = InputName}
+                }
             };
         }
 
@@ -53,30 +47,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             directionalCondition.TrueOutputs.Add(trueRule);
             directionalCondition.FalseOutputs.Add(falseRule);
 
-            Assert.AreEqual(ExpectedXml(), directionalCondition.ToXml(Fns, "").ToString(SaveOptions.DisableFormatting));
+            var serializer = new DirectionalConditionSerializer(directionalCondition);
+            Assert.AreEqual(ExpectedXml(), serializer.ToXml(Fns, "").First().ToString(SaveOptions.DisableFormatting));
         }
 
         private string ExpectedXml()
         {
-            var seriesOne = InputName + "_" + InputParameterName;
-            var previousTimeStep = seriesOne + DirectionalCondition.TimeLagPostFix;
+            string seriesOne = RtcXmlTag.Input + InputName + "/" + InputParameterName;
+            string previousTimeStep = seriesOne + "-1";
 
             return
                 "<trigger xmlns=\"" + Fns.ToString() + "\">" +
-                "<standard id=\"" + directionalCondition.Name + "\">" +
+                "<standard id=\"" + "[DirectionalCondition]" + directionalCondition.Name + "\">" +
                 "<condition>" +
-                "<x1Series ref=\"" + Implicit + "\">input_" + seriesOne + "</x1Series>" +
+                "<x1Series ref=\"" + Implicit + "\">" + seriesOne + "</x1Series>" +
                 "<relationalOperator>Greater</relationalOperator>" +
-                "<x2Series ref=\"" + Implicit + "\">input_" + previousTimeStep + "</x2Series>" +
+                "<x2Series ref=\"" + Implicit + "\">" + previousTimeStep + "</x2Series>" +
                 "</condition>" +
                 "<true>" +
-                "<trigger><ruleReference>" + TrueReference + "</ruleReference></trigger>" +
+                "<trigger><ruleReference>" + "[PID]" + TrueReference + "</ruleReference></trigger>" +
                 "</true>" +
                 "<false>" +
-                "<trigger><ruleReference>" + FalseReference + "</ruleReference></trigger>" +
+                "<trigger><ruleReference>" + "[PID]" + FalseReference + "</ruleReference></trigger>" +
                 "</false>" +
                 "<output>" +
-                "<status>" + directionalCondition.StatusOutputSeriesName + "</status>" +
+                "<status>" + RtcXmlTag.Status + directionalCondition.Name + "</status>" +
                 "</output>" +
                 "</standard>" +
                 "</trigger>";

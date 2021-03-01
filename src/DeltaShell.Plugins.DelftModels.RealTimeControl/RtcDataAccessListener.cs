@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils.Collections;
@@ -9,8 +11,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 {
     public class RtcDataAccessListener : DataAccessListenerBase
     {
-        private const string PreviousDischargeAtLateralDataItemTag = "Discharge (l)";
-        private const string ControlGroupsPropertyName = "ControlGroups";
+        private const string previousDischargeAtLateralDataItemTag = "Discharge (l)";
+        private const string controlGroupsPropertyName = "ControlGroups";
 
         private bool firstRtcModel = true;
 
@@ -26,6 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 ProjectRepository.PreLoad<ControlGroup>(cg => cg.Outputs);
                 ProjectRepository.PreLoad<ControlGroup>(cg => cg.Conditions);
                 ProjectRepository.PreLoad<ControlGroup>(cg => cg.Rules);
+                ProjectRepository.PreLoad<ControlGroup>(cg => cg.MathematicalExpressions);
 
                 ProjectRepository.PreLoad<RuleBase>(r => r.Inputs);
                 ProjectRepository.PreLoad<RuleBase>(r => r.Outputs);
@@ -35,28 +38,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 firstRtcModel = false;
             }
+
+            RemovingInterpolationNoneForTimeRulesIfSetInDatabase(entity, loadedState);
         }
 
         public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
         {
             var rtcModel = entity as IRealTimeControlModel;
-            if (rtcModel == null) return;
+            if (rtcModel == null)
+            {
+                return;
+            }
 
-            var propertyNamesList = propertyNames.ToList();
+            List<string> propertyNamesList = propertyNames.ToList();
 
-            var controlGroupIndex = propertyNamesList.IndexOf(ControlGroupsPropertyName);
-            if (controlGroupIndex < 0) return;
+            int controlGroupIndex = propertyNamesList.IndexOf(controlGroupsPropertyName);
+            if (controlGroupIndex < 0)
+            {
+                return;
+            }
 
             // state and propertyNames will always be the same length
             var stateControlGroups = state[controlGroupIndex] as IEnumerable<ControlGroup>;
-            if (stateControlGroups == null) return;
+            if (stateControlGroups == null)
+            {
+                return;
+            }
 
-            foreach (var controlGroup in stateControlGroups)
+            foreach (ControlGroup controlGroup in stateControlGroups)
             {
                 // SOBEK3-115: Existing projects can have ControlGroups with locations at the deprecated output parameter 'Discharge (l)'
-                controlGroup.Inputs.Where(i => i.ParameterName == PreviousDischargeAtLateralDataItemTag).ForEach(i => i.Reset());
-                controlGroup.Outputs.Where(o => o.ParameterName == PreviousDischargeAtLateralDataItemTag).ForEach(o => o.Reset());
-                    
+                controlGroup.Inputs.Where(i => i.ParameterName == previousDischargeAtLateralDataItemTag).ForEach(i => i.Reset());
+                controlGroup.Outputs.Where(o => o.ParameterName == previousDischargeAtLateralDataItemTag).ForEach(o => o.Reset());
+
                 // SOBEK3-562: Existing projects can have ControlGroups with locations at inputs/outputs but no underlying dataitem links
                 rtcModel.ResetOrphanedControlGroupInputsAndOutputs(controlGroup);
             }
@@ -65,6 +79,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public override object Clone()
         {
             return new RtcDataAccessListener {ProjectRepository = ProjectRepository};
+        }
+
+        private static void RemovingInterpolationNoneForTimeRulesIfSetInDatabase(object entity, object[] loadedState)
+        {
+            if (entity is TimeRule || entity is RelativeTimeRule)
+            {
+                Function timeSeries = loadedState.OfType<Function>().FirstOrDefault();
+
+                if (timeSeries != null && timeSeries.Arguments.First().InterpolationType == InterpolationType.None)
+                {
+                    timeSeries.Arguments.First().InterpolationType = InterpolationType.Linear;
+                }
+            }
         }
     }
 }

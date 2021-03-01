@@ -1,12 +1,25 @@
 ﻿using System.Linq;
 using System.Threading;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using Fluent;
 using NUnit.Framework;
-using Ribbon = DeltaShell.Dimr.Gui.Ribbon;
 
-namespace DeltaShell.Dimr.Tests
+namespace DeltaShell.Dimr.Gui.Tests
 {
+    public class TestDimrGuiPlugin : DimrGuiPlugin
+    {
+        public override bool IsOnlyDimrModelSelected
+        {
+            get
+            {
+                return TestValue;
+            }
+        }
+
+        public bool TestValue { get; set; }
+    }
+
     [TestFixture, Apartment(ApartmentState.STA)]
     public class DimrGuiRibbonTests
     {
@@ -14,29 +27,30 @@ namespace DeltaShell.Dimr.Tests
         public void TestRibbon()
         {
             var ribbon = new Ribbon();
-            var configContextualGroup = (RibbonContextualTabGroup)TypeUtils.GetField(ribbon, "configContextualGroup");
-            var tabDimr = (RibbonTabItem)TypeUtils.GetField(ribbon, "tabDimr");
+            var configContextualGroup = (RibbonContextualTabGroup) TypeUtils.GetField(ribbon, "configContextualGroup");
+            var tabDimr = (RibbonTabItem) TypeUtils.GetField(ribbon, "tabDimr");
             Assert.AreEqual(configContextualGroup, tabDimr.Group);
             Assert.AreEqual(0, ribbon.Commands.Count());
-            ribbon.ValidateItems();//hmm does nothing now...
+            ribbon.ValidateItems(); //hmm does nothing now...
         }
 
-        [Test()]
+        [Test]
+        [Category(TestCategory.Integration)]
         public void TestIsContextualTabVisible()
         {
             var ribbon = new Ribbon();
-            var configContextualGroup = (RibbonContextualTabGroup)TypeUtils.GetField(ribbon, "configContextualGroup");
-            var tabDimr = (RibbonTabItem)TypeUtils.GetField(ribbon, "tabDimr");
+            var configContextualGroup = (RibbonContextualTabGroup) TypeUtils.GetField(ribbon, "configContextualGroup");
+            var tabDimr = (RibbonTabItem) TypeUtils.GetField(ribbon, "tabDimr");
             var dimrGuiPlugin = new TestDimrGuiPlugin();
             dimrGuiPlugin.TestValue = true;
             Assert.True(ribbon.IsContextualTabVisible(configContextualGroup.Name, tabDimr.Name));
         }
-        
-        [Test()]
+
+        [Test]
         public void TestGetRibbonControl()
         {
             var ribbon = new Ribbon();
-            Assert.IsTrue(ribbon.GetRibbonControl().GetType().Namespace.StartsWith("Fluent"));
+            Assert.That(ribbon.GetRibbonControl().GetType().Namespace, Does.StartWith("Fluent"));
         }
     }
 }

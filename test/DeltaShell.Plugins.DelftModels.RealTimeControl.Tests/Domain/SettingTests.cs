@@ -9,8 +9,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         [Test]
         public void Clone()
         {
-            var setting = new Setting {Max = 4, MaxSpeed = 2, Min = 3};
-            var clone = (Setting)setting.Clone();
+            var setting = new Setting
+            {
+                Max = 4,
+                MaxSpeed = 2,
+                Min = 3
+            };
+            var clone = (Setting) setting.Clone();
 
             Assert.AreEqual(setting.Min, clone.Min);
             Assert.AreEqual(setting.Max, clone.Max);

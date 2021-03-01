@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.Add(new RainfallRunoffInWorkFlowTypeValidatorProvider());
             }
-            runner = new DimrRunner(this);
+            runner = new DimrRunner(this, new DimrApiFactory());
         }
 
         /// <summary>
@@ -633,6 +633,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return type == ModelType.DRR;
         }
 
+        public void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath) {}
+
+        public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory => new HashSet<string>();
+
         public virtual Type SupportedRegionType { get { return typeof (IDrainageBasin); } }
 
         public IEnumerable<CatchmentModelData> GetAllModelData()
@@ -999,6 +1003,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public virtual string ShortName { get { return "rr"; } }
 
+        public string DimrModelRelativeOutputDirectory => DirectoryName;
+
         public virtual string GetItemString(IDataItem value)
         {
             return null;
@@ -1044,6 +1050,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         [EditAction]
         public virtual bool RunsInIntegratedModel { get; set; }
+
+        public string DimrExportDirectoryPath => WorkingDirectory;
 
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime

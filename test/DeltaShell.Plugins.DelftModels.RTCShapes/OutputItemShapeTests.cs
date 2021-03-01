@@ -13,7 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         private OutputItemShape shape;
         private Graphics graphic;
 
-
         [SetUp]
         public void SetUp()
         {
@@ -39,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         [Test]
         public void Paint()
         {
-          shape.Paint(graphic);
+            shape.Paint(graphic);
         }
     }
 }

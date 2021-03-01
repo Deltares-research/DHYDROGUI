@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils;
-using DelftTools.Utils.Reflection;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 {
@@ -17,16 +14,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
     /// </summary>
     public class RtcLegacyLoader30 : LegacyLoader
     {
+        private readonly LegacyLoader nextLegacyLoader = new RtcLegacyLoader36();
         private readonly IList<RealTimeControlModel> rtcModels = new List<RealTimeControlModel>();
 
         public override void OnAfterInitialize(object entity, IDbConnection dbConnection)
         {
             rtcModels.Add((RealTimeControlModel) entity);
+
+            nextLegacyLoader.OnAfterInitialize(entity, dbConnection);
         }
 
         public override void OnAfterProjectMigrated(Project project)
         {
-            foreach (var rtcModel in rtcModels)
+            foreach (RealTimeControlModel rtcModel in rtcModels)
             {
                 //trigger some lazy loading
                 project.RootFolder.GetDirectChildren();
@@ -40,12 +40,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
 
                 ITimeDependentModel flowModel = null;
 
-                var linkedChildDataItem = rtcModel.AllDataItems.Where(di => di.LinkedBy.Count > 0 || di.LinkedTo != null)
-                                                 .FirstOrDefault(di => di.Parent is DataItem);
+                IDataItem linkedChildDataItem = rtcModel.AllDataItems.Where(di => di.LinkedBy.Count > 0 || di.LinkedTo != null)
+                                                        .FirstOrDefault(di => di.Parent is DataItem);
 
                 if (linkedChildDataItem != null)
                 {
-                    var otherSide = linkedChildDataItem.LinkedBy.FirstOrDefault() ?? linkedChildDataItem.LinkedTo;
+                    IDataItem otherSide = linkedChildDataItem.LinkedBy.FirstOrDefault() ?? linkedChildDataItem.LinkedTo;
                     flowModel = (ITimeDependentModel) otherSide.Parent.Owner;
                 }
                 else
@@ -58,10 +58,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
                 }
 
                 // these are overwritten by hydro model :-(
-                var name = flowModel.Name;
-                var startTime = flowModel.StartTime;
-                var stopTime = flowModel.StopTime;
-                var timestep = flowModel.TimeStep;
+                string name = flowModel.Name;
+                DateTime startTime = flowModel.StartTime;
+                DateTime stopTime = flowModel.StopTime;
+                TimeSpan timestep = flowModel.TimeStep;
 
                 // instantiate an empty hydro model
                 var hydroModelType =
@@ -69,22 +69,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
                         "DeltaShell.Plugins.DelftModels.HydroModel.HydroModel, DeltaShell.Plugins.DelftModels.HydroModel",
                         true);
                 var hydroModel = (ICompositeActivity) Activator.CreateInstance(hydroModelType);
-
-                // move network to hydro model and relink
-                var networkDataItem = Deproxify(flowModel.DataItems.First(di => di.Value is IHydroNetwork));
-                var network = (IHydroNetwork) networkDataItem.Value;
-
-                var hydroRegion = hydroModel.GetAllItemsRecursive().OfType<IHydroRegion>().First();
-                hydroRegion.SubRegions.Add(network);
-
-                var hydroModelNetworkDataItem = ((IModel) hydroModel).AllDataItems.First(di => di.Value == network);
-
-                TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "LinkedTo",
-                                                   hydroModelNetworkDataItem);
-                TypeUtils.TrySetValueAnyVisibility(networkDataItem, networkDataItem.GetType(), "ComposedValue",
-                                                   null);
-
-                hydroModelNetworkDataItem.LinkedBy.Add(networkDataItem);
 
                 // add rtc & flow as activities
                 hydroModel.Activities.Add(rtcModel);
@@ -97,17 +81,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
                 flowModel.TimeStep = timestep;
 
                 // remove orphaned flow data items
-                var orphanedDataItems = flowModel.AllDataItems.Where(
-                    di => di.LinkedTo == null &&
-                          !di.LinkedBy.Any() &&
-                          di.ValueConverter != null &&
-                          di.ValueConverter.GetEntityType().Name == "WaterFlowModelBranchFeatureValueConverter")
-                                                 .ToList();
+                List<IDataItem> orphanedDataItems = flowModel.AllDataItems.Where(
+                                                                 di => di.LinkedTo == null &&
+                                                                       !di.LinkedBy.Any() &&
+                                                                       di.ValueConverter != null &&
+                                                                       di.ValueConverter.GetEntityType().Name == "WaterFlowModelBranchFeatureValueConverter")
+                                                             .ToList();
 
-                foreach (var orphanedDataItem in orphanedDataItems)
+                foreach (IDataItem orphanedDataItem in orphanedDataItems)
                 {
-                    if (orphanedDataItem.Parent != null)
-                        orphanedDataItem.Parent.Children.Remove(orphanedDataItem);
+                    orphanedDataItem.Parent?.Children.Remove(orphanedDataItem);
                 }
 
                 var hydroModelAsTimeDependent = (ITimeDependentModel) hydroModel;
@@ -119,6 +102,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
                 oldOwner.Items.Remove(rtcModel);
                 oldOwner.Items.Add(hydroModel);
             }
+
+            nextLegacyLoader.OnAfterProjectMigrated(project);
         }
     }
 }

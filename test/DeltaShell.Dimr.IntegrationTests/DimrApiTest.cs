@@ -17,7 +17,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Test]
 		public void GivenDimrApiWhenSetLoggerThenNoExceptionThrown()
 		{
-            using (var dimrApi = DimrApiFactory.CreateNew())
+            using (var dimrApi = new DimrApiFactory().CreateNew())
             {
                 try
                 {
@@ -33,7 +33,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Test]
         public void GivenDimrApiWhenInitializeThenNoExceptionThrown()
         {
-            using (var dimrApi = DimrApiFactory.CreateNew())
+            using (var dimrApi = new DimrApiFactory().CreateNew())
             {
                 try
                 {
@@ -52,7 +52,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Category("ToCheck")]
         public void GivenDimrApiWhenUpdateThenNoExceptionThrown()
         {
-            using (var dimrApi = DimrApiFactory.CreateNew())
+            using (var dimrApi = new DimrApiFactory().CreateNew())
             {
                 try
                 {
@@ -72,7 +72,7 @@ namespace DeltaShell.Dimr.IntegrationTests
         [Category("ToCheck")]
         public void GivenDimrApiWhenFinalizeThenNoExceptionThrown()
         {
-            using (var dimrApi = DimrApiFactory.CreateNew())
+            using (var dimrApi = new DimrApiFactory().CreateNew())
             {
                 try
                 {

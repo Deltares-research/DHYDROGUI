@@ -69,6 +69,22 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DeltaShell.Plugins.CommonTools, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="FParsec, Version=1.0.0.0, Culture=neutral, PublicKeyToken=40ccfc0a09edbb5d">
+      <HintPath>..\..\packages\FParsec.1.0.3\lib\net40-client\FParsec.dll</HintPath>
+    </Reference>
+    <Reference Include="FParsec-Pipes, Version=1.1.1.0, Culture=neutral, PublicKeyToken=a7813e45d445015c, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\FParsec-Pipes.1.1.1\lib\net45\FParsec-Pipes.dll</HintPath>
+    </Reference>
+    <Reference Include="FParsecCS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=40ccfc0a09edbb5d">
+      <HintPath>..\..\packages\FParsec.1.0.3\lib\net40-client\FParsecCS.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=4.7.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\..\packages\FSharp.Core.4.7.0\lib\net45\FSharp.Core.dll</HintPath>
+    </Reference>
     <Reference Include="GeoAPI">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
@@ -85,10 +101,14 @@
       <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MathematicalExpressionParser.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\packages\MathematicalExpressionParser.Core.2.0.0\lib\net461\MathematicalExpressionParser.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="mscorlib" />
     <Reference Include="NetTopologySuite">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
@@ -105,25 +125,41 @@
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
+    <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d">
       <HintPath>..\..\packages\ValidationAspects.dll.2.2.0\lib\net461\ValidationAspects.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="ValidationAspects.PostSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
+    <Reference Include="ValidationAspects.PostSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d">
       <HintPath>..\..\packages\ValidationAspects.dll.2.2.0\lib\net461\ValidationAspects.PostSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -134,20 +170,82 @@
     <Compile Include="Domain\ConnectionType.cs" />
     <Compile Include="Domain\DirectionalCondition.cs" />
     <Compile Include="Domain\ExtrapolationHydraulicType.cs" />
-    <Compile Include="Domain\FakeRtcTimeSeriesFeature.cs" />
+    <Compile Include="Domain\IInput.cs" />
     <Compile Include="Domain\InterpolationHydraulicType.cs" />
+    <Compile Include="Domain\IntervalRuleTimeSeriesCreator.cs" />
+    <Compile Include="Domain\ITimeDependentRtcObject.cs" />
     <Compile Include="Domain\LookupSignal.cs" />
+    <Compile Include="Domain\Restart\RealTimeControlRestartFile.cs" />
+    <Compile Include="IInquiryHelper.cs" />
+    <Compile Include="InquiryHelper.cs" />
+    <Compile Include="IO\DataAccess\BranchNode.cs" />
+    <Compile Include="IO\DataAccess\ConditionDataAccessObject.cs" />
+    <Compile Include="IO\DataAccess\ConditionDataAccessObjectCreator.cs" />
+    <Compile Include="IO\DataAccess\ConstantLeafReference.cs" />
+    <Compile Include="IO\DataAccess\IBranchNode.cs" />
+    <Compile Include="IO\DataAccess\IExpressionNode.cs" />
+    <Compile Include="IO\DataAccess\ILeafNode.cs" />
+    <Compile Include="IO\DataAccess\ConstantValueLeafNode.cs" />
+    <Compile Include="IO\DataAccess\ParameterLeafNode.cs" />
+    <Compile Include="Domain\MathematicalExpression.cs" />
+    <Compile Include="IO\DataAccess\NodeReference.cs" />
+    <Compile Include="IO\DataAccess\Operator.cs" />
     <Compile Include="Domain\SignalBase.cs" />
-    <Compile Include="Domain\SignalProvider.cs" />
     <Compile Include="Domain\TimeCondition.cs" />
     <Compile Include="Domain\ConnectionPoint.cs" />
     <Compile Include="Domain\FactorRule.cs" />
     <Compile Include="Converters\OperationConverter.cs" />
-    <Compile Include="ImportExport\RealTimeControlModelExporter.cs" />
-    <Compile Include="ImportExport\RealTimeControlModelImporter.cs" />
-    <Compile Include="ImportExport\RealTimeControlXmlWriter.cs" />
-    <Compile Include="ImportExport\RealTimeControlDimrConfigModelCouplerProvider.cs" />
-    <Compile Include="ImportExport\RealTimeControlOutputFileFunctionStore.cs" />
+    <Compile Include="IO\DataAccess\ExpressionObject.cs" />
+    <Compile Include="IO\DataAccess\ExpressionReference.cs" />
+    <Compile Include="IO\DataAccess\ExpressionTree.cs" />
+    <Compile Include="IO\DataAccess\ExpressionTreeAssembler.cs" />
+    <Compile Include="IO\DataAccess\IExpressionReference.cs" />
+    <Compile Include="IO\DataAccess\OperatorConverter.cs" />
+    <Compile Include="IO\DataAccess\IRtcDataAccesObject.cs" />
+    <Compile Include="IO\DataAccess\ParameterLeafReference.cs" />
+    <Compile Include="IO\DataAccess\RuleDataAccessObject.cs" />
+    <Compile Include="IO\DataAccess\RuleDataAccessObjectCreator.cs" />
+    <Compile Include="IO\DataAccess\SignalDataAccessObject.cs" />
+    <Compile Include="IO\DataAccess\SignalDataAccessObjectCreator.cs" />
+    <Compile Include="IO\Export\ConditionSerializerBase.cs" />
+    <Compile Include="IO\Export\DirectionalConditionSerializer.cs" />
+    <Compile Include="IO\Export\ExpressionParser.cs" />
+    <Compile Include="IO\Export\FactorRuleSerializer.cs" />
+    <Compile Include="IO\Export\HydraulicRuleSerializer.cs" />
+    <Compile Include="IO\Export\InputSerializerBase.cs" />
+    <Compile Include="IO\Export\InputSerializer.cs" />
+    <Compile Include="IO\Export\IntervalRuleSerializer.cs" />
+    <Compile Include="IO\Export\LookupSignalSerializer.cs" />
+    <Compile Include="IO\Export\MathematicalExpressionSerializer.cs" />
+    <Compile Include="IO\Export\OutputSerializer.cs" />
+    <Compile Include="IO\Export\PidRuleSerializer.cs" />
+    <Compile Include="IO\Export\RealTimeControlRestartFileExporter.cs" />
+    <Compile Include="IO\Export\RelativeTimeRuleSerializer.cs" />
+    <Compile Include="IO\Export\SerializerCreator.cs" />
+    <Compile Include="IO\Export\RtcSerializerBase.cs" />
+    <Compile Include="IO\Export\RuleSerializerBase.cs" />
+    <Compile Include="IO\Export\SignalSerializerBase.cs" />
+    <Compile Include="IO\Export\StandardConditionSerializer.cs" />
+    <Compile Include="IO\Export\TimeConditionSerializer.cs" />
+    <Compile Include="IO\Export\TimeRuleSerializer.cs" />
+    <Compile Include="IO\Import\RealTimeControlRestartFileImporter.cs" />
+    <Compile Include="IO\RealTimeControlDataAndToolsConfigXmlReader.cs" />
+    <Compile Include="IO\RealTimeControlDataConfigXmlSetter.cs" />
+    <Compile Include="IO\Export\RealTimeControlModelExporter.cs" />
+    <Compile Include="IO\Import\RealTimeControlModelImporter.cs" />
+    <Compile Include="IO\RealTimeControlRuntimeConfigSetter.cs" />
+    <Compile Include="IO\RealTimeControlRuntimeConfigXmlReader.cs" />
+    <Compile Include="IO\RealTimeControlTimeSeriesSetter.cs" />
+    <Compile Include="IO\RealTimeControlTimeSeriesXmlReader.cs" />
+    <Compile Include="IO\RealTimeControlToolsConfigComponentConnector.cs" />
+    <Compile Include="IO\RealTimeControlToolsConfigXmlConverter.cs" />
+    <Compile Include="IO\RealTimeControlModelXmlReader.cs" />
+    <Compile Include="IO\RealTimeControlDataConfigXmlConverter.cs" />
+    <Compile Include="IO\RealTimeControlXmlReaderHelper.cs" />
+    <Compile Include="IO\RealTimeControlXmlWriter.cs" />
+    <Compile Include="IO\RealTimeControlDimrConfigModelCouplerProvider.cs" />
+    <Compile Include="IO\RealTimeControlOutputFileFunctionStore.cs" />
+    <Compile Include="IO\RtcXmlTag.cs" />
     <Compile Include="IRealTimeControlModel.cs" />
     <Compile Include="Legacy\RtcLegacyLoader30.cs" />
     <Compile Include="Domain\Periodicity.cs" />
@@ -168,6 +266,8 @@
     <Compile Include="Domain\PIDRule.cs" />
     <Compile Include="Domain\Record.cs" />
     <Compile Include="Domain\Setting.cs" />
+    <Compile Include="Legacy\RtcLegacyLoader37.cs" />
+    <Compile Include="Legacy\RtcLegacyLoader36.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -189,7 +289,6 @@
     <Compile Include="XmlValidation\Validator.cs" />
     <Compile Include="XmlValidation\FileToObject.cs" />
     <Compile Include="Domain\ExtrapolationTimeSeriesType.cs" />
-    <Compile Include="Xml\IXmlVectorState.cs" />
     <Compile Include="Xml\IXmlTimeSeries.cs" />
     <Compile Include="Xml\XmlTimeSeries.cs" />
   </ItemGroup>
@@ -202,6 +301,16 @@
     <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{368694eb-cb62-4008-a27c-37afac0fdf14}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{e22a9330-5ee9-4c26-a014-3269bcf78ded}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
@@ -217,12 +326,10 @@
     <EmbeddedResource Include="Domain\PIDRule.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="Uml\RealTimeControl.cd" />
-    <None Include="Uml\RealTimeControlXmlReaderWriter.cd" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -230,12 +337,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\signal.png" />
-    <None Include="Resources\validation.png" />
-    <None Include="Resources\workingdirectory.png" />
-    <None Include="Resources\standardcondition.png" />
-    <None Include="Resources\timecondition.png" />
-    <None Include="Resources\StopHS.png" />
     <EmbeddedResource Include="Domain\Input.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -267,8 +368,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="RealTimeControlModel.hbm.xml" />
-    <None Include="Resources\cog_active.png" />
-    <None Include="Resources\cog1.png" />
     <EmbeddedResource Include="RealTimeControlModel.3.0.hbm.xml" />
     <EmbeddedResource Include="Domain\LookupSignal.hbm.xml" />
     <EmbeddedResource Include="Domain\SignalBase.hbm.xml">
@@ -277,23 +376,40 @@
     <EmbeddedResource Include="Domain\PIDRule.3.1.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImportExport\RealTimeControlOutputFileFunctionStore.hbm.xml" />
+    <EmbeddedResource Include="IO\RealTimeControlOutputFileFunctionStore.hbm.xml" />
+    <EmbeddedResource Include="Domain\MathematicalExpression.hbm.xml" />
+    <EmbeddedResource Include="Domain\IInput.hbm.xml" />
+    <EmbeddedResource Include="Domain\ControlGroup.3.5.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Domain\Restart\RealTimeControlRestartFile.hbm.xml" />
+    <EmbeddedResource Include="RealTimeControlModel.3.6.hbm.xml" />
+    <EmbeddedResource Include="RealTimeControlModel.3.7.hbm.xml" />
+    <Content Include="Resources\cog_active.png" />
+    <Content Include="Resources\cog1.png" />
     <Content Include="Resources\condition.png" />
     <Content Include="Resources\controlgroup.png" />
     <Content Include="Resources\controlgroup_add.png" />
-    <None Include="Resources\CopyHS.png" />
+    <Content Include="Resources\CopyHS.png" />
     <Content Include="Resources\DeleteHS.png" />
-    <None Include="Resources\directionalcondition.png" />
-    <None Include="Resources\exclamation-small.png" />
-    <None Include="Resources\folder.png" />
+    <Content Include="Resources\directionalcondition.png" />
+    <Content Include="Resources\exclamation-small.png" />
+    <Content Include="Resources\folder.png" />
     <Content Include="Resources\input.png" />
+    <Content Include="Resources\MathExpr.png" />
     <Content Include="Resources\output.png" />
-    <None Include="Resources\PlayHS.png" />
-    <None Include="Resources\PropertiesHS.png" />
+    <Content Include="Resources\PlayHS.png" />
+    <Content Include="Resources\PropertiesHS.png" />
+    <Content Include="Resources\QuestionMark.png" />
     <Content Include="Resources\rtcmodel.png" />
     <Content Include="Resources\rule.png" />
+    <Content Include="Resources\signal.png" />
+    <Content Include="Resources\validation.png" />
+    <Content Include="Resources\workingdirectory.png" />
+    <Content Include="Resources\standardcondition.png" />
+    <Content Include="Resources\timecondition.png" />
+    <Content Include="Resources\StopHS.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

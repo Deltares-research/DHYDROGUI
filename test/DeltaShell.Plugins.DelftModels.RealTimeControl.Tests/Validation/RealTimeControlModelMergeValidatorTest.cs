@@ -5,6 +5,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -15,32 +16,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
     public class RealTimeControlModelMergeValidatorTest
     {
         [Test]
-		public void Given2RTCModelsWithControlgroupsWithTheSameNameWhenValidateControlGroupsThenValidationReportWithWarning()
-		{
-			var destModel = new RealTimeControlModel();
-			var srcModel = new RealTimeControlModel();
+        public void Given2RTCModelsWithControlgroupsWithTheSameNameWhenValidateControlGroupsThenValidationReportWithWarning()
+        {
+            var destModel = new RealTimeControlModel();
+            var srcModel = new RealTimeControlModel();
 
             destModel.ControlGroups.Add(new ControlGroup());
             srcModel.ControlGroups.Add(new ControlGroup());
 
-            var validationReport = RealTimeControlModelMergeValidator.ValidateControlGroups(destModel, srcModel);
+            ValidationReport validationReport = RealTimeControlModelMergeValidator.ValidateControlGroups(destModel, srcModel);
 
             Assert.That(validationReport.WarningCount, Is.EqualTo(1));
-		} 
+        }
 
         [Test]
-		public void Given2RTCModelsWithControlgroupsWithDifferentNamesWhenValidateControlGroupsThenValidationReportIsEmpty()
-		{
-			var destModel = new RealTimeControlModel();
-			var srcModel = new RealTimeControlModel();
+        public void Given2RTCModelsWithControlgroupsWithDifferentNamesWhenValidateControlGroupsThenValidationReportIsEmpty()
+        {
+            var destModel = new RealTimeControlModel();
+            var srcModel = new RealTimeControlModel();
 
             destModel.ControlGroups.Add(new ControlGroup());
-            srcModel.ControlGroups.Add(new ControlGroup(){Name = "sourceName"});
+            srcModel.ControlGroups.Add(new ControlGroup() {Name = "sourceName"});
 
-            var validationReport = RealTimeControlModelMergeValidator.ValidateControlGroups(destModel, srcModel);
+            ValidationReport validationReport = RealTimeControlModelMergeValidator.ValidateControlGroups(destModel, srcModel);
 
             Assert.That(validationReport.IsEmpty, Is.True);
-		} 
+        }
     }
 
     [TestFixture]
@@ -52,12 +53,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var destModel = new RealTimeControlModel();
             var srcModel = new RealTimeControlModel();
 
-            destModel.ControlGroups.Add(new ControlGroup { Name = "ControlGroup1" });
-            srcModel.ControlGroups.Add(new ControlGroup { Name = "ControlGroup1" });
-            srcModel.ControlGroups.Add(new ControlGroup { Name = "ControlGroup1" });
+            destModel.ControlGroups.Add(new ControlGroup {Name = "ControlGroup1"});
+            srcModel.ControlGroups.Add(new ControlGroup {Name = "ControlGroup1"});
+            srcModel.ControlGroups.Add(new ControlGroup {Name = "ControlGroup1"});
 
             TestHelper.AssertAtLeastOneLogMessagesContains(() => destModel.Merge(srcModel, null),
-                string.Format("There already exists a ControlGroup named ControlGroup1 in Model {0}, ControlGroup ControlGroup1 will be renamed", destModel.Name));
+                                                           string.Format("There already exists a ControlGroup named ControlGroup1 in Model {0}, ControlGroup ControlGroup1 will be renamed", destModel.Name));
 
             Assert.AreEqual(3, destModel.ControlGroups.Count);
             Assert.AreEqual(destModel.ControlGroups[0].Name, "ControlGroup1");
@@ -68,16 +69,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         }
 
         [Test]
-		public void Given2RTCModelsWithControlGroupWhenMergeThenInDestinationModel2ControlGroups()
-		{
+        public void Given2RTCModelsWithControlGroupWhenMergeThenInDestinationModel2ControlGroups()
+        {
             var destModel = new RealTimeControlModel();
-			var srcModel = new RealTimeControlModel();
+            var srcModel = new RealTimeControlModel();
 
             destModel.ControlGroups.Add(new ControlGroup());
             srcModel.ControlGroups.Add(new ControlGroup());
             destModel.Merge(srcModel, null);
             Assert.That(destModel.ControlGroups.Count, Is.EqualTo(2));
-		}
+        }
 
         [Test]
         [TestCase(true)]
@@ -89,15 +90,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var subModel1 = mocks.DynamicMultiMock<IModel>(typeof(IModelMerge));
             var subModel2 = mocks.DynamicMultiMock<IModel>(typeof(IModelMerge));
 
-            ((IModelMerge)subModel1).Expect(m => m.CanMerge(subModel2)).Return(subModelsAreCompatible);
-            
+            ((IModelMerge) subModel1).Expect(m => m.CanMerge(subModel2)).Return(subModelsAreCompatible);
+
             mocks.ReplayAll();
-            
+
             var destModel = new RealTimeControlModel();
             var srcModel = new RealTimeControlModel();
 
             SetPrivatePropertyValue(destModel, "InternalControlledModelsList", new EventedList<IModel> {subModel1});
-            SetPrivatePropertyValue(srcModel, "InternalControlledModelsList", new EventedList<IModel> { subModel2 });
+            SetPrivatePropertyValue(srcModel, "InternalControlledModelsList", new EventedList<IModel> {subModel2});
 
             Assert.That(destModel.CanMerge(srcModel), Is.EqualTo(subModelsAreCompatible));
 
@@ -107,8 +108,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         private void SetPrivatePropertyValue(object instance, string propertyName, object value)
         {
             instance.GetType()
-                .GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic)
-                .SetValue(instance, value, null);
+                    .GetProperty(propertyName, BindingFlags.Instance | BindingFlags.NonPublic)
+                    .SetValue(instance, value, null);
         }
     }
 }

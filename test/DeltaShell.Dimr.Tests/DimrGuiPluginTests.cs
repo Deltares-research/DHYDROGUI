@@ -1,24 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
-using DelftTools.Controls;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr.Gui;
+using DeltaShell.Dimr.Gui.Properties;
 using DeltaShell.Gui;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NUnit.Framework;
 using Rhino.Mocks;
-using SharpMap;
 
 namespace DeltaShell.Dimr.Tests
 {
     [TestFixture, Apartment(ApartmentState.STA)]
     public class DimrGuiPluginTests
     {
-        [Test()]
+        [Test]
         public void TestDimrGuiPlugin()
         {
             using (var gui = new DeltaShellGui())
@@ -28,57 +24,58 @@ namespace DeltaShell.Dimr.Tests
                 gui.Run();
                 Assert.AreEqual(dimrGuiPlugin, DimrGuiPlugin.Instance);
                 Assert.AreEqual("Dimr (UI)", DimrGuiPlugin.Instance.Name);
-                Assert.AreEqual(Gui.Properties.Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
-                Assert.IsTrue(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace.StartsWith("DeltaShell.Dimr.Gui"));
+                Assert.AreEqual(Resources.DimrGuiPlugin_Description_Provides_possibilities_to_configure_DIMR_settings, DimrGuiPlugin.Instance.Description);
+                Assert.That(DimrGuiPlugin.Instance.RibbonCommandHandler.GetType().Namespace, Does.StartWith("DeltaShell.Dimr.Gui"));
             }
+
             Assert.IsNull(DimrGuiPlugin.Instance);
         }
 
-        [Test()]
+        [Test]
         public void TestIsOnlyDimrModelSelected()
         {
-            
             var mocks = new MockRepository();
-            var map = new Map();
-            var mapView = new MapView();
-            mapView.Map = map;
+
             var viewlist = mocks.DynamicMock<IViewList>();
-            viewlist.Expect(vl => vl.ActiveView).Return(mapView).Repeat.Any();
-            viewlist.Expect(vl => vl.GetEnumerator()).Return(new List<IView>() { mapView }.GetEnumerator()).Repeat.Any();
             var gui = mocks.DynamicMock<IGui>();
+
             gui.Expect(g => g.DocumentViews).Return(viewlist).Repeat.Any();
+
             mocks.ReplayAll();
+
             using (var guiPlugin = new DimrGuiPlugin())
             {
                 Assert.False(guiPlugin.IsOnlyDimrModelSelected);
                 guiPlugin.Gui = gui;
+
                 Assert.False(guiPlugin.IsOnlyDimrModelSelected);
-                map.Layers.Add(new HydroRegionMapLayer());
-                Assert.False(guiPlugin.IsOnlyDimrModelSelected);
+
                 mocks.BackToRecordAll();
-                viewlist.Expect(vl => vl.ActiveView).Return(mapView).Repeat.Any();
-                gui.Expect(g => g.DocumentViews).Return(viewlist).Repeat.Any();
-                viewlist.Expect(vl => vl.GetEnumerator()).Return(new List<IView>() { mapView }.GetEnumerator()).Repeat.Any();
+
                 var dimrModel = mocks.DynamicMock<IDimrModel>();
                 gui.Expect(g => g.SelectedModel).Return(dimrModel).Repeat.Any();
                 mocks.ReplayAll();
+
                 Assert.True(guiPlugin.IsOnlyDimrModelSelected);
+
                 mocks.BackToRecordAll();
-                viewlist.Expect(vl => vl.ActiveView).Return(mapView).Repeat.Any();
-                gui.Expect(g => g.DocumentViews).Return(viewlist).Repeat.Any();
-                viewlist.Expect(vl => vl.GetEnumerator()).Return(new List<IView>() { mapView }.GetEnumerator()).Repeat.Any();
+
                 var workflow = mocks.DynamicMock<ICompositeActivity>();
-                workflow.Expect(wf => wf.Activities).Return(new EventedList<IActivity>() { dimrModel } ).Repeat.Any();
+                workflow.Expect(wf => wf.Activities).Return(new EventedList<IActivity>() {dimrModel}).Repeat.Any();
+
                 var compositeActivity = mocks.DynamicMultiMock<IModel>(typeof(ICompositeActivity));
                 ((ICompositeActivity) compositeActivity).Expect(ca => ca.CurrentWorkflow).Return(workflow).Repeat.Any();
                 gui.Expect(g => g.SelectedModel).Return(compositeActivity).Repeat.Any();
+
                 mocks.ReplayAll();
+
                 Assert.True(guiPlugin.IsOnlyDimrModelSelected);
             }
+
             mocks.VerifyAll();
         }
 
-        [Test()]
+        [Test]
         public void TestGetPersistentAssemblies()
         {
             using (var dimrGuiPlugin = new DimrGuiPlugin())

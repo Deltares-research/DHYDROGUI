@@ -1,7 +1,7 @@
 ﻿using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.PropertyGrid;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Category(TestCategory.WindowsForms)]
         public void Show()
         {
-            WindowsFormsTestHelper.ShowModal(new PropertyGrid { SelectedObject = new TimeConditionProperties { Data = new TimeCondition() } });
+            WindowsFormsTestHelper.ShowModal(new PropertyGrid {SelectedObject = new TimeConditionProperties {Data = new TimeCondition()}});
         }
     }
 }

@@ -1,41 +1,26 @@
-﻿using System;
-using System.Xml.Linq;
-using DelftTools.Utils.Aop;
+﻿using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
-    [Entity(FireOnCollectionChange=false)]
-    public class Input : ConnectionPoint
+    [Entity(FireOnCollectionChange = false)]
+    public class Input : ConnectionPoint, IInput
     {
+        public override ConnectionType ConnectionType
+        {
+            get
+            {
+                return ConnectionType.Input;
+            }
+        }
+
         /// <summary>
-        /// Value of Setpoint in generated xml; will always be regenerated during ToXml process
+        /// Value of Setpoint in generated xml; will always be regenerated during ToXmlInputReference process
         /// </summary>
         public string SetPoint { get; set; }
 
-        public XElement ToXml(XNamespace xNamespace, string lableName)
-        {
-            return ToXml(xNamespace, lableName, null);
-        }
-
-        public XElement ToXml(XNamespace xNamespace, string lableName, string lableSetpoint)
-        {
-            var result = new XElement(xNamespace + "input");
-            result.Add(new XElement(xNamespace + lableName, XmlName));
-            if (!string.IsNullOrEmpty(SetPoint) && !string.IsNullOrEmpty(lableSetpoint))
-            {
-                result.Add(new XElement(xNamespace + lableSetpoint, SetPoint));
-            }
-            return result;
-        }
-
-        public override ConnectionType ConnectionType
-        {
-            get { return ConnectionType.Input; }
-        }
-
         public override object Clone()
         {
-            var input = (Input) Activator.CreateInstance(GetType());
+            var input = new Input();
             input.CopyFrom(this);
             return input;
         }
@@ -46,14 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             if (input != null)
             {
                 base.CopyFrom(source);
-            }
-        }
-
-        public override string XmlName
-        {
-            get
-            {
-                {return "input_" + Name;}
             }
         }
     }

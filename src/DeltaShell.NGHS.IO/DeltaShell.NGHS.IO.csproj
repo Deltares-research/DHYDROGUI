@@ -118,12 +118,15 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataObjects\Friction\ChannelFrictionDefinition.cs" />
@@ -161,6 +164,8 @@
     <Compile Include="DelftIniMultiLineReader.cs" />
     <Compile Include="DelftIniReader.cs" />
     <Compile Include="DelftIniWriter.cs" />
+    <Compile Include="DirectoryNameConstants.cs" />
+    <Compile Include="FileConverters\DelftXmlFileConverter.cs" />
     <Compile Include="FileReaders\BoundaryFileReader.cs" />
     <Compile Include="FileReaders\CrossSectionFileReader.cs" />
     <Compile Include="FileReaders\Definition\CrossSectionDefinitions\CrossSectionDefinitionReaderBase.cs" />
@@ -183,6 +188,7 @@
     <Compile Include="FileReaders\Definition\Structures\PumpDefinitionReader.cs" />
     <Compile Include="FileReaders\Definition\Structures\WeirDefinitionReader.cs" />
     <Compile Include="FileReaders\Definition\IDefinitionReader.cs" />
+    <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
     <Compile Include="FileReaders\Location\LocationFileReader.cs" />
     <Compile Include="FileReaders\Network\NetworkAndGridReader.cs" />
@@ -321,6 +327,11 @@
     <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{368694eb-cb62-4008-a27c-37afac0fdf14}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>

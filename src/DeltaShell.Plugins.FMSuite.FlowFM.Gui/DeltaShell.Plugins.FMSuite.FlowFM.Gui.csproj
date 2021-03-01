@@ -167,9 +167,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fluent.Ribbon.3.6.1.236\lib\net40\System.Windows.Interactivity.dll</HintPath>
@@ -454,6 +456,11 @@
     <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
       <Project>{6FAD9209-03EA-439C-8B41-80D1FD6AB4E2}</Project>
       <Name>DeltaShell.NGHS.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{368694eb-cb62-4008-a27c-37afac0fdf14}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">

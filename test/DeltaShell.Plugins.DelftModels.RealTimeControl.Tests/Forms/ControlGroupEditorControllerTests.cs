@@ -8,12 +8,14 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+using Netron.GraphLib;
 using Netron.GraphLib.UI;
+using NSubstitute;
 using NUnit.Framework;
+using Connection = Netron.GraphLib.Connection;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 {
-
     [TestFixture]
     public class ControlGroupEditorControllerTests
     {
@@ -63,7 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             controlGroup.Inputs.Add(input);
 
             rule.Inputs.Add(input);
-            
+
             Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());
             Assert.AreEqual(1, graphControl.Shapes.OfType<InputItemShape>().Count());
         }
@@ -72,19 +74,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         public void RemovingRtcDomainObjectFromControlGroupRemovesShapeFromGraphControl()
         {
             Assert.AreEqual(0, graphControl.Shapes.OfType<RuleShape>().Count());
-            
+
             var rule1 = new PIDRule("test1");
             controlGroup.Rules.Add(rule1);
             Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());
-            
-            var rule2 = new PIDRule("test2"){LongName = "Long text test2"};
+
+            var rule2 = new PIDRule("test2") {LongName = "Long text test2"};
             controlGroup.Rules.Add(rule2);
             Assert.AreEqual(2, graphControl.Shapes.OfType<RuleShape>().Count());
-            
+
             controlGroup.Rules.Remove(rule1);
             Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());
-            
-            var ruleShape = graphControl.Shapes.OfType<RuleShape>().FirstOrDefault();
+
+            RuleShape ruleShape = graphControl.Shapes.OfType<RuleShape>().FirstOrDefault();
             Assert.NotNull(ruleShape);
             Assert.AreEqual(rule2.Name, ruleShape.Title);
             Assert.AreEqual(rule2.LongName, ruleShape.Text);
@@ -112,7 +114,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             rule.Name = "test2";
             rule.LongName = "Long name test2";
 
-            var ruleShape = graphControl.Shapes.OfType<RuleShape>().FirstOrDefault();
+            RuleShape ruleShape = graphControl.Shapes.OfType<RuleShape>().FirstOrDefault();
 
             Assert.NotNull(ruleShape);
             Assert.AreEqual(rule.Name, ruleShape.Title);
@@ -149,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             Assert.AreEqual(1, controlGroup.Rules.Count);
 
-            var shapes = controller.GraphControl.Shapes;
+            ShapeCollection shapes = controller.GraphControl.Shapes;
             controller.GraphControlShapesOnShapeRemoved(null, shapes[0]);
 
             Assert.AreEqual(0, controlGroup.Rules.Count);
@@ -158,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void ConvertPIDRuleToIntervalRule()
         {
-            var rule = new PIDRule{Name = "test"};
+            var rule = new PIDRule {Name = "test"};
             controlGroup.Rules.Add(rule);
             Assert.AreEqual(1, controlGroup.Rules.Count);
 
@@ -168,8 +170,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             graphControl.OnShapeRemoved += (sender, shape) => changeCounter++;
 
             controller.ConvertRuleTypeTo(controlGroup.Rules[0], typeof(IntervalRule));
-            Assert.AreEqual(0, changeCounter); 
-            
+            Assert.AreEqual(0, changeCounter);
+
             Assert.AreEqual(1, controlGroup.Rules.Count);
             Assert.AreEqual(typeof(IntervalRule), controlGroup.Rules[0].GetType());
             Assert.AreEqual(rule.Name, controlGroup.Rules[0].Name);
@@ -179,8 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void ConvertStandardConditionToTimeCondition()
         {
-
-            var condition = new StandardCondition { Name = "test" };
+            var condition = new StandardCondition {Name = "test"};
             controlGroup.Conditions.Add(condition);
             Assert.AreEqual(1, controlGroup.Conditions.Count);
 
@@ -201,72 +202,74 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Test]
         public void ConvertStandardConditionToTimeConditionShouldDisconnectInputFromTimeCondition()
         {
-
-            var condition = new StandardCondition { Name = "test" };
+            var condition = new StandardCondition {Name = "test"};
             var input = new Input
             {
                 ParameterName = "InParam",
-                Feature = new RtcTestFeature { Name = "In" },
+                Feature = new RtcTestFeature {Name = "In"}
             };
             condition.Input = input;
             controlGroup.Conditions.Add(condition);
             controlGroup.Inputs.Add(input);
-            controller.AddConnections(controller.ControlGroup.Rules, controller.ControlGroup.Conditions, controller.ControlGroup.Signals);
-            Assert.AreEqual(1,graphControl.Connections.Count);
+
+            ControlGroup controllerControlGroup = controller.ControlGroup;
+            controller.AddConnections(controllerControlGroup.Rules, controllerControlGroup.Conditions, controllerControlGroup.Signals, controllerControlGroup.MathematicalExpressions);
+            Assert.AreEqual(1, graphControl.Connections.Count);
             controller.ConvertConditionTypeTo(condition, typeof(TimeCondition));
             Assert.AreEqual(0, graphControl.Connections.Count);
-           
         }
 
         [Test]
         public void ConversionDoesNotRequireGraphControl()
         {
-            controller.GraphControl= null;
+            controller.GraphControl = null;
             ConvertPIDRuleToIntervalRule();
         }
 
         [Test]
         public void ConversionOfRuleTypeDoesNotAffectShape()
         {
-            var rule = new PIDRule { Name = "test" };
+            var rule = new PIDRule {Name = "test"};
             controlGroup.Rules.Add(rule);
 
-            var shape = graphControl.Shapes.OfType<RuleShape>().FirstOrDefault();
+            RuleShape shape = graphControl.Shapes.OfType<RuleShape>().FirstOrDefault();
 
-            Assert.AreEqual(rule.Name, ((RuleBase)shape.Tag).Name);
+            Assert.AreEqual(rule.Name, ((RuleBase) shape.Tag).Name);
             Assert.IsTrue(shape.Tag is PIDRule);
 
             controller.ConvertRuleTypeTo(controlGroup.Rules[0], typeof(IntervalRule));
 
-            Assert.AreEqual(rule.Name, ((RuleBase)shape.Tag).Name);
-            Assert.AreEqual(rule.LongName, ((RuleBase)shape.Tag).LongName);
+            Assert.AreEqual(rule.Name, ((RuleBase) shape.Tag).Name);
+            Assert.AreEqual(rule.LongName, ((RuleBase) shape.Tag).LongName);
             Assert.IsTrue(shape.Tag is IntervalRule);
         }
 
         [Test]
         public void AddObjectAndShapeAtSpecificLocation()
         {
-            List<object> objecten = new List<object>();
+            var objecten = new List<object>();
             objecten.Add(new Input());
-            var rule = objecten.Where(c => c is RuleBase).Cast<RuleBase>().ToList();
-            var condition = objecten.Where(c => c is ConditionBase).Cast<ConditionBase>().ToList();
-            var input = objecten.Where(c => c is Input).Cast<Input>().ToList();
-            var output = objecten.Where(c => c is Output).Cast<Output>().ToList();
-            var signal = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
-            controller.AddShapesToControlGroupAndPlace(rule, condition, input, output, signal, new Point(10, 11));
-                    
+            List<RuleBase> rule = objecten.Where(c => c is RuleBase).Cast<RuleBase>().ToList();
+            List<ConditionBase> condition = objecten.Where(c => c is ConditionBase).Cast<ConditionBase>().ToList();
+            List<Input> input = objecten.Where(c => c is Input).Cast<Input>().ToList();
+            List<Output> output = objecten.Where(c => c is Output).Cast<Output>().ToList();
+            List<SignalBase> signal = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
+            List<MathematicalExpression> mathExpression = objecten.Where(c => c is MathematicalExpression).Cast<MathematicalExpression>().ToList();
+            controller.AddShapesToControlGroupAndPlace(rule, condition, input, output, signal, mathExpression, new Point(10, 11));
+
             Assert.AreEqual(1, graphControl.Shapes.OfType<InputItemShape>().Count());
             Assert.AreEqual(10, graphControl.Shapes[0].X);
             Assert.AreEqual(11, graphControl.Shapes[0].Y);
 
             objecten.Add(new HydraulicRule());
-            var rule2 = objecten.Where(c => c is RuleBase).Cast<RuleBase>().ToList();
-            var condition2 = objecten.Where(c => c is ConditionBase).Cast<ConditionBase>().ToList();
+            List<RuleBase> rule2 = objecten.Where(c => c is RuleBase).Cast<RuleBase>().ToList();
+            List<ConditionBase> condition2 = objecten.Where(c => c is ConditionBase).Cast<ConditionBase>().ToList();
             var input2 = new List<Input>();
-            var output2 = objecten.Where(c => c is Output).Cast<Output>().ToList();
-            var signal2 = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
-            controller.AddShapesToControlGroupAndPlace(rule2, condition2, input2, output2, signal2, new Point(100, 110));
-            
+            List<Output> output2 = objecten.Where(c => c is Output).Cast<Output>().ToList();
+            List<SignalBase> signal2 = objecten.Where(c => c is SignalBase).Cast<SignalBase>().ToList();
+            List<MathematicalExpression> mathExpression2 = objecten.Where(c => c is MathematicalExpression).Cast<MathematicalExpression>().ToList();
+            controller.AddShapesToControlGroupAndPlace(rule2, condition2, input2, output2, signal2, mathExpression2, new Point(100, 110));
+
             Assert.AreEqual(1, graphControl.Shapes.OfType<InputItemShape>().Count());
             Assert.AreEqual(1, graphControl.Shapes.OfType<RuleShape>().Count());
             Assert.AreEqual(100, graphControl.Shapes[1].X);
@@ -277,11 +280,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Category(TestCategory.Integration)]
         public void RemovingFeatureResetsInputToDefault()
         {
-            var input = new Input { ParameterName = "p", Feature = new RtcTestFeature { Name = "f"}};
+            var input = new Input
+            {
+                ParameterName = "p",
+                Feature = new RtcTestFeature {Name = "f"}
+            };
 
             controlGroup.Inputs.Add(input);
 
-            var itemShape = graphControl.Shapes.OfType<InputItemShape>().FirstOrDefault();
+            InputItemShape itemShape = graphControl.Shapes.OfType<InputItemShape>().FirstOrDefault();
 
             Assert.NotNull(itemShape);
             Assert.AreEqual("f_p", itemShape.Title);
@@ -289,6 +296,101 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             input.Feature = null;
 
             Assert.AreEqual("[Not Set]", itemShape.Title);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void AddInputConnectionToMathematicalExpressionAddsTagToShape()
+        {
+            // Given
+            controlGroup.Inputs.Add(new Input());
+            controlGroup.MathematicalExpressions.Add(new MathematicalExpression());
+            controlGroup.MathematicalExpressions.Add(new MathematicalExpression());
+
+            Connector inputAConnector = graphControl.Shapes[0].Connectors[0];
+            Connector inputBConnector = graphControl.Shapes[1].Connectors[2];
+            Connector mathExpressionConnector = graphControl.Shapes[2].Connectors[1];
+
+            // Preconditions
+            Assert.That(inputAConnector.Name, Is.EqualTo("Bottom"));
+            Assert.That(inputBConnector.Name, Is.EqualTo("Bottom"));
+            Assert.That(mathExpressionConnector.Name, Is.EqualTo("Top"));
+
+            // When
+            graphControl.AddConnection(inputAConnector, mathExpressionConnector);
+            graphControl.AddConnection(inputBConnector, mathExpressionConnector);
+
+            // Then
+            Assert.That(inputAConnector.Connections[0].Text, Is.EqualTo("A"));
+            Assert.That(inputBConnector.Connections[0].Text, Is.EqualTo("B"));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void AddConditionToMathematicalExpressionDoesNotThrowException()
+        {
+            // Given
+            var condition = new StandardCondition();
+            var mathematicalExpression = new MathematicalExpression();
+            controlGroup.Conditions.Add(condition);
+            controlGroup.MathematicalExpressions.Add(mathematicalExpression);
+            Shape conditionShape = controller.GraphControl.Shapes[0];
+            Shape mathExpression = controller.GraphControl.Shapes[1];
+
+            // When
+            Connector mathExpressionConnector = mathExpression.Connectors[0];
+            Connector conditionShapeConnector = conditionShape.Connectors[3];
+            Assert.That(mathExpressionConnector.Name, Is.EqualTo("Left"));
+            Assert.That(conditionShapeConnector.Name, Is.EqualTo("Bottom"));
+            TestDelegate testAction = () => controller.GraphControl.AddConnection(conditionShapeConnector, mathExpressionConnector);
+
+            // Then
+            Assert.That(testAction, Throws.Nothing);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void RemovingExistingConnectionFromMathematicalExpressionReshufflesTags()
+        {
+            // Given
+            var firstInput = new Input
+            {
+                ParameterName = "p",
+                Feature = new RtcTestFeature { Name = "f" }
+            };
+            var secondInput = new Input
+            {
+                ParameterName = "p",
+                Feature = new RtcTestFeature { Name = "f" }
+            };
+            var mathematicalExpression = new MathematicalExpression();
+            controlGroup.Inputs.Add(firstInput);
+            controlGroup.Inputs.Add(secondInput);
+            controlGroup.MathematicalExpressions.Add(mathematicalExpression);
+            Shape firstInputShape = controller.GraphControl.Shapes[0];
+            Shape secondInputShape = controller.GraphControl.Shapes[1];
+            Shape mathExpression = controller.GraphControl.Shapes[2];
+
+            // With
+            Assert.That(mathExpression.Connectors[1].Name, Is.EqualTo("Top"));
+            Assert.That(firstInputShape.Connectors[0].Name, Is.EqualTo("Bottom"));
+            Assert.That(secondInputShape.Connectors[0].Name, Is.EqualTo("Bottom"));
+            controller.GraphControl.AddConnection(firstInputShape.Connectors[0], mathExpression.Connectors[1]);
+            controller.GraphControl.AddConnection(secondInputShape.Connectors[0], mathExpression.Connectors[1]);
+
+            Assert.That(controller.GraphControl.Connections.Count, Is.EqualTo(2));
+            Connection firstConnection = controller.GraphControl.Connections[0];
+            Assert.That(firstConnection.From.BelongsTo, Is.EqualTo(firstInputShape));
+            Assert.That(firstConnection.Text, Is.EqualTo("A"));
+            Assert.That(controller.GraphControl.Connections[1].Text, Is.EqualTo("B"));
+            
+            // When
+            controller.GraphControl.Connections.Remove(firstConnection);
+
+            // Then
+            Assert.That(controller.GraphControl.Connections.Count, Is.EqualTo(1));
+            Assert.That(controller.GraphControl.Connections[0].Text, Is.EqualTo("B"));
+            Assert.That(controller.GraphControl.Connections[0].From.BelongsTo, Is.EqualTo(secondInputShape));
         }
 
         [Test]
@@ -304,14 +406,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [Category(TestCategory.Integration)]
         public void RenamingFeatureOnOutputChangesTextOnShape()
         {
-            var feature = new RtcTestFeature { Name = "feature" };
-            var output = new Output { Feature = feature, ParameterName = "parameter"};
+            var feature = new RtcTestFeature {Name = "feature"};
+            var output = new Output
+            {
+                Feature = feature,
+                ParameterName = "parameter"
+            };
 
             controlGroup.Outputs.Add(output);
 
             feature.Name = "feature2"; // change
 
-            Assert.AreEqual("feature2_parameter", ((ShapeBase)graphControl.Shapes[0]).Title, "changing feature name should update shape text");
+            Assert.AreEqual("feature2_parameter", ((ShapeBase) graphControl.Shapes[0]).Title, "changing feature name should update shape text");
         }
 
         [Test]
@@ -330,26 +436,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             Assert.AreEqual(1, graphControl.Connections.Count);
 
-            var connection = graphControl.Connections[0];
-            
-            Assert.IsTrue(ControlGroupEditorController.ConnectionIs(connection));
-        }
+            Connection connection = graphControl.Connections[0];
 
-        private static Dictionary<ConnectorType, ConnectorType> GetAllowedConnections(object from, object to)
-        {
-            var connectors = Enum.GetValues(typeof(ConnectorType));
-            var allowed = new Dictionary<ConnectorType, ConnectorType>();
-            foreach (ConnectorType source in connectors)
-            {
-                foreach (ConnectorType target in connectors)
-                {
-                    if (ControlGroupEditorController.IsConnectionAllowed(from, source, to, target))
-                    {
-                        allowed[source] = target;
-                    }
-                }
-            }
-            return allowed;
+            Assert.IsTrue(ControlGroupEditorController.ConnectionIs(connection));
         }
 
         [Test]
@@ -357,7 +446,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var source = new Input();
             var target = new Input();
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -366,7 +455,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var source = new Input();
             var target = new StandardCondition();
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(1, allowedConnections.Count);
             Assert.AreEqual(ConnectorType.Top, allowedConnections[ConnectorType.Bottom]);
         }
@@ -377,7 +466,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var input = new Input();
             var hydraulicRule = new HydraulicRule();
 
-            var allowedConnections = GetAllowedConnections(input, hydraulicRule);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(input, hydraulicRule);
             Assert.AreEqual(1, allowedConnections.Count);
             Assert.AreEqual(ConnectorType.Top, allowedConnections[ConnectorType.Bottom]);
         }
@@ -388,7 +477,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var input = new Input();
             var lookupSignal = new LookupSignal();
 
-            var allowedConnections = GetAllowedConnections(input, lookupSignal);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(input, lookupSignal);
             Assert.AreEqual(1, allowedConnections.Count);
             Assert.AreEqual(ConnectorType.Top, allowedConnections[ConnectorType.Bottom]);
         }
@@ -398,17 +487,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var input = new Input();
             var output = new Output();
-            var allowedConnections = GetAllowedConnections(input, output);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(input, output);
             Assert.AreEqual(0, allowedConnections.Count);
         }
-
 
         [Test]
         public void ConditionCanConnectToInput()
         {
             var source = new StandardCondition();
             var target = new Input();
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -418,7 +506,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new StandardCondition();
             var target = new StandardCondition();
 
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(2, allowedConnections.Count);
             Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Right]);
             Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Bottom]);
@@ -430,7 +518,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new StandardCondition();
             var target = new HydraulicRule();
 
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(2, allowedConnections.Count);
             Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Right]);
             Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Bottom]);
@@ -442,7 +530,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new StandardCondition();
             var output = new Output();
 
-            var allowedConnections = GetAllowedConnections(source, output);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, output);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -452,7 +540,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new StandardCondition();
             var output = new LookupSignal();
 
-            var allowedConnections = GetAllowedConnections(source, output);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, output);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -461,7 +549,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var source = new HydraulicRule();
             var target = new Input();
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -471,7 +559,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new HydraulicRule();
             var target = new StandardCondition();
 
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -481,7 +569,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new HydraulicRule();
             var target = new HydraulicRule();
 
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -491,7 +579,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new HydraulicRule();
             var target = new LookupSignal();
 
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -501,7 +589,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new HydraulicRule();
             var output = new Output();
 
-            var allowedConnections = GetAllowedConnections(source, output);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, output);
             Assert.AreEqual(1, allowedConnections.Count);
             Assert.AreEqual(ConnectorType.Left, allowedConnections[ConnectorType.Right]);
         }
@@ -511,7 +599,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var source = new Output();
             var target = new Input();
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -521,7 +609,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new Output();
             var target = new StandardCondition();
 
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -531,7 +619,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new Output();
             var target = new HydraulicRule();
 
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -541,7 +629,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new Output();
             var target = new LookupSignal();
 
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -551,7 +639,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new Output();
             var output = new Output();
 
-            var allowedConnections = GetAllowedConnections(source, output);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, output);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -560,7 +648,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var source = new LookupSignal();
             var target = new Input();
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -569,7 +657,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var source = new LookupSignal();
             var target = new StandardCondition();
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -579,12 +667,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new LookupSignal();
             var target = new HydraulicRule();
 
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
             Assert.IsFalse(target.CanBeLinkedFromSignal());
 
             var target2 = new PIDRule();
-            var allowedConnections2 = GetAllowedConnections(source, target2);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections2 = GetAllowedConnections(source, target2);
             Assert.AreEqual(1, allowedConnections2.Count);
             Assert.IsTrue(target2.CanBeLinkedFromSignal());
             Assert.AreEqual(ConnectorType.Bottom, allowedConnections2[ConnectorType.Right]);
@@ -595,7 +683,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var source = new LookupSignal();
             var target = new Output();
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -604,7 +692,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         {
             var source = new LookupSignal();
             var target = new LookupSignal();
-            var allowedConnections = GetAllowedConnections(source, target);
+            Dictionary<ConnectorType, ConnectorType> allowedConnections = GetAllowedConnections(source, target);
             Assert.AreEqual(0, allowedConnections.Count);
         }
 
@@ -689,13 +777,203 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             controller.ControlGroup = controlGroup;
 
             var collectionChangedCount = 0;
-            ((INotifyCollectionChanged)controller.ControlGroup).CollectionChanged += (s, e) =>
+            ((INotifyCollectionChanged) controller.ControlGroup).CollectionChanged += (s, e) =>
             {
                 collectionChangedCount++;
             };
 
             controlGroup.Inputs.Add(new Input());
             Assert.AreEqual(1, collectionChangedCount);
+        }
+
+        [TestFixture]
+        public static class GivenInput
+        {
+            private static Input input;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                input = new Input();
+            }
+
+            [Test]
+            public static void WhenDisconnectingRule_ThenInputRemovedFromRule()
+            {
+                var rule = Substitute.For<RuleBase>();
+                rule.Inputs.Add(input);
+
+                ControlGroupEditorController.Disconnect(input, rule);
+
+                Assert.That(rule.Inputs, Is.Empty);
+            }
+
+            [Test]
+            public static void WhenDisconnectingSignal_ThenInputRemovedFromSignal()
+            {
+                var signal = Substitute.For<SignalBase>();
+                signal.Inputs.Add(input);
+
+                ControlGroupEditorController.Disconnect(input, signal);
+
+                Assert.That(signal.Inputs, Is.Empty);
+            }
+
+            [Test]
+            public static void WhenDisconnectingCondition_ThenInputRemovedFromCondition()
+            {
+                var condition = Substitute.For<ConditionBase>();
+                condition.Input = input;
+
+                ControlGroupEditorController.Disconnect(input, condition);
+
+                Assert.That(condition.Input, Is.Null);
+            }
+
+            [Test]
+            public static void WhenDisconnectingMathematicalExpression_ThenInputRemovedFromMathematicalExpression()
+            {
+                var mathematicalExpression = new MathematicalExpression();
+                mathematicalExpression.Inputs.Add(input);
+
+                ControlGroupEditorController.Disconnect(input, mathematicalExpression);
+
+                Assert.That(mathematicalExpression.Inputs, Is.Empty);
+            }
+        }
+
+        [TestFixture]
+        public static class GivenMathematicalExpression
+        {
+            private static MathematicalExpression mathematicalExpression;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                mathematicalExpression = new MathematicalExpression();
+            }
+
+            [Test]
+            public static void WhenDisconnectingRule_ThenInputRemovedFromRule()
+            {
+                var rule = Substitute.For<RuleBase>();
+                rule.Inputs.Add(mathematicalExpression);
+
+                ControlGroupEditorController.Disconnect(mathematicalExpression, rule);
+
+                Assert.That(rule.Inputs, Is.Empty);
+            }
+
+            [Test]
+            public static void WhenDisconnectingCondition_ThenInputRemovedFromCondition()
+            {
+                var condition = Substitute.For<ConditionBase>();
+                condition.Input = mathematicalExpression;
+
+                ControlGroupEditorController.Disconnect(mathematicalExpression, condition);
+
+                Assert.That(condition.Input, Is.Null);
+            }
+
+            [Test]
+            public static void WhenDisconnectingMathematicalExpression_ThenInputRemovedFromMathematicalExpression()
+            {
+                var mathematicalExpression2 = new MathematicalExpression();
+                mathematicalExpression2.Inputs.Add(mathematicalExpression);
+
+                ControlGroupEditorController.Disconnect(mathematicalExpression, mathematicalExpression2);
+
+                Assert.That(mathematicalExpression2.Inputs, Is.Empty);
+            }
+        }
+
+        [TestFixture]
+        public static class GivenCondition
+        {
+            private static ConditionBase condition;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                condition = Substitute.For<ConditionBase>();
+            }
+
+            [Test]
+            public static void WhenDisconnectingRtcBaseObject_ThenRtcBaseObjectRemovedFromConditionOutputs()
+            {
+                var rtcBaseObject = Substitute.For<RtcBaseObject>();
+                condition.FalseOutputs.Add(rtcBaseObject);
+                condition.TrueOutputs.Add(rtcBaseObject);
+
+                ControlGroupEditorController.Disconnect(condition, rtcBaseObject);
+
+                Assert.That(condition.FalseOutputs, Is.Empty);
+                Assert.That(condition.TrueOutputs, Is.Empty);
+            }
+        }
+
+        [TestFixture]
+        public static class GivenRule
+        {
+            private static RuleBase rule;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                rule = Substitute.For<RuleBase>();
+            }
+
+            [Test]
+            public static void WhenDisconnectingOutput_ThenOutputRemovedFromRuleOutputs()
+            {
+                var output = Substitute.For<Output>();
+                rule.Outputs.Add(output);
+
+                ControlGroupEditorController.Disconnect(rule, output);
+
+                Assert.That(rule.Outputs, Is.Empty);
+            }
+        }
+
+        [TestFixture]
+        public static class GivenSignal
+        {
+            private static SignalBase signal;
+
+            [SetUp]
+            public static void Arrange()
+            {
+                signal = Substitute.For<SignalBase>();
+            }
+
+            [Test]
+            public static void WhenDisconnectingOutput_ThenOutputRemovedFromRuleOutputs()
+            {
+                var ruleBase = Substitute.For<RuleBase>();
+                signal.RuleBases.Add(ruleBase);
+
+                ControlGroupEditorController.Disconnect(signal, ruleBase);
+
+                Assert.That(signal.RuleBases, Is.Empty);
+            }
+        }
+
+        private static Dictionary<ConnectorType, ConnectorType> GetAllowedConnections(object from, object to)
+        {
+            Array connectors = Enum.GetValues(typeof(ConnectorType));
+            var allowed = new Dictionary<ConnectorType, ConnectorType>();
+            foreach (ConnectorType source in connectors)
+            {
+                foreach (ConnectorType target in connectors)
+                {
+                    if (ControlGroupEditorController.IsConnectionAllowed(from, source, to, target))
+                    {
+                        allowed[source] = target;
+                    }
+                }
+            }
+
+            return allowed;
         }
     }
 }

@@ -6,14 +6,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 {
     public static class DimrConfigModelCouplerFactory
     {
-        public static List<IDimrConfigModelCouplerProvider> CouplerProviders = new List<IDimrConfigModelCouplerProvider>();
+        public const string COUPLER_NAME_COMBINER = "_to_";
 
-        public static IDimrConfigModelCoupler GetCouplerForModels(IModel source, IModel target, ICompositeActivity sourceCoupler, ICompositeActivity targetCoupler)
+        public static List<IDimrConfigModelCouplerProvider> CouplerProviders { get; } =
+            new List<IDimrConfigModelCouplerProvider>();
+
+        public static IDimrConfigModelCoupler GetCouplerForModels(IModel source, IModel target,
+                                                                  ICompositeActivity sourceCoupler,
+                                                                  ICompositeActivity targetCoupler)
         {
-            var couplerConfig = CouplerProviders.Select(p => p.CreateCoupler(source, target, sourceCoupler, targetCoupler)).FirstOrDefault(c => c != null);
+            IDimrConfigModelCoupler couplerConfig = CouplerProviders
+                                                    .Select(p => p.CreateCoupler(source, target, sourceCoupler, targetCoupler))
+                                                    .FirstOrDefault(c => c != null);
             return couplerConfig ?? new DimrConfigModelCoupler(source, target, sourceCoupler, targetCoupler);
         }
-
-        public const string COUPLER_NAME_COMBINER = "_to_";
     }
 }

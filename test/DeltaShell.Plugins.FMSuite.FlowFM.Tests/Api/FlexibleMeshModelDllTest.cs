@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.Finish();
                 model.Cleanup();
 
-                var dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunner.DimrRunLogfileDataItemTag);
+                var dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunHelper.dimrRunLogfileDataItemTag);
                 Assert.NotNull(dimrLogDataItem, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
                 Assert.NotNull(dimrLogDataItem.Value, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
             });
@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             DoWithLocalModelVersion(mduPath, (model) =>
             {
                 model.Initialize();
-                Assert.AreEqual(Dimr.DimrApiDataSet.DIMR_FILL_VALUE, ((double[])model.GetVar("party", "at", "myplace"))[0], 0.01d);
+                Assert.AreEqual(Dimr.DimrApiDataSet.DimrFillValue, ((double[])model.GetVar("party", "at", "myplace"))[0], 0.01d);
             });
         }
 

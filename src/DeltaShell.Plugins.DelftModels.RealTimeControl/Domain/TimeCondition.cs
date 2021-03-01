@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Xml;
 using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
@@ -17,28 +13,55 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     /// <summary>
     /// TimeCondition gives true or false based on a time
     /// The TimeCondition has effect on 3 generated xmls
-    ///  - rtcToolsConfig.xml : same as standardcondition but input is times series found in
-    ///  - rtcDataConfig.xml : time series definition
-    ///  - timeseries_import.xml : the time series contents
+    /// - rtcToolsConfig.xml : same as standardcondition but input is times series found in
+    /// - rtcDataConfig.xml : time series definition
+    /// - timeseries_import.xml : the time series contents
     /// </summary>
     [Entity]
-    public class TimeCondition : StandardCondition, IItemContainer
+    public class TimeCondition : StandardCondition, IItemContainer, ITimeDependentRtcObject
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(StandardCondition));
 
+        private TimeSeries timeSeries;
+
         public TimeCondition() : base(false)
         {
-            Reference = "IMPLICIT"; // = IMPLICIT -> timeseries
+            Reference = ReferenceType.Implicit; // = IMPLICIT -> timeseries
         }
 
-        private TimeSeries timeSeries;
+        [NoNotifyPropertyChange]
+        public InterpolationType InterpolationOptionsTime
+        {
+            get
+            {
+                return TimeSeries.Time.InterpolationType;
+            }
+            set
+            {
+                TimeSeries.Time.InterpolationType = value;
+            }
+        }
+
+        [NoNotifyPropertyChange]
+        public ExtrapolationType Extrapolation
+        {
+            get
+            {
+                return TimeSeries.Time.ExtrapolationType;
+            }
+            set
+            {
+                TimeSeries.Time.ExtrapolationType = value;
+            }
+        }
+
         public TimeSeries TimeSeries
         {
             get
             {
                 if (timeSeries == null)
                 {
-                    timeSeries = new TimeSeries { Name = "Time Series" };
+                    timeSeries = new TimeSeries {Name = "Time Series"};
                     timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
                     timeSeries.Time.InterpolationType = InterpolationType.Constant;
                     timeSeries.Components.Add(new Variable<bool>
@@ -49,118 +72,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                         IsAutoSorted = false,
                         Unit = new Unit("true/false", "true/false")
                     });
-                    timeSeries.Components[0].Attributes[FunctionAttributes.StandardName] = 
+                    timeSeries.Components[0].Attributes[FunctionAttributes.StandardName] =
                         FunctionAttributes.StandardNames.RtcTimeCondition;
                     TimeSeries = timeSeries;
                 }
 
                 return timeSeries;
             }
-            set { timeSeries = value; }
-        }
-
-        public override string GetDescription()
-        {
-            return ""; //todo: show compact notion of time range?
-        }
-
-        public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
-        {
-            yield return GetTimeSeries(prefix, start, stop, step);
-        }
-
-        [NoNotifyPropertyChange]
-        public InterpolationType InterpolationOptionsTime
-        {
-            get { return TimeSeries.Time.InterpolationType; }
-            set { TimeSeries.Time.InterpolationType = value; }
-        }
-
-        [NoNotifyPropertyChange]
-        public ExtrapolationType Extrapolation
-        {
-            get { return TimeSeries.Time.ExtrapolationType; }
-            set { TimeSeries.Time.ExtrapolationType = value; }
-        }
-
-        private IXmlTimeSeries GetTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
-        {
-            var startTime = start;
-            var endTime = stop;
-            var timeStep = step;
-
-            if (TimeSeries.Time.Values.Count > 0)
+            set
             {
-                startTime = TimeSeries.Time.Values.First();
-                endTime = TimeSeries.Time.Values.Last();
-                timeStep = endTime - startTime;
+                timeSeries = value;
             }
-
-            var periodSpan = TimeSeries.Time.Attributes.ContainsKey("PeriodSpan")
-                    ? TimeSpan.ParseExact(TimeSeries.Time.Attributes["PeriodSpan"], "c", null)
-                    : new TimeSpan(0, 0, 0);
-
-            var xmlTimeSeries = new XmlTimeSeries
-            {
-                StartTime = startTime,
-                EndTime = endTime,
-                Name = prefix + TimeSeriesName,
-                LocationId = prefix + LocationId,
-                ParameterId = QuantityId,
-                TimeStep = timeStep,
-                TimeSeries = (TimeSeries) TimeSeries.Clone(),
-                InterpolationType = TimeSeries.Time.InterpolationType,
-                ExtrapolationType = (ExtrapolationTimeSeriesType) TimeSeries.Time.ExtrapolationType,
-                PeriodSpan = periodSpan
-            };
-
-            return xmlTimeSeries;
-        }
-
-        private string LocationId
-        {
-            get
-            {
-                return Name;
-            }
-        }
-        private string QuantityId = "TimeSeries";
-
-        private string TimeSeriesName
-        {
-            get
-            {
-                return LocationId + "_" + QuantityId;
-            }
-        }
-
-        /// <summary>
-        /// All trigger should dump their state to te export file (mail DS )
-        /// </summary>
-        public string InputTimeSeriesName
-        {
-            get { return string.Format("Timeseries_{0}", Name); }
-        }
-
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            return ToXml(xNamespace, prefix, prefix + InputTimeSeriesName);
-        }
-
-        public override IEnumerable<XElement> ToDataConfigImportSeries(string prefix, XNamespace xNamespace)
-        {
-            foreach (var export in base.ToDataConfigImportSeries(prefix, xNamespace))
-            {
-                yield return export;
-            }
-            yield return new XElement(xNamespace + "timeSeries", new XAttribute("id", prefix+InputTimeSeriesName),
-                new XElement(xNamespace + "PITimeSeries",
-                    new XElement(xNamespace + "locationId", prefix+LocationId),
-                    new XElement(xNamespace + "parameterId",QuantityId),
-                    new XElement(xNamespace + "interpolationOption",InterpolationOptionsTime == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
-                    new XElement(xNamespace + "extrapolationOption", TimeSeries.Time.ExtrapolationType == ExtrapolationType.Periodic ? "PERIODIC" : "BLOCK")
-                ));
-
         }
 
         [ValidationMethod]
@@ -171,17 +93,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             if (timeCondition.Input != null)
             {
                 exceptions.Add(new ValidationException(
-                        string.Format("Condition '{0}' has input; this is not supported for time conditions.", timeCondition.Name)));
+                                   string.Format("Condition '{0}' has input; this is not supported for time conditions.", timeCondition.Name)));
             }
+
             if (exceptions.Count > 0)
             {
                 throw new ValidationContextException(exceptions);
             }
         }
-    
+
+        public override string GetDescription()
+        {
+            return ""; //todo: show compact notion of time range?
+        }
+
         public override object Clone()
         {
-            var timeCondition = (TimeCondition)Activator.CreateInstance(GetType());
+            var timeCondition = new TimeCondition();
             timeCondition.CopyFrom(this);
             return timeCondition;
         }
@@ -193,17 +121,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 base.CopyFrom(source);
                 Reference = timeCondition.Reference;
-                TimeSeries = (TimeSeries)timeCondition.TimeSeries.Clone();
+                TimeSeries = (TimeSeries) timeCondition.TimeSeries.Clone();
                 InterpolationOptionsTime = timeCondition.InterpolationOptionsTime;
                 Extrapolation = timeCondition.Extrapolation;
             }
-
         }
 
         public IEnumerable<object> GetDirectChildren()
         {
             if (timeSeries != null)
+            {
                 yield return timeSeries;
+            }
         }
     }
 }

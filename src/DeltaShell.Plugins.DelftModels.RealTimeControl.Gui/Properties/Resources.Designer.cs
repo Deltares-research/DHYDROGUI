@@ -211,6 +211,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PNG image|*.png.
+        /// </summary>
+        internal static string ControlGroupEditor_SaveAsImageAction_PNG_image___png {
+            get {
+                return ResourceManager.GetString("ControlGroupEditor_SaveAsImageAction_PNG_image___png", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save image.
+        /// </summary>
+        internal static string ControlGroupEditor_SaveAsImageAction_Save_image {
+            get {
+                return ResourceManager.GetString("ControlGroupEditor_SaveAsImageAction_Save_image", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Control group.
         /// </summary>
         internal static string ControlGroupProperties_DisplayName {
@@ -342,6 +360,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap folder_output {
+            get {
+                object obj = ResourceManager.GetObject("folder_output", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lookup table rule.
         /// </summary>
         internal static string HydraulicRuleProperties_DisplayName {
@@ -360,7 +388,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Time lag (s).
+        ///   Looks up a localized string similar to Time lag [s].
         /// </summary>
         internal static string HydraulicRuleProperties_TimeLag_DisplayName {
             get {
@@ -434,7 +462,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Above output.
+        ///   Looks up a localized string similar to Output above deadband.
         /// </summary>
         internal static string IntervalRuleProperties_AboutOutput_DisplayName {
             get {
@@ -461,7 +489,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Below output.
+        ///   Looks up a localized string similar to Output below deadband.
         /// </summary>
         internal static string IntervalRuleProperties_Below_DisplayName {
             get {
@@ -871,6 +899,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Output RTC rule already assigned to a different output. Are you sure you want to assign it?.
+        /// </summary>
+        internal static string RealTimeControlModelNodePresenter_OutputLocationWarningMessage {
+            get {
+                return ResourceManager.GetString("RealTimeControlModelNodePresenter_OutputLocationWarningMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Interpolation.
         /// </summary>
         internal static string RelativeTimeRuleProperties_Category_Interpolation {
@@ -925,11 +962,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Minimum period (s).
+        ///   Looks up a localized string similar to Minimum period [s].
         /// </summary>
         internal static string RelativeTimeRuleProperties_MinimumPeriod_DisplayName {
             get {
                 return ResourceManager.GetString("RelativeTimeRuleProperties_MinimumPeriod_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interpolation.
+        /// </summary>
+        internal static string RTC_Category_Interpolation {
+            get {
+                return ResourceManager.GetString("RTC_Category_Interpolation", resourceCulture);
             }
         }
         
@@ -1098,6 +1144,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not check if source shape is connectable with target shape..
+        /// </summary>
+        internal static string ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_with_target_shape_ {
+            get {
+                return ResourceManager.GetString("ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_wi" +
+                        "th_target_shape_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap signal {
@@ -1155,11 +1211,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap table {
+            get {
+                object obj = ResourceManager.GetObject("table", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Table.
         /// </summary>
         internal static string Table_DisplayName {
             get {
                 return ResourceManager.GetString("Table_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap textdocument {
+            get {
+                object obj = ResourceManager.GetObject("textdocument", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

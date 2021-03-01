@@ -43,11 +43,10 @@
   <ItemGroup>
     <Compile Include="Api\Iterative1d2dApi.cs" />
     <Compile Include="CompositeHydroModelWorkFlowData.cs" />
-    <Compile Include="Export\DimrConfigModelCoupler.cs" />
     <Compile Include="Export\DHydroConfigWriter.cs" />
     <Compile Include="Export\DHydroConfigXmlExporter.cs" />
+    <Compile Include="Export\DimrConfigModelCoupler.cs" />
     <Compile Include="Export\DimrConfigModelCouplerFactory.cs" />
-    <Compile Include="Export\FeatureExtensions.cs" />
     <Compile Include="Export\IDimrConfigModelCoupler.cs" />
     <Compile Include="Export\IDimrConfigModelCouplerProvider.cs" />
     <Compile Include="HydroModelSettings.cs" />
@@ -169,8 +168,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>

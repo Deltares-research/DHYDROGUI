@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RTCShapes.Shapes;
+using Netron.GraphLib;
 using Netron.GraphLib.UI;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         {
             condition = new DirectionalCondition();
             graphic = MockRepository.GenerateMock<Graphics>();
-         //  shape = MockRepository.GeneratePartialMock<ConditionShape>();
+            //  shape = MockRepository.GeneratePartialMock<ConditionShape>();
             shape = new ConditionShape();
             graphControl = new GraphControl();
             graphControl.AddLibrary(typeof(RuleShape).Module.FullyQualifiedName);
@@ -43,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         public void GivenConditionShapeWhenDisablingInputConnectionsThenNewConnectionsFromLeftAndTopNodeAreNotAllowed()
         {
             shape.DisableInputConnections();
-            var connector = shape.Connectors[0];
+            Connector connector = shape.Connectors[0];
             Assert.That(connector.AllowNewConnectionsTo, Is.EqualTo(false));
         }
 
@@ -51,11 +52,12 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         public void GivenConditionShapeWhenEnablingInputConnectionsThenNewConnectionsFromLeftAndTopNodeAreAllowed()
         {
             shape.EnableInputConnections();
-            var connector = shape.Connectors[0];
+            Connector connector = shape.Connectors[0];
             Assert.That(connector.AllowNewConnectionsTo, Is.EqualTo(true));
         }
 
-        [Test] public void GivenResizableConditionShapeWhenDrawingTheShapeThenShapeGetsRecalculated()
+        [Test]
+        public void GivenResizableConditionShapeWhenDrawingTheShapeThenShapeGetsRecalculated()
         {
             shape.AutoResize = true;
             shape.Paint(graphic);
@@ -66,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         {
             shape.AutoResize = false;
             shape.Paint(graphic);
-         }
+        }
 
         [Test]
         public void Image()
@@ -80,7 +82,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         {
             shape.GetDescriptionDelegate = condition.GetDescription;
             shape.Paint(graphic);
-
         }
     }
 }

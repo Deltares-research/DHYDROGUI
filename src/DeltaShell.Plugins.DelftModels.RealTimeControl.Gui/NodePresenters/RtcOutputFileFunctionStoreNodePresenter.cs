@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.IO;
 using System.Linq;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.TreeViewControls;
 using DelftTools.Functions;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.ImportExport;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
@@ -11,6 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
     public class RtcOutputFileFunctionStoreNodePresenter : TreeViewNodePresenterBase<RealTimeControlOutputFileFunctionStore>
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(RtcOutputFileFunctionStoreNodePresenter));
+
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, RealTimeControlOutputFileFunctionStore nodeData)
         {
             if (nodeData == null)
@@ -28,9 +30,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
             node.Text = Path.GetFileName(nodeData.Path);
         }
 
-        public override System.Collections.IEnumerable GetChildNodeObjects(RealTimeControlOutputFileFunctionStore parentNodeData, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(RealTimeControlOutputFileFunctionStore parentNodeData, ITreeNode node)
         {
-            return (parentNodeData != null && parentNodeData.Functions != null) ? parentNodeData.Functions : Enumerable.Empty<IFunction>();
+            return parentNodeData != null && parentNodeData.Functions != null ? parentNodeData.Functions : Enumerable.Empty<IFunction>();
         }
     }
 }

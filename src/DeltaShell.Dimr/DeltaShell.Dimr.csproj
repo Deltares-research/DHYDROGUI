@@ -66,7 +66,9 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -74,16 +76,26 @@
     <Compile Include="DimrApiDataSet.cs" />
     <Compile Include="DimrApiFactory.cs" />
     <Compile Include="DimrApiWrapper.cs" />
-    <Compile Include="DimrExe.cs" />
+    <Compile Include="DimrErrorCodeException.cs" />
+    <Compile Include="DimrRunHelper.cs" />
     <Compile Include="DimrRunner.cs" />
+    <Compile Include="dimr_xsd\dimr.cs" />
+    <Compile Include="dimr_xsd\dimr.custom.cs" />
+    <Compile Include="dimr_xsd\DimrXMLSerializer.cs" />
+    <Compile Include="drtc_xsd\rtcRuntimeConfig.cs" />
+    <Compile Include="drtc_xsd\rtcRuntimeConfig.custom.cs" />
     <Compile Include="IDimrApi.cs" />
+    <Compile Include="IDimrApiFactory.cs" />
     <Compile Include="IDimrModel.cs" />
+    <Compile Include="IDimrModelFileImporter.cs" />
     <Compile Include="LoggerToProtoConverter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="RemoteDimrApi.cs" />
-    <Compile Include="xsd\dimr-1.0.custom.cs" />
-    <Compile Include="xsd\dimr-1.0.serializers.cs" />
-    <Compile Include="xsd\dimr-1_0.cs" />
-    <Compile Include="xsd\DimrModelExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
@@ -134,10 +146,6 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="UML\DimrOverview.cd" />
-    <None Include="xsd\dimr-1.0.xsd">
-      <SubType>Designer</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
@@ -145,6 +153,18 @@
       <Name>DelftTools.Hydro</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
+      <Project>{368694eb-cb62-4008-a27c-37afac0fdf14}</Project>
+      <Name>DeltaShell.NGHS.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

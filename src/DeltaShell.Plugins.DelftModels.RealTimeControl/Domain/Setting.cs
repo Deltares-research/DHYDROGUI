@@ -9,11 +9,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     public class Setting : ICloneable, ICopyFrom
     {
         /// <summary>
-        /// only internally used;
-        /// </summary>
-        private long Id { get; set; }
-
-        /// <summary>
         /// used by PidRule
         /// </summary>
         public double Min { get; set; }
@@ -38,31 +33,37 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         /// </summary>
         public double Above { get; set; }
 
-        public override bool Equals(object obj)
-        {
-            if (obj == null) return false;
-
-            if (this.GetType() != obj.GetType()) return false;
-
-            // safe because of the GetType check
-            var other= (Setting)obj;
-
-            return (Min == other.Min && Max == other.Max && MaxSpeed == other.MaxSpeed);
-            
-        }
-
         public static bool operator ==(Setting left, Setting right)
         {
-            if (((object)left == null) || ((object)right == null))
+            if ((object) left == null || (object) right == null)
             {
                 return false;
             }
+
             return ReferenceEquals(left, right) || left.Equals(right);
         }
 
         public static bool operator !=(Setting left, Setting right)
         {
             return !(left == right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            // safe because of the GetType check
+            var other = (Setting) obj;
+
+            return Min == other.Min && Max == other.Max && MaxSpeed == other.MaxSpeed;
         }
 
         public override int GetHashCode()
@@ -72,17 +73,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public object Clone()
         {
-            var setting = (Setting)Activator.CreateInstance(GetType());
+            var setting = (Setting) Activator.CreateInstance(GetType());
             setting.CopyFrom(this);
             return setting;
         }
 
         public virtual void CopyFrom(object source)
         {
-            var settimg = (Setting)source;
+            var settimg = (Setting) source;
             Min = settimg.Min;
             Max = settimg.Max;
             MaxSpeed = settimg.MaxSpeed;
         }
+
+        /// <summary>
+        /// only internally used;
+        /// </summary>
+        private long Id { get; set; }
     }
 }

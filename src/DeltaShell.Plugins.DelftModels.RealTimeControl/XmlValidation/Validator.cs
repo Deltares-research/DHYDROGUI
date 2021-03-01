@@ -20,16 +20,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
         public Validator(IEnumerable<string> xmlSchemaPaths)
         {
             xmlSchemaSet = new XmlSchemaSet();
-            foreach (var xmlSchemaPath in xmlSchemaPaths)
+            foreach (string xmlSchemaPath in xmlSchemaPaths)
             {
-                xmlSchemaSet.Add(FileToObject.ConvertToXmlSchema(xmlSchemaPath));    
+                xmlSchemaSet.Add(FileToObject.ConvertToXmlSchema(xmlSchemaPath));
             }
         }
 
         /// <summary>
         /// Validates the XmlDocument
         /// </summary>
-        /// <param name="xmlDocumentPath">XML Document Path</param>
+        /// <param name="xmlDocumentPath">ComplexType Document Path</param>
         /// <exception cref="ValidatorException">Throws ValidatorException on failure</exception>
         public void Validate(string xmlDocumentPath)
         {
@@ -39,28 +39,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
         /// <summary>
         /// Validates the XmlDocument
         /// </summary>
-        /// <param name="xDocument">XML Document</param>
+        /// <param name="xDocument">ComplexType Document</param>
         /// <exception cref="ValidatorException">Throws ValidatorException on failure</exception>
         public void Validate(XDocument xDocument)
         {
             var messages = "";
-            xDocument.Validate(xmlSchemaSet, (o, e) =>
-                                                 {
-                                                     messages += e.Message;
-                                                 }, true);
+            xDocument.Validate(xmlSchemaSet, (o, e) => { messages += e.Message; }, true);
 
-           if(messages != "")
-           {
-               throw new XmlException(messages);
-           }
-
+            if (messages != "")
+            {
+                throw new XmlException(messages);
+            }
         }
 
         public bool IsValid(string xmlDocumentPath)
         {
             return IsValid(FileToObject.ConvertToXDocument(xmlDocumentPath));
         }
-                
+
         public bool IsValid(XDocument xDocument)
         {
             try
@@ -72,6 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
                 Log.Warn(ex.Message);
                 return false;
             }
+
             return true;
         }
     }

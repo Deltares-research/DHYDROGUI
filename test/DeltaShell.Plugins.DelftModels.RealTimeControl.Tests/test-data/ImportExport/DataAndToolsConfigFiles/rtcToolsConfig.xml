@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews C:\Users\sluis_pa\OneDrive%20-%20Stichting%20Deltares\Documents\model%20with%20all%20rules%20and%20conditions\export_dimr\rtc\rtcToolsConfig.xsd">
+  <general>
+    <description>RTC Model DeltaShell</description>
+    <poolRoutingScheme>Theta</poolRoutingScheme>
+    <theta>0.5</theta>
+  </general>
+  <components>
+    <component>
+      <unitDelay id="[Delayed][Input]ObservationPoint1/Water level (op)">
+        <input>
+          <x>[Input]ObservationPoint1/Water level (op)</x>
+        </input>
+        <output>
+          <yVector>[Delayed][Input]ObservationPoint1/Water level (op)</yVector>
+        </output>
+      </unitDelay>
+    </component>
+  </components>
+  <rules>
+    <rule>
+      <unitDelay id="pid_rule_unitDelay">
+        <input>
+          <x>[Output]Weir1/Crest level (s)</x>
+        </input>
+        <output>
+          <y>[Output]Weir1/Crest level (s)</y>
+        </output>
+      </unitDelay>
+    </rule>
+    <rule>
+      <unitDelay id="interval_rule_unitDelay">
+        <input>
+          <x>[Output]Weir3/Crest level (s)</x>
+        </input>
+        <output>
+          <y>[Output]Weir3/Crest level (s)</y>
+        </output>
+      </unitDelay>
+    </rule>
+    <rule>
+      <unitDelay id="relative_time_rule_unitDelay">
+        <input>
+          <x>[Output]Weir5/Crest level (s)</x>
+        </input>
+        <output>
+          <y>[Output]Weir5/Crest level (s)</y>
+        </output>
+      </unitDelay>
+    </rule>
+    <rule>
+      <unitDelay id="relative_time_rule_unitDelay">
+        <input>
+          <x>[Output]Weir6/Crest level (s)</x>
+        </input>
+        <output>
+          <y>[Output]Weir6/Crest level (s)</y>
+        </output>
+      </unitDelay>
+    </rule>
+    <rule>
+      <pid id="[PID]control_group_1/pid_rule">
+        <mode>PIDVEL</mode>
+        <settingMin>4</settingMin>
+        <settingMax>5</settingMax>
+        <settingMaxSpeed>6</settingMaxSpeed>
+        <kp>1</kp>
+        <ki>2</ki>
+        <kd>3</kd>
+        <input>
+          <x>[Input]ObservationPoint1/Water level (op)</x>
+          <setpointSeries>[SP]control_group_1/pid_rule</setpointSeries>
+        </input>
+        <output>
+          <y>[Output]Weir1/Crest level (s)</y>
+          <integralPart>[IP]control_group_1/pid_rule</integralPart>
+          <differentialPart>[DP]control_group_1/pid_rule</differentialPart>
+        </output>
+      </pid>
+    </rule>
+    <rule>
+      <lookupTable id="[HydraulicRule]control_group_2/lookup_table_rule">
+        <table>
+          <record x="1" y="5" />
+          <record x="2" y="4" />
+          <record x="3" y="3" />
+          <record x="4" y="2" />
+          <record x="5" y="1" />
+        </table>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>BLOCK</extrapolationOption>
+        <input>
+          <x ref="EXPLICIT">[Delayed][Input]ObservationPoint1/Water level (op)[0]</x>
+        </input>
+        <output>
+          <y>[Output]Weir2/Crest level (s)</y>
+        </output>
+      </lookupTable>
+    </rule>
+    <rule>
+      <interval id="[IntervalRule]control_group_3/interval_rule">
+        <settingBelow>4</settingBelow>
+        <settingAbove>3</settingAbove>
+        <settingMaxSpeed>1</settingMaxSpeed>
+        <deadbandSetpointRelative>5</deadbandSetpointRelative>
+        <input>
+          <x ref="EXPLICIT">[Input]ObservationPoint1/Water level (op)</x>
+          <setpoint>[SP]control_group_3/interval_rule</setpoint>
+        </input>
+        <output>
+          <y>[Output]Weir3/Crest level (s)</y>
+          <status>[Status]control_group_3/interval_rule</status>
+        </output>
+      </interval>
+    </rule>
+    <rule>
+      <timeAbsolute id="[TimeRule]control_group_4/time_rule">
+        <input>
+          <x>control_group_4/time_rule</x>
+        </input>
+        <output>
+          <y>[Output]Weir4/Crest level (s)</y>
+        </output>
+      </timeAbsolute>
+    </rule>
+    <rule>
+      <timeRelative id="[RelativeTimeRule]control_group_5/relative_time_rule">
+        <mode>RETAINVALUEWHENINACTIVE</mode>
+        <valueOption>ABSOLUTE</valueOption>
+        <maximumPeriod>0</maximumPeriod>
+        <controlTable>
+          <record time="60" value="10" />
+          <record time="600" value="9" />
+          <record time="1800" value="8" />
+          <record time="3600" value="7" />
+          <record time="36000" value="6" />
+          <record time="36001" value="6" />
+        </controlTable>
+        <output>
+          <y>[Output]Weir5/Crest level (s)</y>
+          <timeActive>control_group_5/relative_time_rule</timeActive>
+        </output>
+      </timeRelative>
+    </rule>
+    <rule>
+      <timeRelative id="[RelativeTimeRule]control_group_6/relative_time_rule">
+        <mode>RETAINVALUEWHENINACTIVE</mode>
+        <valueOption>RELATIVE</valueOption>
+        <maximumPeriod>0</maximumPeriod>
+        <controlTable>
+          <record time="60" value="10" />
+          <record time="600" value="9" />
+          <record time="1800" value="8" />
+          <record time="3600" value="7" />
+          <record time="36000" value="6" />
+          <record time="36001" value="6" />
+        </controlTable>
+        <input>
+          <y>[Output]Weir6/Crest level (s)[AsInputFor]relative_time_rule</y>
+        </input>
+        <output>
+          <y>[Output]Weir6/Crest level (s)</y>
+          <timeActive>control_group_6/relative_time_rule</timeActive>
+        </output>
+      </timeRelative>
+    </rule>
+    <rule>
+      <lookupTable id="[FactorRule]control_group_7/invertor_rule">
+        <table>
+          <record x="-1" y="1" />
+          <record x="1" y="-1" />
+        </table>
+        <interpolationOption>LINEAR</interpolationOption>
+        <extrapolationOption>LINEAR</extrapolationOption>
+        <input>
+          <x ref="IMPLICIT">[Input]ObservationPoint1/Water level (op)</x>
+        </input>
+        <output>
+          <y>[Output]Weir7/Crest level (s)</y>
+        </output>
+      </lookupTable>
+    </rule>
+  </rules>
+  <triggers>
+    <trigger>
+      <standard id="[StandardCondition]control_group_1/standard_condition">
+        <condition>
+          <x1Series ref="EXPLICIT">[Input]ObservationPoint1/Water level (op)</x1Series>
+          <relationalOperator>LessEqual</relationalOperator>
+          <x2Value>5</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>[PID]control_group_1/pid_rule</ruleReference>
+          </trigger>
+        </true>
+        <output>
+          <status>[Status]control_group_1/standard_condition</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="[TimeCondition]control_group_2/time_condition">
+        <condition>
+          <x1Series ref="IMPLICIT">control_group_2/time_condition</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>[HydraulicRule]control_group_2/lookup_table_rule</ruleReference>
+          </trigger>
+        </true>
+        <output>
+          <status>[Status]control_group_2/time_condition</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="[DirectionalCondition]control_group_3/directional_condition">
+        <condition>
+          <x1Series ref="EXPLICIT">[Input]ObservationPoint1/Water level (op)</x1Series>
+          <relationalOperator>LessEqual</relationalOperator>
+          <x2Series ref="EXPLICIT">[Input]ObservationPoint1/Water level (op)-1</x2Series>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>[IntervalRule]control_group_3/interval_rule</ruleReference>
+          </trigger>
+        </true>
+        <output>
+          <status>[Status]control_group_3/directional_condition</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="[StandardCondition]control_group_4/standard_condition">
+        <condition>
+          <x1Series ref="EXPLICIT">[Input]ObservationPoint1/Water level (op)</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>[TimeRule]control_group_4/time_rule</ruleReference>
+          </trigger>
+        </true>
+        <output>
+          <status>[Status]control_group_4/standard_condition</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="[StandardCondition]control_group_5/standard_condition">
+        <condition>
+          <x1Series ref="EXPLICIT">[Input]ObservationPoint1/Water level (op)</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>[RelativeTimeRule]control_group_5/relative_time_rule</ruleReference>
+          </trigger>
+        </true>
+        <output>
+          <status>[Status]control_group_5/standard_condition</status>
+        </output>
+      </standard>
+    </trigger>
+    <trigger>
+      <standard id="[StandardCondition]control_group_6/standard_condition">
+        <condition>
+          <x1Series ref="EXPLICIT">[Input]ObservationPoint1/Water level (op)</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>[RelativeTimeRule]control_group_6/relative_time_rule</ruleReference>
+          </trigger>
+        </true>
+        <output>
+          <status>[Status]control_group_6/standard_condition</status>
+        </output>
+      </standard>
+    </trigger>
+  </triggers>
+</rtcToolsConfig>

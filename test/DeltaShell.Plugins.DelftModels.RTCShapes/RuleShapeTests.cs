@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
         {
             var ruleShape = new RuleShape();
             var rectangle = new RectangleF(0, 0, 60, 40);
-            var shapeColor = Color.WhiteSmoke;
+            Color shapeColor = Color.WhiteSmoke;
             Assert.AreEqual(rectangle, ruleShape.Rectangle);
             Assert.AreEqual(shapeColor, ruleShape.ShapeColor);
         }

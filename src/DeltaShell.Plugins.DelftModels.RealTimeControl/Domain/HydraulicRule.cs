@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections.Generic;
 using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
@@ -14,10 +11,10 @@ using ValidationAspects.Exceptions;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
-    public class HydraulicRule : RuleBase, IItemContainer
+    public class HydraulicRule : RuleBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(HydraulicRule));
         private const string LookupTable = "lookupTable";
+        private static readonly ILog Log = LogManager.GetLogger(typeof(HydraulicRule));
         private int timeLag = 0;
         private int timeLagInTimeSteps = 0;
 
@@ -28,77 +25,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         /// <summary>
         /// A function to store the table to make the hydraulic conversion
-        /// This can either be a Discharge or 
+        /// This can either be a Discharge or
         /// </summary>
         public Function Function { get; set; }
-
-        public static Function DefineFunction()
-        {
-            var function = new Function();
-            function.Arguments.Add(new Variable<double>
-                                       {
-                                           Name = "x",
-                                           InterpolationType = InterpolationType.Constant, 
-                                           ExtrapolationType = ExtrapolationType.Constant
-                                       });
-            function.Components.Add(new Variable<double>("f"));
-            function.Name = LookupTable; 
-            return function;
-        }
-
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            var result = base.ToXml(xNamespace, prefix);
-            IEventedList<Record> table = new EventedList<Record>();
-            foreach (var x in Function.Arguments[0].Values)
-            {
-                table.Add(new Record{X = (double) x, Y = (double) Function[x]});
-            }
-
-            var xElementsInput = Inputs.Select(input => input.ToXml(xNamespace, "x")).ToList();
-
-            if(timeLagInTimeSteps > 0)
-            {
-                //input will be an unitDelay component with the name "delayed<Name>"
-                //a time lag index is needed as 'pointer' and will be added to the name [timeLagInTimeSteps]
-                foreach (var xElementInput in xElementsInput)
-                {
-                    var xElement = xElementInput.Elements().First();
-                    // we need the last element from vector with length (timeLagInTimeSteps-1)
-                    xElement.Value = string.Format("delayed{0}[{1}]", xElement.Value, (timeLagInTimeSteps - 2));
-                    xElement.Add(new XAttribute("ref","EXPLICIT"));
-                }
-            }
-            else
-            {
-                foreach (var xElementInput in xElementsInput)
-                {
-                    var xElement = xElementInput.Elements().First();
-                    xElement.Add(new XAttribute("ref", "IMPLICIT"));
-                }
-
-            }
-
-            result.Add(new XElement(xNamespace + "lookupTable",
-                            new XAttribute("id", prefix + Name),
-                            new XElement(xNamespace + "table", table.Select(record => record.ToXml(xNamespace))),
-                            new XElement(xNamespace + "interpolationOption", Interpolation == InterpolationType.Constant ? "BLOCK" : "LINEAR"),
-                            new XElement(xNamespace + "extrapolationOption", Extrapolation == ExtrapolationType.Constant ? "BLOCK" : "LINEAR"),
-                            xElementsInput,
-                            Outputs.Select(output => output.ToXml(xNamespace, "y", null))));
-            return result;
-        }
 
         [NoNotifyPropertyChange]
         public InterpolationType Interpolation
         {
-            get { return Function.Arguments.First().InterpolationType; }
+            get
+            {
+                return Function.Arguments.First().InterpolationType;
+            }
             set
             {
-                if (!Enum.IsDefined(typeof(InterpolationHydraulicType), (InterpolationHydraulicType)value))
+                if (!Enum.IsDefined(typeof(InterpolationHydraulicType), (InterpolationHydraulicType) value))
                 {
                     throw new ArgumentException(string.Format("Interpolation for lookup table rule does not support {0}", value));
                 }
+
                 Function.Arguments.First().InterpolationType = value;
             }
         }
@@ -106,13 +50,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         [NoNotifyPropertyChange]
         public ExtrapolationType Extrapolation
         {
-            get { return Function.Arguments.First().ExtrapolationType; }
+            get
+            {
+                return Function.Arguments.First().ExtrapolationType;
+            }
             set
             {
-                if (!Enum.IsDefined(typeof(ExtrapolationHydraulicType), (ExtrapolationHydraulicType)value))
+                if (!Enum.IsDefined(typeof(ExtrapolationHydraulicType), (ExtrapolationHydraulicType) value))
                 {
                     throw new ArgumentException(string.Format("Extrapolation for lookup table rule does not support {0}", value));
                 }
+
                 Function.Arguments.First().ExtrapolationType = value;
             }
         }
@@ -120,7 +68,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         //In seconds
         public int TimeLag
         {
-            get { return timeLag; }
+            get
+            {
+                return timeLag;
+            }
             set
             {
                 if (value >= 0)
@@ -130,14 +81,31 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 else
                 {
                     Log.Error("Time Lag must be 0 or greater.");
-                } 
+                }
             }
         }
 
         // TimeLag in n TimeSteps. Calculated after SetTimeLagToTimeSteps(TimeSpan modelTimeSte)
         public int TimeLagInTimeSteps
         {
-            get { return timeLagInTimeSteps; }
+            get
+            {
+                return timeLagInTimeSteps;
+            }
+        }
+
+        public static Function DefineFunction()
+        {
+            var function = new Function();
+            function.Arguments.Add(new Variable<double>
+            {
+                Name = "x",
+                InterpolationType = InterpolationType.Constant,
+                ExtrapolationType = ExtrapolationType.Constant
+            });
+            function.Components.Add(new Variable<double>("f"));
+            function.Name = LookupTable;
+            return function;
         }
 
         /// <summary>
@@ -147,14 +115,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         /// <param name="modelTimeStep"></param>
         public void SetTimeLagToTimeSteps(TimeSpan modelTimeStep)
         {
-            double factorTimeSteps = (double)timeLag/modelTimeStep.TotalSeconds;
+            double factorTimeSteps = (double) timeLag / modelTimeStep.TotalSeconds;
             double nTimeSteps = Math.Floor(factorTimeSteps);
 
             if (factorTimeSteps != nTimeSteps)
             {
-                Log.WarnFormat("Rule {0} has a timelag ({1} seconds) which is not a multiple model time step ({2} seconds). The timelag has been set on {3} timesteps.", this.Name, timeLag, modelTimeStep.Seconds, nTimeSteps.ToString("N0"));
+                Log.WarnFormat("Rule {0} has a timelag ({1} seconds) which is not a multiple model time step ({2} seconds). The timelag has been set on {3} timesteps.", Name, timeLag, modelTimeStep.Seconds, nTimeSteps.ToString("N0"));
             }
-            
+
             timeLagInTimeSteps = Convert.ToInt32(nTimeSteps);
         }
 
@@ -167,14 +135,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 exceptions.Add(new ValidationException(string.Format("Lookup table rule '{0}' has an empty lookup table.", hydraulicRule.Name)));
             }
+
             if (hydraulicRule.Inputs.Count != 1)
             {
                 exceptions.Add(new ValidationException(string.Format("Lookup table rule '{0}' requires exactly 1 input.", hydraulicRule.Name)));
             }
+
             if (hydraulicRule.Outputs.Count != 1)
             {
                 exceptions.Add(new ValidationException(string.Format("Lookup table rule '{0}' requires exactly 1 output.", hydraulicRule.Name)));
             }
+
             if (exceptions.Count > 0)
             {
                 throw new ValidationContextException(exceptions);
@@ -183,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override object Clone()
         {
-            var hydraulicRule = (HydraulicRule)Activator.CreateInstance(GetType());
+            var hydraulicRule = new HydraulicRule();
             hydraulicRule.CopyFrom(this);
             return hydraulicRule;
         }
@@ -202,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        public IEnumerable<object> GetDirectChildren()
+        public override IEnumerable<object> GetDirectChildren()
         {
             yield return Function;
         }

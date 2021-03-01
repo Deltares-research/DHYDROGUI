@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain;
@@ -12,45 +13,90 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 {
     public static class RealTimeControlTestHelper
     {
-
         public static RealTimeControlModel GenerateTestModel(bool allRules)
         {
             var result = new RealTimeControlModel("testModel");
-            var controlGroup = GenerateControlGroup();
+            ControlGroup controlGroup = GenerateControlGroup();
             if (allRules)
             {
                 controlGroup.Rules.Add(GenerateTimeRule());
                 controlGroup.Rules.Add(GenerateHydraulicRule());
                 controlGroup.Rules.Add(GenerateRelativeTimeRule());
             }
+
             result.ControlGroups.Add(controlGroup);
             return result;
+        }
+
+        public static ControlGroup CreateControlGroupWithTwoRulesOnOneOutput()
+        {
+            var controlGroup = new ControlGroup {Name = "control_group"};
+            var output = new Output {Name = "output"};
+
+            RelativeTimeRule rule1 = CreateRelativeTimeRule("rule1", output);
+            var condition1 = new StandardCondition {Name = "condition1"};
+            condition1.TrueOutputs.Add(rule1);
+            var input1 = new Input();
+            condition1.Input = input1;
+
+            RelativeTimeRule rule2 = CreateRelativeTimeRule("rule2", output);
+            var condition2 = new StandardCondition {Name = "condition2"};
+            condition2.TrueOutputs.Add(rule2);
+            var input2 = new Input();
+            condition2.Input = input2;
+
+            controlGroup.Outputs.Add(output);
+            controlGroup.Rules.Add(rule1);
+            controlGroup.Rules.Add(rule2);
+            controlGroup.Conditions.Add(condition1);
+            controlGroup.Conditions.Add(condition2);
+
+            return controlGroup;
+        }
+
+        public static RelativeTimeRule CreateRelativeTimeRule(string name, Output output)
+        {
+            var rule1 = new RelativeTimeRule
+            {
+                Name = name,
+                FromValue = false,
+                Id = 6L,
+                Interpolation = InterpolationType.Constant,
+                MinimumPeriod = 3,
+                LongName = "relative_time_rule_long_name"
+            };
+
+            rule1.Outputs.Add(output);
+            rule1.Function[0d] = 1d;
+            rule1.Function[3d] = 5d;
+            rule1.Function[7d] = 11d;
+
+            return rule1;
         }
 
         public static ControlGroup GenerateControlGroup()
         {
             return RealTimeControlModelHelper.CreateGroupPidRule(true);
-            var result = new ControlGroup { Name = "myFirstControlGroup" };
-            result.Inputs.Add(GenerateInput());
-            result.Outputs.Add(GenerateOutput());
-            result.Rules.Add(GeneratePidRule());
-            result.Conditions.Add(GenerateCondition(result));
-            return result;
         }
 
         public static Input GenerateInput()
         {
-            return new Input();// { Name = "ControlInput" };
+            return new Input(); // { Name = "ControlInput" };
         }
 
         public static Output GenerateOutput()
         {
-            return new Output();// { Name = "ControlOutput" };
+            return new Output(); // { Name = "ControlOutput" };
         }
 
         public static PIDRule GeneratePidRule()
         {
-            return new PIDRule("myFirstRule"){Kd = 1.2, Ki = 42.1, Setting = new Setting(){Max = 11.1}};
+            return new PIDRule("myFirstRule")
+            {
+                Kd = 1.2,
+                Ki = 42.1,
+                Setting = new Setting() {Max = 11.1}
+            };
         }
 
         public static LookupSignal GenerateLookupSignal()
@@ -60,23 +106,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
         public static TimeRule GenerateTimeRule()
         {
-            return new TimeRule("myFirstTimeRule") { InterpolationOptionsTime = InterpolationType.None,
-                                                     Periodicity = ExtrapolationType.Periodic,
-                                                     TimeSeries = GenerateTimeSeries()
+            return new TimeRule("myFirstTimeRule")
+            {
+                InterpolationOptionsTime = InterpolationType.None,
+                Periodicity = ExtrapolationType.Periodic,
+                TimeSeries = GenerateTimeSeries()
             };
-        }
-
-        private static TimeSeries GenerateTimeSeries()
-        {
-            var timeSeries = new TimeSeries();
-            var t = new DateTime(2000, 3, 3);
-            timeSeries.Arguments[0].DefaultValue = new DateTime(2000, 1, 1);
-            timeSeries.Components.Add(new Variable<double>("flow", new Unit("m³/s", "m³/s")));
-            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
-            timeSeries[t] = 0.0;
-            timeSeries[t.AddMinutes(5)] = 20.0;
-            timeSeries.Name = "someTime";
-            return timeSeries;
         }
 
         public static HydraulicRule GenerateHydraulicRule()
@@ -86,18 +121,29 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
         public static FactorRule GenerateFactorRule()
         {
-            return new FactorRule{Name = "Factor", Factor = 1.6 };
+            return new FactorRule
+            {
+                Name = "Factor",
+                Factor = 1.6
+            };
         }
 
         public static IntervalRule GenerateIntervalRule()
         {
             return new IntervalRule("myFirstIntervalRule")
-                       {
-                           IntervalType = IntervalRule.IntervalRuleIntervalType.Variable,
-                           FixedInterval = 0.123,
-                           DeadBandType = IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
-                           Setting = new Setting() {MaxSpeed = .123, Below = 1.0, Min = 2.0, Max = 3.0, Above = 4.0}
-                       };
+            {
+                IntervalType = IntervalRule.IntervalRuleIntervalType.Variable,
+                FixedInterval = 0.123,
+                DeadBandType = IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
+                Setting = new Setting()
+                {
+                    MaxSpeed = .123,
+                    Below = 1.0,
+                    Min = 2.0,
+                    Max = 3.0,
+                    Above = 4.0
+                }
+            };
         }
 
         public static RelativeTimeRule GenerateRelativeTimeRule()
@@ -107,72 +153,85 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
         public static StandardCondition GenerateCondition(IControlGroup controlGroup)
         {
-            return new StandardCondition { Name = "myFirstCondition" };
+            return new StandardCondition {Name = "myFirstCondition"};
         }
-        
+
         public static DirectionalCondition GenerateDirectionalCondition(ControlGroup controlGroup)
         {
             return new DirectionalCondition
-                       {Name = "myDirectionalCondition", LongName = "Test", Operation = Operation.LessEqual};
+            {
+                Name = "myDirectionalCondition",
+                LongName = "Test",
+                Operation = Operation.LessEqual
+            };
         }
 
         public static void AddDummyLinksToGroup(ControlledTestModel controlledTestModel, ControlGroup controlGroup)
         {
-            foreach (var input in controlGroup.Inputs)
+            foreach (Input input in controlGroup.Inputs)
             {
                 // wip: quantityID is hardcoded to Water level, Crest level and Discharge
                 input.ParameterName = "Water level";
-                input.Feature = new RtcTestFeature { Name = "location" };
+                input.Feature = new RtcTestFeature {Name = "location"};
             }
-            foreach (var output in controlGroup.Outputs)
+
+            foreach (Output output in controlGroup.Outputs)
             {
                 // wip: quantityID is hardcoded to Water level, Crest level and Discharge
                 output.ParameterName = "Crest level";
-                output.Feature = new RtcTestFeature { Name = "location" };
+                output.Feature = new RtcTestFeature {Name = "location"};
             }
         }
 
-
-
         public static bool CompareEqualityOfInput(Input left, Input right)
         {
-            if ((left == null) && (right == null))
+            if (left == null && right == null)
             {
                 return true;
             }
-            if ((left == null) || (right == null))
+
+            if (left == null || right == null)
             {
                 return false;
             }
+
             if (left.SetPoint != right.SetPoint)
             {
                 return false;
             }
-            if ((left.IsConnected) && (right.IsConnected))
+
+            if (left.IsConnected && right.IsConnected)
             {
                 return left.ParameterName == right.ParameterName;
             }
+
             return true;
         }
 
         public static bool CompareEqualityOfOutput(Output left, Output right)
         {
-            if ((left == null) && (right == null))
+            if (left == null && right == null)
             {
                 return true;
             }
-            if ((left == null) || (right == null))
+
+            if (left == null || right == null)
             {
                 return false;
             }
-            if (left.IntegralPart != right.IntegralPart) return false;
+
+            if (left.IntegralPart != right.IntegralPart)
+            {
+                return false;
+            }
+
             if (left.IsConnected && right.IsConnected)
             {
                 return left.ParameterName == right.ParameterName;
             }
+
             return true;
         }
-
 
         public static bool CompareEqualityOfRtcBaseObjects(RtcBaseObject left, RtcBaseObject right)
         {
@@ -183,51 +242,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             if (CompareEqualityOfRtcBaseObjects(left, right))
             {
-                if (CompareEqualityOfInput(left.Input, right.Input))
+                if (CompareEqualityOfInput((Input) left.Input, (Input) right.Input))
                 {
                     if (!CompareConditionOutputs(left.FalseOutputs, right.FalseOutputs))
                     {
                         return false;
                     }
+
                     if (!CompareConditionOutputs(left.TrueOutputs, right.TrueOutputs))
                     {
                         return false;
                     }
                 }
             }
-            return true;
-        }
 
-        private static bool CompareConditionOutputs(IList<RtcBaseObject> left, IList<RtcBaseObject> right)
-        {
-            if (left.Count != right.Count)
-            {
-                return false;
-            }
-            if (left.Count != 0)
-            {
-                for (var i = 0; i < left.Count; i++)
-                {
-                    if (left[i].GetType() != right[i].GetType())
-                    {
-                        return false;
-                    }
-                    if (left[i] is RuleBase)
-                    {
-                        if (!CompareEqualityOfRules((RuleBase) left[i], (RuleBase) right[i]))
-                        {
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        if (!CompareEqualityOfConditions((ConditionBase) left[i], (ConditionBase) right[i]))
-                        {
-                            return false;
-                        }
-                    }
-                }
-            }
             return true;
         }
 
@@ -235,11 +263,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             if (CompareEqualityOfConditions(left, right))
             {
-                if ((Math.Abs(left.Value - right.Value) < double.Epsilon) && (left.Reference == right.Reference) && (left.Operation == right.Operation))
+                if (Math.Abs(left.Value - right.Value) < double.Epsilon && left.Reference == right.Reference && left.Operation == right.Operation)
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -251,17 +280,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                 {
                     return false;
                 }
+
                 for (var i = 0; i < left.Inputs.Count; i++)
                 {
-                    if (!CompareEqualityOfInput(left.Inputs[i], right.Inputs[i]))
+                    if (!CompareEqualityOfInput((Input) left.Inputs[i], (Input) right.Inputs[i]))
                     {
                         return false;
                     }
                 }
+
                 if (left.Outputs.Count != right.Outputs.Count)
                 {
                     return false;
                 }
+
                 for (var i = 0; i < left.Outputs.Count; i++)
                 {
                     if (!CompareEqualityOfOutput(left.Outputs[i], right.Outputs[i]))
@@ -269,8 +301,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                         return false;
                     }
                 }
+
                 return true;
             }
+
             return false;
         }
 
@@ -278,12 +312,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             if (CompareEqualityOfRules(left, right))
             {
-                if ((left.Setting == right.Setting) && (Math.Abs(left.Kp - right.Kp) < double.Epsilon) && (Math.Abs(left.Ki - right.Ki) < double.Epsilon) &&
-                    (Math.Abs(left.Kd - right.Kd) < double.Epsilon))//&& (left.IsAConstant == right.IsAConstant))
+                if (left.Setting == right.Setting && Math.Abs(left.Kp - right.Kp) < double.Epsilon && Math.Abs(left.Ki - right.Ki) < double.Epsilon &&
+                    Math.Abs(left.Kd - right.Kd) < double.Epsilon) //&& (left.IsAConstant == right.IsAConstant))
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -291,12 +326,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             if (CompareEqualityOfRules(left, right))
             {
-                if ((left.Periodicity == right.Periodicity) && (left.InterpolationOptionsTime == right.InterpolationOptionsTime)
-                    && CompareEqualityOfTimeSeries(left.TimeSeries, right.TimeSeries))
+                if (left.Periodicity == right.Periodicity && left.InterpolationOptionsTime == right.InterpolationOptionsTime
+                                                          && CompareEqualityOfTimeSeries(left.TimeSeries, right.TimeSeries))
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -304,11 +340,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             if (CompareEqualityOfRules(left, right))
             {
-                if ((left.Interpolation == right.Interpolation) && CompareEqualityOfFunctions(left.Function , right.Function))
+                if (left.Interpolation == right.Interpolation && CompareEqualityOfFunctions(left.Function, right.Function))
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -321,6 +358,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -328,9 +366,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             if (CompareEqualityOfRules(left, right))
             {
-                if ((Math.Abs(left.DeadbandAroundSetpoint - right.DeadbandAroundSetpoint) < double.Epsilon) 
-                    && (left.InterpolationOptionsTime == right.InterpolationOptionsTime)
-                    && (left.Setting == right.Setting) 
+                if (Math.Abs(left.DeadbandAroundSetpoint - right.DeadbandAroundSetpoint) < double.Epsilon
+                    && left.InterpolationOptionsTime == right.InterpolationOptionsTime
+                    && left.Setting == right.Setting
                     && left.IntervalType == right.IntervalType
                     && Math.Abs(left.FixedInterval - right.FixedInterval) < double.Epsilon
                     && left.DeadBandType == right.DeadBandType
@@ -344,6 +382,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -351,39 +390,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             if (CompareEqualityOfRules(left, right))
             {
-                if ((left.FromValue == right.FromValue) && (left.Interpolation == right.Interpolation) &&
+                if (left.FromValue == right.FromValue && left.Interpolation == right.Interpolation &&
                     CompareEqualityOfFunctions(left.Function, right.Function))
                 {
                     return true;
                 }
             }
+
             return false;
         }
-    
-        private static bool CompareEqualityOfFunctions(Function left, Function right)
-        {
-            if (left.Name!=right.Name)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private static bool CompareEqualityOfTimeSeries(TimeSeries left, TimeSeries right)
-        {
-            if (left.Name==right.Name)
-            {
-                if (left.Components[0].ValueType == right.Components[0].ValueType)
-                {
-                    if (left.Components[0].Values.Count == right.Components[0].Values.Count)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
 
         public static bool CompareEqualityOfControlGroups(ControlGroup left, ControlGroup right)
         {
@@ -394,6 +409,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                     return false;
                 }
             }
+
             for (var i = 0; i < left.Outputs.Count; i++)
             {
                 if (!CompareEqualityOfOutput(left.Outputs[i], right.Outputs[i]))
@@ -401,6 +417,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                     return false;
                 }
             }
+
             for (var i = 0; i < left.Rules.Count; i++)
             {
                 if (!CompareEqualityOfRules(left.Rules[i], right.Rules[i]))
@@ -408,6 +425,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                     return false;
                 }
             }
+
             for (var i = 0; i < left.Conditions.Count; i++)
             {
                 if (!CompareEqualityOfConditions(left.Conditions[i], right.Conditions[i]))
@@ -415,6 +433,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                     return false;
                 }
             }
+
             for (var i = 0; i < left.Signals.Count; i++)
             {
                 if (!CompareEqualityOfLookupSignals(left.Signals[i], right.Signals[i]))
@@ -432,6 +451,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             {
                 return true;
             }
+
             return false;
         }
 
@@ -440,8 +460,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             for (var i = 0; i < left.Length; i++)
             {
                 if (!(Math.Abs(left[i] - right[i]) <= tolerance))
+                {
                     return false;
+                }
             }
+
             return true;
         }
 
@@ -452,8 +475,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             var pidRule = new PIDRule()
             {
                 Name = "pid rule",
-                Inputs = { input },
-                Outputs = { output },
+                Inputs = {input},
+                Outputs = {output},
                 Kd = 0.0,
                 Ki = 0.2,
                 Kp = 0.5,
@@ -468,19 +491,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             var lookupSignal = new LookupSignal
             {
                 Name = "lookup signal",
-                Inputs = { input },
-                RuleBases = { pidRule },
-                Function = new Function { Arguments = { new Variable<double>("x") }, Components = { new Variable<double>("y") } }
+                Inputs = {input},
+                RuleBases = {pidRule},
+                Function = new Function
+                {
+                    Arguments = {new Variable<double>("x")},
+                    Components = {new Variable<double>("y")}
+                }
             };
-            lookupSignal.Function[1.1] = new[] { 2.3 };
+            lookupSignal.Function[1.1] = new[]
+            {
+                2.3
+            };
 
             var controlGroup = new ControlGroup
             {
                 Name = "Control Group",
-                Rules = { pidRule },
-                Signals = { lookupSignal },
-                Inputs = { input },
-                Outputs = { output }
+                Rules = {pidRule},
+                Signals = {lookupSignal},
+                Inputs = {input},
+                Outputs = {output}
             };
 
             return controlGroup;
@@ -488,7 +518,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
         public static ControlGroup CreateGroupRuleWithoutConditionWithoutInput(RuleBase ruleBase)
         {
-            var controlGroup = new ControlGroup { Name = "Control group" };
+            var controlGroup = new ControlGroup {Name = "Control group"};
             var ruleOutput = new Output();
 
             controlGroup.Outputs.Add(ruleOutput);
@@ -499,20 +529,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             return controlGroup;
         }
 
-        private static ControlGroup CreateGroupTimeRuleWithoutCondition()
-        {
-            return CreateGroupRuleWithoutConditionWithoutInput(new TimeRule());
-        }
-
         public static ControlGroup CreateControlGroupWithTimeRule(string groupName, ControlledTestModel controlledModel, RealTimeControlModel realTimeControlModel, int inputFeatureIndex = 0)
         {
-            var controlGroup = CreateGroupTimeRuleWithoutCondition();
+            ControlGroup controlGroup = CreateGroupTimeRuleWithoutCondition();
             controlGroup.Name = groupName;
             realTimeControlModel.ControlGroups.Add(controlGroup);
 
-            new TestCompositeActivity { Activities = { realTimeControlModel , controlledModel } };
-            
-            var intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[inputFeatureIndex]).First();
+            new TestCompositeActivity
+            {
+                Activities =
+                {
+                    realTimeControlModel,
+                    controlledModel
+                }
+            };
+
+            IDataItem intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[inputFeatureIndex]).First();
             intputDataItem1.Value = 12.0;
             intputDataItem1.LinkTo(realTimeControlModel.GetDataItemByValue(controlGroup.Outputs[0]));
 
@@ -538,32 +570,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                 TimeStep = new TimeSpan(0, 1, 0, 0),
                 InputFeatures =
                 {
-                    new RtcTestFeature { Name = "input_feature1" },
-                    new RtcTestFeature { Name = "input_feature2" }
+                    new RtcTestFeature {Name = "input_feature1"},
+                    new RtcTestFeature {Name = "input_feature2"}
                 },
                 OutputFeatures =
                 {
-                    new RtcTestFeature { Name = "output_feature1" },
-                    new RtcTestFeature { Name = "output_feature2" }
+                    new RtcTestFeature {Name = "output_feature1"},
+                    new RtcTestFeature {Name = "output_feature2"}
                 }
             };
         }
 
         public static ControlGroup SetupHydraulicRuleControlGroup(ControlledTestModel controlledModel, RealTimeControlModel realTimeControlModel, bool addCondition, int inputFeatureIndex = 0)
         {
-            var controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(addCondition);
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(addCondition);
 
             realTimeControlModel.ControlGroups.Add(controlGroup);
 
-            new TestCompositeActivity { Activities = { realTimeControlModel, controlledModel } };
+            new TestCompositeActivity
+            {
+                Activities =
+                {
+                    realTimeControlModel,
+                    controlledModel
+                }
+            };
 
-            var outputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[0]).First();
+            IDataItem outputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[0]).First();
             outputDataItem1.Value = 2.0;
             realTimeControlModel.GetDataItemByValue(controlGroup.Inputs[0]).LinkTo(outputDataItem1);
 
             if (addCondition)
             {
-                var outputDataItem2 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[1]).First();
+                IDataItem outputDataItem2 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[1]).First();
                 outputDataItem2.Value = 2.0;
                 realTimeControlModel.GetDataItemByValue(controlGroup.Inputs[1]).LinkTo(outputDataItem2);
 
@@ -571,7 +610,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                 controlGroup.Conditions[0].Value = 0; // 2 > 0 -> condition true : rule active
             }
 
-            var intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[inputFeatureIndex]).First();
+            IDataItem intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[inputFeatureIndex]).First();
             intputDataItem1.Value = 12.0;
             intputDataItem1.LinkTo(realTimeControlModel.GetDataItemByValue(controlGroup.Outputs[0]));
 
@@ -589,11 +628,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             controlGroup2 = SetupHydraulicRuleControlGroup(controlledModel, realTimeControlModel, true, 1);
             controlGroup2.Name = "group2";
 
-            var intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[1]).First();
+            IDataItem intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[1]).First();
             intputDataItem1.Value = 2.0; // Rule active
             realTimeControlModel.GetDataItemByValue(controlGroup1.Conditions[0].Input).LinkTo(intputDataItem1);
 
-            var intputDataItem2 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[2]).First();
+            IDataItem intputDataItem2 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[2]).First();
             intputDataItem2.Value = 2.0; // Rule active
             realTimeControlModel.GetDataItemByValue(controlGroup2.Conditions[0].Input).LinkTo(intputDataItem2);
 
@@ -606,21 +645,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
         public static ControlGroup SetupInvertorRule(ControlledTestModel controlledModel, RealTimeControlModel realTimeControlModel, ConditionBase conditionBase)
         {
-            var controlGroup = conditionBase == null
-                ? RealTimeControlModelHelper.CreateGroupInvertorRule()
-                : RealTimeControlModelHelper.CreateGroupRuleWithOneInputOneConditionInput(new FactorRule { Name = "InvertorRule", Factor = -1.0 }, conditionBase);
-  
+            ControlGroup controlGroup = conditionBase == null
+                                            ? RealTimeControlModelHelper.CreateGroupInvertorRule()
+                                            : RealTimeControlModelHelper.CreateGroupRuleWithOneInputOneConditionInput(new FactorRule
+                                            {
+                                                Name = "InvertorRule",
+                                                Factor = -1.0
+                                            }, conditionBase);
+
             realTimeControlModel.ControlGroups.Add(controlGroup);
-  
-            var outputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[0]).First();
+
+            IDataItem outputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[0]).First();
             outputDataItem1.Value = 2.0;
             realTimeControlModel.GetDataItemByValue(controlGroup.Inputs[0]).LinkTo(outputDataItem1);
-  
-            var intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[0]).First();
+
+            IDataItem intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[0]).First();
             intputDataItem1.Value = 12.0;
             intputDataItem1.LinkTo(realTimeControlModel.GetDataItemByValue(controlGroup.Outputs[0]));
 
-            new TestCompositeActivity { Activities = { realTimeControlModel, controlledModel } };
+            new TestCompositeActivity
+            {
+                Activities =
+                {
+                    realTimeControlModel,
+                    controlledModel
+                }
+            };
 
             return controlGroup;
         }
@@ -635,18 +685,25 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                 TimeStep = new TimeSpan(0, 1, 0, 0)
             };
 
-            var controlGroup = RealTimeControlModelHelper.CreateGroupRelativeTimeRule();
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupRelativeTimeRule();
             realTimeControlModel.ControlGroups.Add(controlGroup);
 
-            new TestCompositeActivity { Activities = { realTimeControlModel, controlledModel } };
+            new TestCompositeActivity
+            {
+                Activities =
+                {
+                    realTimeControlModel,
+                    controlledModel
+                }
+            };
 
-            var relativeTimeRule = ((RelativeTimeRule) controlGroup.Rules[0]);
+            var relativeTimeRule = (RelativeTimeRule) controlGroup.Rules[0];
 
-            var outputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[0]).First();
+            IDataItem outputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[0]).First();
             outputDataItem1.Value = 2.0;
             realTimeControlModel.GetDataItemByValue(controlGroup.Inputs[0]).LinkTo(outputDataItem1);
 
-            var intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[0]).First();
+            IDataItem intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[0]).First();
             intputDataItem1.Value = 12.0;
             intputDataItem1.LinkTo(realTimeControlModel.GetDataItemByValue(controlGroup.Outputs[0]));
 
@@ -674,15 +731,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             controlledModel.OutputFeatures.Clear();
             controlledModel.InputFeatures.AddRange(new[]
             {
-                new RtcTestFeature { Name = "input_feature1" },
-                new RtcTestFeature { Name = "input_feature2" },
-                new RtcTestFeature { Name = "input_feature3" },
-                new RtcTestFeature { Name = "input_feature4" }
+                new RtcTestFeature {Name = "input_feature1"},
+                new RtcTestFeature {Name = "input_feature2"},
+                new RtcTestFeature {Name = "input_feature3"},
+                new RtcTestFeature {Name = "input_feature4"}
             });
             controlledModel.OutputFeatures.AddRange(new[]
             {
-                new RtcTestFeature { Name = "output_feature1" },
-                new RtcTestFeature { Name = "output_feature2" }
+                new RtcTestFeature {Name = "output_feature1"},
+                new RtcTestFeature {Name = "output_feature2"}
             });
         }
 
@@ -694,29 +751,44 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                 StartTime = startTime,
                 StopTime = stopTime,
                 TimeStep = timestep,
-                InputFeatures = { new RtcTestFeature { Name = "input1" }, new RtcTestFeature { Name = "input2" } },
-                OutputFeatures = { new RtcTestFeature { Name = "output1" }, new RtcTestFeature { Name = "output2" } }
+                InputFeatures =
+                {
+                    new RtcTestFeature {Name = "input1"},
+                    new RtcTestFeature {Name = "input2"}
+                },
+                OutputFeatures =
+                {
+                    new RtcTestFeature {Name = "output1"},
+                    new RtcTestFeature {Name = "output2"}
+                }
             };
 
-            var controlGroup = RealTimeControlModelHelper.CreateGroupPidRule(addCondition);
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupPidRule(addCondition);
             realTimeControlModel.ControlGroups.Add(controlGroup);
 
-            new TestCompositeActivity { Activities = { realTimeControlModel, controlledModel } };
+            new TestCompositeActivity
+            {
+                Activities =
+                {
+                    realTimeControlModel,
+                    controlledModel
+                }
+            };
 
-            var outputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[0]).First();
+            IDataItem outputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[0]).First();
             realTimeControlModel.GetDataItemByValue(controlGroup.Inputs[0]).LinkTo(outputDataItem1);
 
             if (addCondition)
             {
-                var outputDataItem2 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[1]).First();
+                IDataItem outputDataItem2 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[1]).First();
                 outputDataItem2.Value = 2.0;
                 realTimeControlModel.GetDataItemByValue(controlGroup.Inputs[1]).LinkTo(outputDataItem2);
             }
 
-            var intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[0]).First();
+            IDataItem intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.InputFeatures[0]).First();
             intputDataItem1.Value = 12.0;
             intputDataItem1.LinkTo(realTimeControlModel.GetDataItemByValue(controlGroup.Outputs[0]));
-            
+
             var pidRule = (PIDRule) controlGroup.Rules[0];
             pidRule.Kd = 0.0;
             pidRule.Ki = 0.2;
@@ -726,15 +798,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             pidRule.Setting.Min = 116.0;
 
             // Set timeseries; this is the series the interval rule will try to satisfy
-            pidRule.TimeSeries[new DateTime(2000, 1,  1, 0, 0, 0)] = 100.0;
-            pidRule.TimeSeries[new DateTime(2100, 1,  1, 0, 0, 0)] = 200.0;
-            ruleInput = pidRule.Inputs[0];
+            pidRule.TimeSeries[new DateTime(2000, 1, 1, 0, 0, 0)] = 100.0;
+            pidRule.TimeSeries[new DateTime(2100, 1, 1, 0, 0, 0)] = 200.0;
+            ruleInput = (Input) pidRule.Inputs[0];
 
             if (addCondition)
             {
-                var conditionInput = controlGroup.Conditions[0].Input;
+                var conditionInput = (Input) controlGroup.Conditions[0].Input;
                 ((StandardCondition) controlGroup.Conditions[0]).Operation = Operation.Greater;
-                conditionInput.Value = 2; // Value 
+                conditionInput.Value = 2;             // Value 
                 controlGroup.Conditions[0].Value = 0; // 2 > 0 -> condition true : rule active
             }
 
@@ -745,7 +817,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
         {
             var controlGroup = new ControlGroup {Name = "Control group"};
             controlGroup.Rules.Add(rule);
-            controlGroup.Inputs.Add(rule.Inputs[0]);
+            controlGroup.Inputs.Add((Input) rule.Inputs[0]);
             controlGroup.Outputs.Add(rule.Outputs[0]);
 
             var condition = new StandardCondition {Name = "Hydro Condition"};
@@ -764,7 +836,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
             rule.Inputs.Add(ruleInput);
             rule.Outputs.Add(ruleOutput);
-        
+
             return rule;
         }
 
@@ -780,17 +852,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             controlGroup.Outputs.Add(output2);
 
             // First set of rules & conditions
-            var directionalCondition = new DirectionalCondition { Name = "DirectionalCondition" };
+            var directionalCondition = new DirectionalCondition {Name = "DirectionalCondition"};
             controlGroup.Conditions.Add(directionalCondition);
 
-            var intervalRule = new IntervalRule { Name = "intervalRule" };
+            var intervalRule = new IntervalRule {Name = "intervalRule"};
             controlGroup.Rules.Add(intervalRule);
-            
+
             var hydraulicRule = new HydraulicRule {Name = "hydraulicRule"};
             hydraulicRule.Function[-2.0] = 0.0;
             hydraulicRule.Function[+2.0] = 4.0;
             controlGroup.Rules.Add(hydraulicRule);
-            
+
             directionalCondition.TrueOutputs.Add(hydraulicRule);
             directionalCondition.FalseOutputs.Add(intervalRule);
 
@@ -800,8 +872,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
             hydraulicRule.Outputs.Add(output2);
             intervalRule.Outputs.Add(output2);
-            
-            var timeCondition = new TimeCondition { Name = "TimeConditionAlwaysOn" };
+
+            var timeCondition = new TimeCondition {Name = "TimeConditionAlwaysOn"};
             timeCondition.TimeSeries[new DateTime(1900, 1, 1)] = true;
             timeCondition.TimeSeries[new DateTime(2200, 1, 1)] = false;
             timeCondition.Extrapolation = ExtrapolationType.Constant;
@@ -823,7 +895,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             timeCondition.FalseOutputs.Add(pidRuleNotActive);
 
             pidRuleNotActive.Inputs.Add(input);
-            pidRuleNotActive.Outputs.Add(output); 
+            pidRuleNotActive.Outputs.Add(output);
             relativeTimeRule.Outputs.Add(output);
 
             return controlGroup;
@@ -834,13 +906,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             ControlledTestModel controlledModel;
             RealTimeControlModel realTimeControlModel;
 
-            var controlGroup = SetupRelativeTimeRule(out controlledModel, out realTimeControlModel, true);
+            ControlGroup controlGroup = SetupRelativeTimeRule(out controlledModel, out realTimeControlModel, true);
             controlledModel.StopTime = controlledModel.StartTime.AddDays(15);
             controlledModel.TimeStep = new TimeSpan(1, 0, 0, 0); // 24 * 60 * 60 = 86400 seconds
 
-            var relativeTimeRule = (RelativeTimeRule)controlGroup.Rules[0];
+            var relativeTimeRule = (RelativeTimeRule) controlGroup.Rules[0];
             relativeTimeRule.Function.Clear();
-            relativeTimeRule.Function[0.0] =  0.0;
+            relativeTimeRule.Function[0.0] = 0.0;
             relativeTimeRule.Function[172800.0] = -1.0;
             relativeTimeRule.Function[345600.0] = -2.0;
             relativeTimeRule.Function[518400.0] = -3.0;
@@ -849,14 +921,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             condition.Operation = Operation.GreaterEqual;
             condition.Value = 0.9;
 
-            var intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[1]).First();
+            IDataItem intputDataItem1 = controlledModel.GetChildDataItems(controlledModel.OutputFeatures[1]).First();
             intputDataItem1.Value = 2.0; // Rule active
             realTimeControlModel.GetDataItemByValue(controlGroup.Conditions[0].Input).LinkTo(intputDataItem1);
 
             var waterLevelAtObservationPoint = new[]
             {
-                1.00, 0.91, 0.80, 0.70, 0.70, 0.70, 0.70,
-                1.00, 1.00, 0.90, 0.80, 0.80, 1.00, 1.00, 1.00
+                1.00,
+                0.91,
+                0.80,
+                0.70,
+                0.70,
+                0.70,
+                0.70,
+                1.00,
+                1.00,
+                0.90,
+                0.80,
+                0.80,
+                1.00,
+                1.00,
+                1.00
             };
 
             // The initial value of the output must be set in the state vector
@@ -872,8 +957,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             rtcOutput = new List<double>();
 
             if (ActivityStatus.Initialized != realTimeControlModel.Status ||
-                ActivityStatus.Initialized != controlledModel.Status) return timeStepsCount;
-
+                ActivityStatus.Initialized != controlledModel.Status)
+            {
+                return timeStepsCount;
+            }
 
             // Run the models
             // For the RelativfeTimeFromValue the output is also used as input for RTCTools
@@ -885,7 +972,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
                 controlledModel.GetChildDataItems(controlledModel.OutputFeatures[1]).First().Value = waterLevelAtObservationPoint[timeStepsCount];
 
                 //Assert.AreEqual(new DateTime(2000, 1, 1 + timeStepsCount, 0, 0, 0), realTimeControlModel.CurrentTime);
-                if (new DateTime(2000, 1, 1 + timeStepsCount, 0, 0, 0) != realTimeControlModel.CurrentTime) return 0;
+                if (new DateTime(2000, 1, 1 + timeStepsCount, 0, 0, 0) != realTimeControlModel.CurrentTime)
+                {
+                    return 0;
+                }
 
                 realTimeControlModel.Execute();
                 controlledModel.Execute();
@@ -894,37 +984,36 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
                 timeStepsCount++;
             }
+
             realTimeControlModel.Cleanup();
             controlledModel.Cleanup();
 
 //            Assert.AreEqual(ActivityStatus.Cleaned, realTimeControlModel.Status);
 //            Assert.AreEqual(ActivityStatus.Cleaned, controlledModel.Status);
             if (ActivityStatus.Initialized != realTimeControlModel.Status ||
-                ActivityStatus.Initialized != controlledModel.Status) return timeStepsCount;
-
+                ActivityStatus.Initialized != controlledModel.Status)
+            {
+                return timeStepsCount;
+            }
 
             return timeStepsCount;
         }
 
         /// <summary>
         /// Creates a control group with the following layout.
-        /// 
-        ///   input                  condition              rule                  output
-        /// 
-        /// 
+        /// input                  condition              rule                  output
         /// trueRuleInput ------------------------------  Rule if true ------  outputIfFalse
-        ///                                             /
-        ///                                            true
-        ///                                          /
-        /// conditionInput -------- BooleanCondition  
-        ///                                          \
-        ///                                            false
-        ///                                             \
+        /// /
+        /// true
+        /// /
+        /// conditionInput -------- BooleanCondition
+        /// \
+        /// false
+        /// \
         /// falseRuleInput ------------------------------ Rule if false ------- outputIfFalse
-        /// 
         /// </summary>
         /// <returns></returns>
-        public static ControlGroup CreateGroup2Rules() 
+        public static ControlGroup CreateGroup2Rules()
         {
             var controlGroup = new ControlGroup {Name = "Control group"};
 
@@ -935,7 +1024,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             controlGroup.Inputs.Add(conditionInput);
             controlGroup.Inputs.Add(falseRuleInput);
 
-
             var trueRule = new PIDRule {Name = "Rule if true"};
             trueRule.Inputs.Add(trueRuleInput);
             var falseRule = new PIDRule {Name = "Rule if false"};
@@ -943,7 +1031,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             controlGroup.Rules.Add(trueRule);
             controlGroup.Rules.Add(falseRule);
 
-            var condition = new StandardCondition {Input = conditionInput };
+            var condition = new StandardCondition {Input = conditionInput};
             condition.FalseOutputs.Add(falseRule);
             condition.TrueOutputs.Add(trueRule);
             controlGroup.Conditions.Add(condition);
@@ -955,6 +1043,86 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             controlGroup.Outputs.Add(outputIfFalse);
 
             return controlGroup;
+        }
+
+        private static TimeSeries GenerateTimeSeries()
+        {
+            var timeSeries = new TimeSeries();
+            var t = new DateTime(2000, 3, 3);
+            timeSeries.Arguments[0].DefaultValue = new DateTime(2000, 1, 1);
+            timeSeries.Components.Add(new Variable<double>("flow", new Unit("m3/s", "m3/s")));
+            timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
+            timeSeries[t] = 0.0;
+            timeSeries[t.AddMinutes(5)] = 20.0;
+            timeSeries.Name = "someTime";
+            return timeSeries;
+        }
+
+        private static bool CompareConditionOutputs(IList<RtcBaseObject> left, IList<RtcBaseObject> right)
+        {
+            if (left.Count != right.Count)
+            {
+                return false;
+            }
+
+            if (left.Count != 0)
+            {
+                for (var i = 0; i < left.Count; i++)
+                {
+                    if (left[i].GetType() != right[i].GetType())
+                    {
+                        return false;
+                    }
+
+                    if (left[i] is RuleBase)
+                    {
+                        if (!CompareEqualityOfRules((RuleBase) left[i], (RuleBase) right[i]))
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (!CompareEqualityOfConditions((ConditionBase) left[i], (ConditionBase) right[i]))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private static bool CompareEqualityOfFunctions(Function left, Function right)
+        {
+            if (left.Name != right.Name)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool CompareEqualityOfTimeSeries(TimeSeries left, TimeSeries right)
+        {
+            if (left.Name == right.Name)
+            {
+                if (left.Components[0].ValueType == right.Components[0].ValueType)
+                {
+                    if (left.Components[0].Values.Count == right.Components[0].Values.Count)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static ControlGroup CreateGroupTimeRuleWithoutCondition()
+        {
+            return CreateGroupRuleWithoutConditionWithoutInput(new TimeRule());
         }
     }
 }

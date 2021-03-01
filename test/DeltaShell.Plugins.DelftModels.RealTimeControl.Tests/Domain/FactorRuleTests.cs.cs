@@ -21,15 +21,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
 
             // test for base class data 
             Assert.AreEqual(source.Name, newRule.Name);
-            for (int i = 0; i < source.Function.Arguments[0].Values.Count; i++)
+            for (var i = 0; i < source.Function.Arguments[0].Values.Count; i++)
             {
                 Assert.AreEqual(source.Function.Arguments[0].Values[i], newRule.Function.Arguments[0].Values[i]);
                 Assert.AreEqual(source.Function.Components[0].Values[i], newRule.Function.Components[0].Values[i]);
             }
+
             // factor rule data
             Assert.AreEqual(source.Factor, newRule.Factor);
 
-            var clone = (HydraulicRule)source.Clone();
+            var clone = (HydraulicRule) source.Clone();
             Assert.IsFalse(ReferenceEquals(source, clone));
             Assert.AreEqual(source.Name, clone.Name);
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
-    public class RuleProvider
+    public static class RuleProvider
     {
         public static IEnumerable<Type> GetAllRules()
         {
@@ -21,31 +21,38 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 return "Time Rule";
             }
+
             if (ruleType == typeof(IntervalRule))
             {
                 return "Interval Rule";
             }
+
             if (ruleType == typeof(HydraulicRule))
             {
                 return "Lookup table";
             }
+
             if (ruleType == typeof(PIDRule))
             {
                 return "PID Rule";
             }
+
             if (ruleType == typeof(RelativeTimeRule))
             {
                 return "Relative Time Rule";
             }
+
             if (ruleType == typeof(FactorRule))
             {
                 return "Invertor Rule";
             }
+
             if (ruleType.Name.Contains("Proxy")) //for tests... :-(
             {
                 return "Proxy Rule";
             }
-            throw new ArgumentException(@"Unsupported type", "ruleType");
+
+            throw new ArgumentException(@"Unsupported type", nameof(ruleType));
         }
     }
 }

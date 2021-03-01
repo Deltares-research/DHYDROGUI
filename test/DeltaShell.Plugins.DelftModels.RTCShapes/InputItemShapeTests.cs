@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Tests
             Assert.IsNotNull(inputItemShape);
             Assert.That(shape.GradientStartColor, Is.EqualTo(Color.LemonChiffon));
             Assert.That(shape.GradientEndColor, Is.EqualTo(Color.White));
-    }
+        }
 
         [Test]
         public void GetThumbNail()

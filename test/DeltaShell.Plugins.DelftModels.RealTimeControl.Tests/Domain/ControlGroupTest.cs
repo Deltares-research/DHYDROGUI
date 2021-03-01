@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
@@ -19,22 +20,46 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
         [Test]
         public void Clone()
         {
-            var input = new Input { ParameterName = "parameetr", Feature = new RtcTestFeature { Name = "Inlocation" } };
-            var output = new Output { ParameterName = "parameetr", Feature = new RtcTestFeature { Name = "Outlocation" } };
-            var rule = new PIDRule { Name = "noot", Inputs = { input }, Outputs = { output } };
-            var condition = new StandardCondition { Name = "aap", Input = input, TrueOutputs = { rule }, FalseOutputs = { rule } };
-            var signal = new LookupSignal {Name = "signal", Inputs = {input}, RuleBases = {rule}};
+            var input = new Input
+            {
+                ParameterName = "parameetr",
+                Feature = new RtcTestFeature {Name = "Inlocation"}
+            };
+            var output = new Output
+            {
+                ParameterName = "parameetr",
+                Feature = new RtcTestFeature {Name = "Outlocation"}
+            };
+            var rule = new PIDRule
+            {
+                Name = "noot",
+                Inputs = {input},
+                Outputs = {output}
+            };
+            var condition = new StandardCondition
+            {
+                Name = "aap",
+                Input = input,
+                TrueOutputs = {rule},
+                FalseOutputs = {rule}
+            };
+            var signal = new LookupSignal
+            {
+                Name = "signal",
+                Inputs = {input},
+                RuleBases = {rule}
+            };
             var controlGroup = new ControlGroup
             {
                 Name = "test",
-                Conditions = { condition },
-                Rules = { rule },
-                Inputs = { input },
-                Outputs = { output },
-                Signals = { signal }
+                Conditions = {condition},
+                Rules = {rule},
+                Inputs = {input},
+                Outputs = {output},
+                Signals = {signal}
             };
 
-            var controlGroupClone = (ControlGroup)controlGroup.Clone();
+            var controlGroupClone = (ControlGroup) controlGroup.Clone();
 
             Assert.AreEqual(controlGroup.Name, controlGroupClone.Name);
             Assert.AreEqual(controlGroup.Inputs[0].Name, controlGroupClone.Inputs[0].Name);
@@ -42,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             Assert.AreEqual(controlGroup.Rules[0].Name, controlGroupClone.Rules[0].Name);
             Assert.AreEqual(controlGroup.Conditions[0].Name, controlGroupClone.Conditions[0].Name);
             Assert.AreEqual(controlGroup.Signals[0].Name, controlGroupClone.Signals[0].Name);
-            
+
             Assert.AreNotEqual(controlGroup.Inputs[0], controlGroupClone.Inputs[0]);
 
             // check if all inputs / outputs were re-wired correctly
@@ -64,26 +89,27 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             // see TOOLS-3543
             var inputFeature = new RtcTestFeature();
             var outputFeature = new RtcTestFeature();
-            var controlledModel = new ControlledTestModel { InputFeatures = { inputFeature }, OutputFeatures = { outputFeature } };
+            var controlledModel = new ControlledTestModel
+            {
+                InputFeatures = {inputFeature},
+                OutputFeatures = {outputFeature}
+            };
 
-            var controlGroup = RealTimeControlModelHelper.CreateGroupInvertorRule();
+            ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupInvertorRule();
             var comp = new CompositeModel();
-            
-            var realTimeControlModel = new RealTimeControlModel
-                {
-                    ControlGroups = { controlGroup }
-                };
+
+            var realTimeControlModel = new RealTimeControlModel {ControlGroups = {controlGroup}};
 
             comp.Activities.Add(realTimeControlModel);
             comp.Activities.Add(controlledModel);
 
             // connect
-            var outputDataItem = controlledModel.GetChildDataItems(outputFeature).First();
+            IDataItem outputDataItem = controlledModel.GetChildDataItems(outputFeature).First();
             realTimeControlModel.GetDataItemByValue(controlGroup.Inputs[0]).LinkTo(outputDataItem);
 
-            var inputDataItem = controlledModel.GetChildDataItems(inputFeature).First();
+            IDataItem inputDataItem = controlledModel.GetChildDataItems(inputFeature).First();
             inputDataItem.LinkTo(realTimeControlModel.GetDataItemByValue(controlGroup.Outputs[0]));
-            
+
             Assert.IsNotNull(controlGroup.Inputs[0].Feature);
             Assert.IsNotNull(controlGroup.Outputs[0].Feature);
 
@@ -110,13 +136,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             condition.Name = "Test condition";
             input.Name = "Test input";
             output.Name = "Test output";
-            
+
             var count = 0;
 
-            ((INotifyCollectionChanged)controlGroup).CollectionChanged += (s, e) =>
+            ((INotifyCollectionChanged) controlGroup).CollectionChanged += (s, e) =>
             {
                 count++;
-                Console.WriteLine("Property = " + ((INameable)e.GetRemovedOrAddedItem()).Name + " (" + count + ")");
+                Console.WriteLine("Property = " + ((INameable) e.GetRemovedOrAddedItem()).Name + " (" + count + ")");
             };
 
             controlGroup.Rules.Add(rule);
@@ -144,11 +170,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var count = 0;
 
             ((INotifyPropertyChanged) controlGroup).PropertyChanged += (s, e) =>
-                {
-                    count++;
-                    Console.WriteLine("Property = " + e.PropertyName + " (" + count + ")");
-                };
-            
+            {
+                count++;
+                Console.WriteLine("Property = " + e.PropertyName + " (" + count + ")");
+            };
+
             controlGroup.Name = "Test group";
             rule.Name = "Test rule";
             condition.Name = "Test condition";
@@ -156,6 +182,45 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             output.Name = "Test output";
 
             Assert.AreEqual(5, count);
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("    ")]
+        public void Name_SettingInvalidValue_LogsErrorAndMaintainsOriginalName(string invalidValue)
+        {
+            // Setup
+            var controlGroup = new ControlGroup();
+            string originalName = controlGroup.Name;
+
+            // Precondition
+            Assert.IsNotEmpty(originalName);
+
+            // Call
+            Action testAction = () => controlGroup.Name = invalidValue;
+
+            // Assert
+            const string expectedErrorMessage =
+                "Error changing the Name. The field cannot be empty. Please only use alphanumeric, spaces, underscores and dashes.";
+            TestHelper.AssertLogMessageIsGenerated(testAction, expectedErrorMessage, 1);
+
+            Assert.AreEqual(originalName, controlGroup.Name);
+        }
+
+        [Test]
+        public void Name_SettingValidValue_ErrorNotLoggedAndNameUpdated()
+        {
+            // Setup
+            const string validName = "ControlGroupName";
+            var controlGroup = new ControlGroup();
+
+            // Call
+            Action testAction = () => controlGroup.Name = validName;
+
+            // Assert
+            TestHelper.AssertLogMessagesCount(testAction, 0);
+            Assert.AreEqual(validName, controlGroup.Name);
         }
     }
 }

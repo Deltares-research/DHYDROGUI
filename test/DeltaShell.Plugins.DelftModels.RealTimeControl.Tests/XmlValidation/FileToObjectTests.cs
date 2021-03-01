@@ -1,4 +1,6 @@
-﻿using DelftTools.TestUtils;
+﻿using System.IO;
+using System.Xml.Linq;
+using System.Xml.Schema;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation;
 using NUnit.Framework;
 
@@ -7,17 +9,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.XmlValidation
     [TestFixture]
     public class FileToObjectTests
     {
+        private static readonly string xmlValidationTestXsd = Path.Combine(TestContext.CurrentContext.TestDirectory, @"XmlValidation\XMLValidationTest.xsd");
+        private static readonly string xmlTestFile = Path.Combine(TestContext.CurrentContext.TestDirectory, @"XmlValidation\XMLTest.xml");
+
         [Test]
         public void ConvertXmlDocumentFileToXmlDocumentObject()
         {
-            var xmlDocument = FileToObject.ConvertToXDocument(TestHelper.GetTestWorkingDirectory(@"..\XmlValidation\XMLTest.xml"));
+            XDocument xmlDocument = FileToObject.ConvertToXDocument(xmlTestFile);
             Assert.IsNotNull(xmlDocument);
         }
 
         [Test]
-        public void ConvertXmlSchemaFielToXmlSchemaObject()
+        public void ConvertXmlSchemaFileToXmlSchemaObject()
         {
-            var xmlSchema = FileToObject.ConvertToXmlSchema(TestHelper.GetTestWorkingDirectory(@"..\XmlValidation\XMLValidationTest.xsd"));
+            XmlSchema xmlSchema = FileToObject.ConvertToXmlSchema(xmlValidationTestXsd);
             Assert.IsNotNull(xmlSchema);
         }
     }

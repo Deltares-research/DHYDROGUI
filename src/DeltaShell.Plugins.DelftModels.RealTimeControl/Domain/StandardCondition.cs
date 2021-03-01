@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using System.Collections.Generic;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
 using log4net;
@@ -12,15 +9,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     /// <summary>
     /// The trigger reads
-    /// if y(k) > 0 then 1  |<-- 0 seems invalid 
-    ///             else 0
-    /// The following operators are supported: > >= = <= <
+    /// if y(k) > 0 then 1  |
+    /// <-- 0 seems invalid
+    ///     else 0
+    ///     The following operators are supported:>
+    /// >= = <= <
     /// </summary>
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class StandardCondition : ConditionBase
     {
-        private bool inputRequired;
         private static readonly ILog Log = LogManager.GetLogger(typeof(StandardCondition));
+        private bool inputRequired;
+
+        public StandardCondition() : this(true) {}
+
+        public StandardCondition(bool inputRequired)
+        {
+            Operation = Operation.Equal;
+            Reference = ReferenceType.Explicit; // = default EXPLICIT
+            this.inputRequired = inputRequired;
+        }
 
         /// <summary>
         /// valid values are "EXPLICIT" "IMPLICIT"; default is EXPLICIT
@@ -29,90 +37,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public Operation Operation { get; set; }
 
-        public StandardCondition(): this(true){}
-
-        public StandardCondition(bool inputRequired)
-        {
-            Operation = Operation.Equal;
-            Reference = "EXPLICIT"; // = default EXPLICIT
-            this.inputRequired = inputRequired;
-        }
-
-        public override string GetDescription()
-        {
-            return new OperationConverter().OperationToString(Operation) + Value;
-        }
-
-        /// <summary>
-        /// Generates the xml for standard condition. 
-        /// RTC supports either
-        ///  "x1Series" operator "x2Value" 
-        ///  "x1Series" operator "x2Series" 
-        ///  "x1Value" operator "x2Value" 
-        ///  "x1Value" operator "x2Series" 
-        /// Delta only supports
-        ///  "x1Series" operator "x2Value" where x1Series is base.Input and x2Value is base.Value
-        /// </summary>
-        /// <returns></returns>
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            return ToXml(xNamespace, prefix, GetInputName());
-        }
-
-        protected virtual XElement GetX2Element(XNamespace xNamespace, string inputName)
-        {
-            return new XElement(xNamespace + "x2Value", Value);
-        }
-
-        public XElement ToXml(XNamespace xNamespace, string prefix, string inputName)
-        {
-            var result = base.ToXml(xNamespace, prefix);
-            var standard = new XElement(xNamespace + "standard", new XAttribute("id", prefix + Name));
-            standard.Add(new XElement(xNamespace + "condition",
-                                new XElement(xNamespace + "x1Series", Reference == string.Empty ? null : new XAttribute("ref", Reference), inputName),
-                                new XElement(xNamespace + "relationalOperator", Operation.ToString()),
-                                // see above comment
-                                GetX2Element(xNamespace, inputName)));
-            if (TrueOutputs.OfType<RuleBase>().Any())
-            {
-                //rules
-                standard.Add(new XElement(xNamespace + "true",
-                                          TrueOutputs.OfType<RuleBase>().Select(
-                                              rule => rule.ToXmlReference(xNamespace, prefix))));
-            }
-
-            if (TrueOutputs.OfType<ConditionBase>().Any())
-            {
-                //conditions
-                standard.Add(new XElement(xNamespace + "true", TrueOutputs.OfType<ConditionBase>().Select(condition => condition.ToXml(xNamespace, prefix))));
-            }
-
-            if (FalseOutputs.OfType<RuleBase>().Any())
-            {
-                //rules
-                standard.Add(new XElement(xNamespace + "false",
-                                          FalseOutputs.OfType<RuleBase>().Select(
-                                              rule => rule.ToXmlReference(xNamespace, prefix))));
-            }
-
-            if (FalseOutputs.OfType<ConditionBase>().Any())
-            {
-                //conditions
-                standard.Add(new XElement(xNamespace + "false", FalseOutputs.OfType<ConditionBase>().Select(condition => condition.ToXml(xNamespace, prefix))));
-            }
-
-            // output series with status info is required by RTC
-            standard.Add(new XElement(xNamespace + "output", new XElement(xNamespace + "status", prefix + StatusOutputSeriesName)));
-            result.Add(standard);
-            return result;
-        }
-        
         [ValidationMethod]
         public static void Validate(StandardCondition standardCondition)
         {
             var exceptions = new List<ValidationException>();
 
-            if ((standardCondition.Input == null) && (standardCondition.inputRequired))
+            if (standardCondition.Input == null && standardCondition.inputRequired)
             {
                 exceptions.Add(new ValidationException(string.Format("Condition '{0}' has no input; this is required for standard conditions.", standardCondition.Name)));
             }
@@ -122,10 +52,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 throw new ValidationContextException(exceptions);
             }
         }
-    
+
+        public override string GetDescription()
+        {
+            return new OperationConverter().OperationToString(Operation) + Value;
+        }
+
         public override object Clone()
         {
-            var standardCondition = (StandardCondition)Activator.CreateInstance(GetType());
+            var standardCondition = new StandardCondition();
             standardCondition.CopyFrom(this);
             return standardCondition;
         }
@@ -139,6 +74,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 Reference = standardCondition.Reference;
                 Operation = standardCondition.Operation;
             }
+        }
+
+        public static class ReferenceType
+        {
+            public const string Explicit = "EXPLICIT";
+            public const string Implicit = "IMPLICIT";
         }
     }
 }

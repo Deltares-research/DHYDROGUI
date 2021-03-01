@@ -24,9 +24,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
         private static readonly XName RootName = "dimrConfig";
 
-        public List<IDimrConfigModelCoupler> modelCouplers { get; private set; }
-        public IDictionary<IModel, IDimrModel> CouplerModelsDictionary { get; private set; }
-        
         public DHydroConfigWriter()
         {
             modelCouplers = new List<IDimrConfigModelCoupler>();
@@ -36,6 +33,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             CouplerModelsDictionary = new Dictionary<IModel, IDimrModel>();
         }
 
+        public List<IDimrConfigModelCoupler> modelCouplers { get; private set; }
+        public IDictionary<IModel, IDimrModel> CouplerModelsDictionary { get; private set; }
+
+        public IDictionary<IDimrModel, int> CoreCountDictionary { private get; set; }
+
         public XDocument CreateConfigDocument(ICompositeActivity workFlow)
         {
             if (!workFlow.Activities.Any())
@@ -44,24 +46,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             }
 
             var xDocument = new XDocument {Declaration = new XDeclaration("1.0", Encoding, "yes")};
-            var rootNode = CreateRootNode();
+            XElement rootNode = CreateRootNode();
             xDocument.Add(rootNode);
             modelCouplers.Clear();
             rootNode.Add(CreateControlNode(workFlow));
-            
-            var allDHydroActivities = workFlow.GetAllActivitiesRecursive<IActivity>().Select(UnwrapActivity).OfType<IDimrModel>().ToList();
-            
-            foreach (var dHydroActivity in allDHydroActivities)
+
+            List<IDimrModel> allDHydroActivities = workFlow.GetAllActivitiesRecursive<IActivity>().Select(UnwrapActivity).OfType<IDimrModel>().ToList();
+
+            foreach (IDimrModel dHydroActivity in allDHydroActivities)
             {
-                int nodeCount;
-                CoreCountDictionary.TryGetValue(dHydroActivity, out nodeCount);
+                CoreCountDictionary.TryGetValue(dHydroActivity, out int nodeCount);
                 rootNode.Add(CreateComponentNode(dHydroActivity, nodeCount));
             }
 
-            foreach (var modelCoupler in modelCouplers)
+            foreach (IDimrConfigModelCoupler modelCoupler in modelCouplers)
             {
                 rootNode.Add(CreateCouplerNode(modelCoupler));
             }
+
             return xDocument;
         }
 
@@ -88,8 +90,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             if (numCores > 0)
             {
                 component.Add(new XElement(DHyd + "process",
-                    string.Join(" ",
-                        Enumerable.Range(0, numCores).Select(i => i.ToString(CultureInfo.InvariantCulture)))));
+                                           string.Join(" ",
+                                                       Enumerable.Range(0, numCores).Select(i => i.ToString(CultureInfo.InvariantCulture)))));
             }
 
             component.Add(new XElement(DHyd + "workingDir", dimrModel.DirectoryName));
@@ -104,6 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             {
                 RecursivelyAddCompositeControlNodes(control, hydroModel.CurrentWorkflow);
             }
+
             return control;
         }
 
@@ -111,12 +114,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         {
             var coupler = new XElement(DHyd + "coupler");
             coupler.Add(new XAttribute("name", modelCoupler.Name));
-            var sourceComponentName = modelCoupler.Source;
-            var targetComponentName = modelCoupler.Target; 
+            string sourceComponentName = modelCoupler.Source;
+            string targetComponentName = modelCoupler.Target;
             coupler.Add(new XElement(DHyd + "sourceComponent", sourceComponentName));
             coupler.Add(new XElement(DHyd + "targetComponent", targetComponentName));
 
-            foreach (var coupleInfo in modelCoupler.CoupleInfos)
+            foreach (DimrCoupleInfo coupleInfo in modelCoupler.CoupleInfos)
             {
                 var itemNode = new XElement(DHyd + "item");
                 var sourceNode = new XElement(DHyd + "sourceName", coupleInfo.Source);
@@ -138,27 +141,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
             return coupler;
         }
-        
+
         private void CreateCouplers(ICompositeActivity compositeActivity)
         {
-            var wrappedActivities = compositeActivity.GetActivitiesOfType<ICompositeActivity>().Where(ca => ca != compositeActivity).ToList();
-            foreach (var wrappedActivity in wrappedActivities)
+            List<ICompositeActivity> wrappedActivities = compositeActivity.GetActivitiesOfType<ICompositeActivity>().Where(ca => ca != compositeActivity).ToList();
+            foreach (ICompositeActivity wrappedActivity in wrappedActivities)
             {
-                var unWrappedSubActivities = wrappedActivity.GetActivitiesOfType<IActivity>().Where(wa => wa != wrappedActivity);
-                foreach (var subActivity in unWrappedSubActivities)
+                IEnumerable<IActivity> unWrappedSubActivities = wrappedActivity.GetActivitiesOfType<IActivity>().Where(wa => wa != wrappedActivity);
+                foreach (IActivity subActivity in unWrappedSubActivities)
                 {
-                    var sa = (IModel)subActivity;
+                    var sa = (IModel) subActivity;
                     var wa = (IDimrModel) wrappedActivity;
                     CouplerModelsDictionary.Add(sa, wa);
                 }
             }
 
-            var unWrappedActivities = compositeActivity.GetActivitiesOfType<IActivity>().Where(at => at != compositeActivity).ToList();
-            foreach (var sourceModel in unWrappedActivities.OfType<IModel>())
+            List<IActivity> unWrappedActivities = compositeActivity.GetActivitiesOfType<IActivity>().Where(at => at != compositeActivity).ToList();
+            foreach (IModel sourceModel in unWrappedActivities.OfType<IModel>())
             {
-                foreach (var targetModel in unWrappedActivities.OfType<IModel>())
+                foreach (IModel targetModel in unWrappedActivities.OfType<IModel>())
                 {
-                    if (Equals(sourceModel, targetModel)) continue;
+                    if (Equals(sourceModel, targetModel))
+                    {
+                        continue;
+                    }
+
                     /* Try to guess if it's a wrapped activity */
                     //Is the sourceModel a submodel?
                     IDimrModel wrapperTarget;
@@ -166,39 +173,46 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                     if (wrapperTarget != null)
                     {
                         //try to retrieve the already generated coupler from the coupler list
-                        var couplerName = ((IDimrModel) sourceModel).ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + wrapperTarget.ShortName;
-                        var wrapperCoupler = modelCouplers.FirstOrDefault(mc => mc.Name == couplerName);
+                        string couplerName = ((IDimrModel) sourceModel).ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + wrapperTarget.ShortName;
+                        IDimrConfigModelCoupler wrapperCoupler = modelCouplers.FirstOrDefault(mc => mc.Name == couplerName);
                         if (wrapperCoupler != null)
                         {
                             //if retrieved, then update coupler
                             wrapperCoupler.UpdateModel(sourceModel, targetModel, null, wrapperTarget as CompositeActivity);
-                            continue;   
+                            continue;
                         }
                     }
+
                     //Is the targetmodel a submodel?
                     IDimrModel wrapperSource;
                     CouplerModelsDictionary.TryGetValue(sourceModel, out wrapperSource);
                     if (wrapperSource != null)
                     {
                         //try to retrieve the already generated coupler from the coupler list
-                        var couplerName = wrapperSource.ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + ((IDimrModel) targetModel).ShortName;
-                        var wrapperCoupler = modelCouplers.FirstOrDefault(mc => mc.Name == couplerName);
+                        string couplerName = wrapperSource.ShortName + DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER + ((IDimrModel) targetModel).ShortName;
+                        IDimrConfigModelCoupler wrapperCoupler = modelCouplers.FirstOrDefault(mc => mc.Name == couplerName);
                         if (wrapperCoupler != null)
                         {
                             //if retrieved, then update coupler
                             wrapperCoupler.UpdateModel(sourceModel, targetModel, wrapperSource as CompositeActivity, null);
-                            continue;   
+                            continue;
                         }
                     }
+
                     /*** Generate a new coupler and add to list ***/
-                    var modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(sourceModel, targetModel, wrapperSource as CompositeActivity, wrapperTarget as CompositeActivity);
-                    if (!modelCoupler.CoupleInfos.Any()) continue;
-                    var name = modelCoupler.Name;
-                    var n = modelCouplers.Count(mc => mc.Name.StartsWith(name));
+                    IDimrConfigModelCoupler modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(sourceModel, targetModel, wrapperSource as CompositeActivity, wrapperTarget as CompositeActivity);
+                    if (!modelCoupler.CoupleInfos.Any())
+                    {
+                        continue;
+                    }
+
+                    string name = modelCoupler.Name;
+                    int n = modelCouplers.Count(mc => mc.Name.StartsWith(name));
                     if (n > 0)
                     {
                         modelCoupler.Name = modelCoupler.Name + "_" + (n + 1);
                     }
+
                     modelCouplers.Add(modelCoupler);
                 }
             }
@@ -211,16 +225,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             {
                 RecursivelyAddControlNodes(node, ((ActivityWrapper) activity).Activity, refTime);
             }
-            else { 
-            var compositeActivity = activity as ICompositeActivity;
-                if (compositeActivity != null && compositeActivity.Activities.Any())
+            else
+            {
+                if (activity is ICompositeActivity compositeActivity && compositeActivity.Activities.Any())
                 {
                     RecursivelyAddCompositeControlNodes(node, compositeActivity);
                 }
                 else
                 {
-                    var dHydroActivity = activity as IDimrModel;
-                    if (dHydroActivity != null)
+                    if (activity is IDimrModel dHydroActivity)
                     {
                         if (dHydroActivity.IsMasterTimeStep)
                         {
@@ -236,17 +249,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                         else
                         {
                             var groupElement = new XElement(DHyd + "startGroup");
-                            var timeDependentModel = activity as ITimeDependentModel;
-                            if (timeDependentModel != null && refTime != null)
+                            if (activity is ITimeDependentModel timeDependentModel && refTime != null)
                             {
                                 var timeElement = new XElement(DHyd + "time");
-                                var startTime = (timeDependentModel.StartTime - refTime.Value).TotalSeconds;
-                                var stopTime = (timeDependentModel.StopTime - refTime.Value).TotalSeconds;
-                                var timeStep = timeDependentModel.TimeStep.TotalSeconds;
-                                timeElement.Add(string.Join(" ", new[] {startTime, timeStep, stopTime}));
+                                double startTime = (timeDependentModel.StartTime - refTime.Value).TotalSeconds;
+                                double stopTime = (timeDependentModel.StopTime - refTime.Value).TotalSeconds;
+                                double timeStep = timeDependentModel.TimeStep.TotalSeconds;
+                                timeElement.Add(string.Join(" ", new[]
+                                {
+                                    startTime,
+                                    timeStep,
+                                    stopTime
+                                }));
                                 groupElement.Add(timeElement);
                             }
-                            foreach (var modelCoupler in modelCouplers.Where(mc => Equals(mc.Target, activity.Name)))
+
+                            foreach (IDimrConfigModelCoupler modelCoupler in modelCouplers.Where(mc => Equals(mc.Target, activity.Name)))
                             {
                                 if (modelCoupler.SourceIsMasterTimeStep)
                                 {
@@ -255,15 +273,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                                     groupElement.Add(couplerElement);
                                 }
                             }
+
                             var startElement = new XElement(DHyd + "start");
                             startElement.Add(new XAttribute("name", dHydroActivity.Name));
                             groupElement.Add(startElement);
-                            foreach (var modelCoupler in modelCouplers.Where(mc => Equals(mc.Source, activity.Name)))
+                            foreach (IDimrConfigModelCoupler modelCoupler in modelCouplers.Where(mc => Equals(mc.Source, activity.Name)))
                             {
                                 var couplerElement = new XElement(DHyd + "coupler");
                                 couplerElement.Add(new XAttribute("name", modelCoupler.Name));
                                 groupElement.Add(couplerElement);
                             }
+
                             node.Add(groupElement);
                         }
                     }
@@ -278,21 +298,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
         private void RecursivelyAddCompositeControlNodes(XElement control, ICompositeActivity compositeActivity)
         {
-            if (compositeActivity is SequentialActivity || (compositeActivity is ParallelActivity && compositeActivity.GetActivitiesOfType<IActivity>().Count(at => at != compositeActivity) ==1))
+            if (compositeActivity is SequentialActivity || compositeActivity is ParallelActivity && compositeActivity.GetActivitiesOfType<IActivity>().Count(at => at != compositeActivity) == 1)
             {
-                foreach (var activity in compositeActivity.Activities)
+                foreach (IActivity activity in compositeActivity.Activities)
                 {
                     RecursivelyAddControlNodes(control, activity, null);
                 }
             }
             else if (compositeActivity is ParallelActivity)
             {
-                var unWrappedActivities = compositeActivity.GetActivitiesOfType<IActivity>().Where( at => at != compositeActivity).ToList();
-                if(!unWrappedActivities.Any()) return;
+                List<IActivity> unWrappedActivities = compositeActivity.GetActivitiesOfType<IActivity>().Where(at => at != compositeActivity).ToList();
+                if (!unWrappedActivities.Any())
+                {
+                    return;
+                }
 
                 CreateCouplers(compositeActivity);
                 var parallelBlock = new XElement(DHyd + "parallel");
-                
+
                 var masterActivity =
                     unWrappedActivities.OfType<ITimeDependentModel>().OfType<IDimrModel>().FirstOrDefault(a => a.IsMasterTimeStep) as
                         ITimeDependentModel; /*Only needed for the start time*/
@@ -300,9 +323,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 {
                     throw new NotImplementedException("Workflows without a master model cannot be serialized to d_hydro xml.");
                 }
-                var orderedActivities = unWrappedActivities.ToList();
-                var startTime = masterActivity.StartTime;
-                foreach (var activity in orderedActivities)
+
+                List<IActivity> orderedActivities = unWrappedActivities.ToList();
+                DateTime startTime = masterActivity.StartTime;
+                foreach (IActivity activity in orderedActivities)
                 {
                     RecursivelyAddControlNodes(parallelBlock, activity, startTime);
                 }
@@ -318,16 +342,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
         private static IActivity UnwrapActivity(IActivity activity)
         {
-            var result = activity;
-            while (result is ActivityWrapper)
+            IActivity result = activity;
+            while (result is ActivityWrapper wrapper)
             {
-                result = ((ActivityWrapper) result).Activity;
+                result = wrapper.Activity;
             }
 
             return result;
         }
-
-        public IDictionary<IDimrModel, int> CoreCountDictionary { private get; set; }
-        
     }
 }

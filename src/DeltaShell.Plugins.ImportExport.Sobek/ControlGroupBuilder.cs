@@ -23,22 +23,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private static readonly ILog log = LogManager.GetLogger(typeof(ControlGroupBuilder));
 
         public static void CreateControlGroupForStructureAndAddToRtcModel(SobekStructureMapping sobekStructureMapping,
-                                                                  IStructure1D structure,
-                                                                  IModel model,
-                                                                  RealTimeControlModel rtcModel,
-                                                                  IDictionary<string, SobekController> sobekControllers,
-                                                                  IDictionary<string, SobekTrigger> sobekTriggers)
+                                                                          IStructure1D structure,
+                                                                          IModel model,
+                                                                          RealTimeControlModel rtcModel,
+                                                                          IDictionary<string, SobekController> sobekControllers,
+                                                                          IDictionary<string, SobekTrigger> sobekTriggers)
         {
+            IEnumerable<IDataItem> structureDataItems = GetInputDataItemsByLocationName(sobekStructureMapping.StructureId, model);
 
-            var structureDataItems = GetInputDataItemsByLocationName(sobekStructureMapping.StructureId, model);
-
-            if(structureDataItems.Count() == 0)
+            if (structureDataItems.Count() == 0)
             {
                 log.ErrorFormat("Item with Id '{0}' has no data item. Controller and triggers of {0} have not been imported.", sobekStructureMapping.StructureId);
                 return;
             }
 
-            var controlGroup = new ControlGroup { Name = "Control group of " + sobekStructureMapping.StructureId };
+            var controlGroup = new ControlGroup {Name = "Control group of " + sobekStructureMapping.StructureId};
 
             IList<SobekController> orderedControllers = GetControllersOfStructureOrderedByOutputType(sobekStructureMapping.StructureId, sobekStructureMapping.ControllerIDs, sobekControllers);
 
@@ -48,30 +47,33 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 rtcModel.ControlGroups.Add(controlGroup);
             }
 
-            foreach (var sobekController in orderedControllers)
+            foreach (SobekController sobekController in orderedControllers)
             {
                 IEnumerable<ConditionBase> conditionsOfLastRuleWithSameOutput = new List<ConditionBase>();
 
-                var output = GetOutputItemFromControlGroup(sobekStructureMapping, structure, controlGroup, structureDataItems, sobekController);
+                Output output = GetOutputItemFromControlGroup(sobekStructureMapping, structure, controlGroup, structureDataItems, sobekController);
 
                 if (output != null)
                 {
                     //last rule has same output, so get conditions for merging later on
-                    var lastRule = controlGroup.Rules.Last();
+                    RuleBase lastRule = controlGroup.Rules.Last();
                     conditionsOfLastRuleWithSameOutput = ControlGroupHelper.ConditionsOfRule(controlGroup, lastRule);
                 }
 
                 output = AddNewOutputItemToControlGroup(sobekStructureMapping, structure, controlGroup, structureDataItems, sobekController, rtcModel);
 
-                if (output == null) continue; //no output for rule available
+                if (output == null)
+                {
+                    continue; //no output for rule available
+                }
 
-                var rule = GetRule(sobekController);
+                RuleBase rule = GetRule(sobekController);
 
                 rule.Outputs.Add(output);
                 SetUniqueName(rule, controlGroup);
                 controlGroup.Rules.Add(rule);
 
-                var input = AddInputItemToControlGroup(structure, sobekController, controlGroup, model, rtcModel);
+                Input input = AddInputItemToControlGroup(structure, sobekController, controlGroup, model, rtcModel);
 
                 if (input != null)
                 {
@@ -84,22 +86,173 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 {
                     MergeLastRowWithSameOutput(controlGroup, rule, conditionsOfLastRuleWithSameOutput);
                 }
-
             }
+        }
+
+        public static IEnumerable<ConditionBase> ConditionsOfRule(ControlGroup controlGroup, RuleBase rule)
+        {
+            var conditions = new HashSet<ConditionBase>();
+            foreach (ConditionBase condition in controlGroup.Conditions)
+            {
+                if (condition.TrueOutputs.Contains(rule))
+                {
+                    conditions.Add(condition);
+                    ConditionsOfCondition(controlGroup, condition, conditions);
+                }
+
+                if (condition.FalseOutputs.Contains(rule))
+                {
+                    conditions.Add(condition);
+                    ConditionsOfCondition(controlGroup, condition, conditions);
+                }
+            }
+
+            return conditions;
+        }
+
+        public static RuleBase GetRule(SobekController controller)
+        {
+            switch (controller.ControllerType)
+            {
+                case SobekControllerType.TimeController:
+                    return GetTimeRule(controller);
+                case SobekControllerType.HydraulicController:
+                    return GetHydraulicRule(controller);
+                case SobekControllerType.IntervalController:
+                    return GetIntervalRule(controller);
+                case SobekControllerType.PIDController:
+                    return GetPIDRule(controller);
+                case SobekControllerType.RelativeTimeController:
+                    return GetRelativeTimeRule(controller);
+                case SobekControllerType.RelativeFromValueController:
+                    return GetFromValueRule(controller);
+                default:
+                    throw new NotSupportedException(string.Format("SobekController of type {0} has not been supported.", controller.ControllerType));
+            }
+        }
+
+        public static IEnumerable<ConditionBase> GetConditions(SobekTrigger sobekTrigger)
+        {
+            switch (sobekTrigger.TriggerType)
+            {
+                case SobekTriggerType.Time:
+                    yield return GetTimeCondition(sobekTrigger);
+                    break;
+                case SobekTriggerType.TimeAndHydraulic:
+                    foreach (ConditionBase condition in GetCombinedConditions(sobekTrigger))
+                    {
+                        yield return condition;
+                    }
+
+                    break;
+                case SobekTriggerType.Hydraulic:
+                    foreach (ConditionBase condition in GetHydraulicConditions(sobekTrigger))
+                    {
+                        yield return condition;
+                    }
+
+                    break;
+                default:
+                    throw new NotSupportedException(string.Format("SobekTrigger of type {0} has not been supported.", sobekTrigger.TriggerType));
+            }
+        }
+
+        public static QuantityType GetWaterFlowModelQuantityType(IStructure1D structure, SobekControllerParameter sobekControllerParameter)
+        {
+            Type type = structure.GetType();
+            switch (sobekControllerParameter)
+            {
+                case SobekControllerParameter.BottomLevel2DGridCell:
+                    // todo do not throw exception
+                    throw new ArgumentException("Unsupported type", "measurementLocationParameter");
+                case SobekControllerParameter.CrestLevel:
+                    return QuantityType.CrestLevel;
+                case SobekControllerParameter.CrestWidth:
+                    return QuantityType.CrestWidth;
+                case SobekControllerParameter.GateHeight:
+                    // if Sobek212 set GateHeight is in ModelApi Lower Edge
+                    if (typeof(ICulvert).IsAssignableFrom(type))
+                    {
+                        return QuantityType.ValveOpening;
+                    }
+
+                    return QuantityType.GateLowerEdgeLevel;
+                case SobekControllerParameter.PumpCapacity:
+                    return QuantityType.Setpoint;
+            }
+
+            throw new ArgumentException("Unsupported type", "measurementLocationParameter");
+        }
+
+        public static QuantityType GetWaterFlowModelQuantityType(IStructure1D structure, SobekTriggerParameterType triggerParameterType)
+        {
+            Type type = structure.GetType();
+            switch (triggerParameterType)
+            {
+                case SobekTriggerParameterType.WaterLevelBranchLocation:
+                    return QuantityType.WaterLevel;
+                case SobekTriggerParameterType.HeadDifferenceStructure:
+                    return QuantityType.Head;
+                case SobekTriggerParameterType.DischargeBranchLocation:
+                    return QuantityType.Discharge;
+                case SobekTriggerParameterType.GateHeightStructure:
+                    // if Sobek212 set GateHeight is in ModelApi Lower Edge or ValveOpening
+                    if (typeof(ICulvert).IsAssignableFrom(type))
+                    {
+                        return QuantityType.ValveOpening;
+                    }
+
+                    return QuantityType.GateLowerEdgeLevel;
+                case SobekTriggerParameterType.CrestLevelStructure:
+                    return QuantityType.CrestLevel;
+                case SobekTriggerParameterType.CrestWidthStructure:
+                    return QuantityType.CrestWidth;
+                case SobekTriggerParameterType.WaterlevelRetentionArea:
+                    return QuantityType.WaterLevel;
+                case SobekTriggerParameterType.PressureDifferenceStructure:
+                    return QuantityType.PressureDifference;
+            }
+
+            throw new ArgumentException("Unsupported type", "measurementLocationParameter");
+        }
+
+        public static QuantityType GetWaterFlowModelQuantityType(SobekMeasurementLocationParameter measurementLocationParameter)
+        {
+            switch (measurementLocationParameter)
+            {
+                case SobekMeasurementLocationParameter.WaterLevel:
+                    return QuantityType.WaterLevel;
+                case SobekMeasurementLocationParameter.Discharge:
+                    return QuantityType.Discharge;
+                case SobekMeasurementLocationParameter.HeadDifference: //on structure
+                    return QuantityType.Head;
+                case SobekMeasurementLocationParameter.Velocity: //on structure
+                    return QuantityType.Velocity;
+                case SobekMeasurementLocationParameter.FlowDirection:      //on structure
+                    return QuantityType.Discharge;                         //FlowDirection will be checked on pos or neg discharge
+                case SobekMeasurementLocationParameter.PressureDifference: //on structure
+                    return QuantityType.PressureDifference;
+            }
+
+            throw new ArgumentException("Unsupported type", "measurementLocationParameter");
         }
 
         private static void MergeLastRowWithSameOutput(ControlGroup controlGroup, RuleBase rule, IEnumerable<ConditionBase> conditionsOfLastRuleWithSameOutput)
         {
             var startOfNewRow = ControlGroupHelper.StartObjectOfARule(controlGroup, rule);
 
-            if (startOfNewRow == null) return;
+            if (startOfNewRow == null)
+            {
+                return;
+            }
 
-            foreach (var condition in conditionsOfLastRuleWithSameOutput)
+            foreach (ConditionBase condition in conditionsOfLastRuleWithSameOutput)
             {
                 if (condition.TrueOutputs.Count == 0)
                 {
                     condition.TrueOutputs.Add(startOfNewRow);
                 }
+
                 if (condition.FalseOutputs.Count == 0)
                 {
                     condition.FalseOutputs.Add(startOfNewRow);
@@ -110,16 +263,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private static IList<SobekController> GetControllersOfStructureOrderedByOutputType(string structureId, IList<string> controllerIDs, IDictionary<string, SobekController> sobekControllers)
         {
             var returnList = new List<SobekController>();
-            foreach (var controllerID in controllerIDs)
+            foreach (string controllerID in controllerIDs)
             {
                 if (!sobekControllers.ContainsKey(controllerID))
                 {
                     log.ErrorFormat("Controller Id {0} of structure {1} has not been found.", controllerID, structureId);
                     continue;
                 }
-                var controller = sobekControllers[controllerID];
-                var sobekControllerParameterType = controller.SobekControllerParameterType;
-                var index = -1;
+
+                SobekController controller = sobekControllers[controllerID];
+                SobekControllerParameter sobekControllerParameterType = controller.SobekControllerParameterType;
+                int index = -1;
 
                 for (int i = returnList.Count - 1; i >= 0; i--)
                 {
@@ -138,43 +292,70 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 {
                     returnList.Insert(index + 1, controller); //insert after same type
                 }
-
             }
+
             return returnList;
+        }
+
+        private static void ConditionsOfCondition(ControlGroup controlGroup, ConditionBase currentCondition, HashSet<ConditionBase> conditions)
+        {
+            foreach (ConditionBase condition in controlGroup.Conditions)
+            {
+                if (conditions.Contains(condition))
+                {
+                    continue; //breaks the recursive method
+                }
+
+                if (condition.TrueOutputs.Contains(currentCondition))
+                {
+                    conditions.Add(condition);
+                    ConditionsOfCondition(controlGroup, condition, conditions);
+                }
+
+                if (condition.FalseOutputs.Contains(currentCondition))
+                {
+                    conditions.Add(condition);
+                    ConditionsOfCondition(controlGroup, currentCondition, conditions);
+                }
+            }
         }
 
         private static void AddConditionsToControlGroup(IStructure1D structure, IEnumerable<Trigger> sobekControllerTriggers, IDictionary<string, SobekTrigger> sobekTriggers, IModel model, RealTimeControlModel rtcModel, RuleBase rule, ControlGroup controlGroup)
         {
-            if (sobekControllerTriggers == null) return;
+            if (sobekControllerTriggers == null)
+            {
+                return;
+            }
 
             IList<ConditionBase> conditions = null;
             var previousConditions = new List<ConditionBase>();
             var bNewOrRow = false;
 
-            foreach (var trigger in sobekControllerTriggers)
+            foreach (Trigger trigger in sobekControllerTriggers)
             {
                 if (!trigger.Active)
                 {
                     continue;
                 }
+
                 if (!sobekTriggers.ContainsKey(trigger.Id))
                 {
                     log.ErrorFormat("Adding conditions to control group: trigger with id {0} can not be found", trigger.Id);
                     continue;
                 }
 
-                var sobekTrigger = sobekTriggers[trigger.Id];
+                SobekTrigger sobekTrigger = sobekTriggers[trigger.Id];
 
                 //get conditions and add to control group
                 conditions = GetConditions(sobekTrigger).ToList();
-                foreach (var condition in conditions)
+                foreach (ConditionBase condition in conditions)
                 {
                     SetUniqueName(condition, controlGroup);
                     controlGroup.Conditions.Add(condition);
                 }
 
                 //set input
-                var input = AddInputItemToControlGroup(structure, sobekTrigger, controlGroup, model, rtcModel);
+                Input input = AddInputItemToControlGroup(structure, sobekTrigger, controlGroup, model, rtcModel);
                 if (input != null)
                 {
                     AddInputToNonTimeConditions(conditions, input);
@@ -182,14 +363,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 }
 
                 //Have to start a new (or) row
-                if(bNewOrRow)
+                if (bNewOrRow)
                 {
                     StartNew_OrRow_AndConnectPreviousConditions(conditions.First(), previousConditions);
                     bNewOrRow = false;
                 }
                 else
                 {
-                    foreach(var p in previousConditions.Where(pc => pc.TrueOutputs.Count == 0))
+                    foreach (ConditionBase p in previousConditions.Where(pc => pc.TrueOutputs.Count == 0))
                     {
                         p.TrueOutputs.Add(conditions.First());
                     }
@@ -197,7 +378,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
                 previousConditions.AddRange(conditions);
 
-                if(!trigger.And)
+                if (!trigger.And)
                 {
                     bNewOrRow = true;
                     AddRuleToEmptyTrueOutputs(conditions, rule);
@@ -211,21 +392,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private static void HydraukicRuleBasedOnDownUpHack(IList<ConditionBase> conditions, Input input)
         {
-            if(input.ParameterName == "haha")
+            if (input.ParameterName == "haha")
             {
-                foreach (var hydraulicCondition in conditions.Where(c => c.Input == input))
+                foreach (ConditionBase hydraulicCondition in conditions.Where(c => c.Input == input))
                 {
                     hydraulicCondition.Value = 0;
                 }
             }
-
         }
 
         private static void AddInputToNonTimeConditions(IEnumerable<ConditionBase> conditions, Input input)
         {
-            foreach (var condition in conditions)
+            foreach (ConditionBase condition in conditions)
             {
-                if (condition is TimeCondition) continue;
+                if (condition is TimeCondition)
+                {
+                    continue;
+                }
 
                 condition.Input = input;
             }
@@ -233,9 +416,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private static void AddRuleToEmptyTrueOutputs(IEnumerable<ConditionBase> conditions, RuleBase rule)
         {
-            if (conditions == null) return;
+            if (conditions == null)
+            {
+                return;
+            }
 
-            foreach (var condition in conditions)
+            foreach (ConditionBase condition in conditions)
             {
                 if (condition.TrueOutputs.Count == 0)
                 {
@@ -246,23 +432,24 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private static void StartNew_OrRow_AndConnectPreviousConditions(ConditionBase condition, List<ConditionBase> previousConditions)
         {
-            foreach (var previousCondition in previousConditions)
+            foreach (ConditionBase previousCondition in previousConditions)
             {
                 if (previousCondition.FalseOutputs.Count == 0)
                 {
                     previousCondition.FalseOutputs.Add(condition);
                 }
             }
+
             previousConditions.Clear();
         }
 
         private static void SetUniqueName(RtcBaseObject rtcBaseObject, ControlGroup controlGroup)
         {
-            int index = 0;
-            if(rtcBaseObject is ConditionBase)
+            var index = 0;
+            if (rtcBaseObject is ConditionBase)
             {
-                index = controlGroup.Conditions.Count(c => (c.Name == rtcBaseObject.Name || c.Name.StartsWith(rtcBaseObject.Name + "_")));
-                if(index > 0)
+                index = controlGroup.Conditions.Count(c => c.Name == rtcBaseObject.Name || c.Name.StartsWith(rtcBaseObject.Name + "_"));
+                if (index > 0)
                 {
                     rtcBaseObject.Name = rtcBaseObject.Name + "_" + index;
                 }
@@ -298,6 +485,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 case SobekTriggerParameterType.PressureDifferenceStructure:
                     return SobekLocationType.StructureLocation;
             }
+
             throw new ArgumentException(
                 string.Format("Unsupported triggertype {0}", sobekTrigger.TriggerParameterType), "sobekTrigger");
         }
@@ -306,13 +494,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             IDataItem inputDataItem;
 
-
             if (sobekTrigger.TriggerType == SobekTriggerType.Time)
             {
                 return null; // time trigger does not have input
             }
 
-            var location = GetLocationType(sobekTrigger);
+            SobekLocationType location = GetLocationType(sobekTrigger);
 
             switch (location)
             {
@@ -321,16 +508,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     {
                         return null; //condition without input. Probably a time condition
                     }
+
                     inputDataItem = GetDataItem(model,
-                                                                sobekTrigger.MeasurementStationId, 
-                                                                GetWaterFlowModelQuantityType(structure, sobekTrigger.TriggerParameterType),
-                                                                ElementSet.Observations);
+                                                sobekTrigger.MeasurementStationId,
+                                                GetWaterFlowModelQuantityType(structure, sobekTrigger.TriggerParameterType),
+                                                ElementSet.Observations);
 
                     if (inputDataItem == null)
                     {
                         log.ErrorFormat("Parameter {1} of observation point {0} is not supported by the data item provider.", sobekTrigger.MeasurementStationId, sobekTrigger.TriggerParameterType);
                         return null;
                     }
+
                     break;
 
                 case SobekLocationType.StructureLocation:
@@ -340,15 +529,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     }
 
                     inputDataItem = GetDataItem(model,
-                                        sobekTrigger.StructureId,
-                                        GetWaterFlowModelQuantityType(structure, sobekTrigger.TriggerParameterType),
-                                        ElementSet.Structures);
+                                                sobekTrigger.StructureId,
+                                                GetWaterFlowModelQuantityType(structure, sobekTrigger.TriggerParameterType),
+                                                ElementSet.Structures);
 
                     if (inputDataItem == null)
                     {
                         log.ErrorFormat("Parameter {1} of structure {0} is not supported by the data item provider.", sobekTrigger.StructureId, sobekTrigger.TriggerParameterType);
                         return null;
                     }
+
                     break;
 
                 case SobekLocationType.RetentionAreaLocation:
@@ -359,9 +549,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     throw new ArgumentException(string.Format("Unsupported triggerlocatriontype {0}", location), "sobekTrigger");
             }
 
-            var input = controlGroup.Inputs.FirstOrDefault(o => o.Name == inputDataItem.GetFeature() + "_" + inputDataItem.GetParameterName());
+            Input input = controlGroup.Inputs.FirstOrDefault(o => o.Name == inputDataItem.GetFeature() + "_" + inputDataItem.GetParameterName());
 
-            if (input != null) return input; //input already exists and returns existing input
+            if (input != null)
+            {
+                return input; //input already exists and returns existing input
+            }
 
             input = new Input();
             controlGroup.Inputs.Add(input);
@@ -370,16 +563,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return input;
         }
 
-
         private static Input AddInputItemToControlGroup(IStructure1D structure, SobekController sobekController, ControlGroup controlGroup, IModel model, RealTimeControlModel rtcModel)
         {
             IDataItem outputDataItem;
             if (!string.IsNullOrEmpty(sobekController.MeasurementStationId))
             {
                 outputDataItem = GetDataItem(model,
-                                                            sobekController.MeasurementStationId,
-                                                            GetWaterFlowModelQuantityType(sobekController.MeasurementLocationParameter),
-                                                            ElementSet.Observations);
+                                             sobekController.MeasurementStationId,
+                                             GetWaterFlowModelQuantityType(sobekController.MeasurementLocationParameter),
+                                             ElementSet.Observations);
 
                 if (outputDataItem == null)
                 {
@@ -392,9 +584,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 // if no measure station is given the input is a structure
                 // this only applies to head difference (2) and pressure difference (5)
                 outputDataItem = GetDataItem(model,
-                                            sobekController.StructureId,
-                                            GetWaterFlowModelQuantityType(sobekController.MeasurementLocationParameter),
-                                            ElementSet.Structures);
+                                             sobekController.StructureId,
+                                             GetWaterFlowModelQuantityType(sobekController.MeasurementLocationParameter),
+                                             ElementSet.Structures);
 
                 if (outputDataItem == null)
                 {
@@ -407,9 +599,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 return null; //rule without input
             }
 
-            var input = controlGroup.Inputs.FirstOrDefault(o => o.Name == outputDataItem.GetFeature() + "_" + outputDataItem.GetParameterName());
+            Input input = controlGroup.Inputs.FirstOrDefault(o => o.Name == outputDataItem.GetFeature() + "_" + outputDataItem.GetParameterName());
 
-            if (input != null) return input; //input already exists and returns existing input
+            if (input != null)
+            {
+                return input; //input already exists and returns existing input
+            }
 
             input = new Input();
             controlGroup.Inputs.Add(input);
@@ -420,28 +615,29 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private static IDataItem GetDataItem(IModel model, string locationName, QuantityType quantityType, ElementSet elementSet)
         {
-            var inputDataItems = GetOutputDataItemsByLocationName(locationName, model);
-            var inputDataItem = inputDataItems.FirstOrDefault(
+            IEnumerable<IDataItem> inputDataItems = GetOutputDataItemsByLocationName(locationName, model);
+            IDataItem inputDataItem = inputDataItems.FirstOrDefault(
                 item =>
+                {
+                    var flowValueConverter = item.ValueConverter as Model1DBranchFeatureValueConverter;
+                    if (flowValueConverter != null)
                     {
-                        var flowValueConverter = item.ValueConverter as Model1DBranchFeatureValueConverter;
-                        if (flowValueConverter != null)
-                        {
-                            return flowValueConverter.QuantityType == quantityType
-                                   && flowValueConverter.ElementSet == elementSet;
-                        }
-                        return false;
-                    });
+                        return flowValueConverter.QuantityType == quantityType
+                               && flowValueConverter.ElementSet == elementSet;
+                    }
+
+                    return false;
+                });
             return inputDataItem;
         }
 
         private static IEnumerable<IDataItem> GetInputDataItemsByLocationName(string locationName, IModel model)
         {
-            var namedLocations = model.GetChildDataItemLocations(DataItemRole.Input).OfType<INameable>().ToList();
-            var location = (IFeature)namedLocations.FirstOrDefault(
-                    l => l.Name == locationName);
+            List<INameable> namedLocations = model.GetChildDataItemLocations(DataItemRole.Input).OfType<INameable>().ToList();
+            var location = (IFeature) namedLocations.FirstOrDefault(
+                l => l.Name == locationName);
 
-            if(location == null)
+            if (location == null)
             {
                 return new List<IDataItem>();
             }
@@ -451,13 +647,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private static IEnumerable<IDataItem> GetOutputDataItemsByLocationName(string locationName, IModel model)
         {
-            var namedLocations = model.GetChildDataItemLocations(DataItemRole.Output).OfType<INameable>().ToList();
-            var location = (IFeature)namedLocations.FirstOrDefault(l => l.Name == locationName);
+            List<INameable> namedLocations = model.GetChildDataItemLocations(DataItemRole.Output).OfType<INameable>().ToList();
+            var location = (IFeature) namedLocations.FirstOrDefault(l => l.Name == locationName);
             return location == null
                        ? new List<IDataItem>()
                        : model.GetChildDataItems(location);
         }
-
 
         /// <summary>
         /// The sobekController has knowledge about the controlled parameter of the structure needed for the output
@@ -468,17 +663,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         /// <param name="controller"></param>
         /// <returns>Returns null if not exists</returns>
         private static Output GetOutputItemFromControlGroup(SobekStructureMapping sobekStructureMapping, IStructure1D structure, ControlGroup controlGroup,
-            IEnumerable<IDataItem> structureDataItems, SobekController controller)
+                                                            IEnumerable<IDataItem> structureDataItems, SobekController controller)
         {
-
-            var structureDataItem =
+            IDataItem structureDataItem =
                 structureDataItems.FirstOrDefault(
                     item =>
-                        {
-                            var converter = (Model1DBranchFeatureValueConverter)item.ValueConverter;
-                            return converter.QuantityType == GetWaterFlowModelQuantityType(structure, controller.SobekControllerParameterType)
-                                   && converter.ElementSet == ElementSet.Structures;
-                        });
+                    {
+                        var converter = (Model1DBranchFeatureValueConverter) item.ValueConverter;
+                        return converter.QuantityType == GetWaterFlowModelQuantityType(structure, controller.SobekControllerParameterType)
+                               && converter.ElementSet == ElementSet.Structures;
+                    });
 
             if (structureDataItem == null)
             {
@@ -486,9 +680,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 return null;
             }
 
-            var output = controlGroup.Outputs.FirstOrDefault(o => o.Name == structureDataItem.GetFeature() + "_" + structureDataItem.GetParameterName());
+            Output output = controlGroup.Outputs.FirstOrDefault(o => o.Name == structureDataItem.GetFeature() + "_" + structureDataItem.GetParameterName());
 
-            return output; 
+            return output;
         }
 
         /// <summary>
@@ -500,23 +694,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         /// <param name="controller"></param>
         /// <returns></returns>
         private static Output AddNewOutputItemToControlGroup(SobekStructureMapping sobekStructureMapping, IStructure1D structure, ControlGroup controlGroup,
-            IEnumerable<IDataItem> structureDataItems, SobekController controller, RealTimeControlModel rtcModel)
+                                                             IEnumerable<IDataItem> structureDataItems, SobekController controller, RealTimeControlModel rtcModel)
         {
-
-            var structureDataItem = structureDataItems.FirstOrDefault(
+            IDataItem structureDataItem = structureDataItems.FirstOrDefault(
                 item =>
+                {
+                    var flowValueConverter = item.ValueConverter as Model1DBranchFeatureValueConverter;
+                    if (flowValueConverter != null)
                     {
-                        var flowValueConverter = item.ValueConverter as Model1DBranchFeatureValueConverter;
-                        if (flowValueConverter != null)
-                        {
-                            return flowValueConverter.QuantityType
-                                   ==
-                                   GetWaterFlowModelQuantityType(
-                                       structure, controller.SobekControllerParameterType)
-                                   && flowValueConverter.ElementSet == ElementSet.Structures;
-                        }
-                        return false;
-                    });
+                        return flowValueConverter.QuantityType
+                               ==
+                               GetWaterFlowModelQuantityType(
+                                   structure, controller.SobekControllerParameterType)
+                               && flowValueConverter.ElementSet == ElementSet.Structures;
+                    }
+
+                    return false;
+                });
 
             if (structureDataItem == null)
             {
@@ -524,7 +718,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 return null;
             }
 
-            var output = controlGroup.Outputs.FirstOrDefault(o => o.Name == structureDataItem.GetFeature() + "_" + structureDataItem.GetParameterName());
+            Output output = controlGroup.Outputs.FirstOrDefault(o => o.Name == structureDataItem.GetFeature() + "_" + structureDataItem.GetParameterName());
 
             if (output != null)
             {
@@ -538,73 +732,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return output;
         }
 
-        public static RuleBase GetRule(SobekController controller)
-        {
-            switch (controller.ControllerType)
-            {
-                case SobekControllerType.TimeController:
-                    return GetTimeRule(controller);
-                case SobekControllerType.HydraulicController:
-                    return GetHydraulicRule(controller);
-                case SobekControllerType.IntervalController:
-                    return GetIntervalRule(controller);
-                case SobekControllerType.PIDController:
-                    return GetPIDRule(controller);
-                case SobekControllerType.RelativeTimeController:
-                    return GetRelativeTimeRule(controller);
-                case SobekControllerType.RelativeFromValueController:
-                    return GetFromValueRule(controller);
-                default:
-                    throw new NotSupportedException(string.Format("SobekController of type {0} has not been supported.",controller.ControllerType));
-            }
-        }
-
-        public static IEnumerable<ConditionBase> GetConditions(SobekTrigger sobekTrigger)
-        {
-            switch (sobekTrigger.TriggerType)
-            {
-                case SobekTriggerType.Time:
-                    yield return GetTimeCondition(sobekTrigger);
-                    break;
-                case SobekTriggerType.TimeAndHydraulic:
-                    foreach (var condition in GetCombinedConditions(sobekTrigger))
-                    {
-                        yield return condition;
-                    }
-                    break;
-                case SobekTriggerType.Hydraulic:
-                    foreach (var condition in GetHydraulicConditions(sobekTrigger))
-                    {
-                        yield return condition;
-                    }
-                    break;
-                default:
-                    throw new NotSupportedException(string.Format("SobekTrigger of type {0} has not been supported.", sobekTrigger.TriggerType));
-            }
-        }
-
-
         private static IEnumerable<ConditionBase> GetHydraulicConditions(SobekTrigger sobekTrigger)
         {
             DataColumn columnTime = sobekTrigger.TriggerTable.Columns["Time"];
             DataColumn columnOperator = sobekTrigger.TriggerTable.Columns["Operation"];
-            DataColumn  columnValue = sobekTrigger.TriggerTable.Columns["Value"];
+            DataColumn columnValue = sobekTrigger.TriggerTable.Columns["Value"];
             TimeCondition previousTimeCondition = null;
             DateTime startTime = DateTime.Now;
             DateTime endTime = DateTime.Now;
-            var nRows = sobekTrigger.TriggerTable.Rows.Count;
+            int nRows = sobekTrigger.TriggerTable.Rows.Count;
 
             if (nRows > 0)
             {
-                startTime = (DateTime)sobekTrigger.TriggerTable.Rows[0][columnTime];
-                endTime = (DateTime)sobekTrigger.TriggerTable.Rows[nRows -1][columnTime];
+                startTime = (DateTime) sobekTrigger.TriggerTable.Rows[0][columnTime];
+                endTime = (DateTime) sobekTrigger.TriggerTable.Rows[nRows - 1][columnTime];
             }
 
-            for(int i = 0; i < nRows; i++)
+            for (var i = 0; i < nRows; i++)
             {
                 DataRow nextRow = null;
-                var row = sobekTrigger.TriggerTable.Rows[i];
-                var operation = (bool)row[columnOperator] ? Operation.Greater : Operation.Less;
+                DataRow row = sobekTrigger.TriggerTable.Rows[i];
+                Operation operation = (bool) row[columnOperator] ? Operation.Greater : Operation.Less;
                 var value = Convert.ToDouble(row[columnValue]);
 
                 if (i < sobekTrigger.TriggerTable.Rows.Count - 1)
@@ -620,14 +768,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     Extrapolation = ExtrapolationType.Constant
                 };
 
-                if ((DateTime)row[columnTime] != startTime)
+                if ((DateTime) row[columnTime] != startTime)
                 {
                     timeCondition.TimeSeries[startTime] = false;
                 }
 
                 timeCondition.TimeSeries[row[columnTime]] = true;
 
-                if(nextRow != null)
+                if (nextRow != null)
                 {
                     timeCondition.TimeSeries[nextRow[columnTime]] = false;
                 }
@@ -636,11 +784,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 {
                     timeCondition.TimeSeries[endTime] = timeCondition.TimeSeries[startTime];
                 }
-                
+
                 TimeSeriesHelper.SetPeriodicExtrapolationRtc(timeCondition.TimeSeries, sobekTrigger.PeriodicExtrapolationPeriod);
 
                 StandardCondition hydraulicCondition;
-                
+
                 if (sobekTrigger.CheckOn == SobekTriggerCheckOn.Direction)
                 {
                     hydraulicCondition = new DirectionalCondition
@@ -663,7 +811,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
                 timeCondition.TrueOutputs.Add(hydraulicCondition);
 
-                if(previousTimeCondition != null)
+                if (previousTimeCondition != null)
                 {
                     previousTimeCondition.FalseOutputs.Add(timeCondition);
                 }
@@ -673,7 +821,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 yield return timeCondition;
                 yield return hydraulicCondition;
             }
-
         }
 
         private static IEnumerable<ConditionBase> GetCombinedConditions(SobekTrigger sobekTrigger)
@@ -685,7 +832,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private static ConditionBase GetTimeCondition(SobekTrigger sobekTrigger)
         {
-           var timeCondition = new TimeCondition
+            var timeCondition = new TimeCondition
             {
                 Name = sobekTrigger.Id,
                 LongName = sobekTrigger.Name,
@@ -693,12 +840,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 Extrapolation = ExtrapolationType.Constant
             };
 
-           
-
             foreach (DataRow row in sobekTrigger.TriggerTable.Rows)
             {
-                timeCondition.TimeSeries[(DateTime)row[sobekTrigger.TriggerTable.Columns["Time"]]] = (bool) row[sobekTrigger.TriggerTable.Columns["OnOff"]];
+                timeCondition.TimeSeries[(DateTime) row[sobekTrigger.TriggerTable.Columns["Time"]]] = (bool) row[sobekTrigger.TriggerTable.Columns["OnOff"]];
             }
+
             if (sobekTrigger.PeriodicExtrapolationPeriod != "")
             {
                 timeCondition.Extrapolation = ExtrapolationType.Periodic;
@@ -708,100 +854,22 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return timeCondition;
         }
 
-        public static QuantityType GetWaterFlowModelQuantityType(IStructure1D structure, SobekControllerParameter sobekControllerParameter)
-        {
-            var type = structure.GetType();
-            switch (sobekControllerParameter)
-            {
-                case SobekControllerParameter.BottomLevel2DGridCell:
-                    // todo do not throw exception
-                    throw new ArgumentException("Unsupported type", "measurementLocationParameter");
-                case SobekControllerParameter.CrestLevel:
-                    return QuantityType.CrestLevel;
-                case SobekControllerParameter.CrestWidth:
-                    return QuantityType.CrestWidth;
-                case SobekControllerParameter.GateHeight:
-                    // if Sobek212 set GateHeight is in ModelApi Lower Edge
-                    if (typeof(ICulvert).IsAssignableFrom(type))
-                    {
-                        return QuantityType.ValveOpening;
-                    }
-                    return QuantityType.GateLowerEdgeLevel;
-                case SobekControllerParameter.PumpCapacity:
-                    return QuantityType.Setpoint;
-            }
-            throw new ArgumentException("Unsupported type", "measurementLocationParameter");
-        }
-
-        public static QuantityType GetWaterFlowModelQuantityType(IStructure1D structure, SobekTriggerParameterType triggerParameterType)
-        {
-            var type = structure.GetType();
-            switch (triggerParameterType)
-            {
-                case SobekTriggerParameterType.WaterLevelBranchLocation:
-                    return QuantityType.WaterLevel;
-                case SobekTriggerParameterType.HeadDifferenceStructure:
-                    return QuantityType.Head;
-                case SobekTriggerParameterType.DischargeBranchLocation:
-                    return QuantityType.Discharge;
-                case SobekTriggerParameterType.GateHeightStructure:
-                    // if Sobek212 set GateHeight is in ModelApi Lower Edge or ValveOpening
-                    if (typeof(ICulvert).IsAssignableFrom(type))
-                    {
-                        return QuantityType.ValveOpening;
-                    }
-                    return QuantityType.GateLowerEdgeLevel;
-                case SobekTriggerParameterType.CrestLevelStructure:
-                    return QuantityType.CrestLevel;
-                case SobekTriggerParameterType.CrestWidthStructure:
-                    return QuantityType.CrestWidth;
-                case SobekTriggerParameterType.WaterlevelRetentionArea:
-                    return QuantityType.WaterLevel;
-                case SobekTriggerParameterType.PressureDifferenceStructure:
-                    return QuantityType.PressureDifference;
-            }
-            throw new ArgumentException("Unsupported type", "measurementLocationParameter");
-        }
-
-
-        public static QuantityType GetWaterFlowModelQuantityType(SobekMeasurementLocationParameter measurementLocationParameter)
-        {
-            switch (measurementLocationParameter)
-            {
-                case SobekMeasurementLocationParameter.WaterLevel:
-                    return QuantityType.WaterLevel;
-                case SobekMeasurementLocationParameter.Discharge:
-                    return QuantityType.Discharge;
-                case SobekMeasurementLocationParameter.HeadDifference:  //on structure
-                    return QuantityType.Head;
-                case SobekMeasurementLocationParameter.Velocity:  //on structure
-                    return QuantityType.Velocity;
-                case SobekMeasurementLocationParameter.FlowDirection:  //on structure
-                    return QuantityType.Discharge; //FlowDirection will be checked on pos or neg discharge
-                case SobekMeasurementLocationParameter.PressureDifference:  //on structure
-                    return QuantityType.PressureDifference;
-
-            }
-            throw new ArgumentException("Unsupported type", "measurementLocationParameter");
-        }
-
-
         private static TimeRule GetTimeRule(SobekController controller)
         {
             var timeRule = new TimeRule
-                       {
-                           Name = controller.Id,
-                           LongName = controller.Name,
-                           InterpolationOptionsTime = controller.InterpolationType,
-                           Periodicity = controller.ExtrapolationType // setter will check for validity
-                       };
+            {
+                Name = controller.Id,
+                LongName = controller.Name,
+                InterpolationOptionsTime = controller.InterpolationType,
+                Periodicity = controller.ExtrapolationType // setter will check for validity
+            };
 
             DataTableHelper.SetTableToFunction(controller.TimeTable, timeRule.TimeSeries);
             TimeSeriesHelper.SetPeriodicExtrapolationRtc(timeRule.TimeSeries, controller.ExtrapolationPeriod);
-            
+
             return timeRule;
         }
-         
+
         private static IntervalRule GetIntervalRule(SobekController controller)
         {
             var intervalRule = new IntervalRule
@@ -818,7 +886,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             intervalRule.Setting.Below = specificProperties.USminimum;
             intervalRule.Setting.Above = specificProperties.USmaximum;
             intervalRule.Setting.MaxSpeed = specificProperties.ControlVelocity;
-            intervalRule.DeadBandType = (IntervalRule.IntervalRuleDeadBandType)specificProperties.DeadBandType;
+            intervalRule.DeadBandType = (IntervalRule.IntervalRuleDeadBandType) specificProperties.DeadBandType;
 
             if (intervalRule.DeadBandType == IntervalRule.IntervalRuleDeadBandType.Fixed)
             {
@@ -829,10 +897,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 intervalRule.DeadbandAroundSetpoint = specificProperties.DeadBandPecentage;
             }
 
-            intervalRule.IntervalType = (IntervalRule.IntervalRuleIntervalType)specificProperties.IntervalType;
+            intervalRule.IntervalType = (IntervalRule.IntervalRuleIntervalType) specificProperties.IntervalType;
             intervalRule.FixedInterval = specificProperties.FixedInterval;
-
-
 
             if (controller.TimeTable != null)
             {
@@ -841,7 +907,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
 
             intervalRule.TimeSeries.Components[0].DefaultValue = specificProperties.ConstantSetPoint;
-
 
             return intervalRule;
         }
@@ -861,7 +926,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 hydraulicRule.TimeLag = specificProperties.TimeLag;
             }
 
-            if(controller.LookUpTable != null)
+            if (controller.LookUpTable != null)
             {
                 DataTableHelper.SetTableToFunction(controller.LookUpTable, hydraulicRule.Function);
             }
@@ -873,14 +938,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return hydraulicRule;
         }
 
-
         private static PIDRule GetPIDRule(SobekController controller)
         {
             var pidRule = new PIDRule
-                              {
-                                  Name = controller.Id,
-                                  LongName = controller.Name
-                              };
+            {
+                Name = controller.Id,
+                LongName = controller.Name
+            };
 
             var specificProperties = (SobekPidControllerProperties) controller.SpecificProperties;
 
@@ -906,6 +970,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     log.ErrorFormat("Time table for setpoint of {0} not set; rule correctly initialized", controller.Id);
                     return pidRule;
                 }
+
                 DataTableHelper.SetTableToFunction(controller.TimeTable, pidRule.TimeSeries);
 
                 pidRule.ExtrapolationOptionsTime = controller.ExtrapolationType;
@@ -936,7 +1001,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private static RuleBase GetFromValueRule(SobekController controller)
         {
-            var fromValueRule = GetRelativeTimeRule(controller);
+            RelativeTimeRule fromValueRule = GetRelativeTimeRule(controller);
             fromValueRule.FromValue = true;
             return fromValueRule;
         }

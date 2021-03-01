@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using ValidationAspects;
@@ -9,20 +8,20 @@ using ValidationAspects.Exceptions;
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 {
     [Entity]
-    public abstract class RuleBase : RtcBaseObject
+    public abstract class RuleBase : RtcBaseObject, IItemContainer
     {
-        [Aggregation]
-        public IEventedList<Input> Inputs { get; set; }
-
-        [Aggregation]
-        public IEventedList<Output> Outputs { get; set; }
-
         protected RuleBase()
         {
             Name = RuleProvider.GetTitle(GetType());
-            Inputs = new EventedList<Input>();
+            Inputs = new EventedList<IInput>();
             Outputs = new EventedList<Output>();
         }
+
+        [Aggregation]
+        public IEventedList<IInput> Inputs { get; set; }
+
+        [Aggregation]
+        public IEventedList<Output> Outputs { get; set; }
 
         public virtual bool CanBeLinkedFromSignal()
         {
@@ -34,32 +33,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             return CanBeLinkedFromSignal();
         }
 
-        public override XElement ToXml(XNamespace xNamespace, string prefix)
-        {
-            return new XElement(xNamespace + "rule");
-        }
-
-        /// <summary>
-        /// some rule might require their output logged
-        /// eg. Integral part for PID rule
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<XElement> OutputAsInputToDataConfigXml(XNamespace xNamespace)
-        {
-            yield break;
-        }
-
-        /// <summary>
-        /// implement this if the rule needs to write some state to the
-        /// state_import.xml file.
-        /// eg. Integral part for PID rule
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<XElement> ToImportState(XNamespace xNamespace)
-        {
-            yield break;
-        }
-
         [ValidationMethod]
         public static void Validate(RuleBase ruleBase)
         {
@@ -69,24 +42,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 exceptions.Add(new ValidationException(string.Format("rule '{0}' has no output.", ruleBase.Name)));
             }
-            foreach (var output in ruleBase.Outputs)
+
+            foreach (Output output in ruleBase.Outputs)
             {
                 if (string.IsNullOrEmpty(output.ParameterName))
                 {
                     exceptions.Add(new ValidationException(string.Format("rule '{0}' has unlinked output.", ruleBase.Name)));
                 }
             }
+
             if (exceptions.Count > 0)
             {
                 throw new ValidationContextException(exceptions);
             }
-        }
-
-        public override object Clone()
-        {
-            var ruleBase = (RuleBase)Activator.CreateInstance(GetType());
-            ruleBase.CopyFrom(this);
-            return ruleBase;
         }
 
         public override void CopyFrom(object source)
@@ -97,5 +65,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
                 base.CopyFrom(source);
             }
         }
+
+        public abstract IEnumerable<object> GetDirectChildren();
     }
 }

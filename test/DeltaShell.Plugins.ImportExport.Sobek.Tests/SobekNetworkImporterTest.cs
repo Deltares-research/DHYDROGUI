@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
 using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -14,19 +11,18 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel;
-using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpTestsEx;
 using BridgeType = DelftTools.Hydro.Structures.BridgeType;
+using CulvertType = DelftTools.Hydro.CulvertType;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 {
@@ -35,7 +31,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
     [Category(TestCategory.DataAccess)]
     public class SobekNetworkImporterTest
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (SobekNetworkImporterTest));
+        private static readonly ILog log = LogManager.GetLogger(typeof(SobekNetworkImporterTest));
 
         [SetUp]
         public void SetUp()
@@ -47,7 +43,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadTabulatedCrossSectionDefinition()
         {
             string definitionFile = TestHelper.GetTestDataDirectory() + @"\CrossSection\tabulated.def";
-            
+
             var crossSectionDefinitionReader = new CrossSectionDefinitionReader();
             IList<SobekCrossSectionDefinition> cs =
                 crossSectionDefinitionReader.Read(definitionFile).ToArray();
@@ -55,7 +51,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(3, cs.Count);
 
             SobekCrossSectionDefinition sobekCrossSectionDefinition = cs[0];
-            
+
             //EXAMPLE OK CRDS id 'prof_stadswater2' nm 'stadswater2' ty 0 wm 93 w1 0 w2 0 sw 0 gl 0 gu 0 lt lw
             //CRDS id 'P_NDB_1934' nm 'NDB_MAMO_2' ty 0 wm 1038.16 w1 0 w2 0 sw 9999900000 lt lw PDIN 0 0 '' pdin CLTT 'Level [m]' 'Tot. Width [m]' 'Flow width [m]' cltt CLID '(null)' '(null)' '(null)' clid 
             //TBLE 
@@ -79,8 +75,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //tble  gl 0 gu 0 crds
 
             Assert.AreEqual(SobekCrossSectionDefinitionType.Tabulated, sobekCrossSectionDefinition.Type);
-            Assert.AreEqual(17,sobekCrossSectionDefinition.TabulatedProfile.Count);
- 
+            Assert.AreEqual(17, sobekCrossSectionDefinition.TabulatedProfile.Count);
         }
 
         [Test]
@@ -99,7 +94,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\40\Deftop.1";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             //CRDS id '1001' nm 'Kalkmas1____2.70' ty 0 wm 142 w1 229 w2 0 sw 142 bl 9.9999e+009 lt lw 'Level Width' PDIN 0 0 '' pdin CLTT 'Level [m]' 'Tot. Width [m]' 'Flow width [m]' cltt CLID '(null)' '(null)' '(null)' clid TBLE 
             //40.84 4 4 < 
@@ -139,7 +134,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             // dk 1 dc 50.86 db 49.36 df 85 dt 5 bw 9.9999e+009 bs 9.9999e+009 aw 9.9999e+009 rd 9.9999e+009 ll 9.9999e+009 rl 9.9999e+009 lw 9.9999e+009 rw 9.9999e+009 crds
 
             //etc...
-
         }
 
         [Test]
@@ -147,7 +141,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network1\Network.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             Assert.AreEqual(2, network.Nodes.Count);
             Assert.AreEqual(1, network.Branches.Count);
@@ -157,23 +151,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         /// <summary>
-        /// Reads the reference 
+        /// Reads the reference
         /// </summary>
         [Test]
         public void ReadReferenceNetwork()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             Assert.AreEqual(17, network.Nodes.Count);
             Assert.AreEqual(18, network.Branches.Count);
             Assert.AreEqual(20, network.LateralSources.Count());
-        
-            Assert.IsTrue(network.Nodes.All(n=>n.Network == network));
+
+            Assert.IsTrue(network.Nodes.All(n => n.Network == network));
             Assert.IsTrue(network.Branches.All(n => n.Network == network));
         }
-        
+
         /// <summary>
         /// Tests if data from cross section is correctly imported
         /// Update: cross sections of unsuprted typoes are still read but will not be added to the network.
@@ -183,7 +177,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\network2\Network.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             //ICrossSection trapeziumProfile = network.CrossSections.Where(cs => cs.Name == "4").First();
             //// trapzium not supported; will be default GeometryBased cross section
@@ -193,7 +187,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //// circle not supported; will be default GeometryBased cross section
             //Assert.AreEqual(CrossSectionType.GeometryBased, circleProfile.CrossSectionType);
 
-            var yzProfile = network.CrossSections.Where(cs => cs.Name == "33").First();
+            ICrossSection yzProfile = network.CrossSections.Where(cs => cs.Name == "33").First();
             // yz profile supported; will be default cross section
             Assert.AreEqual(CrossSectionType.YZ, yzProfile.CrossSectionType);
 
@@ -209,22 +203,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\NETWORK.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             Assert.AreEqual(4, network.CrossSectionSectionTypes.Count());
             // first 3 sections are reserved for tabulated
-            var mainSection = network.CrossSectionSectionTypes[0];
+            CrossSectionSectionType mainSection = network.CrossSectionSectionTypes[0];
             //network.CrossSections.All(cs => Assert.AreEqual(mainSection, cs.CrossSectionType));
 
-            var tabulatedProfiles =
+            IEnumerable<ICrossSection> tabulatedProfiles =
                 network.CrossSections.Where(cs => cs.CrossSectionType == CrossSectionType.ZW);
-            foreach (var crossSection in tabulatedProfiles)
+            foreach (ICrossSection crossSection in tabulatedProfiles)
             {
                 Assert.AreEqual(mainSection.Name, crossSection.Definition.Sections[0].SectionType.Name);
             }
-            var firstYzSection = network.CrossSectionSectionTypes[3];
-            var yzProfiles = network.CrossSections.Where(cs => cs.CrossSectionType == CrossSectionType.YZ);
-            foreach (var crossSection in yzProfiles)
+
+            CrossSectionSectionType firstYzSection = network.CrossSectionSectionTypes[3];
+            IEnumerable<ICrossSection> yzProfiles = network.CrossSections.Where(cs => cs.CrossSectionType == CrossSectionType.YZ);
+            foreach (ICrossSection crossSection in yzProfiles)
             {
                 Assert.IsTrue(firstYzSection.Name == crossSection.Definition.Sections[0].SectionType.Name || mainSection.Name == crossSection.Definition.Sections[0].SectionType.Name);
                 //main section will be used if yz cross-section has not been declared in Friction.Dat as CRFR
@@ -232,156 +227,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
-        public void ReadRiverProfileWithMainChannelAnFloodplain1()
-        {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
-            var importer = new SobekModelToIntegratedModelImporter();
-            var rtcMmodel = ((ICompositeActivity) importer.ImportItem(pathToSobekNetwork)).Activities.OfType<RealTimeControlModel>().First();
-            var model = rtcMmodel.ControlledModels.OfType<WaterFlowFMModel>().First();
-            var network = model.Network;
-            var heightFlowStorageWidthCrossSections = network.CrossSections.Where(cs => cs.CrossSectionType == CrossSectionType.ZW);
-            var crossSection = heightFlowStorageWidthCrossSections.First(cs => cs.Name == "5573755");
-
-            // DEFCRS.1 cross sectiojn name -> carrier id = channel
-            // CRSN id '5573822' nm 'RUHR_LIP_780.62' ci 'AL2_06' lc 618 crsn
-            // DEFCRS.3 cross sectiojn name -> definition id
-            // CRSN id '5573822' di '1309' rl 0 us 1e+010 ds 1e+010 crsn
-            // DEFCRS.2
-            // CRDS id '1309' nm 'RUHR_LIP_780.62' ty 0 wm 287 w1 638 w2 0 sw 287 bl 9.9999e+009 lt lw 'Level Width' PDIN 0 0 '' pdin CLTT 'Level [m]' 'Tot. Width [m]' 'Flow width [m]' cltt CLID '(null)' '(null)' '(null)' clid TBLE 
-            //- width main channel = 287
-            //- width floodplain1 = 638
-            //- width floodplain2 = 0
-            //- h  total flow
-            // 14.33 112 112 < 
-            // 14.71 262 249 < 
-            // 14.97 307 265 < 
-            // 15.22 2809 271 < 
-            // 16.48 2825 287 < 
-            // 17.73 2835 297 < 
-            // 18.05 2837 299 < 
-            // 23.74 2869 433 < 
-            // 24.03 3464 441 < 
-            // 27.72 4680 877 < 
-            // 27.93 5401 877 < 
-            // 28.54 5519 877 < 
-            // 29.06 5987 877 < 
-            // 29.79 6938 924 < 
-            // 30.03 6938 925 < 
-            // tble
-            //  dk 1 dc 24.31 db 22.81 df 132 dt 801 bw 9.9999e+009 bs 9.9999e+009 aw 9.9999e+009 rd 9.9999e+009 ll 9.9999e+009 rl 9.9999e+009 lw 9.9999e+009 rw 9.9999e+009 crds
-            //
-            // friction is given as BDFR in channel AL2_06
-            // DEFFRC.1
-            // BDFR id '5574774' nm '(null)' ci 'AL2_06' em 1 er 0 e1 1 e2 0 e3 0 e4 0 mf 3 mt fq 4 26 9.9999e+009 'Coefficient Discharge' PDIN 0 0 '' 
-            //        -> pdin CLTT 'Q' '0' '7000' '12000' '34524' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE 
-            // - main channel mt fq 4 = function of location and q (discharge)
-            // 700 42 40 42 41 < 
-            // 850 40 37 37.5 40 < 
-            // 1400 36 36 36 40 < 
-            // 2000 33 36 37 40 < 
-            // 2160 33 34 36.5 37 < 
-            // 2800 33.5 34 37.5 37 < 
-            // 3800 34 34 40 37 < 
-            // 5300 34 33 42 37 < 
-            // 5600 34 33 42 38 < 
-            // 7400 34.5 35 42 41 < 
-            // 10150 35 36 42 42 < 
-            // 10390 36 36 41.5 42 < 
-            // 11300 36 36 40 42 < 
-            // 11600 36 36 40 43 < 
-            // 11850 36 36 40 44 < 
-            // 12000 36 36 40 45 < 
-
-            // 3 sections : floodplain1 main floodplain1
-            Assert.AreEqual(2, crossSection.Definition.Sections.Count);
-            var branch = network.Branches.Where(b => b.Name == "AL2_06").FirstOrDefault();
-            var roughnessSections = model.RoughnessSections;
-            var main = roughnessSections.Where(r => r.Name == "Main").FirstOrDefault();
-            var mainFunctionofQ = main.FunctionOfQ(branch);
-            Assert.AreEqual(4, mainFunctionofQ.Arguments[0].Values.Count);
-            Assert.AreEqual(16, mainFunctionofQ.Arguments[1].Values.Count);
-            Assert.AreEqual(42.0, (double)mainFunctionofQ[0.0, 700.0], 1.0e-6);
-            Assert.AreEqual(45.0, (double)mainFunctionofQ[34524.0, 12000.0], 1.0e-6);
-
-            // continued...
-            // tble
-            //  mr fq 4 26 9.9999e+009 'Coefficient Discharge' PDIN 0 0 '' pdin CLTT 'Q' '0' '7000' '12000' '34524' cltt CLID '(null)' '(null)' '(null)' '(null)' '(null)' clid TBLE 
-            // 700 42 40 42 41 < 
-            // 850 40 37 37.5 40 < 
-            // 1400 36 36 36 40 < 
-            // 2000 33 36 37 40 < 
-            // 2160 33 34 36.5 37 < 
-            // 2800 33.5 34 37.5 37 < 
-            // 3800 34 34 40 37 < 
-            // 5300 34 33 42 37 < 
-            // 5600 34 33 42 38 < 
-            // 7400 34.5 35 42 41 < 
-            // 10150 35 36 42 42 < 
-            // 10390 36 36 41.5 42 < 
-            // 11300 36 36 40 42 < 
-            // 11600 36 36 40 43 < 
-            // 11850 36 36 40 44 < 
-            // 12000 36 36 40 45 < 
-            // tble
-
-            var fp1 = roughnessSections.Where(r => r.Name == "FloodPlain1").FirstOrDefault();
-            Assert.AreEqual(RoughnessFunction.Constant, fp1.GetRoughnessFunctionType(branch));
-            Assert.AreEqual(1.4, fp1.RoughnessNetworkCoverage.EvaluateRoughnessValue(new NetworkLocation(branch, 0.0)));
-            Assert.AreEqual(RoughnessType.WhiteColebrook, fp1.RoughnessNetworkCoverage.EvaluateRoughnessType(new NetworkLocation(branch, 0.0)));
-
-            //  s1 4 c1 cp 2 9.9999e+009 9.9999e+009 'Nikuradse Coefficient' PDIN 1 0 '' pdin CLTT 'Feature' 'Coefficient' cltt CLID '(null)' '(null)' clid TBLE 
-            // - flood plain 1: s1 4 c1 cp 2 = function of location only (cp 0 is constant)
-            // 0 1.4 < 
-            // 2729 0.5 < 
-            // 5457 0.5 < 
-            // 8186 0.8 < 
-            // 10914 0.6 < 
-            // 13643 0.5 < 
-            // 16371 3 < 
-            // 19100 1.7 < 
-            // 21828 1.4 < 
-            // 24557 1.8 < 
-            // 27285 2.5 < 
-            // 32742 1.5 < 
-            // tble
-            //  r1 cp 2 9.9999e+009 9.9999e+009 'Nikuradse Coefficient' PDIN 1 0 '' pdin CLTT 'Feature' 'Coefficient' cltt CLID '(null)' '(null)' clid TBLE 
-            // 0 1.4 < 
-            // 2729 0.5 < 
-            // 5457 0.5 < 
-            // 8186 0.8 < 
-            // 10914 0.6 < 
-            // 13643 0.5 < 
-            // 16371 3 < 
-            // 19100 1.7 < 
-            // 21828 1.4 < 
-            // 24557 1.8 < 
-            // 27285 2.5 < 
-            // 32742 1.5 < 
-            // tble
-            // - flood plain 2 = irrelevant and same as main
-            //  s2  6 c2 cp 0 9.9999e+009 9.9999e+009 r2 cp 0 9.9999e+009 9.9999e+009 d9 f9 0 9.9999e+009 9.9999e+009 bdfr
-
-            var fp2 = roughnessSections.Where(r => r.Name == "FloodPlain2").FirstOrDefault();
-
-            var fp2FunctionofQ = fp2.FunctionOfQ(branch);
-            Assert.AreEqual(4, fp2FunctionofQ.Arguments[0].Values.Count);
-            Assert.AreEqual(16, fp2FunctionofQ.Arguments[1].Values.Count);
-            Assert.AreEqual(42.0, (double)fp2FunctionofQ[0.0, 700.0], 1.0e-6);
-            Assert.AreEqual(45.0, (double)fp2FunctionofQ[34524.0, 12000.0], 1.0e-6);
-        }
-
-        [Test]
         public void ReadCrossSectionZW()
         {
             // offset for branchfeature are always relative to the geometry of the branch
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
-            var crossSectionZW = network.CrossSections.First(cs => cs.CrossSectionType == CrossSectionType.ZW);
+            ICrossSection crossSectionZW = network.CrossSections.First(cs => cs.CrossSectionType == CrossSectionType.ZW);
             var crossSectionZWDef = crossSectionZW.Definition as CrossSectionDefinitionZW;
-            
+
             Assert.AreEqual("5573755", crossSectionZW.Name);
             Assert.AreEqual(true, crossSectionZWDef.SummerDike.Active);
             Assert.AreEqual(34.8, crossSectionZWDef.SummerDike.FloodPlainLevel);
@@ -389,14 +244,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(158.0, crossSectionZWDef.Sections[0].MaxY);
         }
 
-        [Test] 
+        [Test]
         [Category(TestCategory.Slow)]
         public void AllProfileChainagesShouldFitChannelGeometry()
         {
             // offset for branchfeature are always relative to the geometry of the branch
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_BfgRhein.sbk\1\DEFTOP.1";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             Assert.AreEqual(0, network.CrossSections.Where(cs => cs.Chainage > cs.Branch.Length).Count());
         }
@@ -405,9 +260,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void AllStructureChainagesShouldFitChannelGeometry()
         {
             // offset for branchfeature are always relative to the geometry of the branch
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             Assert.AreEqual(0, network.Structures.Where(s => s.Chainage > s.Branch.Length).Count());
         }
@@ -419,12 +274,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //STFR id 'brug_27' ci 'brug_27' mf 3 mt cp 0 30.000 30.000 mr cp 0 30.000 30.000 s1 6 s2 6 sf 3 st cp 0 30.000 30.000 sr cp 0 30.000 stfr
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\NETWORK.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
-            var bridge = network.Bridges.First(br => br.Name == "brug_27");
-            Assert.AreEqual(StructureFrictionType.StricklerKs, (StructureFrictionType)bridge.FrictionType);
+            IBridge bridge = network.Bridges.First(br => br.Name == "brug_27");
+            Assert.AreEqual(StructureFrictionType.StricklerKs, (StructureFrictionType) bridge.FrictionType);
             Assert.AreEqual(30, bridge.Friction);
-
         }
 
         [Test]
@@ -433,7 +287,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Retent.lit\2\NETWORK.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             Assert.AreEqual(1, network.Retentions.Count());
             Assert.AreEqual(1, network.LateralSources.Count());
@@ -445,7 +299,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             Assert.AreEqual(30, network.Retentions.Count());
 
@@ -458,17 +312,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             }
 
             //check the names are correct
-            var atom = "ABCDEFGHIJKLM".ToCharArray();
-            var names = atom.Select(c => "004_" + c);
-            var longNames = atom.Select(c => "Grensms2_" + c);
-            
-            var branchNames = network.Branches.Select(b => b.Name);
-            var branchLongNames = network.Channels.Select(c => c.LongName);
+            char[] atom = "ABCDEFGHIJKLM".ToCharArray();
+            IEnumerable<string> names = atom.Select(c => "004_" + c);
+            IEnumerable<string> longNames = atom.Select(c => "Grensms2_" + c);
 
-            var a = branchNames.ToList();
-            var bb = longNames.ToList();
-            
-            Assert.IsTrue(names.All(n=>branchNames.Contains(n)),"Branch 004_A , 004_B ...to M should exist");
+            IEnumerable<string> branchNames = network.Branches.Select(b => b.Name);
+            IEnumerable<string> branchLongNames = network.Channels.Select(c => c.LongName);
+
+            List<string> a = branchNames.ToList();
+            List<string> bb = longNames.ToList();
+
+            Assert.IsTrue(names.All(n => branchNames.Contains(n)), "Branch 004_A , 004_B ...to M should exist");
             Assert.IsTrue(longNames.All(n => branchLongNames.Contains(n)), "Grensms3b_A , Grensms3b_B ...to M should exist");
         }
 
@@ -476,17 +330,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ReadNetworkWithExtraResistanceRe()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\REModels\JAMM2010.sbk\5\DEFTOP.1";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             Assert.AreEqual(5, network.ExtraResistances.Count());
-            var extraResistance = network.ExtraResistances.Where(er =>er.Name == "5580754").FirstOrDefault();
+            IExtraResistance extraResistance = network.ExtraResistances.Where(er => er.Name == "5580754").FirstOrDefault();
             Assert.AreEqual("vak3_4", extraResistance.LongName);
             Assert.AreEqual("001_A", extraResistance.Branch.Name);
             Assert.AreEqual(1325, extraResistance.Chainage, 1.0e-6);
             Assert.AreEqual(5, extraResistance.FrictionTable.Arguments[0].Values.Count);
-            Assert.AreEqual(0.0, (double)extraResistance.FrictionTable[50.21], 1.0e-6);
+            Assert.AreEqual(0.0, (double) extraResistance.FrictionTable[50.21], 1.0e-6);
         }
 
         /// <summary>
@@ -497,16 +351,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\NetworkWithStructures\Network.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
-            var pump = network.Structures.Where(s => s.Name == "158").First(); // river pump id != def id
+            IStructure1D pump = network.Structures.Where(s => s.Name == "158").First(); // river pump id != def id
             Assert.IsInstanceOf<Pump>(pump);
-            
+
             /*
              river weirs are not yet implemented in kernel
             var weir = network.Structures.Where(s => s.Name == "123").First(); // river weir id != def id
             Assert.IsInstanceOfType(typeof(Weir), weir);*/
-            var bridge = network.Structures.Where(s => s.Name == "65").First(); // bridge == def id
+            IStructure1D bridge = network.Structures.Where(s => s.Name == "65").First(); // bridge == def id
             Assert.IsInstanceOf<Bridge>(bridge);
         }
 
@@ -518,28 +372,28 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\TestXRST.lit\4\network.tp";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
-            var extraResistances = network.Structures.Where(s => s is IExtraResistance);
+            IEnumerable<IStructure1D> extraResistances = network.Structures.Where(s => s is IExtraResistance);
             Assert.AreEqual(1, extraResistances.Count());
-            ExtraResistance extraResistance = (ExtraResistance)extraResistances.FirstOrDefault();
+            var extraResistance = (ExtraResistance) extraResistances.FirstOrDefault();
             Assert.AreEqual(5, extraResistance.FrictionTable.Arguments[0].Values.Count);
-            Assert.AreEqual(0.000001, (double)extraResistance.FrictionTable[0.0], 1.0e-6);
-            Assert.AreEqual(2.000001, (double)extraResistance.FrictionTable[5.0], 1.0e-6);
-            Assert.AreEqual(0.000001, (double)extraResistance.FrictionTable[10.0], 1.0e-6);
-            Assert.AreEqual(4.000001, (double)extraResistance.FrictionTable[15.0], 1.0e-6);
-            Assert.AreEqual(0.000001, (double)extraResistance.FrictionTable[20.0], 1.0e-6);
+            Assert.AreEqual(0.000001, (double) extraResistance.FrictionTable[0.0], 1.0e-6);
+            Assert.AreEqual(2.000001, (double) extraResistance.FrictionTable[5.0], 1.0e-6);
+            Assert.AreEqual(0.000001, (double) extraResistance.FrictionTable[10.0], 1.0e-6);
+            Assert.AreEqual(4.000001, (double) extraResistance.FrictionTable[15.0], 1.0e-6);
+            Assert.AreEqual(0.000001, (double) extraResistance.FrictionTable[20.0], 1.0e-6);
         }
-        
+
         [Test]
         public void ReadStructures()
         {
-            var structureLocationFile = TestHelper.GetTestDataDirectory() + @"\vsa.lit\network.st";
-            var structures = new SobekNetworkStructureReader().Read(structureLocationFile);
+            string structureLocationFile = TestHelper.GetTestDataDirectory() + @"\vsa.lit\network.st";
+            IEnumerable<SobekStructureLocation> structures = new SobekNetworkStructureReader().Read(structureLocationFile);
             Assert.AreEqual(62, structures.Count());
 
             string structureMappingFile = TestHelper.GetTestDataDirectory() + @"\vsa.lit\struct.dat";
-            var structureMappings = new SobekStructureDatFileReader().Read(structureMappingFile).ToList();
+            List<SobekStructureMapping> structureMappings = new SobekStructureDatFileReader().Read(structureMappingFile).ToList();
             Assert.AreEqual(62, structureMappings.Count);
             //Assert.Fail();
             string structureDefinitionFile = TestHelper.GetTestDataDirectory() + @"\vsa.lit\struct.def";
@@ -550,45 +404,45 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             IEnumerable<SobekStructureDefinition> definitions = reader.Read(structureDefinitionFile);
 
             // nb not all the structures are active
-            Assert.AreEqual(23, definitions.Where(d => d.Type == (int)SobekStructureType.weir).Count());
-            Assert.AreEqual(1, definitions.Where(d => d.Type == (int)SobekStructureType.universalWeir).Count());
-            Assert.AreEqual(1, definitions.Where(d => d.Type == (int)SobekStructureType.pump).Count());
+            Assert.AreEqual(23, definitions.Where(d => d.Type == (int) SobekStructureType.weir).Count());
+            Assert.AreEqual(1, definitions.Where(d => d.Type == (int) SobekStructureType.universalWeir).Count());
+            Assert.AreEqual(1, definitions.Where(d => d.Type == (int) SobekStructureType.pump).Count());
         }
 
         [Test]
         public void ReadCompoundStructures()
         {
-            var structureLocationFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\network.st";
-            var structures = new SobekNetworkStructureReader().Read(structureLocationFile);
+            string structureLocationFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\network.st";
+            IEnumerable<SobekStructureLocation> structures = new SobekNetworkStructureReader().Read(structureLocationFile);
 
             // 1 compound structure with 2 sub structures and 2 'normal' structures
             Assert.AreEqual(3, structures.Count());
 
-            var structureMappingFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\struct.dat";
-            var structureMappings = new SobekStructureDatFileReader().Read(structureMappingFile).ToList();
+            string structureMappingFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\struct.dat";
+            List<SobekStructureMapping> structureMappings = new SobekStructureDatFileReader().Read(structureMappingFile).ToList();
             Assert.AreEqual(4, structureMappings.Count);
 
-            var structureDefinitionFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\struct.def";
+            string structureDefinitionFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\struct.def";
 
             var reader = new SobekStructureDefFileReader(SobekType.Sobek212);
 
-            var definitions = reader.Read(structureDefinitionFile);
+            IEnumerable<SobekStructureDefinition> definitions = reader.Read(structureDefinitionFile);
             Assert.AreEqual(4, definitions.Count());
 
-            Assert.AreEqual(1, definitions.Where(d => d.Type == (int)SobekStructureType.riverWeir).Count());
-            Assert.AreEqual(1, definitions.Where(d => d.Type == (int)SobekStructureType.riverPump).Count());
+            Assert.AreEqual(1, definitions.Where(d => d.Type == (int) SobekStructureType.riverWeir).Count());
+            Assert.AreEqual(1, definitions.Where(d => d.Type == (int) SobekStructureType.riverPump).Count());
         }
 
         [Test]
         public void ReadNetworkWithCompoundStructures()
         {
-            var networkTopologyFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\network.tp";
+            string networkTopologyFile = TestHelper.GetTestDataDirectory() + @"\compound.lit\2\network.tp";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(networkTopologyFile);
+            var network = (HydroNetwork) importer.ImportItem(networkTopologyFile);
 
             Assert.AreEqual(2, network.Nodes.Count);
             Assert.AreEqual(1, network.Branches.Count);
-            Assert.AreEqual(6 , network.Structures.Count());// not reading river weirs yet, not available in the kernel
+            Assert.AreEqual(6, network.Structures.Count()); // not reading river weirs yet, not available in the kernel
             Assert.AreEqual(3, network.Structures.Where(s => s is ICompositeBranchStructure).Count());
             // not reading river weirs yet, not available in the kernel so not multiple in the compound
             //ICompositeBranchStructure compound = (ICompositeBranchStructure) network.Structures.Where(
@@ -602,10 +456,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void TestReadNetworkWithCompoundStructures_CompositeStructureNamesAreUnique()
         {
             // we use this test-data since it contains composite structures with non-unique names
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
-            var compositeStructures = network.CompositeBranchStructures.ToList();
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
+            List<ICompositeBranchStructure> compositeStructures = network.CompositeBranchStructures.ToList();
 
             Assert.IsTrue(compositeStructures.Count > 1);
             Assert.IsTrue(compositeStructures.Select(cbs => cbs.Name).HasUniqueValues());
@@ -615,18 +469,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         [Category(TestCategory.Slow)]
         public void ReadLargeNetwork()
         {
-            var t = DateTime.Now;
+            DateTime t = DateTime.Now;
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\eindhoven\network.tp";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
-            var dt = DateTime.Now - t;
+            TimeSpan dt = DateTime.Now - t;
 
             Assert.AreEqual(20297, network.Nodes.Count);
             Assert.AreEqual(23248, network.Branches.Count);
 
             //ensure each branch has start and endnodes
-            foreach (var branch in network.Branches)
+            foreach (IBranch branch in network.Branches)
             {
                 Assert.IsNotNull(branch.Source);
                 Assert.IsNotNull(branch.Target);
@@ -634,7 +488,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             Console.WriteLine("Total time required for reading network: {0}", dt);
             log.DebugFormat("Total time required for reading network: {0}", dt);
-            
+
             Assert.Less(dt.TotalSeconds, 35, "time to read all (sec)");
 
             Assert.AreEqual("0-NOORD1", network.Nodes[0].Name);
@@ -648,187 +502,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        public void ImportCalculationGridWithNetworkInDutchCulture()
-        {
-            var oldCulture = Thread.CurrentThread.CurrentCulture;
-            //for a dutch culture to demonstrate the import works ok on NL machines
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("nl-NL"); 
-
-            // import model and network.
-            string pathToSobekModel = TestHelper.GetTestFilePath(@"LinkageNodes\network.tp");
-
-            //import existing network and model + default boundary conditions
-            var importer = new SobekModelToIntegratedModelImporter();
-            var waterFlowFmModel = (WaterFlowFMModel)importer.ImportItem(pathToSobekModel);
-            var network = waterFlowFmModel.Network;
-
-            Assert.IsNotNull(waterFlowFmModel.NetworkDiscretization);
-            Assert.AreEqual(SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered, waterFlowFmModel.NetworkDiscretization.SegmentGenerationMethod);
-
-            var branchCount = network.Branches.Count;
-            //linkage nodes are not imported anymore, so we only import the branches
-            //maybe this test is useless now....
-            Assert.AreEqual(6, branchCount); // with linkage nodes expected is 10
-
-            Thread.CurrentThread.CurrentCulture = oldCulture;
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void UpdateCalcGridForLinkageNodes()
-        {
-            // import model and network.
-            var pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\LinkageNodes\network.tp";
-
-            var importer = new SobekModelToIntegratedModelImporter();
-            var waterFlowFmModel = (WaterFlowFMModel)importer.ImportItem(pathToSobekModel);
-            var network = waterFlowFmModel.Network;
-
-            Assert.IsNotNull(waterFlowFmModel.NetworkDiscretization);
-            Assert.AreEqual(SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered, waterFlowFmModel.NetworkDiscretization.SegmentGenerationMethod);
-
-            int branchCount = network.Branches.Count;
-
-            Assert.AreEqual(10, branchCount);
-            // are gridpoints generated for all the branches?
-            Assert.AreEqual(branchCount, waterFlowFmModel.NetworkDiscretization.Locations.Values.Select(bl => bl.Branch).Distinct().Count());
-            // are segmensts generated for all the branches?
-            Assert.AreEqual(branchCount, waterFlowFmModel.NetworkDiscretization.Segments.Values.Select(s => s.Branch).Distinct().Count());
-
-            // have all branches a gridpoint at start and end?
-            foreach (var branch in network.Branches)
-            {
-                var first = waterFlowFmModel.NetworkDiscretization.Locations.Values.Where(nl => nl.Branch == branch).Min(nl => nl.Chainage);
-                Assert.AreEqual(0.0, first, 1.0e-5);
-                var last = waterFlowFmModel.NetworkDiscretization.Locations.Values.Where(nl => nl.Branch == branch).Max(nl => nl.Chainage);
-                Assert.AreEqual(branch.Length, last, 1.0e-5);
-            }
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void ReadNotSupportedEngelundAndSetToDefault()
-        {
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\120_001.lit\3\network.tp";
-            var importer = new SobekModelToIntegratedModelImporter();
-            var model = (WaterFlowFMModel)importer.ImportItem(pathToSobekNetwork);
-
-            var mainRoughnessSection = model.RoughnessSections.FirstOrDefault(s => s.Name.ToLower() == "main");
-
-            Assert.IsNotNull(mainRoughnessSection);
-            var firstNetworkLocation = mainRoughnessSection.RoughnessNetworkCoverage.Locations.Values[0];
-
-            Assert.AreEqual(45.0, mainRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(firstNetworkLocation));
-            Assert.AreEqual(RoughnessType.Chezy, mainRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessType(firstNetworkLocation));
-
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void ReadComplexNetwork()
-        {
-            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\network2\network.tp";
-            var importer = new SobekModelToIntegratedModelImporter();
-            var waterFlowFmModel = (WaterFlowFMModel)importer.ImportItem(pathToSobekModel);
-
-            var network = waterFlowFmModel.Network;
-
-            Assert.AreEqual(waterFlowFmModel.Network, network);
-            Assert.AreEqual(waterFlowFmModel.NetworkDiscretization.Network, network);
-
-            // for reach "2" a BDFR record is defined; expect this friction to be set to cross section in this branch
-            // BDFR id '2' ci '2' mf 4 mt cp 0 0.003 0 mr cp 0 0.003 0 s1 6 s2 6 sf 4 st cp 0 0.003 0 sr cp 0 0.003 bdfr
-
-            var crossSections = network.CrossSections.Where(cs => cs.Branch.Name == "2");
-
-            // 3 cross section on branch 2: 
-            // dat id   def id
-            // '33' -> '4' = ty 10; process as yz
-            // '32' -> '2' = ty 0 name r_Default; not ignored
-            // '31' -> 'Egg Shape .25 m' = ty 6; ignore wait for implementation closed branch
-            Assert.AreEqual(2, crossSections.Count());
-
-            //CRFR id '4' nm 'Friction' cs '4'
-            //lt ys
-            //TBLE
-            //0 40 <
-            //40 70 <
-            //70 100 <
-            //tble
-            //ft ys
-            //TBLE
-            //1 0.03 <
-            //0 45 <
-            //1 0.02 <
-            //tble
-            //fr ys
-            //TBLE
-            //1 0.03 <
-            //0 45 <
-            //1 0.02 <
-            //tble crfr
-            var crossSection = crossSections.First();
-            Assert.AreEqual(3, crossSection.Definition.Sections.Count);
-            var firstSectionType = crossSection.Definition.Sections[0].SectionType;
-            var secondSectionType = crossSection.Definition.Sections[1].SectionType;
-            var thirdSectionType = crossSection.Definition.Sections[2].SectionType;
-            var firstRoughnessSection = waterFlowFmModel.RoughnessSections.Where(rs => rs.CrossSectionSectionType == firstSectionType).FirstOrDefault();
-            var secondRoughnessSection = waterFlowFmModel.RoughnessSections.Where(rs => rs.CrossSectionSectionType == secondSectionType).FirstOrDefault();
-            var thirdRoughnessSection = waterFlowFmModel.RoughnessSections.Where(rs => rs.CrossSectionSectionType == thirdSectionType).FirstOrDefault();
-
-            Assert.AreEqual(RoughnessType.Manning,
-                            firstRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessType(
-                                new NetworkLocation(crossSection.Branch, crossSection.Chainage)));
-            Assert.AreEqual(0.03,
-                            firstRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(
-                                new NetworkLocation(crossSection.Branch, crossSection.Chainage)), 1.0e-6);
-            Assert.AreEqual(RoughnessType.Chezy,
-                            secondRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessType(
-                                new NetworkLocation(crossSection.Branch, crossSection.Chainage)));
-            Assert.AreEqual(45.0,
-                            secondRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(
-                                new NetworkLocation(crossSection.Branch, crossSection.Chainage)), 1.0e-6);
-            Assert.AreEqual(RoughnessType.Manning,
-                            thirdRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessType(
-                                new NetworkLocation(crossSection.Branch, crossSection.Chainage)));
-            Assert.AreEqual(0.02,
-                            thirdRoughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(
-                                new NetworkLocation(crossSection.Branch, crossSection.Chainage)), 1.0e-6);
-        }
-
-        private void InitializeSobekLicense()
-        {
-            TestHelper.SetDeltaresLicenseToEnvironmentVariable();
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.VerySlow)]
-        [Ignore("Should be fixed by issue SOBEK3-1644")]
-        [Category("ToCheck")]
-        public void RunZwolleModel()
-        {
-            InitializeSobekLicense();
-
-            var modelImporter = new SobekModelToIntegratedModelImporter();
-            var pathToSobekNetwork = TestHelper.GetTestFilePath(@"SW_max_1.lit\3\network.tp");
-            var importedModel = (WaterFlowFMModel) modelImporter.ImportItem(pathToSobekNetwork);
-            RunModel(importedModel);
-        }
-
-        [Test]
         [Category(TestCategory.Integration)]
         public void ImportTwenteModelAndCheckInitialConditions()
         {
             var modelImporter = new SobekHydroModelImporter(false);
             string pathToSobekNetwork = TestHelper.GetTestFilePath(@"TwenteKanaal.lit\3\network.tp");
-            var hydroModel = (HydroModel)modelImporter.ImportItem(pathToSobekNetwork);
+            var hydroModel = (HydroModel) modelImporter.ImportItem(pathToSobekNetwork);
 
-            var flowModel = hydroModel.Activities.OfType<WaterFlowFMModel>().First();
+            WaterFlowFMModel flowModel = hydroModel.Activities.OfType<WaterFlowFMModel>().First();
 
             //not a requirement per-se, but otherwise our other asserts will fail
             // Assert.AreEqual(RRInitialConditionsWrapper.InitialConditionsType.Depth, flowModel.InitialConditionsType);
@@ -857,18 +538,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        public void ImportZwolleModelAndCheckLateralSources()
-        {
-            //runs the test with a altered version of the sw_max model.
-            //in this version the crossection on branch '4' is replaced by a YZ-crossection (this was a rectangle)
-            var modelImporter = new SobekModelToIntegratedModelImporter();
-            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_zRect.lit\3\network.tp";
-            var importedModel = (WaterFlowFMModel)modelImporter.ImportItem(pathToSobekNetwork);
-           // Assert.AreEqual(importedModel.LateralSourceData.Count, importedModel.Network.LateralSources.Count());
-        }
-
-        [Test]
-        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         [Ignore("Should be fixed by issue SOBEK3-1644")]
         [Category("ToCheck")]
@@ -880,24 +549,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //in this version the crossection on branch '4' is replaced by a YZ-crossection (this was a rectangle)
             var modelImporter = new SobekNetworkImporter();
             string pathToSobekNetwork = TestHelper.GetTestFilePath(@"SW_zRect.lit\3\network.tp");
-            var importedModel = (WaterFlowFMModel)modelImporter.ImportItem(pathToSobekNetwork);
+            var importedModel = (WaterFlowFMModel) modelImporter.ImportItem(pathToSobekNetwork);
             RunModel(importedModel);
-        }
-
-        [Test]
-        [Category(TestCategory.WorkInProgress)]
-        [Category(TestCategory.Integration)]
-        public void ImportVancouverNetwork_GenerateGridPointsAtCrossSectionsAndRunModel()
-        {
-            ImportVancouverNetworkAndRun(false);
-        }
-
-        [Test]
-        [Category(TestCategory.WorkInProgress)]
-        [Category(TestCategory.Integration)]
-        public void ImportVancouverNetwork_GenerateGridAtFixedChainagesAndRunModel()
-        {
-            ImportVancouverNetworkAndRun(true);
         }
 
         [Test]
@@ -907,32 +560,31 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string path = TestHelper.GetTestDataDirectory() + @"\Tanshui.lit\3\network.tp";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(path);
+            var network = (HydroNetwork) importer.ImportItem(path);
         }
-
 
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.Slow)]
         public void ReadPoNetwork()
         {
-            var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\POup_GV.lit\7\network.tp";
+            string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\POup_GV.lit\7\network.tp";
             var importer = new SobekNetworkImporter();
 
             HydroNetwork network = null;
 
             TestHelper.AssertIsFasterThan(28000, () => network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork));
 
-            var channelsWithoutCrossSections = network.Channels.Where(c => !c.CrossSections.Any());
-            
+            IEnumerable<IChannel> channelsWithoutCrossSections = network.Channels.Where(c => !c.CrossSections.Any());
+
             //linkagenode -> branches with same order number: interpolation/extrapolation cross-sections over node
-            foreach (var channelWithoutCrossSection in channelsWithoutCrossSections)
+            foreach (IChannel channelWithoutCrossSection in channelsWithoutCrossSections)
             {
                 Assert.Greater(
-                                network.Channels.Count(c => c.OrderNumber == channelWithoutCrossSection.OrderNumber),
-                                1, 
-                                string.Format("Channel {0} should have the same order number as another branch for extra/interpolation of cross-section", channelWithoutCrossSection.Name)
-                              );
+                    network.Channels.Count(c => c.OrderNumber == channelWithoutCrossSection.OrderNumber),
+                    1,
+                    string.Format("Channel {0} should have the same order number as another branch for extra/interpolation of cross-section", channelWithoutCrossSection.Name)
+                );
             }
         }
 
@@ -943,7 +595,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string path = TestHelper.GetTestDataDirectory() + @"\JKFL2009.LIT\31\NETWORK.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(path);
+            var network = (HydroNetwork) importer.ImportItem(path);
         }
 
         //[Test]
@@ -963,15 +615,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
-            IHydroNetwork clonedHydroNetwork = (IHydroNetwork)network.Clone();
+            var clonedHydroNetwork = (IHydroNetwork) network.Clone();
             Assert.AreEqual(network.CrossSections.First().Name, clonedHydroNetwork.CrossSections.First().Name);
             clonedHydroNetwork.Nodes.Count.Should().Be.EqualTo(network.Nodes.Count);
             clonedHydroNetwork.Branches.Count.Should().Be.EqualTo(network.Branches.Count);
         }
 
-        
         [Test]
         [Category(TestCategory.DataAccess)]
         public void ReadNetworkWithBridges()
@@ -981,25 +632,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //import existing network and model + default boundary conditions
             IHydroNetwork network = GetNetwork(path);
 
-            var bridges = network.Bridges.ToList();
-            Assert.AreEqual(3,bridges.Count);
-            var rectangleBridge = bridges[1];
-            Assert.AreEqual(BridgeType.Rectangle,rectangleBridge.BridgeType);
+            List<IBridge> bridges = network.Bridges.ToList();
+            Assert.AreEqual(3, bridges.Count);
+            IBridge rectangleBridge = bridges[1];
+            Assert.AreEqual(BridgeType.Rectangle, rectangleBridge.BridgeType);
             Assert.AreEqual(21, rectangleBridge.Width);
             Assert.AreEqual(5, rectangleBridge.Height);
             Assert.AreEqual(0, rectangleBridge.BottomLevel);
             Assert.AreEqual(FlowDirection.Negative, rectangleBridge.FlowDirection);
-            
+
             //check the other bridges' directions
             Assert.AreEqual(FlowDirection.Positive, bridges[2].FlowDirection);
             Assert.AreEqual(FlowDirection.Both, bridges[0].FlowDirection);
-        }
-
-        private IHydroNetwork GetNetwork(string path)
-        {
-            var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(path);
-            return network;
         }
 
         [Test]
@@ -1007,31 +651,82 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadNetworkWithAsymTrapezium()
         {
             string path = TestHelper.GetTestDataDirectory() + @"\AsymTrap.lit\1\NETWORK.TP";
-            var network = GetNetwork(path);
+            IHydroNetwork network = GetNetwork(path);
 
             Assert.AreEqual(2, network.CrossSections.Count());
             Assert.IsTrue(network.CrossSections.All(c => c.CrossSectionType == CrossSectionType.YZ));
 
-            var firstCrossSection = network.CrossSections.First();
+            ICrossSection firstCrossSection = network.CrossSections.First();
             double[] yValues = ((CrossSectionDefinitionYZ) firstCrossSection.Definition).YZDataTable.Select(r => r.Yq).ToArray();
             double[] zValues = ((CrossSectionDefinitionYZ) firstCrossSection.Definition).YZDataTable.Select(r => r.Z).ToArray();
 
-            Assert.AreEqual(new[] {-4.5, -3.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 3.5, 4.5},
+            Assert.AreEqual(new[]
+                            {
+                                -4.5,
+                                -3.5,
+                                -2.5,
+                                -1.5,
+                                -0.5,
+                                0.5,
+                                1.5,
+                                2.5,
+                                3.5,
+                                4.5
+                            },
                             yValues);
 
-            Assert.AreEqual(new[] {2, 2, 1, 1, 0, 0, 1, 1, 2, 2},
+            Assert.AreEqual(new[]
+                            {
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                1,
+                                2,
+                                2
+                            },
                             zValues);
 
             //this one is really asymetrical
-            var lastCrossSection = network.CrossSections.Last();
-            yValues = ((CrossSectionDefinitionYZ)lastCrossSection.Definition).YZDataTable.Select(r => r.Yq).ToArray();
-            zValues = ((CrossSectionDefinitionYZ)lastCrossSection.Definition).YZDataTable.Select(r => r.Z).ToArray();
+            ICrossSection lastCrossSection = network.CrossSections.Last();
+            yValues = ((CrossSectionDefinitionYZ) lastCrossSection.Definition).YZDataTable.Select(r => r.Yq).ToArray();
+            zValues = ((CrossSectionDefinitionYZ) lastCrossSection.Definition).YZDataTable.Select(r => r.Z).ToArray();
 
-            Assert.AreEqual(new[] { -9.5, -8.5, -7.5, -6.5, -5.5, -4.5, -3.5, -2.5, -1.5, -0.5 ,5.5,9.5},
+            Assert.AreEqual(new[]
+                            {
+                                -9.5,
+                                -8.5,
+                                -7.5,
+                                -6.5,
+                                -5.5,
+                                -4.5,
+                                -3.5,
+                                -2.5,
+                                -1.5,
+                                -0.5,
+                                5.5,
+                                9.5
+                            },
                             yValues);
-            Assert.AreEqual(new[] { 2, 2, 1,1,0,0,1,1,2,2,5,5},
-                                        zValues);
-
+            Assert.AreEqual(new[]
+                            {
+                                2,
+                                2,
+                                1,
+                                1,
+                                0,
+                                0,
+                                1,
+                                1,
+                                2,
+                                2,
+                                5,
+                                5
+                            },
+                            zValues);
         }
 
         [Test]
@@ -1039,18 +734,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         public void ReadNetworkWithCulverts()
         {
             string path = TestHelper.GetTestDataDirectory() + @"\Culverts.lit\1\NETWORK.TP";
-            var network = GetNetwork(path);
+            IHydroNetwork network = GetNetwork(path);
 
-            var culverts = network.Culverts.ToList();
+            List<ICulvert> culverts = network.Culverts.ToList();
             Assert.AreEqual(14, culverts.Count); // siphon and inverted siphon are not yet implemented in the kernel
-            
+
             //first the 'normal culvert'
-            var simpleCulvert = culverts[0];
+            ICulvert simpleCulvert = culverts[0];
             Assert.AreEqual(5, simpleCulvert.InletLevel);
             Assert.AreEqual(10, simpleCulvert.OutletLevel);
             Assert.AreEqual(10, simpleCulvert.Length);
             Assert.IsFalse(simpleCulvert.IsGated);
-            Assert.IsFalse(simpleCulvert.CulvertType.Equals(DelftTools.Hydro.CulvertType.Siphon));
+            Assert.IsFalse(simpleCulvert.CulvertType.Equals(CulvertType.Siphon));
             Assert.AreEqual(0.7f, simpleCulvert.InletLossCoefficient);
             Assert.AreEqual(1.0, simpleCulvert.OutletLossCoefficient);
             Assert.AreEqual(FlowDirection.Both, simpleCulvert.FlowDirection);
@@ -1061,21 +756,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(CulvertGeometryType.Tabulated, simpleCulvert.GeometryType);
             Assert.AreEqual(43, simpleCulvert.TabulatedCrossSectionDefinition.ZWDataTable.Count);
             Assert.AreEqual(5.887142, simpleCulvert.TabulatedCrossSectionDefinition.ZWDataTable[3].Z);
-            
 
             //next a rectangular culvert with a gate.
-            var valvedCulvertWithRectangleCrossSection = culverts[1];
+            ICulvert valvedCulvertWithRectangleCrossSection = culverts[1];
             Assert.IsTrue(valvedCulvertWithRectangleCrossSection.IsGated);
             Assert.AreEqual(2.0, valvedCulvertWithRectangleCrossSection.GateInitialOpening);
-            
+
             //check the geometry of the culvert..
-            Assert.AreEqual(CulvertGeometryType.Rectangle,valvedCulvertWithRectangleCrossSection.GeometryType);
+            Assert.AreEqual(CulvertGeometryType.Rectangle, valvedCulvertWithRectangleCrossSection.GeometryType);
             Assert.AreEqual(5.0, valvedCulvertWithRectangleCrossSection.Height);
             Assert.AreEqual(10.0, valvedCulvertWithRectangleCrossSection.Width);
-            Assert.AreEqual(3.1f,valvedCulvertWithRectangleCrossSection.InletLevel);
-            
+            Assert.AreEqual(3.1f, valvedCulvertWithRectangleCrossSection.InletLevel);
+
             //check the gate-opening reduction function
-            Assert.AreEqual(11,valvedCulvertWithRectangleCrossSection.GateOpeningLossCoefficientFunction.Arguments[0].Values.Count);
+            Assert.AreEqual(11, valvedCulvertWithRectangleCrossSection.GateOpeningLossCoefficientFunction.Arguments[0].Values.Count);
             /*
              // siphon and inverted siphon are not yet implemented in the kernel
             //number 3..the siphon
@@ -1093,155 +787,22 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(3.0, invertedSiphon.BendLossCoefficient);
             */
             // this should be an eggie
-            var eitje = culverts[3];
+            ICulvert eitje = culverts[3];
             Assert.AreEqual(0.5, eitje.Width, 1.0e-6);
             Assert.AreEqual(0.75, eitje.Height, 1.0e-6);
 
             //number 5..the inverted siphon
             //notice this is NOT a siphon
-            var circle = culverts[2];
+            ICulvert circle = culverts[2];
             Assert.AreEqual(0.1, circle.Diameter, 1.0e-6); // Diameter = 2 * 0.05
-        }
-
-        /// <summary>
-        /// 
-        ///                             cs=5 (tabulated, constant friction strickler ks 85)
-        ///  0--------------------------------------------------------0
-        /// 
-        ///                             cs=6 (river, main friction strickler ks 33
-        ///                                           fp1 manning 66
-        ///                                           fp2 White-Colebrook 99
-        ///  0--------------------------------------------------------0
-        /// 
-        ///     cs=9         cs=10         cs=11              cs=12
-        ///   0-50 m 0.23   0-15 m 0.23  0- 5 bb 0.1       0- 5 bb 100
-        ///                15-35 c  45   5-10 m  0.2       5-10 bb 101
-        ///                35-50 m 0.23 10-15 c    3      10-15 bb 102
-        ///                             15-35 m    4      15-35 bb 103
-        ///                             35-40 Skn 0.5     35-40 bb 104
-        ///                             40-45 Sks  6      40-45 bb 105
-        ///                             45-50 WC  0.5     45-50 bb 106
-        ///  0--------------------------------------------------------0
-        ///  =>   rs00       rs00         rs02               rs02
-        ///                  rs01         rs03               rs09
-        ///                  rs00         rs04               rs10
-        ///                               rs05               rs11
-        ///                               rs06               rs12
-        ///                               rs07               rs13
-        ///                               rs08               rs14
-        /// total number 18 (main, fp01, fp02, rs00..rs14)
-        /// </summary>
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void ReadNetworkWithRiverFriction()
-        {
-            var path = TestHelper.GetTestDataDirectory() + @"\Friction.lit\1\NETWORK.TP";
-            var importer = new SobekModelToIntegratedModelImporter();
-            var model = (WaterFlowFMModel)importer.ImportItem(path);
-            var network = model.Network;
-
-            var crossSection = network.CrossSections.Where(cs => cs.Name == "6").First();
-            var crossSectionDef = crossSection.Definition;
-            Assert.IsNotNull(crossSection);
-            // friction river cross section is given as
-            //              flow width      type             value
-            // Main            60        Strickler(ks)        33
-            // FP1             20          Manning            66 
-            // FP2             40        White-Colebrook      99
-            // which should translate to
-            //     FP2       FP1            Main              FP1      FP2
-            // [------------|----|--------------------------|----|---------------]
-            //      WC        M                Sks            M        WC
-            //      99        66                33            66       99
-            Assert.AreEqual(CrossSectionType.ZW, crossSection.CrossSectionType);
-            Assert.AreEqual(3, crossSectionDef.Sections.Count());
-
-            var crossSectionSection = crossSectionDef.Sections[0];
-            Assert.AreEqual(0, crossSectionSection.MinY);
-            Assert.AreEqual(30, crossSectionSection.MaxY);
-            CheckRoughnessInCoverage(model, crossSection, crossSectionSection, RoughnessType.Strickler, 33.0);
-            Assert.AreEqual("Main", crossSectionSection.SectionType.Name);
-
-            crossSectionSection = crossSectionDef.Sections[1];
-            Assert.AreEqual(30, crossSectionSection.MinY);
-            Assert.AreEqual(40, crossSectionSection.MaxY);
-            CheckRoughnessInCoverage(model, crossSection, crossSectionSection, RoughnessType.Manning, 66.0);
-            Assert.AreEqual("FloodPlain1", crossSectionSection.SectionType.Name);
-
-            crossSectionSection = crossSectionDef.Sections[2];
-            Assert.AreEqual(40, crossSectionSection.MinY);
-            Assert.AreEqual(60, crossSectionSection.MaxY);
-            CheckRoughnessInCoverage(model, crossSection, crossSectionSection, RoughnessType.WhiteColebrook, 99.0);
-            Assert.AreEqual("FloodPlain2", crossSectionSection.SectionType.Name);
-        }
-
-        private void CheckRoughnessInCoverage(WaterFlowFMModel model, ICrossSection crossSection, CrossSectionSection crossSectionSection, 
-            RoughnessType roughnessType, double roughness)
-        {
-            var roughnessSection =
-                model.RoughnessSections.Where(rs => rs.CrossSectionSectionType == crossSectionSection.SectionType).
-                    FirstOrDefault();
-            Assert.AreEqual(roughnessType,
-                            roughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessType(new NetworkLocation(crossSection.Branch, crossSection.Chainage)));
-            Assert.AreEqual(roughness,
-                            roughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(new NetworkLocation(crossSection.Branch, crossSection.Chainage)), 1.0e-6);
-        }
-
-        /// <summary>
-        /// see comments for ReadNetworkWithRiverFriction
-        /// </summary>
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category("Quarantine")]
-        public void ReadNetworkWithYzFriction()
-        {
-            var path = TestHelper.GetTestDataDirectory() + @"\Friction.lit\1\NETWORK.TP";
-            var importer = new SobekModelToIntegratedModelImporter();
-            var waterFlowFmModel = (WaterFlowFMModel)importer.ImportItem(path);
-
-            Assert.AreEqual(18, waterFlowFmModel.RoughnessSections.Count);
-            var crossSection = waterFlowFmModel.Network.CrossSections.Where(cs => cs.Name == "9").First();
-            var crossSectionDef = crossSection.Definition;
-            Assert.AreEqual(1, crossSectionDef.Sections.Count);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 0), crossSectionDef.Sections[0].SectionType.Name);
-
-            crossSection = waterFlowFmModel.Network.CrossSections.Where(cs => cs.Name == "10").First();
-            crossSectionDef = crossSection.Definition;
-            Assert.AreEqual(3, crossSectionDef.Sections.Count);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 0), crossSectionDef.Sections[0].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 1), crossSectionDef.Sections[1].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 0), crossSectionDef.Sections[2].SectionType.Name);
-
-            crossSection = waterFlowFmModel.Network.CrossSections.Where(cs => cs.Name == "11").First();
-            crossSectionDef = crossSection.Definition;
-            Assert.AreEqual(7, crossSectionDef.Sections.Count);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 2), crossSectionDef.Sections[0].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 3), crossSectionDef.Sections[1].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 4), crossSectionDef.Sections[2].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 5), crossSectionDef.Sections[3].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 6), crossSectionDef.Sections[4].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 7), crossSectionDef.Sections[5].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 8), crossSectionDef.Sections[6].SectionType.Name);
-
-            crossSection = waterFlowFmModel.Network.CrossSections.Where(cs => cs.Name == "12").First();
-            crossSectionDef = crossSection.Definition;
-            Assert.AreEqual(7, crossSectionDef.Sections.Count);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 2), crossSectionDef.Sections[0].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 9), crossSectionDef.Sections[1].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 10), crossSectionDef.Sections[2].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 11), crossSectionDef.Sections[3].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 12), crossSectionDef.Sections[4].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 13), crossSectionDef.Sections[5].SectionType.Name);
-            Assert.AreEqual(string.Format(HydroNetwork.CrossSectionSectionFormat, 14), crossSectionDef.Sections[6].SectionType.Name);
         }
 
         [Test]
         public void ReadNetworkWithGeneralStructure()
         {
-            var network = GetNetwork(TestHelper.GetTestDataDirectory() + @"\GenaStru.lit\1\NETWORK.TP");
-            var weir = network.Structures.OfType<Weir>().First(w => w.WeirFormula is GeneralStructureWeirFormula);
-            
+            IHydroNetwork network = GetNetwork(TestHelper.GetTestDataDirectory() + @"\GenaStru.lit\1\NETWORK.TP");
+            Weir weir = network.Structures.OfType<Weir>().First(w => w.WeirFormula is GeneralStructureWeirFormula);
+
             //check the parameters of the forumale
             var formula = (GeneralStructureWeirFormula) weir.WeirFormula;
             Assert.AreEqual(1, formula.WidthLeftSideOfStructure);
@@ -1257,75 +818,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //gate opening is gateheight minus bedlevel at centre
             Assert.AreEqual(6, formula.GateOpening);
 
-            Assert.AreEqual(0.13, formula.PositiveFreeGateFlow,0.001);
-            Assert.AreEqual(0.14, formula.PositiveDrownedGateFlow,0.001);
-            Assert.AreEqual(0.15, formula.PositiveFreeWeirFlow,0.001);
-            Assert.AreEqual(0.16, formula.PositiveDrownedWeirFlow,0.001);
-            Assert.AreEqual(0.17, formula.PositiveContractionCoefficient,0.001);
-            Assert.AreEqual(0.18, formula.NegativeFreeGateFlow,0.001);
-            Assert.AreEqual(0.19, formula.NegativeDrownedGateFlow,0.001);
-            Assert.AreEqual(0.2, formula.NegativeFreeWeirFlow,0.001);
-            Assert.AreEqual(0.21, formula.NegativeDrownedWeirFlow,0.001);
-            Assert.AreEqual(0.22, formula.NegativeContractionCoefficient,0.001);
-            Assert.AreEqual(0.23, formula.ExtraResistance,0.001);
-            
-        }
-
-        /// <summary>
-        /// DelftShel.Plugins.DelftModels.Tests.FlowModel.DelftFlowModel1DTest
-        /// </summary>
-        private static void ImportVancouverNetworkAndRun(bool fixedSegments)
-        {
-            // import model and network.
-            var path = TestHelper.GetTestFilePath(@"Coquitlam-Vancouver-Canada\Network\NETWORK.TP");
-
-            //import existing network and model + default boundary conditions
-            var importer = new SobekModelToIntegratedModelImporter();
-            var waterFlowFmModel = (WaterFlowFMModel)importer.ImportItem(path);
-
-            // set initial conditions
-            // waterFlowFmModel.DefaultInitialWaterLevel = 0.1;
-            // waterFlowFmModel.DefaultInitialDepth = 0.1;
-
-            // generate grid cells (on cross-sections) using HydroNetworkHelper
-            waterFlowFmModel.NetworkDiscretization = new Discretization
-            {
-                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered,
-                Network = waterFlowFmModel.Network
-            };
-            foreach (var branch in waterFlowFmModel.Network.Channels)
-            {
-                NetworkHelper.ClearLocations(waterFlowFmModel.NetworkDiscretization, branch);
-                if (fixedSegments)
-                {
-                    HydroNetworkHelper.GenerateDiscretization(waterFlowFmModel.NetworkDiscretization, branch, 0, true, 0.5, true, false, true, 500);
-                }
-                else
-                {
-                    IList<double> offsets = new List<double> { 0 };
-
-                    foreach (var crossSection in branch.CrossSections)
-                    {
-                        offsets.Add(crossSection.Chainage);
-                    }
-                    offsets.Add(branch.Geometry.Length);
-                    HydroNetworkHelper.GenerateDiscretization(waterFlowFmModel.NetworkDiscretization, branch, offsets);
-                }
-            }
-
-            //Assert.IsTrue(File.Exists(WaterFlowFMModel.TemplateDataZipFile), "Cannot find template dir");
-            // WaterFlowModel1D.ServerExecutablePath = @"DelftModelServer.exe";
-            //flowFMModel.RunInSeparateProcess = true;
-
-            var t = DateTime.Now;
-
-            waterFlowFmModel.StartTime = t;
-            waterFlowFmModel.StopTime = t.AddMinutes(60);
-            waterFlowFmModel.TimeStep = new TimeSpan(0, 10, 0);
-
-            waterFlowFmModel.OutputTimeStep = waterFlowFmModel.TimeStep;
-
-            RunModel(waterFlowFmModel);
+            Assert.AreEqual(0.13, formula.PositiveFreeGateFlow, 0.001);
+            Assert.AreEqual(0.14, formula.PositiveDrownedGateFlow, 0.001);
+            Assert.AreEqual(0.15, formula.PositiveFreeWeirFlow, 0.001);
+            Assert.AreEqual(0.16, formula.PositiveDrownedWeirFlow, 0.001);
+            Assert.AreEqual(0.17, formula.PositiveContractionCoefficient, 0.001);
+            Assert.AreEqual(0.18, formula.NegativeFreeGateFlow, 0.001);
+            Assert.AreEqual(0.19, formula.NegativeDrownedGateFlow, 0.001);
+            Assert.AreEqual(0.2, formula.NegativeFreeWeirFlow, 0.001);
+            Assert.AreEqual(0.21, formula.NegativeDrownedWeirFlow, 0.001);
+            Assert.AreEqual(0.22, formula.NegativeContractionCoefficient, 0.001);
+            Assert.AreEqual(0.23, formula.ExtraResistance, 0.001);
         }
 
         [Test]
@@ -1341,11 +844,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
 
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
             var importer = new SobekNetworkImporter();
-            var network = (HydroNetwork)importer.ImportItem(pathToSobekNetwork);
+            var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             // profile.def 17 has name that starts with r_; it should be skipped
             Assert.AreEqual(1, sobekCrossSectionDefinitions.Count(cs => cs.ID == "17"));
-            var profileDefinition = sobekCrossSectionDefinitions.First(cs => cs.ID == "17");
+            SobekCrossSectionDefinition profileDefinition = sobekCrossSectionDefinitions.First(cs => cs.ID == "17");
             Assert.AreEqual("r_DuikerLemmelerveld", profileDefinition.Name);
             // profile.def 17 = profile.dat 18
 
@@ -1357,19 +860,42 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(1, network.CrossSections.Count(cs => cs.Name == "prof_D20061011-DP-144"));
         }
 
+        private void InitializeSobekLicense()
+        {
+            TestHelper.SetDeltaresLicenseToEnvironmentVariable();
+        }
+
+        private IHydroNetwork GetNetwork(string path)
+        {
+            var importer = new SobekNetworkImporter();
+            var network = (HydroNetwork) importer.ImportItem(path);
+            return network;
+        }
+
+        private void CheckRoughnessInCoverage(WaterFlowFMModel model, ICrossSection crossSection, CrossSectionSection crossSectionSection,
+                                              RoughnessType roughnessType, double roughness)
+        {
+            RoughnessSection roughnessSection =
+                model.RoughnessSections.Where(rs => rs.CrossSectionSectionType == crossSectionSection.SectionType).FirstOrDefault();
+            Assert.AreEqual(roughnessType,
+                            roughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessType(new NetworkLocation(crossSection.Branch, crossSection.Chainage)));
+            Assert.AreEqual(roughness,
+                            roughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(new NetworkLocation(crossSection.Branch, crossSection.Chainage)), 1.0e-6);
+        }
+
         private static void RunModel(WaterFlowFMModel flowFMModel)
         {
             // fix for added validation (cross section definition sections total width should not be less than total cross section width
             flowFMModel.Network.CrossSections.Select(cs => cs.Definition)
-                .OfType<CrossSectionDefinition>()
-                .Union
-                (
-                    flowFMModel.Network.CrossSections.Select(cs => cs.Definition)
-                    .OfType<CrossSectionDefinitionProxy>()
-                    .Select(csdp => csdp.InnerDefinition)
-                    .OfType<CrossSectionDefinition>()
-                )
-                .ForEach(csd => csd.RefreshSectionsWidths());
+                       .OfType<CrossSectionDefinition>()
+                       .Union
+                       (
+                           flowFMModel.Network.CrossSections.Select(cs => cs.Definition)
+                                      .OfType<CrossSectionDefinitionProxy>()
+                                      .Select(csdp => csdp.InnerDefinition)
+                                      .OfType<CrossSectionDefinition>()
+                       )
+                       .ForEach(csd => csd.RefreshSectionsWidths());
 
             flowFMModel.Initialize();
 
@@ -1382,7 +908,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 // get values from model for the last time step
                 IList<double> values = flowFMModel.OutputWaterLevel.GetValues<double>(
                     new VariableValueFilter<DateTime>(flowFMModel.OutputWaterLevel.Arguments[0], flowFMModel.CurrentTime)
-                    );
+                );
 
                 log.Debug(new List<double>(values).ToArray());
 
@@ -1410,4 +936,3 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
     }
 }
-

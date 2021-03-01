@@ -4,38 +4,47 @@ using DelftTools.Controls;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 {
-    class ControlGroupCollectionNodePresenter : TreeViewNodePresenterBaseForPluginGui<IEventedList<ControlGroup>>
+    /// <summary>
+    /// Node presenter for a collection of <see cref="ControlGroup"/> objects
+    /// </summary>
+    public sealed class ControlGroupCollectionNodePresenter : TreeViewNodePresenterBaseForPluginGui<IEventedList<ControlGroup>>
     {
-        private static readonly Bitmap FolderIcon = RealTimeControl.Properties.Resources.folder;
+        /// <summary>
+        /// Icon used to represent a <see cref="ControlGroup"/> collection in the Project Explorer
+        /// </summary>
+        private static readonly Bitmap folderIcon = Resources.folder;
 
+        /// <inheritdoc/>
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IEventedList<ControlGroup> nodeData)
         {
             node.Text = "Control Groups";
             node.Tag = nodeData;
-            node.Image = FolderIcon;
+            node.Image = folderIcon;
         }
 
+        /// <inheritdoc/>
         public override IEnumerable GetChildNodeObjects(IEventedList<ControlGroup> parentNodeData, ITreeNode node)
         {
-            foreach (var controlGroup in parentNodeData)
+            foreach (ControlGroup controlGroup in parentNodeData)
             {
                 yield return controlGroup;
             }
         }
 
         /// <summary>
-        /// Override the GetContextMenu to attacht the RTC model to the menuitem
+        /// Override the GetContextMenu to attach the RTC model to the menuitem
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="nodeData"></param>
-        /// <returns></returns>
+        /// <param name="sender"><see cref="ITreeNode"/> for which a context menu must be created</param>
+        /// <param name="nodeData">Node data that holds a reference to it's <see cref="RealTimeControlModel"/> domain object</param>
+        /// <returns>A ContextMenu for this node or null.</returns>
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
             var model = (RealTimeControlModel) sender.Parent.Parent.Tag;
-            return GuiPlugin == null ? null : GuiPlugin.GetContextMenu(model, nodeData);
+            return GuiPlugin?.GetContextMenu(model, nodeData);
         }
     }
 }
