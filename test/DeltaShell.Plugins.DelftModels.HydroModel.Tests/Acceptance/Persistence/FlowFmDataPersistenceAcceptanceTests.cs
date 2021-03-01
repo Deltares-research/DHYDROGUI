@@ -24,18 +24,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private string acceptanceModelsDirectory;
 
         public delegate int ActualCountFuncDelegate(IHydroNetwork network);
-        public static IEnumerable<TestCaseData> AcceptanceTests 
+        public static IEnumerable<TestCaseData> AcceptanceTests
         {
             get
             {
-                // Foldername, mdu filename, ActualCountFuncDelegate, expected # branchfeatures
-                yield return new TestCaseData("FM-Eindhoven-Urban", "FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 0); // TODO: Add preconditions when the model can be correctly imported
-                yield return new TestCaseData("Pudong", @"FM\FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 0); // TODO: Add preconditions when the model can be correctly imported
-                yield return new TestCaseData("Hydamo_DBV", "DVB", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 601); // TODO: Add preconditions when the model can be correctly imported
-                yield return new TestCaseData("Hydamo_MoergestelBroek", "moergestels_broek", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 288); // TODO: Add preconditions when the model can be correctly imported
+                yield return new TestCaseData("FM-Eindhoven-Urban", "FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 0).SetName("Eindhoven");                               // TODO: Add preconditions when the model can be correctly imported
+                yield return new TestCaseData("Pudong", @"FM\FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 0).SetName("Pudong");                                          // TODO: Add preconditions when the model can be correctly imported
+                yield return new TestCaseData("Hydamo_DBV", "DVB", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 601).SetName("Hydamo_DBV");                                       // TODO: Add preconditions when the model can be correctly imported
+                yield return new TestCaseData("Hydamo_MoergestelBroek", "moergestels_broek", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 288).SetName("Hydamo_MoergestelBroek"); // TODO: Add preconditions when the model can be correctly imported
             }
         }
-        
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()

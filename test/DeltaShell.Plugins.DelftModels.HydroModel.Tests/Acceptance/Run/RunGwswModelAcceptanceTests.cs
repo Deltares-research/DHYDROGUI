@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Filters;
@@ -25,15 +26,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         private string acceptanceModelsDirectory;
         private string acceptanceModelsReferenceOutputDirectory;
 
-        private static readonly object[] AcceptanceTests =
+        public static IEnumerable<TestCaseData> AcceptanceTests
         {
-            new object[] {"KorteWoerden", 84, 72},
-            new object[] {"DidactischStelsel", 108, 74},
-            new object[] {"Enschede", 0, 0}, //todo: add preconditions
-            new object[] {"Groesb2", 719, 675},
-            new object[] {"Pudong", 4974, 4936},
-            new object[] {"Leiden", 8454, 7978},
-        };
+            get
+            {
+                yield return new TestCaseData("KorteWoerden", 84, 72).SetName("KorteWoerden");
+                yield return new TestCaseData("DidactischStelsel", 108, 74).SetName("DidactischStelsel");
+                yield return new TestCaseData("Enschede", 0, 0).SetName("Enschede");
+                yield return new TestCaseData("Groesb2", 719, 675).SetName("Groesb2");
+                yield return new TestCaseData("Pudong", 4974, 4936).SetName("Pudong");
+                yield return new TestCaseData("Leiden", 8454, 7978).SetName("Leiden");
+            }
+        }
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()

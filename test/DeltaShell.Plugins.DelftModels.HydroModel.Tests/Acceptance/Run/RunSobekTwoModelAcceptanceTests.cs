@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -22,13 +23,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         private string tempDirectory;
         private string acceptanceModelsDirectory;
         private string acceptanceModelsReferenceOutputDirectory;
-        private static readonly object[] AcceptanceTests =
+
+        public static IEnumerable<TestCaseData> AcceptanceTests
         {
-            new object[] {"DarEsSalaam", "14", 177, 0, true},
-            new object[] {"Jakarta", "3", 4148, 0, false},
-            new object[] {"Tholen", "1", 0, 0, false}, // todo: fill in # of expected branch features
-            new object[] {"HogeRaam", "9", 1477, 0, true}, // todo: fill in # of expected catchments
-        };
+            get
+            {
+                yield return new TestCaseData("DarEsSalaam", "14", 177, 0, true).SetName("DarEsSalaam");
+                yield return new TestCaseData("Jakarta", "3", 4148, 0, false).SetName("Jakarta");
+                yield return new TestCaseData("Tholen", "1", 0, 0, false).SetName("Tholen");       // todo: fill in # of expected branch features
+                yield return new TestCaseData("HogeRaam", "9", 1477, 0, true).SetName("HogeRaam"); // todo: fill in # of expected catchments
+
+            }
+        }
 
         [OneTimeSetUp]
         public void TestFixtureSetUp()
