@@ -17,10 +17,21 @@ using SharpMap.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
+    /// <summary>
+    /// <see cref="FlowFMNetFileImporter"/> implements the <see cref="IFileImporter"/>
+    /// interface to import Net files onto <see cref="UnstructuredGrid"/> objects and
+    /// as root level objects.
+    /// </summary>
+    /// <seealso cref="IFileImporter" />
     public class FlowFMNetFileImporter : IFileImporter
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMNetFileImporter));
 
+        /// <summary>
+        /// Gets or sets the function to obtain the
+        /// <see cref="IWaterFlowFMModel"/> corresponding with the provided
+        /// <see cref="UnstructuredGrid"/>.
+        /// </summary>
         public Func<UnstructuredGrid, IWaterFlowFMModel> GetModelForGrid { get; set; }
 
         public string Name => "Unstructured Grid (UGRID)";
@@ -60,58 +71,94 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public object ImportItem(string path, object target = null)
         {
+            ValidatePath(path);
+
+            if (IsRootLevelTarget(target))
+            {
+                return GetRootLevelImport(path);
+            }
+
+            IWaterFlowFMModel flowModel = GetModel(target, path);
+            
+            if (flowModel != null && flowModel.NetFilePath != null)
+            {
+                return GetModelLevelImport(flowModel, path);
+            }
+
+            return null;
+        }
+
+        private static void ValidatePath(string path)
+        {
             if (!File.Exists(path))
             {
                 throw new FileNotFoundException($"Could not find file {path}");
             }
+        }
 
-            if (target == null)
+        private static void ValidateCoordinates(ImportedFMNetFile netFile, IWaterFlowFMModel model)
+        {
+            IList<Coordinate> coordinates = netFile.Grid.Vertices;
+
+            if (model.CoordinateSystem != null &&
+                !CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, model.CoordinateSystem))
             {
-                return new DataItem
-                {
-                    Value = new ImportedFMNetFile(path),
-                    Name = Path.GetFileName(path)
-                };
+                throw new InvalidOperationException("Grid coordinates are incompatible with current model coordinate system: {0}, canceling import.");
             }
-
-            var flowModel = target as IWaterFlowFMModel;
-
-            var grid = target as UnstructuredGrid;
-
-            if (grid != null && GetModelForGrid != null)
+        }
+        private static object GetRootLevelImport(string path) =>
+            new DataItem
             {
-                flowModel = GetModelForGrid(grid);
-                /* DELFT3DFM-453 */
-                log.WarnFormat("Importing bathymetry. Existing grid will be overwritten with grid from {0}.", path);
-                flowModel = GetModelForGrid(flowModel.SpatialData.Bathymetry.Grid);
-            }
+                Value = new ImportedFMNetFile(path),
+                Name = Path.GetFileName(path)
+            };
 
-            if (flowModel != null && flowModel.NetFilePath != null)
+        private static object GetModelLevelImport(IWaterFlowFMModel model, string path)
+        {
+            var fmNetFile = new ImportedFMNetFile(path);
+            
+            ValidateCoordinates(fmNetFile, model);
+            UpdatePersistedGrid(model, path);
+            model.ReloadGrid(false, true);
+
+            return model.Grid;
+        }
+
+        private static bool IsRootLevelTarget(object target) => target == null;
+
+        private IWaterFlowFMModel GetModel(object target, string path)
+        {
+            switch (target)
             {
-                var netfile = new ImportedFMNetFile(path);
-                IList<Coordinate> coordinates = netfile.Grid.Vertices;
-                if (flowModel.CoordinateSystem != null &&
-                    !CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, flowModel.CoordinateSystem))
+                case IWaterFlowFMModel targetAsModel:
+                    return targetAsModel;
+                case UnstructuredGrid grid when GetModelForGrid != null:
                 {
-                    throw new Exception(
-                        "Grid coordinates are incompatible with current model coordinate system: {0}, canceling import.");
+                    IWaterFlowFMModel flowModel = GetModelForGrid(grid); 
+                    /* DELFT3DFM-453 */ 
+                    log.WarnFormat("Importing bathymetry. Existing grid will be overwritten with grid from {0}.", path);
+                    return GetModelForGrid(flowModel.SpatialData.Bathymetry.Grid);
                 }
+                default:
+                    return null;
+            }
+        }
 
-                string destFileName =
-                    Path.Combine(Path.GetDirectoryName(flowModel.NetFilePath), Path.GetFileName(path));
-                if (Path.GetFullPath(destFileName) != Path.GetFullPath(path))
-                {
-                    File.Copy(path, destFileName, true);
-                    flowModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                             .SetValueAsString(Path.GetFileName(destFileName));
-                }
+        private static void UpdatePersistedGrid(IWaterFlowFMModel model,
+                                          string newGridPath)
+        {
+            string destFileName = Path.Combine(Path.GetDirectoryName(model.NetFilePath), 
+                                               Path.GetFileName(newGridPath));
 
-                flowModel.ReloadGrid(false, true);
-
-                return flowModel.Grid;
+            if (Path.GetFullPath(destFileName) == Path.GetFullPath(newGridPath))
+            {
+                return;
             }
 
-            return null;
+            File.Copy(newGridPath, destFileName, true);
+            model.ModelDefinition
+                 .GetModelProperty(KnownProperties.NetFile)
+                 .SetValueAsString(Path.GetFileName(destFileName));
         }
     }
 }
