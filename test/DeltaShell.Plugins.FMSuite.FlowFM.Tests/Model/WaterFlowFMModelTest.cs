@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
@@ -830,9 +829,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             model.ReloadGrid(true);
 
-            Assert.IsTrue(spatialOperationValueConverter.SpatialOperationSet.Dirty);
-
-            spatialOperationValueConverter.SpatialOperationSet.Execute();
+            Assert.That(spatialOperationValueConverter.SpatialOperationSet.Dirty, Is.False);
+            
             var cov =
                 spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
                     UnstructuredGridCoverage;

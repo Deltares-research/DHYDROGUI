@@ -17,10 +17,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             var validationIssues = new List<ValidationIssue>();
             if (waveModel.WriteTable && !waveModel.FeatureContainer.ObservationPoints.Any())
             {
-                validationIssues.Add(new ValidationIssue(waveModel,
-                                                         ValidationSeverity.Warning,
-                                                         Resources
-                                                             .WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_));
+                validationIssues.Add(new ValidationIssue(waveModel, ValidationSeverity.Warning, 
+                                                         Resources.WaveOutputParametersValidator_Validate_Option__Write_Tables__is_selected_but_there_are_no_Observation_Points_in_your_model_));
+            }
+
+            // Note this ValidationIssue can be removed once DSF properly supports single-precision netCDF values, see D3DFMIQ-2555.
+            if ((bool) waveModel.ModelDefinition.GetModelProperty(ModelDefinition.KnownWaveCategories.OutputCategory, 
+                                                           ModelDefinition.KnownWaveProperties.NetCdfSinglePrecision).Value && 
+                (bool) waveModel.ModelDefinition.GetModelProperty(ModelDefinition.KnownWaveCategories.OutputCategory, 
+                                                                  ModelDefinition.KnownWaveProperties.MapWriteNetCDF).Value)
+            {
+                validationIssues.Add(new ValidationIssue(waveModel, ValidationSeverity.Warning,
+                                                         Resources.WaveOutputParametersValidator_Validate_Enabling__Use_NetCDF_single_precision__might_lead_to_unexpected_behavior_when_inspecting_the_NetCDF_model_output_data_));
             }
 
             return new ValidationReport("Output parameters", validationIssues);
