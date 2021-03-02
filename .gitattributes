@@ -665,7 +665,6 @@ src/DeltaShell.NGHS.Common/ICoupledModel.cs -text
 src/DeltaShell.NGHS.Common/IEnvironment.cs -text
 src/DeltaShell.NGHS.Common/IO/CommonFileSystemActions.cs -text
 src/DeltaShell.NGHS.Common/IO/ModelFileImporterBase.cs -text
-src/DeltaShell.NGHS.Common/IO/RestartFiles/IRestartModel.cs -text
 src/DeltaShell.NGHS.Common/IO/RestartFiles/RestartFile.cs -text
 src/DeltaShell.NGHS.Common/Logging/ILogHandler.cs -text
 src/DeltaShell.NGHS.Common/Logging/LogHandler.cs -text
