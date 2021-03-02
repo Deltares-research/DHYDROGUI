@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -21,9 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMNetFileImporter));
 
-        public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { get; set; }
-
-        #region IFileImporter
+        public Func<UnstructuredGrid, IWaterFlowFMModel> GetModelForGrid { get; set; }
 
         [ExcludeFromCodeCoverage]
         public string Name => "Unstructured Grid (UGRID)";
@@ -92,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 };
             }
 
-            var flowModel = target as WaterFlowFMModel;
+            var flowModel = target as IWaterFlowFMModel;
 
             var grid = target as UnstructuredGrid;
 
@@ -131,7 +129,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
             return null;
         }
-
-        #endregion
     }
 }
