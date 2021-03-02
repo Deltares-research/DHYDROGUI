@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using AutoFixture;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
@@ -266,7 +267,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
         
         [Test]
-        [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Wpf)]
         [Category(TestCategory.Slow)]
         public void GivenARunningGui_WhenSavingClosingAndOpeningTheSameProject_ShouldReturnAProjectTreeWithOutputReferencedToTheLastInstanceOfTheModel()
@@ -294,23 +294,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 string mapFilePath = TestHelper.GetTestFilePath(@"Model\Output\FlowFM");
 
                 string modelFolder = tempDirectory.CopyDirectoryToTempDirectory(mapFilePath);
-
-                Action mainWindowShown = delegate
-                {
-                    CreateModelWithOutputCollapsed(Path.Combine(tempDirectory.Path, modelFolder), gui, out int nrOfDataItems);
-
-                    string savePath = Path.Combine(tempDirectory.Path, "SaveLocation", "TestProject.dsproj");
-                    app.SaveProjectAs(savePath);
-
-                    app.CloseProject();
-
-                    app.OpenProject(savePath);
-
-                    CheckProjectTree(gui, nrOfDataItems);
-                };
-
-                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+                
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, () => ReopenANewCreatedProjectAndCheckItsProjectTree(tempDirectory, modelFolder, gui));
             }
+        }
+
+        private void ReopenANewCreatedProjectAndCheckItsProjectTree(TemporaryDirectory tempDirectory, string modelFolder, IGui gui)
+        {
+            IApplication app = gui.Application;
+
+            CreateModelWithOutputCollapsed(Path.Combine(tempDirectory.Path, modelFolder), gui, out int nrOfDataItems);
+
+            string savePath = Path.Combine(tempDirectory.Path, "SaveLocation", "TestProject.dsproj");
+            app.SaveProjectAs(savePath);
+
+            app.CloseProject();
+
+            app.OpenProject(savePath);
+
+            CheckProjectTree(gui, nrOfDataItems);
         }
 
         private static void CheckProjectTree(IGui gui, int nrOfDataItems)
