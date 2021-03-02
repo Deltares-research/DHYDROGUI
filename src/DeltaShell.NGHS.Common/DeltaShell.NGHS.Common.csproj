@@ -42,7 +42,6 @@
     <Compile Include="ICoupledModel.cs" />
     <Compile Include="IEnvironment.cs" />
     <Compile Include="IO\CommonFileSystemActions.cs" />
-    <Compile Include="IO\ModelFileImporterBase.cs" />
     <Compile Include="IO\RestartFiles\RestartFile.cs" />
     <Compile Include="Logging\ILogHandler.cs" />
     <Compile Include="Logging\LogHandler.cs" />

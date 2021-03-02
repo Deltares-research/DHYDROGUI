@@ -232,7 +232,6 @@
     <Compile Include="IO\RealTimeControlDataAndToolsConfigXmlReader.cs" />
     <Compile Include="IO\RealTimeControlDataConfigXmlSetter.cs" />
     <Compile Include="IO\Export\RealTimeControlModelExporter.cs" />
-    <Compile Include="IO\Import\RealTimeControlModelImporter.cs" />
     <Compile Include="IO\RealTimeControlRuntimeConfigSetter.cs" />
     <Compile Include="IO\RealTimeControlRuntimeConfigXmlReader.cs" />
     <Compile Include="IO\RealTimeControlTimeSeriesSetter.cs" />

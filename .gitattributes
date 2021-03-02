@@ -664,7 +664,6 @@ src/DeltaShell.NGHS.Common/IControllingModel.cs -text
 src/DeltaShell.NGHS.Common/ICoupledModel.cs -text
 src/DeltaShell.NGHS.Common/IEnvironment.cs -text
 src/DeltaShell.NGHS.Common/IO/CommonFileSystemActions.cs -text
-src/DeltaShell.NGHS.Common/IO/ModelFileImporterBase.cs -text
 src/DeltaShell.NGHS.Common/IO/RestartFiles/RestartFile.cs -text
 src/DeltaShell.NGHS.Common/Logging/ILogHandler.cs -text
 src/DeltaShell.NGHS.Common/Logging/LogHandler.cs -text
@@ -1540,7 +1539,6 @@ src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Export/SignalSerializerBas
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Export/StandardConditionSerializer.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Export/TimeConditionSerializer.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Export/TimeRuleSerializer.cs -text
-src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Import/RealTimeControlModelImporter.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Import/RealTimeControlRestartFileImporter.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlDataAndToolsConfigXmlReader.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlDataConfigXmlConverter.cs -text
@@ -3506,7 +3504,6 @@ test/DeltaShell.NGHS.Common.Tests/ApplicationPluginHelperTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/DeltaShell.NGHS.Common.Tests.csproj -text
 test/DeltaShell.NGHS.Common.Tests/FileBasedUtilsTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/IO/CommonFileSystemActionsTest.cs -text
-test/DeltaShell.NGHS.Common.Tests/IO/ModelFIleImporterBaseTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/IO/Restart/RestartFileTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/Logging/LogHandlerTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/Logging/LogMessagesListTest.cs -text
@@ -4630,7 +4627,6 @@ test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/Import/RealTimeCont
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlDataAndToolsConfigXmlReaderTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlDataConfigXmlConverterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlDataConfigXmlSetterTest.cs -text
-test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlModelImporterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlModelXmlReaderTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlRuntimeConfigSetterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlRuntimeConfigXmlReaderTest.cs -text
