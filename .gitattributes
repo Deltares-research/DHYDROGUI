@@ -1542,9 +1542,11 @@ src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Export/TimeConditionSerial
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Export/TimeRuleSerializer.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Import/RealTimeControlModelImporter.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/Import/RealTimeControlRestartFileImporter.cs -text
+src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlDataAndToolsConfigXmlReader.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlDataConfigXmlConverter.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlDataConfigXmlSetter.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlDimrConfigModelCouplerProvider.cs -text
+src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlModelXmlReader.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlOutputFileFunctionStore.cs -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlOutputFileFunctionStore.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.RealTimeControl/IO/RealTimeControlRuntimeConfigSetter.cs -text
@@ -4625,6 +4627,7 @@ test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/Export/TimeRuleSeri
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/Helpers/ExpressionNodeEqualityComparer.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/Helpers/ExpressionXMLBuilder.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/Import/RealTimeControlRestartFileImporterTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlDataAndToolsConfigXmlReaderTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlDataConfigXmlConverterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlDataConfigXmlSetterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlModelImporterTest.cs -text

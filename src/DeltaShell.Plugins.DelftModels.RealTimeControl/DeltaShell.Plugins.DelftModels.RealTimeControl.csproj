@@ -229,6 +229,7 @@
     <Compile Include="IO\Export\TimeConditionSerializer.cs" />
     <Compile Include="IO\Export\TimeRuleSerializer.cs" />
     <Compile Include="IO\Import\RealTimeControlRestartFileImporter.cs" />
+    <Compile Include="IO\RealTimeControlDataAndToolsConfigXmlReader.cs" />
     <Compile Include="IO\RealTimeControlDataConfigXmlSetter.cs" />
     <Compile Include="IO\Export\RealTimeControlModelExporter.cs" />
     <Compile Include="IO\Import\RealTimeControlModelImporter.cs" />
@@ -238,6 +239,7 @@
     <Compile Include="IO\RealTimeControlTimeSeriesXmlReader.cs" />
     <Compile Include="IO\RealTimeControlToolsConfigComponentConnector.cs" />
     <Compile Include="IO\RealTimeControlToolsConfigXmlConverter.cs" />
+    <Compile Include="IO\RealTimeControlModelXmlReader.cs" />
     <Compile Include="IO\RealTimeControlDataConfigXmlConverter.cs" />
     <Compile Include="IO\RealTimeControlXmlReaderHelper.cs" />
     <Compile Include="IO\RealTimeControlXmlWriter.cs" />
