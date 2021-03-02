@@ -294,9 +294,9 @@
     <Compile Include="IO\Helpers\ExpressionNodeEqualityComparer.cs" />
     <Compile Include="IO\Helpers\ExpressionXMLBuilder.cs" />
     <Compile Include="IO\Import\RealTimeControlRestartFileImporterTest.cs" />
-    <Compile Include="IO\RealTimeControlDataAndToolsConfigXmlReaderTest.cs" />
     <Compile Include="IO\RealTimeControlDataConfigXmlConverterTest.cs" />
     <Compile Include="IO\RealTimeControlDataConfigXmlSetterTest.cs" />
+    <Compile Include="IO\RealTimeControlModelImporterTest.cs" />
     <Compile Include="IO\RealTimeControlModelXmlReaderTest.cs" />
     <Compile Include="IO\RealTimeControlRuntimeConfigSetterTest.cs" />
     <Compile Include="IO\RealTimeControlRuntimeConfigXmlReaderTest.cs" />

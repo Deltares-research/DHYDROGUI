@@ -89,6 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
+            yield return new RealTimeControlModelImporter();
             yield return new RealTimeControlRestartFileImporter(GetRealTimeControlModels);
         }
 

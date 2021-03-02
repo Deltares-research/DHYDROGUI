@@ -75,58 +75,6 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
             Assert.That(exception.ParamName, Is.EqualTo("objects"));
         }
 
-        [Test]
-        public void GetAllByName_ReturnsCorrectResult()
-        {
-            // Setup
-            const string name = "name";
-            INameable first = GetNameable(name);
-            INameable second = GetNameable(name);
-
-            INameable[] nameables =
-            {
-                GetNameable("unique_1"),
-                first,
-                GetNameable("unique_2"),
-                second,
-                GetNameable("unique_3")
-            };
-
-            // Call
-            IEnumerable<INameable> result = nameables.GetAllByName(name);
-
-            // Assert
-            CollectionAssert.AreEqual(result, new[]
-            {
-                first,
-                second
-            });
-        }
-
-        [Test]
-        public void GetAllByName_CollectionDoesNotContainsObjectWithName_ReturnsDefault()
-        {
-            // Setup
-            INameable[] nameables = GetNameableCollection(5).ToArray();
-
-            // Call
-            IEnumerable<INameable> result = nameables.GetAllByName("name");
-
-            // Assert
-            CollectionAssert.AreEqual(result, Enumerable.Empty<INameable>());
-        }
-
-        [Test]
-        public void GetAllByName_ObjectsNull_ThrowsArgumentNullException()
-        {
-            // Call
-            void Call() => NameableCollectionExtensions.GetAllByName<INameable>(null, "name");
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("objects"));
-        }
-
         [TestCase(StringComparison.Ordinal, 2)]
         [TestCase(StringComparison.CurrentCulture, 2)]
         [TestCase(StringComparison.InvariantCulture, 2)]

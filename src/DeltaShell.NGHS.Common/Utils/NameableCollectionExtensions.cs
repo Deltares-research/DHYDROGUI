@@ -36,23 +36,5 @@ namespace DeltaShell.NGHS.Common.Utils
 
             return objects.FirstOrDefault(o => string.Equals(o.Name, name, comparisonType));
         }
-
-        /// <summary>
-        /// Gets all elements in an <see cref="INameable"/> sequence with the specified <paramref name="name"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the searched objects.</typeparam>
-        /// <param name="objects">The objects.</param>
-        /// <param name="name">The name of the searched objects.</param>
-        /// <returns>
-        /// A collection containing the objects with the same name.
-        /// </returns>
-        /// <exception cref="System.ArgumentNullException">
-        /// Thrown when <paramref name="objects"/> is <c>null</c>.
-        /// </exception>
-        public static IEnumerable<T> GetAllByName<T>(this IEnumerable<T> objects, string name) where T : INameable
-        {
-            Ensure.NotNull(objects, nameof(objects));
-            return objects.Where(o => o.Name == name);
-        }
     }
 }
