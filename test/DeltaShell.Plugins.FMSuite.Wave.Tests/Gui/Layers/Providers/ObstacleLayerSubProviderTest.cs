@@ -18,14 +18,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Layers.Providers
             (factory) => new ObstacleLayerSubProvider(factory);
 
         protected override IWaveModel Model { get; } = GetConfiguredModel();
-        protected override IEnumerable<Feature2D> RelevantFeature => Model.Obstacles;
+        protected override IEnumerable<Feature2D> RelevantFeature => Model.FeatureContainer.Obstacles;
 
         private static IWaveModel GetConfiguredModel()
         {
             var model = Substitute.For<IWaveModel>();
+            var featureContainerMock = Substitute.For<IWaveFeatureContainer>();
             var feature = Substitute.For<IEventedList<WaveObstacle>>();
-
-            model.Obstacles.Returns(feature);
+            
+            featureContainerMock.Obstacles.Returns(feature);
+            model.FeatureContainer.Returns(featureContainerMock);
 
             return model;
         }
