@@ -202,18 +202,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if(!(sender is WaterFlowFMModel )) return;
             MarkDirty();
-            if (e.PropertyName == nameof(Name))
+            if (e.PropertyName == nameof(Name) && fmRegion.Name != Name)
             {
-                if (fmRegion.Name != Name)
-                {
-                    fmRegion.Name = Name;
-                }
-
-                if (ModelDefinition != null)
-                {
-                    ModelDefinition.ModelName = Name;
-                    RenameSubFilesIfApplicable();
-                }
+                fmRegion.Name = Name;
                 if (!OutputIsEmpty)
                 {
                     OnClearOutput();
@@ -288,8 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     case NotifyCollectionChangedAction.Add:
                         if (!BoundaryConditions1DDataItemSet.DataItems.Select(di =>di.Value).OfType<Model1DBoundaryNodeData>().Contains(model1DBoundaryNode))
                         {
-                            lock(BoundaryConditions1DDataItemSet.DataItems)
-                                BoundaryConditions1DDataItemSet.DataItems.Add(new DataItem(model1DBoundaryNode){Hidden = model1DBoundaryNode?.DataType == Model1DBoundaryNodeDataType.None});
+                            BoundaryConditions1DDataItemSet.DataItems.Add(new DataItem(model1DBoundaryNode){Hidden = model1DBoundaryNode?.DataType == Model1DBoundaryNodeDataType.None});
                         }
                         break;
                     case NotifyCollectionChangedAction.Remove:
@@ -298,13 +288,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                 di.Value as Model1DBoundaryNodeData == model1DBoundaryNode);
                         if (existingDataItem != null)
                         {
-                            lock (BoundaryConditions1DDataItemSet.DataItems) 
-                                BoundaryConditions1DDataItemSet.DataItems.Remove(existingDataItem);
+                            BoundaryConditions1DDataItemSet.DataItems.Remove(existingDataItem);
                         }
                         break;
                     case NotifyCollectionChangedAction.Reset:
-                        lock (BoundaryConditions1DDataItemSet.DataItems) 
-                            BoundaryConditions1DDataItemSet.DataItems.Clear();
+                        BoundaryConditions1DDataItemSet.DataItems.Clear();
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -1484,14 +1472,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 yield return boundary;
             }
-            /*foreach (var model1DBoundaryNodeData in BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>())
+            foreach (var model1DBoundaryNodeData in BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>())
             {
                 yield return model1DBoundaryNodeData;
             }
             foreach (var model1DLateralSourceData in LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>())
             {
                 yield return model1DLateralSourceData;
-            }*/
+            }
             foreach (var pipe in Pipes)
             {
                 yield return pipe;
@@ -2137,7 +2125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     {KnownProperties.NetFile, NetFile.FullExtension},
                     {KnownProperties.ExtForceFile, ExtForceFile.Extension},
-                    {KnownProperties.BndExtForceFile, $"_bnd{ExtForceFile.Extension}"},
+                    {KnownProperties.BndExtForceFile, ExtForceFile.Extension},
                     {KnownProperties.LandBoundaryFile, MduFile.LandBoundariesExtension},
                     {KnownProperties.ThinDamFile, MduFile.ThinDamExtension},
                     {KnownProperties.FixedWeirFile, MduFile.FixedWeirExtension},
@@ -2158,7 +2146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                     var currentFileName = Path.GetFileName(propertyValue);
                     if (modelDefinitionName == null ||
-                        !(modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile)
+                        (modelDefinitionName + pair.Value).Equals(currentFileName, StringComparison.InvariantCultureIgnoreCase) && pair.Key != KnownProperties.NetFile)
                     {
                         propertyValue = Name + pair.Value;
                     }
