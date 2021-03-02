@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
@@ -19,15 +19,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
     public class FlowFMNetFileImporter : IFileImporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMNetFileImporter));
+        private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMNetFileImporter));
 
         public Func<UnstructuredGrid, IWaterFlowFMModel> GetModelForGrid { get; set; }
 
-        [ExcludeFromCodeCoverage]
         public string Name => "Unstructured Grid (UGRID)";
 
-        [ExcludeFromCodeCoverage]
-        public string Category => Resources.FMImporters_Category_D_Flow_FM_2D_3D;
+        public string Category => 
+            Resources.FMImporters_Category_D_Flow_FM_2D_3D;
 
         public string Description => string.Empty;
 
@@ -42,28 +41,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
         }
 
-        public bool CanImportOn(object targetObject)
-        {
-            if (targetObject == null)
-            {
-                return true; //import on root level
-            }
+        public bool CanImportOn(object targetObject) =>
+            (targetObject == null) || // import on root level
+            (targetObject is UnstructuredGrid grid && GetModelForGrid?.Invoke(grid) != null);
 
-            UnstructuredGrid grid = null;
-            var unstructuredGrid = targetObject as UnstructuredGrid;
-            if (unstructuredGrid != null)
-            {
-                grid = unstructuredGrid;
-            }
-
-            return grid != null && GetModelForGrid != null && GetModelForGrid(grid) != null;
-        }
-
-        [ExcludeFromCodeCoverage]
         public bool CanImportOnRootLevel => true;
 
-        [ExcludeFromCodeCoverage]
-        public string FileFilter => $"Net file|*{FileConstants.NetCdfFileExtension}";
+        public string FileFilter => 
+            $"Net file|*{FileConstants.NetCdfFileExtension}";
 
         public string TargetDataDirectory { get; set; }
 
@@ -71,14 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        [ExcludeFromCodeCoverage]
         public bool OpenViewAfterImport => true;
 
         public object ImportItem(string path, object target = null)
         {
             if (!File.Exists(path))
             {
-                throw new FileNotFoundException(string.Format("Could not find file {0}", path));
+                throw new FileNotFoundException($"Could not find file {path}");
             }
 
             if (target == null)
@@ -98,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             {
                 flowModel = GetModelForGrid(grid);
                 /* DELFT3DFM-453 */
-                Log.WarnFormat("Importing bathymetry. Existing grid will be overwritten with grid from {0}.", path);
+                log.WarnFormat("Importing bathymetry. Existing grid will be overwritten with grid from {0}.", path);
                 flowModel = GetModelForGrid(flowModel.SpatialData.Bathymetry.Grid);
             }
 
