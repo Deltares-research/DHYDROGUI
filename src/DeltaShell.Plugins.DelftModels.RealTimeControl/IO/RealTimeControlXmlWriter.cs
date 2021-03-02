@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         public static void CopyXsds(string copyToDirectory)
         {
-            foreach (string xsdFile in Directory.GetFiles(DimrApiDataSet.RtcToolsDllPath).ToList().Where(f => f.EndsWith("xsd")))
+            foreach (string xsdFile in Directory.GetFiles(DimrApiDataSet.RtcToolsDllPath).Where(f => f.EndsWith("xsd")))
             {
                 File.Copy(xsdFile, copyToDirectory + Path.DirectorySeparatorChar + Path.GetFileName(xsdFile), true);
             }
@@ -443,7 +443,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         private static XElement GetXmlForLimitedMemoryOption(bool limitMemory)
         {
-            if (limitMemory == false)
+            if (!limitMemory)
             {
                 limitMemory = true;
                 Log.Warn("Depricated option \"Limited Memory\" of D-RTC model is set to True");
@@ -680,7 +680,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             AddHydraulicRulesWithTimeLagAsTimeSerieToDataConfig(export, controlGroups.SelectMany(controlGroup => controlGroup.Rules.OfType<HydraulicRule>().Where(r => r.TimeLagInTimeSteps > 0)));
 
             // if no timeseries where added add the root node, else the XSD validation breaks
-            if (export.Nodes().Count() == 0)
+            if (!export.Nodes().Any())
             {
                 export.Add(new XElement(Fns + "timeSeries", new XAttribute("id", string.Empty)));
             }

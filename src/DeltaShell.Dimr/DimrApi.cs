@@ -55,6 +55,23 @@ namespace DeltaShell.Dimr
             DimrApiWrapper.set_logger(Logger);
         }
 
+        [ExcludeFromCodeCoverage]
+        private void BMI_Logger_function(Level level, string message)
+        {
+            string msg = message != null ? string.Copy(message) : string.Empty;
+
+            msg = string.Format("Dimr [{0}] {1} >> {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), Enum.GetName(typeof(Level), level), msg);
+            if (useMessagesBuffering)
+            {
+                messages.Add(msg);
+            }
+            else
+            {
+                Console.WriteLine(msg);
+                Log.DebugFormat(msg);
+            }
+        }
+
         #region Implementation of IDisposable
 
         public void Dispose()
@@ -73,23 +90,6 @@ namespace DeltaShell.Dimr
 
         #endregion
 
-        [ExcludeFromCodeCoverage]
-        private void BMI_Logger_function(Level level, string message)
-        {
-            string msg = message != null ? string.Copy(message) : string.Empty;
-
-            msg = string.Format("Dimr [{0}] {1} >> {2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), Enum.GetName(typeof(Level), level), msg);
-            if (useMessagesBuffering)
-            {
-                messages.Add(msg);
-            }
-            else
-            {
-                Console.WriteLine(msg);
-                Log.DebugFormat(msg);
-            }
-        }
-
         #region Implementation of IDimrApi
 
         public virtual DateTime DimrRefDate
@@ -104,8 +104,6 @@ namespace DeltaShell.Dimr
                 currentTime = dimrRefDate.AddSeconds(tCurrent);
             }
         }
-
-        public void SetValues(string variable, int[] index, Array values) {}
 
         public DateTime StartTime
         {
@@ -310,7 +308,7 @@ namespace DeltaShell.Dimr
         /// </summary>
         /// <param name="dt">The time step dt.</param>
         /// <returns>The exit code of the Update call.</returns>
-        public int Update(double dt)
+        public int Update(double dt = -1.0)
         {
             int returnCode = DimrApiWrapper.update(dt);
 
@@ -414,14 +412,21 @@ namespace DeltaShell.Dimr
 
         public void SetValues(string variable, Array values)
         {
-            var valuesDouble = values as double[];
-            if (valuesDouble != null)
+            if (values is double[] valuesDouble)
             {
                 SetValuesDouble(variable, valuesDouble);
             }
         }
 
-        public void SetValues(string variable, int[] start, int[] count, Array values) {}
+        public void SetValues(string variable, int[] start, int[] count, Array values)
+        {
+            // Not needed.
+        }
+        
+        public void SetValues(string variable, int[] index, Array values)
+        {
+            // Not needed.
+        }
 
         public string[] Messages
         {

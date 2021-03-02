@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         private const string DateTimeFormat = "yyyy-MM-ddTHH:mm:ss";
         private const string TimeDimensionName = "time";
 
-        private Dictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatureArrays = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
+        private readonly Dictionary<string, IMultiDimensionalArray<IFeature>> cachedFeatureArrays = new Dictionary<string, IMultiDimensionalArray<IFeature>>();
         private IList<IFeature> features;
         private ICoordinateSystem coordinateSystem;
 
@@ -265,9 +265,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             Path = path;
         }
 
-        public void Close() {}
+        public new void Close()
+        {
+            // Nothing to close.
+        }
 
-        public void Open(string path) {}
+        public void Open(string path)
+        {
+            // Nothing to open.
+        }
 
         public void CopyTo(string destinationPath)
         {

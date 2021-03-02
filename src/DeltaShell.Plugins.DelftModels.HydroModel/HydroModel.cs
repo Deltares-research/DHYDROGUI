@@ -1017,27 +1017,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             dimrApi = null;
         }
 
-        private void CleanUpDimrApi()
-        {
-            if (dimrApi == null)
-            {
-                return;
-            }
-
-            try
-            {
-                dimrApi?.Dispose();
-            }
-            catch (Exception e)
-            {
-                Log.Debug(e.Message);
-            }
-
-            dimrApi = null;
-            Thread.Sleep(200);
-            GC.SuppressFinalize(this);
-        }
-
         #endregion
 
         #region Region

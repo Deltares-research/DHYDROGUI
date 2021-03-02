@@ -1,20 +1,14 @@
 ﻿using System;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr.RtcXsd;
-using DeltaShell.NGHS.Common.Logging;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 {
-    /// <summary>Responsible for setting all the data from the runtime config file on the RealTimeControlModel</summary>
+    /// <summary>
+    /// Responsible for setting all the data from the runtime config file on the RealTimeControlModel
+    /// </summary>
     public class RealTimeControlRuntimeConfigSetter
     {
-        private readonly ILogHandler logHandler;
-
-        public RealTimeControlRuntimeConfigSetter(ILogHandler logHandler)
-        {
-            this.logHandler = logHandler;
-        }
-
         /// <summary>
         /// Sets the run time settings on the RealTimeControl Model.
         /// </summary>

@@ -35,14 +35,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public void Configure(object item)
         {
-            var exporter = item as RealTimeControlModelExporter;
-            if (exporter != null)
+            if (item is RealTimeControlModelExporter exporter)
             {
                 exporter.Directory = Directory;
             }
         }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done.
+        }
 
         private string Directory { get; set; }
     }

@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             UserDefinedStateExportComplexType restartSettings = runtimeConfigObject.stateFiles;
             var simulationModeSettings = runtimeConfigObject.Item as ModeComplexType;
 
-            var runtimeConfigSetter = new RealTimeControlRuntimeConfigSetter(logHandler);
+            var runtimeConfigSetter = new RealTimeControlRuntimeConfigSetter();
             runtimeConfigSetter.SetRunTimeSettings(rtcModel, runTimeSettings);
             runtimeConfigSetter.SetRestartSettings(rtcModel, restartSettings);
             runtimeConfigSetter.SetSimulationModeSettings(rtcModel, simulationModeSettings);

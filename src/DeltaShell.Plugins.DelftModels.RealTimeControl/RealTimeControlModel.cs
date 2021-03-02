@@ -1375,7 +1375,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return new RealTimeControlModelMergeValidator().Validate(this, (RealTimeControlModel) sourceModel);
         }
 
-        public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependentModelsLookup)
+        public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependendModelsLookup)
         {
             if (!CanMerge(sourceModel))
             {
@@ -1405,14 +1405,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 existingControlGroupNames.Add(clonedControlGroup.Name);
             }
 
-            if (mergedDependentModelsLookup == null)
+            if (mergedDependendModelsLookup == null)
             {
                 return true;
             }
 
-            foreach (IModelMerge sourceDependentModel in mergedDependentModelsLookup.Keys)
+            foreach (IModelMerge sourceDependentModel in mergedDependendModelsLookup.Keys)
             {
-                var mergedDependentModel = mergedDependentModelsLookup[sourceDependentModel] as IModel;
+                var mergedDependentModel = mergedDependendModelsLookup[sourceDependentModel] as IModel;
 
                 // check input items LinkedTo
                 sourceModel.AllDataItems.Where(di => di.Role == DataItemRole.Input && di.LinkedTo != null && di.ValueConverter != null)

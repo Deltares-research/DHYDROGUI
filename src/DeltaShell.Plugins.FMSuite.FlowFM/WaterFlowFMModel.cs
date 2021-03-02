@@ -3581,7 +3581,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return type == ModelType.DFlowFM;
         }
 
-        public void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath) {}
+        public void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath)
+        {
+            // Nothing to do.
+        }
 
         public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory => new HashSet<string>();
 

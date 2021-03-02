@@ -633,7 +633,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return type == ModelType.DRR;
         }
 
-        public void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath) {}
+        public void OnFinishIntegratedModelRun(string hydroModelWorkingDirectoryPath)
+        {
+            // Nothing to clean up.
+        }
 
         public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory => new HashSet<string>();
 

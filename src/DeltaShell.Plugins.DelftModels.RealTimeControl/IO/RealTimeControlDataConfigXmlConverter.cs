@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using DeltaShell.Dimr.RtcXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
@@ -8,22 +7,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
     /// <summary>
     /// Responsible for taking the objects that come from the data config xml file and converting them into connection points.
     /// </summary>
-    public class RealTimeControlDataConfigXmlConverter
+    public static class RealTimeControlDataConfigXmlConverter
     {
-        private readonly ILogHandler logHandler;
-
-        public RealTimeControlDataConfigXmlConverter(ILogHandler logHandler)
-        {
-            this.logHandler = logHandler;
-        }
-
         /// <summary>
         /// Creates the connection points from XML elements.
         /// </summary>
         /// <param name="elements">The elements.</param>
         /// <returns>A collection of connection points</returns>
         /// <remarks>If parameter elements is NULL, methods returns.</remarks>
-        public IEnumerable<ConnectionPoint> CreateConnectionPointsFromXmlElements(IEnumerable<RTCTimeSeriesComplexType> elements)
+        public static IEnumerable<ConnectionPoint> CreateConnectionPointsFromXmlElements(IEnumerable<RTCTimeSeriesComplexType> elements)
         {
             if (elements == null)
             {
