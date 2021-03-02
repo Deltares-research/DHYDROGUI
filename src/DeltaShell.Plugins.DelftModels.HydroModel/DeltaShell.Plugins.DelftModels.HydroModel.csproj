@@ -168,10 +168,8 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Web" />
     <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
@@ -189,11 +187,6 @@
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
       <Project>{368694EB-CB62-4008-A27C-37AFAC0FDF14}</Project>
       <Name>DeltaShell.NGHS.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
-      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
-      <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
