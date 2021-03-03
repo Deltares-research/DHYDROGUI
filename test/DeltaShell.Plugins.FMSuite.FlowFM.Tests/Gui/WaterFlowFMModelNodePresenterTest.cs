@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
-using AutoFixture;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
