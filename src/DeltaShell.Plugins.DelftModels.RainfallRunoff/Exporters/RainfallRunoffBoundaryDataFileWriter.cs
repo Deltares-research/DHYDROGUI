@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
@@ -31,41 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             {
                 categories.Add(GenerateBoundaryConditionDefinition(startTime, boundaryData));
                 rrBoundaries.Add(boundaryData.Boundary);
-            }
-            var rrModel = rainfallRunoffModel as RainfallRunoffModel;
-            if (rrModel != null)
-            {
-                var linksFound = rrModel.GetAllModelData()
-                    .SelectMany(md =>
-                    {
-                        var links = new List<ModelLink>();
-                        RainfallRunoffModelController.AddLink(links, md.Catchment);
-                        return links;
-                    });
-
-                foreach (var link in linksFound)
-                {
-                    if (link.ToFeature != null && !(link.ToFeature is RunoffBoundary)) continue;
-                    var boundary = link.ToFeature ?? link.FromFeature;
-
-                    if (rrBoundaries.Contains(boundary))
-                        continue; //already added
-
-                    if (boundary is Catchment boundaryOnTheCatchment && Equals(boundaryOnTheCatchment.CatchmentType, CatchmentType.NWRW))
-                        continue; //Nwrw catchments don't have catchment boundaries
-
-                    rrBoundaries.Add(boundary);
-                    var boundaryData = new RunoffBoundaryData(
-                        new RunoffBoundary
-                        {
-                            Attributes = boundary.Attributes,
-                            Geometry = boundary.Geometry,
-                            Name = link.ToId ?? link.FromId,
-                        });
-
-                    //This method currently ads a value to the series generated, however it will always be 0, should we include this?
-                    categories.Add(GenerateBoundaryConditionDefinition(startTime, boundaryData));
-                }
             }
 
             if (File.Exists(targetFile)) File.Delete(targetFile);
