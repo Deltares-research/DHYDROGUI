@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -420,9 +421,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
             Assert.AreEqual(2, area.Pumps.Count);
-            Assert.AreEqual(3, area.Weirs.Count);
-            Assert.AreEqual(1, area.Weirs.Where(w => w.WeirFormula.GetType() == typeof(GatedWeirFormula)).ToList().Count);
-            Assert.AreEqual(2, area.Weirs.Where(w => w.WeirFormula.GetType() == typeof(SimpleWeirFormula)).ToList().Count);
+            Assert.AreEqual(3, area.Structures.Count);
+            Assert.AreEqual(1, area.Structures.Where(w => w.Formula.GetType() == typeof(SimpleGateFormula)).ToList().Count);
+            Assert.AreEqual(2, area.Structures.Where(w => w.Formula.GetType() == typeof(SimpleWeirFormula)).ToList().Count);
         }
 
         [Test]

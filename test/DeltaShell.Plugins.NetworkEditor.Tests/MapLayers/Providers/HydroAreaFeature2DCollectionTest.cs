@@ -1,4 +1,5 @@
 using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using NUnit.Framework;
 using SharpMap.Data.Providers;

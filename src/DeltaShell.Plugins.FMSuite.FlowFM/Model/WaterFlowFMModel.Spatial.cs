@@ -380,7 +380,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 finally
                 {
                     dataItem.ValueConverter = valueConverter;
-                    valueConverter.SpatialOperationSet.SetDirty();
+                    valueConverter.SpatialOperationSet.Execute();
                 }
             }
             else

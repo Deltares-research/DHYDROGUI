@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.ObservationPointsPluralName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.ObservationCrossSectionsPluralName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.PumpsPluralName));
-            Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.WeirsPluralName));
+            Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.StructuresPluralName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.LandBoundariesPluralName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.DryPointsPluralName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.DryAreasPluralName));

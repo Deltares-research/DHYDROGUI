@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
     }
 
     public abstract class Feature2DImportExportBase<TFeature> : MapFeaturesImporterBase, IFileExporter,
-                                                             IFeature2DImporterExporter
+                                                                IFeature2DImporterExporter
         where TFeature : IFeature, INameable
     {
         /// <summary>
@@ -86,6 +86,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         /// (object1 = current feature, object 2 = new feature to replace with)
         /// </summary>
         public Func<object, object, bool> ShouldReplace { get; set; }
+
+        public override string Name => Mode == Feature2DImportExportMode.Export ? ExporterName : ImporterName;
 
         /// <summary>
         /// Gets the name of the exporter.
@@ -170,8 +172,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
 
         #region IFileImporter
 
-        public override string Name => ImporterName;
-
         public override IEnumerable<Type> SupportedItemTypes
         {
             get
@@ -249,8 +249,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
         #endregion
 
         #region IFileExporter
-
-        string ICategorizableItem.Name => Mode == Feature2DImportExportMode.Export ? ExporterName : ImporterName;
 
         public virtual bool Export(object item, string path)
         {

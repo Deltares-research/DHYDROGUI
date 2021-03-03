@@ -1,4 +1,4 @@
-﻿using DelftTools.Hydro;
+﻿using DelftTools.Hydro.GroupableFeatures;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
@@ -7,8 +7,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
     {
         public static void TrySetGroupName(this IFeature feature, string filePath)
         {
-            var groupableFeature = feature as IGroupableFeature;
-            if (groupableFeature == null)
+            if (!(feature is IGroupableFeature groupableFeature))
             {
                 return;
             }

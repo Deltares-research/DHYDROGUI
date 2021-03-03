@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.GroupableFeatures;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;

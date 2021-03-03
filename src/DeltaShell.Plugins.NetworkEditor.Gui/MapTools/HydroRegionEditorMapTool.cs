@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.ObservationPointsPluralName, ObservationPointToolName, Resources.Observation));
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ObservationCrossSectionsPluralName, ObservationCrossSectionToolName, Resources.observationcs2d));
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.PumpsPluralName, PumpToolName, Resources.pump));
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.WeirsPluralName, WeirToolName, Resources.Weir) {MaxPoints = 2});
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.StructuresPluralName, WeirToolName, Resources.Weir) {MaxPoints = 2});
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
             AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.DryPointsPluralName, DryPointToolName, Resources.dry_point));
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.DryAreasPluralName, DryAreaToolName, Resources.dry_area) {CloseLine = true});
