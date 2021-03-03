@@ -279,6 +279,7 @@
     <Compile Include="Gui\Restart\RealTimeControlInputRestartFileContextMenuTest.cs" />
     <Compile Include="Gui\Restart\RealTimeControlOutputRestartFileContextMenuTest.cs" />
     <Compile Include="Gui\Restart\RealTimeControlOutputRestartFileNodePresenterTest.cs" />
+    <Compile Include="InquiryHelperTest.cs" />
     <Compile Include="IO\DataAccess\BranchNodeTest.cs" />
     <Compile Include="IO\DataAccess\ConditionDataAccessObjectCreatorTest.cs" />
     <Compile Include="IO\DataAccess\ConditionDataAccessObjectTest.cs" />

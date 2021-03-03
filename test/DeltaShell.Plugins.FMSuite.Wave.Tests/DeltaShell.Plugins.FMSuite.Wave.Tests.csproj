@@ -398,6 +398,7 @@
     <Compile Include="Gui\Layers\Providers\Feature2DLayerSubProviderTestFixture.cs" />
     <Compile Include="Gui\Layers\Providers\ObservationCrossSectionLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\ObservationPointLayerSubProviderTest.cs" />
+    <Compile Include="Gui\Layers\Providers\ObstacleLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\OutputData\TestWavmFileFunctionStore.cs" />
     <Compile Include="Gui\Layers\Providers\OutputData\WavhFileFunctionStoreGroupLayerSubProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\OutputData\WavhFileFunctionStoreLayerSubProviderTest.cs" />
