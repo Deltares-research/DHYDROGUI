@@ -7,10 +7,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -22,10 +23,13 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.TestUtils;
+using DeltaShell.NGHS.TestUtils;
+using DeltaShell.NGHS.TestUtils.AutoFixtureCustomizations;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -98,151 +102,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
-        public void TestAddingSourceAndSinkCorrectlyUpdatesSedimentFractionAndTracerNamesForSourceAndSink()
+        public void GivenAWaterFlowFMModelWithATracerBoundaryCondition_WhenRemovingTheTracer_ThenBoundaryConditionIsRemoved()
         {
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(TestHelper.GetTestFilePath(@"SimpleModel_SourceAndSink_Tracer_Morphology\SimpleModel.mdu"));
-
-            var sourceAndSink = new SourceAndSink();
-
-            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
-            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
-
-            model.SourcesAndSinks.Add(sourceAndSink);
-
-            foreach (ISedimentFraction sedimentFraction in model.SedimentFractions)
+            // Given
+            using (var model = new WaterFlowFMModel())
             {
-                Assert.True(sourceAndSink.SedimentFractionNames.Contains(sedimentFraction.Name));
+                const string tracer = "Some Tracer";
+
+                var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty) {TracerName = tracer};
+                var boundary = new BoundaryConditionSet {BoundaryConditions = {boundaryCondition}};
+
+                model.TracerDefinitions.Add(tracer);
+                model.BoundaryConditionSets.Add(boundary);
+
+                // Precondition
+                Assert.That(boundary.BoundaryConditions, Has.Count.EqualTo(1));
+
+                // When
+                model.TracerDefinitions.Remove(tracer);
+
+                // Then
+                Assert.That(boundary.BoundaryConditions, Is.Empty);
             }
-
-            IEnumerable<string> tracerBoundaryConditionsTracerNames = model.BoundaryConditions
-                                                                           .OfType<FlowBoundaryCondition>()
-                                                                           .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                                                                           .Select(tbc => tbc.TracerName)
-                                                                           .Distinct();
-
-            foreach (string tracerName in model.TracerDefinitions.Where(t => tracerBoundaryConditionsTracerNames.Contains(t)))
-            {
-                Assert.True(sourceAndSink.TracerNames.Contains(tracerName));
-            }
-
-            foreach (string tracerName in model.TracerDefinitions.Where(t => !tracerBoundaryConditionsTracerNames.Contains(t)))
-            {
-                Assert.False(sourceAndSink.TracerNames.Contains(tracerName));
-            }
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
-        public void TestRemovingTracerBoundaryCondition_OnlyRemovesTracerNameFromSourceAndSink_IfNoOtherTracerBoundaryConditionsExistsForSameTracer()
-        {
-            var model = new WaterFlowFMModel();
-            var sourceAndSink = new SourceAndSink();
-
-            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
-            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
-
-            model.SourcesAndSinks.Add(sourceAndSink);
-
-            var tracer01 = "Tracer01";
-            var tracer02 = "Tracer02";
-            model.TracerDefinitions.AddRange(new List<string>
-            {
-                tracer01,
-                tracer02
-            });
-
-            var boundary01 = new Feature2D() {Name = "Boundary01"};
-            var set01 = new BoundaryConditionSet();
-            model.BoundaryConditionSets.Add(set01);
-
-            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary01,
-                TracerName = tracer01
-            });
-
-            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary01,
-                TracerName = tracer02
-            });
-
-            var boundary02 = new Feature2D() {Name = "Boundary02"};
-            var set02 = new BoundaryConditionSet();
-            model.BoundaryConditionSets.Add(set02);
-            set02.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary02,
-                TracerName = tracer01
-            });
-
-            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
-            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
-
-            set01.BoundaryConditions.Clear();
-
-            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
-        }
-
-        [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        [NUnit.Framework.Category(TestCategory.Slow)]
-        public void TestRemovingBoundaryConditionSet_OnlyRemovesTracerNameFromSourceAndSink_IfNoOtherTracerBoundaryConditionsExistsForSameTracer()
-        {
-            var model = new WaterFlowFMModel();
-            var sourceAndSink = new SourceAndSink();
-
-            Assert.AreEqual(0, sourceAndSink.SedimentFractionNames.Count);
-            Assert.AreEqual(0, sourceAndSink.TracerNames.Count);
-
-            model.SourcesAndSinks.Add(sourceAndSink);
-
-            var tracer01 = "Tracer01";
-            var tracer02 = "Tracer02";
-            model.TracerDefinitions.AddRange(new List<string>
-            {
-                tracer01,
-                tracer02
-            });
-
-            var boundary01 = new Feature2D() {Name = "Boundary01"};
-            var set01 = new BoundaryConditionSet();
-            model.BoundaryConditionSets.Add(set01);
-
-            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary01,
-                TracerName = tracer01
-            });
-
-            set01.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary01,
-                TracerName = tracer02
-            });
-
-            var boundary02 = new Feature2D() {Name = "Boundary02"};
-            var set02 = new BoundaryConditionSet();
-            model.BoundaryConditionSets.Add(set02);
-            set02.BoundaryConditions.Add(new FlowBoundaryCondition(FlowBoundaryQuantityType.Tracer, BoundaryConditionDataType.Empty)
-            {
-                Feature = boundary02,
-                TracerName = tracer01
-            });
-
-            Assert.AreEqual(2, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
-            Assert.AreEqual(tracer02, sourceAndSink.TracerNames[1]);
-
-            model.BoundaryConditionSets.Remove(set01);
-
-            Assert.AreEqual(1, sourceAndSink.TracerNames.Count);
-            Assert.AreEqual(tracer01, sourceAndSink.TracerNames[0]);
         }
 
         [Test]
@@ -266,10 +147,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             var model = new WaterFlowFMModel();
 
-            var weir = new Weir2D()
+            var weir = new Structure()
             {
                 Name = "weir01",
-                WeirFormula = new SimpleWeirFormula()
+                Formula = new SimpleWeirFormula()
             };
 
             var collectionChangedCount = 0;
@@ -286,7 +167,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var weirFormulaChangeCount = 0;
             ((INotifyPropertyChanged) model).PropertyChanged += (s, e) =>
             {
-                if (e.PropertyName != nameof(Weir.WeirFormula))
+                if (e.PropertyName != nameof(Structure.Formula))
                 {
                     return;
                 }
@@ -294,11 +175,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 weirFormulaChangeCount++;
             };
             // add weir to model
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
             Assert.AreEqual(1, collectionChangedCount);
 
             // change weirformula
-            weir.WeirFormula = new GeneralStructureWeirFormula();
+            weir.Formula = new GeneralStructureFormula();
             Assert.AreEqual(1, weirFormulaChangeCount);
         }
 
@@ -307,12 +188,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             var model = new WaterFlowFMModel();
 
-            var weir = new Weir2D
+            var weir = new Structure
             {
                 Name = "weir01",
-                WeirFormula = new SimpleWeirFormula()
+                Formula = new SimpleWeirFormula()
             };
-            model.Area.Weirs.Add(weir);
+            model.Area.Structures.Add(weir);
 
             List<IDataItem> dataItems = model.GetChildDataItems(weir).ToList();
 
@@ -326,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.AreEqual(KnownStructureProperties.CrestLevel, ((WaterFlowFMFeatureValueConverter) dataItems[0].ValueConverter).ParameterName);
 
             // change weir formula
-            weir.WeirFormula = new GeneralStructureWeirFormula();
+            weir.Formula = new GeneralStructureFormula();
             dataItems = model.GetChildDataItems(weir).ToList();
             Assert.AreEqual(3, dataItems.Count);
 
@@ -464,27 +345,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             var model = new WaterFlowFMModel(); // empty model
             Assert.IsTrue(model.Grid.IsEmpty);
-            Assert.IsNotNull(model.Bathymetry);
-            Assert.AreEqual(0, model.Bathymetry.ToPointCloud().PointValues.Count);
-        }
-
-        [Test]
-        public void AddInitialSalinityTest()
-        {
-            // this test checks for SpatialDataLayersChanged() in WaterFlowFMModel.
-            var model = new WaterFlowFMModel();
-
-            Assert.AreEqual(1, model.InitialSalinity.Coverages.Count);
-            IDataItem originalDataItem = model.GetDataItemByValue(model.InitialSalinity.Coverages[0]);
-            string originalName = originalDataItem.Name;
-
-            model.InitialSalinity.VerticalProfile = new VerticalProfileDefinition(VerticalProfileType.TopBottom);
-
-            Assert.AreEqual(2, model.InitialSalinity.Coverages.Count);
-            Assert.IsNotNull(model.GetDataItemByValue(model.InitialSalinity.Coverages[1]));
-            // check if a data item was created
-
-            Assert.AreNotEqual(originalName, model.GetDataItemByValue(model.InitialSalinity.Coverages[0]).Name);
+            Assert.IsNotNull(model.SpatialData.Bathymetry);
+            Assert.AreEqual(0, model.SpatialData.Bathymetry.ToPointCloud().PointValues.Count);
         }
 
         [Test]
@@ -508,9 +370,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             model.TransformCoordinates(transformation);
 
             Assert.AreEqual(model.CoordinateSystem, newCoordinateSystem);
-            Assert.AreEqual(model.Roughness.CoordinateSystem, newCoordinateSystem);
+            Assert.AreEqual(model.SpatialData.Roughness.CoordinateSystem, newCoordinateSystem);
 
-            IDataItem roughnessDataItem = model.GetDataItemByValue(model.Roughness);
+            IDataItem roughnessDataItem = model.GetDataItemByValue(model.SpatialData.Roughness);
             var valueConverter = (SpatialOperationSetValueConverter) roughnessDataItem.ValueConverter;
 
             Assert.AreEqual(model.CoordinateSystem, valueConverter.SpatialOperationSet.CoordinateSystem);
@@ -937,7 +799,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
 
-            IValueConverter valueConverter = model.GetDataItemByValue(model.Roughness).ValueConverter;
+            IValueConverter valueConverter = model.AllDataItems.First(d => d.Value == model.SpatialData.Roughness).ValueConverter;
             var spatialOperationValueConverter = valueConverter as SpatialOperationSetValueConverter;
 
             Assert.IsNotNull(spatialOperationValueConverter);
@@ -955,10 +817,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
 
             UnstructuredGrid originalGrid = model.Grid;
-            IDataItem bathymetryDataItem = model.GetDataItemByValue(model.Bathymetry);
+            IDataItem bathymetryDataItem = model.GetDataItemByValue(model.SpatialData.Bathymetry);
             SpatialOperationSetValueConverter spatialOperationValueConverter =
                 SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(bathymetryDataItem,
-                                                                                                model.Bathymetry.Name);
+                                                                                                model.SpatialData.Bathymetry.Name);
 
             Assert.IsNotNull(spatialOperationValueConverter);
 
@@ -967,9 +829,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             model.ReloadGrid(true);
 
-            Assert.IsTrue(spatialOperationValueConverter.SpatialOperationSet.Dirty);
-
-            spatialOperationValueConverter.SpatialOperationSet.Execute();
+            Assert.That(spatialOperationValueConverter.SpatialOperationSet.Dirty, Is.False);
+            
             var cov =
                 spatialOperationValueConverter.SpatialOperationSet.Output.Provider.Features[0] as
                     UnstructuredGridCoverage;
@@ -1007,13 +868,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             try
             {
-                Assert.That(model.Bathymetry.Components[0].NoDataValue, Is.EqualTo(-999.0).Within(0.01));
+                Assert.That(model.SpatialData.Bathymetry.Components[0].NoDataValue, Is.EqualTo(-999.0).Within(0.01));
                 TypeUtils.SetPrivatePropertyValue(model, "MduFilePath", @".\");
                 model.ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = localCopyOfTestFile;
                 model.ReloadGrid(false);
                 Assert.That(model.Grid.Cells.Count, Is.GreaterThan(0));
 
-                Assert.That(model.Bathymetry.Components[0].NoDataValue, Is.EqualTo(-999.0).Within(0.01));
+                Assert.That(model.SpatialData.Bathymetry.Components[0].NoDataValue, Is.EqualTo(-999.0).Within(0.01));
             }
             finally
             {
@@ -1103,12 +964,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Pumps.Add(new Pump2D {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
-            fmModel.Area.Weirs.Add(new Weir2D {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
+            fmModel.Area.Pumps.Add(new Pump {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
+            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/gate01.pli")});
 
             // Check that group name gives a relative path from the mdu folder
             Assert.That(fmModel.Area.Pumps.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
-            Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
+            Assert.That(fmModel.Area.Structures.FirstOrDefault().GroupName, Is.EqualTo(@"FeatureFiles/FlowFM_structures.ini"));
         }
 
         [Test]
@@ -1123,10 +984,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             fmModel.ImportFromMdu(mduFilePath);
 
             // Import dry points
-            fmModel.Area.Weirs.Add(new Weir2D {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")});
+            fmModel.Area.Structures.Add(new Structure {GroupName = Path.Combine(localPath, @"MduFileWithoutFeatureFileReferences/FeatureFiles/nonReferencedGates.pli")});
 
             // Check that group name gives a relative path from the mdu folder
-            Assert.That(fmModel.Area.Weirs.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
+            Assert.That(fmModel.Area.Structures.FirstOrDefault().GroupName, Is.EqualTo("FeatureFiles/" + fmModel.Name + "_structures.ini"));
         }
 
         [Test]
@@ -1158,7 +1019,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
             var messageList = new List<string>
             {
+                "0,00%",
                 "Initializing",
+                "0,00%",
                 "0,00%",
                 "0,00%",
                 "Initializing",
@@ -1639,12 +1502,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         [Test]
         [TestCase(typeof(SimpleWeirFormula), KnownFeatureCategories.Weirs)]
-        [TestCase(typeof(GatedWeirFormula), KnownFeatureCategories.Gates)]
-        [TestCase(typeof(GeneralStructureWeirFormula), KnownFeatureCategories.GeneralStructures)]
+        [TestCase(typeof(SimpleGateFormula), KnownFeatureCategories.Gates)]
+        [TestCase(typeof(GeneralStructureFormula), KnownFeatureCategories.GeneralStructures)]
         public void GivenAWeirFeature_WhenGettingFeatureCategory_ThenTheCorrectStringIsReturned(Type weirType, string expectedString)
         {
             // Given
-            var feature = new Weir("myStructure") {WeirFormula = (IWeirFormula) Activator.CreateInstance(weirType, false)};
+            var feature = new Structure() {Name = "myStructure", Formula = (IStructureFormula) Activator.CreateInstance(weirType, false)};
             var model = new WaterFlowFMModel();
 
             // When
@@ -1715,10 +1578,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 dataItemWaterFlowFmModel.LinkedTo.Parent.ToString());
 
             // When and Then
-            Weir2D feature = model.Area.Weirs.FirstOrDefault();
+            IStructure feature = model.Area.Structures.FirstOrDefault();
             Assert.NotNull(feature);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature.WeirFormula = new GatedWeirFormula(),
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => feature.Formula = new SimpleGateFormula(),
                                                            expectedMessage);
 
             Assert.IsNull(dataItemWaterFlowFmModel.LinkedTo, "The DataItem of the structure is still linked after changing the weir formula");
@@ -1734,9 +1597,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             WaterFlowFMModel model = CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel);
 
             // When
-            model.Area.Weirs.Clear();
+            model.Area.Structures.Clear();
 
-            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
+            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is IStructure);
             Assert.IsNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not removed after removing the weir");
             Assert.AreEqual(0, rtcDataItem.LinkedBy.Count, "The DataItem of the RTC component is still linked after removing the weir");
         }
@@ -1770,32 +1633,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         }
 
         [Test]
-        [NUnit.Framework.Category(TestCategory.Integration)]
-        public void GivenAModelWithADataItem_WhenAddingNewTracerWithSameName_ThenValueOfThisDataItemIsSetAndNoExtraDataItemIsCreated()
-        {
-            // Given
-            const string tracerName = "tracer";
-            var dataItem = new DataItem(null, tracerName, typeof(UnstructuredGridCellCoverage), DataItemRole.Input, "");
-            using (var model = new WaterFlowFMModel())
-            {
-                model.DataItems.Add(dataItem);
-                int dataItemCountBefore = model.DataItems.Count;
-
-                // Pre-condition
-                Assert.That(dataItem.Value, Is.Null);
-
-                // When
-                model.TracerDefinitions.Add(tracerName);
-
-                // Then
-                Assert.That(dataItem.Value, Is.SameAs(model.InitialTracers.Single()),
-                            "Value of data item was not as expected.");
-                Assert.That(model.DataItems.Count, Is.EqualTo(dataItemCountBefore),
-                            "No data items should have been added.");
-            }
-        }
-
-        [Test]
         public void Constructor_CorrectRestartData()
         {
             // Call
@@ -1808,6 +1645,97 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             Assert.That(model.RestartInput.Path, Is.Null);
             Assert.That(model.RestartOutput, Is.Not.Null);
             Assert.That(model.RestartOutput, Is.Empty);
+        }
+
+        [Test]
+        public void Constructor_InitializesSpatialData()
+        {
+            // Call
+            using (var model = new WaterFlowFMModel())
+            {
+                // Assert
+                Assert.That(model.SpatialData, Is.Not.Null);
+                Assert.That(model.SpatialDataItems, Is.Not.Empty);
+                Assert.That(model.SpatialDataItems, Is.EqualTo(model.SpatialData.DataItems));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void Constructor_SubscribesToSpatialDataDataItems_WhenAddingItemToSpatialData_PropagatesEvents()
+        {
+            var dataItemsObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+            var modelObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                model.SpatialDataItems.CollectionChanged += dataItemsObserver.OnEventFired;
+                ((INotifyCollectionChanged) model).CollectionChanged += modelObserver.OnEventFired;
+
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false) {Name = "Some tracer"};
+
+                // When
+                model.SpatialData.AddTracer(coverage);
+
+                // Then
+                IDataItem dataItem = model.SpatialData.DataItems.First(d => d.Value == coverage);
+                Assert.That(model.SpatialDataItems, Does.Contain(dataItem));
+                Assert.That(model.SpatialDataItems, Is.EquivalentTo(model.SpatialData.DataItems));
+
+                Assert.That(dataItemsObserver.NCalls, Is.EqualTo(1));
+                Assert.That(dataItemsObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(dataItemsObserver.EventArgses[0].NewItems, Has.Count.EqualTo(1));
+                Assert.That(dataItemsObserver.EventArgses[0].NewItems[0], Is.SameAs(dataItem));
+                Assert.That(dataItemsObserver.EventArgses[0].OldItems, Is.Null);
+
+                Assert.That(modelObserver.NCalls, Is.EqualTo(1));
+                Assert.That(modelObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(modelObserver.EventArgses[0].NewItems, Has.Count.EqualTo(1));
+                Assert.That(modelObserver.EventArgses[0].NewItems[0], Is.SameAs(dataItem));
+                Assert.That(modelObserver.EventArgses[0].OldItems, Is.Null);
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void Constructor_SubscribesToSpatialDataDataItems_WhenRemovingItemFromSpatialData_PropagatesEvents()
+        {
+            var dataItemsObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+            var modelObserver = new EventTestObserver<NotifyCollectionChangedEventArgs>();
+
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false) {Name = "Some fraction"};
+                model.SpatialData.AddFraction(coverage);
+                IDataItem dataItem = model.SpatialData.DataItems.First(d => d.Value == coverage);
+
+                model.SpatialDataItems.CollectionChanged += dataItemsObserver.OnEventFired;
+                ((INotifyCollectionChanged) model).CollectionChanged += modelObserver.OnEventFired;
+
+                // Precondition
+                Assert.That(model.SpatialDataItems, Does.Contain(dataItem));
+
+                // When
+                model.SpatialData.RemoveFraction("Some fraction");
+
+                // Then
+                Assert.That(model.SpatialDataItems, Does.Not.Contain(dataItem));
+                Assert.That(model.SpatialDataItems, Is.EquivalentTo(model.SpatialData.DataItems));
+
+                Assert.That(dataItemsObserver.NCalls, Is.EqualTo(1));
+                Assert.That(dataItemsObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(dataItemsObserver.EventArgses[0].NewItems, Is.Null);
+                Assert.That(dataItemsObserver.EventArgses[0].OldItems, Has.Count.EqualTo(1));
+                Assert.That(dataItemsObserver.EventArgses[0].OldItems[0], Is.SameAs(dataItem));
+
+                Assert.That(modelObserver.NCalls, Is.EqualTo(1));
+                Assert.That(modelObserver.Senders[0], Is.SameAs(model.SpatialDataItems));
+                Assert.That(modelObserver.EventArgses[0].NewItems, Is.Null);
+                Assert.That(modelObserver.EventArgses[0].OldItems, Has.Count.EqualTo(1));
+                Assert.That(modelObserver.EventArgses[0].OldItems[0], Is.SameAs(dataItem));
+            }
         }
 
         [Test]
@@ -1931,8 +1859,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         {
             // Arrange
             var fmModel = new WaterFlowFMModel();
-            var weir = new Weir2D();
-            fmModel.Area.Weirs.Add(weir);
+            var weir = new Structure();
+            fmModel.Area.Structures.Add(weir);
 
             // Act
             IList<IDataItem> couplingDataItems = ((ICoupledModel) fmModel).GetDataItemsUsedForCouplingModel(DataItemRole.Input).ToList();
@@ -2042,7 +1970,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             for (var i = 0; i < bedLevelLocations.Length; i++)
             {
                 TypeUtils.CallPrivateMethod(fmModel, "UpdateBathymetryCoverage", bedLevelLocations[i]);
-                Assert.AreEqual(coverageTypes[i], fmModel.Bathymetry.GetType());
+                Assert.AreEqual(coverageTypes[i], fmModel.SpatialData.Bathymetry.GetType());
             }
         }
 
@@ -2063,10 +1991,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             bedLevelTypeProperty.SetValueAsString(((int) bedLevelLocation).ToString());
 
             // execution
-            TypeUtils.CallPrivateMethod(fmModel, "InitializeUnstructuredGridCoverages");
+            TypeUtils.CallPrivateMethod(fmModel, "SetSpatialCoverages");
 
             // check result
-            Assert.AreEqual(coverageType, fmModel.Bathymetry.GetType());
+            Assert.AreEqual(coverageType, fmModel.SpatialData.Bathymetry.GetType());
         }
 
         [TestCase(true)]
@@ -2151,15 +2079,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         private static WaterFlowFMModel CreateFMModelWithStructureLinkedToRTC(out DataItem rtcDataItem, out IDataItem dataItemWaterFlowFmModel)
         {
-            var feature = new Weir2D() {WeirFormula = new SimpleWeirFormula()};
+            var feature = new Structure {Formula = new SimpleWeirFormula()};
 
             var model = new WaterFlowFMModel();
 
             rtcDataItem = new DataItem() {Parent = new DataItem() {Name = "Control Group 1"}};
 
-            model.Area.Weirs.Add(feature);
+            model.Area.Structures.Add(feature);
 
-            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is Weir2D);
+            dataItemWaterFlowFmModel = model.AllDataItems.FirstOrDefault(di => di.ComposedValue is IStructure);
 
             Assert.IsNotNull(dataItemWaterFlowFmModel, "The DataItem for the weir is not created");
 
@@ -2220,17 +2148,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var model = new WaterFlowFMModel())
             {
-                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
-                coverage.Components[0].NoDataValue = -999d;
-
-                model.DataItems.Add(new DataItem(coverage, "Some Tracer"));
-
                 // When
                 model.TracerDefinitions.Add("Some Tracer");
 
                 // Then
-                Assert.That(model.InitialTracers.Single(), Is.SameAs(coverage));
-                Assert.That(coverage.Grid, Is.SameAs(model.Grid));
+                UnstructuredGridCellCoverage tracerCoverage = model.SpatialData.InitialTracers.Single();
+                Assert.That(tracerCoverage.Name, Is.EqualTo("Some Tracer"));
+                Assert.That(tracerCoverage.Grid, Is.SameAs(model.Grid));
+                Assert.That(tracerCoverage.Components[0].DefaultValue, Is.EqualTo(0d));
+                Assert.That(tracerCoverage.Components[0].Values.OfType<double>(), Is.All.EqualTo(0d));
             }
         }
 
@@ -2241,16 +2167,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             // Given
             using (var model = new WaterFlowFMModel())
             {
-                var coverage = new UnstructuredGridCellCoverage(new UnstructuredGrid(), false);
-                coverage.Components[0].NoDataValue = -999d;
-
-                model.DataItems.Add(new DataItem(coverage, "Some Sediment Fraction_SedConc"));
-
                 // When
                 model.SedimentFractions.Add(new SedimentFraction {Name = "Some Sediment Fraction"});
 
                 // Then
-                Assert.That(model.InitialFractions.Single(), Is.SameAs(coverage));
+                UnstructuredGridCellCoverage coverage = model.SpatialData.InitialFractions.Single();
+                Assert.That(coverage.Name, Is.EqualTo("Some Sediment Fraction_SedConc"));
                 Assert.That(coverage.Grid, Is.SameAs(model.Grid));
             }
         }
@@ -2278,6 +2200,192 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                             Is.EqualTo(expectedCorrectedTargetName), 
                             "The retrieved corrected target name {0} is not the same as the expected corrected target name {1} for target name {2}", correctedTargetName, expectedCorrectedTargetName, oldTargetName);
             }
+        }
+        
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAWaterFlowFMModelWithTracers_WhenAddingASourceAndSink_TheTracersAreAddedToTheSourceAndSink()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                var tracers = Create.For<IList<string>>();
+                model.TracerDefinitions.AddRange(tracers);
+
+                var sourceAndSink = new SourceAndSink();
+
+                // When
+                model.SourcesAndSinks.Add(sourceAndSink);
+
+                // Then
+                IEventedList<IVariable> variables = sourceAndSink.Data.Components;
+                Assert.That(variables, Has.Count.EqualTo(7));
+                Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
+                Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
+                Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
+                Assert.That(variables[3].Name, Is.EqualTo("Secondary Flow"));
+                Assert.That(variables[4].Name, Is.EqualTo(tracers[0]));
+                Assert.That(variables[5].Name, Is.EqualTo(tracers[1]));
+                Assert.That(variables[6].Name, Is.EqualTo(tracers[2]));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAWaterFlowFMModelWithSourcesAndSinks_WhenAddingATracer_TheTracerIsAddedToTheSourcesAndSinks()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                List<SourceAndSink> sourcesAndSinks = CreateSourcesAndSinks().ToList();
+                model.SourcesAndSinks.AddRange(sourcesAndSinks);
+
+                // When
+                model.TracerDefinitions.Add("Some Tracer");
+
+                // Then
+                foreach (SourceAndSink sourceAndSink in sourcesAndSinks)
+                {
+                    IEventedList<IVariable> variables = sourceAndSink.Data.Components;
+                    Assert.That(variables, Has.Count.EqualTo(5));
+                    Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
+                    Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
+                    Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
+                    Assert.That(variables[3].Name, Is.EqualTo("Secondary Flow"));
+                    Assert.That(variables[4].Name, Is.EqualTo("Some Tracer"));
+                }
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAWaterFlowFMModelWithSourcesAndSinks_WhenRemovingATracer_TheTracerIsRemovedFromTheSourcesAndSinks()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                List<SourceAndSink> sourcesAndSinks = CreateSourcesAndSinks().ToList();
+                model.SourcesAndSinks.AddRange(sourcesAndSinks);
+
+                model.TracerDefinitions.Add("Some Tracer 1");
+                model.TracerDefinitions.Add("Some Tracer 2");
+
+                // When
+                model.TracerDefinitions.Remove("Some Tracer 1");
+
+                // Then
+                foreach (SourceAndSink sourceAndSink in sourcesAndSinks)
+                {
+                    IEventedList<IVariable> variables = sourceAndSink.Data.Components;
+                    Assert.That(variables, Has.Count.EqualTo(5));
+                    Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
+                    Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
+                    Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
+                    Assert.That(variables[3].Name, Is.EqualTo("Secondary Flow"));
+                    Assert.That(variables[4].Name, Is.EqualTo("Some Tracer 2"));
+                }
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAWaterFlowFMModelWithSedimentFractions_WhenAddingASourceAndSink_TheSedimentFractionsAreAddedToTheSourceAndSink()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                List<SedimentFraction> sedimentFractions = CreateSedimentFractions().ToList();
+                model.SedimentFractions.AddRange(sedimentFractions);
+
+                var sourceAndSink = new SourceAndSink();
+
+                // When
+                model.SourcesAndSinks.Add(sourceAndSink);
+
+                // Then
+                IEventedList<IVariable> variables = sourceAndSink.Data.Components;
+                Assert.That(variables, Has.Count.EqualTo(7));
+                Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
+                Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
+                Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
+                Assert.That(variables[3].Name, Is.EqualTo(sedimentFractions[0].Name));
+                Assert.That(variables[4].Name, Is.EqualTo(sedimentFractions[1].Name));
+                Assert.That(variables[5].Name, Is.EqualTo(sedimentFractions[2].Name));
+                Assert.That(variables[6].Name, Is.EqualTo("Secondary Flow"));
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAWaterFlowFMModelWithSourcesAndSinks_WhenAddingASedimentFraction_TheSedimentFractionIsAddedToTheSourcesAndSinks()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                List<SourceAndSink> sourcesAndSinks = CreateSourcesAndSinks().ToList();
+                model.SourcesAndSinks.AddRange(sourcesAndSinks);
+
+                // When
+                model.SedimentFractions.Add(new SedimentFraction {Name = "Some Sediment Fraction"});
+
+                // Then
+                foreach (SourceAndSink sourceAndSink in sourcesAndSinks)
+                {
+                    IEventedList<IVariable> variables = sourceAndSink.Data.Components;
+                    Assert.That(variables, Has.Count.EqualTo(5));
+                    Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
+                    Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
+                    Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
+                    Assert.That(variables[3].Name, Is.EqualTo("Some Sediment Fraction"));
+                    Assert.That(variables[4].Name, Is.EqualTo("Secondary Flow"));
+                }
+            }
+        }
+
+        [Test]
+        [NUnit.Framework.Category(TestCategory.Integration)]
+        public void GivenAWaterFlowFMModelWithSourcesAndSinks_WhenRemovingASedimentFraction_TheSedimentFractionIsRemovedFromTheSourcesAndSinks()
+        {
+            // Given
+            using (var model = new WaterFlowFMModel())
+            {
+                List<SourceAndSink> sourcesAndSinks = CreateSourcesAndSinks().ToList();
+                model.SourcesAndSinks.AddRange(sourcesAndSinks);
+
+                var sedimentFraction1 = new SedimentFraction {Name = "Some Sediment Fraction 1"};
+                var sedimentFraction2 = new SedimentFraction {Name = "Some Sediment Fraction 2"};
+                model.SedimentFractions.Add(sedimentFraction1);
+                model.SedimentFractions.Add(sedimentFraction2);
+
+                // When
+                model.SedimentFractions.Remove(sedimentFraction1);
+
+                // Then
+                foreach (SourceAndSink sourceAndSink in sourcesAndSinks)
+                {
+                    IEventedList<IVariable> variables = sourceAndSink.Data.Components;
+                    Assert.That(variables, Has.Count.EqualTo(5));
+                    Assert.That(variables[0].Name, Is.EqualTo("Discharge"));
+                    Assert.That(variables[1].Name, Is.EqualTo("Salinity"));
+                    Assert.That(variables[2].Name, Is.EqualTo("Temperature"));
+                    Assert.That(variables[3].Name, Is.EqualTo("Some Sediment Fraction 2"));
+                    Assert.That(variables[4].Name, Is.EqualTo("Secondary Flow"));
+                }
+            }
+        }
+        
+        private static IEnumerable<SourceAndSink> CreateSourcesAndSinks()
+        {
+            yield return new SourceAndSink();
+            yield return new SourceAndSink();
+            yield return new SourceAndSink();
+        }
+
+        private static IEnumerable<SedimentFraction> CreateSedimentFractions()
+        {
+            yield return new SedimentFraction {Name = "Fraction_1"};
+            yield return new SedimentFraction {Name = "Fraction_2"};
+            yield return new SedimentFraction {Name = "Fraction_3"};
         }
     }
 }

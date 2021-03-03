@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             // setup
             WaterFlowFMModel model = CreateSimpleBoxModel();
-            Assert.IsEmpty(model.InitialFractions.ToList());
+            Assert.IsEmpty(model.SpatialData.InitialFractions.ToList());
             var fraction = new SedimentFraction() {Name = "Frac1"};
             model.SedimentFractions.Add(fraction);
 
@@ -30,17 +30,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // TODO: delete the next two lines and uncomment the foreach-loop when Initial Condition is supported in ext-files (DELFT3DFM-996)
             ISpatiallyVaryingSedimentProperty initialConditionProperty = spatiallyVaryingProperties.FirstOrDefault();
             Assert.NotNull(initialConditionProperty);
-            //foreach (var spatiallyVaryingProperty in spatiallyVaryingProperties)
-            //{
-            //    // DataItem for coverage should not exist yet
-            //    Assert.Null(model.DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingProperty.SpatiallyVaryingName));
-            //}
 
             foreach (ISpatiallyVaryingSedimentProperty spatiallyVaryingProperty in spatiallyVaryingProperties)
             {
                 // Set spatially varying property to true, DataItem for coverage should now exist
                 spatiallyVaryingProperty.IsSpatiallyVarying = true;
-                Assert.NotNull(model.DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingProperty.SpatiallyVaryingName));
+                Assert.NotNull(model.AllDataItems.FirstOrDefault(di => di.Name == spatiallyVaryingProperty.SpatiallyVaryingName));
             }
 
             // Remove the Fraction (with a spatially varying property set to true) the DataItem for the coverage should also be removed
@@ -54,7 +49,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.SedimentFractions.Add(fraction);
             foreach (ISpatiallyVaryingSedimentProperty spatiallyVaryingProperty in spatiallyVaryingProperties)
             {
-                Assert.NotNull(model.DataItems.FirstOrDefault(di => di.Name == spatiallyVaryingProperty.SpatiallyVaryingName));
+                Assert.NotNull(model.AllDataItems.FirstOrDefault(di => di.Name == spatiallyVaryingProperty.SpatiallyVaryingName));
             }
         }
 
@@ -64,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // create
             WaterFlowFMModel model = CreateSimpleBoxModel();
             model.BoundaryConditionSets[0].BoundaryConditions.Clear();
-            Assert.IsEmpty(model.InitialFractions.ToList());
+            Assert.IsEmpty(model.SpatialData.InitialFractions.ToList());
             Assert.IsEmpty(model.BoundaryConditionSets[0].BoundaryConditions.ToList());
             Assert.IsEmpty(
                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
@@ -76,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //The fraction does no longer imply an initial value
             // TODO: delete the next line and uncomment the zero-check when Initial Condition is supported in ext-files (DELFT3DFM-996)
-            Assert.AreEqual(2, model.InitialFractions.Count);
+            Assert.AreEqual(2, model.SpatialData.InitialFractions.Count());
             //Assert.AreEqual(0, model.InitialFractions.Count);
 
             //add sediment bc
@@ -91,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //clearing
             model.SedimentFractions.Clear(); // All boundary conditions with these fractions should be removed.
-            Assert.IsEmpty(model.InitialFractions);
+            Assert.IsEmpty(model.SpatialData.InitialFractions);
             Assert.IsEmpty(model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                                 .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.SedimentConcentration)
                                 .ToList());
@@ -103,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // create
             WaterFlowFMModel model = CreateSimpleBoxModel();
             model.BoundaryConditionSets[0].BoundaryConditions.Clear();
-            Assert.IsEmpty(model.InitialFractions.ToList());
+            Assert.IsEmpty(model.SpatialData.InitialFractions.ToList());
             Assert.IsEmpty(model.BoundaryConditionSets[0].BoundaryConditions.ToList());
             Assert.IsEmpty(
                 model.BoundaryConditions.OfType<FlowBoundaryCondition>()
@@ -117,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //The fraction does no longer imply an initial value
             // TODO: delete the next line and uncomment the zero-check when Initial Condition is supported in ext-files (DELFT3DFM-996)
-            Assert.AreEqual(2, model.InitialFractions.Count);
+            Assert.AreEqual(2, model.SpatialData.InitialFractions.Count());
             //Assert.AreEqual(0, model.InitialFractions.Count);
 
             //add sediment bc
@@ -138,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //clearing
             model.SedimentFractions.Clear(); // All boundary conditions with these fractions should be removed.
-            Assert.IsEmpty(model.InitialFractions);
+            Assert.IsEmpty(model.SpatialData.InitialFractions);
             Assert.AreEqual(model.BoundaryConditions.ToList().Count, 2);
             Assert.AreEqual(model.BoundaryConditions.OfType<FlowBoundaryCondition>()
                                  .Where(bc => bc.FlowQuantity == FlowBoundaryQuantityType.MorphologyBedLevelPrescribed
@@ -153,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         {
             // setup
             WaterFlowFMModel model = CreateSimpleBoxModel();
-            Assert.IsEmpty(model.InitialFractions.ToList());
+            Assert.IsEmpty(model.SpatialData.InitialFractions.ToList());
             var fraction = new SedimentFraction() {Name = "Frac1"};
 
             // set the sand sediment type to the fraction
@@ -170,7 +165,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 sedimentProperty.IsSpatiallyVarying = true;
             }
 
-            Assert.AreEqual(spatiallyVaryingProperties.Count, model.InitialFractions.Count);
+            Assert.AreEqual(spatiallyVaryingProperties.Count, model.SpatialData.InitialFractions.Count());
 
             // Now change the sediment type to mud and repeat above steps. 
             fraction.CurrentSedimentType = fraction.AvailableSedimentTypes.First(sed => sed.Key == "mud");
@@ -182,7 +177,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 sedimentProperty.IsSpatiallyVarying = false;
             }
 
-            Assert.AreEqual(0, model.InitialFractions.Count);
+            Assert.AreEqual(0, model.SpatialData.InitialFractions.Count());
 
             // Set all spatially varying to true, this should add as much fractions as present properties
             foreach (ISpatiallyVaryingSedimentProperty sedimentProperty in spatiallyVaryingProperties)
@@ -190,19 +185,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 sedimentProperty.IsSpatiallyVarying = true;
             }
 
-            Assert.AreEqual(spatiallyVaryingProperties.Count, model.InitialFractions.Count);
+            Assert.AreEqual(spatiallyVaryingProperties.Count, model.SpatialData.InitialFractions.Count());
 
             // Change the sediment type back to sand, check if the number of fractions is correct 
             fraction.CurrentSedimentType = fraction.AvailableSedimentTypes.First(sed => sed.Key == "sand");
             spatiallyVaryingProperties = fraction.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().ToList();
-            Assert.AreEqual(spatiallyVaryingProperties.Count, model.InitialFractions.Count);
+            Assert.AreEqual(spatiallyVaryingProperties.Count, model.SpatialData.InitialFractions.Count());
         }
 
         [Test]
         public void ChangeSedimentTypeOrFormulaToSpatiallyVaryingCreatesAnInitialFractionWithName()
         {
             WaterFlowFMModel model = CreateSimpleBoxModel();
-            Assert.IsEmpty(model.InitialFractions.ToList());
+            Assert.IsEmpty(model.SpatialData.InitialFractions.ToList());
             var fraction = new SedimentFraction() {Name = "Frac1"};
 
             model.SedimentFractions.Add(fraction);
@@ -220,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 {
                     fraction.CurrentFormulaType = formula;
                     /* Changing formula type resets Spatially Varying Formula operations */
-                    Assert.AreEqual(model.InitialFractions.Count, typesSVProps.Count);
+                    Assert.AreEqual(model.SpatialData.InitialFractions.Count(), typesSVProps.Count);
                     //Set the spatially varying props to true
                     List<ISpatiallyVaryingSedimentProperty> formulaSVProps = fraction.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>().ToList();
                     CheckInitialConditionWithName(formulaSVProps, model, fraction, formulaSVProps.Count + typesSVProps.Count); /* SedConc is always SpatiallyVarying*/
@@ -248,11 +243,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 svProps.ForEach(f => f.IsSpatiallyVarying = true);
 
                 //assert if the initial condition has not been added.
-                Assert.AreEqual(model.InitialFractions.Count, svPropsCount); /*SedConc is always Spatially varying*/
+                Assert.AreEqual(model.SpatialData.InitialFractions.Count(), svPropsCount); /*SedConc is always Spatially varying*/
 
                 //assert if the initial condition does not have the correct name.
-                model.InitialFractions.ForEach(iniFrac => Assert.NotNull(iniFrac.Name));
-                model.InitialFractions.ForEach(iniFrac => Assert.That(fraction.GetAllActiveSpatiallyVaryingPropertyNames().Contains(iniFrac.Name)));
+                model.SpatialData.InitialFractions.ForEach(iniFrac => Assert.NotNull(iniFrac.Name));
+                model.SpatialData.InitialFractions.ForEach(iniFrac => Assert.That(fraction.GetAllActiveSpatiallyVaryingPropertyNames().Contains(iniFrac.Name)));
             }
         }
     }

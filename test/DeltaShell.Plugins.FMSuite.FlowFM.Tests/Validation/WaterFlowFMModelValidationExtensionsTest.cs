@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
@@ -59,10 +60,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void CheckPumpCapacityIsNotNegative()
         {
             var model = new WaterFlowFMModel();
-            model.Area.Pumps.Add(new Pump2D("A", true)
+            model.Area.Pumps.Add(new Pump()
             {
+                Name = "A",
                 Capacity = -1.2,
-                Branch = null
             });
 
             ValidationReport report = model.Validate();
@@ -78,9 +79,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         public void CheckPumpCapacityTimeSeriesIsNotNegative()
         {
             var model = new WaterFlowFMModel();
-            var pump = new Pump2D("A", true)
+            var pump = new Pump()
             {
-                Branch = null,
+                Name = "A",
                 UseCapacityTimeSeries = true
             };
             pump.CapacityTimeSeries[new DateTime(2000, 1, 2)] = -1.2;
@@ -95,35 +96,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(1, issues.Count(i =>
                                                 i.Severity == ValidationSeverity.Error &&
                                                 i.Message.Contains("pump 'A': capacity time series does not span the model run interval.")));
-        }
-
-        [Test]
-        public void CheckPumpSuctionAndDeliverySideControl()
-        {
-            var model = new WaterFlowFMModel();
-            var pump = new Pump2D("A", true)
-            {
-                Branch = null,
-                ControlDirection = PumpControlDirection.SuctionAndDeliverySideControl,
-                StartDelivery = 1.2,
-                StopDelivery = -1.2,
-                StartSuction = -1.2,
-                StopSuction = 1.2
-            };
-            model.Area.Pumps.Add(pump);
-
-            ValidationReport report = model.Validate();
-
-            Assert.AreEqual(1,
-                            report.GetAllIssuesRecursive()
-                                  .Count(i =>
-                                             i.Severity == ValidationSeverity.Error &&
-                                             i.Message.Contains("pump 'A': Delivery start level must be less than or equal to delivery stop level.")));
-            Assert.AreEqual(1,
-                            report.GetAllIssuesRecursive()
-                                  .Count(i =>
-                                             i.Severity == ValidationSeverity.Error &&
-                                             i.Message.Contains("pump 'A': Suction start level must be greater than or equal to suction stop level.")));
         }
 
         [Test]
@@ -202,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             CreateSedimentFraction(thickProp, fmModel);
 
-            var coverage = (UnstructuredGridCoverage) fmModel.DataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
+            var coverage = (UnstructuredGridCoverage) fmModel.AllDataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
             coverage.SetValues(new[]
             {
                 1.0,
@@ -237,7 +209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
             CreateSedimentFraction(thickProp, fmModel);
 
-            var coverage = (UnstructuredGridCoverage) fmModel.DataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
+            var coverage = (UnstructuredGridCoverage) fmModel.AllDataItems.First(di => di.Name == thickProp.SpatiallyVaryingName).Value;
             coverage.SetValues(new[]
             {
                 -999.0,
@@ -379,6 +351,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.IsInstanceOf<FmValidationShortcut>(viewData);
             Assert.AreSame(fmModel, ((FmValidationShortcut) viewData).FlowFmModel);
             Assert.AreEqual("Output Parameters", ((FmValidationShortcut) viewData).TabName);
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void Validate_PhysicalProcesses_CompositeHeatFluxModelTypeWithoutMeteoData_AddsExpectedValidationIssueToValidationReport()
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                string compositeHeatFluxModelType = ((int) HeatFluxModelType.Composite).ToString();
+                model.ModelDefinition.GetModelProperty(KnownProperties.Temperature).SetValueAsString(compositeHeatFluxModelType);
+                
+                // Precondition
+                Assert.That(model.ModelDefinition.HeatFluxModel.MeteoData.GetValues<double>().Any(), Is.False);
+                
+                // Call
+                ValidationReport report = model.Validate();
+
+                // Assert
+                Assert.That(report, Is.Not.Null);
+
+                ValidationReport physicalProcessesReport = report.SubReports.SingleOrDefault(r => r.Category.Equals("Physical Processes"));
+                Assert.That(physicalProcessesReport, Is.Not.Null);
+
+                const string expectedError = "Composite Model option is selected for Temperature, however no Meteo Data was specified.";
+                ValidationIssue heatFluxModelMeteoDataIssue = physicalProcessesReport.GetAllIssuesRecursive()
+                                                                                     .SingleOrDefault(i => i.Message == expectedError);
+                Assert.That(heatFluxModelMeteoDataIssue, Is.Not.Null);
+                Assert.That(heatFluxModelMeteoDataIssue.Severity, Is.EqualTo(ValidationSeverity.Error));
+                
+                object viewData = heatFluxModelMeteoDataIssue.ViewData;
+                Assert.IsInstanceOf<HeatFluxModel>(viewData);
+            }
         }
 
         private static void CreateSedimentFraction(SpatiallyVaryingSedimentProperty<double> thickProp, WaterFlowFMModel fmModel)

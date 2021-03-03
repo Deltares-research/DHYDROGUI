@@ -9,6 +9,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
@@ -130,7 +131,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string lineToLower = line.ToLower();
             IEnumerable<string> keysToCheck = new[]
             {
-                quantityKey,
+                ExtForceFileConstants.QuantityKey,
                 disabledQuantityKey
             }.Concat(unsupportedQuantityKeys).Select(s => s.ToLower());
 
@@ -142,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             string propertyName = GetKeyPart(currentLine);
             var extForceFileItem = new ExtForceFileItem(GetValuePart(currentLine));
 
-            if (propertyName != quantityKey)
+            if (propertyName != ExtForceFileConstants.QuantityKey)
             {
                 //something other than QUANTITY must be disabled
                 extForceFileItem.Enabled = false;
@@ -173,16 +174,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             switch (propertyName)
             {
-                case fileNameKey:
+                case ExtForceFileConstants.FileNameKey:
                     SetFileName(extForceFileItem);
                     break;
-                case fileTypeKey:
+                case ExtForceFileConstants.FileTypeKey:
                     SetFileType(extForceFileItem);
                     break;
-                case methodKey:
+                case ExtForceFileConstants.MethodKey:
                     SetMethod(extForceFileItem);
                     break;
-                case operandKey:
+                case ExtForceFileConstants.OperandKey:
                     SetOperand(extForceFileItem);
                     break;
                 case valueKey:
@@ -929,7 +930,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(fileNameKey);
+                LogWarningQuantityPropertyAlreadySet(ExtForceFileConstants.FileNameKey);
             }
         }
 
@@ -937,7 +938,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (extForceFileItem.FileName == null)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(fileTypeKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(ExtForceFileConstants.FileTypeKey));
             }
 
             if (extForceFileItem.FileType == int.MinValue)
@@ -946,7 +947,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(fileTypeKey);
+                LogWarningQuantityPropertyAlreadySet(ExtForceFileConstants.FileTypeKey);
             }
         }
 
@@ -954,7 +955,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (extForceFileItem.FileType == int.MinValue)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(methodKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(ExtForceFileConstants.MethodKey));
             }
 
             if (extForceFileItem.Method == int.MinValue)
@@ -970,7 +971,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(methodKey);
+                LogWarningQuantityPropertyAlreadySet(ExtForceFileConstants.MethodKey);
             }
         }
 
@@ -978,7 +979,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (extForceFileItem.Method == int.MinValue)
             {
-                throw new FormatException(GetMessageUnexpectedKeyword(operandKey));
+                throw new FormatException(GetMessageUnexpectedKeyword(ExtForceFileConstants.OperandKey));
             }
 
             if (extForceFileItem.Operand == null)
@@ -987,7 +988,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                LogWarningQuantityPropertyAlreadySet(operandKey);
+                LogWarningQuantityPropertyAlreadySet(ExtForceFileConstants.OperandKey);
             }
         }
 

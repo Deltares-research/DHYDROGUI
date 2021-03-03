@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -277,13 +277,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 var model = new WaterFlowFMModel();
                 model.ImportFromMdu(mduFilePath);
 
-                IDataItem di = model.GetDataItemByValue(model.Bathymetry);
+                IDataItem di = model.GetDataItemByValue(model.SpatialData.Bathymetry);
                 SpatialOperationSetValueConverter coverageValueConverter = SpatialOperationValueConverterFactory.Create(di.Value, di.Value.GetType());
                 di.ValueConverter = coverageValueConverter;
 
                 ISpatialOperationSet operationSet = coverageValueConverter.SpatialOperationSet;
                 operationSet.Inputs[0].FeatureType = typeof(UnstructuredGridVertexCoverage);
-                operationSet.Inputs[0].Provider = new CoverageFeatureProvider {Coverage = model.Bathymetry};
+                operationSet.Inputs[0].Provider = new CoverageFeatureProvider {Coverage = model.SpatialData.Bathymetry};
 
                 var maskFeatureColl = new FeatureCollection(
                     new[]
@@ -328,7 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 app.OpenProject("spatial_hibernate.dsproj");
 
                 var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
-                IDataItem loadedDi = loadedModel.GetDataItemByValue(loadedModel.Bathymetry);
+                IDataItem loadedDi = loadedModel.GetDataItemByValue(loadedModel.SpatialData.Bathymetry);
                 var loadedOperations = (SpatialOperationSetValueConverter) loadedDi.ValueConverter;
 
                 Assert.IsNull(loadedOperations,
@@ -414,7 +414,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 model = app.Project.RootFolder.Models.OfType<WaterFlowFMModel>().First();
 
-                IValueConverter valueConverter = model.GetDataItemByValue(model.Roughness).ValueConverter;
+                IValueConverter valueConverter = model.GetDataItemByValue(model.SpatialData.Roughness).ValueConverter;
                 var spatialOperationValueConverter = valueConverter as SpatialOperationSetValueConverter;
 
                 Assert.IsNotNull(spatialOperationValueConverter);
@@ -422,8 +422,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.AreEqual(2, spatialOperationValueConverter.SpatialOperationSet.Operations.Count);
                 Assert.IsTrue(spatialOperationValueConverter.SpatialOperationSet.Operations[1] is InterpolateOperation);
 
-                IMultiDimensionalArray<double> values = model.Roughness.GetValues<double>();
-                Assert.IsFalse(values.All(v => Math.Abs(v - (double) model.Roughness.Components[0].NoDataValue) < 1e-15), "Roughness spatial data is loaded but only contains no data values, it should contain real values!!");
+                IMultiDimensionalArray<double> values = model.SpatialData.Roughness.GetValues<double>();
+                Assert.IsFalse(values.All(v => Math.Abs(v - (double) model.SpatialData.Roughness.Components[0].NoDataValue) < 1e-15), "Roughness spatial data is loaded but only contains no data values, it should contain real values!!");
             }
         }
 

@@ -19,7 +19,7 @@ morphology,SedThr,morphology,General,Minimum depth for sediment computations,Dou
 morphology,DensIn,morphology,General,Include sediment concentration on density,1|0,0,,,FALSE,,,,,,Include effect of sediment concentration on fluid density,
 morphology,BedUpd,morphology,General,Update bed levels during simulation,0|1,1,,,FALSE,,,,,,Update bed levels during simulation,
 morphology,CmpUpd,morphology,General,Update bed composition during simulation,0|1,1,,,FALSE,,,,,,Update bed composition during simulation,
-morphology,BcFil,morphology,General,Morphology boundary condition file,String,,,,FALSE,FALSE,,,,,Morphology boundary conditions file,
+morphology,BcFil,morphology,General,Morphology boundary condition file,String,,,,FALSE,FALSE,FALSE,,,,Morphology boundary conditions file,
 
 morphology,ISlope,morphology,Bed load transport,Bed slope formulation: No bed slope|Bagnold formulation|Koch & Flokstra formulation|Parker & Andrews formulation,1|2|3|4,2,1,4,FALSE,,,,,,"Bed slope formulation (1:no bed slope, 2:Bagnold formulation, 3:Koch & Flokstra formulation, 4:Parker & Andrews formulation)",
 morphology,AlfaBs,morphology,Bed load transport,Streamwise bed gradient factor,Double,1,0.0,,FALSE,,ISlope=2|3|4,,,,"Streamwise bed gradient factor for bed load transport (if ISlope>=2)",-

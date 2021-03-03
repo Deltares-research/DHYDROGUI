@@ -132,6 +132,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         }
 
         /// <summary>
+        /// Gets the corresponding rule by element id in a control group.
+        /// </summary>
+        /// <param name="controlGroup">The controlgroup.</param>
+        /// <param name="id">The id of the rule element.</param>
+        /// <param name="logHandler">The log handler to which log messages can be added.</param>
+        /// <returns>The corresponding rule.</returns>
+        /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
+        public static RuleBase GetRuleByElementId(this IControlGroup controlGroup, string id, ILogHandler logHandler)
+        {
+            if (controlGroup == null)
+            {
+                return null;
+            }
+
+            string ruleName = GetComponentNameFromElementId(id);
+
+            RuleBase correspondingRule = controlGroup.Rules.FirstOrDefault(r => r.Name == ruleName);
+            if (correspondingRule == null)
+            {
+                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXmlFiles.XmlData);
+            }
+
+            return correspondingRule;
+        }
+
+        /// <summary>
         /// Gets the corresponding signal by element id and type in a control group.
         /// </summary>
         /// <typeparam name="T"> The type of signal. </typeparam>
@@ -159,32 +185,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             }
 
             return correspondingSignal;
-        }
-
-        /// <summary>
-        /// Gets the corresponding rule by element id in a control group.
-        /// </summary>
-        /// <param name="controlGroup">The controlgroup.</param>
-        /// <param name="id">The id of the rule element.</param>
-        /// <param name="logHandler">The log handler to which log messages can be added.</param>
-        /// <returns>The corresponding rule.</returns>
-        /// <remarks>Parameter id is expected to not be <c>null</c>.</remarks>
-        public static RuleBase GetRuleByElementId(this IControlGroup controlGroup, string id, ILogHandler logHandler)
-        {
-            if (controlGroup == null)
-            {
-                return null;
-            }
-
-            string ruleName = GetComponentNameFromElementId(id);
-
-            RuleBase correspondingRule = controlGroup.Rules.FirstOrDefault(r => r.Name == ruleName);
-            if (correspondingRule == null)
-            {
-                logHandler?.ReportWarningFormat(Resources.RealTimeControlXmlReaderHelper_GetRuleByElementIdInControlGroup_Could_not_find_the_rule___0___that_is_referenced_in_id___1___The_rule_needs_to_be_referenced_in_file___2___, ruleName, id, RealTimeControlXmlFiles.XmlData);
-            }
-
-            return correspondingRule;
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -9,6 +10,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -177,6 +179,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 Assert.Fail("An unexpected exception was given: {0}", e.Message);
             }
+        }
+
+        [TestCase(-1d)]
+        [TestCase(7d)]
+        public void ReplaceMissingValuesWithDefaultValues_ReplacesNoDataValuesWithDefaultValues(double defaultValue)
+        {
+            // Setup
+            const double noDataValue = -1d;
+
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 1, 1);
+            var coverage = new UnstructuredGridCellCoverage(grid, false);
+
+            IVariable component = coverage.Components[0];
+
+            component.NoDataValue = noDataValue;
+            component.DefaultValue = defaultValue;
+
+            component.Values[0] = noDataValue;
+            component.Values[1] = 1d;
+            component.Values[2] = noDataValue;
+            component.Values[3] = 3d;
+
+            // Call
+            coverage.ReplaceMissingValuesWithDefaultValues();
+
+            // Assert
+            Assert.That(coverage.Components[0].Values[0], Is.EqualTo(defaultValue));
+            Assert.That(coverage.Components[0].Values[1], Is.EqualTo(1d));
+            Assert.That(coverage.Components[0].Values[2], Is.EqualTo(defaultValue));
+            Assert.That(coverage.Components[0].Values[3], Is.EqualTo(3d));
+        }
+
+        [Test]
+        public void ReplaceMissingValuesWithDefaultValues_CoverageNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => ((UnstructuredGridCoverage) null).ReplaceMissingValuesWithDefaultValues();
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("coverage"));
         }
 
         private static IList<Coordinate> TwoTrianglesInASquareUnstructuredGrid(out int[,] edges, out int[,] cellIndices)

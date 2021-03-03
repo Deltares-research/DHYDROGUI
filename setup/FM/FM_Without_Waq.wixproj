@@ -88,8 +88,6 @@
     <Content Include="Delft3D FM HM_Resources\setup_banner.jpg" />
     <Content Include="Delft3D FM HM_Resources\setup_start.jpg" />
     <Content Include="Delft3D FM HM_Resources\splash_screen.jpg" />
-    <Content Include="Delft3D FM HM_Resources\start_page_background.jpg" />
-    <Content Include="Delft3D FM HM_Resources\Welcome.htm" />
     <Content Include="Extras.wxi" />
     <Content Include="Features.wxi" />
     <Content Include="FMPlugin.wxi" />
@@ -102,7 +100,6 @@
     <Content Include="Plugins.wxi" />
     <Content Include="Resources\FM.ico" />
     <Content Include="Resources\FM.png" />
-    <Content Include="Resources\Welcome.htm" />
     <Content Include="Resources\WindowLayout_normal.en-US.xml" />
     <Content Include="RGFGridDefines.wxi" />
     <Content Include="RGFGrid_x64.wxi" />

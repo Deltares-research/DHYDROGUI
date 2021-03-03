@@ -80,26 +80,14 @@ namespace DeltaShell.Dimr
 
         public string KernelDirs
         {
-            get
-            {
-                return api.KernelDirs;
-            }
-            set
-            {
-                api.KernelDirs = value;
-            }
+            get => api.KernelDirs;
+            set => api.KernelDirs = value;
         }
 
         public DateTime DimrRefDate
         {
-            get
-            {
-                return api.DimrRefDate;
-            }
-            set
-            {
-                api.DimrRefDate = value;
-            }
+            get => api.DimrRefDate;
+            set => api.DimrRefDate = value;
         }
 
         public void set_feedback_logger()
@@ -156,80 +144,44 @@ namespace DeltaShell.Dimr
 
         public void SetValues(string variable, Array values)
         {
-            var doubles = values as double[];
-            if (doubles != null)
+            switch (values)
             {
-                SetValuesDouble(variable, doubles);
-                return;
-            }
-
-            var ints = values as int[];
-            if (ints != null)
-            {
-                SetValuesInt(variable, ints);
-                return;
-            }
-
-            if (api != null)
-            {
-                api.SetValues(variable, values);
+                case double[] doubles:
+                    SetValuesDouble(variable, doubles);
+                    return;
+                case int[] ints:
+                    SetValuesInt(variable, ints);
+                    return;
+                default:
+                    api?.SetValues(variable, values);
+                    break;
             }
         }
 
-        public void SetValues(string variable, int[] start, int[] count, Array values) {}
-
-        public void SetValues(string variable, int[] index, Array values) {}
-
-        public DateTime StartTime
+        public void SetValues(string variable, int[] start, int[] count, Array values)
         {
-            get
-            {
-                return api.StartTime;
-            }
+            // Not needed.
         }
 
-        public DateTime StopTime
+        public void SetValues(string variable, int[] index, Array values)
         {
-            get
-            {
-                return api.StopTime;
-            }
+            // Not needed.
         }
 
-        public DateTime CurrentTime
-        {
-            get
-            {
-                return api.CurrentTime;
-            }
-        }
+        public DateTime StartTime => api.StartTime;
 
-        public TimeSpan TimeStep
-        {
-            get
-            {
-                return api.TimeStep;
-            }
-        }
+        public DateTime StopTime => api.StopTime;
 
-        public string[] VariableNames
-        {
-            get
-            {
-                return api.VariableNames;
-            }
-        }
+        public DateTime CurrentTime => api.CurrentTime;
+
+        public TimeSpan TimeStep => api.TimeStep;
+
+        public string[] VariableNames => api.VariableNames;
 
         public Logger Logger
         {
-            get
-            {
-                return api.Logger;
-            }
-            set
-            {
-                api.Logger = value;
-            }
+            get => api.Logger;
+            set => api.Logger = value;
         }
 
         public string[] Messages
@@ -259,26 +211,17 @@ namespace DeltaShell.Dimr
 
         public void SetValuesDouble(string variable, double[] values)
         {
-            if (api != null)
-            {
-                api.SetValuesDouble(variable, values);
-            }
+            api?.SetValuesDouble(variable, values);
         }
 
         public void SetValuesInt(string variable, int[] values)
         {
-            if (api != null)
-            {
-                api.SetValuesInt(variable, values);
-            }
+            api?.SetValuesInt(variable, values);
         }
 
         public void SetLoggingLevel(string logType, Level level)
         {
-            if (api != null)
-            {
-                api.SetLoggingLevel(logType, level);
-            }
+            api?.SetLoggingLevel(logType, level);
         }
 
         #endregion

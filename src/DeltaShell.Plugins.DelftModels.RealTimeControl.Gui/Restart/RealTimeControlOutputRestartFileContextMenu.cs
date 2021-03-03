@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             Ensure.NotNull(restartFile, nameof(restartFile));
             Ensure.NotNull(node, nameof(node));
 
-            if (!TryGetModel(node, out RealTimeControlModel model))
+            if (!TryGetModel(node, out IRealTimeControlModel model))
             {
                 return;
             }
@@ -43,26 +43,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Restart
             }
         }
 
-        private void AddItemsForOutputRestartFile(RealTimeControlModel model, RestartFile restartFile)
+        private void AddItemsForOutputRestartFile(IRealTimeControlModel model, RestartFile restartFile)
         {
             ContextMenuStrip.Items.Add(GetUseAsRestartMenuItem(model, restartFile));
         }
 
-        private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(RealTimeControlModel model, RestartFile restartFile)
+        private static ClonableToolStripMenuItem GetUseAsRestartMenuItem(IRealTimeControlModel model, RestartFile restartFile)
         {
             var menuItem = new ClonableToolStripMenuItem {Text = Resources.UseAsRestart};
-            menuItem.Click += (s, e) => model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(restartFile.Path),
-                                                                                            File.ReadAllText(restartFile.Path));
+            menuItem.Click += (s, e) =>
+            {
+                model.RestartInput = new RealTimeControlRestartFile(Path.GetFileName(restartFile.Path),
+                                                                    File.ReadAllText(restartFile.Path));
+                model.MarkOutputOutOfSync();
+            };
 
             return menuItem;
         }
 
-        private static bool TryGetModel(ITreeNode node, out RealTimeControlModel result)
+        private static bool TryGetModel(ITreeNode node, out IRealTimeControlModel result)
         {
             ITreeNode parent = node.Parent;
             while (parent != null)
             {
-                if (parent.Tag is RealTimeControlModel model)
+                if (parent.Tag is IRealTimeControlModel model)
                 {
                     result = model;
                     return true;

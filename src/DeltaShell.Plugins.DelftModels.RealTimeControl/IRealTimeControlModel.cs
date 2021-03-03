@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
+using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain.Restart;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 
@@ -16,6 +19,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         ICoordinateSystem CoordinateSystem { get; set; }
 
         IEnumerable<IModel> ControlledModels { get; } // TODO: rename to ControlledModels once RTC model will not be ICompositeModel
+        
+        DateTime SaveStateStartTime { get; set; }
+        TimeSpan SaveStateTimeStep { get; set; }
+        DateTime SaveStateStopTime { get; set; }
+        
+        bool WriteRestart { get; set; }
+        bool UseRestart { get; }
+        RealTimeControlRestartFile RestartInput { get; set; }
+        IEventedList<RestartFile> RestartOutput { get; }
 
         /// <summary>
         /// Query connectable locations from controlled models.

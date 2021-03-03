@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private void RelinkDataItems(ModelExchangeInfo info)
         {
             ICoupledModel sourceModel = GetCoupledModel(info.SourceModelName);
-            IDictionary<string, IDataItem> sourceItems = 
+            IDictionary<string, IDataItem> sourceItems =
                 GetDataItemsUsedForCouplingModel(sourceModel, DataItemRole.Output);
 
             if (sourceItems == null || !sourceItems.Any())
@@ -69,14 +69,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             ICoupledModel targetModel = GetCoupledModel(info.TargetModelName);
-            IDictionary<string, IDataItem> targetItems = 
+            IDictionary<string, IDataItem> targetItems =
                 GetDataItemsUsedForCouplingModel(targetModel, DataItemRole.Input);
 
             if (targetItems == null || !targetItems.Any())
             {
                 return;
             }
-                
+
+            System.Tuple<bool, bool> sourceStatus = GetModelOutputEventStatus(sourceModel as IModel);
+            System.Tuple<bool, bool> targetStatus = GetModelOutputEventStatus(targetModel as IModel);
             SuspendModelOutputEvents(sourceModel as IModel);
             SuspendModelOutputEvents(targetModel as IModel);
 
@@ -88,27 +90,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                                targetModel);
             }
 
-           UnsuspendModelOutputEvents(sourceModel as IModel);
-           UnsuspendModelOutputEvents(targetModel as IModel);
+            UnsuspendModelOutputEvents(sourceModel as IModel, sourceStatus);
+            UnsuspendModelOutputEvents(targetModel as IModel, targetStatus);
         }
 
-        private static void RelinkDataItemsInModelExchange(ModelExchange exchange, 
+        private static void RelinkDataItemsInModelExchange(ModelExchange exchange,
                                                            IDictionary<string, IDataItem> sourceItems,
                                                            IDictionary<string, IDataItem> targetItems,
                                                            ICoupledModel targetModel)
         {
-                if (!sourceItems.TryGetValue(exchange.SourceName, out IDataItem sourceItem))
-                {
-                    return;
-                }
+            if (!sourceItems.TryGetValue(exchange.SourceName, out IDataItem sourceItem))
+            {
+                return;
+            }
 
-                string targetName = targetModel.GetUpToDateDataItemName(exchange.TargetName);
-                if (!targetItems.TryGetValue(targetName, out IDataItem targetItem))
-                {
-                    return;
-                }
+            string targetName = targetModel.GetUpToDateDataItemName(exchange.TargetName);
+            if (!targetItems.TryGetValue(targetName, out IDataItem targetItem))
+            {
+                return;
+            }
 
-                targetItem.LinkTo(sourceItem);
+            targetItem.LinkTo(sourceItem);
         }
 
         private IDictionary<string, IDataItem> GetDataItemsUsedForCouplingModel(ICoupledModel model, DataItemRole role) =>
@@ -119,16 +121,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private ICoupledModel GetCoupledModel(string modelName) =>
             Models.FirstOrDefault(m => Equals(ModelExchangeInfo.GetModelIdentifier(m), modelName)) as ICoupledModel;
 
+        private static System.Tuple<bool, bool> GetModelOutputEventStatus(IModel model)
+        {
+            return new System.Tuple<bool, bool>(model.SuspendClearOutputOnInputChange, model.SuspendMarkOutputOutOfSyncOnInputChange);
+        }
+
         private static void SuspendModelOutputEvents(IModel model)
         {
             model.SuspendClearOutputOnInputChange = true;
             model.SuspendMarkOutputOutOfSyncOnInputChange = true;
         }
 
-        private static void UnsuspendModelOutputEvents(IModel model)
+        private static void UnsuspendModelOutputEvents(IModel model, System.Tuple<bool, bool> targetStatus)
         {
-            model.SuspendClearOutputOnInputChange = false;
-            model.SuspendMarkOutputOutOfSyncOnInputChange = false;
+            (bool originalSuspendClearOutput, bool originalSuspendOutOfSync) = targetStatus;
+            model.SuspendClearOutputOnInputChange = originalSuspendClearOutput;
+            model.SuspendMarkOutputOutOfSyncOnInputChange = originalSuspendOutOfSync;
         }
 
         /// <summary>
@@ -246,6 +254,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                                                          IReadOnlyDictionary<IDataItem, string> dataItemNameMapping,
                                                                          Func<IDataItem, IDataItem> getDataItemFunc)
         {
+            System.Tuple<bool, bool> inputStatus = GetModelOutputEventStatus(inputModel);
+            System.Tuple<bool, bool> outputStatus = GetModelOutputEventStatus(outputModel);
             SuspendModelOutputEvents(inputModel);
             SuspendModelOutputEvents(outputModel);
 
@@ -269,8 +279,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 RestoreDataItemName(dataItemNameMapping, dataItemToRestore);
             }
 
-            UnsuspendModelOutputEvents(inputModel);
-            UnsuspendModelOutputEvents(outputModel);
+            UnsuspendModelOutputEvents(inputModel, inputStatus);
+            UnsuspendModelOutputEvents(outputModel, outputStatus);
 
             return modelExchange;
         }

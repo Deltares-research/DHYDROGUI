@@ -55,8 +55,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             Assert.That(viewModel.ActiveParametersViewModel, Is.Null, "Precondition violated.");
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
             // Call
             viewModel.UpdateActiveSupportPoint(supportPoint);
@@ -88,8 +88,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             viewModel.UpdateActiveSupportPoint(supportPoint);
             Assert.That(viewModel.ActiveParametersViewModel, Is.Not.Null, "Precondition violated.");
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
             var otherSupportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
 
@@ -124,8 +124,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
             Assert.That(initialObservedParameters,
                         Is.SameAs(dictionary[supportPoint]), "Precondition violated.");
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
             // Call
             viewModel.UpdateActiveSupportPoint(supportPoint);
@@ -150,8 +150,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             Assert.That(viewModel.ActiveParametersViewModel, Is.Null, "Precondition violated.");
 
-            var propertyChangedObserver = new NotifyPropertyChangedTestObserver();
-            viewModel.PropertyChanged += propertyChangedObserver.OnPropertyChanged;
+            var propertyChangedObserver = new EventTestObserver<PropertyChangedEventArgs>();
+            viewModel.PropertyChanged += propertyChangedObserver.OnEventFired;
 
             var supportPoint = new SupportPoint(20.0, Substitute.For<IWaveBoundaryGeometricDefinition>());
 

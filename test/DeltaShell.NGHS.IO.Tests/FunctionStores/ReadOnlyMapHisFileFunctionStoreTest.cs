@@ -5,7 +5,8 @@ using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
@@ -164,7 +165,7 @@ namespace DeltaShell.NGHS.IO.Tests.FunctionStores
         {
             string path = Path.Combine(TestHelper.GetTestDataDirectory(), "FunctionStores", "rrrunoff.his");
 
-            var weir = new Weir2D {Name = "Catchment1"};
+            var weir = new Structure() {Name = "Catchment1"};
             var featureCoverage = new FeatureCoverage("Outflow(hbv)")
             {
                 IsTimeDependent = true,

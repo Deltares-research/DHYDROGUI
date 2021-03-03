@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
@@ -103,8 +105,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             yield return typeof(EventedList<FixedWeir>);
             yield return typeof(EventedList<GroupableFeature2DPoint>);
             yield return typeof(EventedList<ObservationCrossSection2D>);
-            yield return typeof(EventedList<Pump2D>);
-            yield return typeof(EventedList<Weir2D>);
+            yield return typeof(EventedList<Pump>);
+            yield return typeof(EventedList<Structure>);
             yield return typeof(EventedList<LandBoundary2D>);
             yield return typeof(EventedList<GroupablePointFeature>);
             yield return typeof(EventedList<GroupableFeature2DPolygon>);

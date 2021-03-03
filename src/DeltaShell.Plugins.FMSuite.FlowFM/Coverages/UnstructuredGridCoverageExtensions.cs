@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
@@ -36,18 +38,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
                         .UnstructuredGridCoverageExtensions_ToPointCloud_Converting_a_non_double_valued_coverage_component_to_a_point_cloud_is_not_supported);
             }
 
-            List<Coordinate> coordinates = coverage.Coordinates.ToList();
+            Coordinate[] coordinates = coverage.Coordinates.ToArray();
             IMultiDimensionalArray<double> values = component.Values;
             var noDataValue = (double) component.NoDataValue;
 
-            if (coordinates.Count != values.Count)
+            if (coordinates.Length != values.Count)
             {
                 throw new InvalidOperationException(
                     Resources
                         .UnstructuredGridCoverageExtensions_ToPointCloud_Spatial_data_is_not_consistent__number_of_coordinate_does_not_match_number_of_values);
             }
 
-            for (var i = 0; i < coordinates.Count; i++)
+            for (var i = 0; i < coordinates.Length; i++)
             {
                 if (skipMissingValues && values[i] == noDataValue)
                 {
@@ -195,6 +197,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
             coverage.Grid = grid;
             coverage.EndEdit();
+        }
+
+        /// <summary>
+        /// Replaces the no data values for this <see cref="UnstructuredGridCoverage"/> with default values.
+        /// </summary>
+        /// <param name="coverage"> The coverage for which to replace the values for. </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="coverage"/> is <c>null</c>.
+        /// </exception>
+        public static void ReplaceMissingValuesWithDefaultValues(this UnstructuredGridCoverage coverage)
+        {
+            Ensure.NotNull(coverage, nameof(coverage));
+
+            var variable = (IVariable<double>) coverage.Components[0];
+            if (Equals(variable.NoDataValue, variable.DefaultValue))
+            {
+                return;
+            }
+
+            coverage.BeginEdit(new DefaultEditAction($"Replacing missing values for coverage {coverage.Name}"));
+            List<double> values = GenerateCollectionWithReplacedValues(variable).ToList();
+            variable.Values.Clear();
+
+            FunctionHelper.SetValuesRaw(variable, (IList) values);
+
+            coverage.EndEdit();
+        }
+
+        private static IEnumerable<T> GenerateCollectionWithReplacedValues<T>(IVariable<T> variable)
+        {
+            foreach (T value in variable.Components[0].Values)
+            {
+                yield return value.Equals(variable.NoDataValue)
+                                 ? variable.DefaultValue
+                                 : value;
+            }
         }
 
         private static bool SingleValue(IList<double> values, out double value)

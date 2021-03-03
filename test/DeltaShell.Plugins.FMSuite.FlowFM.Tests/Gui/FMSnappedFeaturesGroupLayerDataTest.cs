@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -11,7 +13,7 @@ using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -255,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Envelope gridExtent = model.GridExtent;
                 Coordinate center = gridExtent.Centre;
-                model.Area.Pumps.Add(new Pump2D()
+                model.Area.Pumps.Add(new Pump()
                 {
                     Geometry = new LineString(new[]
                     {
@@ -283,7 +285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Envelope gridExtent = model.GridExtent;
                 Coordinate center = gridExtent.Centre;
-                model.Area.Weirs.Add(new Weir2D()
+                model.Area.Structures.Add(new Structure()
                 {
                     Geometry = new LineString(new[]
                     {

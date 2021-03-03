@@ -142,24 +142,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
         }
 
         [Test]
-        [TestCase(null, null, false)]
-        [TestCase("", null, false)]
-        [TestCase("someKey WithSpaces=AValue;someOtherKeyWithoutSpaces=AnotherValue", null, false)]
-        [TestCase("Data Source=/a/path/to/a/database", "/a/path/to/a/database", true)]
-        [TestCase(@"someKey WithSpaces=AValue;Data Source=\a\path\to\a\database;someOtherKeyWithoutSpaces=AnotherValue", @"\a\path\to\a\database", true)]
-        [TestCase(@"someKey WithSpaces=AValue;Data Source=C:\a\path\to\a\database;someOtherKeyWithoutSpaces=AnotherValue", @"C:\a\path\to\a\database", true)]
-        public void TryParseDatabasePath_ExpectedResults(string connectionString, string expectedDatabasePath, bool couldParse)
-        {
-            // Call
-            bool hasParsed =
-                WaveDirectoryStructureMigrationHelper.TryParseDatabasePath(connectionString, out string databasePath);
-
-            // Assert
-            Assert.That(hasParsed, Is.EqualTo(couldParse));
-            Assert.That(databasePath, Is.EqualTo(expectedDatabasePath));
-        }
-
-        [Test]
         public void MigrateFileStructure_MdwFileDoesNotExist_LogsErrorMessage()
         {
             // Call 

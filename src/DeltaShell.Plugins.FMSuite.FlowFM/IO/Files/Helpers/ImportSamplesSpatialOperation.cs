@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             var interpolateOperation = new InterpolateOperation
             {
-                Name = "Interpolation",
+                Name = "Interpolate",
                 CoordinateSystem = CoordinateSystem,
                 Dirty = true,
                 Enabled = Enabled,

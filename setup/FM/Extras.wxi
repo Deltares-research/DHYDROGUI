@@ -2,10 +2,5 @@
 <Include>
   <Component Id="FMExtras" Guid="9616A194-176B-4C05-9015-CB7CF9A706E3">
     <File Id="splash_screen" Source='$(var.Delft3DPackageName)_Resources\splash_screen.jpg' />
-
-    <File Id="Welcome.htm" Source="$(var.Delft3DPackageName)_Resources\Welcome.htm"/>
-    <File Id="Welcome.css" Source="..\Framework\Start Page\Welcome.css"/>
-    <File Id="start_page_background" Source="$(var.Delft3DPackageName)_Resources\start_page_background.jpg"/>
-    <File Id="deltares_logo_groot.jpg" Source="..\Framework\Start Page\Resources\deltares_logo_groot.jpg"/>
   </Component>
 </Include>

@@ -35,15 +35,26 @@ namespace DeltaShell.NGHS.Common.IO
             try
             {
                 object importedObject = OnImportItem(path, target);
+                
+                if (importedObject == null)
+                {
+                    LogImportFailed();
+                    return null;
+                }
+                
                 log.Info(Resources.ModelFileImporterBase_ImportItem_Stop_importing_model_data);
-
                 return importedObject;
             }
             catch
             {
-                log.Error(Resources.ModelFileImporterBase_ImportItem_Importing_model_data_failed);
+                LogImportFailed();
                 throw;
             }
+        }
+
+        private static void LogImportFailed()
+        {
+            log.Error(Resources.ModelFileImporterBase_ImportItem_Importing_model_data_failed);
         }
 
         /// <summary>
@@ -51,7 +62,7 @@ namespace DeltaShell.NGHS.Common.IO
         /// </summary>
         /// <param name="path">The file path to import the data from.</param>
         /// <param name="target">The optional target to import the data to.</param>
-        /// <returns>The type of object to import.</returns>
+        /// <returns>The imported object, or <c>null</c> when the import has failed.</returns>
         /// <remarks>This method can throw any exceptions.</remarks>
         protected abstract object OnImportItem(string path, object target = null);
     }

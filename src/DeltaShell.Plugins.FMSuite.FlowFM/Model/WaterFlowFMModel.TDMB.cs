@@ -9,7 +9,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Features;
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             get
             {
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v));
+                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(SpatialData.DataItems);
             }
         }
 
@@ -117,14 +117,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 yield return windField;
             }
 
-            yield return InitialSalinity;
-            yield return Viscosity;
-            yield return Diffusivity;
-            yield return Roughness;
-            yield return InitialWaterLevel;
-            yield return InitialTemperature;
-            yield return InitialTracers;
-            yield return InitialFractions;
+            foreach (var spatialDataItem in SpatialData.DataItems)
+            {
+                yield return spatialDataItem;
+            }
 
             yield return RestartInput;
 
@@ -196,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             get
             {
                 yield return Area.Pumps;
-                yield return Area.Weirs;
+                yield return Area.Structures;
             }
         }
 

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -49,8 +51,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void GivenFeatureWithUnRootedGroupName_WhenUpdatingGroupName_ThenGroupNameWillNotChange(string groupName, string expectedGroupName)
         {
             // structures
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Weir2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Pump2D>(groupName, expectedGroupName);
+            CheckIfUpdateGroupNameGivesTheDesiredResult<Structure>(groupName, expectedGroupName);
+            CheckIfUpdateGroupNameGivesTheDesiredResult<Pump>(groupName, expectedGroupName);
 
             // other features
             CheckIfUpdateGroupNameGivesTheDesiredResult<LandBoundary2D>(groupName, expectedGroupName);
@@ -134,9 +136,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 HydroArea area = CreateHydroArea();
 
                 yield return new TestCaseData(area, KnownFeatureCategories.Pumps, area.Pumps);
-                yield return new TestCaseData(area, KnownFeatureCategories.Weirs, area.Weirs.Where(w => w.WeirFormula is SimpleWeirFormula));
-                yield return new TestCaseData(area, KnownFeatureCategories.Gates, area.Weirs.Where(w => w.WeirFormula is GatedWeirFormula));
-                yield return new TestCaseData(area, KnownFeatureCategories.GeneralStructures, area.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula));
+                yield return new TestCaseData(area, KnownFeatureCategories.Weirs, area.Structures.Where(w => w.Formula is SimpleWeirFormula));
+                yield return new TestCaseData(area, KnownFeatureCategories.Gates, area.Structures.Where(w => w.Formula is SimpleGateFormula));
+                yield return new TestCaseData(area, KnownFeatureCategories.GeneralStructures, area.Structures.Where(w => w.Formula is GeneralStructureFormula));
                 yield return new TestCaseData(area, KnownFeatureCategories.ObservationPoints, area.ObservationPoints);
                 yield return new TestCaseData(area, KnownFeatureCategories.ObservationCrossSections, area.ObservationCrossSections);
             }
@@ -151,19 +153,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             for (var i = 0; i < k; i++)
             {
-                var pump = new Pump2D();
-                var simpleWeir = new Weir2D {WeirFormula = new SimpleWeirFormula()};
-                var gate = new Weir2D {WeirFormula = new GatedWeirFormula()};
-                var generalStructure = new Weir2D {WeirFormula = new GeneralStructureWeirFormula()};
+                var pump = new Pump();
+                var simpleWeir = new Structure() {Formula = new SimpleWeirFormula()};
+                var gate = new Structure {Formula = new SimpleGateFormula()};
+                var generalStructure = new Structure() {Formula = new GeneralStructureFormula()};
                 var observationPoint = new GroupableFeature2DPoint();
                 var observationCrossSection = new ObservationCrossSection2D();
 
                 area.ObservationCrossSections.Add(observationCrossSection);
                 area.ObservationPoints.Add(observationPoint);
                 area.Pumps.Add(pump);
-                area.Weirs.Add(simpleWeir);
-                area.Weirs.Add(gate);
-                area.Weirs.Add(generalStructure);
+                area.Structures.Add(simpleWeir);
+                area.Structures.Add(gate);
+                area.Structures.Add(generalStructure);
             }
 
             return area;
@@ -172,8 +174,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         private void CheckUpdatingNamesForStructures(string fileName, string expectedGroupName, string parentDir)
         {
             string groupName = Path.Combine(parentDir, fileName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Weir2D>(groupName, expectedGroupName);
-            CheckIfUpdateGroupNameGivesTheDesiredResult<Pump2D>(groupName, expectedGroupName);
+            CheckIfUpdateGroupNameGivesTheDesiredResult<Structure>(groupName, expectedGroupName);
+            CheckIfUpdateGroupNameGivesTheDesiredResult<Pump>(groupName, expectedGroupName);
         }
 
         private void CheckUpdatingNamesForHydroAreaFeatures(string fileName, string expectedGroupName, string parentDir)
@@ -187,15 +189,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CheckIfUpdateGroupNameGivesTheDesiredResult<ObservationCrossSection2D>(groupName, expectedGroupName);
         }
 
-        private void CheckIfUpdateGroupNameGivesTheDesiredResult<T>(string groupName, string expectedGroupName) where T : IGroupableFeature
+        private void CheckIfUpdateGroupNameGivesTheDesiredResult<T>(string groupName, string expectedGroupName) where T : IGroupableFeature, new()
         {
-            var gate = mocks.Stub<T>();
-            gate.GroupName = groupName;
-            mocks.ReplayAll();
+            var structure = new T {GroupName = groupName};
 
-            gate.UpdateGroupName(fmModel);
+            structure.UpdateGroupName(fmModel);
 
-            Assert.That(gate.GroupName, Is.EqualTo(expectedGroupName));
+            Assert.That(structure.GroupName, Is.EqualTo(expectedGroupName));
         }
 
         #endregion

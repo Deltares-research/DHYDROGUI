@@ -4,8 +4,9 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -16,6 +17,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
+using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -34,12 +36,14 @@ using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.SpatialOperations;
+using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
@@ -417,9 +421,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mduFile.Read(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
 
             Assert.AreEqual(2, area.Pumps.Count);
-            Assert.AreEqual(3, area.Weirs.Count);
-            Assert.AreEqual(1, area.Weirs.Where(w => w.WeirFormula.GetType() == typeof(GatedWeirFormula)).ToList().Count);
-            Assert.AreEqual(2, area.Weirs.Where(w => w.WeirFormula.GetType() == typeof(SimpleWeirFormula)).ToList().Count);
+            Assert.AreEqual(3, area.Structures.Count);
+            Assert.AreEqual(1, area.Structures.Where(w => w.Formula.GetType() == typeof(SimpleGateFormula)).ToList().Count);
+            Assert.AreEqual(2, area.Structures.Where(w => w.Formula.GetType() == typeof(SimpleWeirFormula)).ToList().Count);
         }
 
         [Test]
@@ -931,14 +935,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ImportFromMdu(mduPath);
 
             // update model definition (called during export)
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             IDictionary<string, IList<ISpatialOperation>> mduSpatialOperations = model.ModelDefinition.SpatialOperations;
             Assert.AreEqual(3, mduSpatialOperations.Count);
 
             // retrieve value converter for InitialWaterLevel dataitem
             SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                model.GetDataItemByValue(model.InitialWaterLevel), model.InitialWaterLevel.Name);
+                model.AllDataItems.First(d => d.Value == model.SpatialData.InitialWaterLevel), model.SpatialData.InitialWaterLevel.Name);
 
             // Generate samples to add
             var samples = new AddSamplesOperation(false);
@@ -986,11 +990,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(samples));
 
             // update model definition (called during export)
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             // assert that the incomplete spatial operation has not been added
             Assert.AreEqual(3, mduSpatialOperations.Count);
-            Assert.IsFalse(mduSpatialOperations.Any(o => o.Key == model.InitialWaterLevel.Name));
+            Assert.IsFalse(mduSpatialOperations.Any(o => o.Key == model.SpatialData.InitialWaterLevel.Name));
 
             // create an interpolate operation using the samples added earlier
             var interpolateOperation = new InterpolateOperation();
@@ -998,11 +1002,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(interpolateOperation));
 
             // update model definition (called during export)
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
             // assert that the complete spatial operation has now been added
             Assert.AreEqual(4, mduSpatialOperations.Count);
-            Assert.IsTrue(mduSpatialOperations.Any(o => o.Key == model.InitialWaterLevel.Name));
+            Assert.IsTrue(mduSpatialOperations.Any(o => o.Key == model.SpatialData.InitialWaterLevel.Name));
+        }
+
+        [Test]
+        public void SelectSpatialOperations_DataItemHasValueConverter_CreatedAddSamplesOperationForOriginalValue()
+        {
+            // Setup
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(3, 3, 1, 1);
+
+            var originalCoverage = new UnstructuredGridCellCoverage(grid, false);
+            originalCoverage.Components[0].NoDataValue = -999d;
+            originalCoverage.SetValues(new[]
+            {
+                1d,
+                2d,
+                3d
+            });
+
+            var setValueOperation = new SetValueOperation();
+            var valueConverter = Substitute.For<SpatialOperationSetValueConverter>();
+            valueConverter.OriginalValue = originalCoverage;
+            valueConverter.SpatialOperationSet.Operations.Returns(new EventedList<ISpatialOperation> {setValueOperation});
+
+            var dataItem = new DataItem(new UnstructuredGridCellCoverage(grid, false), "Some spatial coverage") {ValueConverter = valueConverter};
+
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Call
+            modelDefinition.SelectSpatialOperations(new List<IDataItem> {dataItem}, Enumerable.Empty<string>());
+
+            // Assert
+            IList<ISpatialOperation> spatialOperations = modelDefinition.SpatialOperations["Some spatial coverage"];
+            Assert.That(spatialOperations, Has.Count.EqualTo(2));
+            Assert.That(spatialOperations[0], Is.TypeOf<AddSamplesOperation>());
+            Assert.That(spatialOperations[1], Is.SameAs(setValueOperation));
         }
 
         [Test]
@@ -1016,14 +1054,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             model.ImportFromMdu(mduPath);
 
             // Set values in coverage
-            model.Viscosity.SetValues(new[]
+            model.SpatialData.Viscosity.SetValues(new[]
             {
                 500.0
             });
 
             // create a spatial operation set on bathymetry
             SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                model.GetDataItemByValue(model.Viscosity), model.Viscosity.Name);
+                model.AllDataItems.First(d => d.Value == model.SpatialData.Viscosity), model.SpatialData.Viscosity.Name);
 
             // add an unsupported operation (erase for example)
             var polygons = new[]
@@ -1045,14 +1083,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             eraseOperation.SetInputData(SpatialOperation.MaskInputName, mask);
             Assert.IsNotNull(valueConverter.SpatialOperationSet.AddOperation(eraseOperation));
 
-            model.ModelDefinition.SelectSpatialOperations(model.DataItems, model.TracerDefinitions);
+            model.ModelDefinition.SelectSpatialOperations(model.AllDataItems.Where(d => d.Value is UnstructuredGridCoverage).ToList(), model.TracerDefinitions);
 
-            IList<ISpatialOperation> viscosityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.Viscosity.Name).Value;
+            IList<ISpatialOperation> viscosityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.SpatialData.Viscosity.Name).Value;
 
             Assert.AreEqual(1, viscosityOperations.Count);
             Assert.IsTrue(viscosityOperations[0] is AddSamplesOperation);
 
-            IList<ISpatialOperation> salinityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.InitialSalinity.Name).Value;
+            IList<ISpatialOperation> salinityOperations = model.ModelDefinition.SpatialOperations.First(kvp => kvp.Key == model.SpatialData.InitialSalinity.Name).Value;
 
             Assert.AreEqual(2, salinityOperations.Count);
             Assert.IsTrue(salinityOperations[0] is SetValueOperation);
@@ -1676,42 +1714,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.AreEqual(expectedString, resultedString,
                             $"When the model definition does not contain the 'OutputDir' property, then the expected OutputDirectoryName is \"{expectedString}\", but it was \"{resultedString}\".");
         }
-
-        [Test]
-        public void
-            SelectSpatialOperations_WithTwoDataItemsWithSameName_OneWithASpatialOperation_ThenOnlyThisOneIsTakenIntoAccountAndNoWarningIsGiven()
-        {
-            // Set-up
-            const string name = "tracer";
-            IDataItem dataItemWithoutConverter = CreateCoverageDataItem(name, false);
-            IDataItem dataItemWithConverter = CreateCoverageDataItem(name, true);
-
-            var modelDefinition = new WaterFlowFMModelDefinition();
-
-            // Pre-condition
-            Assert.That(modelDefinition.SpatialOperations, Is.Empty);
-
-            // Action
-            void TestAction()
-            {
-                modelDefinition.SelectSpatialOperations(
-                    new[]
-                    {
-                        dataItemWithConverter,
-                        dataItemWithoutConverter
-                    },
-                    new[]
-                    {
-                        name
-                    }
-                );
-            }
-
-            IEnumerable<string> renderedMessages = TestHelper.GetAllRenderedMessages(TestAction);
-            Assert.That(renderedMessages, Is.Empty);
-            Assert.That(modelDefinition.SpatialOperations, Has.Count.EqualTo(1));
-        }
-
+        
         [Test]
         public void SetUseMorphologySediment_True_ThenSedimentModelNumberIsEqualTo4()
         {
@@ -1743,7 +1746,123 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Assert
             Assert.That(modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).GetValueAsString(), Is.EqualTo("0"));
         }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void SelectSpatialOperations_OriginalSamplesEqualImportedSamples_DoesNotAddOriginalSamples()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                var modelDefinition = new WaterFlowFMModelDefinition();
+            
+                UnstructuredGridCellCoverage coverage = CreateGridCoverageWithValue(7d);
+                InterpolateOperation interpolateOperation = CreateInterpolateOperationWithValue(temp, 7d);
 
+                IDataItem dataItem = CreateDataItem(coverage, interpolateOperation);
+                
+                // Call
+                modelDefinition.SelectSpatialOperations(new List<IDataItem> {dataItem}, 
+                                                        Enumerable.Empty<string>(), 
+                                                        Enumerable.Empty<string>());
+                
+                // Assert
+                Assert.That(modelDefinition.SpatialOperations.ContainsKey("initial_condition"));
+                IList<ISpatialOperation> operation = modelDefinition.SpatialOperations["initial_condition"];
+                Assert.That(operation, Has.Count.EqualTo(1));
+                Assert.That(operation[0], Is.TypeOf<ImportSamplesSpatialOperation>());
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void SelectSpatialOperations_OriginalSamplesDoNotEqualImportedSamples_AddsOriginalSamples()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                var modelDefinition = new WaterFlowFMModelDefinition();
+            
+                UnstructuredGridCellCoverage coverage = CreateGridCoverageWithValue(7d);
+                InterpolateOperation interpolateOperation = CreateInterpolateOperationWithValue(temp, 6d);
+
+                IDataItem dataItem = CreateDataItem(coverage, interpolateOperation);
+
+                // Call
+                modelDefinition.SelectSpatialOperations(new List<IDataItem> {dataItem}, 
+                                                        Enumerable.Empty<string>(), 
+                                                        Enumerable.Empty<string>());
+                
+                // Assert
+                Assert.That(modelDefinition.SpatialOperations.ContainsKey("initial_condition"));
+                IList<ISpatialOperation> operations = modelDefinition.SpatialOperations["initial_condition"];
+                Assert.That(operations, Has.Count.EqualTo(2));
+                Assert.That(operations[0], Is.TypeOf<AddSamplesOperation>());
+                Assert.That(operations[1], Is.TypeOf<ImportSamplesSpatialOperation>());
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void SelectSpatialOperations_DataItemOnlyContainsSpatialOperationSet_SpatialOperationsEmpty()
+        {
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            UnstructuredGridCellCoverage coverage = CreateGridCoverageWithValue(7d);
+            var operationSet = Substitute.For<ISpatialOperationSet>();
+            operationSet.Operations.Returns(new EventedList<ISpatialOperation> {new ImportSamplesOperation(false)});
+            IDataItem dataItem = CreateDataItem(coverage, operationSet);
+
+            // Call
+            modelDefinition.SelectSpatialOperations(new List<IDataItem> {dataItem},
+                                                    Enumerable.Empty<string>(),
+                                                    Enumerable.Empty<string>()); 
+            
+            // Assert
+            Assert.That(modelDefinition.SpatialOperations.ContainsKey("initial_condition")); 
+            IList<ISpatialOperation> operations = modelDefinition.SpatialOperations["initial_condition"];
+            Assert.That(operations, Is.Empty);
+        }
+        
+        private static UnstructuredGridCellCoverage CreateGridCoverageWithValue(double value)
+        {
+            UnstructuredGrid grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 1, 1);
+            UnstructuredGridCellCoverage coverage = UnstructuredGridCoverageFactory.CreateCellCoverage("initial_condition", grid, defaultValue: value);
+            
+            return coverage;
+        }
+
+        private static InterpolateOperation CreateInterpolateOperationWithValue(TemporaryDirectory temp, double value)
+        {
+            string filePath = Path.Combine(temp.Path, "initial_condition.xyz");
+            File.WriteAllLines(filePath, new []
+            {
+                $"0.5 0.5 {value}",
+                $"1.5 0.5 {value}",
+                $"0.5 1.5 {value}",
+                $"1.5 1.5 {value}",
+            });
+            
+            
+            var importOperation = new ImportSamplesOperation(true) {FilePath = filePath};
+            var interpolateOperation = new InterpolateOperation();
+            interpolateOperation.Mask.Provider = new FeatureCollection(new List<Feature>(), typeof(Feature));
+            interpolateOperation.LinkInput(InterpolateOperation.InputSamplesName, importOperation.Output);
+            
+            return interpolateOperation;
+        }
+        
+        private static IDataItem CreateDataItem(UnstructuredGridCellCoverage coverage, ISpatialOperation operation)
+        {
+            IDataItem dataItem = new DataItem(coverage, DataItemRole.Input) {Name = "initial_condition"};
+            var valueConverter = Substitute.For<SpatialOperationSetValueConverter>();
+            dataItem.ValueConverter = valueConverter;
+            var set = Substitute.For<ISpatialOperationSet>();
+            valueConverter.OriginalValue = coverage;
+            valueConverter.SpatialOperationSet.Returns(set);
+            set.Operations = new EventedList<ISpatialOperation> {operation};
+            
+            return dataItem;
+        }
+        
         private static IEnumerable<KeyValuePair<string, string>> GetExpectedKeyValuePairs(IEnumerable<string> lines)
         {
             foreach (string line in lines)
@@ -1771,40 +1890,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             {
                 Assert.AreEqual(expectedValue, modelDefinition.GetModelProperty(testProp).Value);
             }
-        }
-
-        private static IDataItem CreateCoverageDataItem(string name, bool withValueConverter)
-        {
-            var grid = new UnstructuredGrid
-            {
-                Cells = new List<Cell>
-                {
-                    new Cell(new int[]
-                                 {})
-                }
-            };
-
-            var coverage = new UnstructuredGridCellCoverage(grid, false) {Name = name};
-            var dataItem = MockRepository.GenerateStub<IDataItem>();
-            dataItem.Value = coverage;
-            dataItem.Name = name;
-
-            if (withValueConverter)
-            {
-                dataItem.ValueConverter = GetStubbedValueConverter();
-            }
-
-            return dataItem;
-        }
-
-        private static SpatialOperationSetValueConverter GetStubbedValueConverter()
-        {
-            var operation = new SetValueOperation {OperationType = PointwiseOperationType.Overwrite};
-            var converter = MockRepository.GenerateStub<SpatialOperationSetValueConverter>();
-            var operationSet = MockRepository.GenerateStub<ISpatialOperationSet>();
-            operationSet.Operations = new EventedList<ISpatialOperation> {operation};
-            converter.Stub(c => c.SpatialOperationSet).Return(operationSet);
-            return converter;
         }
     }
 }

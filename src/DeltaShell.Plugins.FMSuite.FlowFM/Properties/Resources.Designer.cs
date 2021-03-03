@@ -1011,6 +1011,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} already contains a component with name &apos;{1}&apos;..
+        /// </summary>
+        public static string SourceAndSinkFunction_Already_contains_a_component_with_name {
+            get {
+                return ResourceManager.GetString("SourceAndSinkFunction_Already_contains_a_component_with_name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Additional values detected for one or more physical processes.
         /// </summary>
         public static string SourceAndSinkImporterHelper_TryAdjustSalinityAndTemperatureComponents_Additional_values_detected_for_one_or_more_physical_processes {
@@ -1212,6 +1221,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("unstrucWater", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Composite Model option is selected for Temperature, however no Meteo Data was specified..
+        /// </summary>
+        public static string ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_temperature_but_no_meteo_data_was_specified {
+            get {
+                return ResourceManager.GetString("ValidatePhysicalProcesses_HeatFluxModel_has_composite_model_option_selected_for_t" +
+                        "emperature_but_no_meteo_data_was_specified", resourceCulture);
             }
         }
         
@@ -1440,6 +1459,51 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while updating file {0}: {1}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_An_error_occurred_while_updating_file {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_An_error_occurred_while_updating_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not determine dsproj location from database connection: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Could_not_determine_dsproj_location {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Could_not_determine_dsproj_location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not determine the grid file location from the mdu file: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Could_not_determine_grid_file_location {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Could_not_determine_grid_file_location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the file: {0}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Could_not_find_file {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Could_not_find_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while reading file {0}: {1}.
+        /// </summary>
+        public static string WaterFlowFMModel130LegacyLoader_Error_occurred_while_reading_file {
+            get {
+                return ResourceManager.GetString("WaterFlowFMModel130LegacyLoader_Error_occurred_while_reading_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No grid points defined between structure {0} and {1}.
         /// </summary>
         public static string WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_ {
@@ -1626,6 +1690,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         public static string WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state {
             get {
                 return ResourceManager.GetString("WaterFlowFmModelValidationExtensions_ValidateRestartInput_Input_restart_state", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} contains unspecified points, the calculation kernel will replace these with default values.
+        /// </summary>
+        public static string WaterFlowFMProcessesValidator_Coverage_contains_unspecified_points {
+            get {
+                return ResourceManager.GetString("WaterFlowFMProcessesValidator_Coverage_contains_unspecified_points", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tracer &apos;{0}&apos; concentration has not been set in any boundary condition nor initial field. It is now set to default value 0..
+        /// </summary>
+        public static string WaterFlowFMProcessesValidator_Tracer_concentration_has_not_been_set_in_any_boundary_condition_nor_initial_field {
+            get {
+                return ResourceManager.GetString("WaterFlowFMProcessesValidator_Tracer_concentration_has_not_been_set_in_any_bounda" +
+                        "ry_condition_nor_initial_field", resourceCulture);
             }
         }
         

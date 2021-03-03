@@ -38,9 +38,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
             exporter.GetModelForGrid = g => fmModel;
 
             // When, Then
-            Assert.IsTrue(exporter.CanExportFor(fmModel.Bathymetry),
+            Assert.IsTrue(exporter.CanExportFor(fmModel.SpatialData.Bathymetry),
                           "FlowFMNetFileExporter should be able to export the bathymetry (UnstructuredGridCoverage) of the model.");
-            Assert.IsFalse(exporter.CanExportFor(fmModel.InitialWaterLevel),
+            Assert.IsFalse(exporter.CanExportFor(fmModel.SpatialData.InitialWaterLevel),
                            "FlowFMNetFileExporter should not be able to export UnstructuredGridCoverages other than the bathymetry coverage of the model.");
         }
 

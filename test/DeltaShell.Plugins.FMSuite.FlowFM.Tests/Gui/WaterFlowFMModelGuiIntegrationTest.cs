@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Area.Objects;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
@@ -25,6 +26,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
@@ -569,11 +571,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Assert.IsTrue(gui.DocumentViewsResolver.OpenViewForData(model, typeof(ProjectItemMapView)));
                 var mapView = gui.DocumentViews.ActiveView as ProjectItemMapView;
-                mapView.SetSpatialOperationLayer(mapView.MapView.GetLayerForData(model.Bathymetry), true);
+                mapView.SetSpatialOperationLayer(mapView.MapView.GetLayerForData(model.SpatialData.Bathymetry), true);
                 sharpMapGisGuiPlugin.FocusSpatialOperationView();
 
                 SpatialOperationSetValueConverter valueConverter = SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                    model.GetDataItemByValue(model.Bathymetry));
+                    model.GetDataItemByValue(model.SpatialData.Bathymetry));
 
                 Assert.IsNotNull(valueConverter.SpatialOperationSet);
 
