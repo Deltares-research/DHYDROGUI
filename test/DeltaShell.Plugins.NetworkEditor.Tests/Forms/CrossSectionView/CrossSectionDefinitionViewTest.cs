@@ -13,6 +13,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
+using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -23,6 +24,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
     [TestFixture]
     public class CrossSectionDefinitionViewTest
     {
+        private ClipboardMock clipboard;
+
+        [SetUp]
+        public void Setup()
+        {
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard = new ClipboardMock();
+            clipboard.GetText_Returns_SetText();
+            clipboard.GetData_Returns_SetData();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            HydroNetworkCopyAndPasteHelper.ReleaseCopiedNetworkFeature();
+            if (!GuiTestHelper.IsBuildServer) return;
+            clipboard.Dispose();
+        }
+
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void PasteIntoTableOfZWCrossSection()
