@@ -108,6 +108,7 @@
       <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="mscorlib" />
     <Reference Include="NetTopologySuite">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
@@ -142,8 +143,8 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
