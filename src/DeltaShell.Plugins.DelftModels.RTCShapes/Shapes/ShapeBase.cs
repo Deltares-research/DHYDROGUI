@@ -151,8 +151,6 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
                 return;
             }
 
-            var sf = new StringFormat {Alignment = stringAlignment};
-
             PointF origin = Point.Empty;
 
             switch (stringAlignment)
