@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         bathymetryNoDataValue = GetBathymetryNoDataValue(originalBathymetry);
                     }
 
-                    fileOperations.DoIfUgrid(uGridAdaptor =>
+                    fileOperations.DoIfUgrid(uGridAdapter =>
                     {
                         if (1 > uGridAdapter.uGrid.GetNumberOf2DMeshes())
                         {
