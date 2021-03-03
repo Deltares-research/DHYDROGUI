@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Api.Editors;
@@ -12,14 +12,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
     /// <summary>
     /// Provides logic for creating <see cref="ILayer"/> objects for collections
-    /// of <see cref="Pump2D"/> objects.
+    /// of <see cref="IPump"/> objects.
     /// </summary>
-    internal sealed class PumpsLayerProvider : FeaturesLayerProvider<Pump2D>
+    internal sealed class PumpsLayerProvider : FeaturesLayerProvider<Pump>
     {
         /// <inheritdoc/>
         protected override IFeatureEditor GetLayerFeatureEditor(HydroArea hydroArea)
         {
-            return new Feature2DEditor(hydroArea) {CreateNewFeature = l => new Pump2D(true)};
+            return new Feature2DEditor(hydroArea) {CreateNewFeature = l => new Pump()};
         }
 
         /// <inheritdoc/>
@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         }
 
         /// <inheritdoc/>
-        protected override IEventedList<Pump2D> GetLayerFeatures(HydroArea hydroArea)
+        protected override IEventedList<Pump> GetLayerFeatures(HydroArea hydroArea)
         {
             return hydroArea.Pumps;
         }

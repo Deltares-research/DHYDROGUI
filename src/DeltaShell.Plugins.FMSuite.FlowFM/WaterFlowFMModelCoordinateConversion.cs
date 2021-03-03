@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                        .Concat(area.DryPoints)
                        .Concat(area.DryAreas)
                        .Concat(area.Pumps)
-                       .Concat(area.Weirs)
+                       .Concat(area.Structures)
                        .Concat(area.ThinDams)
                        .Concat(area.FixedWeirs)
                        .Concat(area.Enclosures)

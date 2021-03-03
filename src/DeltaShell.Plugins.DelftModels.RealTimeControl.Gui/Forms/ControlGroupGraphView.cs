@@ -19,20 +19,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             Text = @"Control Group Editor";
         }
 
-        public ControlGroupEditor ControlGroupEditor
-        {
-            get
-            {
-                return controlGroupEditor;
-            }
-        }
+        public ControlGroupEditor ControlGroupEditor => controlGroupEditor;
 
         public IGui Gui
         {
-            get
-            {
-                return gui;
-            }
+            get => gui;
             set
             {
                 gui = value;
@@ -42,10 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public IRealTimeControlModel Model
         {
-            get
-            {
-                return model;
-            }
+            get => model;
             set
             {
                 model = value;
@@ -55,10 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public object Data
         {
-            get
-            {
-                return controlGroup;
-            }
+            get => controlGroup;
             set
             {
                 UnsubscribeEventListeners();
@@ -78,28 +63,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         public Image Image
         {
-            get
-            {
-                return null;
-            }
+            get => null;
             set {}
         }
 
         public IViewContext ViewContext
         {
-            get
-            {
-                return controlGroupEditor.ViewContext;
-            }
-            set
-            {
-                controlGroupEditor.ViewContext = value;
-            }
+            get => controlGroupEditor.ViewContext;
+            set => controlGroupEditor.ViewContext = value;
         }
 
         public ViewInfo ViewInfo { get; set; }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done.
+        }
 
         private void SubscribeEventListeners()
         {
@@ -119,9 +98,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void ControlGroupPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Name" && sender is ControlGroup)
+            if (e.PropertyName == "Name" && sender is ControlGroup sendingControlGroup)
             {
-                Text = ((ControlGroup) sender).Name;
+                Text = sendingControlGroup.Name;
             }
         }
 

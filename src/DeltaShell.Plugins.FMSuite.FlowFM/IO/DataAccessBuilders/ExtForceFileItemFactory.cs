@@ -7,6 +7,7 @@ using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -194,6 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// <param name="spatialOperations">The spatial operations.</param>
         /// <param name="existingForceFileItems">The existing external force file items.</param>
         /// <param name="filePath">The external forcing file path.</param>
+        /// <param name="uniqueFileNameProvider"> A unique file name provider </param>
         /// <param name="prefix">The optional prefix to be written before the quantity.</param>
         /// <returns>
         /// A dictionary with each <see cref="ISpatialOperation"/> and their corresponding <see cref="ExtForceFileItem"/>.
@@ -442,14 +444,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return new ExtForceFileItem(quantityName)
             {
                 FileName = fileNameProvider.GetUniqueFileNameFor(fileName),
-                FileType = ExtForceQuantNames.FileTypes.Triangulation,
-                Method = 6,
+                FileType = AddSamplesDefaults.FileType,
+                Method = AddSamplesDefaults.Method,
                 Enabled = spatialOperation.Enabled,
-                Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite],
+                Operand = ExtForceQuantNames.OperatorToStringMapping[AddSamplesDefaults.Operand],
                 ModelData =
                 {
-                    [ExtForceFileConstants.AveragingTypeKey] = (int) GridCellAveragingMethod.ClosestPoint,
-                    [ExtForceFileConstants.RelSearchCellSizeKey] = 1.0
+                    [ExtForceFileConstants.AveragingTypeKey] = (int) AddSamplesDefaults.AveragingType,
+                    [ExtForceFileConstants.RelSearchCellSizeKey] = AddSamplesDefaults.RelSearchCellSize
                 },
             };
         }

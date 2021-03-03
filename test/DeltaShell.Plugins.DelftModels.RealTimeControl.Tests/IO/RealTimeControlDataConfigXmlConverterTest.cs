@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeltaShell.Dimr.RtcXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using NUnit.Framework;
@@ -15,22 +14,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         private const string InputId = RtcXmlTag.Input + "parameter/quantity";
         private const string OutputId = RtcXmlTag.Output + "parameter/quantity";
         private const string ControlGroupName = "control_group_name";
-        private RealTimeControlDataConfigXmlConverter dataConfigConverter;
-        private ILogHandler logHandler;
-
-        [SetUp]
-        public void SetUp()
-        {
-            logHandler = new LogHandler("");
-            dataConfigConverter = new RealTimeControlDataConfigXmlConverter(logHandler);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            logHandler = null;
-            dataConfigConverter = null;
-        }
 
         [Test]
         public void GivenParameterIsNull_WhenCreateConnectionPointsFromXmlElementsIsCalled_ThenNothingHappensAndMethodReturn()
@@ -39,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // Given, When
             Assert.DoesNotThrow(
-                () => connectionPoints = dataConfigConverter.CreateConnectionPointsFromXmlElements(null),
+                () => connectionPoints = RealTimeControlDataConfigXmlConverter.CreateConnectionPointsFromXmlElements(null),
                 "Method throws an unexpected exception when parameter 'elements' is null.");
 
             // Then
@@ -56,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // When
             List<ConnectionPoint> connectionPoints =
-                dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements).ToList();
+                RealTimeControlDataConfigXmlConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements).ToList();
 
             // Then
             Assert.AreEqual(1, connectionPoints.Count, "Number of connection points was expected to be 1.");
@@ -79,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // When
             IEnumerable<ConnectionPoint> connectionPoints =
-                dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements);
+                RealTimeControlDataConfigXmlConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements);
 
             // Then
             AssertNotNullAndEmpty(connectionPoints);
@@ -95,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             // When
             IEnumerable<ConnectionPoint> connectionPoints =
-                dataConfigConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements);
+                RealTimeControlDataConfigXmlConverter.CreateConnectionPointsFromXmlElements(timeSeriesElements);
 
             // Then
             AssertNotNullAndEmpty(connectionPoints);

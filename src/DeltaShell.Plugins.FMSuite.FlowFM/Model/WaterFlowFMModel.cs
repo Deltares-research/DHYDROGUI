@@ -4,9 +4,10 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
@@ -23,6 +24,7 @@ using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Sediment;
@@ -158,20 +160,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 return KnownFeatureCategories.Pumps;
             }
 
-            if (feature is IWeir weir)
+            if (feature is IStructure weir)
             {
-                IWeirFormula weirFormula = weir.WeirFormula;
-                if (weirFormula is GeneralStructureWeirFormula)
+                IStructureFormula structureFormula = weir.Formula;
+                switch (structureFormula)
                 {
-                    return KnownFeatureCategories.GeneralStructures;
+                    case GeneralStructureFormula _:
+                        return KnownFeatureCategories.GeneralStructures;
+                    case SimpleGateFormula _:
+                        return KnownFeatureCategories.Gates;
+                    default:
+                        return KnownFeatureCategories.Weirs;
                 }
-
-                if (weirFormula is GatedWeirFormula)
-                {
-                    return KnownFeatureCategories.Gates;
-                }
-
-                return KnownFeatureCategories.Weirs;
             }
 
             if (Area.ObservationPoints.Contains(feature))
@@ -209,14 +209,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (!ss.TracerNames.Contains(name))
                 {
-                    ss.TracerNames.Add(name);
+                    ss.Function.AddTracer(name);
                 }
             });
         }
 
         private void AddToInitialFractions(string spatiallyVaryingName)
         {
-            SpatialData.AddFraction(CreateUnstructuredGridCellCoverage(spatiallyVaryingName, Grid));
+            SpatialData.AddFraction(UnstructuredGridCoverageFactory.CreateCellCoverage(spatiallyVaryingName, Grid));
         }
 
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)
@@ -239,7 +239,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         #region Model Data
 
         private IEventedList<ISedimentFraction> sedimentFractions;
-        private IEventedList<BoundaryConditionSet> boundaryConditionSets;
         private IEventedList<string> tracerDefinitions;
         private IEventedList<SourceAndSink> sourcesAndSinks;
         private IDataItem areaDataItem;
@@ -592,24 +591,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public IEventedList<Feature2D> Boundaries { get; private set; }
 
-        public IEventedList<BoundaryConditionSet> BoundaryConditionSets
-        {
-            get => boundaryConditionSets;
-            private set
-            {
-                if (boundaryConditionSets != null)
-                {
-                    BoundaryConditionSets.CollectionChanged -= BoundaryConditionSetsCollectionChanged;
-                }
-
-                boundaryConditionSets = value;
-
-                if (boundaryConditionSets != null)
-                {
-                    BoundaryConditionSets.CollectionChanged += BoundaryConditionSetsCollectionChanged;
-                }
-            }
-        }
+        public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
 
         public IEventedList<Feature2D> Pipes { get; private set; }
 

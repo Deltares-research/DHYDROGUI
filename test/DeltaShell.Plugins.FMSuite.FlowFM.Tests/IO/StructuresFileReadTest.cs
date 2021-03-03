@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO;
@@ -55,12 +55,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When | Then
                 // - Read structures file
-                IList<IStructure> structures = null;
+                IList<IStructureObject> structures = null;
                 Assert.DoesNotThrow(() => { structures = structuresFile.Read(fileIniPath); });
 
                 AssertThatOnlyOneStructureExistsWithin(structures);
 
-                IStructure weirStructure = structures[0];
+                IStructureObject weirStructure = structures[0];
                 AssertThatStructureIsCorrect(weirStructure, typeof(SimpleWeirFormula));
             });
         }
@@ -101,13 +101,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When | Then
                 // - Read structures file
-                IList<IStructure> structures = null;
+                IList<IStructureObject> structures = null;
                 Assert.DoesNotThrow(() => { structures = structuresFile.Read(fileIniPath); });
 
                 AssertThatOnlyOneStructureExistsWithin(structures);
 
-                IStructure weirStructure = structures[0];
-                AssertThatStructureIsCorrect(weirStructure, typeof(GatedWeirFormula));
+                IStructureObject weirStructure = structures[0];
+                AssertThatStructureIsCorrect(weirStructure, typeof(SimpleGateFormula));
             });
         }
 
@@ -151,14 +151,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 // When | Then
                 // - Read structures file
-                IList<IStructure> structures = null;
+                IList<IStructureObject> structures = null;
                 Assert.DoesNotThrow(() => { structures = structuresFile.Read(fileIniPath); });
 
                 AssertThatOnlyOneStructureExistsWithin(structures);
 
-                IStructure weirStructure = structures[0];
-                AssertThatStructureIsCorrect(weirStructure, typeof(GeneralStructureWeirFormula));
-                var generalStructureFormula = ((Weir2D) weirStructure).WeirFormula as GeneralStructureWeirFormula;
+                IStructureObject weirStructure = structures[0];
+                AssertThatStructureIsCorrect(weirStructure, typeof(GeneralStructureFormula));
+                var generalStructureFormula = ((Structure) weirStructure).Formula as GeneralStructureFormula;
                 AssertThatAdditionalGeneralStructureIsCorrect(generalStructureFormula);
             });
         }
@@ -276,26 +276,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             structureCategory.AddProperty(GetName(KnownGeneralStructureProperties.GateOpeningHorizontalDirection), "symmetric", "#");
         }
 
-        private static void AssertThatStructureIsCorrect(IStructure structure, Type expectedWeirFormulaType)
+        private static void AssertThatStructureIsCorrect(IStructureObject structure, Type expectedWeirFormulaType)
         {
-            Assert.That(structure, Is.TypeOf(typeof(Weir2D)), "Expected read structure to be of a different type:");
-            var weirdStructure = (Weir2D) structure;
+            Assert.That(structure, Is.TypeOf(typeof(Structure)), "Expected read structure to be of a different type:");
+            var weirdStructure = (Structure) structure;
 
-            Assert.That(weirdStructure.WeirFormula, Is.Not.Null, "Expected weir formula to not be null.");
-            Assert.That(weirdStructure.WeirFormula, Is.TypeOf(expectedWeirFormulaType),
+            Assert.That(weirdStructure.Formula, Is.Not.Null, "Expected weir formula to not be null.");
+            Assert.That(weirdStructure.Formula, Is.TypeOf(expectedWeirFormulaType),
                         "Expected weir formula to be of a different type:");
             Assert.That(weirdStructure.CrestWidth, Is.NaN, "Expected weir's crest width to be Empty:");
         }
 
-        private static void AssertThatOnlyOneStructureExistsWithin(IList<IStructure> structures)
+        private static void AssertThatOnlyOneStructureExistsWithin(IList<IStructureObject> structures)
         {
             Assert.That(structures, Is.Not.Null, "Expected the list of read structures to not be null.");
             Assert.That(structures.Count, Is.EqualTo(1), "Expected a different number of read structures:");
-            IStructure weirStructure = structures[0];
+            IStructureObject weirStructure = structures[0];
             Assert.That(weirStructure, Is.Not.Null, "Expected read structure to not be null.");
         }
 
-        private static void AssertThatAdditionalGeneralStructureIsCorrect(GeneralStructureWeirFormula formula)
+        private static void AssertThatAdditionalGeneralStructureIsCorrect(GeneralStructureFormula formula)
         {
             Assert.That(formula.WidthRightSideOfStructure, Is.NaN, "Expected general structure's Downstream 2 width to be Empty:");
             Assert.That(formula.WidthStructureRightSide, Is.NaN, "Expected general structure's Downstream 1 width to be Empty:");

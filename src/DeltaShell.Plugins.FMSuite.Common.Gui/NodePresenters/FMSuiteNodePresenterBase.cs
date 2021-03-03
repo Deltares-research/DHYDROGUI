@@ -69,6 +69,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
             return data;
         }
 
+        protected void ResetGuiSelection()
+        {
+            Gui.Selection = null;
+        }
+
         private static Image CreateEmptyDataImage(Image image)
         {
             var semiTransparentyImage = new Bitmap(image);

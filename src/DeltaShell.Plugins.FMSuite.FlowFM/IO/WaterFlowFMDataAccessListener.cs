@@ -49,20 +49,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             // check if ImportSamplesOperations of model have valid paths otherwise try to correct using mdu file directory
             // this is needed in for backward compatibility (previously FilePath used to be relative to mdu path)
-            IEnumerable<ImportSamplesOperation> importSamplesOperationsWithoutValidPath = model
-                                                                                          .DataItems.Select(
-                                                                                              di => di.ValueConverter)
-                                                                                          .OfType<
-                                                                                              SpatialOperationSetValueConverter
-                                                                                          >()
-                                                                                          .SelectMany(
-                                                                                              vc => vc
-                                                                                                    .SpatialOperationSet
-                                                                                                    .GetOperationsRecursive())
-                                                                                          .OfType<ImportSamplesOperation
-                                                                                          >()
-                                                                                          .Where(o => !File.Exists(
-                                                                                                          o.FilePath));
+            IEnumerable<ImportSamplesOperation> importSamplesOperationsWithoutValidPath = 
+                model.DataItems
+                     .Select(di => di.ValueConverter)
+                     .OfType<SpatialOperationSetValueConverter>()
+                     .SelectMany(vc => vc.SpatialOperationSet.GetOperationsRecursive())
+                     .OfType<ImportSamplesOperation>()
+                     .Where(o => !File.Exists(o.FilePath));
 
             string mduDirectory = Path.GetDirectoryName(model.ExtFilePath);
             if (mduDirectory == null)

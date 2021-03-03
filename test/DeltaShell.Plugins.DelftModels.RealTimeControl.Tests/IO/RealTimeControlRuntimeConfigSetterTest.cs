@@ -1,6 +1,5 @@
 ﻿using System;
 using DeltaShell.Dimr.RtcXsd;
-using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using NUnit.Framework;
 
@@ -19,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         [SetUp]
         public void SetUp()
         {
-            runtimeConfigSetter = new RealTimeControlRuntimeConfigSetter(new LogHandler(""));
+            runtimeConfigSetter = new RealTimeControlRuntimeConfigSetter();
             rtcModel = new RealTimeControlModel();
         }
 

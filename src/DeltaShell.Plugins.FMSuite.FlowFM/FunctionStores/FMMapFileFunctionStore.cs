@@ -75,8 +75,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             boundaryCellValues.Clear();
-            UpdateGrid();
-            bool isUgridConvention = GetNcFileConvention() == GridApiDataSet.DataSetConventions.CONV_UGRID;
+
+            var fileOperations = new UnstructuredGridFileOperations(netCdfFile.Path);
+            Grid = fileOperations.GetGrid(true);
+            bool isUgridConvention = fileOperations.DataSetConventions == GridApiDataSet.DataSetConventions.CONV_UGRID;
 
             List<UnstructuredGridCoverage> functions = GetFunctions(dataVariables, isUgridConvention);
             if (!isUgridConvention)
@@ -390,36 +392,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
-        private GridApiDataSet.DataSetConventions GetNcFileConvention()
-        {
-            try
-            {
-                IUGridApi api = GridApiFactory.CreateNew();
-                if (api != null)
-                {
-                    using (api)
-                    {
-                        GridApiDataSet.DataSetConventions convention;
-                        int ierr = api.GetConvention(netCdfFile.Path, out convention);
-                        if (ierr != GridApiDataSet.GridConstants.NOERR)
-                        {
-                            throw new Exception("Couldn't get the nc file convention because of error number: " + ierr);
-                        }
-
-                        return convention;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                log.ErrorFormat(
-                    Resources.FMMapFileFunctionStore_CreateCoverageFromNetCdfVariable_FailedToConstructGridSpatialData,
-                    e.Message);
-            }
-
-            return GridApiDataSet.DataSetConventions.CONV_NULL;
-        }
-
         private void InitializeCoverage(IFunction coverage, string secondDimensionName, string variableName,
                                         string unitSymbol, string refDate,
                                         IEnumerable<Tuple<string, string>> secondDimensionAdditionalAttributes = null)
@@ -586,12 +558,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
                 yield return sedCoverage;
             }
-        }
-
-        private void UpdateGrid()
-        {
-            // import the grid from the map file if there is no model grid available
-            Grid = UnstructuredGridFileHelper.LoadFromFile(netCdfFile.Path, true);
         }
 
         #region Map file constants

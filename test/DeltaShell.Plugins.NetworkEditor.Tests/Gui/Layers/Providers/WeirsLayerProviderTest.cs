@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers;
@@ -14,7 +14,7 @@ using SharpMap.Rendering;
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
 {
     [TestFixture]
-    public class WeirsLayerProviderTest : FeaturesLayerProviderTest<Weir2D>
+    public class WeirsLayerProviderTest : FeaturesLayerProviderTest<Structure>
     {
         protected override void AssertLayerProviderSpecificSettings(VectorLayer vectorLayer)
         {
@@ -29,15 +29,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
         protected override HydroArea CreateHydroArea()
         {
             var hydroArea = new HydroArea();
-            hydroArea.Weirs.Add(new Weir2D());
-            hydroArea.Weirs.Add(new Weir2D());
+            hydroArea.Structures.Add(new Structure());
+            hydroArea.Structures.Add(new Structure());
 
             return hydroArea;
         }
 
-        protected override IEventedList<Weir2D> GetStructureCollection(HydroArea hydroArea)
+        protected override IEventedList<Structure> GetStructureCollection(HydroArea hydroArea)
         {
-            return hydroArea.Weirs;
+            return new EventedList<Structure>(hydroArea.Structures.Cast<Structure>());
         }
 
         protected override Color ExpectedVectorStyleLineColor()

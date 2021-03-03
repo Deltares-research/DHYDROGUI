@@ -2,8 +2,9 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -680,14 +681,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
             // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
             // Since this test is not meant to test the CrestWidth getting and setting, we place a hack here to set all the Crest Widths to any positive value.
-            model.Area.Weirs.Select(c =>
+            model.Area.Structures.Select(c =>
             {
                 c.CrestWidth = 1.0;
                 return c;
             }).ToList();
             model.StopTime = model.StartTime.AddMinutes(15);
 
-            Assert.IsTrue(model.Area.Weirs.Where(w => w.WeirFormula is GatedWeirFormula).ToList().Count > 0);
+            Assert.IsTrue(model.Area.Structures.Where(w => w.Formula is SimpleGateFormula).ToList().Count > 0);
 
             app.Project.RootFolder.Add(model);
 

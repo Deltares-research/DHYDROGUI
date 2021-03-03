@@ -6,7 +6,6 @@ using System.Reflection;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
@@ -17,7 +16,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
-using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
@@ -492,25 +491,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 var spatialOperationValueConverter = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
                 if (spatialOperationValueConverter.SpatialOperationSet.Operations.All(SupportedByExtForceFile))
                 {
-                    SpatialOperations[dataItem.Name] = new List<ISpatialOperation>();
-
-                    var originalCoverage = (UnstructuredGridCoverage) spatialOperationValueConverter.OriginalValue;
-                    IPointCloud samples = originalCoverage?.ToPointCloud(skipMissingValues: true);
-                    if (samples?.PointValues.Any() == true)
-                    {
-                        AddSamplesOperation samplesOperation = CreateSamplesOperation(samples, originalCoverage.Name);
-                        SpatialOperations[dataItem.Name].Add(samplesOperation);
-                    }
-
-                    // put in everything except spatial operation sets,
-                    // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
-                    List<ISpatialOperation> spatialOperations = spatialOperationValueConverter
-                                                                .SpatialOperationSet.Operations
-                                                                .Where(s => !(s is ISpatialOperationSet))
-                                                                .Select(ConvertSpatialOperation)
-                                                                .ToList();
-
-                    SpatialOperations[dataItem.Name].AddRange(spatialOperations);
+                    SpatialOperations[dataItem.Name] = GetSpatialOperations(spatialOperationValueConverter);
                 }
                 // null check to see if it has a final coverage. It could be that there are only point clouds in the set.
                 else if (spatialOperationValueConverter.SpatialOperationSet.Output.Provider != null)
@@ -550,6 +531,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 AddSamplesOperation samplesOperation = CreateSamplesOperation(pointCloud, coverage.Name);
                 AddSpatialOperation(dataItemNameLookup[coverage], samplesOperation);
             }
+        }
+
+        private static List<ISpatialOperation> GetSpatialOperations(SpatialOperationSetValueConverter spatialOperationValueConverter)
+        {
+            // put in everything except spatial operation sets,
+            // because we only use interpolate commands that will grab the importsamplesoperation via the input parameters.
+            List<ISpatialOperation> spatialOperations = spatialOperationValueConverter
+                                                        .SpatialOperationSet.Operations
+                                                        .Where(s => !(s is ISpatialOperationSet))
+                                                        .Select(ConvertSpatialOperation)
+                                                        .ToList();
+
+            if (!spatialOperations.Any())
+            {
+                return spatialOperations;
+            }
+            
+            var originalCoverage = (UnstructuredGridCoverage) spatialOperationValueConverter.OriginalValue;
+            IPointCloud samples = originalCoverage.ToPointCloud(skipMissingValues: true);
+            
+            if (!samples.PointValues.Any() || SamplesAreEqual(samples, spatialOperations[0]))
+            {
+                return spatialOperations;
+            }
+            
+            AddSamplesOperation samplesOperation = CreateSamplesOperation(samples, originalCoverage.Name);
+            spatialOperations.Insert(0, samplesOperation);
+            
+            return spatialOperations;
+        }
+
+        private static bool SamplesAreEqual(IPointCloud samples, ISpatialOperation operation)
+        {
+            if (!(operation is ImportSamplesOperation importSamplesOperation))
+            {
+                return false;
+            }
+
+            return samples.PointValues.SequenceEqual(importSamplesOperation.GetPoints(), new PointValueEqualityComparer());
         }
 
         private static bool ShouldSkipCoverage(UnstructuredGridCoverage coverage, SpatialOperationSetValueConverter spatialOperationValueConverter)

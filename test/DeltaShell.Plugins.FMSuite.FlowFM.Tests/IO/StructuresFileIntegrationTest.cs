@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures;
 using DeltaShell.Plugins.FMSuite.Common.ModelSchema;
@@ -32,15 +32,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             StructuresFile structuresFile = GetStructuresFile();
 
             const string simpleWeirName = "Its-weir-d";
-            Weir2D simpleWeir = GetSimpleWeir(simpleWeirName);
+            Structure simpleWeir = GetSimpleWeir(simpleWeirName);
 
             const string gatedWeirName = "Open-the-gate-a-little";
-            Weir2D gatedWeir = GetGatedWeir(gatedWeirName);
+            Structure gatedWeir = GetGatedWeir(gatedWeirName);
 
             const string generalStructureName = "general-structure-sir";
-            Weir2D generalStructure = GetGeneralStructure(generalStructureName);
+            Structure generalStructure = GetGeneralStructure(generalStructureName);
 
-            var writtenStructures = new List<IStructure>()
+            var writtenStructures = new List<IStructureObject>()
             {
                 simpleWeir,
                 gatedWeir,
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // When | Then
                 Assert.DoesNotThrow(() => { structuresFile.Write(exportFilePath, writtenStructures); });
 
-                IList<IStructure> readStructures = null;
+                IList<IStructureObject> readStructures = null;
                 Assert.DoesNotThrow(() => { readStructures = structuresFile.Read(exportFilePath); });
 
                 Assert.That(readStructures, Is.Not.Null, "Expected read structures to not be null.");
@@ -76,28 +76,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         /// within the read structures, and that the name, crest width, crest level,
         /// and formulas are equivalent.
         /// </remarks>
-        private static void AssertThatReadStructuresAreEquivalentToWrittenStructures(IEnumerable<IStructure> readStructures, IEnumerable<IStructure> writtenStructures)
+        private static void AssertThatReadStructuresAreEquivalentToWrittenStructures(IEnumerable<IStructureObject> readStructures, IEnumerable<IStructureObject> writtenStructures)
         {
-            List<IStructure> readStructuresList = readStructures.ToList();
-            foreach (IStructure writtenStructure in writtenStructures)
+            List<IStructureObject> readStructuresList = readStructures.ToList();
+            foreach (IStructureObject writtenStructure in writtenStructures)
             {
-                IStructure readStructure = readStructuresList.FirstOrDefault(s => s.Name == writtenStructure.Name);
+                IStructureObject readStructure = readStructuresList.FirstOrDefault(s => s.Name == writtenStructure.Name);
                 Assert.That(readStructure, Is.Not.Null, $"Read structures does not contain structure with name {writtenStructure.Name}");
 
-                Assert.That(readStructure, Is.TypeOf<Weir2D>(), $"Expected structure {readStructure.Name} of type <Weir2D>");
-                var readWeir = (Weir2D) readStructure;
-                var writtenWeir = (Weir2D) writtenStructure;
+                Assert.That(readStructure, Is.TypeOf<Structure>(), $"Expected structure {readStructure.Name} of type <Weir2D>");
+                var readWeir = (Structure) readStructure;
+                var writtenWeir = (Structure) writtenStructure;
 
-                Assert.That(readWeir.WeirFormula, Is.Not.Null, $"Expected the weir formula of {readStructure.Name} not to be null.");
-                Assert.That(readWeir.WeirFormula, Is.TypeOf(writtenWeir.WeirFormula.GetType()));
+                Assert.That(readWeir.Formula, Is.Not.Null, $"Expected the weir formula of {readStructure.Name} not to be null.");
+                Assert.That(readWeir.Formula, Is.TypeOf(writtenWeir.Formula.GetType()));
 
                 Assert.That(readWeir.CrestWidth, Is.EqualTo(writtenWeir.CrestWidth), "Expected read crest width to be equal to written crest width:");
                 Assert.That(readWeir.CrestLevel, Is.EqualTo(writtenWeir.CrestLevel), "Expected read crest level to be equal to written crest level:");
 
                 // Extra values of general structure.
-                if (writtenWeir.WeirFormula is GeneralStructureWeirFormula writtenGSFormula)
+                if (writtenWeir.Formula is GeneralStructureFormula writtenGSFormula)
                 {
-                    var readGSFormula = readWeir.WeirFormula as GeneralStructureWeirFormula;
+                    var readGSFormula = readWeir.Formula as GeneralStructureFormula;
                     Assert.That(readGSFormula.BedLevelLeftSideOfStructure, Is.EqualTo(writtenGSFormula.BedLevelLeftSideOfStructure));
                     Assert.That(readGSFormula.BedLevelRightSideOfStructure, Is.EqualTo(writtenGSFormula.BedLevelRightSideOfStructure));
                     Assert.That(readGSFormula.BedLevelLeftSideStructure, Is.EqualTo(writtenGSFormula.BedLevelLeftSideStructure));
@@ -111,9 +111,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        private static Weir2D GetGeneralStructure(string weirName)
+        private static Structure GetGeneralStructure(string weirName)
         {
-            var generalStructureFormula = new GeneralStructureWeirFormula()
+            var generalStructureFormula = new GeneralStructureFormula()
             {
                 WidthLeftSideOfStructure = double.NaN,
                 WidthRightSideOfStructure = double.NaN,
@@ -122,36 +122,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 WidthStructureRightSide = double.NaN
             };
 
-            var generalStructure = new Weir2D(weirName)
+            return new Structure()
             {
-                WeirFormula = generalStructureFormula,
+                Name = weirName,
+                Formula = generalStructureFormula,
                 CrestWidth = double.NaN,
                 Geometry = new Point(0.0, 0.0)
             };
-            return generalStructure;
         }
 
-        private static Weir2D GetGatedWeir(string weirName)
-        {
-            var gatedWeir = new Weir2D(weirName)
+        private static Structure GetGatedWeir(string weirName) =>
+            new Structure()
             {
-                WeirFormula = new GatedWeirFormula(true),
+                Name = weirName,
+                Formula = new SimpleGateFormula(true),
                 CrestWidth = double.NaN,
                 Geometry = new Point(0.0, 0.0)
             };
-            return gatedWeir;
-        }
 
-        private static Weir2D GetSimpleWeir(string weirName)
-        {
-            var simpleWeir = new Weir2D(weirName)
+        private static Structure GetSimpleWeir(string weirName) =>
+            new Structure()
             {
-                WeirFormula = new SimpleWeirFormula(),
+                Name = weirName,
+                Formula = new SimpleWeirFormula(),
                 CrestWidth = double.NaN,
                 Geometry = new Point(0.0, 0.0)
             };
-            return simpleWeir;
-        }
 
         /// <summary>
         /// Gets the structures file.

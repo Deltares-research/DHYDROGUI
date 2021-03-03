@@ -42,7 +42,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
             yield return hydroArea.ObservationPoints;
             yield return hydroArea.ObservationCrossSections;
             yield return hydroArea.Pumps;
-            yield return hydroArea.Weirs;
+            yield return hydroArea.Structures;
             yield return hydroArea.LandBoundaries;
             yield return hydroArea.DryPoints;
             yield return hydroArea.DryAreas;

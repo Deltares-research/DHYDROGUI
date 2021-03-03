@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Globalization;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
@@ -12,7 +12,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
     [ResourcesDisplayName(typeof(Resources), "WeirProperties_DisplayName")]
-    public class FMWeirProperties : ObjectProperties<IWeir>
+    public class FMWeirProperties : ObjectProperties<IStructure>
     {
         [Category("General")]
         [PropertyOrder(0)]
@@ -39,30 +39,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             get
             {
-                if (data.WeirFormula is GatedWeirFormula)
+                switch (data.Formula)
                 {
-                    return SelectableWeirFormulaType.SimpleGate;
+                    case SimpleGateFormula _:
+                        return SelectableWeirFormulaType.SimpleGate;
+                    case GeneralStructureFormula _:
+                        return SelectableWeirFormulaType.GeneralStructure;
+                    default:
+                        return SelectableWeirFormulaType.SimpleWeir;
                 }
-
-                if (data.WeirFormula is GeneralStructureWeirFormula)
-                {
-                    return SelectableWeirFormulaType.GeneralStructure;
-                }
-
-                return SelectableWeirFormulaType.SimpleWeir;
             }
             set
             {
                 switch (value)
                 {
                     case SelectableWeirFormulaType.SimpleWeir:
-                        data.WeirFormula = new SimpleWeirFormula();
+                        data.Formula = new SimpleWeirFormula();
                         break;
                     case SelectableWeirFormulaType.SimpleGate:
-                        data.WeirFormula = new GatedWeirFormula(true);
+                        data.Formula = new SimpleGateFormula(true);
                         break;
                     case SelectableWeirFormulaType.GeneralStructure:
-                        var generalStructureWeirFormula = new GeneralStructureWeirFormula()
+                        var generalStructureWeirFormula = new GeneralStructureFormula()
                         {
                             BedLevelStructureCentre = data.CrestLevel,
                             WidthStructureCentre = data.CrestWidth,
@@ -71,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                             WidthLeftSideOfStructure = double.NaN,
                             WidthRightSideOfStructure = double.NaN
                         };
-                        data.WeirFormula = generalStructureWeirFormula;
+                        data.Formula = generalStructureWeirFormula;
                         break;
                 }
             }
@@ -84,15 +82,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         [DynamicReadOnly]
         public string CrestLevel
         {
-            get
-            {
-                if (data.CanBeTimedependent && data.UseCrestLevelTimeSeries)
-                {
-                    return "Time series";
-                }
-
-                return data.CrestLevel.ToString(CultureInfo.CurrentCulture);
-            }
+            get => data.UseCrestLevelTimeSeries 
+                       ? "Time series" 
+                       : data.CrestLevel.ToString(CultureInfo.CurrentCulture);
             set
             {
                 if (double.TryParse(value, out double crestLevel))
@@ -108,14 +100,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         [PropertyOrder(3)]
         public TimeDependency UseCrestLevelTimeSeries
         {
-            get
-            {
-                return data.UseCrestLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant;
-            }
-            set
-            {
-                data.UseCrestLevelTimeSeries = value == TimeDependency.TimeDependent;
-            }
+            get => data.UseCrestLevelTimeSeries ? TimeDependency.TimeDependent : TimeDependency.Constant;
+            set => data.UseCrestLevelTimeSeries = value == TimeDependency.TimeDependent;
         }
 
         /// <summary>
@@ -135,19 +121,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         [DynamicReadOnly]
         public double? CrestWidth
         {
-            get
-            {
-                if (double.IsNaN(data.CrestWidth))
-                {
-                    return null;
-                }
-
-                return data.CrestWidth;
-            }
-            set
-            {
-                data.CrestWidth = value ?? double.NaN;
-            }
+            get => (!double.IsNaN(data.CrestWidth)) ? (double?) data.CrestWidth : null;
+            set => data.CrestWidth = value ?? double.NaN;
         }
 
         [Category("General")]
@@ -156,14 +131,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         [Description("If true then use the crest width value else calculate with the weir geometry")]
         public bool UseCrestWidth
         {
-            get
-            {
-                return data.CrestWidth > 0;
-            }
-            set
-            {
-                data.CrestWidth = value ? data.Geometry.Length : double.NaN;
-            }
+            get => data.CrestWidth > 0;
+            set => data.CrestWidth = value ? data.Geometry.Length : double.NaN;
         }
 
         /// <summary>
@@ -176,17 +145,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         [DynamicReadOnlyValidationMethod]
         public bool IsReadonly(string propertyName)
         {
-            if (propertyName == "CrestLevel")
+            switch (propertyName)
             {
-                return data.UseCrestLevelTimeSeries;
+                case "CrestLevel":
+                    return data.UseCrestLevelTimeSeries;
+                case "CrestWidth":
+                    return double.IsNaN(data.CrestWidth) || data.CrestWidth <= 0.0;
+                default:
+                    return false;
             }
-
-            if (propertyName == "CrestWidth")
-            {
-                return double.IsNaN(data.CrestWidth) || data.CrestWidth <= 0.0;
-            }
-
-            return false;
         }
     }
 }

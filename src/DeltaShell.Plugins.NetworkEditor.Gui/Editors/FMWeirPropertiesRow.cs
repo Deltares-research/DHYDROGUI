@@ -1,60 +1,80 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Globalization;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Area.Objects.StructureObjects;
+using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Utils;
 using DelftTools.Utils.ComponentModel;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
 {
+    /// <summary>
+    /// <see cref="FMWeirPropertiesRow"/> defines a single row within the
+    /// multi-data editor of a single <see cref="IStructure"/>.
+    /// </summary>
+    /// <seealso cref="IDisposable" />
+    /// <seealso cref="INotifyPropertyChange" />
+    /// <seealso cref="IFeatureRowObject" />
     public class FMWeirPropertiesRow : IDisposable, INotifyPropertyChange, IFeatureRowObject
     {
         protected string CrestLevelTimeSeriesString = "Time series";
-        private IWeir weir;
-        private IWeirFormula formula;
+        private IStructure weir;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangingEventHandler PropertyChanging;
 
-        public FMWeirPropertiesRow(IWeir weir)
+        /// <summary>
+        /// Creates a new <see cref="FMWeirPropertiesRow"/>.
+        /// </summary>
+        /// <param name="weir">The weir.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="weir"/> is <c>null</c>.
+        /// </exception>
+        public FMWeirPropertiesRow(IStructure weir)
         {
+            Ensure.NotNull(weir, nameof(weir));
             Weir = weir;
         }
 
-        // weir properties
+        /// <summary>
+        /// Gets or sets the name of the group.
+        /// </summary>
+        [DisplayName("Group Name")]
+        public string GroupName
+        {
+            get => Weir.GroupName;
+            set => Weir.GroupName = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
         [DisplayName("Name")]
         public string Name
         {
-            get
-            {
-                return Weir.Name;
-            }
-            set
-            {
-                Weir.Name = value;
-            }
+            get => Weir.Name;
+            set => Weir.Name = value;
         }
 
+        /// <summary>
+        /// Gets or sets the crest level.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <c>Pump.UseCrestLevelTimeSeries</c> is <c>true</c>.
+        /// </exception>
         [DynamicReadOnly]
-        [DisplayName(GuiParameterNames.CrestLevel)]
+        [DisplayName(GuiParameterNames.CrestLevel + " [m AD]")]
         public string CrestLevel
         {
-            get
-            {
-                if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
-                {
-                    return CrestLevelTimeSeriesString;
-                }
-
-                return weir.CrestLevel.ToString("0.00", CultureInfo.CurrentCulture);
-            }
+            get => weir.UseCrestLevelTimeSeries 
+                       ? CrestLevelTimeSeriesString 
+                       : weir.CrestLevel.ToString("0.00", CultureInfo.CurrentCulture);
             set
             {
-                if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+                if (weir.UseCrestLevelTimeSeries)
                 {
                     throw new InvalidOperationException("Cannot set value from row when using time dependent crest level.");
                 }
@@ -63,60 +83,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
             }
         }
 
+        /// <summary>
+        /// Gets or sets the width of the crest.
+        /// </summary>
         [DynamicReadOnly]
         [DisplayName(GuiParameterNames.CrestWidth + " [m]")]
+        [DisplayFormat("0.00")]
         public string CrestWidth
         {
-            get
-            {
-                return weir.CrestWidth.ToString("0.00", CultureInfo.CurrentCulture);
-            }
-            set
-            {
-                weir.CrestWidth = double.Parse(value, CultureInfo.CurrentCulture);
-            }
+            get => weir.CrestWidth.ToString("0.00", CultureInfo.CurrentCulture);
+            set => weir.CrestWidth = double.Parse(value, CultureInfo.CurrentCulture);
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether [use crest width].
+        /// </summary>
         [DisplayName("Use crest width")]
         public bool UseCrestWidth
         {
-            get
-            {
-                return weir.CrestWidth > 0;
-            }
-            set
-            {
-                weir.CrestWidth = value ? weir.Geometry.Length : 0.0;
-            }
+            get => weir.CrestWidth > 0;
+            set => weir.CrestWidth = value ? weir.Geometry.Length : 0.0;
         }
 
-        [DisplayName("Lateral contraction coefficient")]
-        [DisplayFormat("0.00")]
-        public double SLateralContraction
-        {
-            get
-            {
-                var f = formula as SimpleWeirFormula;
-                if (f != null)
-                {
-                    return f.LateralContraction;
-                }
-
-                return 0.0;
-            }
-            set
-            {
-                var f = formula as SimpleWeirFormula;
-                if (f != null)
-                {
-                    f.LateralContraction = value;
-                }
-            }
-        }
+        [ReadOnly(true)]
+        [DisplayName("Structure Type")]
+        public string FormulaName => Weir.Formula.Name;
 
         [Browsable(false)]
         public bool HasParent { get; set; }
 
+        /// <summary>
+        /// Determines whether the specified <paramref name="propertyName"/>
+        /// is currently read-only.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>
+        /// <c>true</c> if <paramref name="propertyName"/> is currently read-only;
+        /// otherwise, <c>false</c>.
+        /// </returns>
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
@@ -125,17 +129,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
                 return false;
             }
 
-            if (propertyName == "CrestLevel")
+            switch (propertyName)
             {
-                return weir.UseCrestLevelTimeSeries;
+                case nameof(CrestLevel):
+                    return weir.UseCrestLevelTimeSeries;
+                case nameof(CrestWidth):
+                    return weir.CrestWidth <= 0.0;
+                default:
+                    return false;
             }
-
-            if (propertyName == "CrestWidth")
-            {
-                return weir.CrestWidth <= 0.0;
-            }
-
-            return false;
         }
 
         public void Dispose()
@@ -146,25 +148,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!disposing)
             {
-                Weir = null;
-                PropertyChanged = null;
-                PropertyChanging = null;
+                return;
             }
+
+            Weir = null;
+            PropertyChanged = null;
+            PropertyChanging = null;
         }
 
-        public IFeature GetFeature()
-        {
-            return weir;
-        }
+        /// <summary>
+        /// Gets the underlying feature.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="IStructure"/> feature.
+        /// </returns>
+        public IFeature GetFeature() => Weir;
 
-        private IWeir Weir
+        private IStructure Weir
         {
-            get
-            {
-                return weir;
-            }
+            get => weir;
             set
             {
                 if (weir != null)
@@ -173,10 +177,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
                 }
 
                 weir = value;
-                UpdateTimeSerieStrings();
+                UpdateTimeSeriesStrings();
+
                 if (weir != null)
                 {
-                    formula = (IWeirFormula) weir.WeirFormula;
                     ((INotifyPropertyChanged) weir).PropertyChanged += WeirPropertiesRowPropertyChanged;
                 }
             }
@@ -186,20 +190,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors
         {
             if (e.PropertyName == "Name")
             {
-                UpdateTimeSerieStrings();
+                UpdateTimeSeriesStrings();
             }
 
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, e);
-            }
+            PropertyChanged?.Invoke(this, e);
         }
 
-        private void UpdateTimeSerieStrings()
+        private void UpdateTimeSeriesStrings()
         {
             if (weir != null)
             {
-                CrestLevelTimeSeriesString = string.Format("{0}_{1}.tim", weir.Name, KnownStructureProperties.CrestLevel);
+                CrestLevelTimeSeriesString = $"{weir.Name}_{KnownStructureProperties.CrestLevel}.tim";
             }
         }
     }

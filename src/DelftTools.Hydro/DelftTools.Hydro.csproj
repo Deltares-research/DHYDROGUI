@@ -79,33 +79,33 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -117,11 +117,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
@@ -129,12 +129,12 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="QuickGraph">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.315-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.441-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -158,20 +158,23 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
+    <Compile Include="Area\Objects\StructureObjects\IPump.cs" />
+    <Compile Include="Area\Objects\StructureObjects\IStructure.cs" />
+    <Compile Include="Area\Objects\StructureObjects\IStructureObject.cs" />
+    <Compile Include="Area\Objects\StructureObjects\Pump.cs" />
+    <Compile Include="Area\Objects\StructureObjects\Structure.cs" />
     <Compile Include="Embankment.cs" />
-    <Compile Include="GroupableFeature2D.cs" />
-    <Compile Include="GroupableFeature2DPoint.cs" />
-    <Compile Include="GroupableFeature2DPolygon.cs" />
-    <Compile Include="GroupableFeatureComparer.cs" />
-    <Compile Include="GroupableFeatureExtensions.cs" />
-    <Compile Include="GroupablePointFeature.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeature2D.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeature2DPoint.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeature2DPolygon.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeatureComparer.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeatureExtensions.cs" />
+    <Compile Include="GroupableFeatures\GroupablePointFeature.cs" />
     <Compile Include="HydroAreaLayerNames.cs" />
-    <Compile Include="IGroupableFeature.cs" />
-    <Compile Include="ILongNameable.cs" />
-    <Compile Include="IStructure.cs" />
+    <Compile Include="GroupableFeatures\IGroupableFeature.cs" />
     <Compile Include="NameableFeatureComparer.cs" />
-    <Compile Include="Structures\BridgePillar.cs" />
-    <Compile Include="Structures\FixedWeir.cs" />
+    <Compile Include="Area\Objects\BridgePillar.cs" />
+    <Compile Include="Area\Objects\FixedWeir.cs" />
     <Compile Include="Helpers\ActivitiesExtensions.cs" />
     <Compile Include="Helpers\ActivityExtensions.cs" />
     <Compile Include="Helpers\ICoordinateSystemExtensions.cs" />
@@ -184,35 +187,26 @@
     <Compile Include="IHydroRegion.cs" />
     <Compile Include="IHydroObject.cs" />
     <Compile Include="IModelMerge.cs" />
-    <Compile Include="LandBoundary2D.cs" />
-    <Compile Include="ObservationCrossSection2D.cs" />
-    <Compile Include="FlowDirection.cs" />
+    <Compile Include="Area\Objects\LandBoundary2D.cs" />
+    <Compile Include="Area\Objects\ObservationCrossSection2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Structures\GroupableFeatureHelper.cs" />
-    <Compile Include="Structures\GateOpeningDirection.cs" />
-    <Compile Include="Structures\IPump.cs" />
-    <Compile Include="Structures\IWeir.cs" />
-    <Compile Include="Structures\IWeirFormula.cs" />
-    <Compile Include="Structures\KnownStructureProperties\KnownGeneralStructureProperties.cs" />
-    <Compile Include="Structures\KnownStructureProperties\KnownStructureProperties.cs" />
-    <Compile Include="Structures\GuiParameterNames.cs" />
-    <Compile Include="Structures\Pump.cs" />
-    <Compile Include="Structures\Pump2D.cs" />
-    <Compile Include="Structures\PumpControlDirection.cs" />
-    <Compile Include="Structures\Weir.cs" />
-    <Compile Include="Structures\Weir2D.cs" />
-    <Compile Include="Structures\WeirFormula\GatedWeirFormula.cs" />
-    <Compile Include="Structures\WeirFormula\GeneralStructureWeirFormula.cs" />
-    <Compile Include="Structures\WeirFormula\IGatedWeirFormula.cs" />
-    <Compile Include="Structures\WeirFormula\SimpleWeirFormula.cs" />
+    <Compile Include="GroupableFeatures\GroupableFeatureHelper.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\GateOpeningDirection.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\IStructureFormula.cs" />
+    <Compile Include="Area\Objects\StructureObjects\KnownProperties\KnownGeneralStructureProperties.cs" />
+    <Compile Include="Area\Objects\StructureObjects\KnownProperties\KnownStructureProperties.cs" />
+    <Compile Include="Area\Objects\StructureObjects\GuiParameterNames.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\SimpleGateFormula.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\GeneralStructureFormula.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\IGatedStructureFormula.cs" />
+    <Compile Include="Area\Objects\StructureObjects\StructureFormulas\SimpleWeirFormula.cs" />
     <Compile Include="HydroTimeSeriesFactory.cs" />
-    <Compile Include="StructureType.cs" />
-    <Compile Include="Structures\ThinDam2D.cs" />
+    <Compile Include="Area\Objects\ThinDam2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -270,6 +264,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Embankment.hbm.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -289,8 +284,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.315-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.315-beta\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.441-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.441-beta\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.315-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.315-beta\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.441-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.441-beta\build\net461\DeltaShell.Framework.targets')" />
 </Project>

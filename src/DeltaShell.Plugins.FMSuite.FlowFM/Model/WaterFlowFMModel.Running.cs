@@ -21,6 +21,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         public override string ProgressText => string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText;
         public override IBasicModelInterface BMIEngine => runner.Api;
 
+        protected override void OnReset()
+        {
+            base.OnReset();
+            ReportProgressText(); // Reset the progress text
+        }
+
         protected override void OnInitialize()
         {
             previousProgress = 0;

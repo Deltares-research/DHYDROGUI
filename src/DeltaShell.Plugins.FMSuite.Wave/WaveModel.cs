@@ -839,6 +839,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             }
         }
 
+        protected override void OnReset()
+        {
+            base.OnReset();
+            ReportProgressText(); // Reset the progress text
+        }
+        
         protected override void OnInitialize()
         {
             previousProgress = 0;

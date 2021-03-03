@@ -13,6 +13,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
 using DeltaShell.Plugins.FMSuite.Common.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers;
@@ -397,34 +398,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations, UniqueFileNameProvider fileNameProvider,
+        private IEnumerable<ExtForceFileItem> WriteSpatialData(string quantity, IEnumerable<ISpatialOperation> spatialOperations, UniqueFileNameProvider uniqueFileNameProvider,
                                                                string prefix = null)
         {
             IDictionary<ISpatialOperation, ExtForceFileItem> spatialDataItems =
-                ExtForceFileItemFactory.GetSpatialDataItems(quantity, spatialOperations, ExistingForceFileItems, extFilePath, fileNameProvider,
+                ExtForceFileItemFactory.GetSpatialDataItems(quantity, spatialOperations, ExistingForceFileItems, extFilePath, uniqueFileNameProvider,
                                                             prefix);
 
             foreach (KeyValuePair<ISpatialOperation, ExtForceFileItem> spatialDataItem in spatialDataItems)
             {
                 ExtForceFileItem extForceFileItem = spatialDataItem.Value;
-                Action writeAction;
+
                 switch (spatialDataItem.Key)
                 {
                     case ImportSamplesSpatialOperation importSamplesOperation:
-                        writeAction = () => WriteInitialConditionsSamples(importSamplesOperation, extForceFileItem);
+                        WriteInitialConditionsSamples(importSamplesOperation, extForceFileItem);
                         break;
                     case SetValueOperation polygonOperation:
-                        writeAction = () => WriteInitialConditionsPolygon(polygonOperation, extForceFileItem);
+                        WriteInitialConditionsPolygon(polygonOperation, extForceFileItem);
                         break;
                     case AddSamplesOperation addSamplesOperation:
-                        writeAction = () => WriteInitialConditionsUnsupported(addSamplesOperation, extForceFileItem);
+                        WriteInitialConditionsUnsupported(addSamplesOperation, extForceFileItem);
                         break;
                     default:
                         throw new NotImplementedException(
                             $"Cannot serialize operation of type {spatialDataItem.Key.GetType()} to external forcings file");
                 }
-
-                writeAction();
+                
                 yield return extForceFileItem;
             }
         }
@@ -450,7 +450,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private static void CopyImportSamplesOperation(ImportSamplesOperation operation, string targetDir, string newFileName)
         {
             string targetPath = Path.Combine(targetDir, newFileName);
-            File.Copy(operation.FilePath, targetPath);
+            File.Copy(operation.FilePath, targetPath, true);
             operation.FilePath = targetPath;
         }
 
@@ -566,13 +566,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             if (!UseProperty(modelDefinition, KnownProperties.UseSalinity))
             {
-                function.RemoveComponentByName(SourceAndSink.SalinityVariableName);
+                function.RemoveComponentByName(SourceSinkVariableInfo.SalinityVariableName);
             }
 
             if ((HeatFluxModelType) modelDefinition.GetModelProperty(KnownProperties.Temperature).Value ==
                 HeatFluxModelType.None)
             {
-                function.RemoveComponentByName(SourceAndSink.TemperatureVariableName);
+                function.RemoveComponentByName(SourceSinkVariableInfo.TemperatureVariableName);
             }
 
             if (!UseProperty(modelDefinition, GuiProperties.UseMorSed))
@@ -582,7 +582,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             if (!UseProperty(modelDefinition, KnownProperties.SecondaryFlow))
             {
-                function.RemoveComponentByName(SourceAndSink.SecondaryFlowVariableName);
+                function.RemoveComponentByName(SourceSinkVariableInfo.SecondaryFlowVariableName);
             }
         }
 
