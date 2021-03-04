@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         [Test]
         public void TestValidateInitialSedimentThicknessOfSedimentFractionsInModel_WithNoSedimentFractions()
         {
-            var fmModel = new WaterFlowFMModel("MyFmModel") { ModelDefinition = { UseMorphologySediment = true } };
+            var fmModel = new WaterFlowFMModel { ModelDefinition = { UseMorphologySediment = true } };
             var issues = GetValidationIssuesWithMessages(fmModel, new List<string>(){ Resources.WaterFlowFMSedimentMorphologyValidator_ValidateInitialSedimentThicknessOfSedimentFractionsInModel_At_least_one_sediment_fraction_should_have_a_positive_thickness});
             Assert.AreEqual(0, issues.Count());
         }
@@ -227,7 +227,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
         #region Test helper methods
         private static WaterFlowFMModel GetFMModelWithDefaultSandAndMudFractions()
         {
-            var fmModel = new WaterFlowFMModel("MyFmModel")
+            var fmModel = new WaterFlowFMModel()
             {
                 ModelDefinition = { UseMorphologySediment = true },
                 SedimentFractions = new EventedList<ISedimentFraction>()
@@ -250,7 +250,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
 
         private static WaterFlowFMModel GetFmModelWithSedimentFraction(IEventedList<ISedimentProperty> sedimentProperties)
         {
-            var fmModel = new WaterFlowFMModel("MyFmModel") {ModelDefinition = {UseMorphologySediment = true}};
+            var fmModel = new WaterFlowFMModel {ModelDefinition = {UseMorphologySediment = true}};
             var sedimentFraction = new SedimentFraction
             {
                 Name = "Sand",
