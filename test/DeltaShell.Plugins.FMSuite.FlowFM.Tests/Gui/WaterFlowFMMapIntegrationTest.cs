@@ -36,7 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         [Test]
         [Category(TestCategory.WindowsForms)]
-        [Category("Quarantine")]
         public void TestRunningSmallModelWithManyTimeSteps()
         {
             var mduPath = TestHelper.GetTestFilePath(@"smallModelWithManyTimeSteps\r01.mdu");

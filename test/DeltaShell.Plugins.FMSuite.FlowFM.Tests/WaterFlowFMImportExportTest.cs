@@ -76,7 +76,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category("Quarantine")]
         public void ExportOutputCoverage()
         {
             if(Map.CoordinateSystemFactory == null)

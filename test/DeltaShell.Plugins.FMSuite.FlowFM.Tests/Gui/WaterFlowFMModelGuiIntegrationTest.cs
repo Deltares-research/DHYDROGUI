@@ -388,7 +388,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.VerySlow)]
-        [Category("Quarantine")]
         public void RunningFMModelShouldGiveVectorVelocityLayer()
         {
             var mduPath =

@@ -282,7 +282,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void ReadNetworkWithRetentions212()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Retent.lit\2\NETWORK.TP";

@@ -108,7 +108,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
-        [Category("Quarantine")]
         public void CheckIfTholenCatchmentZRO652HasTwoLinks()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Tholen.Lit\29\Network.TP";

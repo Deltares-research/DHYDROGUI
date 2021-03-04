@@ -89,7 +89,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         }
 
         [Test]
-        [Category("Quarantine")]
         public void ImportLateralSourcesAndRetentions()
         {
             string pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\263_000.lit\1\NETWORK.TP";
