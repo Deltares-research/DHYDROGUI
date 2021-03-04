@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportSettingsRe()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\LATERALS.sbk\2\DEFTOP.1";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
+            var waterFlowFmModel = new WaterFlowFMModel("waterflowfm");
             waterFlowFmModel.StopTime = waterFlowFmModel.StartTime;
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekSettingsImporter() });
@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportSettingsFlow()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\301_00.lit\2\NETWORK.TP";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
+            var waterFlowFmModel = new WaterFlowFMModel("waterflowfm");
             waterFlowFmModel.StopTime = waterFlowFmModel.StartTime;
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekSettingsImporter() });
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportSettingsChezyBecomesConveyance()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\chezyBecomesConveyance\1\NETWORK.TP";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
+            var waterFlowFmModel = new WaterFlowFMModel("waterflowfm");
             waterFlowFmModel.StopTime = waterFlowFmModel.StartTime;
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekSettingsImporter() });

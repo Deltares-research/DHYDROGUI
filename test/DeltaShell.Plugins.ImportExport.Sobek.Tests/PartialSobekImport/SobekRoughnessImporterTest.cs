@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportRoughnessWhereYZCrossSectionHasNoFrictionDataShouldTakeTheMainValueOfTheBranch() //Review Witteveen en Bos
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\Twentekanaal.lit\3\Network.TP";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow 1d");
+            var waterFlowFmModel = new WaterFlowFMModel("waterflow1d");
 
             Assert.IsFalse(waterFlowFmModel.UseReverseRoughness);
 

@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         public void ImportComputationalGridReWithOptionOnCrossSectionsOnly()
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\JAMM2010.sbk\40\DEFTOP.1";
-            var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
+            var waterFlowFmModel = new WaterFlowFMModel("waterflowfm");
 
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork,
                 waterFlowFmModel,
