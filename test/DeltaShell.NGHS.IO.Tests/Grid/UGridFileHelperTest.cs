@@ -8,6 +8,7 @@ using DelftTools.Hydro.Link1d2d;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -30,6 +31,29 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             var grid = UGridFileHelper.ReadUnstructuredGrid(testFilePath);
             Assert.AreEqual(gridShouldLoad, grid != null);
+        }
+
+        [Test]
+        public void CheckUGridFileDeltaresVersion()
+        {
+            var filePath = TestHelper.CreateLocalCopySingleFile(Path.Combine(TestHelper.GetTestDataDirectory(), "ugrid","Custom_Ugrid.nc"));
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => UGridFileHelper.IsUGridFile(filePath), $"Could not find Deltares netcdf file version type with their version higher than 0.10 in the file {filePath}");
+        }
+
+        [Test]
+        public void CheckDeltaresVersionInFileWithoutGlobalAttributeConventions()
+        {
+            var filePath = TestHelper.CreateLocalCopySingleFile(Path.Combine(TestHelper.GetTestDataDirectory(), "nonUgrid", "small_net.nc"));
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => UGridFileHelper.IsUGridFile(filePath), $"Could not find Deltares netcdf file version type string in the file {filePath}");
+        }
+
+        [Test]
+        public void CheckDeltaresVersionNonExitingFile()
+        {
+            var filePath = "fileDoesNotExist.nc";
+            TestHelper.AssertAtLeastOneLogMessagesContains(
+                () => Assert.Throws<FileNotFoundException>(() =>new RemoteUGridApi().Open(filePath))
+                , $"While reading Deltares netcdf file version type from file {filePath} we encounter the following problem:");
         }
 
         [TestCase(@"ugrid\BedLevelValues_NodesAndFaces.nc", UGridFileHelper.BedLevelLocation.Faces)]

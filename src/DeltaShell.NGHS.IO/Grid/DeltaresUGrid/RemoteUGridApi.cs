@@ -1,5 +1,8 @@
-﻿using DelftTools.Utils.Remoting;
+﻿using System;
+using DelftTools.Utils.NetCdf;
+using DelftTools.Utils.Remoting;
 using Deltares.UGrid.Api;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 {
@@ -9,7 +12,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
     public sealed class RemoteUGridApi : IUGridApi
     {
         private IUGridApi api;
-
+        private static readonly ILog log = LogManager.GetLogger(typeof(RemoteUGridApi));
         public RemoteUGridApi()
         {
             api = RemoteInstanceContainer.CreateInstance<IUGridApi, UGridApi>(true);
@@ -49,7 +52,51 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <inheritdoc/>
         public void Open(string filePath, OpenMode mode = OpenMode.Reading)
         {
+            ValidateFilePathWithAcceptableDeltaresVersion(filePath);
             api.Open(filePath, mode);
+        }
+
+        private static void ValidateFilePathWithAcceptableDeltaresVersion(string filePath)
+        {
+            var deltaresVersionKeyValue = "Deltares-";
+            NetCdfFile file = null;
+            string conventions = string.Empty;
+            try
+            {
+                // open netcdf manually, this functionality must be placed int the wrapper opening function using the ionc_adheresto_conventions_dll call when UNST-4908 is resolved
+                file = NetCdfFile.OpenExisting(filePath);
+                conventions = file.GetGlobalAttribute("Conventions")?.Value?.ToString() ?? string.Empty;
+            }
+            catch (Exception e)
+            {
+                log.Warn($"While reading Deltares netcdf file version type from file {filePath} we encounter the following problem: {e.Message}");
+            }
+            finally
+            {
+                file?.Close();
+            }
+            var indexOfStartDeltaresVersionSubString = conventions.IndexOf(deltaresVersionKeyValue, StringComparison.InvariantCultureIgnoreCase);
+            if (indexOfStartDeltaresVersionSubString == -1)
+            {
+                log.Warn($"Could not find Deltares netcdf file version type string in the file {filePath}");
+                return;
+            }
+
+            var indexOfEndDeltaresVersionSubString = conventions.IndexOf(" ", indexOfStartDeltaresVersionSubString, StringComparison.InvariantCultureIgnoreCase);
+            var lengthOfDeltaresVersionSubString = indexOfEndDeltaresVersionSubString == -1
+                                                       ? conventions.Length - (indexOfStartDeltaresVersionSubString + deltaresVersionKeyValue.Length)
+                                                       : indexOfEndDeltaresVersionSubString - (indexOfStartDeltaresVersionSubString + deltaresVersionKeyValue.Length);
+
+            var deltaresVersionString = conventions.Substring(indexOfStartDeltaresVersionSubString + deltaresVersionKeyValue.Length, lengthOfDeltaresVersionSubString);
+            var deltaresVersionArray = deltaresVersionString.Contains(".")
+                                           ? Array.ConvertAll(deltaresVersionString.Split('.'), s => int.TryParse(s, out int version) ? version : 0)
+                                           : new[]
+                                           {
+                                               0,
+                                               int.TryParse(deltaresVersionString, out int v) ? v : 0
+                                           };
+            if (deltaresVersionArray.Length != 2 || deltaresVersionArray[0] < 0 || deltaresVersionArray[1] < 10)
+                log.Warn($"Could not find Deltares netcdf file version type with their version higher than 0.10 in the file {filePath}");
         }
 
         /// <inheritdoc/>
