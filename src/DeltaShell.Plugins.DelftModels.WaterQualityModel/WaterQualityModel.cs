@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterQualityModel));
 
         /// <summary>
-        /// Occures when the hydro data has changed (file has been edited) (async event)
+        /// Occurs when the hydro data has changed (file has been edited) (async event)
         /// </summary>
         public virtual event EventHandler<EventArgs> HydroDataChanged;
 
@@ -492,7 +492,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                     if (existingBoundary != null)
                     {
                         // copy the location aliases
-                        // TODO: extend this list if there is more to be mapped
                         waterQualityBoundary.LocationAliases = existingBoundary.LocationAliases;
                     }
 
