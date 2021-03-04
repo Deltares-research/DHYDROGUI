@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Commands;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
@@ -23,7 +24,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         private static readonly MockRepository mocks = new MockRepository();
 
         [Test]
-        [Category("Quarantine")]
         public void ExecuteShowOpenViewForCorrectData()
         {
             //test the command issues a command to the commandhandler to open a view with the correct coverages..
@@ -54,7 +54,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             
                 //setup expectations
                 Expect.Call(hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer).Return(networkCoverageGroupLayer);
-                Expect.Call(documentViews.ActiveView.GetViewsOfType<MapView>()).Return(new[] {mapView});
+                var activeView = mocks.DynamicMock<ICompositeView>();
+                Expect.Call(activeView.ChildViews).Return(new EventedList<IView>() { mapView }).Repeat.Any();
+                Expect.Call(documentViews.ActiveView).Return(activeView);
+
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(pluginGui.Gui).Return(gui).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();
@@ -98,7 +101,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         }
 
         [Test]
-        [Category("Quarantine")]
         public void SideViewIsOpenedWithCoveragesInTheMapView()
         {
             //mock the needs
@@ -128,7 +130,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 var coverageInMapView = new NetworkCoverage { Network = route.Network, Name = "coverageInMapView" };
                 //setup expectations
                 Expect.Call(hydroNetworkEditorMapTool.ActiveNetworkCoverageGroupLayer).Return(networkCoverageGroupLayer);
-                Expect.Call(documentViews.ActiveView.GetViewsOfType<MapView>()).Return(new[] { mapView });
+                var activeView = mocks.DynamicMock<ICompositeView>();
+                Expect.Call(activeView.ChildViews).Return(new EventedList<IView>() { mapView }).Repeat.Any();
+                Expect.Call(documentViews.ActiveView).Return(activeView);
+
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(pluginGui.Gui).Return(gui).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();

@@ -40,6 +40,7 @@ using Rhino.Mocks;
 using SharpMap;
 using SharpTestsEx;
 using Control = System.Windows.Controls.Control;
+using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
@@ -52,55 +53,54 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void PluginGuiUpdatesCoverageViewViewContextsOnNetworkCoverageNetworkPropertyChanged()
         {
-            using (var gui = new DeltaShellGui())
+            using (var clipboardMock = new ClipboardMock())
+            using (CultureUtils.SwitchToCulture("nl-NL"))
             {
-                var app = gui.Application;
+                clipboardMock.GetText_Returns_SetText();
+                using (var gui = new DeltaShellGui())
+                {
+                    var app = gui.Application;
 
-                app.Plugins.Add(new NetworkEditorApplicationPlugin());
-                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                    app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                    app.Plugins.Add(new SharpMapGisApplicationPlugin());
 
-                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
-                gui.Plugins.Add(new SharpMapGisGuiPlugin());
-                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                    gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                    gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                    gui.Plugins.Add(new NetworkEditorGuiPlugin());
 
-                
-                gui.Run();
 
-                // Create a network coverage and add it to the root folder
-                var networkCoverage = new NetworkCoverage { Network = new HydroNetwork { Name = "HydroNetwork 1" } };
-                app.Project.RootFolder.Add(networkCoverage);
+                    gui.Run();
 
-                // Create two view contexts and add them to the gui context manager
-                var coverageViewViewContext1 = new CoverageViewViewContext
+                    // Create a network coverage and add it to the root folder
+                    var networkCoverage = new NetworkCoverage {Network = new HydroNetwork {Name = "HydroNetwork 1"}};
+                    app.Project.RootFolder.Add(networkCoverage);
+
+                    // Create two view contexts and add them to the gui context manager
+                    var coverageViewViewContext1 = new CoverageViewViewContext
                     {
-                        Coverage = networkCoverage, 
-                        Map = new Map { Layers =
-                                            {
-                                                MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider>{new NetworkEditorMapLayerProvider()})
-                                            } }
-                    };
-                
-                var coverageViewViewContext2 = new CoverageViewViewContext
-                    {
-                        Coverage = networkCoverage, 
-                        Map = new Map { Layers =
-                                            {
-                                                MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider>{new NetworkEditorMapLayerProvider()})
-                                            } }
+                        Coverage = networkCoverage,
+                        Map = new Map {Layers = {MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()})}}
                     };
 
-                ((GuiContextManager) gui.ViewContextManager).ProjectViewContexts.Add(coverageViewViewContext1);
-                ((GuiContextManager) gui.ViewContextManager).ProjectViewContexts.Add(coverageViewViewContext2);
-                
-                // Change the network of the coverage layer
-                networkCoverage.Network = new HydroNetwork { Name = "HydroNetwork 2" };
+                    var coverageViewViewContext2 = new CoverageViewViewContext
+                    {
+                        Coverage = networkCoverage,
+                        Map = new Map {Layers = {MapLayerProviderHelper.CreateLayersRecursive(networkCoverage.Network, null, new List<IMapLayerProvider> {new NetworkEditorMapLayerProvider()})}}
+                    };
 
-                // Check if the network of both coverage view view contexts is correctly updated
-                var hydroNetworkMapLayer = coverageViewViewContext1.Map.Layers.OfType<HydroRegionMapLayer>().First(l => l.Region is IHydroNetwork);
-                Assert.AreEqual("HydroNetwork 2", hydroNetworkMapLayer.Region.Name);
+                    ((GuiContextManager) gui.ViewContextManager).ProjectViewContexts.Add(coverageViewViewContext1);
+                    ((GuiContextManager) gui.ViewContextManager).ProjectViewContexts.Add(coverageViewViewContext2);
 
-                hydroNetworkMapLayer = coverageViewViewContext2.Map.Layers.OfType<HydroRegionMapLayer>().First(l => l.Region is IHydroNetwork);
-                Assert.AreEqual("HydroNetwork 2", hydroNetworkMapLayer.Region.Name);
+                    // Change the network of the coverage layer
+                    networkCoverage.Network = new HydroNetwork {Name = "HydroNetwork 2"};
+
+                    // Check if the network of both coverage view view contexts is correctly updated
+                    var hydroNetworkMapLayer = coverageViewViewContext1.Map.Layers.OfType<HydroRegionMapLayer>().First(l => l.Region is IHydroNetwork);
+                    Assert.AreEqual("HydroNetwork 2", hydroNetworkMapLayer.Region.Name);
+
+                    hydroNetworkMapLayer = coverageViewViewContext2.Map.Layers.OfType<HydroRegionMapLayer>().First(l => l.Region is IHydroNetwork);
+                    Assert.AreEqual("HydroNetwork 2", hydroNetworkMapLayer.Region.Name);
+                }
             }
         }
 
@@ -186,7 +186,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
         public void ReleaseCopiedBranchFeatureOnProjectClosing()
         {
             var gui = Mocks.DynamicMock<IGui>();
@@ -199,7 +198,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
                 var project = new Project(); // Project is pretty lightweight don't need to mock here
 
-                Expect.Call(documentViews.ActiveView.GetViewsOfType<MapView>()).Return(new[] { mapView });
+                var activeView = Mocks.DynamicMock<ICompositeView>();
+                Expect.Call(activeView.ChildViews).Return(new EventedList<IView>() { mapView }).Repeat.Any(); 
+                Expect.Call(documentViews.ActiveView).Return(activeView);
+                
                 Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
                 Expect.Call(gui.ToolWindowViews).Return(documentViews).Repeat.Any();
                 Expect.Call(gui.Application).Return(application).Repeat.Any();
