@@ -176,6 +176,7 @@
     <Compile Include="FeatureData\FixedWeirSchemes.cs" />
     <Compile Include="FlowFMApplicationPlugin.cs" />
     <Compile Include="FeatureData\GeometryExtensions.cs" />
+    <Compile Include="FunctionStores\NetCdfFileParsingException.cs" />
     <Compile Include="FunctionStores\IFMClassMapFileFunctionStore.cs" />
     <Compile Include="FunctionStores\IFMHisFileFunctionStore.cs" />
     <Compile Include="FunctionStores\IFMMapFileFunctionStore.cs" />
