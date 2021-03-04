@@ -14,7 +14,7 @@ using DeltaShell.Plugins.DelftModels.WaterQualityModel.Properties;
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
     /// <summary>
-    /// Function store wrapper for waterquality map file. Only supports readonly timedependend UnstructuredGridCellCoverages
+    /// Function store wrapper for WaterQuality map file. Only supports readonly time-dependent UnstructuredGridCellCoverages
     /// </summary>
     public class LazyMapFileFunctionStore : IFunctionStore
     {
@@ -51,10 +51,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             Path
         };
 
-        public bool IsFileCritical => false;
-
-        public bool IsOpen => false;
-
         public long Id { get; set; }
 
         public IEventedList<IFunction> Functions
@@ -70,10 +66,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             FileUtils.DeleteIfExists(path);
             Path = path;
         }
-
-        public void Close() {}
-
-        public void Open(string path) {}
 
         public void CopyTo(string destinationPath)
         {
@@ -181,7 +173,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             if (typeof(T) == typeof(double))
             {
-                double maxValue = maxValues.ContainsKey(variable.Name) ? maxValues[variable.Name] : double.MaxValue;
+                double maxValue = maxValues.ContainsKey(variable.Name) ? maxValues[variable.Name] : 0D;
                 return (T) Convert.ChangeType(maxValue, typeof(T));
             }
 
@@ -198,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             if (typeof(T) == typeof(double))
             {
-                double minValue = minValues.ContainsKey(variable.Name) ? minValues[variable.Name] : double.MinValue;
+                double minValue = minValues.ContainsKey(variable.Name) ? minValues[variable.Name] : 0D;
                 return (T) Convert.ChangeType(minValue, typeof(T));
             }
 
@@ -309,45 +301,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        private void FireCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
-        {
-            if (CollectionChanging == null)
-            {
-                return;
-            }
-
-            CollectionChanging(sender, e);
-        }
-
-        private void FireCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (CollectionChanged == null)
-            {
-                return;
-            }
-
-            CollectionChanged(sender, e);
-        }
-
-        private void FireFunctionValuesChanged(object sender, FunctionValuesChangingEventArgs e)
-        {
-            if (FunctionValuesChanged == null)
-            {
-                return;
-            }
-
-            FunctionValuesChanged(sender, e);
-        }
-
-        private void FireFunctionValuesChanging(object sender, FunctionValuesChangingEventArgs e)
-        {
-            if (FunctionValuesChanging == null)
-            {
-                return;
-            }
-
-            FunctionValuesChanging(sender, e);
-        }
+        private void FireFunctionValuesChanged(object sender, FunctionValuesChangingEventArgs e) => 
+            FunctionValuesChanged?.Invoke(sender, e);
 
         #region Unsupported properties
 
@@ -355,7 +310,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         public bool SupportsPartialRemove => false;
 
-        public IList<ITypeConverter> TypeConverters => null;
+        public IList<ITypeConverter> TypeConverters => new List<ITypeConverter>();
 
         public bool DisableCaching { get; set; }
 
