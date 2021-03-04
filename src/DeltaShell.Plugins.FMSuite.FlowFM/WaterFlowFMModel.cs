@@ -31,6 +31,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
@@ -76,7 +77,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
         private readonly DimrRunner runner;
-
+        private string currentOutputDirectoryPath;
         public const string CellsToFeaturesName = "CellsToFeatures";
 
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
@@ -133,6 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ImportSpatialOperationsAfterCreating(modelDataItems);
 
                 AddSewerRoughnessIfNecessary();
+                LoadOutputStateFromMdu(mduFilePath);
                 FileBasedModelIsLoaded = true;
             }
             else
@@ -609,8 +611,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             });
 
             FireImportProgressChanged(this, "Reading model output", 8, TotalImportSteps);
-
-            ReconnectOutputFiles(Path.GetDirectoryName(mduFilePath));
             RefreshBoundaryConditions1DDataItemSet();
         }
 
@@ -2351,7 +2351,56 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // sync the heat flux model, because events are off during reading
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
         }
-        
+        private void LoadOutputStateFromMdu(string mduFilePath)
+        {
+            string existingOutputDirectory = RetrieveOutputDirectory(mduFilePath);
+            ReconnectOutputFiles(existingOutputDirectory);
+        }
+        public string ModelDirectoryPath => Path.GetDirectoryName(Path.GetDirectoryName(MduFilePath));
+        public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, DirectoryNameConstants.OutputDirectoryName);
+
+        private string RetrieveOutputDirectory(string mduFilePath)
+        {
+            currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+
+            if (ModelDefinition.ContainsProperty(KnownProperties.OutDir))
+            {
+                string mduOutputDir =
+                    ModelDefinition.GetModelProperty(KnownProperties.OutDir).GetValueAsString()?.Trim();
+
+                if (!string.IsNullOrEmpty(mduOutputDir))
+                {
+                    // We currently assume all OutputDirectoryNames are relative.
+                    string mduOutputDirPath = Path.Combine(Path.GetDirectoryName(mduFilePath), mduOutputDir);
+                    if (Directory.Exists(mduOutputDirPath))
+                    {
+                        currentOutputDirectoryPath = mduOutputDirPath;
+                    }
+                }
+            }
+
+            string existingOutputDirectory = Directory.Exists(currentOutputDirectoryPath)
+                                                 ? currentOutputDirectoryPath
+                                                 : Path.GetDirectoryName(
+                                                     mduFilePath); // backwards Compatibility (output next to mdu file)
+            return existingOutputDirectory;
+        }
+
+        #region Output
+
+        private void SetOutputDirProperty()
+        {
+            WaterFlowFMProperty outputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.OutDir);
+
+            string existingOutputDir = outputDirProperty.GetValueAsString();
+            if (!existingOutputDir.StartsWith(DirectoryNameConstants.OutputDirectoryName))
+            {
+                outputDirProperty.SetValueAsString(DirectoryNameConstants.OutputDirectoryName);
+                Log.InfoFormat("Running this model requires the OutputDirectory to be overwritten to: {0}",
+                               DirectoryNameConstants.OutputDirectoryName);
+            }
+        }
+        #endregion
         internal void SyncModelTimesWithBase()
         {
             base.StartTime = StartTime;
@@ -2395,6 +2444,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (!IsEditing)
                 InitializeAreaDataColumns();
+            SetOutputDirProperty();
             if (switchTo)
             {
                 ReloadGrid();
@@ -2478,7 +2528,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             UpdateSpatialDataAfterGridSet(grid, false, false, false);
             ImportSpatialOperationsAfterLoading();
-            ReconnectOutputFiles(Path.GetDirectoryName(mduPath));
+            LoadOutputStateFromMdu(mduPath);
             FileBasedModelIsLoaded = true;
         }
 
@@ -3961,6 +4011,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             
             ReportProgressText("Initializing");
+            SetOutputDirProperty();
+
             runner.OnInitialize();
             
             if (Status != ActivityStatus.Failed)
