@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoFixture;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
+using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
@@ -276,6 +279,130 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 }
             };
             return vertices;
+        }
+
+        [Test]
+        public void LoadBathymetry_UnstructuredGridCellCoverageNull_ThrowsArgumentNullException()
+        {
+            UnstructuredGridCellCoverage coverage = null;
+            var grid = new UnstructuredGrid();
+
+            void Call() => 
+                UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, grid, "some/path.nc", -999.0);
+
+            Assert.Throws<ArgumentNullException>(Call);
+        }
+
+        [Test]
+        public void LoadBathymetry_UnstructuredGridVertexCoverageNull_ThrowsArgumentNullException()
+        {
+            UnstructuredGridVertexCoverage coverage = null;
+            var grid = new UnstructuredGrid();
+
+            void Call() => 
+                UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, grid, -999.0);
+
+            Assert.Throws<ArgumentNullException>(Call);
+        }
+
+        [Test]
+        public void LoadBathymetry_UnstructuredGridCellCoverage_GridNull_ThrowsArgumentNullException()
+        {
+            var grid = new UnstructuredGrid();
+            var coverage = new UnstructuredGridCellCoverage(grid, false);
+
+            void Call() => 
+                UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, null, "some/path.nc", -999.0);
+
+            Assert.Throws<ArgumentNullException>(Call);
+        }
+
+        [Test]
+        public void LoadBathymetry_UnstructuredGridVertexCoverage_GridNull_ThrowsArgumentNullException()
+        {
+            var grid = new UnstructuredGrid();
+            var coverage = new UnstructuredGridVertexCoverage(grid, false);
+
+            void Call() => 
+                UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, null, -999.0);
+
+            Assert.Throws<ArgumentNullException>(Call);
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        public void LoadBathymetry_UnstructuredGridCellCoverage_PathInvalid_ThrowsArgumentException(string path)
+        {
+            var grid = new UnstructuredGrid();
+            var coverage = new UnstructuredGridCellCoverage(grid, false);
+
+            void Call() => 
+                UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, grid, path, -999.0);
+
+            Assert.Throws<ArgumentException>(Call);
+        }
+
+        [Test]
+        public void LoadBathymetry_UnstructuredGridVertexCoverage_ExpectedResults()
+        {
+            // Setup
+            var fixture = new Fixture();
+
+            var grid = new UnstructuredGrid();
+            var coverage = new UnstructuredGridVertexCoverage(grid, false);
+
+            UnstructuredGrid newGrid = UnstructuredGridTestHelper.GenerateRegularGrid(4, 4, 10D, 10D);
+
+            foreach (Coordinate vertex in newGrid.Vertices)
+            {
+                vertex.Z = fixture.Create<double>();
+            }
+
+            // Call
+            coverage.LoadBathymetry(newGrid);
+
+            // Assert
+            Assert.That(coverage.Grid, Is.SameAs(newGrid));
+
+            IMultiDimensionalArray data = coverage.Components[0].Values;
+            var retrievedValues = new double[data.Count];
+            data.CopyTo(retrievedValues, 0);
+
+            Assert.That(retrievedValues, Is.EqualTo(newGrid.Vertices.Select(v => v.Z)));
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void LoadBathymetry_UnstructuredGridCellCoverage_ExpectedResults()
+        {
+            // Setup
+            var grid = new UnstructuredGrid();
+            var coverage = new UnstructuredGridCellCoverage(grid, false);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                UnstructuredGrid newGrid = UnstructuredGridTestHelper.GenerateRegularGrid(7, 7, 10D, 10D);
+                
+                string gridSourcePath = TestHelper.GetTestFilePath("WaterFlowFMModel.MorphologicalGrid/replacement_grid.nc");
+                string gridLocalPath = tempDir.CopyTestDataFileToTempDirectory(TestHelper.GetTestFilePath(gridSourcePath));
+
+                // Call
+                coverage.LoadBathymetry(newGrid, gridLocalPath);
+
+                // Assert
+                Assert.That(coverage.Grid, Is.SameAs(newGrid));
+
+                double[] expectedValues = 
+                    UnstructuredGridFileHelper.ReadZValues(gridLocalPath,
+                                                           UnstructuredGridFileHelper.BedLevelLocation.Faces);
+
+                IMultiDimensionalArray data = coverage.Components[0].Values;
+                var retrievedValues = new double[data.Count];
+                data.CopyTo(retrievedValues, 0);
+
+                Assert.That(retrievedValues, Is.EqualTo(expectedValues));
+            }
         }
     }
 }
