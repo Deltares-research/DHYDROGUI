@@ -2353,6 +2353,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         private void LoadOutputStateFromMdu(string mduFilePath)
         {
+            if(!File.Exists(mduFilePath)) return;
             string existingOutputDirectory = RetrieveOutputDirectory(mduFilePath);
             ReconnectOutputFiles(existingOutputDirectory);
         }
