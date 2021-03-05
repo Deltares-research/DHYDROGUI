@@ -6,7 +6,6 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -245,14 +244,15 @@ namespace DelftTools.Hydro.Helpers
                                            fixedLength);
                 }
             }
-
-            // force refresh of caching (location dictionary) -> new locations are added
+            discretization.MergeNetworkLocations(discretization.Locations.GetValues<INetworkLocation>());
+            /*// force refresh of caching (location dictionary) -> new locations are added
+             // FOR THE REVIEWER: THIS PART I AM UNSURE ABOUT I DID it right.... please help because i lost the woods.
             TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
 
             discretization.RemoveLocations(discretization.GetDuplicatePointsOnHydroNodes());
 
             // force refresh of caching (location dictionary) -> locations were removed
-            TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
+            TypeUtils.SetField(discretization, "updateLocationsDictionary", true);*/
 
             discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
             discretization.Locations.SkipUniqueValuesCheck = false;
