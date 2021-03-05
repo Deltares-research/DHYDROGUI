@@ -12,6 +12,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -406,23 +407,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             }
         }
 
+        /// <summary>
+        /// Gets the name of the output directory.
+        /// </summary>
+        /// <value>
+        /// The name of the output directory.
+        /// </value>
+        /// <remarks>
+        /// If the property does not exist or the value of the property is null or an empty string we use the default
+        /// output directory name.
+        /// </remarks>
+        /// <remarks> If the value of the property is a dot (.) it means output files are in the model directory. </remarks>
         public string OutputDirectory
         {
             get
             {
-                var defaultName = "DFM_OUTPUT_" + ModelName;
-
-                // if the list doesn't contain OutDir
                 if (!ContainsProperty(KnownProperties.OutDir))
-                    return defaultName;
+                {
+                    return DirectoryNameConstants.OutputDirectoryName;
+                }
 
-                var mduOutputDir = GetModelProperty(KnownProperties.OutDir).GetValueAsString().Trim();
+                string mduOutputDir = GetModelProperty(KnownProperties.OutDir).GetValueAsString()?.Trim();
 
-                if (String.IsNullOrEmpty(mduOutputDir))
-                    return defaultName; // empty string = default dir!!! (unexpected, yes)
+                if (string.IsNullOrEmpty(mduOutputDir))
+                {
+                    return DirectoryNameConstants.OutputDirectoryName;
+                }
 
-                if (String.Equals(mduOutputDir, ".")) // dot means current dir
-                    return ""; // mdu dir
+                if (string.Equals(mduOutputDir, "."))
+                {
+                    return "";
+                }
 
                 return mduOutputDir;
             }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -70,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
             // gather paths            
             var mduName = model.Name + MduFile.MduExtension;
-            mduFilePath = Path.Combine(tempPath, mduName);
+            mduFilePath = Path.Combine(tempPath, model.Name, DirectoryNameConstants.InputDirectoryName, mduName);
 
             // make sure we initialize without: ext, thin dams, cross sections, etc..
             var adjustedMduProperties = model.ModelDefinition.Properties.ToList();

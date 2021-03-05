@@ -2099,6 +2099,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/FeatureData/IModelFeatureCoordinateData.cs
 src/DeltaShell.Plugins.FMSuite.FlowFM/FeatureData/ModelFeatureCoordinateData.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FeatureData/SourceAndSink.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FeatureData/SupportedVerticalProfileTypes.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/FileConstants.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FixedWeirSchemes.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FlowFMApplicationPlugin.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BathymetryFileWriter.cs -text

@@ -153,6 +153,7 @@
     <Compile Include="FeatureData\BridgePillarFmModelFeatureCoordinateDataSyncExtensions.cs" />
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
+    <Compile Include="FileConstants.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\ChannelFrictionDefinitionFileReader.cs" />

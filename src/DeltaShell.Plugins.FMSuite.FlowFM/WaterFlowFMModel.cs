@@ -31,6 +31,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
@@ -77,7 +78,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
         private readonly DimrRunner runner;
-        private string currentOutputDirectoryPath;
         public const string CellsToFeaturesName = "CellsToFeatures";
 
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
@@ -2088,7 +2088,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public string MduSavePath
         {
-            get { return GetMduPathFromDeltaShellPath(Path.GetDirectoryName(MduFilePath)); }
+            get { return GetMduPathFromDeltaShellPath(RecursivelyGetModelDirectoryPathFromMduFile()); }
+        }
+        private string RecursivelyGetModelDirectoryPathFromMduFile()
+        {
+            if (string.IsNullOrEmpty(MduFilePath))
+            {
+                return Name;
+            }
+
+            string modelDirectoryName = Path.GetFileNameWithoutExtension(MduFilePath);
+            var modelDir = new DirectoryInfo(MduFilePath);
+            while (modelDir != null && modelDir.Name != modelDirectoryName)
+            {
+                modelDir = modelDir.Parent;
+            }
+
+            return modelDir?.Parent == null // should never happen, unless the file-based repository is corrupted
+                       ? Path.GetDirectoryName(
+                           Path.GetDirectoryName(MduFilePath)) // default behaviour (e.g. model renamed)
+                       : modelDir.FullName;
         }
 
         public string HisSavePath
@@ -2562,36 +2581,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnSave()
         {
-            string modelDir = null;
-            string outputDir = null;
+            const string postfixExplicitWorkingDirectory = "_output";
+
+            string previousModelDir = null;
+            string previousExplicitWorkingDirectory = null;
             if (MduFilePath != MduSavePath)
             {
-                modelDir = Path.GetDirectoryName(MduFilePath);
-                outputDir = Path.GetDirectoryName(MapFilePath);
+                previousModelDir = RecursivelyGetModelDirectoryPathFromMduFile();
+                previousExplicitWorkingDirectory = previousModelDir + postfixExplicitWorkingDirectory;
             }
-            if( ExportTo(MduSavePath))
+            if (ExportTo(MduSavePath))
             {
                 /*Make sure the ModelDirectory gets updated when saving*/
-                ModelDefinition.ModelDirectory = Path.GetDirectoryName(MduSavePath);
+                ModelDefinition.ModelDirectory = RecursivelyGetModelDirectoryPathFromMduFile();
             }
-            if (modelDir != null && Directory.Exists(modelDir))
+
+            if (previousModelDir == null)
             {
-                Directory.Delete(modelDir, true);
+                return;
             }
-            if (outputDir != null && Directory.Exists(outputDir))
-            {
-                Directory.Delete(outputDir, true);
-            }
+
+            FileUtils.DeleteIfExists(previousModelDir);
+            FileUtils.DeleteIfExists(previousExplicitWorkingDirectory);
         }
 
-        private string GetMduPathFromDeltaShellPath(string path)
+        private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = DirectoryNameConstants.InputDirectoryName)
         {
             var directoryName = path != null
                 ? Path.GetDirectoryName(path) ?? ""
                 : "";
 
             // dsproj_data/<model name>/<model name>.mdu
-            return Path.Combine(directoryName, Name, Name + ".mdu");
+            return Path.Combine(directoryName, Name, subFoldersFromModelFolder, Name + ".mdu");
         }
 
         private void RenameSubFilesIfApplicable()
@@ -2739,13 +2760,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         #endregion
 
         #region Output
-
+        private string outputSnappedFeaturesPath;
         public string OutputSnappedFeaturesPath
         {
-            get
+            get => outputSnappedFeaturesPath;
+            set
             {
-                return Path.Combine(WorkingDirectory, DirectoryName, ModelDefinition.OutputDirectory, SnappedFeaturesDirectoryName);
+                if (outputSnappedFeaturesPath == value)
+                {
+                    return;
+                }
+
+                outputSnappedFeaturesPath = value;
+
+                OnOutputSnappedFeaturesPathPropertyChanged(nameof(OutputSnappedFeaturesPath));
             }
+        }
+        public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
+        protected void OnOutputSnappedFeaturesPathPropertyChanged(string name)
+        {
+            OutputSnappedFeaturesPathPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
         public TimeSpan OutputTimeStep
@@ -2787,76 +2821,311 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         
         public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
         private string WaqHydFilePath { get; set; }
+        public const string DiaFileDataItemTag = "DiaFile";
+        private string currentOutputDirectoryPath;
+        public string WorkingOutputDirectoryPath =>
+            Path.Combine(WorkingDirectory, DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
+        private bool HasOpenFunctionStores =>
+            OutputMapFileStore != null || OutputHisFileStore != null;// || OutputClassMapFileStore != null;
+
+        /// <summary>
+        /// Saves the output by either moving or copying the source output to the target output directory.
+        /// </summary>
+        /// <remarks> When a file is locked, we report an error and return. </remarks>
         private void SaveOutput()
         {
-            var oldMapFilePath = File.Exists(OutputMapFileStore?.Path)
-                ? OutputMapFileStore?.Path
-                : File.Exists(Output1DFileStore?.Path)
-                    ? Output1DFileStore?.Path
-                    : null;
-
-            var oldHisFilePath = OutputHisFileStore == null ? null : OutputHisFileStore.Path;
-
-            DisconnectOutput();
-
-            if (oldMapFilePath != null && !string.Equals(Path.GetFullPath(oldMapFilePath), Path.GetFullPath(MapFilePath), StringComparison.CurrentCultureIgnoreCase) )
+            if (string.IsNullOrEmpty(currentOutputDirectoryPath))
             {
-                FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(MapFilePath));
-                File.Copy(oldMapFilePath, MapFilePath, true);
-            }
-            else if (oldMapFilePath == null && File.Exists(MapFilePath))
-            {
-                // delete old map file
-                File.Delete(MapFilePath);
+                return;
             }
 
-            if (oldHisFilePath != null && Path.GetFullPath(oldHisFilePath).ToLower() != Path.GetFullPath(HisFilePath).ToLower())
+            var sourceOutputDirectory = new DirectoryInfo(currentOutputDirectoryPath);
+            if (!sourceOutputDirectory.Exists)
             {
-                FileUtils.CreateDirectoryIfNotExists(Path.GetDirectoryName(HisFilePath));
-                File.Copy(oldHisFilePath, HisFilePath, true);
-            }
-            else if (oldHisFilePath == null && File.Exists(HisFilePath))
-            {
-                File.Delete(HisFilePath);
+                currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+                return;
             }
 
-            // copy the complete delwaq output folder
-            string waqOutputDir = Path.Combine(Path.GetDirectoryName(MduFilePath), DelwaqHydFolderName);
-            if(WaqHydFilePath != null && WaqHydFilePath != waqOutputDir)
+            var targetOutputDirectory = new DirectoryInfo(PersistentOutputDirectoryPath);
+            string sourceOutputDirectoryPath = sourceOutputDirectory.FullName;
+            string targetOutputDirectoryPath = targetOutputDirectory.FullName;
+
+            bool sourceIsWorkingDir = sourceOutputDirectoryPath == WorkingOutputDirectoryPath;
+
+            if (OutputIsEmpty && !HasOpenFunctionStores)
             {
-                // delete the old delwaq files, they have been recreated
-                FileUtils.DeleteIfExists(waqOutputDir);
-                FileUtils.CopyDirectory(WaqHydFilePath, waqOutputDir);
+                CleanDirectory(PersistentOutputDirectoryPath);
+
+                if (sourceIsWorkingDir)
+                {
+                    CleanDirectory(WorkingDirectory);
+                }
+
+                currentOutputDirectoryPath = PersistentOutputDirectoryPath;
+
+                return;
             }
 
-            ReconnectOutputFiles(MapFilePath, HisFilePath, waqOutputDir, switchTo: true);
+            if (sourceOutputDirectoryPath == targetOutputDirectoryPath)
+            {
+                return;
+            }
+
+            //copy all files and subdirectories from source directory "output" to persistent directory "output"
+            if (!FileUtils.IsDirectoryEmpty(sourceOutputDirectoryPath))
+            {
+                FileUtils.CreateDirectoryIfNotExists(targetOutputDirectoryPath);
+
+                if (sourceIsWorkingDir)
+                {
+                    List<string> lockedFiles = GetLockedFiles(WorkingDirectory).ToList();
+
+                    if (lockedFiles.Any())
+                    {
+                        ReportLockedFiles(lockedFiles);
+                        return;
+                    }
+
+                    CleanDirectory(targetOutputDirectoryPath);
+                    MoveAllContentDirectory(sourceOutputDirectory, targetOutputDirectoryPath);
+                }
+                else
+                {
+                    CleanDirectory(targetOutputDirectoryPath);
+                    FileUtils.CopyAll(sourceOutputDirectory, targetOutputDirectory, string.Empty);
+                }
+            }
+
+            currentOutputDirectoryPath = targetOutputDirectoryPath;
+            ReconnectOutputFiles(currentOutputDirectoryPath, true);
+
+            if (sourceIsWorkingDir)
+            {
+                CleanDirectory(WorkingDirectory);
+            }
         }
 
+        private void MoveAllContentDirectory(DirectoryInfo sourceDirectory, string targetDirectoryPath)
+        {
+            foreach (FileInfo file in sourceDirectory.EnumerateFiles())
+            {
+                MoveFile(file, targetDirectoryPath);
+            }
+
+            bool onSameVolume = Directory.GetDirectoryRoot(sourceDirectory.FullName)
+                                         .Equals(Directory.GetDirectoryRoot(targetDirectoryPath));
+
+            foreach (DirectoryInfo directory in sourceDirectory.EnumerateDirectories())
+            {
+                MoveDirectory(directory, targetDirectoryPath, onSameVolume);
+            }
+        }
+
+        private static void ReportLockedFiles(IEnumerable<string> filePaths)
+        {
+            string separator = Environment.NewLine + "- ";
+            string lockedFilesMessage = separator + string.Join(separator, filePaths);
+            Log.Error("There are one or more files locked, please close the following file(s) and save again:" +
+                      lockedFilesMessage);
+        }
+
+        private IEnumerable<string> GetLockedFiles(string sourceDirectoryPath)
+        {
+            var sourceDirectory = new DirectoryInfo(sourceDirectoryPath);
+
+            foreach (FileInfo file in sourceDirectory.EnumerateFiles("*", SearchOption.AllDirectories))
+            {
+                string path = file.FullName;
+                string parentDirectoryName = Path.GetFileName(Path.GetDirectoryName(path));
+
+                // Snapped feature files are locked when the map in the GUI is open, so we ignore and copy snapped files instead.
+                if (parentDirectoryName != SnappedFeaturesDirectoryName && FileUtils.IsFileLocked(path))
+                {
+                    yield return path;
+                }
+            }
+        }
+
+        private static void MoveFile(FileInfo file, string targetDirectoryPath)
+        {
+            string targetPath = Path.Combine(targetDirectoryPath, file.Name);
+            file.MoveTo(targetPath);
+        }
+
+        private void MoveDirectory(DirectoryInfo sourceDirectoryInfo, string targetParentDirectoryPath,
+                                          bool onSameVolume)
+        {
+            var targetDirectoryInfo =
+                new DirectoryInfo(Path.Combine(targetParentDirectoryPath, sourceDirectoryInfo.Name));
+
+            if (onSameVolume && sourceDirectoryInfo.Name != SnappedFeaturesDirectoryName)
+            {
+                sourceDirectoryInfo.MoveTo(targetDirectoryInfo.FullName);
+            }
+            else
+            {
+                FileUtils.CopyAll(sourceDirectoryInfo, targetDirectoryInfo, string.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Removes all files and directories from the directory.
+        /// </summary>
+        /// <param name="directoryPath"> The directory path of the directory that needs to be cleaned. </param>
+        private static void CleanDirectory(string directoryPath)
+        {
+            var directoryInfo = new DirectoryInfo(directoryPath);
+
+            if (!directoryInfo.Exists)
+            {
+                return;
+            }
+
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                file.Delete();
+            }
+
+            foreach (DirectoryInfo directory in directoryInfo.EnumerateDirectories())
+            {
+                try
+                {
+                    directory.Delete(true);
+                }
+                // Do NOT remove: when File Explorer is opened in the directory, an IO exeption is thrown.
+                // There is no way of checking for this case, so we have to catch it. The second time it is called, it works fine.
+                // https://stackoverflow.com/questions/329355/cannot-delete-directory-with-directory-deletepath-true
+                catch (IOException)
+                {
+                    directory.Delete(true);
+                }
+            }
+        }
+        
         public string DelwaqHydFolderName
         {
             get { return "DFM_DELWAQ_" + Name; }
         }
-
-        protected virtual void ReconnectOutputFiles(string outputDirectory)
+        /// <summary>
+        /// Representation of the output directory for a D-Flow FM model.
+        /// </summary>
+        private class FmOutputDirectory
         {
-            ReconnectOutputFiles(Path.Combine(outputDirectory, ModelDefinition.RelativeMapFilePath),
-                Path.Combine(outputDirectory, ModelDefinition.RelativeHisFilePath), Path.Combine(outputDirectory, DelwaqHydFolderName));
+            private readonly DirectoryInfo outputDirectoryInfo;
+
+            /// <summary>
+            /// Creates a new instance of <see cref="FmOutputDirectory"/>.
+            /// </summary>
+            /// <param name="directoryPath"></param>
+            public FmOutputDirectory(string directoryPath)
+            {
+                outputDirectoryInfo = new DirectoryInfo(directoryPath);
+            }
+
+            /// <summary>
+            /// Determines whether the output directory exists.
+            /// </summary>
+            public bool Exists => outputDirectoryInfo.Exists;
+
+            /// <summary>
+            /// Determines whether the output directory contains output.
+            /// </summary>
+            public bool ContainsOutput => File.Exists(MapFilePath)
+                                          || File.Exists(HisFilePath)
+                                          || File.Exists(ClassMapFilePath)
+                                          || File.Exists(WaqOutputDirectoryPath)
+                                          || File.Exists(SnappedOutputDirectoryPath)
+                                          || RestartFilePaths.Any();
+
+            /// <summary>
+            /// The file path to the map file.
+            /// </summary>
+            /// <remarks> Returns null in case the file was not found. </remarks>
+            public string MapFilePath => FindFileThatEndsWith(FileConstants.MapFileExtension);
+
+            /// <summary>
+            /// The file path to the his file.
+            /// </summary>
+            /// <remarks> Returns null in case the file was not found. </remarks>
+            public string HisFilePath => FindFileThatEndsWith(FileConstants.HisFileExtension);
+
+            /// <summary>
+            /// The file path to the class map file.
+            /// </summary>
+            /// <remarks> Returns null in case the file was not found. </remarks>
+            public string ClassMapFilePath => FindFileThatEndsWith(FileConstants.ClassMapFileExtension);
+
+            /// <summary>
+            /// The path to the waq output directory.
+            /// </summary>
+            /// <remarks> Returns null in case the directory was not found. </remarks>
+            public string WaqOutputDirectoryPath => GetDirectoryPathStartingWith(FileConstants.PrefixDelwaqDirectoryName);
+
+            /// <summary>
+            /// The path to the snapped output directory.
+            /// </summary>
+            /// <remarks> Returns null in case the directory was not found. </remarks>
+            public string SnappedOutputDirectoryPath => GetDirectoryPathStartingWith(FileConstants.SnappedFeaturesDirectoryName);
+
+            /// <summary>
+            /// The paths of the restart files.
+            /// </summary>
+            public IEnumerable<string> RestartFilePaths => FindFilesThatEndWith(FileConstants.RestartFileExtension);
+
+            private string GetDirectoryPathStartingWith(string directoryNameStart)
+            {
+                return outputDirectoryInfo.EnumerateDirectories()
+                                          .FirstOrDefault(d => d.Name.StartsWith(directoryNameStart, StringComparison.Ordinal))?
+                                          .FullName;
+            }
+
+            private string FindFileThatEndsWith(string extension)
+            {
+                return outputDirectoryInfo.EnumerateFiles()
+                                          .FirstOrDefault(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
+                                          .FullName;
+            }
+
+            private IEnumerable<string> FindFilesThatEndWith(string extension)
+            {
+                return outputDirectoryInfo.EnumerateFiles()
+                                          .Where(f => f.Name.EndsWith(extension, StringComparison.Ordinal))?
+                                          .Select(f => f.FullName);
+            }
         }
 
-        private void ReconnectOutputFiles(string mapFilePath, string hisFilePath, string waqFolderPath, bool switchTo = false)
+        protected virtual void ReconnectOutputFiles(string outputDirectoryPath, bool switchTo = false)
         {
-            var existsMapFile = File.Exists(mapFilePath);
-            var existsHisFile = File.Exists(hisFilePath);
-            var existsWaqFolder = Directory.Exists(waqFolderPath);
+            if (string.IsNullOrEmpty(outputDirectoryPath))
+            {
+                return;
+            }
 
-            if (!existsMapFile && !existsHisFile && !existsWaqFolder) return;
+            var outputDirectory = new FmOutputDirectory(outputDirectoryPath);
+            if (!outputDirectory.Exists || !outputDirectory.ContainsOutput)
+            {
+                return;
+            }
 
             FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
             BeginEdit(new DefaultEditAction("Reconnect output files"));
 
+            ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
+            ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
+            //ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
+            ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
+            ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
+            ReconnectRestartFiles(outputDirectory.RestartFilePaths);
+
+            OutputIsEmpty = false;
+
+            EndEdit();
+        }
+        private void ReconnectMapFile(string mapFilePath, bool switchTo)
+        {
             // deal with issue that kernel doesn't understand any coordinate systems other than RD & WGS84 :
-            if (existsMapFile)
+            if (mapFilePath != null)
             {
                 ReportProgressText("Reading map file");
                 var cs = UGridFileHelper.ReadCoordinateSystem(mapFilePath);
@@ -2904,16 +3173,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
             }
+        }
 
-            if (existsHisFile)
+        private void ReconnectHistoryFile(string hisFilePath, bool switchTo)
+        {
+            if (OutputMapFileStore != null && OutputMapFileStore.Grid == null)
+            {
+                Log.Warn("Associated output files are unsupported, these will not be loaded");
+                OutputMapFileStore = null;
+                return;
+            }
+
+            if (hisFilePath != null)
             {
                 ReportProgressText("Reading his file");
-                FireImportProgressChanged(this, "Reading output files - Reading His file", 1, 2);
+                FireImportProgressChanged(this,"Reading output files - Reading His file", 1, 2);
                 if (switchTo && OutputHisFileStore != null)
                 {
-
                     OutputHisFileStore.Path = hisFilePath;
-                    OutputHisFileStore.CoordinateSystem = CoordinateSystem;
                 }
                 else
                 {
@@ -2922,15 +3199,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     OutputHisFileStore.CoordinateSystem = CoordinateSystem;
                 }
             }
+        }
 
-            if (existsWaqFolder)
+        /*Private void ReconnectClassMapFile(string classMapFilePath, bool switchTo)
+        {
+            if (classMapFilePath != null)
             {
-                WaqHydFilePath = waqFolderPath;
+                ReportProgressText("Reading class map file");
+                FireImportProgressChanged("Reading output files - Reading Class Map file", 1, 2);
+                if (switchTo && OutputClassMapFileStore != null)
+                {
+                    OutputClassMapFileStore.Path = classMapFilePath;
+                }
+                else
+                {
+                    OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
+                }
             }
-            
-            OutputIsEmpty = false;
+        }*/
+        public string DelwaqOutputDirectoryName => FileConstants.PrefixDelwaqDirectoryName + Name;
+        public string DelwaqOutputDirectoryPath { get; set; }
 
-            EndEdit();
+        private void ReconnectWaterQualityOutputDirectory(string waqOutputDirectoryPath)
+        {
+            if (waqOutputDirectoryPath != null)
+            {
+                DelwaqOutputDirectoryPath = waqOutputDirectoryPath;
+            }
+        }
+        private void ClearWaqOutputDirProperty()
+        {
+            ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir).SetValueAsString(string.Empty);
+        }
+        private void SetWaqOutputDirProperty()
+        {
+            if (!SpecifyWaqOutputInterval)
+            {
+                return;
+            }
+
+            string relativeDWaqOutputDirectory = Path.Combine(DirectoryNameConstants.OutputDirectoryName, DelwaqOutputDirectoryName);
+            WaterFlowFMProperty waqOutputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir);
+            waqOutputDirProperty.SetValueAsString(relativeDWaqOutputDirectory);
+        }
+        private void ReconnectSnappedOutputDirectory(string snappedOutputDirectoryPath)
+        {
+            if (snappedOutputDirectoryPath != null)
+            {
+                OutputSnappedFeaturesPath = snappedOutputDirectoryPath;
+            }
+        }
+        public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
+        private void ReconnectRestartFiles(IEnumerable<string> restartFilePaths)
+        {
+            RestartOutput = restartFilePaths.Select(p => new RestartFile(p)).ToList();
         }
         #endregion
 
@@ -3780,7 +4102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return "flow"; }
         }
 
-        public virtual string DimrModelRelativeOutputDirectory => DirectoryName;
+        public virtual string DimrModelRelativeOutputDirectory => Path.Combine(DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
         public virtual string GetItemString(IDataItem dataItem)
         {
@@ -3869,7 +4191,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual void ConnectOutput(string outputPath)
         {
+            currentOutputDirectoryPath = outputPath;
             ReconnectOutputFiles(outputPath);
+            ClearWaqOutputDirProperty();
         }
 
         private void ReadDiaFile()
@@ -4013,6 +4337,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             
             ReportProgressText("Initializing");
             SetOutputDirProperty();
+            SetWaqOutputDirProperty();
+            if (Directory.Exists(WorkingOutputDirectoryPath))
+            {
+                DisconnectOutput();
+                FileUtils.DeleteIfExists(WorkingOutputDirectoryPath);
+                FileUtils.CreateDirectoryIfNotExists(WorkingOutputDirectoryPath);
+            }
 
             runner.OnInitialize();
             
@@ -4060,6 +4391,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         protected override void OnFinish()
         {
             runner.OnFinish();
+            currentOutputDirectoryPath = WorkingOutputDirectoryPath;
+
         }
         #endregion
 
