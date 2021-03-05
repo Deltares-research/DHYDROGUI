@@ -633,25 +633,24 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private static IEnumerable<IDataItem> GetInputDataItemsByLocationName(string locationName, IModel model)
         {
-            List<INameable> namedLocations = model.GetChildDataItemLocations(DataItemRole.Input).OfType<INameable>().ToList();
-            var location = (IFeature) namedLocations.FirstOrDefault(
-                l => l.Name == locationName);
+            var location = (IFeature)model.GetChildDataItemLocations(DataItemRole.Input)
+                                          .OfType<INameable>()
+                                          .FirstOrDefault(l => l.Name == locationName);
 
-            if (location == null)
-            {
-                return new List<IDataItem>();
-            }
-
-            return model.GetChildDataItems(location);
+            return location != null 
+                       ? model.GetChildDataItems(location) 
+                       : new List<IDataItem>();
         }
 
         private static IEnumerable<IDataItem> GetOutputDataItemsByLocationName(string locationName, IModel model)
         {
-            List<INameable> namedLocations = model.GetChildDataItemLocations(DataItemRole.Output).OfType<INameable>().ToList();
-            var location = (IFeature) namedLocations.FirstOrDefault(l => l.Name == locationName);
-            return location == null
-                       ? new List<IDataItem>()
-                       : model.GetChildDataItems(location);
+            var location = (IFeature)model.GetChildDataItemLocations(DataItemRole.Output)
+                                          .OfType<INameable>()
+                                          .FirstOrDefault(l => l.Name == locationName);
+
+            return location != null 
+                       ? model.GetChildDataItems(location) 
+                       : new List<IDataItem>();
         }
 
         /// <summary>

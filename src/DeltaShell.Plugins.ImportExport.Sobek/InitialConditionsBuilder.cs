@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Networks;
@@ -66,16 +67,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private void FilterUnusedFlowInitialConditions(IDictionary<string, IBranch> branchesDictionary)
         {
-            var conditionsWithoutBranch = flowInitialConditions.Where(c => IsUnusedCondition(c, branchesDictionary));
-            foreach (var condition in conditionsWithoutBranch.ToArray())
-            {
-                Log.WarnFormat("Channel {0} for initial condition {1} not found; skipped",
-                    condition.BranchID, condition.ID);
+            var conditionsWithoutBranch = flowInitialConditions.Where(c => IsUnusedCondition(c, branchesDictionary)).ToArray();
+            string unfoundConditions = string.Join(Environment.NewLine, conditionsWithoutBranch.Select(c => $"(branch \"{c.BranchID}\", cond. id \"{c.ID}\")"));
+            Log.Warn($"For the following initial conditions the channels where not found; skipped {Environment.NewLine + unfoundConditions}");
 
-                flowInitialConditions.Remove(condition);
-            }
+            conditionsWithoutBranch.ForEach(c => flowInitialConditions.Remove(c));
         }
-        
+
         private static bool IsUnusedCondition(FlowInitialCondition initialCondition, IDictionary<string, IBranch> branchesDictionary)
         {
             return !initialCondition.IsGlobalDefinition
@@ -117,7 +115,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             {
                 if (!initialCondition.IsLevelBoundary)
                 {
-                    Log.WarnFormat($"Cannot import {initialCondition.ID}. Only WaterDepth and WaterLevel initial conditions are currently supported.");
+                    listOfWarnings.Add($"Cannot import {initialCondition.ID}. Only WaterDepth and WaterLevel initial conditions are currently supported.");
                     continue;
                 } 
                 
@@ -214,6 +212,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private void FilterInvalidChannelInitialConditionDefinitions()
         {
             var keysToRemove = new List<string>();
+            var nonMatchingDefinitionsWarnings = new List<string>();
             foreach (var channelInitialConditionDefinition in ChannelInitialConditionDefinitionsDict.Values)
             {
                 InitialConditionQuantity quantity;
@@ -242,7 +241,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             foreach (var keyToRemove in keysToRemove)
             {
                 ChannelInitialConditionDefinitionsDict.Remove(keyToRemove);
-                Log.WarnFormat($"Initial condition definition for '{keyToRemove}' does match the global quantity {GlobalQuantity}. Skipping import.");
+                nonMatchingDefinitionsWarnings.Add($"definition \"{keyToRemove}\" - global \"{GlobalQuantity}\"");
+            }
+
+            if (nonMatchingDefinitionsWarnings.Any())
+            {
+                Log.Warn($"Initial condition definition does match the global quantity. Skipping import." + Environment.NewLine + string.Join(Environment.NewLine, nonMatchingDefinitionsWarnings));
             }
         }
     }

@@ -102,6 +102,29 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var definitionIDToDefinition = GetDefinitionIDToDefinitionDictionary(mappings, crossSectionDefinitionsLookup, HydroNetwork);
 
             var initiatedEditing = false;
+            var errorList = new Dictionary<string, IList<string>>();
+            var warningList = new Dictionary<string, IList<string>>();
+
+            IList<string> GetListForKey(string key, IDictionary<string, IList<string>> lookup)
+            {
+                if (!lookup.ContainsKey(key))
+                {
+                    lookup[key] = new List<string>();
+                }
+
+                return lookup[key];
+            }
+
+            void LogError(string key, string value)
+            {
+                GetListForKey(key, errorList).Add(value);
+            }
+
+            void LogWarning(string key, string value)
+            {
+                GetListForKey(key, warningList).Add(value);
+            }
+
             try
             {
                 if (!HydroNetwork.IsEditing)
@@ -114,7 +137,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     if (!locationLookup.ContainsKey(sobekCrossSectionMapping.LocationId))
                     {
-                        log.WarnFormat("No location with id = {0} found", sobekCrossSectionMapping.LocationId);
+                        LogWarning("No locations found with the following id's", sobekCrossSectionMapping.LocationId);
                         continue;
                     }
 
@@ -122,8 +145,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                     if (!branches.ContainsKey(location.BranchID))
                     {
-                        log.ErrorFormat("Could not import cross-section '{0}' because branch '{1}' doesn't exist.",
-                                        sobekCrossSectionMapping.LocationId, location.BranchID);
+                        LogError("Could not import cross-sections because branch doesn't exist.", $"id \"{sobekCrossSectionMapping.LocationId}\", branch \"{location.BranchID}\"");
                         continue;
                     }
 
@@ -132,8 +154,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (!crossSectionDefinitionsLookup.ContainsKey(sobekCrossSectionMapping.DefinitionId))
                     {
                         // definition not found or not supported type; ignore and do not use default type which is misleading.
-                        log.Warn(String.Format(@"Definition with id '{0}' not found; ignored",
-                                               sobekCrossSectionMapping.DefinitionId));
+                        LogWarning("Definition with the following ids were not found; ignored", sobekCrossSectionMapping.DefinitionId);
                         continue;
                     }
 
@@ -148,9 +169,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                     if (offset > branch.Length)
                     {
-                        log.ErrorFormat(
-                            "The chainage of cross-section '{0}' is out of the branch length. The chainage has been set from {1} to {2}.",
-                            sobekCrossSectionMapping.LocationId, offset, branch.Length);
+                        LogError(
+                            "The chainage of cross-section is out of the branch length. The chainage has been set from to branch length.",
+                            $"loc id \"{sobekCrossSectionMapping.LocationId}\", chainage \"{sobekCrossSectionMapping.LocationId}\", branch length \"{branch.Length}\"");
+
                         offset = branch.Length;
                     }
 
@@ -163,8 +185,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                     else if (sewerConnection != null)
                     {
-                        log.WarnFormat(
-                            "Cross-section '{0}' can not be set on a sewer connection '{1}'.",location.ID,sewerConnection.Name);
+                        LogWarning("Cross-sections can not be set on a sewer connection.", $"id \"{location.ID}\", \"{sewerConnection.Name}\"");
                     }
                     else
                     {
@@ -212,6 +233,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             finally
             {
+                foreach (var warning in warningList)
+                {
+                    log.Warn($"{warning.Key} {Environment.NewLine} {string.Join(Environment.NewLine, warning.Value)}");
+                }
+
+                foreach (var error in errorList)
+                {
+                    log.Error($"{error.Key} {Environment.NewLine} {string.Join(Environment.NewLine, error.Value)}");
+                }
+
                 if (initiatedEditing)
                 {
                     HydroNetwork.EndEdit();

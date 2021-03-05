@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DeltaShell.Sobek.Readers.Readers;
@@ -15,7 +16,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             const string source = @"FLBR id 'Zwolle' sc 0 lt 0 dc lt 0 0.071 0 flbr";
 
             SobekLateralFlowReader sobekLateralFlowReader = new SobekLateralFlowReader();
-            var sobekLateralFlow = sobekLateralFlowReader.GetLateralFlow(source);
+            var sobekLateralFlow = sobekLateralFlowReader.GetLateralFlow(source, new Dictionary<string, IList<string>>());
             Assert.AreEqual("Zwolle", sobekLateralFlow.Id);
             Assert.IsTrue(sobekLateralFlow.IsPointDischarge);
             Assert.IsTrue(sobekLateralFlow.IsConstantDischarge);
@@ -37,7 +38,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
 
 
             SobekLateralFlowReader sobekLateralFlowReader = new SobekLateralFlowReader();
-            var sobekLateralFlow = sobekLateralFlowReader.GetLateralFlow(source);
+            var sobekLateralFlow = sobekLateralFlowReader.GetLateralFlow(source, new Dictionary<string, IList<string>>());
             Assert.AreEqual("L_MS_01", sobekLateralFlow.Id);
             Assert.IsTrue(sobekLateralFlow.IsPointDischarge);
             Assert.IsFalse(sobekLateralFlow.IsConstantDischarge);
@@ -58,7 +59,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                 @"FLBR id 'Linterzijl' sc 0 lt 0 dc lt 0 3.33 0 flbr" + Environment.NewLine +
                 @"FLBR id 'Marslanden_Noord_Zuid' sc 0 lt 0 dc lt 0 0.058 0 flbr" + Environment.NewLine;
             SobekLateralFlowReader sobekLateralFlowReader = new SobekLateralFlowReader();
-            var lateralFlows = sobekLateralFlowReader.ParseBoundaryConditions(source);
+            var lateralFlows = sobekLateralFlowReader.ParseBoundaryConditions(source, new Dictionary<string, IList<string>>());
             Assert.AreEqual(4, lateralFlows.Count());
             Assert.AreEqual(4, lateralFlows.Where(lc => lc.IsConstantDischarge == true).Count());
             Assert.AreEqual(4, lateralFlows.Where(lc => lc.IsPointDischarge == true).Count());
@@ -154,7 +155,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
 
             var reader = new SobekLateralFlowReader();
 
-            var lateralFlowRecords = reader.ParseBoundaryConditions(initialConditionsText);
+            var lateralFlowRecords = reader.ParseBoundaryConditions(initialConditionsText, new Dictionary<string, IList<string>>());
 
             Assert.AreEqual(2, lateralFlowRecords.Count());
         }
@@ -170,7 +171,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                 @"FLBR id 'AL1_O_016' sc 0 dc lt 5 9.9999e+009 9.9999e+009 s2 'AL1_O_016_uit' ar 1.21e+007 bl 40.46 ih 40.46 u1 1 ca 1 1 0 0 cj 'AL1_O_016_1' 'AL1_O_016_2' '-1' '-1' cb 0 0 0 0 ck '-1' '-1' '-1' '-1' lt 0 sd 'AL1_O_016_in' si '-1' wl ow 0 9.9999e+009 9.9999e+009 hs 0 as SLST slst flbr";
             var reader = new SobekLateralFlowReader();
 
-            var lateralFlowRecords = reader.ParseBoundaryConditions(source);
+            var lateralFlowRecords = reader.ParseBoundaryConditions(source, new Dictionary<string, IList<string>>());
 
             Assert.AreEqual(1, lateralFlowRecords.Count());
             var lateralFlow = lateralFlowRecords.FirstOrDefault();
@@ -190,7 +191,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                 @" lt 0 sd '-1' si '-1' wl ow 0 9.9999e+009 9.9999e+009 hs 0 as SLST slst flbr";
             var reader = new SobekLateralFlowReader();
 
-            var lateralFlowRecords = reader.ParseBoundaryConditions(source);
+            var lateralFlowRecords = reader.ParseBoundaryConditions(source, new Dictionary<string, IList<string>>());
 
             Assert.AreEqual(1, lateralFlowRecords.Count());
             var lateralFlow = lateralFlowRecords.First();
@@ -217,7 +218,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                 @" lt 0 sd '-1' si '-1' wl ow 0 9.9999e+009 9.9999e+009 hs 0 as SLST slst flbr";
             var reader = new SobekLateralFlowReader();
 
-            var lateralFlow = reader.GetLateralFlow(source);
+            var lateralFlow = reader.GetLateralFlow(source, new Dictionary<string, IList<string>>());
             // Qh should always be linear
             Assert.IsNotNull(lateralFlow.LevelQhTable);
             Assert.AreEqual(InterpolationType.Linear, lateralFlow.InterpolationType);
@@ -230,7 +231,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             string source =
                 @"FLDI id '2' ci '2' sc 0 lt -1 dc lt 0 33.3 0 fldi";
             SobekLateralFlowReader sobekLateralFlowReader = new SobekLateralFlowReader();
-            var lateralFlows = sobekLateralFlowReader.ParseBoundaryConditions(source);
+            var lateralFlows = sobekLateralFlowReader.ParseBoundaryConditions(source, new Dictionary<string, IList<string>>());
             var diffuseLF = lateralFlows.First();
             Assert.IsFalse(diffuseLF.IsPointDischarge);
 
@@ -248,7 +249,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                 @"tble" + Environment.NewLine +
                 @"lt 1800 sd '-1' si '-1' wl ow 0 9.9999e+009 9.9999e+009 hs 0 as SLST slst flbr";
                 SobekLateralFlowReader sobekLateralFlowReader = new SobekLateralFlowReader();
-                var lateralFlows = sobekLateralFlowReader.ParseBoundaryConditions(source);
+                var lateralFlows = sobekLateralFlowReader.ParseBoundaryConditions(source, new Dictionary<string, IList<string>>());
                 var diffuseLF = lateralFlows.First();
                 Assert.IsFalse(diffuseLF.IsPointDischarge);
                 Assert.AreEqual(1800, diffuseLF.Length);
@@ -263,7 +264,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                 Environment.NewLine +
                 @"FLBR id 'E_AFW_100' sc 0 lt 0 dc lt 6 ir 3.0e-01 ms 'VOLKEL EN DEELEN' ii 0 ar 30000 flbr";
 
-            var lateralFlows = new SobekLateralFlowReader().ParseBoundaryConditions(source).ToList();
+            var lateralFlows = new SobekLateralFlowReader().ParseBoundaryConditions(source, new Dictionary<string, IList<string>>()).ToList();
             Assert.AreEqual(2, lateralFlows.Count);
             Assert.IsTrue(lateralFlows.First().IsConstantDischarge);
             Assert.AreEqual(1.234, lateralFlows.First().ConstantDischarge);

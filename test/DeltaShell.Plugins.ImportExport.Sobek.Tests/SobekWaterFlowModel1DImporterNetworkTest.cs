@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 @"tble flbo";
             var reader = new SobekLateralFlowReader();
 
-            var lateralFlow = reader.GetLateralFlow(initialConditionsText);
+            var lateralFlow = reader.GetLateralFlow(initialConditionsText, new Dictionary<string, IList<string>>());
 
             Model1DLateralSourceData model1DLateralSourceData = new Model1DLateralSourceData();
             SobekLateralSourcesDataImporter.ConvertToLateralSourceData(lateralFlow, model1DLateralSourceData);
@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 @" lt 0 sd '-1' si '-1' wl ow 0 9.9999e+009 9.9999e+009 hs 0 as SLST slst flbr";
             var reader = new SobekLateralFlowReader();
 
-            var lateralFlow = reader.GetLateralFlow(source);
+            var lateralFlow = reader.GetLateralFlow(source, new Dictionary<string, IList<string>>());
 
             var waterFlowModel1DLateralSourceData = new Model1DLateralSourceData();
 

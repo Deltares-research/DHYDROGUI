@@ -156,11 +156,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions,
             RoughnessSection defaultRoughnessSection)
         {
+            var locationsToRemove = new List<INetworkLocation>();
+            var defaultCoverage = defaultRoughnessSection.RoughnessNetworkCoverage;
+
             foreach (var channelFrictionDefinition in channelFrictionDefinitions)
             {
                 var channel = channelFrictionDefinition.Channel;
                 var functionType = defaultRoughnessSection.GetRoughnessFunctionType(channel);
-                var networkLocations = defaultRoughnessSection.RoughnessNetworkCoverage.GetLocationsForBranch(channel);
+                var networkLocations = defaultCoverage.GetLocationsForBranch(channel);
+                locationsToRemove.AddRange(networkLocations);
 
                 switch (functionType)
                 {
@@ -174,33 +178,36 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                                 break;
                             default: // Branch Chainages - Constant (one or more locations)
                                 channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
-                                channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetRoughnessTypeForChannel(defaultRoughnessSection.RoughnessNetworkCoverage, channel);
+                                channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetRoughnessTypeForChannel(defaultCoverage, channel);
                                 channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.Constant;
-                                SetSpatialValuesToSpatialChannelFrictionDefinition(channelFrictionDefinition.SpatialChannelFrictionDefinition, defaultRoughnessSection.RoughnessNetworkCoverage, networkLocations);
+                                SetSpatialValuesToSpatialChannelFrictionDefinition(channelFrictionDefinition.SpatialChannelFrictionDefinition, defaultCoverage, networkLocations);
                                 break;
                         }
 
                         break;
                     case RoughnessFunction.FunctionOfQ: // Branch Chainages - Function of Q
                         channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
-                        channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetRoughnessTypeForChannel(defaultRoughnessSection.RoughnessNetworkCoverage, channel);
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetRoughnessTypeForChannel(defaultCoverage, channel);
                         channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfQ;
                         SetFunctionValuesToSpatialChannelFrictionDefinition(channelFrictionDefinition.SpatialChannelFrictionDefinition, defaultRoughnessSection.FunctionOfQ(channel));
                         break;
                     case RoughnessFunction.FunctionOfH: // Branch Chainages - Function of H
                         channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.SpatialChannelFrictionDefinition;
-                        channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetRoughnessTypeForChannel(defaultRoughnessSection.RoughnessNetworkCoverage, channel);
+                        channelFrictionDefinition.SpatialChannelFrictionDefinition.Type = GetRoughnessTypeForChannel(defaultCoverage, channel);
                         channelFrictionDefinition.SpatialChannelFrictionDefinition.FunctionType = RoughnessFunction.FunctionOfH;
                         SetFunctionValuesToSpatialChannelFrictionDefinition(channelFrictionDefinition.SpatialChannelFrictionDefinition, defaultRoughnessSection.FunctionOfH(channel));
                         break;
                 }
+            }
+            // Remove data from default roughness section
+            if (!locationsToRemove.Any()) return;
 
-                // Remove data from default roughness section
-                if (networkLocations.Any())
-                {
-                    defaultRoughnessSection.RoughnessNetworkCoverage.Arguments[RoughnessValueComponentIndex].RemoveValues(new VariableValueFilter<INetworkLocation>(defaultRoughnessSection.RoughnessNetworkCoverage.Arguments[0], networkLocations));
-                    defaultRoughnessSection.RemoveRoughnessFunctionsForBranch(channel);
-                }
+            defaultCoverage.Locations.RemoveValues(new VariableValueFilter<INetworkLocation>(defaultCoverage.Locations, locationsToRemove));
+            var channels = locationsToRemove.Select(l => l.Branch).OfType<IChannel>().Distinct().ToArray();
+
+            for (int i = 0; i < channels.Length; i++)
+            {
+                defaultRoughnessSection.RemoveRoughnessFunctionsForBranch(channels[i]);
             }
         }
 

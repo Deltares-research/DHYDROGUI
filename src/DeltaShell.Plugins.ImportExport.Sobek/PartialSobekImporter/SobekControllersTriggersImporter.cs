@@ -55,11 +55,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             sobekControllers = ImportControllers(waterFlowModel1D.TimeStep, SobekType == DeltaShell.Sobek.Readers.SobekType.Sobek212);
             sobekTriggers = ImportTriggers();
 
+            var structureLookup = HydroNetwork.Structures.ToLookup(s => s.Name);
+
             foreach (var sobekStructureMapping in controlledStructures)
             {
-                var structure =
-                    HydroNetwork.Structures.FirstOrDefault(s => s.Name == sobekStructureMapping.StructureId);
-                if (null == structure)
+                var structure = structureLookup[sobekStructureMapping.StructureId].FirstOrDefault();
+                if (structure == null)
                 {
                     log.ErrorFormat("Unable to link controlled structure {0} to imported structure in model; skipped.", sobekStructureMapping.StructureId);
                 }

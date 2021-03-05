@@ -9,6 +9,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
@@ -209,6 +210,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                                                       out defaultRoughnessType, false);
             }
 
+            var warningList = new Dictionary<string, IList<string>>();
+
+            void LogWarning(string key, string value)
+            {
+                if (!warningList.ContainsKey(key))
+                {
+                    warningList[key] = new List<string>();
+                }
+
+                warningList[key].Add(value);
+            }
+
             // process all BDFR records
             foreach (var sobekBedFriction in sobekFriction.SobekBedFrictionList)
             {
@@ -219,16 +232,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                 if (!channels.ContainsKey(sobekBedFriction.BranchId))
                 {
-                    log.WarnFormat("Friction BDFR {0} is linked to branch that does not exist (id {1}); ignored.",
-                                   sobekBedFriction.Id, sobekBedFriction.BranchId);
+                    LogWarning("Friction BDFR is linked to branch that does not exist; ignored.", $"{sobekBedFriction.Id}, branch {sobekBedFriction.BranchId}");
                     continue;
                 }
                 var channel = channels[sobekBedFriction.BranchId];
                 if (!channel.CrossSections.Any(c => c.CrossSectionType == CrossSectionType.ZW || c.CrossSectionType == CrossSectionType.Standard))
                 {
-                    log.WarnFormat(
-                        "Friction BDFR {0} is linked to branch definition {1} without any tabulated,standard or river profiles; ignored.",
-                        sobekBedFriction.Id, sobekBedFriction.BranchId);
+                    LogWarning("Friction BDFR is linked to branch that does not exist; ignored.", $"{sobekBedFriction.Id}, branch {sobekBedFriction.BranchId}");
                     continue;
                 }
 
@@ -250,6 +260,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
             }
             coveragesWithInterpolationSet.Clear(); //clear our administration, we no longer care
+
+            foreach (var (key, value) in warningList)
+            {
+                log.Warn(key + Environment.NewLine + string.Join(Environment.NewLine, value));
+            }
         }
 
         private void SetSewerRoughness(CrossSectionSectionType sewerFriction, SobekFriction sobekFriction)
@@ -709,20 +724,34 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var crossSectionRoughnessPerBranch = new Dictionary<IBranch, IList<DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>>>();
 
+            var warningList = new Dictionary<string, IList<string>>();
+
+            void LogWarning(string key, string value)
+            {
+                if (!warningList.ContainsKey(key))
+                {
+                    warningList[key] = new List<string>();
+                }
+
+                warningList[key].Add(value);
+            }
+
             foreach (var crossSectionID in sobekCrossSectionLocations.Keys)
             {
                 var crossSectionLocation = sobekCrossSectionLocations[crossSectionID];
 
                 if (!branches.ContainsKey(crossSectionLocation.BranchID))
                 {
-                    log.WarnFormat("Branch {0} of location {1} - {2} doesn't exist. Feature has been skipped", crossSectionLocation.BranchID, crossSectionLocation.ID, crossSectionLocation.Name);
+                    LogWarning("Branch of the following locations doesn't exist. Feature has been skipped.",
+                        $"branch \"{crossSectionLocation.BranchID}\", location \"{crossSectionLocation.ID} - {crossSectionLocation.Name}\"");
                     continue;
                 }
 
                 var branch = branches[crossSectionLocation.BranchID];
                 if (crossSectionLocation.Offset > branch.Length)
                 {
-                    log.WarnFormat("Offset of location {0} - {1} ({2}) is out of branch {3} length ({4}). Feature has been skipped", crossSectionLocation.ID, crossSectionLocation.Name, crossSectionLocation.Offset.ToString("N1"), crossSectionLocation.BranchID, branch.Length.ToString("N1"));
+                    LogWarning("Offset of the following locations is out of branch length. Feature has been skipped.",
+                        $"location \"{crossSectionLocation.ID} - {crossSectionLocation.Name} ({crossSectionLocation.Offset:N1})\", branch \"{crossSectionLocation.BranchID}, {branch.Length.ToString("N1")}\"");
                     continue;
                 }
 
@@ -740,7 +769,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
                 else
                 {
-                    log.WarnFormat("Cross-section {0} has no definition. Look-up for roughness of this cross-section has been skipped", crossSectionID);
+                    LogWarning("The following cross-sections have no definition. Look-up for roughness of these cross-sections have been skipped",  
+                        $"Cross-section \"{crossSectionID}\"");
                     continue;
                 }
 
@@ -760,7 +790,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                     if (!sobekCrossSectionDefinitions.TryGetValue(definitionID, out sobekCrossSectionDefinition))
                     {
-                        log.WarnFormat("Cross-section definition {0} not found. Look-up for roughness of this cross-section has been skipped", definitionID);
+                        LogWarning("The following cross-section definitions were not found. Look-up for roughness of these cross-sections have been skipped", 
+                            $"Cross-section definition \"{definitionID}\"");
                         continue;
                     }
 
@@ -771,26 +802,38 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                     if (sobekBranchMainFrictions.ContainsKey(crossSectionLocation.BranchID))
                     {
-                        log.WarnFormat("Friction data of definition {0} of cross-section {1} has not been found. The main bed of branch {2} is used as roughness data.", definitionID, crossSectionID, crossSectionLocation.BranchID);
-
+                        LogWarning("Friction data for the following cross-section definitions have not been found. The main bed of branch is used as roughness data.", 
+                            $"Definition \"{definitionID}\", cross-section \"{crossSectionID}\", branch \"{crossSectionLocation.BranchID}\"");
+                        
                         var sobekCrossSectionFriction = GetSobekCrossSectionFrictionBasedOnBranchFriction(crossSectionLocation, sobekCrossSectionDefinitions[definitionID], sobekBranchMainFrictions[crossSectionLocation.BranchID]);
 
                         crossSectionRoughnessPerBranchItem.Add(new DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>(new NetworkLocation(branch, crossSectionLocation.Offset), sobekCrossSectionFriction));
                     }
                     else if (sobekFriction.GlobalBedFrictionList.Any())
                     {
-                        log.WarnFormat("Friction data of definition {0} of cross-section {1} has not been found. The main bed of branch {2} has not been found. The global friction will be used.", definitionID, crossSectionID, crossSectionLocation.BranchID);
-
+                        LogWarning("Friction data for the following cross-section definitions have not been found. The main bed of branch has not been found. The global friction will be used.",
+                            $"Definition \"{definitionID}\", cross-section \"{crossSectionID}\", branch \"{crossSectionLocation.BranchID}\"");
+                        
                         var sobekCrossSectionFriction = GetSobekCrossSectionFrictionBasedOnBranchFriction(crossSectionLocation, sobekCrossSectionDefinitions[definitionID], sobekFriction.GlobalBedFrictionList.First().MainFriction);
 
                         crossSectionRoughnessPerBranchItem.Add(new DelftTools.Utils.Tuple<INetworkLocation, SobekCrossSectionFriction>(new NetworkLocation(branch, crossSectionLocation.Offset), sobekCrossSectionFriction));
                     }
                     else
                     {
-                        log.WarnFormat("Friction data of definition {0} of cross-section {1} has not been found. The main bed of branch {2} has not been found. Additionally no global friction has been found.", definitionID, crossSectionID, crossSectionLocation.BranchID);
+                       LogWarning("Friction data for the following cross-section definitions have not been found. The main bed of branch has not been found. Additionally no global friction has been found.",
+                           $"Definition \"{definitionID}\", cross-section \"{crossSectionID}\", branch \"{crossSectionLocation.BranchID}\"");
                     }
                 }
             }
+
+            if (warningList.Any())
+            {
+                foreach (var (key, value) in warningList)
+                {
+                    log.Warn(key + Environment.NewLine + string.Join(Environment.NewLine, value));
+                }
+            }
+
             return crossSectionRoughnessPerBranch;
         }
 

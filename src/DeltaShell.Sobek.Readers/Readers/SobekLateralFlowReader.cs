@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using DelftTools.Functions.Generic;
@@ -65,6 +67,7 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         public IEnumerable<SobekLateralFlow> ReadLateralBoundaries(string filePath)
         {
+            var warningList = new Dictionary<string, IList<string>>();
             var sb = new StringBuilder();
 
             using (var fileStream = File.OpenText(filePath))
@@ -80,7 +83,7 @@ namespace DeltaShell.Sobek.Readers.Readers
 
                         if (line.EndsWith("flbr") || line.EndsWith("fldi") || line.EndsWith("flno"))
                         {
-                            foreach (var sobekLateralFlow in ParseBoundaryConditions(sb.ToString()))
+                            foreach (var sobekLateralFlow in ParseBoundaryConditions(sb.ToString(), warningList))
                             {
                                 yield return sobekLateralFlow;
                             }
@@ -92,11 +95,19 @@ namespace DeltaShell.Sobek.Readers.Readers
                 } 
                 while (!fileStream.EndOfStream); 
 
-            } 
+            }
 
+            if (warningList.Any())
+            {
+                foreach (var (key, value) in warningList)
+                {
+                    Log.Warn(key + Environment.NewLine + string.Join(Environment.NewLine, value));
+                }
+            }
         }
 
-        public IEnumerable<SobekLateralFlow> ParseBoundaryConditions(string text)
+        public IEnumerable<SobekLateralFlow> ParseBoundaryConditions(string text,
+            Dictionary<string, IList<string>> warningList)
         {
             const string lateralConditionPattern = @"(FLBR\s+(?'text'.*?)\s+flbr)|(FLDI\s+(?'text'.*?)\s+fldi)|(FLNO\s+(?'text'.*?)\s+flno)";
 
@@ -104,7 +115,7 @@ namespace DeltaShell.Sobek.Readers.Readers
 
             foreach (Match match in matches)
             {
-                SobekLateralFlow sobekLateralFlow = GetLateralFlow(match.Value);
+                SobekLateralFlow sobekLateralFlow = GetLateralFlow(match.Value, warningList);
                 if (sobekLateralFlow != null)
                 {
                     yield return sobekLateralFlow;
@@ -112,7 +123,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             }
         }
 
-        public SobekLateralFlow GetLateralFlow(string record)
+        public SobekLateralFlow GetLateralFlow(string record, Dictionary<string, IList<string>> warningList)
         {
             var sobekLateralFlow = new SobekLateralFlow
             {
@@ -123,6 +134,16 @@ namespace DeltaShell.Sobek.Readers.Readers
                              RegularExpression.GetScientific("lc") + "|" +
                              @"dc\s+'?(?<dc>" + RegularExpression.ExtendedCharacters + @")'?\s?";
 
+            void LogWarning(string key, string value)
+            {
+                if (!warningList.ContainsKey(key))
+                {
+                    warningList[key] = new List<string>();
+                }
+
+                warningList[key].Add(value);
+            }
+
             foreach (Match match in RegularExpression.GetMatches(pattern, record))
             {
                 ExtractLength(match, sobekLateralFlow, "lt");
@@ -132,7 +153,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                     var match2 = RegularExpression.GetFirstMatch(@"dc lt (?<ltype>" + RegularExpression.Integer + @")", match.Value);
                     if (match2 == null)
                     {
-                        Log.WarnFormat("Could not parse lateral flow specification with ID {0} (\"{1}\")",sobekLateralFlow.Id,record);
+                        LogWarning("Could not parse lateral flow specification for id's", $"{sobekLateralFlow.Id} (\"{record}\")");
                         continue;
                     }
                     var type = int.Parse(match2.Groups["ltype"].Value);
@@ -142,7 +163,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                             match2 = RegularExpression.GetFirstMatch(@"dc lt 0\s*(?<const>" + RegularExpression.Scientific + @")", record);
                             if (match2 == null)
                             {
-                                Log.WarnFormat("Could not parse lateral flow specification with ID {0} (\"{1}\")", sobekLateralFlow.Id, record);
+                                LogWarning("Could not parse lateral flow specification for id's", $"{sobekLateralFlow.Id} (\"{record}\")");
                                 break;
                             }
                             sobekLateralFlow.IsConstantDischarge = true;
@@ -153,14 +174,14 @@ namespace DeltaShell.Sobek.Readers.Readers
                             var dcmatch = RegularExpression.GetFirstMatch(@"dc lt 1\s*(?<table>" + RegularExpression.CharactersAndQuote + @")", record);
                             if (dcmatch == null)
                             {
-                                Log.WarnFormat("Could not parse lateral flow specification with ID {0} (\"{1}\")", sobekLateralFlow.Id, record);
+                                LogWarning("Could not parse lateral flow specification for id's", $"{sobekLateralFlow.Id} (\"{record}\")");
                                 break;
                             }
                             sobekLateralFlow.IsConstantDischarge = false;
                             sobekLateralFlow.FlowTimeTable = SobekDataTableReader.GetTable((string) dcmatch.Groups["table"].Value, (DataTable) SobekLateralFlow.TimeTableStructure);
                             break;
                         case 3:
-                            Log.WarnFormat("Unable to import Lateral Flow record '{0}'; 2nd station (dc lt {1}) is not supported: consider creating a RTC control group with Invertor Rule; currently set to default", sobekLateralFlow.Id, type);
+                            LogWarning("Unable to import Lateral Flow record; 2nd station is not supported: consider creating a RTC control group with Invertor Rule; currently set to default", $"record {sobekLateralFlow.Id} (dc lt {type})");
                             break;
                         case 5: 
                             // ignore
@@ -174,10 +195,10 @@ namespace DeltaShell.Sobek.Readers.Readers
                             sobekLateralFlow.ConstantDischarge = 0.001 * (intensity + infiltrationOrSeepage)*area;
                             break;
                         case 7:
-                            Log.WarnFormat("Unable to import Lateral Flow record '{0}'; rational method from meteo station (dc lt {1}) not yet supported; currently set to default", sobekLateralFlow.Id, type);
+                            LogWarning("Unable to import Lateral Flow record; rational method from meteo station not yet supported; currently set to default", $"{sobekLateralFlow.Id} (dc lt {type})");
                             break;
                         default:
-                            Log.ErrorFormat("Unable to import Lateral Flow record '{0}'; type (dc lt {1}) not supported; set to default", record, type);
+                            LogWarning("Unable to import Lateral Flow record; type not supported; set to default", $"record {record} (dc lt {type})");
                             break;
                     }
                 }
@@ -191,7 +212,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                     var match2 = RegularExpression.GetFirstMatch(@"dc lw (?<ltype>" + RegularExpression.Integer + @")", match.Value);
                     if (match2 == null)
                     {
-                        Log.WarnFormat("Could not parse lateral flow specification with ID {0} (\"{1}\")", sobekLateralFlow.Id, record);
+                        LogWarning("Could not parse lateral flow specification for the following id's", $"id {sobekLateralFlow.Id} (\"{record}\")");
                         continue;
                     }
                     var type = int.Parse(match2.Groups["ltype"].Value);
@@ -201,7 +222,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                             var dcmatch = RegularExpression.GetFirstMatch(@"dc lw 2\s*(?<table>" + RegularExpression.CharactersAndQuote + @")", record);
                             if (dcmatch == null)
                             {
-                                Log.WarnFormat("Could not parse lateral flow specification with ID {0} (\"{1}\")", sobekLateralFlow.Id, record);
+                                LogWarning("Could not parse lateral flow specification for the following id's", $"id {sobekLateralFlow.Id} (\"{record}\")");
                                 break;
                             }
                             sobekLateralFlow.IsConstantDischarge = false;
@@ -209,7 +230,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                                                                                   SobekFlowBoundaryCondition.QhTableStructure);
                             break;
                         default:
-                            Log.ErrorFormat("Unable to import Lateral Flow record '{0}'; type (dc lw {1}) not supported; set to default", record, type);
+                            LogWarning("Unable to import Lateral Flow record; type not supported; set to default", $"record {record} (dc lt {type})");
                             break;
                     }
                 }
