@@ -14,49 +14,37 @@ using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
 using log4net;
 
-namespace DeltaShell.NGHS.IO.FileReaders 
+namespace DeltaShell.NGHS.IO.FileReaders
 {
     public static class StructureFileReader
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(StructureFileReader));
-        public static void ReadFile(string structureFilename, string csdFilename, IHydroNetwork network)
+        public static void ReadFile(string structureFilename, ICrossSectionDefinition[] crossSectionDefinitions, IHydroNetwork network)
         {
             var fileReadingExceptions = new List<FileReadingException>();
-            var crossSectionDefinitions = new List<ICrossSectionDefinition>();
-
-            if (File.Exists(csdFilename)) 
-                crossSectionDefinitions = new DelftIniReader().ReadDelftIniFile(csdFilename).Where(category => category.Name.Equals(DefinitionPropertySettings.Header,StringComparison.InvariantCultureIgnoreCase) ).Select(csdDefinitionCategory =>
-                CrossSectionFileReader.TransformDefinitionCategoryIntoCrossSectionDefinition(csdDefinitionCategory, null, null, null, out var hasFriction)).ToList();
-            
-            if (fileReadingExceptions.Count > 0)
-            {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-                throw new FileReadingException(string.Format("While reading cross section definitions for structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
-            }
 
             var structuresCategories = ReadStructureDelftIniCategories(structureFilename);
             if (structuresCategories.Count == 0)
-                throw new FileReadingException(string.Format("Could not read file {0} properly, it seems empty", structureFilename));
+                throw new FileReadingException($"Could not read file {structureFilename} properly, it seems empty");
 
             var structures = GetAllStructuresFromCategories(structuresCategories, crossSectionDefinitions, network, fileReadingExceptions);
             if (fileReadingExceptions.Count > 0)
             {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
                 //Do not throw because we want to add the successful structures to the model
-                log.Warn(string.Format("While creating structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
+                var errors = string.Join(Environment.NewLine, fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine));
+                log.Warn($"While creating structures an error occured :{Environment.NewLine} {errors}");
                 fileReadingExceptions.Clear();
             }
-            
+
             // do not add crossSectionDefinitions => already added
             AddStructuresToNetwork(structures);
 
-            if (fileReadingExceptions.Count > 0)
-            {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-                throw new FileReadingException(string.Format("While reading structures an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
-            }
+            if (fileReadingExceptions.Count <= 0) return;
+
+            var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
+            throw new FileReadingException($"While reading structures an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
         }
-        
+
         private static void AddStructuresToNetwork(IList<IStructure1D> structures)
         {
             var compoundStructures = structures.Where(s => s.GetStructureType() == StructureType.CompositeBranchStructure);
@@ -82,7 +70,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     {
                         HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(s, @group.Key);
                     }
-                    
+
                 });
             }
         }
@@ -139,7 +127,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     {
                         continue;
                     }
-                    
+
                     if (structureNameLookup.Contains(structure1D.Name))
                     {
                         throw new FileReadingException(string.Format(

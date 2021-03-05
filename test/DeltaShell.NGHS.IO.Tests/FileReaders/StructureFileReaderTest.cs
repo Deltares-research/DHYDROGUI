@@ -18,18 +18,20 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         {
             //Arrange
             var networkFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\StructureFileReaderTest\FlowFM_net.nc");
+            var crossSectionLocationFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\StructureFileReaderTest\crsloc.ini");
             var crossSectionDefinitionFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), @"FileReaders\StructureFileReaderTest\crsdef.ini");
             var structureFilePath = Path.Combine(TestHelper.GetTestDataDirectory(),@"FileReaders\StructureFileReaderTest\structures.ini");
 
             IHydroNetwork network = new HydroNetwork();
             IDiscretization discretization = new Discretization();
             UGridFileHelper.ReadNetworkAndDiscretisation(networkFilePath, discretization, network, null, null);
-            
+            var definitions = CrossSectionFileReader.ReadFile(crossSectionLocationFilePath,crossSectionDefinitionFilePath, network, "", null);
+
             // Act
-            StructureFileReader.ReadFile(structureFilePath, crossSectionDefinitionFilePath, network);
+            StructureFileReader.ReadFile(structureFilePath, definitions, network);
 
             // Assert
-            Assert.AreEqual(18, network.BranchFeatures.Count());
+            Assert.AreEqual(26, network.BranchFeatures.Count());
             Assert.AreEqual(8, network.CompositeBranchStructures.Count());
             Assert.AreEqual(1, network.Bridges.Count());
             Assert.AreEqual(2, network.Culverts.Count());
