@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
             var generateButton = new Button
                 {Text = "Generate timeseries", Dock = DockStyle.Left, Width = 150, Tag = function};
             var functionView = new FunctionView {Dock = DockStyle.Fill, Data = function};
-            functionView.TableView.IsEndEditOnEnterKey = true;
+            
             var form = new Form
                 {Text = "Edit " + function.Name, Width = 800, Height = 600, ShowIcon = false, ShowInTaskbar = false};
 
