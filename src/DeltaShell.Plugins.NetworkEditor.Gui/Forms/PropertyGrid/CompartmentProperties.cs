@@ -1,4 +1,7 @@
 ﻿using System.ComponentModel;
+using System.Drawing.Design;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -36,6 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Length")]
         [PropertyOrder(5)]
         [DynamicVisible]
+        [DynamicReadOnly]
         public double Length
         {
             get => data.ManholeLength;
@@ -46,6 +50,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Width")]
         [PropertyOrder(6)]
         [DynamicVisible]
+        [DynamicReadOnly]
         public double Width
         {
             get => data.ManholeWidth;
@@ -56,6 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Floodable area")]
         [PropertyOrder(7)]
         [DynamicVisible]
+        [DynamicReadOnly]
         public double FloodableArea
         {
             get => data.FloodableArea;
@@ -66,6 +72,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Bottom level")]
         [PropertyOrder(8)]
         [DynamicVisible]
+        [DynamicReadOnly]
         public double BottomLevel
         {
             get => data.BottomLevel;
@@ -76,6 +83,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Surface level")]
         [PropertyOrder(9)]
         [DynamicVisible]
+        [DynamicReadOnly]
         public double SurfaceLevel
         {
             get => data.SurfaceLevel;
@@ -86,6 +94,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Surface water level")]
         [PropertyOrder(10)]
         [DynamicVisible]
+        [DynamicReadOnly]
         public double SurfaceWaterLevel
         {
             get
@@ -108,6 +117,68 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get => data.CompartmentStorageType;
             set => data.CompartmentStorageType = value;
+        }
+        [Category(PropertyWindowCategoryHelper.TableCategory)]
+        [Description("Storage area definition.")]
+        [PropertyOrder(12)]
+        [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
+        [DynamicReadOnly]
+        public Function Storage
+        {
+            get { return (Function)data.Storage; }
+            set { data.Storage = value; }
+        }
+
+        [Category(PropertyWindowCategoryHelper.TableCategory)]
+        [Description("Type")]
+        [PropertyOrder(13)]
+        [DynamicReadOnly]
+        public InterpolationType InterpolationType
+        {
+            get { return data.InterpolationType; }
+            set { data.InterpolationType = value; }
+        }
+
+        [Category(PropertyWindowCategoryHelper.TableCategory)]
+        [Description("Use storage as function of level.")]
+        [DisplayName("Use table")]
+        [PropertyOrder(14)]
+        public bool UseTable
+        {
+            get { return data.UseTable; }
+            set { data.UseTable = value; }
+        }
+
+        [DynamicReadOnlyValidationMethod]
+        public bool IsFieldReadOnly(string propertyName)
+        {
+            if (propertyName == nameof(SurfaceLevel) ||
+                propertyName == nameof(FloodableArea) ||
+                propertyName == nameof(Length) ||
+                propertyName == nameof(Width) ||
+                propertyName == nameof(BottomLevel) 
+                )
+            {
+                return GetUseTable();
+            }
+            if (propertyName == nameof(Storage) ||
+                propertyName == nameof(InterpolationType) 
+                )
+            {
+                return !GetUseTable();
+            }
+
+            return true;
+        }
+
+        private bool GetUseTable()
+        {
+            if (!UseTable)
+            {
+                InterpolationType = InterpolationType.Constant;
+            }
+
+            return UseTable;
         }
 
         [DynamicVisibleValidationMethod]

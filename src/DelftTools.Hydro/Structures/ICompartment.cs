@@ -1,4 +1,6 @@
-﻿using DelftTools.Hydro.SewerFeatures;
+﻿using DelftTools.Functions;
+using DelftTools.Functions.Generic;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
 using GeoAPI.Geometries;
 
@@ -52,6 +54,11 @@ namespace DelftTools.Hydro.Structures
         CompartmentShape Shape { get; set; }
 
         CompartmentStorageType CompartmentStorageType { get; set; }
+        
+        bool UseTable { get; set; }
+        
+        IFunction Storage { get; set; }
+        InterpolationType InterpolationType { get; set; }
     }
 
     public enum CompartmentStorageType

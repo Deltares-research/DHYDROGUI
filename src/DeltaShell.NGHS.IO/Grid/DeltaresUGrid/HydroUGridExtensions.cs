@@ -780,7 +780,13 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                         Shape = properties.CompartmentShape,
                         CompartmentStorageType = properties.CompartmentStorageType
                     };
-
+                    if (properties.UseTable)
+                    {
+                        compartment.UseTable = true;
+                        compartment.Storage.Arguments[0].InterpolationType = properties.Interpolation;
+                        compartment.Storage.Arguments[0].SetValues(properties.Levels);
+                        compartment.Storage.Components[0].SetValues(properties.StorageAreas);
+                    }
 
                     if (manHoleLookup.TryGetValue(properties.ManholeId, out var existingManhole))
                     {

@@ -462,6 +462,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             };
             yield return attributeTableSewerConnectionsData;
 
+            var attributeTableCompartments = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<ICompartment, IModelWithNetwork>(m => m.Network.Compartments, () => Gui);
+            var baseAfterCreateCompartments = attributeTableCompartments.AfterCreate;
+            attributeTableCompartments.AfterCreate = (v, o) =>
+            {
+                baseAfterCreateCompartments(v, o);
+                var column = v.TableView.Columns.FirstOrDefault(c => c.Caption.Equals("Storage table", StringComparison.InvariantCultureIgnoreCase));
+                if (column != null)
+                    column.Editor = new ButtonTypeEditor()
+                    {
+                        Name = "ViewStorageTable",
+                        Caption = "...",
+                        HideOnReadOnly = true,
+                        Tooltip = "Storage Table",
+                        ButtonClickAction = () =>
+                        {
+                            var compartment = v.TableView.CurrentFocusedRowObject as ICompartment;
+                            if (compartment != null)
+                                Gui.CommandHandler.OpenView(compartment.Storage);
+                        }
+                    };
+            };
+            yield return attributeTableCompartments;
+
             yield return new ViewInfo<LeveeBreach, LeveeBreachView>();
         }
 
