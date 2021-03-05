@@ -188,39 +188,45 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Category(TestCategory.Integration)]
         public void ReleaseCopiedBranchFeatureOnProjectClosing()
         {
-            var gui = Mocks.DynamicMock<IGui>();
-            var documentViews = Mocks.DynamicMock<IViewList>();
-
-            using (var mapView = new MapView())
+            using (var clipboardMock = new ClipboardMock())
+            using (CultureUtils.SwitchToCulture("nl-NL"))
             {
-                var application = Mocks.DynamicMock<IApplication>();
-                application.Stub(a => a.FileExporters).Return(new List<IFileExporter>());
+                clipboardMock.GetData_Returns_SetData();
 
-                var project = new Project(); // Project is pretty lightweight don't need to mock here
+                var gui = Mocks.DynamicMock<IGui>();
+                var documentViews = Mocks.DynamicMock<IViewList>();
 
-                var activeView = Mocks.DynamicMock<ICompositeView>();
-                Expect.Call(activeView.ChildViews).Return(new EventedList<IView>() { mapView }).Repeat.Any(); 
-                Expect.Call(documentViews.ActiveView).Return(activeView);
-                
-                Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
-                Expect.Call(gui.ToolWindowViews).Return(documentViews).Repeat.Any();
-                Expect.Call(gui.Application).Return(application).Repeat.Any();
-                Expect.Call(application.Project).Return(project).Repeat.Any();
-
-                application.ProjectClosing += null;
-                var projectClosingRaiser = LastCall.IgnoreArguments().GetEventRaiser();
-
-                Mocks.ReplayAll();
-
-                using (var pluginGui = new NetworkEditorGuiPlugin { Gui = gui })
+                using (var mapView = new MapView())
                 {
-                    pluginGui.Activate();
+                    var application = Mocks.DynamicMock<IApplication>();
+                    application.Stub(a => a.FileExporters).Return(new List<IFileExporter>());
 
-                    HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(new Bridge());
-                    Assert.IsTrue(HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard());
+                    var project = new Project(); // Project is pretty lightweight don't need to mock here
 
-                    projectClosingRaiser.Raise(project);
-                    Assert.IsFalse(HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard());
+                    var activeView = Mocks.DynamicMock<ICompositeView>();
+                    Expect.Call(activeView.ChildViews).Return(new EventedList<IView>() {mapView}).Repeat.Any();
+                    Expect.Call(documentViews.ActiveView).Return(activeView);
+
+                    Expect.Call(gui.DocumentViews).Return(documentViews).Repeat.Any();
+                    Expect.Call(gui.ToolWindowViews).Return(documentViews).Repeat.Any();
+                    Expect.Call(gui.Application).Return(application).Repeat.Any();
+                    Expect.Call(application.Project).Return(project).Repeat.Any();
+
+                    application.ProjectClosing += null;
+                    var projectClosingRaiser = LastCall.IgnoreArguments().GetEventRaiser();
+
+                    Mocks.ReplayAll();
+
+                    using (var pluginGui = new NetworkEditorGuiPlugin {Gui = gui})
+                    {
+                        pluginGui.Activate();
+
+                        HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(new Bridge());
+                        Assert.IsTrue(HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard());
+
+                        projectClosingRaiser.Raise(project);
+                        Assert.IsFalse(HydroNetworkCopyAndPasteHelper.IsBranchFeatureSetToClipBoard());
+                    }
                 }
             }
         }
