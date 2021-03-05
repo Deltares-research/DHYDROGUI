@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Resources;
 using DelftTools.Controls;
@@ -783,6 +784,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectSaving += CloseAllViewsBeforeSaving;
             base.Gui.Application.ProjectSaveFailed += OpenClosedViews;
             base.Gui.Application.ProjectSaved += OpenClosedViews;
+            base.Gui.Application.ProjectSaving += ApplicationOnProjectSaving;
+            base.Gui.Application.ProjectSaved += ApplicationOnProjectSaved;
             base.Gui.Application.FileImporters.OfType<RasterFileImporter>().ForEach(rfi => rfi.MakeLayerVisibleAfterImport = MakeLayerVisibleAfterImport);
             
             var project = base.Gui.Application.Project;
@@ -841,7 +844,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectSaving -= CloseAllViewsBeforeSaving;
             base.Gui.Application.ProjectSaveFailed -= OpenClosedViews;
             base.Gui.Application.ProjectSaved -= OpenClosedViews;
-
+            base.Gui.Application.ProjectSaving -= ApplicationOnProjectSaving;
+            base.Gui.Application.ProjectSaved -= ApplicationOnProjectSaved;
             var project = base.Gui.Application.Project;
             if (project != null)
             {
@@ -929,7 +933,86 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
         }
+        private void ApplicationOnProjectSaving(Project project)
+        {
+            foreach (WaterFlowFMModel model in FlowModels)
+            {
+                FreeSnappedOutputLayers(model);
+                model.OutputSnappedFeaturesPathPropertyChanged += OnModelOutputSnappedFeaturesPathPropertyChanged;
+            }
+        }
 
+        private void ApplicationOnProjectSaved(Project obj)
+        {
+            foreach (WaterFlowFMModel model in FlowModels)
+            {
+                model.OutputSnappedFeaturesPathPropertyChanged -= OnModelOutputSnappedFeaturesPathPropertyChanged;
+            }
+        }
+
+        private void OnModelOutputSnappedFeaturesPathPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var waterflowFmModel = sender as WaterFlowFMModel;
+            if (waterflowFmModel == null ||
+                !Equals(e.PropertyName, nameof(waterflowFmModel.OutputSnappedFeaturesPath)))
+            {
+                return;
+            }
+
+            UpdateOutputSnappedFeaturesPaths(waterflowFmModel);
+        }
+
+        private void UpdateOutputSnappedFeaturesPaths(WaterFlowFMModel waterflowFmModel)
+        {
+            string targetDirectory = waterflowFmModel.OutputSnappedFeaturesPath;
+            foreach (ShapeFile shapeFile in GetShapeFilesOfSnappedOutputLayersForModel(waterflowFmModel))
+            {
+                string fileName = Path.GetFileName(shapeFile.Path);
+                string targetPath = targetDirectory != null && fileName != null
+                                        ? Path.Combine(targetDirectory, fileName)
+                                        : null;
+
+                shapeFile.Close();
+                if (targetPath != null)
+                {
+                    shapeFile.Path = targetPath;
+                }
+            }
+        }
+
+        private void FreeSnappedOutputLayers(WaterFlowFMModel model)
+        {
+            GetShapeFilesOfSnappedOutputLayersForModel(model).ForEach(s => s.Close());
+        }
+
+        private IEnumerable<ShapeFile> GetShapeFilesOfSnappedOutputLayersForModel(WaterFlowFMModel model)
+        {
+            IEnumerable<ILayer> layers = Gui.DocumentViews
+                                            .OfType<ProjectItemMapView>()
+                                            .Select(m => m.MapView.GetLayerForData(model))
+                                            .Where(l => l != null);
+
+            return layers.SelectMany(GetOutputSnappedFeaturesLayerShapeFiles);
+        }
+
+        private static IEnumerable<ShapeFile> GetOutputSnappedFeaturesLayerShapeFiles(ILayer modelLayer)
+        {
+            var groupModelLayer = modelLayer as GroupLayer;
+            if (groupModelLayer == null)
+            {
+                return Enumerable.Empty<ShapeFile>();
+            }
+
+            var snappedOutputLayer =
+                groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as
+                    GroupLayer;
+            if (snappedOutputLayer == null)
+            {
+                return Enumerable.Empty<ShapeFile>();
+            }
+
+            return snappedOutputLayer.Layers.Select(l => l.DataSource).OfType<ShapeFile>();
+        }
         private void OnActivityRunnerStatusChanged(object sender,
             ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
