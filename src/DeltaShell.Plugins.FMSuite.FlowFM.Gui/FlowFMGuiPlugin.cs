@@ -328,7 +328,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
-            yield return SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>(m => m.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>(), () => Gui);
+
+            var model1DBoundaryConditionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>("1D Boundary Conditions", m => m.BoundaryConditions1D, () => Gui);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(model1DBoundaryConditionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
+
             var attributeTableLateralSourcesData = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(), () => Gui);
             var baseAfterCreate = attributeTableLateralSourcesData.AfterCreate;
             attributeTableLateralSourcesData.AfterCreate = (view, datas) =>

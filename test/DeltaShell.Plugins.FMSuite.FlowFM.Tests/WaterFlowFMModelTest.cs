@@ -2217,11 +2217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             HydroNetworkHelper.AddSnakeHydroNetwork(model.Network,new [] {new Point(0,0),new Point(100,0)});
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(2));
             model.BoundaryConditions1D[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
-            IDataItem myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.False);
-
+            
             //Call
             var channel = new Channel();
             model.Network.Branches.Add(channel);
@@ -2236,10 +2232,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Assert
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(3));
-            myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.False);
             Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.WaterLevelConstant));
         }
 
@@ -2251,11 +2243,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             HydroNetworkHelper.AddSnakeHydroNetwork(model.Network,new [] {new Point(0,0),new Point(100,0)});
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(2));
             model.BoundaryConditions1D[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
-            IDataItem myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.False);
-
+            
             //Call2
             var channelToNode2 = new Channel();
             model.Network.Branches.Add(channelToNode2);
@@ -2270,10 +2258,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //Assert1
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(3));
-            myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.False);
             Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.WaterLevelConstant));
 
             //Call2
@@ -2290,10 +2274,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Assert2
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(4));
-            myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.True);
             Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.None));
         }
 
@@ -2305,11 +2285,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             HydroNetworkHelper.AddSnakeHydroNetwork(model.Network,new [] {new Point(0,0),new Point(100,0)});
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(2));
             model.BoundaryConditions1D[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
-            IDataItem myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.False);
-
+            
             //Call
             var channel = new Channel();
             model.Network.Branches.Add(channel);
@@ -2324,10 +2300,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Assert
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(3));
-            myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.True);
             Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.None));
         }
 
@@ -2413,11 +2385,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             mocks.ReplayAll();
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(2));
             model.BoundaryConditions1D[1].DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
-            IDataItem myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.False);
-
+            
             //Call1
             model.Network.Branches.Add(channelToNode2);
             model.Network.Nodes.Add(sourceNode);
@@ -2426,10 +2394,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             //Assert1
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(3));
-            myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.False);
             Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.WaterLevelConstant));
 
             //Call2
@@ -2440,10 +2404,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             // Assert2
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(4));
-            myDataItem = null;
-            Assert.DoesNotThrow(() => myDataItem = model.BoundaryConditions1DDataItemSet.DataItems.SingleOrDefault(di => di.ValueType == typeof(Model1DBoundaryNodeData) && di.Value is Model1DBoundaryNodeData model1DBoundaryNodeData && Equals(model1DBoundaryNodeData.Feature, model.Network.Nodes[1])));
-            Assert.That(myDataItem, Is.Not.Null);
-            Assert.That(myDataItem.Hidden, Is.True);
             Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.None));
         }
     }

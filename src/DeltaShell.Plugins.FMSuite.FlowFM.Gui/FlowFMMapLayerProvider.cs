@@ -460,7 +460,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
                 yield return initialConditionGroupLayerDataElement;
 
-                yield return model.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>();
+                yield return model.BoundaryConditions1D;
                 yield return model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>();
 
                 var rootModel = GetRootModel(model);
@@ -623,7 +623,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     model.OutputHisFileStore,
                     model.Output1DFileStore,
                     model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(),
-                    model.BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>(),
                     model.InitialWaterLevel,
                     ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions),
                     PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions),

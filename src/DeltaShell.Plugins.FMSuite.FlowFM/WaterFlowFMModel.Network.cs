@@ -170,10 +170,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (node.IncomingBranches.Count >= 1 
                 && node.OutgoingBranches.Count >=1
-                && boundaryConditions1D.Any(bc =>
+                && BoundaryConditions1D.Any(bc =>
                     bc.DataType != Model1DBoundaryNodeDataType.None && Equals(bc.Feature, node)))
             {
-                boundaryConditions1D
+                BoundaryConditions1D
                     .Where(bc =>
                         bc.DataType != Model1DBoundaryNodeDataType.None
                         && Equals(bc.Feature, node))
@@ -264,7 +264,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             RefreshMappings();
         }
         
-        private DataItemSet boundaryNodeDataItemSet;
         private DataItemSet lateralSourceDataItemSet;
 
         public IEventedList<ChannelFrictionDefinition> ChannelFrictionDefinitions { get; private set; }
@@ -469,7 +468,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void RefreshNetworkRelatedData()
         {
             ClearOutput();
-            ClearBoundaryConditions();
             ClearLateralSourceData();
             ClearChannelFrictionDefinitions();
             ClearChannelInitialConditionDefinitions();
@@ -484,75 +482,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UpdateRoughnessSections();
         }
 
-        private void RefreshBoundaryConditions1DDataItemSet()
-        {
-            foreach (var model1DBoundaryNodeData in BoundaryConditions1D.Where(bc1d =>
-                bc1d.DataType != Model1DBoundaryNodeDataType.None))
-            {
-                var bcDataItem = boundaryNodeDataItemSet.DataItems.FirstOrDefault(di =>
-                {
-                    var boundaryNodeData = (di.Value as Model1DBoundaryNodeData);
-                    if (boundaryNodeData == null) return false;
-
-                    return model1DBoundaryNodeData.Feature.Equals(boundaryNodeData.Feature);
-                });
-                if (bcDataItem != null)
-                {
-                    bcDataItem.Value = model1DBoundaryNodeData;
-                    bcDataItem.Hidden = model1DBoundaryNodeData.DataType == Model1DBoundaryNodeDataType.None;
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Gets the boundary conditions for this model
         /// </summary>
-        public IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D
-        {
-            get { return boundaryConditions1D; }
-            private set
-            {
-                if (boundaryConditions1D != null)
-                {
-                    UnSubscribeBoundaryConditions1D();
-                }
-                boundaryConditions1D = value;
-
-                if (boundaryConditions1D != null)
-                {
-                    SubscribeBoundaryConditions1D();
-                }
-            }
-        }
-
-        public void SubscribeBoundaryConditions1D()
-        {
-            BoundaryConditions1D.CollectionChanged += BoundaryConditions1DOnCollectionChanged;
-            ((INotifyPropertyChanged) (BoundaryConditions1D)).PropertyChanged += BoundaryConditions1DOnPropertyChanged;
-        }
-
-        public void UnSubscribeBoundaryConditions1D()
-        {
-            BoundaryConditions1D.CollectionChanged -= BoundaryConditions1DOnCollectionChanged;
-            ((INotifyPropertyChanged) (BoundaryConditions1D)).PropertyChanged -= BoundaryConditions1DOnPropertyChanged;
-        }
-
-        /// <summary>
-        /// Gets the boundary conditions data item set for this model
-        /// </summary>
-        public virtual IDataItemSet BoundaryConditions1DDataItemSet
-        {
-            get { return boundaryNodeDataItemSet; }
-        }
+        public IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D { get; private set; }
 
         private void ClearLateralSourceData()
         {
             lateralSourceDataItemSet.DataItems.Clear();
-        }
-
-        private void ClearBoundaryConditions()
-        {
-            boundaryNodeDataItemSet.DataItems.Clear();
         }
 
         private void ClearChannelFrictionDefinitions()
@@ -719,7 +657,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
         private bool settingSewerRoughness;
-        private IEventedList<Model1DBoundaryNodeData> boundaryConditions1D;
         private IEventedList<Model1DLateralSourceData> lateralSourcesData;
 
         private void AddSewerRoughnessIfNecessary()

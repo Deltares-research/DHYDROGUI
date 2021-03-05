@@ -173,11 +173,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // q's supplied by externals
             AddInflowsDataItem();
 
-            boundaryNodeDataItemSet = new DataItemSet(new EventedList<Model1DBoundaryNodeData>(), WaterFlowFMModelDataSet.BoundaryConditionsTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.BoundaryConditionsTag, typeof(Model1DBoundaryNodeData))
-            {
-                Owner = this
-            };
-            
             lateralSourceDataItemSet = new DataItemSet(new EventedList<Model1DLateralSourceData>(), WaterFlowFMModelDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.LateralSourcesDataTag, typeof(Model1DLateralSourceData))
             {
                 Owner = this
@@ -259,48 +254,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
         
-        private void BoundaryConditions1DOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Model1DBoundaryNodeData.DataType) && sender is Model1DBoundaryNodeData)
-            {
-                var bc = sender as Model1DBoundaryNodeData;
-                var bcDataItem = boundaryNodeDataItemSet.DataItems.First(di => ReferenceEquals(di.Value, bc));
-                bcDataItem.Hidden = bc.DataType == Model1DBoundaryNodeDataType.None;
-            }
-        }
-        [EditAction]
-        private void BoundaryConditions1DOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var modelDefinitionBoundaryConditions1D = sender as IEventedList<Model1DBoundaryNodeData>;
-            if (modelDefinitionBoundaryConditions1D != null)
-            {
-                var model1DBoundaryNode = e.GetRemovedOrAddedItem() as Model1DBoundaryNodeData;
-                if (model1DBoundaryNode == null) return;
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        if (!BoundaryConditions1DDataItemSet.DataItems.Select(di =>di.Value).OfType<Model1DBoundaryNodeData>().Contains(model1DBoundaryNode))
-                        {
-                            BoundaryConditions1DDataItemSet.DataItems.Add(new DataItem(model1DBoundaryNode){Hidden = model1DBoundaryNode?.DataType == Model1DBoundaryNodeDataType.None});
-                        }
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        var existingDataItem = BoundaryConditions1DDataItemSet.DataItems
-                            .Where(di => di.Value is Model1DBoundaryNodeData).FirstOrDefault(di =>
-                                di.Value as Model1DBoundaryNodeData == model1DBoundaryNode);
-                        if (existingDataItem != null)
-                        {
-                            BoundaryConditions1DDataItemSet.DataItems.Remove(existingDataItem);
-                        }
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        BoundaryConditions1DDataItemSet.DataItems.Clear();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
         private void LateralSourceDatasOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var model1DLateralSourceDatas = sender as IEventedList<Model1DLateralSourceData>;
@@ -611,7 +564,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             });
 
             FireImportProgressChanged(this, "Reading model output", 8, TotalImportSteps);
-            RefreshBoundaryConditions1DDataItemSet();
         }
 
         private void SynchronizeModelDefinitions()
@@ -1217,10 +1169,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
-                var boundaryCondition1DDataItems = BoundaryConditions1D.Select(bc => bc.SeriesDataItem);
                 var lateralDataItems = LateralSourcesData.Select(d => d.SeriesDataItem);
 
-                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(boundaryCondition1DDataItems).Concat(lateralDataItems);
+                return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(lateralDataItems);
             }
         }
 
@@ -1472,7 +1423,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 yield return boundary;
             }
-            foreach (var model1DBoundaryNodeData in BoundaryConditions1DDataItemSet.AsEventedList<Model1DBoundaryNodeData>())
+            foreach (var model1DBoundaryNodeData in BoundaryConditions1D)
             {
                 yield return model1DBoundaryNodeData;
             }
@@ -1799,13 +1750,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         // [TOOLS-22813] Override OnInputPropertyChanged to stop base class (ModelBase) from clearing the output
         protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Model1DBoundaryNodeData.DataType) && sender is Model1DBoundaryNodeData)
-            {
-                var bc = sender as Model1DBoundaryNodeData;
-                
-                var bcDataItem = boundaryNodeDataItemSet.DataItems.First(di => ReferenceEquals(di.Value, bc));
-                bcDataItem.Hidden = bc.DataType == Model1DBoundaryNodeDataType.None;
-            }
         }
 
         protected override void OnClearOutput()

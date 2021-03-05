@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
             fmModel.UnSubscribeFromNetwork(network);
             fmModel.UnSubscribeLateralSourcesData();
-            fmModel.UnSubscribeBoundaryConditions1D();
+            
             var bubbelingEventSetting = EventSettings.BubblingEnabled;
             var branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
             var pipesBySourceCompartmentName = network.Pipes.ToLookup(p => p.SourceCompartmentName, p => p, StringComparer.OrdinalIgnoreCase);
@@ -259,7 +259,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 EventSettings.BubblingEnabled = bubbelingEventSetting;
                 fmModel.SubscribeToNetwork(network);
                 fmModel.SubscribeLateralSourcesData();
-                fmModel.SubscribeBoundaryConditions1D();
                 network.EndEdit();
             }
         }
@@ -369,7 +368,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var lateralSourcesDataByLaterSource = new ConcurrentDictionary<LateralSource, Model1DLateralSourceData>();
             var bubblingEnabled = EventSettings.BubblingEnabled;
             fmModel.UnSubscribeLateralSourcesData();
-            fmModel.UnSubscribeBoundaryConditions1D();
             fmModel.UnSubscribeFromNetwork(network);
             try
             {
@@ -473,7 +471,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 EventSettings.BubblingEnabled = bubblingEnabled;
                 fmModel.SubscribeLateralSourcesData();
-                fmModel.SubscribeBoundaryConditions1D();
                 fmModel.SubscribeToNetwork(network);
             }
             
@@ -574,7 +571,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var bubblingEnabledSetting = EventSettings.BubblingEnabled;
             try
             {
-                fmModel.UnSubscribeBoundaryConditions1D();
                 EventSettings.BubblingEnabled = false;
 
                 ParallelHelper.RunActionInParallel(this, networkManholes, manhole =>
@@ -584,11 +580,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     lock (fmModel.BoundaryConditions1D)
                     {
                         fmModel.BoundaryConditions1D.Add(bc);
-                    }
-
-                    lock (fmModel.BoundaryConditions1DDataItemSet)
-                    {
-                        fmModel.BoundaryConditions1DDataItemSet.DataItems.Add(new DataItem(bc) {Hidden = bc?.DataType == Model1DBoundaryNodeDataType.None});
                     }
                 }, "Add Model 1D Boundary Nodes to Fm Model");
                 
@@ -600,7 +591,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             finally
             {
                 EventSettings.BubblingEnabled = bubblingEnabledSetting;
-                fmModel.SubscribeBoundaryConditions1D();
             }
         }
 
