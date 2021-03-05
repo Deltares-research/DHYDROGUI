@@ -20,7 +20,6 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
@@ -795,9 +794,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (base.Gui == null || base.Gui.Application == null) return;
             base.Gui.Application.ProjectOpened += SubscribeToProjectPropertyChanged;
             base.Gui.Application.ProjectClosing += UnsubscribeToProjectPropertyChanged;
-            base.Gui.Application.ProjectSaving += CloseAllViewsBeforeSaving;
-            base.Gui.Application.ProjectSaveFailed += OpenClosedViews;
-            base.Gui.Application.ProjectSaved += OpenClosedViews;
             base.Gui.Application.ProjectSaving += ApplicationOnProjectSaving;
             base.Gui.Application.ProjectSaved += ApplicationOnProjectSaved;
             base.Gui.Application.FileImporters.OfType<RasterFileImporter>().ForEach(rfi => rfi.MakeLayerVisibleAfterImport = MakeLayerVisibleAfterImport);
@@ -806,42 +802,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (project != null)
             {
                 SubscribeToProjectPropertyChanged(project);
-            }
-        }
-        [InvokeRequired]
-        private void OpenClosedViews(Project project)
-        {
-            if (project == null || project.RootFolder == null || ClosedViewTypes == null) return;
-
-            try
-            {
-                if (ClosedViewTypes == null || !ClosedViewTypes.Any()) return;
-                foreach (var flowFmModel in project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>())
-                {
-                    foreach (var viewType in ClosedViewTypes)
-                    {
-                        Gui.CommandHandler.OpenView(flowFmModel, viewType);
-                    }
-                }
-                if (ClosedViewTypes == null)
-                    ClosedViewTypes = new List<Type>();
-                else
-                    ClosedViewTypes.Clear();
-                HiddenVisibleLayers?.ForEach(l =>
-                {
-                    l.Visible = true;
-                    l.RenderRequired = true;
-                });
-                HiddenVisibleLayers?.Clear();
-            }
-            catch
-            {
-                //gulp
-                if (ClosedViewTypes == null)
-                    ClosedViewTypes = new List<Type>();
-                else
-                    ClosedViewTypes.Clear();
-                HiddenVisibleLayers?.Clear();
             }
         }
 
@@ -855,9 +815,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (base.Gui == null || base.Gui.Application == null) return;
             base.Gui.Application.ProjectOpened -= SubscribeToProjectPropertyChanged;
             base.Gui.Application.ProjectClosing -= UnsubscribeToProjectPropertyChanged;
-            base.Gui.Application.ProjectSaving -= CloseAllViewsBeforeSaving;
-            base.Gui.Application.ProjectSaveFailed -= OpenClosedViews;
-            base.Gui.Application.ProjectSaved -= OpenClosedViews;
             base.Gui.Application.ProjectSaving -= ApplicationOnProjectSaving;
             base.Gui.Application.ProjectSaved -= ApplicationOnProjectSaved;
             var project = base.Gui.Application.Project;
@@ -900,27 +857,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (!(sender is WaterFlowFMModel))
                 return; //early exit
 
-            if (e.PropertyName.Equals(CoordinateSystemMemberName))
-        {
-                var model = sender as WaterFlowFMModel;
-                if (! model.WriteSnappedFeatures) return;
-
-                // Set coordinate system to OutputSnappedFeatures
-                var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == model);
-                foreach (var mapView in mapViews)
+            if (!e.PropertyName.Equals(CoordinateSystemMemberName))
             {
-                    var modelLayer = mapView.MapView.GetLayerForData(model);
-                    var groupModelLayer = modelLayer as GroupLayer;
-                    if (groupModelLayer != null)
-                {
-                        var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
-                        if (snappedOutputLayer == null) continue;
-
-                        snappedOutputLayer.Layers.ForEach(l => l.DataSource.CoordinateSystem = model.CoordinateSystem);
-                }
+                return;
             }
 
-        }
+            var model = sender as WaterFlowFMModel;
+            if (! model.WriteSnappedFeatures) return;
+
+            // Set coordinate system to OutputSnappedFeatures
+            var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == model);
+            foreach (var mapView in mapViews)
+            {
+                var modelLayer = mapView.MapView.GetLayerForData(model);
+                var groupModelLayer = modelLayer as GroupLayer;
+                if (groupModelLayer != null)
+                {
+                    var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
+                    if (snappedOutputLayer == null) continue;
+
+                    snappedOutputLayer.Layers.ForEach(l => l.DataSource.CoordinateSystem = model.CoordinateSystem);
+                }
+            }
         }
 
         void ProjectPropertyChanging(object sender, PropertyChangingEventArgs e)
@@ -1094,56 +1052,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 ActiveMapView.Map.ZoomToExtents();
             }
         }
-
-        private IList<Type> ClosedViewTypes { get; set; }
-
-        [InvokeRequired]
-        private void CloseAllViewsBeforeSaving(Project project)
-        {
-            if (project == null || project.RootFolder == null) return;
-            if (ClosedViewTypes == null)
-                ClosedViewTypes = new List<Type>();
-            else
-                ClosedViewTypes.Clear();
-
-            if (HiddenVisibleLayers == null)
-                HiddenVisibleLayers = new List<ILayer>();
-            else
-                HiddenVisibleLayers.Clear();
-
-            HiddenVisibleLayers = new List<ILayer>();
-            
-            foreach (var flowFmModel in project.RootFolder.GetAllItemsRecursive().OfType<WaterFlowFMModel>())
-            {
-                var collection = Gui.DocumentViews.AllViews.Where(v =>
-                {
-                    var data = v.Data as WaterFlowFMModel;
-                    return data != null && (data == flowFmModel);
-                }).Select(v => v.GetType());
-                if(collection != null)
-                    ClosedViewTypes.AddRange(collection);
-                Gui.CommandHandler.RemoveAllViewsForItem(flowFmModel);
-            }
-            var activeView = Gui.DocumentViews.ActiveView;
-            if (activeView == null || activeView.Data == null)
-            {
-                return; // strange bug
-            }
-
-            if (activeView is MapView || activeView is ProjectItemMapView)
-            {
-                // when region is dragged onto an opened mapview
-                var mapView = activeView is ProjectItemMapView
-                    ? ((ProjectItemMapView)activeView).MapView
-                    : (MapView)activeView;
-
-                HiddenVisibleLayers = mapView.Map.GetAllVisibleLayers(true).Where(l => l.Name.Contains("Output")).ToList();
-                HiddenVisibleLayers.ForEach(l => l.Visible = false);
-            }
-        }
-
-        private IList<ILayer> HiddenVisibleLayers { get; set; }
-
+        
         [InvokeRequired]
         private void CloseViewDataForOutdatedStore(FMHisFileFunctionStore fmHisFileFunctionStore)
         {

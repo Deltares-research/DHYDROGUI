@@ -10,11 +10,8 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
-using DelftTools.Utils;
-using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
@@ -247,100 +244,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             get { return base.Gui; }
             set
             {
-                if (base.Gui != null)
-                {
-                    UnsubscribeToProjectEvents();
-                    UnSubscribeToActivityEvents();
-                }
-
                 base.Gui = value;
                 if (base.Gui != null)
                 {
-                    SubscribeToProjectEvents();
-                    SubscribeToActivityEvents();
                     Gui.UndoRedoManager.Enabled = false;
                 }
-            }
-        }
-
-
-        private void SubscribeToProjectEvents()
-        {
-            base.Gui.Application.ProjectClosing += CloseAllViews;
-            base.Gui.Application.ProjectSaving += CloseAllViewsBeforeSaving;
-            base.Gui.Application.ProjectSaveFailed += OpenClosedViews;
-            base.Gui.Application.ProjectSaved += OpenClosedViews;
-        }
-
-        private void CloseAllViews(Project obj)
-        {
-            CloseAllViews(obj, false);
-        }
-
-        private void SubscribeToActivityEvents()
-        {
-        }
-
-        private void UnsubscribeToProjectEvents()
-        {
-            base.Gui.Application.ProjectSaving -= CloseAllViewsBeforeSaving;
-            base.Gui.Application.ProjectSaveFailed -= OpenClosedViews;
-            base.Gui.Application.ProjectSaved -= OpenClosedViews;
-        }
-
-        private void UnSubscribeToActivityEvents()
-        {
-        }
-        private IDictionary<Type, IList<INameable>> ClosedViews { get; set; }
-
-        private void CloseAllViewsBeforeSaving(Project project)
-        {
-            if (project == null || project.RootFolder == null) return;
-            ClosedViews = new Dictionary<Type, IList<INameable>>();
-            
-            CloseAllViews(project, true);
-        }
-
-        private void CloseAllViews(Project project, bool saveViewList)
-        {
-            RemoveViewsOfType<Model1DBoundaryNodeDataViewWpf>(saveViewList);
-            RemoveViewsOfType<Model1DLateralSourceDataViewWpf>(saveViewList);
-        }
-
-        private void RemoveViewsOfType<T>(bool saveViewList) where T:IView
-        {
-            var views = Gui.DocumentViews.AllViews.OfType<T>().Cast<IView>().ToList();
-            if (views != null && saveViewList)
-                views.ForEach(view => ClosedViews[view.GetType()] = views.Where(v=> v.Data is INameable).Select(v => v.Data).Cast<INameable>().ToList());
-            Gui.CommandHandler.RemoveAllViewsForItem(views.Select(c => c.Data));
-            views.ForEach(view => Gui.DocumentViews.Remove(view));
-        }
-
-        private void OpenClosedViews(Project project)
-        {
-            if (project == null || project.RootFolder == null || ClosedViews == null) return;
-
-            try
-            {
-                if (ClosedViews == null || !ClosedViews.Any()) return;
-                ClosedViews.ForEach(v =>
-                {
-                    v.Value.ForEach(o =>
-                    {
-                        //search same object in current model
-                        project.RootFolder.GetAllItemsRecursive().OfType<IModel>().ForEach(model =>
-                        {
-                            Gui.CommandHandler.OpenView(o, v.Key);
-                        });
-                    });
-                });
-                
-                ClosedViews = new Dictionary<Type, IList<INameable>>();
-            }
-            catch
-            {
-                //gulp
-                ClosedViews = new Dictionary<Type, IList<INameable>>();
             }
         }
     }
