@@ -659,6 +659,8 @@ src/DeltaShell.NGHS.Common/ApplicationPluginHelper.cs -text
 src/DeltaShell.NGHS.Common/DefaultModelSettings.cs -text
 src/DeltaShell.NGHS.Common/DeltaShell.NGHS.Common.csproj -text
 src/DeltaShell.NGHS.Common/EnvironmentConstants.cs -text
+src/DeltaShell.NGHS.Common/Extensions/DisposableEditableObject.cs -text
+src/DeltaShell.NGHS.Common/Extensions/EditableObjectEditExtensions.cs -text
 src/DeltaShell.NGHS.Common/FileBasedUtils.cs -text
 src/DeltaShell.NGHS.Common/IControllingModel.cs -text
 src/DeltaShell.NGHS.Common/ICoupledModel.cs -text

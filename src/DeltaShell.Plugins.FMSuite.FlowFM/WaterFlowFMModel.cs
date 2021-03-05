@@ -4177,32 +4177,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (category == GridPropertyName)
             {
-                return new[] {grid};
+                return new[] { grid };
             }
 
             if (runner.CanCommunicateWithDimrApi)
             {
-                return !string.IsNullOrEmpty(itemName)
-                    ? !string.IsNullOrEmpty(parameter)
-                        ?
-                        runner.GetVar(string.Format("{0}/{1}/{2}/{3}", Name, category, itemName, parameter))
-                        : runner.GetVar(string.Format("{0}/{1}/{2}", Name, category, itemName))
-                    : runner.GetVar(string.Format("{0}/{1}", Name, category));
+                return string.IsNullOrEmpty(itemName)
+                           ? runner.GetVar($"{Name}/{category}")
+                           : string.IsNullOrEmpty(parameter)
+                               ? runner.GetVar($"{Name}/{category}/{itemName}")
+                               : runner.GetVar($"{Name}/{category}/{itemName}/{parameter}");
             }
+
             IFeature feature = null;
             switch (category)
             {
                 case Model1DParametersCategories.Weirs:
-                    feature = Network.Weirs.FirstOrDefault(w => w.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase));
+                    feature = Network.GetBranchFeatureByName<IWeir>(itemName);
                     break;
                 case Model1DParametersCategories.Culverts:
-                    feature = Network.Culverts.FirstOrDefault(c => c.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase));
+                    feature = Network.GetBranchFeatureByName<ICulvert>(itemName);
                     break;
                 case Model1DParametersCategories.Pumps:
-                    feature = Network.Pumps.FirstOrDefault(p => p.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase));
+                    feature = Network.GetBranchFeatureByName<IPump>(itemName);
                     break;
                 case Model1DParametersCategories.Laterals:
-                    feature = Network.LateralSources.FirstOrDefault(l => l.Name.Equals(itemName, StringComparison.InvariantCultureIgnoreCase));
+                    feature = Network.GetBranchFeatureByName<ILateralSource>(itemName);
                     break;
             }
 

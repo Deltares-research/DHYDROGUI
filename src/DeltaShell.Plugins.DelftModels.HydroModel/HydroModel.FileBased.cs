@@ -209,17 +209,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             var targetInputItems = GetDataItems(targetModel, DataItemRole.Input).ToList();
             var sourceOutputItems = GetDataItems(sourceModel, DataItemRole.Output).ToList();
-            
+
             var exchangeInfo = new ModelExchangeInfo(sourceModel, targetModel);
 
             foreach (var sourceOutputItem in sourceOutputItems)
             {
+                var hiddenStateSource = sourceOutputItem.Hidden;
+                sourceOutputItem.Hidden = true;
                 foreach (var targetInputItem in targetInputItems.Where(i => i.LinkedTo != null && i.LinkedTo.Equals(sourceOutputItem)))
                 {
                     exchangeInfo.Exchanges.Add(new ModelExchange(sourceOutputItem, targetInputItem));
 
+                    var hiddenStateTarget = targetInputItem.Hidden;
+                    targetInputItem.Hidden = true;
                     targetInputItem.Unlink();
+                    targetInputItem.Hidden = hiddenStateTarget;
                 }
+                sourceOutputItem.Hidden = hiddenStateSource;
             }
 
             return exchangeInfo;

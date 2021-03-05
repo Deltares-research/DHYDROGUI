@@ -65,18 +65,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         public virtual ICoordinateSystem CoordinateSystem
         {
-            get
-            {
-                return Region.CoordinateSystem;
-            }
+            get { return Region.CoordinateSystem; }
             set
             {
-                Region.AllRegions.ForEach(r => r.CoordinateSystem = value);
+                Region.AllRegions.ForEach(r =>
+                {
+                    if (r.CoordinateSystem != value)
+                    {
+                        r.CoordinateSystem = value;
+                    }
+                });
+
                 Activities.ForEach(a =>
                 {
                     a.GetType().GetProperties()
                      .Where(p => p.PropertyType == typeof(ICoordinateSystem) && p.CanWrite)
-                     .ForEach(p => p.SetValue(a, value));
+                     .ForEach(p =>
+                     {
+                         if (p.GetValue(a) != value)
+                         {
+                             p.SetValue(a, value);
+                         }
+                     });
                 });
             }
         }

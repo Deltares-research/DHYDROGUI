@@ -10,6 +10,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using log4net;
 using Mono.Addins;
@@ -88,13 +89,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             if (project == null || project.RootFolder == null) return;
 
             project.RootFolder.GetAllModelsRecursive().ForEach(m => m.SuspendClearOutputOnInputChange = true);
-            // go through all hydro models and unlink all objects that link between rtc and flowFM, 
-            // because flow is not saved in the database.
-            foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
+
+            using (project.InEditMode("Saving"))
             {
-                hydroModel.UnlinkAndRememberDataItems();
-                hydroModel.UnlinkAndRememberRegionLinks();
+                // go through all hydro models and unlink all objects that link between rtc and flowFM, 
+                // because flow is not saved in the database.
+
+                foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
+                {
+                    using (hydroModel.InEditMode("Unlinking items for saving"))
+                    {
+                        hydroModel.UnlinkAndRememberDataItems();
+                        hydroModel.UnlinkAndRememberRegionLinks();
+                    }
+                }
             }
+
             project.RootFolder.GetAllModelsRecursive().ForEach(m => m.SuspendClearOutputOnInputChange = false);
         }
 
@@ -102,12 +112,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (project == null || project.RootFolder == null) return;
 
-            foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
+            using (project.InEditMode("Saving"))
             {
-                hydroModel.RelinkDataItems();
-                hydroModel.RelinkHydroRegionLinks();
+                foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
+                {
+                    using (hydroModel.InEditMode("Linking items after for saving"))
+                    {
+                        hydroModel.RelinkDataItems();
+                        hydroModel.RelinkHydroRegionLinks();
+                    }
+                }
             }
         }
+
         private void ApplicationProjectOpened(Project project)
         {
             Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>

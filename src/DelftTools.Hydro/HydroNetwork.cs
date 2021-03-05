@@ -30,6 +30,8 @@ namespace DelftTools.Hydro
 
         public const string ImportBranchesActionName = "Import branches";
 
+        private Dictionary<Type, IDictionary<string, IBranchFeature>> branchFeatureNameCache;
+
         [Aggregation]
         public virtual ICrossSectionDefinition DefaultCrossSectionDefinition { get; set; }
 
@@ -61,7 +63,7 @@ namespace DelftTools.Hydro
             if (route == null)
                 return;
 
-            switch(e.Action)
+            switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
                     route.Network = this;
@@ -92,7 +94,7 @@ namespace DelftTools.Hydro
                 }
             }
         }
-        
+
         [EditAction]
         void SharedCrossSectionDefinitionsCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
@@ -101,7 +103,7 @@ namespace DelftTools.Hydro
             {
                 var definitionBeingRemoved = e.Item as ICrossSectionDefinition;
 
-                if(definitionBeingRemoved == null)
+                if (definitionBeingRemoved == null)
                 {
                     return;
                 }
@@ -114,7 +116,7 @@ namespace DelftTools.Hydro
                 var crossSectionsUsingDefinitionBeingRemoved =
                     CrossSections.Where(
                         cs => cs.Definition.IsProxy &&
-                              ((CrossSectionDefinitionProxy) cs.Definition).InnerDefinition == definitionBeingRemoved);
+                              ((CrossSectionDefinitionProxy)cs.Definition).InnerDefinition == definitionBeingRemoved);
 
                 if (crossSectionsUsingDefinitionBeingRemoved.Any())
                 {
@@ -125,7 +127,7 @@ namespace DelftTools.Hydro
                     e.Cancel = true;
                 }
             }
-            else if (e.Action == NotifyCollectionChangeAction.Add && 
+            else if (e.Action == NotifyCollectionChangeAction.Add &&
                      e.Item is CrossSectionDefinitionXYZ)
             {
                 throw new NotSupportedException("XYZ cross sections cannot be added as definitions.");
@@ -158,10 +160,10 @@ namespace DelftTools.Hydro
         {
             if (e.PropertyName == nameof(CrossSectionSectionType.Name))
             {
-                var sectionName = ((CrossSectionSectionType) sender).Name;
+                var sectionName = ((CrossSectionSectionType)sender).Name;
                 if (crossSectionSectionTypes.Count(sec => sec.Name == sectionName) > 1)
                 {
-                    ((CrossSectionSectionType) sender).Name = sectionName + "_1";
+                    ((CrossSectionSectionType)sender).Name = sectionName + "_1";
                     return;
                 }
                 CrossSections.Select(cs => cs.Definition)
@@ -175,7 +177,7 @@ namespace DelftTools.Hydro
             //check if the section is in use somewhere..the deletion is not allowed
             if ((e.Action == NotifyCollectionChangeAction.Replace) || (e.Action == NotifyCollectionChangeAction.Remove))
             {
-                var crossSectionSectionType = (CrossSectionSectionType) e.Item;
+                var crossSectionSectionType = (CrossSectionSectionType)e.Item;
 
                 var crossSection =
                     CrossSections.FirstOrDefault(
@@ -189,7 +191,7 @@ namespace DelftTools.Hydro
             }
             if (e.Action == NotifyCollectionChangeAction.Add)
             {
-                var sectionName = ((CrossSectionSectionType) e.Item).Name;
+                var sectionName = ((CrossSectionSectionType)e.Item).Name;
                 if (crossSectionSectionTypes.Select(sec => sec.Name).Contains(sectionName))
                 {
                     log.ErrorFormat("Unable to add cross section section type with non-identical name {0}.", sectionName);
@@ -197,7 +199,7 @@ namespace DelftTools.Hydro
                 }
             }
         }
-        
+
         public HydroNetwork()
         {
             Name = "network1";
@@ -209,20 +211,36 @@ namespace DelftTools.Hydro
             {
                 Name = RoughnessDataSet.MainSectionTypeName
             };
-            
+
             CrossSectionSectionTypes.Add(section);
 
             Links = new EventedList<HydroLink>();
             SubRegions = new EventedList<IRegion>();
+
+            PropertyChanged += (s, a) =>
+            {
+                if (s is IBranchFeature && string.Equals(a.PropertyName, nameof(IBranchFeature.Name)))
+                {
+                    branchFeatureNameCache = null;
+                };
+            };
+
+            CollectionChanged += (sender, args) =>
+            {
+                if (args.GetRemovedOrAddedItem() is IBranchFeature)
+                {
+                    branchFeatureNameCache = null;
+                }
+            };
         }
-        
+
         public override IEventedList<IBranch> Branches
         {
             get { return base.Branches; }
             set
             {
                 base.Branches = value;
-                
+
                 Pipes = Branches.OfType<IPipe>();
                 SewerConnections = Branches.OfType<ISewerConnection>();
                 Channels = Branches.OfType<IChannel>();
@@ -250,10 +268,10 @@ namespace DelftTools.Hydro
         public override IEventedList<INode> Nodes
         {
             get { return base.Nodes; }
-            set 
-            { 
-                base.Nodes = value; 
-                
+            set
+            {
+                base.Nodes = value;
+
                 Manholes = Nodes.OfType<IManhole>();
                 OutletCompartments = Manholes.SelectMany(m => m.OutletCompartments());
                 Compartments = Manholes.SelectMany(m => m.Compartments.OfType<Compartment>());
@@ -267,9 +285,9 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<ISewerConnection> SewerConnections { get; protected set; }
         public virtual IEnumerable<IChannel> Channels
         {
-            get ; protected set;
+            get; protected set;
         }
-        
+
         public virtual IEnumerable<IManhole> Manholes { get; protected set; }
         public virtual IEnumerable<OutletCompartment> OutletCompartments { get; protected set; }
         public virtual IEnumerable<Compartment> Compartments { get; protected set; }
@@ -279,7 +297,7 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<ICrossSection> CrossSections { get; protected set; }
         public virtual IEnumerable<IPump> Pumps { get; protected set; }
         public virtual IEnumerable<IWeir> Weirs { get; protected set; }
-        public virtual IEnumerable<IGate> Gates { get; protected set; } 
+        public virtual IEnumerable<IGate> Gates { get; protected set; }
         public virtual IEnumerable<IGully> Gullies { get; protected set; }
         public virtual IEnumerable<ICulvert> Culverts { get; protected set; }
         public virtual IEnumerable<IBridge> Bridges { get; protected set; }
@@ -287,7 +305,24 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<ILateralSource> LateralSources { get; protected set; }
         public virtual IEnumerable<IRetention> Retentions { get; protected set; }
         public virtual IEnumerable<IObservationPoint> ObservationPoints { get; protected set; }
- 
+
+        /// <inheritdoc cref="IHydroNetwork"/>
+        public T GetBranchFeatureByName<T>(string featureName) where T : IBranchFeature
+        {
+            if (branchFeatureNameCache == null)
+            {
+                RecreateCache();
+            }
+
+            if (!branchFeatureNameCache.ContainsKey(typeof(T)))
+                return default(T);
+
+            var features = branchFeatureNameCache[typeof(T)];
+            return (T)(features.ContainsKey(featureName.ToLower())
+                            ? features[featureName.ToLower()]
+                            : default(T));
+        }
+
         public override string ToString()
         {
             return Name;
@@ -319,23 +354,23 @@ namespace DelftTools.Hydro
 
         public override object Clone()
         {
-            var clone = (HydroNetwork) base.Clone();
+            var clone = (HydroNetwork)base.Clone();
             clone.crossSectionSectionTypes.Clear();
             foreach (var crossSectionSectionType in CrossSectionSectionTypes)
             {
-                clone.crossSectionSectionTypes.Add((CrossSectionSectionType) crossSectionSectionType.Clone());
+                clone.crossSectionSectionTypes.Add((CrossSectionSectionType)crossSectionSectionType.Clone());
             }
             foreach (var definition in SharedCrossSectionDefinitions)
             {
-                var definitionClone = (ICrossSectionDefinition) definition.Clone();
+                var definitionClone = (ICrossSectionDefinition)definition.Clone();
                 clone.SharedCrossSectionDefinitions.Add(definitionClone);
-                if(Equals(definition, DefaultCrossSectionDefinition))
+                if (Equals(definition, DefaultCrossSectionDefinition))
                 {
                     clone.DefaultCrossSectionDefinition = definitionClone;
                 }
             }
 
-            foreach(var route in Routes)
+            foreach (var route in Routes)
             {
                 var clonedRoute = (Route)route.Clone();
                 NetworkCoverage.ReplaceNetworkForClone(clone, clonedRoute);
@@ -356,7 +391,7 @@ namespace DelftTools.Hydro
             }
 
             //rewire proxy crosssection))))
-            foreach (var proxy in clone.CrossSections.Select(c=>c.Definition).OfType<CrossSectionDefinitionProxy>())
+            foreach (var proxy in clone.CrossSections.Select(c => c.Definition).OfType<CrossSectionDefinitionProxy>())
             {
                 var index = SharedCrossSectionDefinitions.IndexOf(proxy.InnerDefinition);
                 proxy.InnerDefinition = clone.SharedCrossSectionDefinitions[index];
@@ -364,7 +399,7 @@ namespace DelftTools.Hydro
 
             foreach (var subRegion in SubRegions)
             {
-                clone.SubRegions.Add((IHydroRegion) subRegion.Clone());
+                clone.SubRegions.Add((IHydroRegion)subRegion.Clone());
             }
 
             clone.Links = new EventedList<HydroLink>(Links);
@@ -380,12 +415,12 @@ namespace DelftTools.Hydro
 
         public virtual IEnumerable<IHydroObject> AllHydroObjects
         {
-            get 
+            get
             {
                 return Nodes.OfType<IHydroObject>()
                     .Concat(Branches.OfType<IHydroObject>())
                     .Concat(BranchFeatures.OfType<IHydroObject>())
-                    .Concat(NodeFeatures.OfType<IHydroObject>()); 
+                    .Concat(NodeFeatures.OfType<IHydroObject>());
             }
         }
 
@@ -418,6 +453,26 @@ namespace DelftTools.Hydro
             {
                 base.EditWasCancelled = value;
             }
+        }
+
+        private void RecreateCache()
+        {
+            branchFeatureNameCache = new Dictionary<Type, IDictionary<string, IBranchFeature>>
+            {
+                [typeof(IOrifice)] = Orifices.ToDictionary(o => o.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(ICrossSection)] = CrossSections.ToDictionary(c => c.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IPump)] = Pumps.ToDictionary(p => p.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(ICulvert)] = Culverts.ToDictionary(c => c.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IBridge)] = Bridges.ToDictionary(b => b.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IWeir)] = Weirs.ToDictionary(w => w.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IGate)] = Gates.ToDictionary(g => g.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(ILateralSource)] = LateralSources.ToDictionary(l => l.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IRetention)] = Retentions.ToDictionary(r => r.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IObservationPoint)] = ObservationPoints.ToDictionary(o => o.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IExtraResistance)] = ExtraResistances.ToDictionary(e => e.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IGully)] = Gullies.ToDictionary(g => g.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(ICompositeBranchStructure)] = CompositeBranchStructures.ToDictionary(c => c.Name.ToLower(), w => w as IBranchFeature)
+            };
         }
     }
 }

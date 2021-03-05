@@ -37,6 +37,8 @@
     <Compile Include="ApplicationPluginHelper.cs" />
     <Compile Include="DefaultModelSettings.cs" />
     <Compile Include="EnvironmentConstants.cs" />
+    <Compile Include="Extensions\DisposableEditableObject.cs" />
+    <Compile Include="Extensions\EditableObjectEditExtensions.cs" />
     <Compile Include="FileBasedUtils.cs" />
     <Compile Include="IControllingModel.cs" />
     <Compile Include="ICoupledModel.cs" />
@@ -98,6 +100,7 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
