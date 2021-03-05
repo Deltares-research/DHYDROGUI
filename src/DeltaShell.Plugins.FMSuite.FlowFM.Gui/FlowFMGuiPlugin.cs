@@ -332,16 +332,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var model1DBoundaryConditionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>("1D Boundary Conditions", m => m.BoundaryConditions1D, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(model1DBoundaryConditionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
-            var attributeTableLateralSourcesData = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<Model1DLateralSourceData, WaterFlowFMModel>(m => m.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(), () => Gui);
-            var baseAfterCreate = attributeTableLateralSourcesData.AfterCreate;
-            attributeTableLateralSourcesData.AfterCreate = (view, datas) =>
-            {
-                baseAfterCreate(view, datas);
-                SetLateralSourceCompartmentComboBoxTypeEditor(view);
+            var model1DLateralSourceViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DLateralSourceData, WaterFlowFMModel>("Lateral Sources", m => m.LateralSourcesData, () => Gui);
 
-                view.TableView.FocusedRowChanged += (sender, args) => { SetLateralSourceCompartmentComboBoxTypeEditor(view); };
-            };
-            yield return attributeTableLateralSourcesData;
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(model1DLateralSourceViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) =>
+            {
+                
+                v.CanAddDeleteAttributes = false;
+                ProjectItemMapView centralMap1 = Gui.DocumentViews.OfType<ProjectItemMapView>()
+                                                    .FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
+                if (centralMap1 == null)
+                {
+                    return;
+                }
+
+                v.DeleteSelectedFeatures = () => centralMap1.MapView.MapControl.DeleteTool.DeleteSelection();
+                v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
+                v.ZoomToFeature = feature => centralMap1.MapView.EnsureVisible(feature);
+                v.CanAddDeleteAttributes = false;
+                SetLateralSourceCompartmentComboBoxTypeEditor(v);
+
+                v.TableView.FocusedRowChanged += (sender, args) => { SetLateralSourceCompartmentComboBoxTypeEditor(v); };
+            });
             var networkDiscretizationCoverageViewInfo = new ViewInfo<ICoverage, CoverageTableView>
             {
                 Description = "Network Discretization",

@@ -229,7 +229,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 // Update laterals
                 foreach (var lateralSource in Network.LateralSources)
                 {
-                    AddLateralSourceData(new Model1DLateralSourceData { Feature = (LateralSource)lateralSource });
+                    AddLateralSourceData(new Model1DLateralSourceData { Feature = (LateralSource)lateralSource, UseSalt = UseSalinity, UseTemperature = UseTemperature });
                 }
 
                 // Update channel friction definitions
@@ -264,8 +264,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             RefreshMappings();
         }
         
-        private DataItemSet lateralSourceDataItemSet;
-
         public IEventedList<ChannelFrictionDefinition> ChannelFrictionDefinitions { get; private set; }
         public IEventedList<PipeFrictionDefinition> PipeFrictionDefinitions { get; private set; }
 
@@ -361,7 +359,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             var channel = (IChannel) e.GetRemovedOrAddedItem();
                             foreach (var lateralSource in channel.BranchSources)
                             {
-                                AddLateralSourceData(new Model1DLateralSourceData {Feature = lateralSource});
+                                AddLateralSourceData(new Model1DLateralSourceData {Feature = lateralSource, UseSalt = UseSalinity, UseTemperature = UseTemperature });
                             }
 
                             ChannelFrictionDefinitions.Add(new ChannelFrictionDefinition(channel));
@@ -468,7 +466,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void RefreshNetworkRelatedData()
         {
             ClearOutput();
-            ClearLateralSourceData();
             ClearChannelFrictionDefinitions();
             ClearChannelInitialConditionDefinitions();
             RefreshNetworkDataRelatedData();
@@ -488,11 +485,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </summary>
         public IEventedList<Model1DBoundaryNodeData> BoundaryConditions1D { get; private set; }
 
-        private void ClearLateralSourceData()
-        {
-            lateralSourceDataItemSet.DataItems.Clear();
-        }
-
         private void ClearChannelFrictionDefinitions()
         {
             ChannelFrictionDefinitions.Clear();
@@ -506,40 +498,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// <summary>
         /// Gets the lateral source data for this model
         /// </summary>
-        public IEventedList<Model1DLateralSourceData> LateralSourcesData
-        {
-            get { return lateralSourcesData; }
-            private set
-            {
-                if (lateralSourcesData != null)
-                {
-                    UnSubscribeLateralSourcesData();
-                }
-                lateralSourcesData = value;
-                if (lateralSourcesData != null)
-                {
-                    SubscribeLateralSourcesData();
-                }
-            }
-        }
-
-        public void SubscribeLateralSourcesData()
-        {
-            lateralSourcesData.CollectionChanged += LateralSourceDatasOnCollectionChanged;
-        }
-
-        public void UnSubscribeLateralSourcesData()
-        {
-            lateralSourcesData.CollectionChanged -= LateralSourceDatasOnCollectionChanged;
-        }
-
-        /// <summary>
-        /// Gets the lateral sources data item set for this model
-        /// </summary>
-        public virtual IDataItemSet LateralSourcesDataItemSet
-        {
-            get { return lateralSourceDataItemSet; }
-        }
+        public IEventedList<Model1DLateralSourceData> LateralSourcesData { get; private set; }
 
         [NoNotifyPropertyChange]
         public virtual IFeatureCoverage Inflows
@@ -657,7 +616,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
         private bool settingSewerRoughness;
-        private IEventedList<Model1DLateralSourceData> lateralSourcesData;
 
         private void AddSewerRoughnessIfNecessary()
         {
@@ -741,7 +699,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 case NotifyCollectionChangedAction.Add:
                     
-                    var model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource };
+                    var model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource, UseSalt = UseSalinity, UseTemperature = UseTemperature };
                     if (lateralSource.Branch is IPipe pipe)
                     {
                         model1DLateralSourceData.Compartment = pipe.SourceCompartmentName != null && pipe.SourceCompartmentName.Equals(lateralSource.Name)

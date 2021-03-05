@@ -461,7 +461,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 yield return initialConditionGroupLayerDataElement;
 
                 yield return model.BoundaryConditions1D;
-                yield return model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>();
+                yield return model.LateralSourcesData;
 
                 var rootModel = GetRootModel(model);
                 if (rootModel == null || rootModel is WaterFlowFMModel || model.GetDataItemByValue(model.Area).LinkedTo == null)
@@ -622,7 +622,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     model.OutputHisFileStore,
                     model.Output1DFileStore,
-                    model.LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>(),
+                    model.LateralSourcesData,
                     model.InitialWaterLevel,
                     ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions),
                     PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions),

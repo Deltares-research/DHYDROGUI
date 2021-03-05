@@ -172,11 +172,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             
             // q's supplied by externals
             AddInflowsDataItem();
-
-            lateralSourceDataItemSet = new DataItemSet(new EventedList<Model1DLateralSourceData>(), WaterFlowFMModelDataSet.LateralSourcesDataTag, DataItemRole.Input, true, WaterFlowFMModelDataSet.LateralSourcesDataTag, typeof(Model1DLateralSourceData))
-            {
-                Owner = this
-            };
         }
 
         private void AddAreaToModel()
@@ -254,38 +249,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
         
-        private void LateralSourceDatasOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var model1DLateralSourceDatas = sender as IEventedList<Model1DLateralSourceData>;
-            if (model1DLateralSourceDatas != null)
-            {
-                var model1DLateralSourceData = e.GetRemovedOrAddedItem() as Model1DLateralSourceData;
-                if (model1DLateralSourceData == null) return;
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        if (LateralSourcesDataItemSet.DataItems.Where(di => di.Value is Model1DLateralSourceData).All(di => di.Value as Model1DLateralSourceData != model1DLateralSourceData))
-                        {
-                            LateralSourcesDataItemSet.DataItems.Add(new DataItem(model1DLateralSourceData));
-                        }
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        var existingDataItem = LateralSourcesDataItemSet.DataItems
-                            .Where(di => di.Value is Model1DLateralSourceData).FirstOrDefault(di =>
-                                di.Value as Model1DLateralSourceData == model1DLateralSourceData);
-                        if (existingDataItem != null)
-                        {
-                            LateralSourcesDataItemSet.DataItems.Remove(existingDataItem);
-                        }
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        LateralSourcesDataItemSet.DataItems.Clear();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
 
         public IList<ModelFeatureCoordinateData<BridgePillar>> BridgePillarsDataModel { get; private set; }
 
@@ -1427,7 +1390,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 yield return model1DBoundaryNodeData;
             }
-            foreach (var model1DLateralSourceData in LateralSourcesDataItemSet.AsEventedList<Model1DLateralSourceData>())
+            foreach (var model1DLateralSourceData in LateralSourcesData)
             {
                 yield return model1DLateralSourceData;
             }

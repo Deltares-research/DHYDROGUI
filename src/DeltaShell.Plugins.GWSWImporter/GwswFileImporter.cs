@@ -174,7 +174,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
             network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
             fmModel.UnSubscribeFromNetwork(network);
-            fmModel.UnSubscribeLateralSourcesData();
             
             var bubbelingEventSetting = EventSettings.BubblingEnabled;
             var branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
@@ -212,8 +211,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                                 var model1DLateralSourceData = new Model1DLateralSourceData
                                 {
                                     Feature = lateralSource,
-                                    UseSalt = false,
-                                    UseTemperature = false
+                                    UseSalt = fmModel.UseSalinity,
+                                    UseTemperature = fmModel.UseTemperature
                                 };
                                 if (lateralSource.Branch is IPipe pipe)
                                 {
@@ -229,9 +228,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
                                 lock (fmModel.LateralSourcesData)
                                     fmModel.LateralSourcesData.Add(model1DLateralSourceData);
-                                lock (fmModel.LateralSourcesDataItemSet.DataItems)
-                                    fmModel.LateralSourcesDataItemSet.DataItems.Add(
-                                        new DataItem(model1DLateralSourceData));
                                 linksOfNwrwDataToLateralSource.AddOrUpdate(nwrwData, lateralSource, (ls, nwrw) => nwrw);
                             }
                         }
@@ -258,7 +254,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 EventSettings.BubblingEnabled = bubbelingEventSetting;
                 fmModel.SubscribeToNetwork(network);
-                fmModel.SubscribeLateralSourcesData();
                 network.EndEdit();
             }
         }
@@ -367,7 +362,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId = new ConcurrentDictionary<string, NwrwData>(rrModel.GetAllModelData().OfType<NwrwData>().ToDictionary(md => md.Name, md => md, StringComparer.InvariantCultureIgnoreCase));
             var lateralSourcesDataByLaterSource = new ConcurrentDictionary<LateralSource, Model1DLateralSourceData>();
             var bubblingEnabled = EventSettings.BubblingEnabled;
-            fmModel.UnSubscribeLateralSourcesData();
             fmModel.UnSubscribeFromNetwork(network);
             try
             {
@@ -437,8 +431,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                             var model1DLateralSourceData = new Model1DLateralSourceData
                             {
                                 Feature = lateralSource,
-                                UseSalt = false,
-                                UseTemperature = false
+                                UseSalt = fmModel.UseSalinity,
+                                UseTemperature = fmModel.UseTemperature
                             };
                             if (lateralSource.Branch is IPipe pipe)
                             {
@@ -453,8 +447,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
                             lock (fmModel.LateralSourcesData)
                                 fmModel.LateralSourcesData.Add(model1DLateralSourceData);
-                            lock (fmModel.LateralSourcesDataItemSet)
-                                fmModel.LateralSourcesDataItemSet.DataItems.Add(new DataItem(model1DLateralSourceData));
                         }
                     }
                     catch (Exception exception)
@@ -470,7 +462,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             finally
             {
                 EventSettings.BubblingEnabled = bubblingEnabled;
-                fmModel.SubscribeLateralSourcesData();
                 fmModel.SubscribeToNetwork(network);
             }
             
@@ -537,32 +528,18 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         private void AddModel1DLateralSourceToFmModel(IHydroNetwork network, WaterFlowFMModel fmModel)
         {
             var lateralSources = network.Channels.SelectMany(c => c.BranchSources).ToArray();
-            try
-            {
-                fmModel.UnSubscribeLateralSourcesData();
-                ParallelHelper.RunActionInParallel(this, lateralSources,
-                    lateralSource =>
+            
+            ParallelHelper.RunActionInParallel(this, lateralSources,
+                lateralSource =>
+                {
+                    if (fmModel.LateralSourcesData.Any(lsd => lsd.Feature == lateralSource)) return;
+                    var model1DLateralSourceData = new Model1DLateralSourceData
+                        {Feature = lateralSource, UseSalt = fmModel.UseSalinity, UseTemperature = fmModel.UseTemperature};
+                    lock (fmModel.LateralSourcesData)
                     {
-                        if (fmModel.LateralSourcesData.Any(lsd => lsd.Feature == lateralSource)) return;
-                        var model1DLateralSourceData = new Model1DLateralSourceData
-                            {Feature = lateralSource, UseSalt = false, UseTemperature = false};
-                        lock (fmModel.LateralSourcesData)
-                        {
-                            fmModel.LateralSourcesData.Add(model1DLateralSourceData);
-                        }
-
-                        lock (fmModel.LateralSourcesDataItemSet)
-                        {
-                            fmModel.LateralSourcesDataItemSet.DataItems.Add(new DataItem(model1DLateralSourceData));
-                        }
-
-
-                    }, "adding model1d lateral sources to fm model");
-            }
-            finally
-            {
-                fmModel.SubscribeLateralSourcesData();
-            }
+                        fmModel.LateralSourcesData.Add(model1DLateralSourceData);
+                    }
+                }, "adding model1d lateral sources to fm model");
         }
         private void AddModel1DBoundaryNodesToFmModel(IHydroNetwork network, WaterFlowFMModel fmModel)
         {

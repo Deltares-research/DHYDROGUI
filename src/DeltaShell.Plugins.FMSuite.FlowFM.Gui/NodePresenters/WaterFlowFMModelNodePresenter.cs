@@ -124,8 +124,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 {
                     ChannelInitialConditionDefinitionsWrapper.GetInstance(model.ChannelInitialConditionDefinitions)
                 }, "1D Initial Conditions", FolderImageType.None),
-                new FmModelTreeShortcut("1D Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditions1D, ShortCutType.FeatureSet, model.BoundaryConditions1D.Except(model.BoundaryConditions1D.Where(m1dbnd => m1dbnd.DataType == Model1DBoundaryNodeDataType.None))),
-                model.LateralSourcesDataItemSet
+                new FmModelTreeShortcut("1D Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditions1D, ShortCutType.FeatureSet, model.BoundaryConditions1D.Where(m1dbnd => m1dbnd.DataType != Model1DBoundaryNodeDataType.None)),
+                new FmModelTreeShortcut("Lateral Sources", FolderIcon, model, model.LateralSourcesData, ShortCutType.FeatureSet, model.LateralSourcesData.Where(m1dlat => m1dlat.DataType != Model1DLateralDataType.FlowRealTime)),
             }, "1D", FolderImageType.None);
 
             yield return new TreeFolder(model, new object[]

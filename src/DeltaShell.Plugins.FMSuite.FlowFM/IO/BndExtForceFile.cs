@@ -1024,7 +1024,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     lateralSourcesData.FirstOrDefault(lsd => lsd.Feature == lateralSource);
                 if (model1DLateralSourceData == null)
                     model1DLateralSourceData = new Model1DLateralSourceData
-                        {Feature = lateralSource, UseSalt = false, UseTemperature = false};
+                        {Feature = lateralSource, UseSalt = (bool)modelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value, UseTemperature = (HeatFluxModelType)modelDefinition.GetModelProperty(KnownProperties.Temperature).Value != HeatFluxModelType.None };
                 if (compartment != null)
                     model1DLateralSourceData.Compartment = compartment;
                 if (forcingFile == "realtime")
