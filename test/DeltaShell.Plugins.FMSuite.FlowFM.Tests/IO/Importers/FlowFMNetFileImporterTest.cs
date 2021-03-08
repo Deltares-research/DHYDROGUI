@@ -77,25 +77,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(result, Is.EqualTo(expectedResult));
         }
 
-        [Test]
-        public void ImportItem_PathNull_ThrowsFileNotFoundException()
+        public static IEnumerable<TestCaseData> GetImportItemParamNullData()
         {
-            // Setup
-            var importer = new FlowFMNetFileImporter();
-
-            // Call | Assert
-            void Call() => importer.ImportItem(null, null);
-            Assert.That(Call, Throws.InstanceOf<FileNotFoundException>());
+            yield return new TestCaseData(null, new object());
+            yield return new TestCaseData("some/non-existent/path.nc", null);
         }
 
         [Test]
-        public void ImportItem_PathDoesNotExist_ThrowsFileNotFoundException()
+        [TestCaseSource(nameof(GetImportItemParamNullData))]
+        public void ImportItem_PathNull_ThrowsFileNotFoundException(string path, object target)
         {
             // Setup
             var importer = new FlowFMNetFileImporter();
 
             // Call | Assert
-            void Call() => importer.ImportItem("some/non-existent/path", null);
+            void Call() => importer.ImportItem(path, target);
             Assert.That(Call, Throws.InstanceOf<FileNotFoundException>());
         }
 

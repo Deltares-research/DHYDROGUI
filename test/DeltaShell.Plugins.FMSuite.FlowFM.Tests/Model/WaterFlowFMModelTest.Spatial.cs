@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [Category(TestCategory.Slow)]
         [TestCase(faces)]
         [TestCase(facesMeanLevFromNodes)]
-        public void GivenAWaterFlowFMModelWithAGrid_WhenTheBedLevelTypeIsChangedAndTheGridReplaced_ThenTheBedLevelLocationAreCorrectly(string bedlevType)
+        public void GivenAWaterFlowFMModelWithAGrid_WhenTheBedLevelTypeIsChangedAndTheGridReplaced_ThenTheBedLevelLocationAreCorrectlyUpdatedToTheValuesOnTheNewGrid(string bedlevType)
         {
             // Given
             using (var tempDir = new TemporaryDirectory())
