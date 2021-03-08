@@ -14,7 +14,7 @@ namespace DelftTools.Hydro.Tests.Structures.WeirFormula
         {
             var formula = new FreeFormWeirFormula();
             Assert.AreEqual(2,formula.Y.Count());
-            Assert.That(formula.DischargeCoefficient, Is.EqualTo(0));
+            Assert.That(formula.DischargeCoefficient, Is.EqualTo(1.0));
         }
 
 

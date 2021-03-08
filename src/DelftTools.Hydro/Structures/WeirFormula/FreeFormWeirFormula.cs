@@ -22,6 +22,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         private void Initialize()
         {
             SetDefaultShape();
+            DischargeCoefficient = 1.0;
         }
 
         /// <summary>
