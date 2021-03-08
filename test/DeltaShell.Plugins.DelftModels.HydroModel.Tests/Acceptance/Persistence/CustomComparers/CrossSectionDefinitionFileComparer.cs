@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence.CustomComparers
 {
@@ -36,7 +37,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             errorMessage = string.Empty;
 
-            string[] coordinatesLineIdentifiers = new[] { "    xCoordinates", "    yCoordinates", "    zCoordinates" };
+            string[] coordinatesLineIdentifiers = new[]
+            {
+                DefinitionPropertySettings.XCoors.Key, 
+                DefinitionPropertySettings.YCoors.Key,
+                DefinitionPropertySettings.ZCoors.Key
+            };
 
             bool identical = CompareNonCoordinateLines(filePathExpected, 
                                                   filePathActual, 

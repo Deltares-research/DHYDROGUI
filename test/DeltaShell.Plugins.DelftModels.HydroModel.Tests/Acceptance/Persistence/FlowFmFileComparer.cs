@@ -7,9 +7,11 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence.CustomComparers;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
@@ -94,9 +96,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 SortScrambledFiles(expectedFlowFmFile, actualFlowFmFile);
 
                 string errorMessage = string.Empty;
-                
+
                 // crsdef.ini requires custom comparison because of rounding errors for coordinates when saving and loading
-                if (Path.GetFileNameWithoutExtension(expectedFlowFmFile).Equals("crsdef", StringComparison.InvariantCultureIgnoreCase))
+                if (IsCrossSectionDefinitionFile(actualFlowFmFile))
                 {
                     identical = CrossSectionDefinitionFileComparer.CompareFiles(expectedFlowFmFile, actualFlowFmFile, out errorMessage) && identical;
                 }
@@ -116,7 +118,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 Assert.Fail(overallErrorMessage);
             }
         }
-        
+
+        private static bool IsCrossSectionDefinitionFile(string filePath)
+        {
+            IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
+            return categories.Any(c => c.ValidGeneralRegion(GeneralRegion.CrossSectionDefinitionsMajorVersion,
+                                                            GeneralRegion.CrossSectionDefinitionsMinorVersion,
+                                                            GeneralRegion.FileTypeName.CrossSectionDefinition));
+        }
+
         private static void SortScrambledFiles(string expectedFlowFmFile, string actualFlowFmFile)
         {
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(expectedFlowFmFile);
