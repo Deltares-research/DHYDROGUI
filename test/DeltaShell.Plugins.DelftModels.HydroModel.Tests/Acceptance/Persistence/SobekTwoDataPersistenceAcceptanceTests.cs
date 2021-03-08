@@ -28,6 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             {
                 yield return new TestCaseData("DarEsSalaam", "14", 177, 0, true).SetName("DarEsSalaam");
                 yield return new TestCaseData("Raam1D", "8", 1477, 0, true).SetName("Raam1D");
+                yield return new TestCaseData("Eindhoven", "10", 0, 0, true).SetName("Eindhoven"); // #todo: fill in expected data
             }
         }
 
