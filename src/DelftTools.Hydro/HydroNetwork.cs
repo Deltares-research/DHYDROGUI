@@ -307,7 +307,7 @@ namespace DelftTools.Hydro
         public virtual IEnumerable<IObservationPoint> ObservationPoints { get; protected set; }
 
         /// <inheritdoc cref="IHydroNetwork"/>
-        public T GetBranchFeatureByName<T>(string featureName) where T : IBranchFeature
+        public virtual T GetBranchFeatureByName<T>(string featureName) where T : IBranchFeature
         {
             if (branchFeatureNameCache == null)
             {
