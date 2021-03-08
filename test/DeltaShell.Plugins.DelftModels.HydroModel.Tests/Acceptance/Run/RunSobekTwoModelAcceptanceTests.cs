@@ -29,10 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             get
             {
                 yield return new TestCaseData("DarEsSalaam", "14", 177, 0, true).SetName("DarEsSalaam");
-                yield return new TestCaseData("Jakarta", "3", 4148, 0, false).SetName("Jakarta");
-                yield return new TestCaseData("Tholen", "1", 0, 0, false).SetName("Tholen");       // todo: fill in # of expected branch features
-                yield return new TestCaseData("HogeRaam", "9", 1477, 0, true).SetName("HogeRaam"); // todo: fill in # of expected catchments
-
+                yield return new TestCaseData("Raam1D", "8", 1477, 0, true).SetName("Raam1D");
             }
         }
 
