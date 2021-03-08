@@ -32,10 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             {
                 yield return new TestCaseData("KorteWoerden", 84, 72).SetName("KorteWoerden");
                 yield return new TestCaseData("DidactischStelsel", 108, 74).SetName("DidactischStelsel");
-                yield return new TestCaseData("Enschede", 0, 0).SetName("Enschede");
-                yield return new TestCaseData("Groesb2", 719, 675).SetName("Groesb2");
                 yield return new TestCaseData("Pudong", 4974, 4936).SetName("Pudong");
-                yield return new TestCaseData("Leiden", 8454, 7978).SetName("Leiden");
             }
         }
 
