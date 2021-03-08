@@ -69,7 +69,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             var conditionsWithoutBranch = flowInitialConditions.Where(c => IsUnusedCondition(c, branchesDictionary)).ToArray();
             string unfoundConditions = string.Join(Environment.NewLine, conditionsWithoutBranch.Select(c => $"(branch \"{c.BranchID}\", cond. id \"{c.ID}\")"));
-            Log.Warn($"For the following initial conditions the channels where not found; skipped {Environment.NewLine + unfoundConditions}");
+
+            if (unfoundConditions.Any())
+            {
+                Log.Warn($"For the following initial conditions the channels where not found; skipped {Environment.NewLine + unfoundConditions}");
+            }
 
             conditionsWithoutBranch.ForEach(c => flowInitialConditions.Remove(c));
         }

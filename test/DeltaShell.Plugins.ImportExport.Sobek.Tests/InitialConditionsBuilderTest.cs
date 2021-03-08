@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Action action = () => builder.Build();
 
             // Then
-            TestHelper.AssertLogMessageIsGenerated(action, $"Cannot import {initialConditionId}. Only WaterDepth and WaterLevel initial conditions are currently supported.");
+            TestHelper.AssertLogMessageIsGenerated(action, $"While importing initial conditions we encountered the following 1 warnings: \r\nCannot import {initialConditionId}. Only WaterDepth and WaterLevel initial conditions are currently supported.");
             Assert.That(builder.ChannelInitialConditionDefinitionsDict, Is.Not.Null);
             Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(0));
         }
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Action action = () => builder.Build();
 
             // Then
-            TestHelper.AssertLogMessageIsGenerated(action, $"Channel {nonExistingName} for initial condition {initialConditionId} not found; skipped");
+            TestHelper.AssertLogMessageIsGenerated(action, $"For the following initial conditions the channels where not found; skipped \r\n(branch \"{nonExistingName}\", cond. id \"{initialConditionId}\")");
             Assert.That(builder.ChannelInitialConditionDefinitionsDict, Is.Not.Null);
             Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(0));
         }
@@ -255,10 +255,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var network = new HydroNetwork();
             network.Branches.AddRange(new[]
             {
-                new Channel(){Name="Branch1"},
-                new Channel(){Name="Branch2"},
-                new Channel(){Name="Branch3"},
-                new Channel(){Name="Branch4"},
+                new Channel{Name="Branch1"},
+                new Channel{Name="Branch2"},
+                new Channel{Name="Branch3"},
+                new Channel{Name="Branch4"},
             });
             Assert.That(network.Branches.Count, Is.EqualTo(4));
 
@@ -269,10 +269,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             // Then
             var expectedLogMessages = new[]
             {
-                $"Initial condition definition for '{invalidBranches[0]}' does match the global quantity {globalQuantity}. Skipping import.",
-                $"Initial condition definition for '{invalidBranches[1]}' does match the global quantity {globalQuantity}. Skipping import.",
+                $"Initial condition definition does match the global quantity. Skipping import.\r\ndefinition \"{invalidBranches[0]}\" - global \"{globalQuantity}\"\r\ndefinition \"{invalidBranches[1]}\" - global \"{globalQuantity}\""
             };
             TestHelper.AssertLogMessagesAreGenerated(action, expectedLogMessages);
+            
             Assert.That(builder.ChannelInitialConditionDefinitionsDict.Count, Is.EqualTo(2));
             foreach (var channelInitialConditionDefinition in builder.ChannelInitialConditionDefinitionsDict.Values)
             {
