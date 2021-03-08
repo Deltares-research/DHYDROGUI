@@ -386,7 +386,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             if (!sobekFriction.GlobalBedFrictionList.Any())
             {
-                log.ErrorFormat("No global friction available; set to to default {0}, {1}", DefaultRoughnessType, DefaultRoughnessValue);
+                log.WarnFormat("No global friction available; set to to default {0}, {1}", DefaultRoughnessType, DefaultRoughnessValue);
 
                 sectionMain.SetDefaults(DefaultRoughnessType, DefaultRoughnessValue);
                 sectionFloodplain1.SetDefaults(DefaultRoughnessType, DefaultRoughnessValue);
