@@ -77,7 +77,7 @@
     <Compile Include="DimrApi.cs" />
     <Compile Include="DimrApiDataSet.cs" />
     <Compile Include="DimrApiFactory.cs" />
-    <Compile Include="DimrApiWrapper.cs" />
+    <Compile Include="DimrDll.cs" />
     <Compile Include="DimrErrorCodeException.cs" />
     <Compile Include="DimrRunHelper.cs" />
     <Compile Include="DimrRunner.cs" />
