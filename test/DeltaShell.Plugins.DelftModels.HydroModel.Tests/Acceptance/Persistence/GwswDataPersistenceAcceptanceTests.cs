@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 yield return new TestCaseData("KorteWoerden", 84, 72).SetName("KorteWoerden");
                 yield return new TestCaseData("DidactischStelsel", 108, 74).SetName("DidactischStelsel");
                 yield return new TestCaseData("Pudong", 4974, 4936).SetName("Pudong");
+                yield return new TestCaseData("Eindhoven", 16529, 16131).SetName("Eindhoven");
             }
         }
 
