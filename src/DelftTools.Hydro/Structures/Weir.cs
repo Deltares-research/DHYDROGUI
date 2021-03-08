@@ -35,7 +35,6 @@ namespace DelftTools.Hydro.Structures
             Name = name;
             CrestWidth = 5;
             CrestLevel = 1;
-            DischargeCoefficient = 1;
             OffsetY = 0;
             FlowDirection = FlowDirection.Both;
             CrestShape = CrestShape.Sharp;
@@ -132,31 +131,6 @@ namespace DelftTools.Hydro.Structures
                     crestLevel = value;
                 }
                 OnCrestLevelChanged();
-            }
-        }
-
-        [FeatureAttribute(Order = 7)]
-        [DisplayName("Discharge coefficient")]
-        public virtual double DischargeCoefficient
-        {
-            get
-            {
-                if (WeirFormula is FreeFormWeirFormula)
-                {
-                    return (WeirFormula as FreeFormWeirFormula).DischargeCoefficient;
-                }
-                return dischargeCoefficient;
-            }
-            set
-            {
-                if (WeirFormula is FreeFormWeirFormula)
-                {
-                    (WeirFormula as FreeFormWeirFormula).DischargeCoefficient = value;
-                }
-                else
-                {
-                    dischargeCoefficient = value;
-                }
             }
         }
 

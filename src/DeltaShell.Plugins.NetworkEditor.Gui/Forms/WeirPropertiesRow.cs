@@ -100,11 +100,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
         {
             get
             {
-                return weir.DischargeCoefficient.ToString("0.00", CultureInfo.CurrentCulture);
+                return FreeFormWeirFormula.DischargeCoefficient.ToString("0.00", CultureInfo.CurrentCulture);
             }
             set
             {
-                weir.DischargeCoefficient = double.Parse(value, CultureInfo.CurrentCulture);
+                FreeFormWeirFormula.DischargeCoefficient = double.Parse(value, CultureInfo.CurrentCulture);
             }
         }
         
