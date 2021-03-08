@@ -854,15 +854,11 @@ src/DeltaShell.NGHS.IO/Grid/UGridFileHelper.cs -text
 src/DeltaShell.NGHS.IO/Helpers/BranchChainageExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ConfigurationSetting.cs -text
 src/DeltaShell.NGHS.IO/Helpers/DelftIniCategory.cs -text
-src/DeltaShell.NGHS.IO/Helpers/DoubleExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/FileWritingUtils.cs -text
 src/DeltaShell.NGHS.IO/Helpers/IoHelper.cs -text
-src/DeltaShell.NGHS.IO/Helpers/ListExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ModelDefinitionsRegion.cs -text
 src/DeltaShell.NGHS.IO/Helpers/Sobek2ModelImporters.cs -text
 src/DeltaShell.NGHS.IO/Helpers/StringArrayExtensions.cs -text
-src/DeltaShell.NGHS.IO/Helpers/StringExtensions.cs -text
-src/DeltaShell.NGHS.IO/Helpers/ToDictionaryExtensions.cs -text
 src/DeltaShell.NGHS.IO/IFeature2DFileBase.cs -text
 src/DeltaShell.NGHS.IO/Kernels/x64/io_netcdf.dll -text
 src/DeltaShell.NGHS.IO/Kernels/x64/libifcoremd.dll -text
@@ -885,6 +881,13 @@ src/DeltaShell.NGHS.IO/Steerable.cs -text
 src/DeltaShell.NGHS.IO/TimFile.cs -text
 src/DeltaShell.NGHS.IO/UML/OverView.cd -text
 src/DeltaShell.NGHS.IO/packages.config -text
+src/DeltaShell.NGHS.Utils/DeltaShell.NGHS.Utils.csproj -text
+src/DeltaShell.NGHS.Utils/DoubleExtensions.cs -text
+src/DeltaShell.NGHS.Utils/ListExtensions.cs -text
+src/DeltaShell.NGHS.Utils/Properties/AssemblyInfo.cs -text
+src/DeltaShell.NGHS.Utils/StringExtensions.cs -text
+src/DeltaShell.NGHS.Utils/ToDictionaryExtensions.cs -text
+src/DeltaShell.NGHS.Utils/packages.config -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/ActivityShapeBase.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/CompositeActivityShape.cs -text
@@ -2463,6 +2466,7 @@ src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SelectSobekPartsWizardPage.resx
 src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SobekModelSelectFileWizardPage.Designer.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SobekModelSelectFileWizardPage.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SobekModelSelectFileWizardPage.resx -text
+src/DeltaShell.Plugins.ImportExport.Sobek/app.config -text
 src/DeltaShell.Plugins.ImportExport.Sobek/packages.config -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddInterpolatedCrossSectionCommand.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Commands/AddNewBranchCommand.cs -text
@@ -3620,6 +3624,11 @@ test/DeltaShell.NGHS.TestUtils/Properties/AssemblyInfo.cs -text
 test/DeltaShell.NGHS.TestUtils/RandomExtensions.cs -text
 test/DeltaShell.NGHS.TestUtils/Repeat.cs -text
 test/DeltaShell.NGHS.TestUtils/packages.config -text
+test/DeltaShell.NGHS.Utils.Test/App.config -text
+test/DeltaShell.NGHS.Utils.Test/DeltaShell.NGHS.Utils.Test.csproj -text
+test/DeltaShell.NGHS.Utils.Test/Properties/AssemblyInfo.cs -text
+test/DeltaShell.NGHS.Utils.Test/ToDictionaryExtensionsTest.cs -text
+test/DeltaShell.NGHS.Utils.Test/packages.config -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/AcceptanceModelTestHelper.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/FileComparerHelper.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/GwswAcceptanceModelTestHelper.cs -text
@@ -9775,7 +9784,6 @@ test/DeltaShell.Plugins.ImportExport.Sobek.Tests/SobekWindImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/StringUtilsTests.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/TestClassSetup.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/TimeSeriesHelperTests.cs -text
-test/DeltaShell.Plugins.ImportExport.Sobek.Tests/ToDictionaryExtensionsTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/WaterFlowModel1DBoundaryNodeDataBuilderTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/WeirBuilderTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/WeirNamerTest.cs -text

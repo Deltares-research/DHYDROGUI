@@ -10,7 +10,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Editing;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var crossSectionLookup = HydroNetwork.CrossSections.ToDictionary(cs => cs.Name);
             var defPath = GetFilePath(SobekFileNames.SobekProfileDefinitionsFileName);
             var crossSectionDefinitionsLookup = crossSectionDefinitionReader.Read(defPath)
-                                                        .ToDictionaryWithDuplicateWarnings(defPath, d => d.ID);
+                                                        .ToDictionaryWithDuplicateLogging(defPath, d => d.ID);
 
             if (mappings.Count > 0)
             {
@@ -280,7 +280,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var locationIdByDefinitionId = mappings
                                                 .GroupBy(m => m.DefinitionId)
                                                 .Where(m => m.Count() == 1)
-                                                .ToDictionaryWithDuplicateWarnings("sobek shared cross section mapping shared once", 
+                                                .ToDictionaryWithDuplicateLogging("sobek shared cross section mapping shared once", 
                                                     m => m.Key, m => m.First().LocationId);
 
 

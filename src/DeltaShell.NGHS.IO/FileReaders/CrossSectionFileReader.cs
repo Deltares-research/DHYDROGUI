@@ -10,6 +10,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
@@ -45,7 +46,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             var assignedDefinitions = new List<ICrossSectionDefinition>();
             var fileReadingExceptions = new List<FileReadingException>();
-            var branchLookup = hydroNetwork.Branches.ToDictionaryWithDuplicateWarnings("Branches", b => b.Name.ToLower());
+            var branchLookup = hydroNetwork.Branches.ToDictionaryWithDuplicateLogging("Branches", b => b.Name.ToLower());
 
             // add shared cross-section definitions to network1
             hydroNetwork.SharedCrossSectionDefinitions.AddRange(sharedDefinitionNameLookup.Values);

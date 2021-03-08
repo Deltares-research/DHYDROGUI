@@ -2,7 +2,7 @@
 using System.Linq;
 using DelftTools.Utils.Reflection;
 
-namespace DeltaShell.NGHS.IO.Helpers
+namespace DeltaShell.NGHS.Utils
 {
     public static class StringExtensions
     {

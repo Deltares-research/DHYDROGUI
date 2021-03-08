@@ -2,6 +2,7 @@
 using System.Globalization;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Location

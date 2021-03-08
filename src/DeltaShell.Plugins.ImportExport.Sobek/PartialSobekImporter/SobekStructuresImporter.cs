@@ -4,7 +4,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Networks;
@@ -104,7 +104,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var filePath = GetFilePath(SobekFileNames.SobekProfileDefinitionsFileName);
             return new CrossSectionDefinitionReader()
                 .Read(filePath)
-                .ToDictionaryWithDuplicateWarnings(filePath, csd => csd.ID);
+                .ToDictionaryWithDuplicateLogging(filePath, csd => csd.ID);
         }
 
         private IList<SobekValveData> GetSobekValveData()

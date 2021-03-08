@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Sobek.Readers;

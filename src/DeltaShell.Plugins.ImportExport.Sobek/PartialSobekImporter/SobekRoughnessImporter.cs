@@ -10,7 +10,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -784,7 +784,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (sobekCrossSectionDefinitions == null)
                     {
                         var crossSectionDefinitionReader = new CrossSectionDefinitionReader();
-                        sobekCrossSectionDefinitions = crossSectionDefinitionReader.Read(crossSectionDefinitionReaderPath).ToDictionaryWithDuplicateWarnings(crossSectionDefinitionReaderPath, csDef => csDef.ID, csDef => csDef);
+                        sobekCrossSectionDefinitions = crossSectionDefinitionReader.Read(crossSectionDefinitionReaderPath).ToDictionaryWithDuplicateLogging(crossSectionDefinitionReaderPath, csDef => csDef.ID, csDef => csDef);
                     }
                     SobekCrossSectionDefinition sobekCrossSectionDefinition = null;
 

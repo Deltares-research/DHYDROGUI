@@ -131,13 +131,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -249,6 +247,7 @@
     <Compile Include="WaterFlowModel1DBoundaryNodeDataBuilder.cs" />
     <Compile Include="WeirBuilder.cs" />
     <Compile Include="WeirNamer.cs" />
+    <None Include="app.config" />
     <None Include="GenerateParserFiles.cmd" />
     <None Include="Scripts\Libraries\Sobek2Functions.py" />
     <None Include="Uml\SobekImportExportOverview.cd" />
@@ -272,6 +271,11 @@
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj">
+      <Project>{0ae5102c-0560-4a9c-8197-a6d8ca99b5de}</Project>
+      <Name>DeltaShell.NGHS.Utils</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
@@ -351,7 +355,6 @@
     <None Include="packages.config" />
     <None Include="Resources\sobek.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

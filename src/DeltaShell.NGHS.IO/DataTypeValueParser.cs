@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 using log4net;
 
 namespace DeltaShell.NGHS.IO

@@ -10,6 +10,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -459,19 +460,19 @@ namespace DelftTools.Hydro
         {
             branchFeatureNameCache = new Dictionary<Type, IDictionary<string, IBranchFeature>>
             {
-                [typeof(IOrifice)] = Orifices.ToDictionary(o => o.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(ICrossSection)] = CrossSections.ToDictionary(c => c.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IPump)] = Pumps.ToDictionary(p => p.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(ICulvert)] = Culverts.ToDictionary(c => c.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IBridge)] = Bridges.ToDictionary(b => b.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IWeir)] = Weirs.ToDictionary(w => w.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IGate)] = Gates.ToDictionary(g => g.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(ILateralSource)] = LateralSources.ToDictionary(l => l.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IRetention)] = Retentions.ToDictionary(r => r.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IObservationPoint)] = ObservationPoints.ToDictionary(o => o.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IExtraResistance)] = ExtraResistances.ToDictionary(e => e.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IGully)] = Gullies.ToDictionary(g => g.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(ICompositeBranchStructure)] = CompositeBranchStructures.ToDictionary(c => c.Name.ToLower(), w => w as IBranchFeature)
+                [typeof(IOrifice)] = Orifices.ToDictionaryWithDuplicateLogging("Orifices", o => o.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(ICrossSection)] = CrossSections.ToDictionaryWithDuplicateLogging("CrossSections", c => c.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IPump)] = Pumps.ToDictionaryWithDuplicateLogging("Pumps", p => p.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(ICulvert)] = Culverts.ToDictionaryWithDuplicateLogging("Culverts", c => c.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IBridge)] = Bridges.ToDictionaryWithDuplicateLogging("Bridges", b => b.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IWeir)] = Weirs.ToDictionaryWithDuplicateLogging("Weirs", w => w.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IGate)] = Gates.ToDictionaryWithDuplicateLogging("Gates", g => g.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(ILateralSource)] = LateralSources.ToDictionaryWithDuplicateLogging("LateralSources", l => l.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IRetention)] = Retentions.ToDictionaryWithDuplicateLogging("Retentions", r => r.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IObservationPoint)] = ObservationPoints.ToDictionaryWithDuplicateLogging("ObservationPoints", o => o.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IExtraResistance)] = ExtraResistances.ToDictionaryWithDuplicateLogging("ExtraResistances", e => e.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(IGully)] = Gullies.ToDictionaryWithDuplicateLogging("Gullies", g => g.Name.ToLower(), w => w as IBranchFeature),
+                [typeof(ICompositeBranchStructure)] = CompositeBranchStructures.ToDictionaryWithDuplicateLogging("CompositeBranchStructures", c => c.Name.ToLower(), w => w as IBranchFeature)
             };
         }
     }

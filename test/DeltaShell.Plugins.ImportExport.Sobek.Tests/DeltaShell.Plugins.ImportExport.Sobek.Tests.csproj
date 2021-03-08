@@ -216,7 +216,6 @@
     <Compile Include="SobekWindImporterTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="TimeSeriesHelperTests.cs" />
-    <Compile Include="ToDictionaryExtensionsTest.cs" />
     <Compile Include="WaterFlowModel1DBoundaryNodeDataBuilderTest.cs" />
     <Compile Include="WeirNamerTest.cs" />
     <Compile Include="PumpBuilderTest.cs" />

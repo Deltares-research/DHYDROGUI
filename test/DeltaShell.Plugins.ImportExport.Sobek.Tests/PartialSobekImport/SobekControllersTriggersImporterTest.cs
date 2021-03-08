@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using DelftTools.TestUtils;
+﻿using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -25,11 +24,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             hydroModel.Activities.Add(realTimeControlModel);
             hydroModel.Activities.Add(waterFlowFmModel);
 
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekStructuresImporter(), new SobekMeasurementStationsImporter(), new SobekControllersTriggersImporter() });
+            var partialSobekImporters = new IPartialSobekImporter[]
+            {
+                new SobekBranchesImporter(),
+                new SobekStructuresImporter(),
+                new SobekMeasurementStationsImporter(),
+                new SobekControllersTriggersImporter()
+            };
 
-            importer.Import();
+            PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, hydroModel, partialSobekImporters).Import();
 
-            Assert.AreEqual(14, realTimeControlModel.ControlGroups.Count());
+            Assert.AreEqual(14, realTimeControlModel.ControlGroups.Count);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using GeoAPI.Extensions.Networks;
+﻿using DeltaShell.NGHS.Utils;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {

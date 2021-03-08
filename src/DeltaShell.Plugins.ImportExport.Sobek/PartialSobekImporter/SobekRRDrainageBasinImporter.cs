@@ -4,7 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;

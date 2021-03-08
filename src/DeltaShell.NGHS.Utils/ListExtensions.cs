@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DeltaShell.NGHS.IO.Helpers
+namespace DeltaShell.NGHS.Utils
 {
     public static class ListExtensions
     {

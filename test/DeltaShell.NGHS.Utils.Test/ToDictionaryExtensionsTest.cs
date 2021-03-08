@@ -1,8 +1,7 @@
 using System;
-using DeltaShell.NGHS.IO.Helpers;
 using NUnit.Framework;
 
-namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
+namespace DeltaShell.NGHS.Utils.Test
 {
     [TestFixture]
     public class ToDictionaryExtensionsTest

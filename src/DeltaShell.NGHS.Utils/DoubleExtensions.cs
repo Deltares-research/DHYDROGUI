@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace DeltaShell.NGHS.IO.Helpers
+namespace DeltaShell.NGHS.Utils
 {
-    internal static class DoubleExtensions
+    public static class DoubleExtensions
     {
         private const int DefaultNumberOfDigits = 6;
 
@@ -16,7 +16,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         /// <param name="number">Number to truncate.</param>
         /// <param name="digits">Number of digits to truncate the double to.</param>
         /// <returns>Truncated double</returns>
-        internal static double TruncateByDigits(this double number, int digits = DefaultNumberOfDigits)
+        public static double TruncateByDigits(this double number, int digits = DefaultNumberOfDigits)
         {
             var truncationNumber = Math.Pow(10, digits);
             return Math.Floor(number * truncationNumber) / truncationNumber;

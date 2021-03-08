@@ -6,7 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;

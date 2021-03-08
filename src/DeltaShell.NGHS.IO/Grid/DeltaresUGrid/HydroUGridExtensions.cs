@@ -11,6 +11,7 @@ using DelftTools.Utils.Collections.Generic;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
