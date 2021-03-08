@@ -87,10 +87,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             Ensure.NotNull(coverage, nameof(coverage));
             Ensure.NotNull(grid, nameof(grid));
 
-            int GetVertexCount(UnstructuredGrid ug) => ug.Vertices.Count;
             IEnumerable<double> GetZValues() => grid.Vertices.Select(v => v.Z);
 
-            LoadBathymetry(coverage, grid, noDataValue, GetVertexCount, GetZValues);
+            LoadBathymetry(coverage, grid, noDataValue, GetZValues);
         }
 
         /// <summary>
@@ -124,39 +123,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             Ensure.NotNull(grid, nameof(grid));
             Ensure.NotNullOrEmpty(netFilePath, nameof(netFilePath));
 
-            int GetCellCount(UnstructuredGrid ug) => ug.Cells.Count;
-
             // Note that at the time of writing, there is no distinction between reading z-values
             // with Faces or FacesMeanLevFromNodes, so we default to Faces.
             IEnumerable<double> GetZValues() => 
                 UnstructuredGridFileHelper.ReadZValues(netFilePath, UnstructuredGridFileHelper.BedLevelLocation.Faces);
 
-            LoadBathymetry(coverage, grid, noDataValue, GetCellCount, GetZValues);
+            LoadBathymetry(coverage, grid, noDataValue, GetZValues);
         }
 
         private static void LoadBathymetry(UnstructuredGridCoverage coverage, 
                                            UnstructuredGrid grid, 
                                            double noDataValue,
-                                           Func<UnstructuredGrid, int> getCountFunc, 
                                            Func<IEnumerable<double>> getZValues)
         {
             coverage.BeginEdit(new DefaultEditAction("Starting import of bed levels"));
             
-            int count = getCountFunc(grid);
+            int count = coverage.GetCoordinatesForGrid(grid).Count();
 
             IVariable locationIndexVariable = coverage.Arguments.Last();
             locationIndexVariable.Values.Clear();
-            if (count > 0)
-            {
-                FunctionHelper.SetValuesRaw(locationIndexVariable, Enumerable.Range(0, count));
-            }
 
             IVariable component = coverage.Components[0];
             component.Values.Clear();
             component.NoDataValue = noDataValue;
-            
+
             if (count > 0)
             {
+                FunctionHelper.SetValuesRaw(locationIndexVariable, Enumerable.Range(0, count));
                 FunctionHelper.SetValuesRaw(component, getZValues());
             }
 
