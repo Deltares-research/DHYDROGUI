@@ -25,6 +25,7 @@ namespace DelftTools.Hydro.Validators
                         ValidateCulverts(target),
                         ValidateBranches(target),
                         ValidateCrossSections(target),
+                        ValidateRetentions(target),
                         StructuresValidator.Validate(target),
                         ExtraResistanceValidator.Validate(target.Structures.Where(s => s is IExtraResistance)),
                     });
@@ -39,6 +40,21 @@ namespace DelftTools.Hydro.Validators
             }
             return new ValidationReport("Network", new List<ValidationIssue>(),
                                         subReports);
+        }
+
+        private static ValidationReport ValidateRetentions(IHydroNetwork network)
+        {
+            var issues = new List<ValidationIssue>();
+            foreach (var retention in network.Retentions)
+            {
+                if (retention.StorageArea == 0)
+                {
+                    issues.Add(new ValidationIssue(retention, 
+                                                   ValidationSeverity.Error, 
+                                                   string.Format("The values in the storage graph of retention {0} should be greater than zero.", retention.Name)));
+                }
+            }
+            return new ValidationReport("Retentions", issues);
         }
 
         private static ValidationReport ValidateCulverts(IHydroNetwork target)
