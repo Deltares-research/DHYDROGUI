@@ -309,6 +309,7 @@
     <Compile Include="IO\RealTimeControlXmlWriterTest.cs" />
     <Compile Include="Legacy\RtcLegacyLoader36Test.cs" />
     <Compile Include="Legacy\RtcLegacyLoader37Test.cs" />
+    <Compile Include="NHibernateRealTimeControlIntegrationTests.cs" />
     <Compile Include="NodePresenters\ControlGroupCollectionNodePresenterTest.cs" />
     <Compile Include="NodePresenters\ControlGroupNodePresenterTest.cs" />
     <Compile Include="NodePresenters\RealTimeControlModelNodePresenterTest.cs" />

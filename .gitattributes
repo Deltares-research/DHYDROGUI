@@ -4654,6 +4654,7 @@ test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlXmlR
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/IO/RealTimeControlXmlWriterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/Legacy/RtcLegacyLoader36Test.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/Legacy/RtcLegacyLoader37Test.cs -text
+test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/NHibernateRealTimeControlIntegrationTests.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/NodePresenters/ControlGroupCollectionNodePresenterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/NodePresenters/ControlGroupNodePresenterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/NodePresenters/RealTimeControlModelNodePresenterTest.cs -text
