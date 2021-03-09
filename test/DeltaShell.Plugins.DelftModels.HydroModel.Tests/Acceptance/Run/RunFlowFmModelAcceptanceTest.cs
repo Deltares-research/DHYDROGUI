@@ -103,11 +103,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         {
             var importer = new WaterFlowFMFileImporter(()=> TestHelper.GetTestWorkingDirectory());
             string pathToMduFile = Path.Combine(acceptanceModelsDirectory, acceptanceModelName, acceptanceModelFileName+".mdu");
+
+            // [Precondition]
+            Assert.That(File.Exists(pathToMduFile), $"[Precondition failure] Cannot find the specified mdu file: {pathToMduFile}.");
+
             WaterFlowFMModel model = null;
             IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(() => model = importer.ImportItem(pathToMduFile) as WaterFlowFMModel, Level.Error);
 
             Assert.IsNotNull(model);
             gui.Application.Project.RootFolder.Add(model);
+
             // [Precondition]
             Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the FlowFM model:{Environment.NewLine}{errorMessages}");
 
