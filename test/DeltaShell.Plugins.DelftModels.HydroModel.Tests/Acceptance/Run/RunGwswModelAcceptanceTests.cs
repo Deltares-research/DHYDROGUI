@@ -97,6 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 gui.Application.SaveProjectAs(Path.Combine(tempDirectory, "SavedModel"));
 
                 // [Then]
+                Console.WriteLine("Comparing output");
                 CompareResultDataWithReferenceData(acceptanceModelName);
             }
         }

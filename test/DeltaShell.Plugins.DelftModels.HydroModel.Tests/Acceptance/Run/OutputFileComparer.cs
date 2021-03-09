@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Web.Configuration;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 {
@@ -32,6 +34,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 
             foreach (string fileName in allFileNames)
             {
+                if (IgnoreFile(fileName))
+                {
+                    continue;
+                }
+                
                 string[] linesToIgnore = NetCdfLinesToIgnore;
                 
                 string expectedOutputFile = expectedOutputFileNames.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
@@ -49,8 +56,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 FileComparerHelper.DumpNetCdfToTextFile(expectedOutputFile, expectedOutputFile);
                 FileComparerHelper.DumpNetCdfToTextFile(actualOutputFile, actualOutputFile);
                 
-                identical = FileComparerHelper.CompareFiles(expectedOutputFile, actualOutputFile, linesToIgnore, out var errorMessage) && identical;
+                identical = FileComparerHelper.CompareFiles(expectedOutputFile, actualOutputFile, linesToIgnore, out string errorMessage) && identical;
+
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    overallErrorMessage += $"{errorMessage}{FileComparerHelper.VerticalLine}";
+                }
             }
+
+            if (!identical)
+            {
+                Assert.Fail(overallErrorMessage);
+            }
+        }
+
+        private static bool IgnoreFile(string fileName)
+        {
+            return fileName.EndsWith(".dia")
+                   || fileName.EndsWith(".xyz");
         }
     }
 }
