@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -248,13 +249,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 app.OpenProject(filePath); // save to initialize file repository..
                 /*Prevent overwritting existent data used for other tests */
+                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
+                loadedModel.WorkingDirectoryPathFunc = () => TestHelper.GetTestWorkingDirectory(TestHelper.GetCurrentMethodName());
                 if (saving)
                 {
                     app.SaveProjectAs(newSavePath);
                 }
-                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
-                loadedModel.WorkingDirectoryPathFunc = () => TestHelper.GetTestWorkingDirectory(TestHelper.GetCurrentMethodName());
-
+                
                 try
                 {
                     ActivityRunner.RunActivity(loadedModel);
