@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override string FileFormatVersion
         {
-            get { return "1.1.0.0"; }
+            get { return "1.4.0.0"; }
         }
 
         public override IApplication Application

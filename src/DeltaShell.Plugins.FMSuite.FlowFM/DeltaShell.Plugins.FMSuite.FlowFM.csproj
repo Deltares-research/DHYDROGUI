@@ -126,6 +126,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
@@ -154,6 +155,7 @@
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="Grid\UnstructuredGridExtensions.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\ChannelFrictionDefinitionFileReader.cs" />
@@ -180,6 +182,9 @@
     <Compile Include="IO\Importers\GisToFeature2DImporter.cs" />
     <Compile Include="IO\Links1D2DHelper.cs" />
     <Compile Include="IO\TimeDependentVariableMetaDataBase.cs" />
+    <Compile Include="IO\WaterFlowFMModel110LegacyLoader.cs" />
+    <Compile Include="IO\WaterFlowFMModel120LegacyLoader.cs" />
+    <Compile Include="IO\WaterFlowFMModel130LegacyLoader.cs" />
     <Compile Include="IO\WaterFlowFMModelWriterData.cs" />
     <Compile Include="ModelDefinition\ICoordinateSystemExtensions.cs" />
     <Compile Include="EmbankmentGenerator.cs" />
@@ -434,6 +439,9 @@
     <None Include="Resources\dry_point.png" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="WaterFlowFMModel.1.1.0.hbm.xml" />
+    <EmbeddedResource Include="WaterFlowFMModel.1.2.0.hbm.xml" />
+    <EmbeddedResource Include="WaterFlowFMModel.1.3.0.hbm.xml" />
     <Resource Include="Resources\function_timeseries.png" />
     <None Include="Resources\lines.png" />
     <None Include="Resources\points.png" />

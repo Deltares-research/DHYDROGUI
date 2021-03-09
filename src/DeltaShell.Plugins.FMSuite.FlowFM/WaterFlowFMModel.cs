@@ -2640,7 +2640,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         void IFileBased.SwitchTo(string newPath)
         {
             filePath = newPath;
-            OnSwitchTo(GetMduPathFromDeltaShellPath(newPath));
+
+            string expectedMduPath = GetMduPathFromDeltaShellPath(newPath);
+            var mduFileInfo = new FileInfo(expectedMduPath);
+            if (!mduFileInfo.Exists && mduFileInfo.Directory?.Parent != null)
+            {
+                // [D3DFMIQ-450] Backwards compatibility: Older Models may not have 'input' folder
+                string legacyMduPath = Path.Combine(mduFileInfo.Directory.Parent.FullName, mduFileInfo.Name);
+
+                if (File.Exists(legacyMduPath))
+                {
+                    OnSwitchTo(legacyMduPath);
+                    return;
+                }
+            }
+
+            OnSwitchTo(expectedMduPath);
         }
 
         void IFileBased.Delete()
@@ -4094,6 +4109,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
                 EndEdit();
             }
+            OutputSnappedFeaturesPath = null;
         }
 
         public virtual void ConnectOutput(string outputPath)
