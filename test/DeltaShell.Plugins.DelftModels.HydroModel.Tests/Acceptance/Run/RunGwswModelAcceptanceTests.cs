@@ -41,12 +41,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         public void TestFixtureSetUp()
         {
             string acceptanceModelPath = GuiTestHelper.IsBuildServer
-                ? @"..\..\AcceptanceModels\FlowFM"
+                ? @"..\..\AcceptanceModels\GWSW"
                 : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModels\GWSW";
             acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
 
             string acceptanceModelReferenceOutputPath = GuiTestHelper.IsBuildServer
-                ? @"..\..\AcceptanceModels\FlowFM"
+                ? @"..\..\AcceptanceModels\GWSW"
                 : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModelsReferenceOutput\GWSW";
             acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
         }
