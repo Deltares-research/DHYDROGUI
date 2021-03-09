@@ -222,8 +222,9 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 };
             }
 
-            discretization.MergeNetworkLocations(networkLocations);
-
+            discretization.Clear();
+            discretization.Locations.SetValues(networkLocations);
+            discretization.RemoveLocations(discretization.GetDuplicatePointsOnHydroNodes());
             IList<INetworkSegment> segmentToRemove = null;
             var locationIdLookup = discretization.Locations.AllValues.ToArray().ToIndexDictionary();
 

@@ -615,7 +615,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         listOfErrors.Add(exception.Message + Environment.NewLine);
                     }
                 });
-                networkDiscretization.MergeNetworkLocations(newLocations);
+
+                networkDiscretization.Locations.AddValues(newLocations);
+                networkDiscretization.Network = network;
+                networkDiscretization.RemoveLocations(networkDiscretization.GetDuplicatePointsOnManholes());
 
                 if (listOfErrors.Any())
                     Log.ErrorFormat(
