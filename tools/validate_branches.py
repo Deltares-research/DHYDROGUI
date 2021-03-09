@@ -3,22 +3,24 @@ import re
 
 import argparse
 import requests
+import os
 
 
-def retrieve_branches() -> list:
-    git_cmd = 'git branch -r'
+def retrieve_branches(owner, repo, token) -> list:
+    request_url = f"https://api.github.com/repos/{owner}/{repo}/branches"
+    headers = {'Authorization': f'token {token}'}
+    r = requests.get(request_url, headers=headers, params={})
 
-    p = subprocess.run(git_cmd, shell=True, stdout=subprocess.PIPE)
-    branches = p.stdout.decode('utf-8').splitlines()
+    if r.status_code != 200:
+        return []
 
-    return (b[9:] for b in branches)
+    branches_json = r.json()
+    return (b['name'] for b in branches_json)
 
 
-project_keys = ['D3DFMIQ', 'DSFRAME']
 issue_group_key = 'issue'
 
-
-def get_issue_regex():
+def get_issue_regex(project_keys):
     integer_regex = r'(0|([1-9]\d*))'
     project_regexes = (f'({proj_key}-{integer_regex})' for proj_key in project_keys)
     issue_regex = "|".join(project_regexes)
@@ -73,10 +75,10 @@ def validate_branch(issue: str, branch: str, user: str, password: str):
         fail_test(branch, f"Issue {issue} is 'Closed' but {branch} still exists.")
 
 
-def validate_branches(branches: list, username: str, password: str) -> tuple:
+def validate_branches(branches: list, username: str, password: str, project_keys: list) -> tuple:
     start_test_suite()
 
-    regex = get_issue_regex()
+    regex = get_issue_regex(project_keys)
 
     for b in branches:
         m = regex.match(b)
@@ -101,6 +103,10 @@ def parse_arguments():
 
     parser.add_argument("username", help="JIRA Username")
     parser.add_argument("password", help="JIRA password")
+    parser.add_argument("owner", help="Owner of the repository")
+    parser.add_argument("repo", help="Name of the repository")
+    parser.add_argument("token", help="Token to authenticate on github")
+    parser.add_argument("projects", help="The names of projects to be parsed", nargs='+')
 
     return parser.parse_args()
 
@@ -108,5 +114,5 @@ def parse_arguments():
 if __name__ == "__main__":
     args = parse_arguments()
 
-    branches = retrieve_branches()
-    validate_branches(branches, args.username, args.password)
+    branches = retrieve_branches(args.owner, args.repo, args.token)
+    validate_branches(branches, args.username, args.password, args.projects)
