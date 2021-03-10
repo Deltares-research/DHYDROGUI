@@ -1785,6 +1785,8 @@ src/DeltaShell.Plugins.FMSuite.Common/FeatureData/VerticalInterpolationType.cs -
 src/DeltaShell.Plugins.FMSuite.Common/FeatureData/VerticalProfileDefinition.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/FeatureDataSyncer.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/FileBasedWindDefinition.cs -text
+src/DeltaShell.Plugins.FMSuite.Common/FunctionStores/FunctionExtensions.cs -text
+src/DeltaShell.Plugins.FMSuite.Common/FunctionStores/IFMNetCdfFileFunctionStore.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/ApwxwyFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/Delft3DDepthFileExporter.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/Delft3DDepthFileImporter.cs -text
@@ -1975,6 +1977,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/MapTools/MergeEmbankmentsMapTool.cs -t
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/BoundaryConditionSetNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/ChannelFrictionDefinitionsWrapperNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/ChannelInitialConditionDefinitionsWrapperNodePresenter.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FMClassMapFileFunctionStoreNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FMHisFileFunctionStoreNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FMMapFileFunctionStoreNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FmMeteoItemListNodePresenter.cs -text
@@ -2109,6 +2112,8 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/FeatureData/SupportedVerticalProfileTypes.
 src/DeltaShell.Plugins.FMSuite.FlowFM/FileConstants.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FixedWeirSchemes.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FlowFMApplicationPlugin.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/FunctionStores/FMClassMapFileFunctionStore.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/FunctionStores/IFMClassMapFileFunctionStore.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Grid/UnstructuredGridExtensions.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BathymetryFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcFile.cs -text
@@ -5021,6 +5026,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Exporters/WaterFlowFMFileExporte
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ExtForceFileHelperTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ExtForceFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FM1DFileFunctionStoreTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMClassMapFileFunctionStoreTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMHisFileFunctionStoreTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMMapFileFunctionStoreTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMModelSchemaCsvFileTest.cs -text
@@ -9160,6 +9166,8 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/out
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/outputSnappedFeatures.dsproj_data/FlowFM_output/dflowfm/DFM_OUTPUT_FlowFM/SNAPPED/FlowFM_snapped_weir.dbf -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/outputSnappedFeatures.dsproj_data/FlowFM_output/dflowfm/DFM_OUTPUT_FlowFM/SNAPPED/FlowFM_snapped_weir.shp -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/outputSnappedFeatures.dsproj_data/FlowFM_output/dflowfm/DFM_OUTPUT_FlowFM/SNAPPED/FlowFM_snapped_weir.shx -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_clmfiles/FlowFM_clm.nc -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_clmfiles/T2_FlowFM_clm.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/culvert_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/flume_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/generalStructure_his.nc -text

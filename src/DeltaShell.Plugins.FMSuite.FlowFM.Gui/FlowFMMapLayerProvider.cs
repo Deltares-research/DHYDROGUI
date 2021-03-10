@@ -26,6 +26,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects;
@@ -161,14 +162,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             }
 
-            if (parentData is FMMapFileFunctionStore mapFileFunctionStore && data is IEventedList<ILink1D2D> linksMapfile)
+            if (parentData is FMMapFileFunctionStore mapFileFunctionStore && data is IList<ILink1D2D> linksMapfile && linksMapfile.Any())
             {
                 var coordinateSystem = mapFileFunctionStore.Grid.CoordinateSystem;
                 var theme = Create1D2DLinksTheme();
 
                 return new VectorLayer(LayerName1D2DLinks)
                 {
-                    DataSource = new WaterFlowFmModelFeature2DCollection().Init(linksMapfile, "1d2dLink", ModelName, coordinateSystem),
+                    DataSource = new WaterFlowFmModelFeature2DCollection().Init(new EventedList<ILink1D2D>(linksMapfile), "1d2dLink", ModelName, coordinateSystem),
+                    CanBeRemovedByUser = false,
+                    SmoothingMode = SmoothingMode.AntiAlias,
+                    Opacity = 0.7f,
+                    Theme = theme,
+                    Style = (VectorStyle)theme.DefaultStyle,
+                    Selectable = true,
+                    NameIsReadOnly = true,
+                };
+            }
+            if (parentData is FMClassMapFileFunctionStore classMapFileFunctionStore && data is IList<ILink1D2D> linksClassMapfile && linksClassMapfile.Any())
+            {
+                var coordinateSystem = classMapFileFunctionStore.Grid.CoordinateSystem;
+                var theme = Create1D2DLinksTheme();
+
+                return new VectorLayer(LayerName1D2DLinks)
+                {
+                    DataSource = new WaterFlowFmModelFeature2DCollection().Init(new EventedList<ILink1D2D>(linksClassMapfile), "1d2dLink", ModelName, coordinateSystem),
                     CanBeRemovedByUser = false,
                     SmoothingMode = SmoothingMode.AntiAlias,
                     Opacity = 0.7f,
@@ -182,6 +200,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (data is FMMapFileFunctionStore)
             {
                 var groupLayer = new GroupLayer("Output 2D (map file)")
+                    {
+                        LayersReadOnly = true,
+                        NameIsReadOnly = true
+                    };
+                groupLayer.Layers.CollectionChanged += MapGroupLayerLayersCollectionChanged;
+                return groupLayer;
+            }
+
+            if (data is FMClassMapFileFunctionStore)
+            {
+                var groupLayer = new GroupLayer("Output (class map file)")
                     {
                         LayersReadOnly = true,
                         NameIsReadOnly = true
@@ -410,9 +439,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is Links1D2DCoverage
                    || data is IEventedList<ILink1D2D> &&
                    (parentObject is WaterFlowFMModel || parentObject is FMMapFileFunctionStore)
+                   || data is IList<ILink1D2D> &&
+                   (parentObject is FMClassMapFileFunctionStore || parentObject is FMMapFileFunctionStore)
                    || data is IGrouping<string, IFunction>
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
+                   || data is FMClassMapFileFunctionStore
                    || data is FM1DFileFunctionStore
                    || data is ImportedFMNetFile
                    || data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel
@@ -549,6 +581,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                 if (model.OutputHisFileStore != null)
                     yield return model.OutputHisFileStore;
+                
+                if (model.OutputClassMapFileStore != null)
+                {
+                    yield return model.OutputClassMapFileStore;
+                }
             }
 
             var coverageDepthLayersList = data as CoverageDepthLayersList;
@@ -578,6 +615,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
                 else
                 {
+                    var classMapStore = outputStore as FMClassMapFileFunctionStore;
+                    if (classMapStore != null)
+                    {
+                        yield return classMapStore.Network;
+                        yield return classMapStore.Grid;
+                        yield return classMapStore.Discretization;
+                        yield return classMapStore.Links;
+                    }
+
                     foreach (var output in outputStore.Functions)
                         yield return output;
                 }
@@ -621,6 +667,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var objectsInRenderOrder = new List<object>
                 {
                     model.OutputHisFileStore,
+                    model.OutputClassMapFileStore,
                     model.Output1DFileStore,
                     model.LateralSourcesData,
                     model.InitialWaterLevel,

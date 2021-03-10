@@ -489,8 +489,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                              GuiProperties.WaqOutputDeltaT, GuiProperties.SpecifyWaqOutputStartTime,
                              GuiProperties.WaqOutputStartTime, GuiProperties.SpecifyWaqOutputStopTime,
                              GuiProperties.WaqOutputStopTime);
-        }
 
+            SetMduIntervalFromGuiProperty(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile, GuiProperties.ClassMapOutputDeltaT);
+        }
+        private void SetMduIntervalFromGuiProperty(string intervalPropName, string doWritePropName,
+                                                   string deltaTPropName)
+        {
+            var timeFrame = new List<double>();
+            var writePropName = (bool)GetModelProperty(doWritePropName).Value;
+            if (writePropName)
+            {
+                var timeSpan = (TimeSpan)GetModelProperty(deltaTPropName).Value;
+                double secondsInInterval = (double)timeSpan.Ticks / TimeSpan.TicksPerSecond;
+                if (secondsInInterval > 0)
+                {
+                    timeFrame.Add(secondsInInterval);
+                }
+            }
+            else
+            {
+                timeFrame.Add(0.0);
+            }
+
+            GetModelProperty(intervalPropName).Value = timeFrame;
+        }
         private void SetMduStartStopDeltaTFromGui(string intervalPropName, string doWritePropName, string deltaTPropName,
                                                   string specifyStartPropName, string startTimePropName, string specifyStopPropName, 
                                                   string stopTimePropName)
@@ -551,10 +573,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                                          GuiProperties.WaqOutputStartTime, GuiProperties.SpecifyWaqOutputStopTime,
                                          GuiProperties.WaqOutputStopTime);
 
+            SetGuiStartStopDeltaTFromMdu(KnownProperties.ClassMapInterval, GuiProperties.WriteClassMapFile,
+                                         GuiProperties.ClassMapOutputDeltaT);
+
         }
 
-        private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName, string deltaTPropName,
-            string specifyStartPropName, string startTimePropName, string specifyStopPropName, string stopTimePropName)
+        private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName, string deltaTPropName)
         {
             var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
             if (timeFrame.Count == 0)
@@ -579,6 +603,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 0, 0);
                     GetModelProperty(doWritePropName).Value = true;
                 }
+                if (intervalPropName == KnownProperties.ClassMapInterval)
+                {
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
+                    GetModelProperty(doWritePropName).Value = true;
+                }
             }
 
             if (timeFrame.Count > 0)
@@ -591,29 +620,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 GetModelProperty(doWritePropName).Value = interval.Ticks > 0;
                     // 0 = off (for backward compatibility only)
             }
+        }
 
-            if (timeFrame.Count > 1)
+        private void SetGuiStartStopDeltaTFromMdu(string intervalPropName, string doWritePropName, string deltaTPropName,
+            string specifyStartPropName, string startTimePropName, string specifyStopPropName, string stopTimePropName)
+        {
+            SetGuiStartStopDeltaTFromMdu(intervalPropName, doWritePropName, deltaTPropName);
+            var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
+            if (timeFrame.Count == 0)
             {
-                // output start time is specified
-                GetModelProperty(startTimePropName).Value = GetAbsoluteDateTime(timeFrame[1], false);
-                GetModelProperty(specifyStartPropName).Value = true;
-            }
-            else
-            {
-                // output start time not specified, set to model start time
-                GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
-            }
 
-            if (timeFrame.Count > 2)
-            {
-                // output stop time is specified
-                GetModelProperty(stopTimePropName).Value = GetAbsoluteDateTime(timeFrame[2], false);
-                GetModelProperty(specifyStopPropName).Value = true;
-            }
-            else
-            {
-                // output start time not specified, set to model stop time
-                GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+                if (timeFrame.Count > 1)
+                {
+                    // output start time is specified
+                    GetModelProperty(startTimePropName).Value = GetAbsoluteDateTime(timeFrame[1], false);
+                    GetModelProperty(specifyStartPropName).Value = true;
+                }
+                else
+                {
+                    // output start time not specified, set to model start time
+                    GetModelProperty(startTimePropName).Value = GetModelProperty(GuiProperties.StartTime).Value;
+                }
+
+                if (timeFrame.Count > 2)
+                {
+                    // output stop time is specified
+                    GetModelProperty(stopTimePropName).Value = GetAbsoluteDateTime(timeFrame[2], false);
+                    GetModelProperty(specifyStopPropName).Value = true;
+                }
+                else
+                {
+                    // output start time not specified, set to model stop time
+                    GetModelProperty(stopTimePropName).Value = GetModelProperty(GuiProperties.StopTime).Value;
+                }
             }
         }
 

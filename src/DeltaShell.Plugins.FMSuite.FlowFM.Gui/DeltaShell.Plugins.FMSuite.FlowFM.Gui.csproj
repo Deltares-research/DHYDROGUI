@@ -380,6 +380,7 @@
     <Compile Include="MapTools\GenerateLinksMapTool.cs" />
     <Compile Include="MapTools\MapTool1D2DLinksHelper.cs" />
     <Compile Include="NodePresenters\ChannelInitialConditionDefinitionsWrapperNodePresenter.cs" />
+    <Compile Include="NodePresenters\FMClassMapFileFunctionStoreNodePresenter.cs" />
     <Compile Include="NodePresenters\PipeFrictionDefinitionsWrapperNodePresenter.cs" />
     <Compile Include="NodePresenters\ChannelFrictionDefinitionsWrapperNodePresenter.cs" />
     <Compile Include="NodePresenters\FmMeteoItemListNodePresenter.cs" />

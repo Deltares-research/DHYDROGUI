@@ -166,9 +166,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         continue;
                     }
 
-                    Dictionary<string, object> attributes = outputFile.GetAttributes(netCdfVariable);
-
-                    timeDependentVariableMetaData.Add(ParseVariableMetaData(variableName, attributes));
+                    var longName = outputFile.GetAttributeValue(netCdfVariable, longNameAttributeKeyNameInNetCdfFile) ?? string.Empty;
+                    var unit = outputFile.GetAttributeValue(netCdfVariable, unitsAttributeKeyNameInNetCdfFile) ?? string.Empty;
+                    timeDependentVariableMetaData.Add(new TimeDependentVariableMetaDataBase(variableName, longName, unit));
                 }
 
                 return timeDependentVariableMetaData;
@@ -228,18 +228,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return netCdfFileWrapper.GetValues1D<T>(variableName) ?? new List<T>();
             }
         }
-
-        private TimeDependentVariableMetaDataBase ParseVariableMetaData(string variableName, Dictionary<string, object> attributes)
-        {
-            object longName = attributes.FirstOrDefault(a => a.Key == longNameAttributeKeyNameInNetCdfFile).Value;
-            string longNameString = longName == null ? string.Empty : longName.ToString();
-
-            object unit = attributes.FirstOrDefault(a => a.Key == unitsAttributeKeyNameInNetCdfFile).Value;
-            string unitString = unit == null ? string.Empty : unit.ToString();
-
-            return new TimeDependentVariableMetaDataBase(variableName, longNameString, unitString);
-        }
-
+        
         private class LocationVariableNames
         {
             private readonly string meshName;

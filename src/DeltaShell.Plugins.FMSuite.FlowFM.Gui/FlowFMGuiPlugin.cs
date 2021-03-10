@@ -102,6 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new SourceSinkNodePresenter {GuiPlugin = this};
             yield return new FMMapFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new FMHisFileFunctionStoreNodePresenter();
+            yield return new FMClassMapFileFunctionStoreNodePresenter { GuiPlugin = this };
             yield return new FM1DFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new ImportedFMNetFileNodePresenter {GuiPlugin = this};
             yield return new HeatFluxModelNodePresenter {GuiPlugin = this};

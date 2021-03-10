@@ -26,6 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string GulliesFile = "Gulliesfile";
         public const string ManholeFile = "manholefile";
         public const string MapInterval = "mapinterval";
+        public const string ClassMapInterval = "classmapinterval";
         public const string NetFile = "netfile";
         public const string StorageNodeFile = "StorageNodeFile";
         public const string BranchFile = "BranchFile";
@@ -156,7 +157,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string InitialConditionGlobalQuantity1D = "InitialConditionGlobalQuantity1D";
         public const string InitialConditionGlobalQuantity2D = "InitialConditionGlobalQuantity2D";
 
-        
+        public const string WriteClassMapFile = "writeclassmapfile";
+        public const string ClassMapOutputDeltaT = "classmapoutputdeltat";
+
+
+
     }
 
 

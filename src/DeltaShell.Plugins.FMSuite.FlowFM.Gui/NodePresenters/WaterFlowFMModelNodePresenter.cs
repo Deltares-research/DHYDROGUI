@@ -210,6 +210,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             foreach (var func in model.OutputHisFileStore.Functions.OfType<TimeSeries>())
                 yield return WrapIntoOutputItem(func, func.Name, model);
+            
+            if (model.OutputClassMapFileStore != null)
+            {
+                foreach (IFunction func in model.OutputClassMapFileStore.Functions)
+                {
+                    yield return WrapIntoOutputItem(func, func.Name, model);
+                }
+            }
             // wrapped in dataitems for central map resolve logic..
         }
 

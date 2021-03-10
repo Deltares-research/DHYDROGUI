@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
@@ -18,6 +19,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -96,7 +98,48 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             ShowModelLayers(model);
         }
+        
+        [Test]
+        [TestCase("FlowFM_clm.nc")]
+        [TestCase("T2_FlowFM_clm.nc")]
+        public void OpenClassMapFileAndInpectFunctions(string flowfmClmNc)
+        {
+            string testDataFilePath = TestHelper.GetTestFilePath(@"output_clmfiles");
+            
+            flowfmClmNc = TestHelper.CreateLocalCopy(Path.Combine(testDataFilePath, flowfmClmNc));
+            var store = new FMClassMapFileFunctionStore(flowfmClmNc);
+                
+            
+            using (var gui = new DeltaShellGui())
+            {
+                var fmModel = new WaterFlowFMModel();
+                TypeUtils.SetPrivatePropertyValue(fmModel, nameof(WaterFlowFMModel.OutputClassMapFileStore), store);
+                var app = gui.Application;
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+                gui.Application.UserSettings["ShowStartUpScreen"] = false;
+                gui.Run();
 
+                Action mainWindowShown = delegate
+                {
+                    var project = app.Project;
+                    project.RootFolder.Add(fmModel);
+                    gui.CommandHandler.OpenView(fmModel);
+                    
+                    var waterLevelFunction = (NetworkCoverage)store.Functions.FirstOrDefault(f => f.Components[0].Name == "mesh1d_s1");
+
+                    SharpMapGisGuiPlugin.Instance.Gui.CommandHandler.OpenView(waterLevelFunction);
+                };
+
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
+            }
+        }
         [Test]
         public void OpenHisFileCheckFunctions()
         {

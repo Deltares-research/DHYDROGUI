@@ -211,6 +211,9 @@ GUIOnly,MapOutputStartTime,output,Map,Map output start time,DateTime,,,,FALSE,Wr
 GUIOnly,SpecifyMapStop,output,Map,Specify Map output stop time,0|1,0,,,FALSE,WriteMapFile && SpecifyMapStart,WriteMapFile,,,,Stop writing map output before of simulation,
 GUIOnly,MapOutputStopTime,output,Map,Map output stop time,DateTime,,,,FALSE,WriteMapFile && SpecifyMapStart && SpecifyMapStop,WriteMapFile,,,,No map output will be written after this time stamp,
 *,,,,,,,,,,,,,,,,
+GUIOnly,WriteClassMapFile,output,Class,Write Class Map file,0|1,0,,,FALSE,,,,,,"Write a class map file"
+GUIOnly,ClassMapOutputDeltaT,output,Class,Class Map interval,Interval,,,,FALSE,,WriteClassMapFile,,,,Interval for writing Class Map Output [Dd HH:MM:SS.ZZZ]
+*,,,,,,,,,,,,,,,
 GUIOnly,WriteRstFile,output,Restart,Write Rst file,0|1,0,,,FALSE,,,,,,Write restart files,
 GUIOnly,RstOutputDeltaT,output,Restart,Rst output interval,Interval,,,,FALSE,,WriteRstFile,,,,Interval for writing Rst Output,
 GUIOnly,SpecifyRstStart,output,Restart,Specify Rst output start time,0|1,0,,,FALSE,,WriteRstFile,,,,Start writing restart files later then start of simulation,
@@ -292,12 +295,12 @@ GUIOnly,SpecifyWaqOutputStartTime, output, Others,Specify WAQ start time output,
 GUIOnly,WaqOutputStartTime, output, Others,WAQ output-start-time,Datetime,,,,TRUE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,WAQ Start time output,
 GUIOnly,SpecifyWaqOutputStopTime, output, Others,Specify WAQ stop time output,0|1,0,,,TRUE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime,,,,,Specify WAQ stop time output,
 GUIOnly,WaqOutputStopTime, output, Others,WAQ output-end-time,Datetime,,,,TRUE,SpecifyWaqOutputInterval && SpecifyWaqOutputStartTime && SpecifyWaqOutputStopTime,,,,,WAQ End time output,
-output,ClassMapFile,,,,FileName,,,,TRUE,,,,,,Class map file *_clm.nc,
-output,WaterlevelClasses,output,Class,Class map's list of class values for water levels,String,0,,,,,WriteClassMapFile,,,,Water level classes, m
-output,WaterdepthClasses,output,Class,Class map's list of class values for water depths,String,0,,,,,WriteClassMapFile,,,,Water depth classes, m
+output,ClassMapFile,,,,FileName,,,,TRUE,,,,,,"Class map file *_clm.nc"
+output,WaterlevelClasses,output,Class,Water level classes,String,0.0,,,,,WriteClassMapFile,,,,"Water level classes", m
+output,WaterdepthClasses,output,Class,Water depth classes,String,0.0,,,,,WriteClassMapFile,,,,"Water depth classes", m
+output,ClassMapInterval,,,Class map interval,DoubleArray,300,0,,TRUE,,WriteClassMapFile,,,,"Class output interval [Dd HH:MM:SS.ZZZ]"
 output,VelocityMagnitudeClasses,output,Class,Class map's list of class values for velocity magnitudes,String,0,,,,,WriteClassMapFile,,,,Water level classes, m
 output,VelocityDirectionClassesInterval,output,Class,Class map's step size of class values for velocity direction,String,30,,,,,WriteClassMapFile,,,,Water depth classes, m
-output,ClassMapInterval,,,Class map interval,DoubleArray,300,0,,TRUE,,WriteClassMapFile,,,,Class output interval [Dd HH:MM:SS.ZZZ],
 output,StatsInterval,output,Others,Statistics output interval,Interval,0,,,FALSE,,,,,,Interval (in s) between simulation statistics output,
 output,Writebalancefile,output,Others,Write water balance file,0|1,0,0,1,FALSE,,,,,,"Write balance file (1: yes, 0: no)",
 output,TimingsInterval,output,Others,Timing statistics output interval,Interval,0,,,FALSE,,,,,,Timings statistics output interval,

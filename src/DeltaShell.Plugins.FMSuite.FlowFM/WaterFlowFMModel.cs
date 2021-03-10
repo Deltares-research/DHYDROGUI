@@ -46,6 +46,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -70,6 +71,8 @@ using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
+using FMHisFileFunctionStore = DeltaShell.Plugins.FMSuite.FlowFM.IO.FMHisFileFunctionStore;
+using FMMapFileFunctionStore = DeltaShell.Plugins.FMSuite.FlowFM.IO.FMMapFileFunctionStore;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
@@ -1331,6 +1334,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     OnPropertyChanged(nameof(SpecifyWaqOutputStopTime));
                     EndEdit();
                 }
+                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteClassMapFile,
+                                                                        StringComparison.InvariantCultureIgnoreCase))
+                {
+                    BeginEdit(new DefaultEditAction("Switching WriteClassMapFile"));
+                    OnPropertyChanged(nameof(WriteClassMapFile));
+                    EndEdit();
+                }
+
             }
         }
 
@@ -1449,6 +1460,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (Output1DFileStore != null)
                 foreach (var function in Output1DFileStore.Functions)
                     yield return function;
+            if (OutputClassMapFileStore != null)
+            {
+                foreach (IFunction function in OutputClassMapFileStore.Functions)
+                {
+                    yield return function;
+                }
+            }
         }
 
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
@@ -1736,8 +1754,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OutputHisFileStore.Close();
                 OutputHisFileStore = null;
             }
+            if (OutputClassMapFileStore != null)
+            {
+                ClearFunctionStore(OutputClassMapFileStore);
+                OutputClassMapFileStore = null;
+            }
         }
-       
+        private static void ClearFunctionStore(IReadOnlyNetCdfFunctionStoreBase functionStore)
+        {
+            functionStore.Functions.Clear();
+            functionStore.Close();
+        }
+
         public override IProjectItem DeepClone()
         {
             var tempDir = FileUtils.CreateTempDirectory();
@@ -1797,6 +1825,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if (Output1DFileStore != null)
                 {
                     Output1DFileStore.CoordinateSystem = value;
+                }
+                
+                if (OutputClassMapFileStore != null)
+                {
+                    OutputClassMapFileStore.CoordinateSystem = value;
                 }
                 
                 if (Network != null && Network.CoordinateSystem != value)
@@ -2245,6 +2278,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             // cannot actually return anything, because it's a dynamic enum
             get { return null; }
+        }
+        public bool WriteClassMapFile
+        {
+            get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value; }
         }
 
         public ImportProgressChangedDelegate ImportProgressChanged { get; set; }
@@ -2742,6 +2779,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         
         public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
+        public virtual FMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
         private string WaqHydFilePath { get; set; }
         public const string DiaFileDataItemTag = "DiaFile";
         private string currentOutputDirectoryPath;
@@ -2749,7 +2787,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Path.Combine(WorkingDirectory, DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
         private bool HasOpenFunctionStores =>
-            OutputMapFileStore != null || OutputHisFileStore != null;// || OutputClassMapFileStore != null;
+            OutputMapFileStore != null || OutputHisFileStore != null || OutputClassMapFileStore != null;
 
         /// <summary>
         /// Saves the output by either moving or copying the source output to the target output directory.
@@ -3035,7 +3073,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
             ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
-            //ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
+            ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
             ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
             ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
             ReconnectRestartFiles(outputDirectory.RestartFilePaths);
@@ -3123,12 +3161,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        /*Private void ReconnectClassMapFile(string classMapFilePath, bool switchTo)
+        private void ReconnectClassMapFile(string classMapFilePath, bool switchTo)
         {
             if (classMapFilePath != null)
             {
                 ReportProgressText("Reading class map file");
-                FireImportProgressChanged("Reading output files - Reading Class Map file", 1, 2);
+                FireImportProgressChanged(this,"Reading output files - Reading Class Map file", 1, 2);
                 if (switchTo && OutputClassMapFileStore != null)
                 {
                     OutputClassMapFileStore.Path = classMapFilePath;
@@ -3138,7 +3176,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
                 }
             }
-        }*/
+        }
         public string DelwaqOutputDirectoryName => FileConstants.PrefixDelwaqDirectoryName + Name;
         public string DelwaqOutputDirectoryPath { get; set; }
 
@@ -4106,6 +4144,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     OutputHisFileStore.Close();
                     OutputHisFileStore = null;
+                }
+                if (OutputClassMapFileStore != null)
+                {
+                    OutputClassMapFileStore.Close();
+                    OutputClassMapFileStore = null;
                 }
                 EndEdit();
             }
