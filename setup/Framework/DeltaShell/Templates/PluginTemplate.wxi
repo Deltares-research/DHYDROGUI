@@ -48,6 +48,8 @@
       
                         
   Optional variables:
+  - CheckOriginOfProject:			If you set this to true, projects from not supported products can not be opened.
+  - AdditionalCompatibleProducts:	Additional compatible products of which projects can be opened. You don't have to mention current product.
   - ShowStartUpScreen:               If you set this to false, the start up screen will not be shown. 
   - EnableDHydroDelft3DFMVersionNaming: Enable to use the d-hydro specific setup configuration. You must define the following variables: var.ApplicationName
                                         and var.PublicReleaseVersion.
@@ -465,7 +467,6 @@
         <ComponentRef Id="UninstallShortcutComponent" />
         <ComponentRef Id="comp_netcdf_x86" />
         <ComponentRef Id="comp_SharpMap_Extensions_gdal_x86" />
-        <ComponentRef Id="comp_Tao_OpenGL"/>
         <ComponentRef Id="comp_OpenTK"/>
 
         <Feature Id="DeltaShellX64Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
