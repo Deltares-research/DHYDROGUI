@@ -965,6 +965,7 @@ src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModel.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelApplicationPlugin.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelBuilder.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelBuilder.py -text
+src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelDataAccessListener.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelExtensions.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelSettings.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/IHydroModelWorkFlow.cs -text

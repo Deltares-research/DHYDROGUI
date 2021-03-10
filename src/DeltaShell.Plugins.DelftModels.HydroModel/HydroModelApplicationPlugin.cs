@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
@@ -18,7 +20,7 @@ using Mono.Addins;
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {
     [Extension(typeof(IPlugin))]
-    public class HydroModelApplicationPlugin : ApplicationPlugin
+    public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
         public const string RHUINTEGRATEDMODEL_TEMPLATE_ID = "RHUIntegratedModel";
         public static int MainThreadId;
@@ -84,63 +86,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        private void ApplicationProjectSaving(Project project)
+        public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
-            if (project == null || project.RootFolder == null) return;
-
-            project.RootFolder.GetAllModelsRecursive().ForEach(m => m.SuspendClearOutputOnInputChange = true);
-
-            using (project.InEditMode("Saving"))
-            {
-                // go through all hydro models and unlink all objects that link between rtc and flowFM, 
-                // because flow is not saved in the database.
-
-                foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
-                {
-                    using (hydroModel.InEditMode("Unlinking items for saving"))
-                    {
-                        hydroModel.UnlinkAndRememberDataItems();
-                        hydroModel.UnlinkAndRememberRegionLinks();
-                    }
-                }
-            }
-
-            project.RootFolder.GetAllModelsRecursive().ForEach(m => m.SuspendClearOutputOnInputChange = false);
-        }
-
-        private void ApplicationProjectSavedOrFailed(Project project)
-        {
-            if (project == null || project.RootFolder == null) return;
-
-            using (project.InEditMode("Saving"))
-            {
-                foreach (var hydroModel in project.RootFolder.GetAllItemsRecursive().OfType<HydroModel>())
-                {
-                    using (hydroModel.InEditMode("Linking items after for saving"))
-                    {
-                        hydroModel.RelinkDataItems();
-                        hydroModel.RelinkHydroRegionLinks();
-                    }
-                }
-            }
-        }
-
-        private void ApplicationProjectOpened(Project project)
-        {
-            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
-            {
-                hm.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
-            });
-        }
-
-        private void ActivityRunnerOnActivityStatusChanged(object sender, ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
-        {
-            var hydroModel = sender as HydroModel;
-            if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing && hydroModel != null)
-            {
-                Log.Info(string.Format(DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_ActivityRunnerOnActivityStatusChanged_DeltaShell_version___0_, Application.Version));
-                Log.Info(Application.PluginVersions);
-            }
+            yield return new HydroModelDataAccessListener();
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()
@@ -222,6 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
             };
         }
+
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new DHydroConfigXmlExporter();
@@ -230,6 +179,73 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private void InitializeModelBuilder()
         {
             new HydroModelBuilder();
+        }
+
+        private void ApplicationProjectSaving(Project project)
+        {
+            // go through all hydro models and unlink all objects that link between rtc and flowFM, 
+            // because flow is not saved in the database.
+            DoWithHydroModels(project, "Unlinking items for saving", m =>
+            {
+                m.UnlinkAndRememberDataItems();
+                m.UnlinkAndRememberRegionLinks();
+            });
+        }
+
+        private void ApplicationProjectSavedOrFailed(Project project)
+        {
+            DoWithHydroModels(project, "Linking items after for saving", m =>
+            {
+                m.RelinkDataItems();
+                m.RelinkHydroRegionLinks();
+            });
+        }
+
+        private void ApplicationProjectOpened(Project project)
+        {
+            Application.GetAllModelsInProject().OfType<HydroModel>().ForEach(hm =>
+            {
+                hm.WorkingDirectoryPathFunc = () => Application.WorkDirectory;
+            });
+        }
+
+        private void ActivityRunnerOnActivityStatusChanged(object sender, ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
+        {
+            var hydroModel = sender as HydroModel;
+            if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing && hydroModel != null)
+            {
+                Log.Info(string.Format(DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_ActivityRunnerOnActivityStatusChanged_DeltaShell_version___0_, Application.Version));
+                Log.Info(Application.PluginVersions);
+            }
+        }
+
+        private static void DoWithHydroModels(Project project, string actionName, Action<HydroModel> modelAction)
+        {
+            var models = project?.RootFolder?.GetAllModelsRecursive().ToArray() ?? new IModel[0];
+            var hydroModels = models.OfType<HydroModel>().ToArray();
+            if (!hydroModels.Any()) return;
+
+            models.ForEach(m => m.SuspendClearOutputOnInputChange = true);
+
+            var projectChangedState = project?.IsChanged;
+
+            using (project.InEditMode())
+            {
+                foreach (var hydroModel in hydroModels)
+                {
+                    using (hydroModel.InEditMode(actionName))
+                    {
+                        modelAction?.Invoke(hydroModel);
+                    }
+                }
+            }
+
+            models.ForEach(m => m.SuspendClearOutputOnInputChange = false);
+
+            if (projectChangedState.HasValue)
+            {
+                project.IsChanged = projectChangedState.Value;
+            }
         }
     }
 }

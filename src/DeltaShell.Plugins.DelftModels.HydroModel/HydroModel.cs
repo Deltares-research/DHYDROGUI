@@ -386,13 +386,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 return;
             }
 
-            if (e.PropertyName.Equals(nameof(IHydroModel.FileBasedModelIsLoaded), StringComparison.InvariantCultureIgnoreCase)
-                && FileBasedModelIsLoaded)
-            {
-                RelinkDataItems();
-                RelinkHydroRegionLinks();
-            }
-
             var parameter = sender as Parameter;
 
             if (parameter == null || e.PropertyName != "Value")
@@ -1054,16 +1047,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
 
                 AddChildRegionDataItems(regionDataItem);
-            }
-        }
-
-        [NoNotifyPropertyChange]
-        public virtual bool FileBasedModelIsLoaded
-        {
-            get
-            {
-                IEnumerable<IHydroModel> hydroModels = Models.OfType<IHydroModel>();
-                return hydroModels.All(hm => hm.FileBasedModelIsLoaded);
             }
         }
 

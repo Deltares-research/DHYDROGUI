@@ -138,7 +138,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 AddSewerRoughnessIfNecessary();
                 LoadOutputStateFromMdu(mduFilePath);
-                FileBasedModelIsLoaded = true;
             }
             else
             {
@@ -2314,6 +2313,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // sync the heat flux model, because events are off during reading
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
         }
+
         private void LoadOutputStateFromMdu(string mduFilePath)
         {
             if(!File.Exists(mduFilePath)) return;
@@ -2493,7 +2493,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UpdateSpatialDataAfterGridSet(grid, false, false, false);
             ImportSpatialOperationsAfterLoading();
             LoadOutputStateFromMdu(mduPath);
-            FileBasedModelIsLoaded = true;
         }
 
         private void UpdateDataItemsNotCreatedInPreviousVersion()
@@ -3894,8 +3893,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get { return fmRegion; }
         }
-
-        public bool FileBasedModelIsLoaded { get; set; } = false;
 
         public bool IsActivityOfEnumType(ModelType type)
         {

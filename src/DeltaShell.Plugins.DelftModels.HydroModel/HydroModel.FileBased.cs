@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges;
 using GeoAPI.Extensions.Feature;
 using log4net;
@@ -188,8 +189,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             return flowModel != null && rtcModel != null;
         }
 
-        public static IEnumerable<IDataItem> GetDataItems(IModel model, DataItemRole role)
+        private static IEnumerable<IDataItem> GetDataItems(IModel model, DataItemRole role)
         {
+            if (model is ICoupledModel coupledModel)
+            {
+                return coupledModel.GetDataItemsUsedForCouplingModel(role);
+            }
+
             return model is IFileBased
                 ? model.GetChildDataItemLocations(role).SelectMany(model.GetChildDataItems)
                 : model.AllDataItems.Where(di => (di.Role & role) == role);

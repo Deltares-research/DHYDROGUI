@@ -1,6 +1,8 @@
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
@@ -15,6 +17,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private bool firstBasin = true;
         private bool firstRRModel = true;
+
+        public override void OnPostLoad(object entity, object[] state, string[] propertyNames)
+        {
+            if (!(entity is RainfallRunoffModel rainfallRunoffModel)) 
+                return;
+
+            var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
+            importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
+        }
 
         public override void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)
         {

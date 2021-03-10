@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 {
                     base.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerOnActivityStatusChanged;
                     base.Application.ProjectSaved -= SaveToFile;
-                    base.Application.ProjectOpened -= LoadFromFile;
+                    base.Application.ProjectOpened -= ApplicationOnProjectOpened;
                 }
 
                 base.Application = value;
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 {
                     base.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerOnActivityStatusChanged;
                     base.Application.ProjectSaved += SaveToFile;
-                    base.Application.ProjectOpened += LoadFromFile;
+                    base.Application.ProjectOpened += ApplicationOnProjectOpened;
                 }
             }
         }
@@ -78,15 +78,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             DimrConfigModelCouplerFactory.CouplerProviders.Add(new RRDimrConfigModelCouplerProvider());
         }
 
-        private void LoadFromFile(Project project)
+        private void ApplicationOnProjectOpened(Project project)
         {
-            var rrModels = project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
-            
-            foreach (var rainfallRunoffModel in rrModels)
+            foreach (var rainfallRunoffModel in project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>())
             {
-                var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
-                importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
-                rainfallRunoffModel.FileBasedModelIsLoaded = true;
                 rainfallRunoffModel.WorkingDirectoryPathFunc = () => Application?.WorkDirectory;
             }
         }
@@ -98,6 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             var projectDataFolderDirectory = Application.ProjectDataDirectory;
             var rrModels = project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
             var exporter = new RainfallRunoffModelExporter();
+
             foreach (var rainfallRunoffModel in rrModels)
             {
                 var path = Path.Combine(projectDataFolderDirectory, rainfallRunoffModel.Name);

@@ -476,7 +476,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
 
             public IHydroRegion Region { get { return (IHydroRegion) DataItems.First(di => di.ValueType == SupportedRegionType).Value; } }
-            public bool FileBasedModelIsLoaded { get; } = true;
 
             public Type SupportedRegionType { get { return typeof (HydroNetwork); } }
         }

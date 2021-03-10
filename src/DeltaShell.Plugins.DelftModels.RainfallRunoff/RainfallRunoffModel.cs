@@ -626,8 +626,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             get { return Basin; }
         }
 
-        public bool FileBasedModelIsLoaded { get; set; } = false;
-        
         public bool IsActivityOfEnumType(ModelType type)
         {
             return type == ModelType.DRR;

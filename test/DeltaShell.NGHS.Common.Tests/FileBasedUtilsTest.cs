@@ -284,7 +284,6 @@ namespace DeltaShell.NGHS.IO.Tests
             public bool SuspendMarkOutputOutOfSyncOnInputChange { get; set; }
             public bool CanRun { get; }
             public IHydroRegion Region { get; }
-            public bool FileBasedModelIsLoaded { get; }
 
             #endregion
         }
@@ -370,7 +369,6 @@ namespace DeltaShell.NGHS.IO.Tests
             public bool SuspendMarkOutputOutOfSyncOnInputChange { get; set; }
             public bool CanRun { get; }
             public IHydroRegion Region { get; }
-            public bool FileBasedModelIsLoaded { get; }
 
             #endregion
         }
