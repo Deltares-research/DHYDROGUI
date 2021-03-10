@@ -3652,7 +3652,7 @@ test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/Flow
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/FlowFmFileComparer.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/GwswDataPersistenceAcceptanceTests.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/SobekTwoDataPersistenceAcceptanceTests.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/OutputFileComparer.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/FlowFmOutputFileComparer.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/RunFlowFmModelAcceptanceTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/RunGwswModelAcceptanceTests.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Run/RunModelAcceptanceTestHelper.cs -text

@@ -36,24 +36,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             }
             
             string expectedOutputFolder = Path.Combine(referenceOutputDirectory, acceptanceModelName, "FlowFM");
-            if (!Directory.Exists(expectedOutputFolder))
-            {
-                if (!keepOutput)
-                {
-                    Assert.Fail("No reference output available.");
-                }
-            }
             string[] expectedOutputFiles = Directory.GetFiles(expectedOutputFolder);
             
             if (!expectedOutputFiles.Any())
             {
-                Assert.Fail("No output has been created after running the model.");
+                Assert.Fail($"No reference data found at: {expectedOutputFolder}.");
             }
             
             string actualOutputFolder = Path.Combine(tempDirectory, "SavedModel_data", "FlowFM", "output");
             string[] actualOutputFiles = Directory.GetFiles(actualOutputFolder);
-            
-            OutputFileComparer.Compare(expectedOutputFiles, actualOutputFiles, tempDirectory);
+            if (!expectedOutputFiles.Any())
+            {
+                Assert.Fail("No output has been created after running the model.");
+            }
+
+            FlowFmOutputFileComparer.Compare(expectedOutputFiles, actualOutputFiles);
 
             if (keepOutput)
             {
