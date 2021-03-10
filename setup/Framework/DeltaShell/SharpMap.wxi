@@ -11,6 +11,11 @@
     </Component>
   </Directory>
 
+  <Component Id="comp_Tao_OpenGL" Guid="E223A150-7575-4FC1-812A-2735BBD810DE">
+    <File Id="Tao.OpenGl.dll" Source="$(var.deltashell_gui_bin)Tao.OpenGl.dll" />
+    <File Id="Tao.Platform.Windows.dll" Source="$(var.deltashell_gui_bin)Tao.Platform.Windows.dll" />
+  </Component>
+
   <Component Id="comp_OpenTK" Guid="8A834442-150C-4DDB-973D-AF8A522C4B87">
     <File Id="OpenTK" Source="$(var.deltashell_gui_bin)OpenTK.dll" />
   </Component>
