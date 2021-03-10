@@ -130,6 +130,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     rainfallRunoffModel.TemperatureStations.AddRange(buiFileReader.StationNames);
                     temperature.DataDistributionType = MeteoDataDistributionType.PerStation;
                     temperature.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
+                    temperature.Data.Arguments[1].SetValues(buiFileReader.StationNames);
+
                     foreach (var measurement in measurements)
                     {
                         temperature.Data.SetValues(measurement.MeasuredValues,
@@ -170,12 +172,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             try
             {
-                
                 if (buiFileReader.StationNames.Count > 1)
                 {
-                    rainfallRunoffModel.MeteoStations.AddRange(buiFileReader.StationNames);                
+                    rainfallRunoffModel.MeteoStations.AddRange(buiFileReader.StationNames);
                     precipitation.DataDistributionType = MeteoDataDistributionType.PerStation; //via eventing fills the second argument with station names
                     precipitation.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
+                    precipitation.Data.Arguments[1].SetValues(buiFileReader.StationNames);
+
                     foreach (var measurement in measurements)
                     {
                         precipitation.Data.SetValues(measurement.MeasuredValues,
