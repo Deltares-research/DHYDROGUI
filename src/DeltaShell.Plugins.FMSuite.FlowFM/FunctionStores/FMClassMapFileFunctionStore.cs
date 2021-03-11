@@ -121,9 +121,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
                 var branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
                 var compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
-                network.Nodes.Clear();
-                network.Branches.Clear();
-                discretization.Clear();
+                
+                network = new HydroNetwork();
+                discretization = new Discretization();
                 discretization.Locations.IsAutoSorted = false;
                 UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, compartmentData, branchData);
 
