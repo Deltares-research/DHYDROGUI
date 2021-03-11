@@ -10,6 +10,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -218,7 +219,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void ReplaceMissingValuesWithDefaultValues_CoverageNull_ThrowsArgumentNullException()
         {
             // Call
-            void Call() => ((UnstructuredGridCoverage) null).ReplaceMissingValuesWithDefaultValues();
+            void Call() => ((UnstructuredGridCoverage)null).ReplaceMissingValuesWithDefaultValues();
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
@@ -287,7 +288,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             UnstructuredGridCellCoverage coverage = null;
             var grid = new UnstructuredGrid();
 
-            void Call() => 
+            void Call() =>
                 UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, grid, "some/path.nc", -999.0);
 
             Assert.Throws<ArgumentNullException>(Call);
@@ -299,7 +300,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             UnstructuredGridVertexCoverage coverage = null;
             var grid = new UnstructuredGrid();
 
-            void Call() => 
+            void Call() =>
                 UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, grid, -999.0);
 
             Assert.Throws<ArgumentNullException>(Call);
@@ -311,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var grid = new UnstructuredGrid();
             var coverage = new UnstructuredGridCellCoverage(grid, false);
 
-            void Call() => 
+            void Call() =>
                 UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, null, "some/path.nc", -999.0);
 
             Assert.Throws<ArgumentNullException>(Call);
@@ -323,7 +324,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var grid = new UnstructuredGrid();
             var coverage = new UnstructuredGridVertexCoverage(grid, false);
 
-            void Call() => 
+            void Call() =>
                 UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, null, -999.0);
 
             Assert.Throws<ArgumentNullException>(Call);
@@ -337,7 +338,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var grid = new UnstructuredGrid();
             var coverage = new UnstructuredGridCellCoverage(grid, false);
 
-            void Call() => 
+            void Call() =>
                 UnstructuredGridCoverageExtensions.LoadBathymetry(coverage, grid, path, -999.0);
 
             Assert.Throws<ArgumentException>(Call);
@@ -365,9 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // Assert
             Assert.That(coverage.Grid, Is.SameAs(newGrid));
 
-            IMultiDimensionalArray data = coverage.Components[0].Values;
-            var retrievedValues = new double[data.Count];
-            data.CopyTo(retrievedValues, 0);
+            double[] retrievedValues = GetBathymetryValuesFromCoverage(coverage);
 
             Assert.That(retrievedValues, Is.EqualTo(newGrid.Vertices.Select(v => v.Z)));
         }
@@ -383,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             using (var tempDir = new TemporaryDirectory())
             {
                 UnstructuredGrid newGrid = UnstructuredGridTestHelper.GenerateRegularGrid(7, 7, 10D, 10D);
-                
+
                 string gridSourcePath = TestHelper.GetTestFilePath("WaterFlowFMModel.MorphologicalGrid/replacement_grid.nc");
                 string gridLocalPath = tempDir.CopyTestDataFileToTempDirectory(TestHelper.GetTestFilePath(gridSourcePath));
 
@@ -393,16 +392,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Assert
                 Assert.That(coverage.Grid, Is.SameAs(newGrid));
 
-                double[] expectedValues = 
+                double[] expectedValues =
                     UnstructuredGridFileHelper.ReadZValues(gridLocalPath,
                                                            UnstructuredGridFileHelper.BedLevelLocation.Faces);
 
-                IMultiDimensionalArray data = coverage.Components[0].Values;
-                var retrievedValues = new double[data.Count];
-                data.CopyTo(retrievedValues, 0);
+                double[] retrievedValues = GetBathymetryValuesFromCoverage(coverage);
 
                 Assert.That(retrievedValues, Is.EqualTo(expectedValues));
             }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void LoadBathymetry_UnstructuredGridCellCoverage_NoDataInFile_MissingDataValueWrittenForAllBathymetryValues()
+        {
+            // Setup
+            var grid = new UnstructuredGrid();
+            var coverage = new UnstructuredGridCellCoverage(grid, false);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                UnstructuredGrid newGrid = UnstructuredGridTestHelper.GenerateRegularGrid(7, 7, 10D, 10D);
+
+                string gridSourcePath = TestHelper.GetTestFilePath("WaterFlowFMModel.MorphologicalGrid/grid_without_face_data.nc");
+                string gridLocalPath = tempDir.CopyTestDataFileToTempDirectory(TestHelper.GetTestFilePath(gridSourcePath));
+
+                // Call
+                void Call() => coverage.LoadBathymetry(newGrid, gridLocalPath);
+                IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
+
+                // Assert
+                Assert.That(messages, Has.Member("No bathymetry data was found, the default D-FlowFM (-999) will be used instead."));
+                Assert.That(coverage.Grid, Is.SameAs(newGrid));
+
+                double[] retrievedValues = GetBathymetryValuesFromCoverage(coverage);
+
+                Assert.That(retrievedValues.Length, Is.EqualTo(coverage.GetCoordinatesForGrid(newGrid).Count()));
+                Assert.That(retrievedValues, Has.All.EqualTo(-999.0));
+            }
+        }
+
+        public static double[] GetBathymetryValuesFromCoverage(UnstructuredGridCoverage coverage)
+        {
+            IMultiDimensionalArray dataSource = coverage.Components[0].Values;
+            var dataReturn = new double[dataSource.Count];
+            dataSource.CopyTo(dataReturn, 0);
+
+            return dataReturn;
         }
     }
 }

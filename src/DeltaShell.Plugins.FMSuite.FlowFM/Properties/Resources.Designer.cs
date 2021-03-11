@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -1181,6 +1181,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("unstrucModel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No bathymetry data was found, the default D-FlowFM ({0}) will be used instead..
+        /// </summary>
+        public static string UnstructuredGridCoverageExtensions_LoadBathymetry_No_bathymetry_data_was_found__the_default_D_FlowFM___0___will_be_used_instead_ {
+            get {
+                return ResourceManager.GetString("UnstructuredGridCoverageExtensions_LoadBathymetry_No_bathymetry_data_was_found__t" +
+                        "he_default_D_FlowFM___0___will_be_used_instead_", resourceCulture);
             }
         }
         
