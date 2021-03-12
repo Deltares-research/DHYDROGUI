@@ -6,7 +6,6 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -245,15 +244,8 @@ namespace DelftTools.Hydro.Helpers
                                            fixedLength);
                 }
             }
-
-            // force refresh of caching (location dictionary) -> new locations are added
-            TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
-
-            discretization.RemoveLocations(discretization.GetDuplicatePointsOnHydroNodes());
-
-            // force refresh of caching (location dictionary) -> locations were removed
-            TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
-
+            discretization.UpdateNetworkLocations(discretization.Locations.GetValues<INetworkLocation>().ToArray(), false);
+            
             discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
             discretization.Locations.SkipUniqueValuesCheck = false;
         }

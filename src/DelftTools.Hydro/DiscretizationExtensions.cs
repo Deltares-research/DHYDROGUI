@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Editing;
+using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -139,25 +144,44 @@ namespace DelftTools.Hydro
                 .ToList();
         }
 
-        public static IEnumerable<INetworkLocation> GetDuplicatePointsOnHydroNodes(this IDiscretization discretization)
+        public static void UpdateNetworkLocations(this IDiscretization networkDiscretization, IEnumerable<INetworkLocation> newLocations, bool merge = true)
         {
-            var duplicateLocations = new List<INetworkLocation>();
-            var hydroNetwork = discretization.GetHydroNetwork();
-            if (hydroNetwork == null) return duplicateLocations;
+            // remember network locations the user has fixed.
+            var currentLocations = networkDiscretization.Locations.Values;
+
+            var fixedOffsetNetworkLocations = new HashSet<INetworkLocation>(currentLocations
+                                              .Where(networkDiscretization.IsFixedPoint));
+
+            // Merge existing locations and remove locations with the same geometry
+            var networkLocations = newLocations as INetworkLocation[] ?? newLocations.ToArray();
             
-            foreach (var node in hydroNetwork.HydroNodes)
+
+            networkDiscretization.BeginEdit(new DefaultEditAction("Setting values"));
+            networkDiscretization.Clear();
+            if (merge)
             {
-                if (node.IsOnSingleBranch)
-                    continue;
-
-                var nodeLocations = discretization.GetNetworkLocationAtNode(node);
-                if (nodeLocations.Count <= 1) 
-                    continue;
-
-                duplicateLocations.AddRange(nodeLocations.Skip(1));
+                var locationsMerged = networkLocations
+                                      .Union(currentLocations)
+                                      .GroupBy(lv => lv.Geometry.Coordinate)
+                                      .Select(crdGroup =>
+                                                  crdGroup.Select(nl => fixedOffsetNetworkLocations.Contains(nl) ? nl : null).FirstOrDefault() ??
+                                                  crdGroup.Min())
+                                      .OrderBy(l => l)
+                                      .ToArray();
+                FunctionHelper.SetValuesRaw<INetworkLocation>(networkDiscretization.Locations, locationsMerged);
+                FunctionHelper.SetValuesRaw(networkDiscretization.Components[0], Enumerable.Repeat(0d, locationsMerged.Length));
+            }
+            else
+            {
+                FunctionHelper.SetValuesRaw<INetworkLocation>(networkDiscretization.Locations, networkLocations);
+                FunctionHelper.SetValuesRaw(networkDiscretization.Components[0], Enumerable.Repeat(0d, networkLocations.Length));
             }
 
-            return duplicateLocations;
+            fixedOffsetNetworkLocations.ForEach(networkDiscretization.ToggleFixedPoint);
+            networkDiscretization.EndEdit();
+
+            // force refresh of caching (location dictionary) -> new locations are added
+            TypeUtils.SetField(networkDiscretization, "updateLocationsDictionary", true);
         }
 
         private static IHydroNetwork GetHydroNetwork(this IDiscretization discretization)

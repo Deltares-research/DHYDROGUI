@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -44,7 +45,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             try
             {
                 waterFlowFMModel.NetworkDiscretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered;
-                ClearComputationalPointsOfChannels(waterFlowFMModel.NetworkDiscretization, channels);
                 ImportCalculationGrids(waterFlowFMModel.NetworkDiscretization, channels);
                 ImportFixedGridPointData(waterFlowFMModel.NetworkDiscretization);
             }
@@ -74,80 +74,55 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void ImportFixedGridPointData(IDiscretization networkDiscretization)
         {
             var sobekObjectTypePath = GetFilePath(SobekFileNames.SobekObjectTypeFileName);
-            if (File.Exists(sobekObjectTypePath))
-            {
-                var fixedGridPointData = new SobekObjectTypeReader().Read(sobekObjectTypePath).Where(sot => sot.Type == SobekObjectType.SBK_GRIDPOINTFIXED).Select(sot => sot.ID).ToList();
-                fixedGridPointData.Sort();
-                var gridPointToBecomeFixed = networkDiscretization.Locations.Values.Where(gridPoint => fixedGridPointData.BinarySearch(gridPoint.Name) >= 0);
-
-                foreach (var networkLocation in gridPointToBecomeFixed)
-                {
-                    networkDiscretization[networkLocation] = 1.0;
-                }
-            }
-            else
+            if (!File.Exists(sobekObjectTypePath))
             {
                 Log.WarnFormat("Could not import fixed grid points data; file {0} not found.", sobekObjectTypePath);
+                return;
             }
+
+            var fixedGridPointData = new HashSet<string>(new SobekObjectTypeReader().Read(sobekObjectTypePath).Where(sot => sot.Type == SobekObjectType.SBK_GRIDPOINTFIXED).Select(sot => sot.ID));
+            var gridPointToBecomeFixed = networkDiscretization.Locations.Values.Where(gridPoint => fixedGridPointData.Contains(gridPoint.Name)).ToArray();
+            networkDiscretization.SetValues(Enumerable.Repeat(1.0d, gridPointToBecomeFixed.Length), new VariableValueFilter<INetworkLocation>(networkDiscretization.Locations, gridPointToBecomeFixed));
         }
 
         private void ImportCalculationGrids(IDiscretization networkDiscretization, Dictionary<string, IChannel> channels)
         {
             string gridPath = GetFilePath(SobekFileNames.SobekNetworkGridFileName);
-            if (File.Exists(gridPath))
-            {
-                //channels.ContainsKey -> calculation points on pipes should not be imported
-                IList<CalcGrid> calcGrids = new SobekGridPointsReader().Read(gridPath).Where(cg => channels.ContainsKey(cg.BranchID)).ToList();
-
-                var locations = new List<NetworkLocation>();
-
-                //add the grids in the order of the branches in network..because adding slices to underlying coverage is only supported 
-                //when values are monotonous ascending..
-                foreach (CalcGrid grid in calcGrids.OrderBy(g => HydroNetwork.Branches.IndexOf(channels[g.BranchID])))
-                {
-                    var branch = channels[grid.BranchID];
-
-                    var branchLocations = CreateFractionSegment(branch, grid,
-                                          branch.Structures.Where(s => s is ICompositeBranchStructure).OrderBy(
-                                              s => s.Chainage).Select(s => s.Chainage).ToList());
-
-                    if (branchLocations != null && branchLocations.Any())
-                    {
-                        locations.AddRange(branchLocations);
-                    }
-                }
-                //change stupid duplicate names of locations
-                while (locations.Select(ls => ls.Name).Distinct().Count() !=
-                       locations.Select(ls => ls.Name).Count())
-                {
-                    NamingHelper.MakeNamesUnique(locations);
-                }
-                // remember network locations the user has fixed.
-                var fixedOffsetNetworkLocations = networkDiscretization
-                    .Locations
-                    .Values
-                    .Where(networkDiscretization.IsFixedPoint)
-                    .ToArray();
-
-                // Merge existing locations and remove locations with the same geometry
-                var locationsMerged = locations
-                    .Union(networkDiscretization.Locations.Values)
-                    .GroupBy(lv => lv.Geometry.Coordinate)
-                    .Select(crdGroup => crdGroup.Min())
-                    .OrderBy(l => l)
-                    .ToArray();
-                networkDiscretization.BeginEdit(new DefaultEditAction("Setting values"));
-                networkDiscretization.Clear();
-                FunctionHelper.SetValuesRaw<INetworkLocation>(networkDiscretization.Locations, locationsMerged);
-                FunctionHelper.SetValuesRaw(networkDiscretization.Components[0], Enumerable.Repeat(0d, locationsMerged.Length));
-                fixedOffsetNetworkLocations.ForEach(networkDiscretization.ToggleFixedPoint); 
-                networkDiscretization.EndEdit();
-                
-            }
-            else
+            if (!File.Exists(gridPath))
             {
                 Log.WarnFormat("Could not import computational grid; file {0} not found.", gridPath);
+                return;
             }
+
+            //channels.ContainsKey -> calculation points on pipes should not be imported
+            IList<CalcGrid> calcGrids = new SobekGridPointsReader().Read(gridPath).Where(cg => channels.ContainsKey(cg.BranchID)).ToList();
+
+            var locations = new List<NetworkLocation>();
+
+            //add the grids in the order of the branches in network..because adding slices to underlying coverage is only supported 
+            //when values are monotonous ascending..
+            foreach (CalcGrid grid in calcGrids.OrderBy(g => HydroNetwork.Branches.IndexOf(channels[g.BranchID])))
+            {
+                var branch = channels[grid.BranchID];
+
+                var branchLocations = CreateFractionSegment(branch, grid,
+                                                            branch.Structures.Where(s => s is ICompositeBranchStructure).OrderBy(
+                                                                s => s.Chainage).Select(s => s.Chainage).ToList());
+
+                if (branchLocations != null && branchLocations.Any())
+                {
+                    locations.AddRange(branchLocations);
+                }
+            }
+
+            //change stupid duplicate names of locations
+            while (locations.Select(ls => ls.Name).Distinct().Count() !=
+                   locations.Select(ls => ls.Name).Count())
+            {
+                NamingHelper.MakeNamesUnique(locations);
+            }
+
+            networkDiscretization.UpdateNetworkLocations(locations);
         }
 
         /// <summary>
@@ -223,11 +198,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             return networkLocations;
-        }
-
-        private void ClearComputationalPointsOfChannels(IDiscretization networkDiscretization, Dictionary<string, IChannel> channels)
-        {
-            networkDiscretization.Locations.AllValues.RemoveAllWhere(l => channels.ContainsKey(l.Branch.Name));
         }
     }
 }
