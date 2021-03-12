@@ -1185,7 +1185,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No bathymetry data was found, the default D-FlowFM ({0}) will be used instead..
+        ///   Looks up a localized string similar to No bathymetry data was found, the default D-Flow FM ({0}) will be used instead..
         /// </summary>
         public static string UnstructuredGridCoverageExtensions_LoadBathymetry_No_bathymetry_data_was_found__the_default_D_FlowFM___0___will_be_used_instead_ {
             get {
