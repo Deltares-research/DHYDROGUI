@@ -55,15 +55,21 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             ValidateFilePathWithAcceptableDeltaresVersion(filePath);
             api.Open(filePath, mode);
         }
-
+        /// <summary>
+        /// open netcdf manually, this functionality must be placed int the wrapper opening function using the ionc_adheresto_conventions_dll call when UNST-4908 is resolved
+        /// format of the convention string could be:
+        /// "CF-1.6 UGRID-1.0/Deltares-0.8"
+        /// "CF-1.6 UGRID-1.0/Deltares-0.9"
+        /// "CF-1.8 UGRID-1.0 Deltares-0.10"
+        /// </summary>
+        /// <param name="filePath"></param>
         private static void ValidateFilePathWithAcceptableDeltaresVersion(string filePath)
         {
-            var deltaresVersionKeyValue = "Deltares-";
+            const string deltaresVersionKeyValue = "Deltares-";
             NetCdfFile file = null;
             string conventions = string.Empty;
             try
             {
-                // open netcdf manually, this functionality must be placed int the wrapper opening function using the ionc_adheresto_conventions_dll call when UNST-4908 is resolved
                 file = NetCdfFile.OpenExisting(filePath);
                 conventions = file.GetGlobalAttribute("Conventions")?.Value?.ToString() ?? string.Empty;
             }
