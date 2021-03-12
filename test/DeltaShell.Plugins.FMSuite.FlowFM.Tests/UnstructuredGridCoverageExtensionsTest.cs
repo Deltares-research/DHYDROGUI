@@ -422,7 +422,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 IEnumerable<string> messages = TestHelper.GetAllRenderedMessages(Call, Level.Warn);
 
                 // Assert
-                Assert.That(messages, Has.Member("No bathymetry data was found, the default D-FlowFM (-999) will be used instead."));
+                Assert.That(messages, Has.Member("No bathymetry data was found, the default D-Flow FM (-999) will be used instead."));
                 Assert.That(coverage.Grid, Is.SameAs(newGrid));
 
                 double[] retrievedValues = GetBathymetryValuesFromCoverage(coverage);
