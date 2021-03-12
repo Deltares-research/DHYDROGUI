@@ -46,8 +46,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
 
             string acceptanceModelReferenceOutputPath = GuiTestHelper.IsBuildServer
-                ? @"..\..\AcceptanceModels\GWSW"
-                : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModelsReferenceOutput\GWSW";
+                                                            ? @"..\..\AcceptanceModelsReferenceOutput\GWSW"
+                                                            : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModelsReferenceOutput\GWSW";
             acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
         }
 
