@@ -3,9 +3,10 @@ from typing import Generator
 import shutil
 import argparse
 import json
+from itertools import chain
 
 
-def determine_analysis_dlls(repo_root: Path) -> Generator[str, None, None]:
+def determine_analysis_dlls(repo_root: Path, include_tests: bool) -> Generator[str, None, None]:
     """
     Gather all the dll names which need to be analysed.
 
@@ -22,7 +23,10 @@ def determine_analysis_dlls(repo_root: Path) -> Generator[str, None, None]:
         Generator[str, None, None]: Generator containing the dll names to sign.
     """
     src_csprojs = ((repo_root / Path("src")).glob("**/*.csproj"))
-    return (x.with_suffix(".dll").name for x in src_csprojs)
+    test_csprojs = ((repo_root / Path("test")).glob("**/*.csproj"))
+    relevant_csprojs = chain(src_csprojs, test_csprojs) if include_tests else src_csprojs
+
+    return (x.with_suffix(".dll").name for x in relevant_csprojs)
 
 
 def get_dll_path(repo_root: Path, dll_name: str, config: str) -> Path:
@@ -66,8 +70,8 @@ def copy_dll(destination_directory: Path, src_dll_path: Path, repo_path: Path) -
     shutil.move(str(src_dll_path.with_suffix('.pdb')), str(goal_path.with_suffix('.pdb')))
 
 
-def run(repo_root: Path, destination_directory: Path, config: str) -> None:
-    dll_names = determine_analysis_dlls(repo_root)
+def run(repo_root: Path, destination_directory: Path, config: str, include_tests: bool) -> None:
+    dll_names = determine_analysis_dlls(repo_root, include_tests)
     dll_paths = find_all_dll_paths(repo_root, dll_names, config)
 
     for p in dll_paths:
@@ -83,9 +87,10 @@ def parse_arguments():
     parser.add_argument("repo_path", help="Path to the root of the repository.")
     parser.add_argument("dest_path", help="Path to the destination folder.")
     parser.add_argument("config", help="The build configuration")
+    parser.add_argument("--exclude_tests", action='store_true', help="Exclude test dlls from analysis folder.")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_arguments()
-    run(Path(args.repo_path), Path(args.dest_path), args.config)
+    run(Path(args.repo_path), Path(args.dest_path), args.config, not args.exclude_tests)
