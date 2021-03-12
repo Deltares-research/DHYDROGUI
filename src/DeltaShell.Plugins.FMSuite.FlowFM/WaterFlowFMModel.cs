@@ -1727,9 +1727,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
         }
 
-        // [TOOLS-22813] Override OnInputPropertyChanged to stop base class (ModelBase) from clearing the output
         protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            // [TOOLS-22813] Override OnInputPropertyChanged to stop base class (ModelBase) from clearing the output
         }
 
         protected override void OnClearOutput()
