@@ -18,7 +18,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private static readonly ILog Log = LogManager.GetLogger(typeof(SobekInitialConditionsImporter));
 
         public override string DisplayName => "Initial Conditions";
-        
+
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.WaterFlow1D;
+
         protected override void PartialImport()
         {
             Log.DebugFormat("Importing initial conditions ...");

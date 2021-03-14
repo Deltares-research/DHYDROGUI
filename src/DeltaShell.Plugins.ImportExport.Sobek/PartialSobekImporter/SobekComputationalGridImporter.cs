@@ -29,6 +29,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return "Grid points (computational grid)"; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.WaterFlow1D;
+
         protected override void PartialImport()
         {
             if (!HydroNetwork.Branches.Any())

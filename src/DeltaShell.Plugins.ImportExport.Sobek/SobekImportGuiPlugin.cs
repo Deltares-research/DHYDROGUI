@@ -38,8 +38,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get { return "3.5.0.0"; }
         }
 
+        public override IGraphicsProvider GraphicsProvider { get; } = new SobekImportGraphicsProvider();
+
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
+            yield return new ViewInfo<ProjectTemplate, SobekImportWizardControl>
+            {
+                AdditionalDataCheck = t => string.Equals(t.Id, "Sobek2ImportTemplate"),
+                AfterCreate = (v, t) =>
+                {
+                    v.Application = Gui?.Application;
+                }
+            };
+
             yield return new ViewInfo<SobekHydroModelImporter, ImportSobekHydroModelWizardDialog>
             {
                 GetViewName = (v, o) => v.Title,

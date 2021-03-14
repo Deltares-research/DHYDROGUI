@@ -34,6 +34,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         
         public override string DisplayName => "Rainfall Runoff NWRW data";
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.RainfallRunoff;
 
         protected override void PartialImport()
         {

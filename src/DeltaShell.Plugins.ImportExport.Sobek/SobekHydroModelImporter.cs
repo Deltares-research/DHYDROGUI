@@ -28,9 +28,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private const string RRWorkflowName = "RR"; 
 
         public bool enableWaqOutput;
-        public bool useRR;
-        public bool useRTC;
-        public bool useFm = true;
+
+        public bool UseRR { get; set; }
+
+        public bool UseRTC { get; set; }
+
+        public bool UseFm { get; set; } = true;
 
         private bool shouldCancel;
         private IPartialSobekImporter importer;
@@ -43,9 +46,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public SobekHydroModelImporter(bool useRR, bool useRTC = true, bool useFm = true)
         {
-            this.useFm = useFm;
-            this.useRR = useRR;
-            this.useRTC = useRTC;
+            UseFm = useFm;
+            UseRR = useRR;
+            UseRTC = useRTC;
         }
 
         # region IFileImporter
@@ -179,6 +182,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get { return Name; }
         }
 
+        SobekImporterCategories IPartialSobekImporter.Category { get; } = SobekImporterCategories.IntegratedModel;
+
         public object TargetObject
         {
             get
@@ -270,7 +275,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             var hydroModel = TargetObject as HydroModel;
             if (hydroModel == null) return;
-            if (useFm)
+            if (UseFm)
             {
                 foreach (var waterFlowFmModel in hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>())
                 {
@@ -311,14 +316,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             // Build using the selected models
             var previousImporter = importer;
             importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(PathSobek, targetObject);
-            if (useFm && !GetImporters(importer).Any(i => PartialSobekImporterBuilder.GetWaterFlowFMModelImporters().Any(imp => i.GetType().Implements(imp.GetType()))))
+            if (UseFm && !GetImporters(importer).Any(i => PartialSobekImporterBuilder.GetWaterFlowFMModelImporters().Any(imp => i.GetType().Implements(imp.GetType()))))
             {
                 importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(importer.PathSobek,
                     importer.TargetObject, GetImporters(importer).Reverse().Concat(PartialSobekImporterBuilder.GetWaterFlowFMModelImporters())
                         .Distinct(new ImporterTypeComparer()).ToList());
 
             }
-            if (useRR && !GetImporters(importer).Any(i => PartialSobekImporterBuilder.GetRainfallRunoffModelImporters().Any(imp => i.GetType().Implements(imp.GetType()))))
+            if (UseRR && !GetImporters(importer).Any(i => PartialSobekImporterBuilder.GetRainfallRunoffModelImporters().Any(imp => i.GetType().Implements(imp.GetType()))))
             {
                 importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(importer.PathSobek,
                     importer.TargetObject,
@@ -326,7 +331,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                         .Distinct(new ImporterTypeComparer()).ToList());
 
             }
-            if (useRTC && !GetImporters(importer).Any(i => PartialSobekImporterBuilder.GetRealTimeControlModelImporters().All(imp => i.GetType().Implements(imp.GetType()))))
+            if (UseRTC && !GetImporters(importer).Any(i => PartialSobekImporterBuilder.GetRealTimeControlModelImporters().All(imp => i.GetType().Implements(imp.GetType()))))
             {
                 importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(importer.PathSobek,
                     importer.TargetObject,
@@ -407,7 +412,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
             var hydroModel = hydroModelBuilder.BuildModel(ModelGroup.RHUModels);
 
-            if (!useFm)
+            if (!UseFm)
             {
                 var fm = hydroModel.Activities.First(m => m is WaterFlowFMModel);
                 hydroModel.Region.SubRegions.Remove(((WaterFlowFMModel)fm).Network);
@@ -415,14 +420,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 hydroModel.Activities.Remove(fm);
             }
 
-            if (!useRR)
+            if (!UseRR)
             {
                 var rr = hydroModel.Activities.First(m => m is RainfallRunoffModel);
                 hydroModel.Region.SubRegions.Remove(((RainfallRunoffModel) rr).Basin);
                 hydroModel.Activities.Remove(rr);
             }
 
-            if (!useRTC)
+            if (!UseRTC)
             {
                 var rtc = hydroModel.Activities.First(m => m is RealTimeControlModel);
                 hydroModel.Activities.Remove(rtc);
@@ -555,15 +560,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private string FindActivityFromDescription(string description)
         {
-            if (description == "RR" && useRR)
+            if (description == "RR" && UseRR)
             {
                 return RRWorkflowName;
             }
-            if (description.StartsWith("CF") && useFm)  // CF is old Flow1D, need to map on FM
+            if (description.StartsWith("CF") && UseFm)  // CF is old Flow1D, need to map on FM
             {
                 return FlowFMWorkflowName;
             }
-            if (description.StartsWith("RTC") && useRTC)
+            if (description.StartsWith("RTC") && UseRTC)
             {
                 return RtcWorkflowName;
             }

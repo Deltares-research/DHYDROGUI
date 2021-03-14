@@ -34,6 +34,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return displayName; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.RainfallRunoff;
+
         protected override void PartialImport()
         {
             rainfallRunoffModel = GetModel<RainfallRunoffModel>();

@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
                     selectSobekModelsWizardPage.ImportFlowEnabled = settingsDat.Contains("channel=-1") || settingsDat.Contains("river=-1") || settingsDat.Contains("sewer=-1");
                     selectSobekModelsWizardPage.ImportRtcEnabled = selectSobekModelsWizardPage.ImportFlow;
                     selectSobekModelsWizardPage.ImportRREnabled = settingsDat.Contains("3b=-1");
-                    }
+                }
                 else
                 {
                     throw new ArgumentException("Not a valid file to import.");
@@ -100,9 +100,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             }
             else if (page == selectSobekModelsWizardPage)
             {
-                importer.useFm = selectSobekModelsWizardPage.ImportFlow;
-                importer.useRR = selectSobekModelsWizardPage.ImportRR;
-                importer.useRTC = selectSobekModelsWizardPage.ImportRtc;
+                importer.UseFm = selectSobekModelsWizardPage.ImportFlow;
+                importer.UseRR = selectSobekModelsWizardPage.ImportRR;
+                importer.UseRTC = selectSobekModelsWizardPage.ImportRtc;
                 selectSobekPartsWizardPage.PartialSobekImporter = importer;
             }
             else if (page == selectSobekPartsWizardPage)
@@ -121,9 +121,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
         }
         protected override void OnDialogFinished()
         {
-            importer.useRTC = GetImporters(importer).Where(i => PartialSobekImporterBuilder.GetRealTimeControlModelImporters().Any(rtcImp => i.GetType().Implements(rtcImp.GetType()))).Any(imp => imp.IsActive);
-            importer.useRR = GetImporters(importer).Where(i => PartialSobekImporterBuilder.GetRainfallRunoffModelImporters().Any(rrImp => i.GetType().Implements(rrImp.GetType()))).Any(imp => imp.IsActive);
-            importer.useFm = GetImporters(importer).Where(i => PartialSobekImporterBuilder.GetWaterFlowFMModelImporters().Any(fmImp => i.GetType().Implements(fmImp.GetType()))).Any(imp => imp.IsActive);
+            importer.UseRTC = GetImporters(importer).Where(i => PartialSobekImporterBuilder.GetRealTimeControlModelImporters().Any(rtcImp => i.GetType().Implements(rtcImp.GetType()))).Any(imp => imp.IsActive);
+            importer.UseRR = GetImporters(importer).Where(i => PartialSobekImporterBuilder.GetRainfallRunoffModelImporters().Any(rrImp => i.GetType().Implements(rrImp.GetType()))).Any(imp => imp.IsActive);
+            importer.UseFm = GetImporters(importer).Where(i => PartialSobekImporterBuilder.GetWaterFlowFMModelImporters().Any(fmImp => i.GetType().Implements(fmImp.GetType()))).Any(imp => imp.IsActive);
             ConfigureIntegratedModel(importer);
             base.OnDialogFinished();
         }
@@ -132,21 +132,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
         {
             if (sobekHydroModelImporter.TargetObject is HydroModel hydroModel)
             {
-                if (!hydroModel.GetAllActivitiesRecursive<IModelWithNetwork>().Any() && sobekHydroModelImporter.useFm)
+                if (!hydroModel.GetAllActivitiesRecursive<IModelWithNetwork>().Any() && sobekHydroModelImporter.UseFm)
                 {
                     //seems like an integrated model without fm
                     var fmModel = new WaterFlowFMModel();
                     fmModel.MoveModelIntoIntegratedModel(hydroModel.GetFolderContainer(), hydroModel);
                 }
 
-                if (!hydroModel.GetAllActivitiesRecursive<RainfallRunoffModel>().Any() && sobekHydroModelImporter.useRR)
+                if (!hydroModel.GetAllActivitiesRecursive<RainfallRunoffModel>().Any() && sobekHydroModelImporter.UseRR)
                 {
                     //seems like an integrated model without rr
                     var rrModel = new RainfallRunoffModel();
                     rrModel.MoveModelIntoIntegratedModel(hydroModel.GetFolderContainer(), hydroModel);
                 }
 
-                if (!hydroModel.GetAllActivitiesRecursive<RealTimeControlModel>().Any() && sobekHydroModelImporter.useRTC)
+                if (!hydroModel.GetAllActivitiesRecursive<RealTimeControlModel>().Any() && sobekHydroModelImporter.UseRTC)
                 {
                     //seems like an integrated model without rtc
                     var rtcModel = new RealTimeControlModel();

@@ -227,6 +227,7 @@
     <Compile Include="Wizard\ImportPartialSobekWizardDialogTest.cs" />
     <Compile Include="Wizard\ImportSobekHydroModelWizardDialogTest.cs" />
     <Compile Include="Wizard\SelectSobekPartsWizardPageTest.cs" />
+    <Compile Include="Wizard\SobekImportWizardControlViewModelTest.cs" />
     <Compile Include="Wizard\SobekModelSelectFileWizardPageTest.cs" />
   </ItemGroup>
   <ItemGroup>

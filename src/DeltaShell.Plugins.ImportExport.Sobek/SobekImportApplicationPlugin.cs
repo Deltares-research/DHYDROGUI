@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using DelftTools.Shell.Core;
 using DeltaShell.NGHS.IO.Helpers;
 using Mono.Addins;
@@ -41,7 +42,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get { return "3.5.0.0"; }
         }
 
-        
+        public override IEnumerable<ProjectTemplate> ProjectTemplates()
+        {
+            yield return new ProjectTemplate
+            {
+                Name = "Model from Sobek 2",
+                Category = "RHU Templates",
+                Description = "Generate a model from an existing Sobek 2 model",
+                Id = "Sobek2ImportTemplate",
+                ExecuteTemplate = (p, m) =>
+                {
+                    p.RootFolder.Add(m);
+                }
+            };
+        }
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new SobekHydroModelImporter();

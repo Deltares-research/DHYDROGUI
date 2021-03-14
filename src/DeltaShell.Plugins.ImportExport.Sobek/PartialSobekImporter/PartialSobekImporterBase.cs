@@ -26,6 +26,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         public abstract string DisplayName { get; }
 
+        public abstract SobekImporterCategories Category { get; }
+
         public string PathSobek
         {
             get

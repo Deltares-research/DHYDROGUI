@@ -12,7 +12,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         /// <summary>
         /// Name to describe the data that is imported by this importer
         /// </summary>
-        string DisplayName { get;} 
+        string DisplayName { get;}
+
+        /// <summary>
+        /// Category of the importer
+        /// </summary>
+        SobekImporterCategories Category { get; }
 
         /// <summary>
         /// Object to import to

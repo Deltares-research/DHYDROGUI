@@ -81,9 +81,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
     }
 
 
-
-
-
     public class PartialSobekImporterBaseTestClass: PartialSobekImporterBase
     {
         private int partialImportCount = 0;
@@ -118,6 +115,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         {
             get { throw new NotImplementedException(); }
         }
+
+        public override SobekImporterCategories Category { get; }
 
         public SobekFileNames SobekFileNames
         {

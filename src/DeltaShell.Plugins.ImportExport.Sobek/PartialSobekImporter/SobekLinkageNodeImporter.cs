@@ -24,6 +24,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return "Sobek Linkage Node Importer"; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.WaterFlow1D;
+
         protected override void PartialImport()
         {
             if (!HydroNetwork.Branches.Any())

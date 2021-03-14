@@ -97,6 +97,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get { return "Sobek 2 importer for FM"; }
         }
 
+        SobekImporterCategories IPartialSobekImporter.Category { get; } = SobekImporterCategories.WaterFlow1D;
+
         public object TargetObject
         {
             get { return TargetItem; }

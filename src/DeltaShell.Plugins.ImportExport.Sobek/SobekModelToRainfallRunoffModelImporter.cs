@@ -109,6 +109,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             get { return "Sobek 2 RR importer for RR"; }
         }
 
+        SobekImporterCategories IPartialSobekImporter.Category { get; } = SobekImporterCategories.RainfallRunoff;
+
         public object TargetObject
         {
             get { return TargetItem; }

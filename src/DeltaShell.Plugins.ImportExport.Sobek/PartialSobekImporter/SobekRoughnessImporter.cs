@@ -35,6 +35,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return displayName; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.WaterFlow1D;
+
         protected override void PartialImport()
         {
 

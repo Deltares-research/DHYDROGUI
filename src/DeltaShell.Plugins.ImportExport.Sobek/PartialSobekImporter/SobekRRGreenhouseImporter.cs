@@ -18,6 +18,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return "Rainfall Runoff greenhouse data"; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.RainfallRunoff;
+
         protected override void PartialImport()
         {
             log.DebugFormat("Importing greenhouse data ...");

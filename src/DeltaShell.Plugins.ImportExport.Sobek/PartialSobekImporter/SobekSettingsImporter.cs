@@ -23,6 +23,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return "Model and case settings"; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.WaterFlow1D;
+
         protected override void PartialImport()
         {
             Log.DebugFormat("Importing model settings ...");

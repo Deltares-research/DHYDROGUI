@@ -26,6 +26,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return displayName; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.Rtc;
+
         protected override void PartialImport()
         {
             log.DebugFormat("Importing Controllers and Triggers ...");

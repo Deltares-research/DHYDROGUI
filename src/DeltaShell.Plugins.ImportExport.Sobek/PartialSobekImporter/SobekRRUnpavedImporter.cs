@@ -23,6 +23,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return "Rainfall Runoff unpaved data"; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.RainfallRunoff;
+
         protected override void PartialImport()
         { 
             log.DebugFormat("Importing unpaved data ...");

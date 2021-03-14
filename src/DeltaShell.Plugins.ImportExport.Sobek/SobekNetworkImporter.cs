@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     {
         private object targetObject;
         private bool targetItemHasBeenSet;
-
+        
         public SobekNetworkImporter()
         {
             targetItemHasBeenSet = false;
@@ -117,6 +117,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             get { return null; }
         }
+
+        SobekImporterCategories IPartialSobekImporter.Category { get; } = SobekImporterCategories.WaterFlow1D;
 
         public object TargetObject
         {

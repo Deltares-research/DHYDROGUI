@@ -33,6 +33,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return displayName; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.RainfallRunoff;
+
         protected override void PartialImport()
         {
             dictionaryCatchments = DrainageBasin.Catchments.ToDictionary(c => c.Name, c => c);

@@ -643,6 +643,7 @@ src/DeltaShell.NGHS.Common.Gui/BitmapConversionExtensions.cs -text
 src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPicker.xaml -text
 src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPicker.xaml.cs -text
 src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPickerViewModel.cs -text
+src/DeltaShell.NGHS.Common.Gui/DefaultControlTemplates.xaml -text
 src/DeltaShell.NGHS.Common.Gui/DeltaShell.NGHS.Common.Gui.csproj -text
 src/DeltaShell.NGHS.Common.Gui/LayerExtensions.cs -text
 src/DeltaShell.NGHS.Common.Gui/NodePresenters/ContextMenuFactory.cs -text
@@ -2419,6 +2420,7 @@ src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekBranchesImpo
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekComputationalGridImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekControllersTriggersImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekCrossSectionsImporter.cs -text
+src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekImporterCategories.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekInitialConditionsImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekLateralSourcesDataImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekLateralSourcesImporter.cs -text
@@ -2445,13 +2447,18 @@ src/DeltaShell.Plugins.ImportExport.Sobek/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Properties/Resources.Designer.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Properties/Resources.resx -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PumpBuilder.cs -text
+src/DeltaShell.Plugins.ImportExport.Sobek/Resources/STARTUP.BMP -text
+src/DeltaShell.Plugins.ImportExport.Sobek/Resources/image0.png -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Resources/sobek.png -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Scripts/Libraries/Sobek2Functions.py -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekCaseDataReader.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekHydroModelImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekImportApplicationPlugin.cs -text
+src/DeltaShell.Plugins.ImportExport.Sobek/SobekImportGraphics.xaml -text
+src/DeltaShell.Plugins.ImportExport.Sobek/SobekImportGraphicsProvider.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekImportGuiPlugin.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekLocationType.cs -text
+src/DeltaShell.Plugins.ImportExport.Sobek/SobekModelToIntegratedModelImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekModelToRainfallRunoffModelImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekModelToWaterFlowFMImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekNetworkImporter.cs -text
@@ -2478,6 +2485,9 @@ src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SelectSobekModelsWizardPage.res
 src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SelectSobekPartsWizardPage.Designer.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SelectSobekPartsWizardPage.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SelectSobekPartsWizardPage.resx -text
+src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SobekImportWizardControl.xaml -text
+src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SobekImportWizardControl.xaml.cs -text
+src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SobekImportWizardControlViewModel.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SobekModelSelectFileWizardPage.Designer.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SobekModelSelectFileWizardPage.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Wizard/SobekModelSelectFileWizardPage.resx -text
@@ -9809,6 +9819,7 @@ test/DeltaShell.Plugins.ImportExport.Sobek.Tests/WeirNamerTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/Wizard/ImportPartialSobekWizardDialogTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/Wizard/ImportSobekHydroModelWizardDialogTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/Wizard/SelectSobekPartsWizardPageTest.cs -text
+test/DeltaShell.Plugins.ImportExport.Sobek.Tests/Wizard/SobekImportWizardControlViewModelTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/Wizard/SobekModelSelectFileWizardPageTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/packages.config -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/test-data/019_011.lit/2/2DBNDWQ.DAT -text

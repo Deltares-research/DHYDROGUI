@@ -22,6 +22,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             get { return "Boundary conditions (data)"; }
         }
 
+        public override SobekImporterCategories Category { get; } = SobekImporterCategories.WaterFlow1D;
+
         protected override void PartialImport()
         {
             var initialPath = GetFilePath(SobekFileNames.SobekBoundaryFileName);
