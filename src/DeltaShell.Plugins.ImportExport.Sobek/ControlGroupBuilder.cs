@@ -635,7 +635,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             var location = (IFeature)model.GetChildDataItemLocations(DataItemRole.Input)
                                           .OfType<INameable>()
-                                          .FirstOrDefault(l => l.Name == locationName);
+                                          .FirstOrDefault(l => string.Equals(l.Name, locationName, StringComparison.InvariantCultureIgnoreCase));
 
             return location != null 
                        ? model.GetChildDataItems(location) 
@@ -646,7 +646,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             var location = (IFeature)model.GetChildDataItemLocations(DataItemRole.Output)
                                           .OfType<INameable>()
-                                          .FirstOrDefault(l => l.Name == locationName);
+                                          .FirstOrDefault(l => string.Equals(l.Name, locationName, StringComparison.InvariantCultureIgnoreCase));
 
             return location != null 
                        ? model.GetChildDataItems(location) 

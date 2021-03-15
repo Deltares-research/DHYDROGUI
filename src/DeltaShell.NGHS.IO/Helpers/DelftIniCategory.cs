@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using DeltaShell.NGHS.IO.FileReaders;
 using GeoAPI.Geometries;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {
@@ -217,7 +218,8 @@ namespace DeltaShell.NGHS.IO.Helpers
     public static class DelftIniCategoryExtensionMethods
     {
         private static readonly char[] StandardSeperators = new[] { ' ', '\t' };
-
+        private static readonly ILog log = LogManager.GetLogger(typeof(DelftIniCategoryExtensionMethods));
+        
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, ref string errorMessage)
         {
             var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
@@ -228,19 +230,31 @@ namespace DeltaShell.NGHS.IO.Helpers
             errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
             return default(T);
         }
-        public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false, T defaultValue = default(T))
+        public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false, T defaultValue = default(T), bool logError = true)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.Equals(key, StringComparison.InvariantCultureIgnoreCase));
+            var iniProperty = category.Properties.FirstOrDefault(property => string.Equals(property.Name, key, StringComparison.InvariantCultureIgnoreCase));
 
             var typeConverter = TypeDescriptor.GetConverter(typeof(T));
             if (iniProperty != null && typeConverter.CanConvertFrom(typeof(string)) && typeConverter.IsValid(iniProperty.Value))
             {
-                return (T) typeConverter.ConvertFromInvariantString(iniProperty.Value);
+                return (T)typeConverter.ConvertFromInvariantString(iniProperty.Value);
             }
-            
-            if(!isOptional)
-                throw new PropertyNotFoundInFileException(String.Format("Property {0} is not found in the file", key));
+
+            if (!isOptional)
+            {
+                string message = $"Property {key} is not found in the file";
+                if (!logError)
+                    throw new PropertyNotFoundInFileException(message);
+                
+                log.Error(message);
+            }
             return defaultValue;
+
+        }
+        public static T ReadProperty<T>(this IDelftIniCategory category, ConfigurationSetting setting, bool isOptional = false, T defaultValue = default(T), bool logError = true)
+        {
+            return category.ReadProperty(setting.Key, isOptional, defaultValue, logError);
+
         }
         public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, ref string errorMessage)
         {
@@ -254,9 +268,9 @@ namespace DeltaShell.NGHS.IO.Helpers
             errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
             return default(IList<T>);
         }
-        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>), bool useStandardSeparators = true)
+        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>), bool useStandardSeparators = true, bool logError = true)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
+            var iniProperty = category.Properties.FirstOrDefault(property => string.Equals(property.Name, key, StringComparison.InvariantCultureIgnoreCase));
 
             if (iniProperty != null)
             { 
@@ -271,9 +285,19 @@ namespace DeltaShell.NGHS.IO.Helpers
             }
 
             if (!isOptional)
-                throw new PropertyNotFoundInFileException($"Property {key} is not found in the file");
-            
+            {
+                string message = $"Property {key} is not found in the file";
+                if (!logError)
+                    throw new PropertyNotFoundInFileException(message);
+
+                log.Error(message);
+            }
             return defaultValue;
+        }
+
+        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, ConfigurationSetting setting, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>), bool useStandardSeparators = true, bool logError = true)
+        {
+            return category.ReadPropertiesToListOfType(setting.Key, isOptional, customSeparator, defaultValue, useStandardSeparators, logError);
         }
     }
     #endregion

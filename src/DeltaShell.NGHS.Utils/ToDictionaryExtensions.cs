@@ -71,10 +71,11 @@ namespace DeltaShell.NGHS.Utils
         /// <param name="keySelector">Method to select keys from the <typeparamref name="T"/> object</param>
         /// <param name="valueSelector">Method to select values from the <typeparamref name="T"/> object</param>
         /// <param name="logLevel">Level of log message (default is warning)</param>
+        /// <param name="comparer"></param>
         /// <returns>Created dictionary without duplicates</returns>
-        public static Dictionary<TKey, TValue> ToDictionaryWithDuplicateLogging<TKey, TValue, T>(this IEnumerable<T> source, string context, Func<T, TKey> keySelector, Func<T, TValue> valueSelector, Level logLevel = null)
+        public static Dictionary<TKey, TValue> ToDictionaryWithDuplicateLogging<TKey, TValue, T>(this IEnumerable<T> source, string context, Func<T, TKey> keySelector, Func<T, TValue> valueSelector, Level logLevel = null, IEqualityComparer<TKey> comparer = null)
         {
-            var dictionary = new Dictionary<TKey, TValue>();
+            var dictionary = comparer != null ? new Dictionary<TKey, TValue>(comparer) : new Dictionary<TKey, TValue>();
             var duplicateKeys = new Collection<TKey>();
             
             foreach (var item in source)

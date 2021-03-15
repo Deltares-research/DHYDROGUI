@@ -12,6 +12,7 @@ using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.NGHS.IO.FileReaders.Location;
 using DeltaShell.NGHS.IO.FileReaders.Roughness;
 using DeltaShell.NGHS.IO.FileWriters.Network;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
@@ -65,12 +66,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!File.Exists(crDefFile))
                 return new ICrossSectionDefinition[0];
 
-            var channelFrictionDefinitionPerChannelLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel);
+//            var channelFrictionDefinitionPerChannelLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel);
 
-            return CrossSectionFileReader.ReadFile(crLocFile, crDefFile, network, "Channels", channel =>
-            {
-                channelFrictionDefinitionPerChannelLookup[channel].SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
-            });
+            return CrossSectionFileReader.ReadFile(crLocFile, crDefFile, network, channelFrictionDefinitions);
         }
         private static void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {

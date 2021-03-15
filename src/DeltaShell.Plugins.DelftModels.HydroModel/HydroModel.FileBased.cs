@@ -221,18 +221,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             foreach (var sourceOutputItem in sourceOutputItems)
             {
                 var hiddenStateSource = sourceOutputItem.Hidden;
-                sourceOutputItem.Hidden = true; // for performance (bypasses view and sync logic)
-
-                foreach (var targetInputItem in targetInputItems.Where(i => i.LinkedTo != null && i.LinkedTo.Equals(sourceOutputItem)))
+                try
                 {
-                    exchangeInfo.Exchanges.Add(new ModelExchange(sourceOutputItem, targetInputItem));
+                    sourceOutputItem.Hidden = true; // for performance (bypasses view and sync logic)
 
-                    var hiddenStateTarget = targetInputItem.Hidden;
-                    targetInputItem.Hidden = true; // for performance (bypasses view and sync logic)
-                    targetInputItem.Unlink();
-                    targetInputItem.Hidden = hiddenStateTarget;
+                    foreach (var targetInputItem in targetInputItems.Where(i => i.LinkedTo != null && i.LinkedTo.Equals(sourceOutputItem)))
+                    {
+                        exchangeInfo.Exchanges.Add(new ModelExchange(sourceOutputItem, targetInputItem));
+
+                        var hiddenStateTarget = targetInputItem.Hidden;
+                        try
+                        {
+                            targetInputItem.Hidden = true; // for performance (bypasses view and sync logic)
+                            targetInputItem.Unlink();
+                        }
+                        finally
+                        {
+                            targetInputItem.Hidden = hiddenStateTarget;
+                        }
+                    }
                 }
-                sourceOutputItem.Hidden = hiddenStateSource;
+                finally
+                {
+                    sourceOutputItem.Hidden = hiddenStateSource;
+                }
+
             }
 
             return exchangeInfo;

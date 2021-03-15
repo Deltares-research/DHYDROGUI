@@ -25,7 +25,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             IHydroNetwork network = new HydroNetwork();
             IDiscretization discretization = new Discretization();
             UGridFileHelper.ReadNetworkAndDiscretisation(networkFilePath, discretization, network, null, null);
-            var definitions = CrossSectionFileReader.ReadFile(crossSectionLocationFilePath,crossSectionDefinitionFilePath, network, "", null);
+            var definitions = CrossSectionFileReader.ReadFile(crossSectionLocationFilePath,crossSectionDefinitionFilePath, network, null);
 
             // Act
             StructureFileReader.ReadFile(structureFilePath, definitions, network);

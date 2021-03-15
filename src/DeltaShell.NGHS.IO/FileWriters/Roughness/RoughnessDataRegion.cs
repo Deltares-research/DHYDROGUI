@@ -5,7 +5,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
     public static class RoughnessDataRegion
     {
         public const string GlobalIniHeader = "Global";
-        public static readonly ConfigurationSetting SectionId = new ConfigurationSetting(key: "frictionId", description: "The name of the roughness section");
+        public static readonly ConfigurationSetting SectionId = new ConfigurationSetting(key: "frictionId", description: "The name of the roughness section", defaultValue: "Channels");
         public static readonly ConfigurationSetting FrictionType = new ConfigurationSetting(key: "frictionType", description: "The global roughness type for this variable which is used if no branch specific roughness definition is given.See the table at the beginning of this section for the encoding of the different roughness types.");
         public static readonly ConfigurationSetting FrictionValue = new ConfigurationSetting(key: "frictionValue", description: "The global default value for this roughness variable");
         

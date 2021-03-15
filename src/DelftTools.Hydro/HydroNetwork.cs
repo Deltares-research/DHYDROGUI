@@ -315,13 +315,10 @@ namespace DelftTools.Hydro
                 RecreateCache();
             }
 
-            if (!branchFeatureNameCache.ContainsKey(typeof(T)))
-                return default(T);
-
-            var features = branchFeatureNameCache[typeof(T)];
-            return (T)(features.ContainsKey(featureName.ToLower())
-                            ? features[featureName.ToLower()]
-                            : default(T));
+            return branchFeatureNameCache.TryGetValue(typeof(T), out var features) && 
+                   features.TryGetValue(featureName, out var feature) 
+                       ? (T) feature 
+                       : default(T);
         }
 
         public override string ToString()
@@ -460,20 +457,25 @@ namespace DelftTools.Hydro
         {
             branchFeatureNameCache = new Dictionary<Type, IDictionary<string, IBranchFeature>>
             {
-                [typeof(IOrifice)] = Orifices.ToDictionaryWithDuplicateLogging("Orifices", o => o.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(ICrossSection)] = CrossSections.ToDictionaryWithDuplicateLogging("CrossSections", c => c.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IPump)] = Pumps.ToDictionaryWithDuplicateLogging("Pumps", p => p.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(ICulvert)] = Culverts.ToDictionaryWithDuplicateLogging("Culverts", c => c.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IBridge)] = Bridges.ToDictionaryWithDuplicateLogging("Bridges", b => b.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IWeir)] = Weirs.ToDictionaryWithDuplicateLogging("Weirs", w => w.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IGate)] = Gates.ToDictionaryWithDuplicateLogging("Gates", g => g.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(ILateralSource)] = LateralSources.ToDictionaryWithDuplicateLogging("LateralSources", l => l.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IRetention)] = Retentions.ToDictionaryWithDuplicateLogging("Retentions", r => r.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IObservationPoint)] = ObservationPoints.ToDictionaryWithDuplicateLogging("ObservationPoints", o => o.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IExtraResistance)] = ExtraResistances.ToDictionaryWithDuplicateLogging("ExtraResistances", e => e.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(IGully)] = Gullies.ToDictionaryWithDuplicateLogging("Gullies", g => g.Name.ToLower(), w => w as IBranchFeature),
-                [typeof(ICompositeBranchStructure)] = CompositeBranchStructures.ToDictionaryWithDuplicateLogging("CompositeBranchStructures", c => c.Name.ToLower(), w => w as IBranchFeature)
+                [typeof(IOrifice)] = CreateDictionaryForBranchFeatures(nameof(Orifices), Orifices),
+                [typeof(ICrossSection)] = CreateDictionaryForBranchFeatures(nameof(CrossSections), CrossSections),
+                [typeof(IPump)] = CreateDictionaryForBranchFeatures(nameof(Pumps), Pumps),
+                [typeof(ICulvert)] = CreateDictionaryForBranchFeatures(nameof(Culverts), Culverts),
+                [typeof(IBridge)] = CreateDictionaryForBranchFeatures(nameof(Bridges), Bridges),
+                [typeof(IWeir)] = CreateDictionaryForBranchFeatures(nameof(Weirs), Weirs),
+                [typeof(IGate)] = CreateDictionaryForBranchFeatures(nameof(Gates), Gates),
+                [typeof(ILateralSource)] = CreateDictionaryForBranchFeatures(nameof(LateralSources), LateralSources),
+                [typeof(IRetention)] = CreateDictionaryForBranchFeatures(nameof(Retentions), Retentions),
+                [typeof(IObservationPoint)] = CreateDictionaryForBranchFeatures(nameof(ObservationPoints), ObservationPoints),
+                [typeof(IExtraResistance)] = CreateDictionaryForBranchFeatures(nameof(ExtraResistances), ExtraResistances),
+                [typeof(IGully)] = CreateDictionaryForBranchFeatures(nameof(Gullies), Gullies),
+                [typeof(ICompositeBranchStructure)] = CreateDictionaryForBranchFeatures(nameof(CompositeBranchStructures), CompositeBranchStructures),
             };
+        }
+
+        private Dictionary<string, IBranchFeature> CreateDictionaryForBranchFeatures(string context, IEnumerable<IBranchFeature> branchFeatures)
+        {
+            return branchFeatures.ToDictionaryWithDuplicateLogging(context, o => o.Name, bf => bf, comparer: StringComparer.InvariantCultureIgnoreCase);
         }
     }
 }
