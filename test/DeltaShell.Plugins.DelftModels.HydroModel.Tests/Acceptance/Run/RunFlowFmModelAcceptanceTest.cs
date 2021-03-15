@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 gui.Application.SaveProjectAs(Path.Combine(tempDirectory, "SavedModel"));
                 
                 // [Then]
-                CompareResultDataWithReferenceData(acceptanceModelName);
+                CompareResultDataWithReferenceData(acceptanceModelName, acceptanceModelFileName);
             }
         }
 
@@ -123,10 +123,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             return model;
         }
 
-        private void CompareResultDataWithReferenceData(string acceptanceModelName)
+        private void CompareResultDataWithReferenceData(string acceptanceModelName, string acceptanceModelFileName)
         {
             RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, acceptanceModelsReferenceOutputDirectory,
-                                                             tempDirectory, keepOutput);
+                                                             tempDirectory, keepOutput, acceptanceModelFileName);
         }
     }
 }

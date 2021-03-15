@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         /// <param name="keepOutput">Whether or not to keep the actual output files.</param>
         /// <exception cref="ArgumentNullException">When any argument is <c>null</c>.</exception>
         public static void CompareFlowFmOutput(string acceptanceModelName, string referenceOutputDirectory, 
-                                        string tempDirectory, bool keepOutput)
+                                        string tempDirectory, bool keepOutput, string actualModelOutputDirectory = "FlowFm")
         {
             if (acceptanceModelName == null)
             {
@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 Assert.Fail($"No reference data found at: {expectedOutputFolder}.");
             }
             
-            string actualOutputFolder = Path.Combine(tempDirectory, "SavedModel_data", "FlowFM", "output");
+            string actualOutputFolder = Path.Combine(tempDirectory, "SavedModel_data", actualModelOutputDirectory, "output");
             string[] actualOutputFiles = Directory.GetFiles(actualOutputFolder);
             if (!expectedOutputFiles.Any())
             {
