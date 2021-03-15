@@ -2,6 +2,7 @@
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui.Swf;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -30,21 +31,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                         {
                             var quantityAsString = InitialConditionQuantityTypeConverter
                                 .ConvertInitialConditionQuantityToString((InitialConditionQuantity) quantity);
-                            node.Text = $"Channels - {quantityAsString}";
+                            node.Text = $"{RoughnessDataRegion.SectionId.DefaultValue} - {quantityAsString}";
                         }
                         else
                         {
-                            node.Text = $"Channels";
+                            node.Text = $"{RoughnessDataRegion.SectionId.DefaultValue}";
                         }
                     }
                     else
                     {
-                        node.Text = $"Channels";
+                        node.Text = $"{RoughnessDataRegion.SectionId.DefaultValue}";
                     }
                 }
                 else
                 {
-                    node.Text = $"Channels";
+                    node.Text = $"{RoughnessDataRegion.SectionId.DefaultValue}";
                 }
             }
             else

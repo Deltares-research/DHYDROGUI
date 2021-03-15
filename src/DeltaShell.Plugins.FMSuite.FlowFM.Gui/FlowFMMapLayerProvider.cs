@@ -21,6 +21,7 @@ using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
@@ -365,7 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             if (data is ChannelInitialConditionDefinitionsWrapper channelInitialConditionDefinitionsWrapper)
             {
-                return new VectorLayer("Channels")
+                return new VectorLayer(RoughnessDataRegion.SectionId.DefaultValue)
                 {
                     Visible = false,
                     Selectable = true,

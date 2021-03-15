@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 modelDefinition.SetModelProperty(KnownProperties.CrossDefFile, CROSS_SECTION_DEFINITION_FILE_NAME);
                 CrossSectionDefinitionFileWriter.WriteFile(crossSectionDefinitionFilePath, network,
                     WriteFrictionFromCrossSectionDefinitionsForChannel(channelFrictionDefinitionPerChannelLookup),
-                    "Channels");
+                    RoughnessDataRegion.SectionId.DefaultValue);
             }
             else
             {
