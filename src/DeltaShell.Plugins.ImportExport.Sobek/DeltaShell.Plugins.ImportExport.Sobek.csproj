@@ -70,7 +70,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Wpf">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.348-beta\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.436-beta\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
