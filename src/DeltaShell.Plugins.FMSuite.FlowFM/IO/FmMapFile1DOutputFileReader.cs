@@ -177,12 +177,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private DateTime ParseReferenceTime(NetCdfFile outputFile, NetCdfVariable timeVariable)
         {
-            Dictionary<string, object> attributes = outputFile.GetAttributes(timeVariable);
-
-            object unit = attributes.FirstOrDefault(a => a.Key == unitsAttributeKeyNameInNetCdfFile).Value;
+            string unit = outputFile.GetAttributeValue(timeVariable, unitsAttributeKeyNameInNetCdfFile);
             string unitString = unit == null
                                     ? string.Empty
-                                    : unit.ToString().Replace(timeVariableUnitValuePrefixInNetCdfFile, "").Trim();
+                                    : unit.Replace(timeVariableUnitValuePrefixInNetCdfFile, "").Trim();
 
             if (DateTime.TryParseExact(unitString,
                                        new[]

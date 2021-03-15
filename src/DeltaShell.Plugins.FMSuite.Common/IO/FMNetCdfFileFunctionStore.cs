@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         protected override string ReadReferenceDateFromFile(string timeVariableName)
         {
             NetCdfVariable timeVariable = netCdfFile.GetVariableByName(timeVariableName);
-            string timeReference = netCdfFile.GetAttributeValue(timeVariable, "units");
+            string timeReference = netCdfFile.GetAttributeValue(timeVariable, "units") ?? string.Empty;
 
             const string secondsSince = "seconds since ";
             var dateTimeFormatWithZone = $"{dateTimeFormat} zzz";
