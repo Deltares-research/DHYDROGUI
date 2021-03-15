@@ -123,9 +123,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             var crossSectionDefinitions = unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).ToArray();
 
-            // Remove friction data for structure related definitions
-            crossSectionDefinitions.ForEach(d => d.Sections.Clear());
-
             return crossSectionDefinitions;
         }
 
