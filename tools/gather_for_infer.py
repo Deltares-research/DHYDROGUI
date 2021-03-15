@@ -34,8 +34,10 @@ def copy_dll(destination_directory: Path, src_dll_path: Path, repo_path: Path) -
     goal_path = destination_directory / relative_path
     goal_path.parent.mkdir(parents=True, exist_ok=True)
 
-    shutil.move(str(src_dll_path), str(goal_path))
-    shutil.move(str(src_dll_path.with_suffix('.pdb')), str(goal_path.with_suffix('.pdb')))
+    src_pdb_path = src_dll_path.with_suffix('.pdb')
+    if src_pdb_path.exists() and src_dll_path.exists() :
+        shutil.move(str(src_dll_path), str(goal_path))
+        shutil.move(str(src_pdb_path), str(goal_path.with_suffix('.pdb')))
 
 
 def run(src_directories: List[Path], bin_directory: Path,destination_directory: Path) -> None:
