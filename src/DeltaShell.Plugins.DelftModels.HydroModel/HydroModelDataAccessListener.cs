@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 return;
 
             // Relink after loading
-            using (hydroModel.InEditMode($"Linking items after loading")) ;
+            using (hydroModel.InEditMode("Linking items after loading"))
             {
                 hydroModel.RelinkDataItems();
                 hydroModel.RelinkHydroRegionLinks();

@@ -8,7 +8,6 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Units;
-using DelftTools.Utils;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
@@ -281,7 +280,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
                 if (filters == null || filters.Length == 0)
                 {
-                    return GetValuesForTimeSeriesAtAllLocations<T>(variable, ncVariableName); ;
+                    return GetValuesForTimeSeriesAtAllLocations<T>(variable, ncVariableName);
                 }
 
                 if (variable.Attributes["OriginalType"] == "Byte")

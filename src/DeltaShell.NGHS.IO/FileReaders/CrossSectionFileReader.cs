@@ -6,7 +6,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
@@ -121,9 +120,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new FileReadingException($"While reading cross sections an error occured :{Environment.NewLine} {string.Join(Environment.NewLine, innerExceptionMessages)}");
             }
 
-            var crossSectionDefinitions = unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).ToArray();
-
-            return crossSectionDefinitions;
+            return unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).ToArray();
         }
 
         private static ICrossSectionDefinition CreateCrossSectionDefinitionFromCategory(DelftIniCategory csdCategory, IHydroNetwork network, string defaultFrictionId)

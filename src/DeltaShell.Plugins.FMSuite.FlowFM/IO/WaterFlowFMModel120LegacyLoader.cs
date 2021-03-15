@@ -8,7 +8,6 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

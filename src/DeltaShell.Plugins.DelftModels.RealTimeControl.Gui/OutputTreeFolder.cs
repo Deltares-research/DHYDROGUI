@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-using System.Collections;
+﻿using System.Collections;
+using System.Drawing;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 

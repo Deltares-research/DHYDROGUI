@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
-using DelftTools.Utils.Collections;
-using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;

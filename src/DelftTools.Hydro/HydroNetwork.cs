@@ -223,7 +223,7 @@ namespace DelftTools.Hydro
                 if (s is IBranchFeature && string.Equals(a.PropertyName, nameof(IBranchFeature.Name)))
                 {
                     branchFeatureNameCache = null;
-                };
+                }
             };
 
             CollectionChanged += (sender, args) =>

@@ -13,6 +13,7 @@ using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Properties;
 using DeltaShell.NGHS.Common.IO;
 using log4net;
+
 namespace DeltaShell.Dimr
 {
     public class DimrRunner : IDisposable

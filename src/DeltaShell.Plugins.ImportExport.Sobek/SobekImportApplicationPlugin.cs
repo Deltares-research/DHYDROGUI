@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
 using DelftTools.Shell.Core;
 using DeltaShell.NGHS.IO.Helpers;
 using Mono.Addins;

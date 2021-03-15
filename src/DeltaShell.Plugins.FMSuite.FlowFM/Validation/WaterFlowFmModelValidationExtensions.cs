@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Link1d2d;
-using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;

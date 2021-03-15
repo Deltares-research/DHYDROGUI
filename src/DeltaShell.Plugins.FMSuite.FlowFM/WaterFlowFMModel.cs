@@ -71,8 +71,6 @@ using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
-using FMHisFileFunctionStore = DeltaShell.Plugins.FMSuite.FlowFM.IO.FMHisFileFunctionStore;
-using FMMapFileFunctionStore = DeltaShell.Plugins.FMSuite.FlowFM.IO.FMMapFileFunctionStore;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {

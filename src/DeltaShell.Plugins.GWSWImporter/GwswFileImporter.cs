@@ -16,7 +16,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
-using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
