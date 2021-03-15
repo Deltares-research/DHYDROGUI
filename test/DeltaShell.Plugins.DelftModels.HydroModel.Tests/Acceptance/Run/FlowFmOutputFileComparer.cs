@@ -56,8 +56,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                     sameDimensions = CompareDimensions(actualNetCdfFile, expectedNetCdfFile, fileName, ref overallErrorMessage);
                     sameVariables = CompareVariables(actualNetCdfFile, expectedNetCdfFile, fileName, ref overallErrorMessage);
                 }
-                catch
+                catch (Exception e)
                 {
+                    overallErrorMessage += $"An exception occurred while comparing the output file {fileName}: {e.Message}";
                     identical = false;
                     continue;
                 }
