@@ -338,6 +338,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                                                       string variableName,
                                                       ref string overallErrorMessage)
         {
+            // We currently only support doubles
+            NetCdfDataType actualVariableType = actualNetCdfFile.GetVariableDataType(actualVariable);
+            NetCdfDataType expectedVariableType = expectedNetCdfFile.GetVariableDataType(expectedVariable);
+            if (actualVariableType != NetCdfDataType.NcDoublePrecision || expectedVariableType != NetCdfDataType.NcDoublePrecision)
+            {
+                return true;
+            }
+
             Dictionary<string, object> actualVariableAttributes = actualNetCdfFile.GetAttributes(actualVariable);
             Dictionary<string, object> expectedVariableAttributes = expectedNetCdfFile.GetAttributes(expectedVariable);
 
