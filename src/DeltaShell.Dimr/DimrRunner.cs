@@ -157,8 +157,8 @@ namespace DeltaShell.Dimr
         public static string GenerateDimrXML(IDimrModel dimrModel, string workDirectory)
         {
             // generate dimr config
-            string dimrFile = Path.Combine(workDirectory, "dimr.xml");
-            FileUtils.DeleteIfExists(dimrFile);
+            string newDimrFile = Path.Combine(workDirectory, "dimr.xml");
+            FileUtils.DeleteIfExists(newDimrFile);
             var dimrConfig = new dimrXML {documentation = documentation};
 
             // control section
@@ -180,8 +180,8 @@ namespace DeltaShell.Dimr
             {
                 component
             };
-            new DimrXMLSerializer().SaveToFile(dimrFile, dimrConfig);
-            return dimrFile;
+            new DimrXMLSerializer().SaveToFile(newDimrFile, dimrConfig);
+            return newDimrFile;
         }
 
         public Array GetVar(string key)
@@ -227,7 +227,7 @@ namespace DeltaShell.Dimr
             disposed = true;
         }
 
-        private bool CanCommunicateWithDimrApi => model != null &&
+        public bool CanCommunicateWithDimrApi => model != null &&
                                                   (model.Status == ActivityStatus.Initialized ||
                                                    model.Status == ActivityStatus.Executing ||
                                                    model.Status == ActivityStatus.Executed ||

@@ -20,20 +20,28 @@
   <?define Delft3DPackageName="D-HYDRO"?>
   <?define registrationFeature="D-HYDRO"?>
   <?define registrationVersion="1.7"?>
+  <?define CheckOriginOfProject="False"?>  
+  <?define AdditionalCompatibleProducts="Delft3D Flexible Mesh Suite HMWQ, Delft3D Flexible Mesh Suite OpenHMWQ, Delft3D Flexible Mesh Suite HM"?>  
   <?else?>
   <?ifdef var.NOWAQ?>
   <?define Delft3DPackageName="Delft3D FM HM"?>
   <?define registrationFeature="Delft3D_FM_Hyd-Mor"?>
   <?define registrationVersion="1.7"?>
+  <?define CheckOriginOfProject="False"?>  
+  <?define AdditionalCompatibleProducts="Delft3D Flexible Mesh Suite HMWQ, Delft3D Flexible Mesh Suite OpenHMWQ, D-HYDRO Suite"?>  
   <?else?>
   <?ifdef var.NOKERNELS?>
   <?define Delft3DPackageName="Delft3D FM HMWQ"?>
   <?define registrationFeature="Delft3D_FM_OSS"?>
   <?define registrationVersion="1.7"?>
+  <?define CheckOriginOfProject="False"?>  
+  <?define AdditionalCompatibleProducts="Delft3D Flexible Mesh Suite HMWQ, D-HYDRO Suite, Delft3D Flexible Mesh Suite HM"?>  
   <?else?>
   <?define Delft3DPackageName="Delft3D FM HMWQ"?>
   <?define registrationFeature="Delft3D_FM_Hyd-Mor_And_Waq"?>
   <?define registrationVersion="1.7"?>
+  <?define CheckOriginOfProject="False"?>  
+  <?define AdditionalCompatibleProducts="Delft3D Flexible Mesh Suite OpenHMWQ, D-HYDRO Suite, Delft3D Flexible Mesh Suite HM"?>  
   <?endif?>
   <?endif?>
   <?endif?>

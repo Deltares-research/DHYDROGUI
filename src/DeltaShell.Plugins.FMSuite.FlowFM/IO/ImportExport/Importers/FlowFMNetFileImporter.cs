@@ -17,19 +17,27 @@ using SharpMap.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 {
+    /// <summary>
+    /// <see cref="FlowFMNetFileImporter"/> implements the <see cref="IFileImporter"/>
+    /// interface to import Net files onto <see cref="UnstructuredGrid"/> objects and
+    /// as root level objects.
+    /// </summary>
+    /// <seealso cref="IFileImporter" />
     public class FlowFMNetFileImporter : IFileImporter
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(FlowFMNetFileImporter));
+        private static readonly ILog log = LogManager.GetLogger(typeof(FlowFMNetFileImporter));
 
-        public Func<UnstructuredGrid, WaterFlowFMModel> GetModelForGrid { get; set; }
+        /// <summary>
+        /// Gets or sets the function to obtain the
+        /// <see cref="IWaterFlowFMModel"/> corresponding with the provided
+        /// <see cref="UnstructuredGrid"/>.
+        /// </summary>
+        public Func<UnstructuredGrid, IWaterFlowFMModel> GetModelForGrid { get; set; }
 
-        #region IFileImporter
-
-        [ExcludeFromCodeCoverage]
         public string Name => "Unstructured Grid (UGRID)";
 
-        [ExcludeFromCodeCoverage]
-        public string Category => Resources.FMImporters_Category_D_Flow_FM_2D_3D;
+        public string Category => 
+            Resources.FMImporters_Category_D_Flow_FM_2D_3D;
 
         public string Description => string.Empty;
 
@@ -44,28 +52,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             }
         }
 
-        public bool CanImportOn(object targetObject)
-        {
-            if (targetObject == null)
-            {
-                return true; //import on root level
-            }
+        public bool CanImportOn(object targetObject) =>
+            (targetObject == null) || // import on root level
+            (targetObject is UnstructuredGrid grid && GetModelForGrid?.Invoke(grid) != null);
 
-            UnstructuredGrid grid = null;
-            var unstructuredGrid = targetObject as UnstructuredGrid;
-            if (unstructuredGrid != null)
-            {
-                grid = unstructuredGrid;
-            }
-
-            return grid != null && GetModelForGrid != null && GetModelForGrid(grid) != null;
-        }
-
-        [ExcludeFromCodeCoverage]
         public bool CanImportOnRootLevel => true;
 
-        [ExcludeFromCodeCoverage]
-        public string FileFilter => $"Net file|*{FileConstants.NetCdfFileExtension}";
+        public string FileFilter => 
+            $"Net file|*{FileConstants.NetCdfFileExtension}";
 
         public string TargetDataDirectory { get; set; }
 
@@ -73,67 +67,100 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
 
         public ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        [ExcludeFromCodeCoverage]
         public bool OpenViewAfterImport => true;
 
         public object ImportItem(string path, object target = null)
         {
-            if (!File.Exists(path))
+            ValidatePath(path);
+
+            if (IsRootLevelTarget(target))
             {
-                throw new FileNotFoundException(string.Format("Could not find file {0}", path));
+                return GetRootLevelImport(path);
             }
 
-            if (target == null)
-            {
-                return new DataItem
-                {
-                    Value = new ImportedFMNetFile(path),
-                    Name = Path.GetFileName(path)
-                };
-            }
-
-            var flowModel = target as WaterFlowFMModel;
-
-            var grid = target as UnstructuredGrid;
-
-            if (grid != null && GetModelForGrid != null)
-            {
-                flowModel = GetModelForGrid(grid);
-                /* DELFT3DFM-453 */
-                Log.WarnFormat("Importing bathymetry. Existing grid will be overwritten with grid from {0}.", path);
-                flowModel = GetModelForGrid(flowModel.SpatialData.Bathymetry.Grid);
-            }
-
+            IWaterFlowFMModel flowModel = GetModel(target, path);
+            
             if (flowModel != null && flowModel.NetFilePath != null)
             {
-                var netfile = new ImportedFMNetFile(path);
-                IList<Coordinate> coordinates = netfile.Grid.Vertices;
-                if (flowModel.CoordinateSystem != null &&
-                    !CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, flowModel.CoordinateSystem))
-                {
-                    throw new Exception(
-                        "Grid coordinates are incompatible with current model coordinate system: {0}, canceling import.");
-                }
-
-                string destFileName =
-                    Path.Combine(Path.GetDirectoryName(flowModel.NetFilePath), Path.GetFileName(path));
-                if (Path.GetFullPath(destFileName) != Path.GetFullPath(path))
-                {
-                    File.Copy(path, destFileName, true);
-                    flowModel.ModelDefinition.GetModelProperty(KnownProperties.NetFile)
-                             .SetValueAsString(Path.GetFileName(destFileName));
-                }
-
-                flowModel.ReloadGrid(false, true);
-
-                flowModel.MarkOutputOutOfSync();
-
-                return flowModel.Grid;
+                return GetModelLevelImport(flowModel, path);
             }
 
             return null;
         }
 
-        #endregion
+        private static void ValidatePath(string path)
+        {
+            if (!File.Exists(path))
+            {
+                throw new FileNotFoundException($"Could not find file {path}");
+            }
+        }
+
+        private static void ValidateCoordinates(ImportedFMNetFile netFile, IWaterFlowFMModel model)
+        {
+            IList<Coordinate> coordinates = netFile.Grid.Vertices;
+
+            if (model.CoordinateSystem != null &&
+                !CoordinateSystemValidator.CanAssignCoordinateSystem(coordinates, model.CoordinateSystem))
+            {
+                throw new InvalidOperationException("Grid coordinates are incompatible with current model coordinate system: {0}, canceling import.");
+            }
+        }
+        private static object GetRootLevelImport(string path) =>
+            new DataItem
+            {
+                Value = new ImportedFMNetFile(path),
+                Name = Path.GetFileName(path)
+            };
+
+        private static object GetModelLevelImport(IWaterFlowFMModel model, string path)
+        {
+            var fmNetFile = new ImportedFMNetFile(path);
+            
+            ValidateCoordinates(fmNetFile, model);
+            UpdatePersistedGrid(model, path);
+            model.ReloadGrid(false, true);
+
+            return model.Grid;
+        }
+
+        private static bool IsRootLevelTarget(object target) => target == null;
+
+        private IWaterFlowFMModel GetModel(object target, string path)
+        {
+            switch (target)
+            {
+                case WaterFlowFMModel targetAsModel:
+                    return targetAsModel;
+                case UnstructuredGrid grid when GetModelForGrid != null:
+                {
+                    IWaterFlowFMModel flowModel = GetModelForGrid(grid); 
+                    /* DELFT3DFM-453 */ 
+                    log.WarnFormat("Importing bathymetry. Existing grid will be overwritten with grid from {0}.", path);
+                    return GetModelForGrid(flowModel.SpatialData.Bathymetry.Grid);
+                }
+                default:
+                    return null;
+            }
+        }
+
+        private static void UpdatePersistedGrid(IWaterFlowFMModel model,
+                                          string newGridPath)
+        {
+            string destFileName = Path.Combine(Path.GetDirectoryName(model.NetFilePath), 
+                                               Path.GetFileName(newGridPath));
+
+            if (Path.GetFullPath(destFileName) == Path.GetFullPath(newGridPath))
+            {
+                return;
+            }
+
+            File.Copy(newGridPath, destFileName, true);
+            model.ModelDefinition
+                 .GetModelProperty(KnownProperties.NetFile)
+                 .SetValueAsString(Path.GetFileName(destFileName));
+
+            model.MarkOutputOutOfSync();
+        }
     }
 }

@@ -350,5 +350,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             segmentArgument.ValueType = typeof(int);
             yield return segmentArgument;
         }
+
+        [Test]
+        public void GetMinValue_Double_WithoutData_ReturnsZero()
+        {
+            // Setup
+            var variable = new Variable<double>();
+            var store = new LazyMapFileFunctionStore();
+
+            // Call
+            var result = store.GetMinValue<double>(variable);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(0D));
+        }
+
+        [Test]
+        public void GetMaxValue_Double_WithoutData_ReturnsZero()
+        {
+            // Setup
+            var variable = new Variable<double>();
+            var store = new LazyMapFileFunctionStore();
+
+            // Call
+            var result = store.GetMaxValue<double>(variable);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(0D));
+        }
     }
 }

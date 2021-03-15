@@ -29,7 +29,7 @@ namespace DeltaShell.Dimr
         private double tCurrent;
         private List<string> messages;
         private bool reduceLogging = false;
-        private DimrApiWrapper.Message_Callback cMessageCallback; // keep the callback so it doesn't get garbage collected!
+        private DimrDll.Message_Callback cMessageCallback; // keep the callback so it doesn't get garbage collected!
         private DateTime currentTime;
         private DateTime dimrRefDate;
         private double relativeStartTime;
@@ -52,26 +52,8 @@ namespace DeltaShell.Dimr
 
         public void set_logger()
         {
-            DimrApiWrapper.set_logger(Logger);
+            DimrDll.set_logger(Logger);
         }
-
-        #region Implementation of IDisposable
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                DimrApiWrapper.set_logger_callback(null);
-            }
-        }
-
-        #endregion
 
         [ExcludeFromCodeCoverage]
         private void BMI_Logger_function(Level level, string message)
@@ -90,6 +72,24 @@ namespace DeltaShell.Dimr
             }
         }
 
+        #region Implementation of IDisposable
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                DimrDll.set_logger_callback(null);
+            }
+        }
+
+        #endregion
+
         #region Implementation of IDimrApi
 
         public virtual DateTime DimrRefDate
@@ -104,8 +104,6 @@ namespace DeltaShell.Dimr
                 currentTime = dimrRefDate.AddSeconds(tCurrent);
             }
         }
-
-        public void SetValues(string variable, int[] index, Array values) {}
 
         public DateTime StartTime
         {
@@ -144,7 +142,7 @@ namespace DeltaShell.Dimr
 
         public void set_feedback_logger()
         {
-            DimrApiWrapper.set_logger_callback(cMessageCallback);
+            DimrDll.set_logger_callback(cMessageCallback);
         }
 
         [ExcludeFromCodeCoverage]
@@ -216,7 +214,7 @@ namespace DeltaShell.Dimr
 
                 // sending intPointer to unmanaged code here
 
-                DimrApiWrapper.set_var("useMPI", intPointer);
+                DimrDll.set_var("useMPI", intPointer);
 
                 // Free memory
                 Marshal.FreeHGlobal(intPointer);
@@ -229,7 +227,7 @@ namespace DeltaShell.Dimr
 
                 // sending intPointer to unmanaged code here
 
-                DimrApiWrapper.set_var("numRanks", intPointer);
+                DimrDll.set_var("numRanks", intPointer);
 
                 // Free memory
                 Marshal.FreeHGlobal(intPointer);
@@ -243,21 +241,21 @@ namespace DeltaShell.Dimr
 
                 // sending intPointer to unmanaged code here
 
-                DimrApiWrapper.set_var("myRank", intPointer);
+                DimrDll.set_var("myRank", intPointer);
 
                 // Free memory
                 Marshal.FreeHGlobal(intPointer);
 
-                int returnCode = DimrApiWrapper.initialize(path);
+                int returnCode = DimrDll.initialize(path);
                 if (returnCode != 0)
                 {
                     return returnCode;
                 }
 
-                DimrApiWrapper.get_start_time(ref tStart);
-                DimrApiWrapper.get_end_time(ref tEnd);
-                DimrApiWrapper.get_time_step(ref tStep);
-                DimrApiWrapper.get_current_time(ref tCurrent);
+                DimrDll.get_start_time(ref tStart);
+                DimrDll.get_end_time(ref tEnd);
+                DimrDll.get_time_step(ref tStep);
+                DimrDll.get_current_time(ref tCurrent);
                 relativeStartTime = tCurrent;
             }
             catch (Exception exception)
@@ -287,7 +285,7 @@ namespace DeltaShell.Dimr
 
             // sending intPointer to unmanaged code here
 
-            DimrApiWrapper.set_var(logType, intPointer);
+            DimrDll.set_var(logType, intPointer);
             // Free memory
             Marshal.FreeHGlobal(intPointer);
         }
@@ -310,23 +308,23 @@ namespace DeltaShell.Dimr
         /// </summary>
         /// <param name="dt">The time step dt.</param>
         /// <returns>The exit code of the Update call.</returns>
-        public int Update(double dt)
+        public int Update(double dt = -1.0)
         {
-            int returnCode = DimrApiWrapper.update(dt);
+            int returnCode = DimrDll.update(dt);
 
             if (returnCode != 0)
             {
                 return returnCode;
             }
 
-            DimrApiWrapper.get_current_time(ref tCurrent);
+            DimrDll.get_current_time(ref tCurrent);
             currentTime = DimrRefDate.AddSeconds(tCurrent - relativeStartTime);
             return 0;
         }
 
         public int Finish()
         {
-            DimrApiWrapper.finalize();
+            DimrDll.finalize();
             return 0;
         }
 
@@ -346,7 +344,7 @@ namespace DeltaShell.Dimr
             IntPtr dPtr = handle.AddrOfPinnedObject();
             try
             {
-                DimrApiWrapper.get_var(variable, ref dPtr);
+                DimrDll.get_var(variable, ref dPtr);
                 Marshal.Copy(dPtr, value, 0, value.Length);
             }
             finally
@@ -386,7 +384,7 @@ namespace DeltaShell.Dimr
             Marshal.Copy(values, 0, intArrayPointer, values.Length);
 
             // sending doubleArrayPointer to unmanaged code here
-            DimrApiWrapper.set_var(variable, intArrayPointer);
+            DimrDll.set_var(variable, intArrayPointer);
 
             // Free memory
             Marshal.FreeHGlobal(intArrayPointer);
@@ -406,7 +404,7 @@ namespace DeltaShell.Dimr
             Marshal.Copy(values, 0, doubleArrayPointer, values.Length);
 
             // sending doubleArrayPointer to unmanaged code here
-            DimrApiWrapper.set_var(variable, doubleArrayPointer);
+            DimrDll.set_var(variable, doubleArrayPointer);
 
             // Free memory
             Marshal.FreeHGlobal(doubleArrayPointer);
@@ -414,14 +412,21 @@ namespace DeltaShell.Dimr
 
         public void SetValues(string variable, Array values)
         {
-            var valuesDouble = values as double[];
-            if (valuesDouble != null)
+            if (values is double[] valuesDouble)
             {
                 SetValuesDouble(variable, valuesDouble);
             }
         }
 
-        public void SetValues(string variable, int[] start, int[] count, Array values) {}
+        public void SetValues(string variable, int[] start, int[] count, Array values)
+        {
+            // Not needed.
+        }
+        
+        public void SetValues(string variable, int[] index, Array values)
+        {
+            // Not needed.
+        }
 
         public string[] Messages
         {

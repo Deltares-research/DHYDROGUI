@@ -6,9 +6,11 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api;
@@ -18,6 +20,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 {
     public static class UnstructuredGridCoverageExtensions
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(UnstructuredGridCoverageExtensions));
+
         public static IPointCloud ToPointCloud(this UnstructuredGridCoverage coverage, int componentIndex = 0,
                                                bool skipMissingValues = false)
         {
@@ -40,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
             Coordinate[] coordinates = coverage.Coordinates.ToArray();
             IMultiDimensionalArray<double> values = component.Values;
-            var noDataValue = (double) component.NoDataValue;
+            var noDataValue = (double)component.NoDataValue;
 
             if (coordinates.Length != values.Count)
             {
@@ -69,31 +73,109 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             return pointCloud;
         }
 
-        public static void LoadBathymetry(this UnstructuredGridVertexCoverage coverage, UnstructuredGrid grid,
+        /// <summary>
+        /// Load the bathymetry on this <see cref="UnstructuredGridVertexCoverage"/>
+        /// from the specified <paramref name="grid"/>.
+        /// </summary>
+        /// <param name="coverage">The coverage to load the bathymetry data on.</param>
+        /// <param name="grid">The grid from which to obtain the data and set as the grid of the coverage.</param>
+        /// <param name="noDataValue">The no data value used to indicate no data.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="coverage"/> or <paramref name="grid"/> is <c>null</c>.
+        /// </exception>
+        public static void LoadBathymetry(this UnstructuredGridVertexCoverage coverage,
+                                          UnstructuredGrid grid,
                                           double noDataValue = -999.0)
         {
+            Ensure.NotNull(coverage, nameof(coverage));
+            Ensure.NotNull(grid, nameof(grid));
+
+            IEnumerable<double> GetZValues() => grid.Vertices.Select(v => v.Z);
+
+            LoadBathymetry(coverage, grid, noDataValue, GetZValues);
+        }
+
+        /// <summary>
+        /// Load the bathymetry on this <see cref="UnstructuredGridCellCoverage"/>
+        /// from the specified grid and nc file at <paramref name="netFilePath"/>.
+        /// </summary>
+        /// <param name="coverage">The coverage to load the bathymetry data on.</param>
+        /// <param name="grid">The grid from which to obtain the data and set as the grid of the coverage.</param>
+        /// <param name="netFilePath">The nc file from which to obtain the z-values</param>
+        /// <param name="noDataValue">The no data value used to indicate no data.</param>
+        /// <remarks>
+        /// For some reason when we construct our <see cref="UnstructuredGridCellCoverage"/>
+        /// when we have our bathymetry data on the faces, these values are not properly read.
+        /// As such we need to retrieve them from the net file itself.
+        ///
+        /// We assume that the <paramref name="netFilePath"/> exists and corresponds with
+        /// the provided <paramref name="grid"/>.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="coverage"/> or <paramref name="grid"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="netFilePath"/> is <c>null</c> or empty.
+        /// </exception>
+        public static void LoadBathymetry(this UnstructuredGridCellCoverage coverage,
+                                          UnstructuredGrid grid,
+                                          string netFilePath,
+                                          double noDataValue = -999.0)
+        {
+            Ensure.NotNull(coverage, nameof(coverage));
+            Ensure.NotNull(grid, nameof(grid));
+            Ensure.NotNullOrEmpty(netFilePath, nameof(netFilePath));
+
+            // Note that at the time of writing, there is no distinction between reading z-values
+            // with Faces or FacesMeanLevFromNodes, so we default to Faces.
+            IEnumerable<double> GetZValues() =>
+                UnstructuredGridFileHelper.ReadZValues(netFilePath, UnstructuredGridFileHelper.BedLevelLocation.Faces);
+
+            LoadBathymetry(coverage, grid, noDataValue, GetZValues);
+        }
+
+        private static void LoadBathymetry(UnstructuredGridCoverage coverage,
+                                           UnstructuredGrid grid,
+                                           double noDataValue,
+                                           Func<IEnumerable<double>> getZValues)
+        {
             coverage.BeginEdit(new DefaultEditAction("Starting import of bed levels"));
-            int count = grid.Vertices.Count();
+
+            int count = coverage.GetCoordinatesForGrid(grid).Count();
+
             IVariable locationIndexVariable = coverage.Arguments.Last();
             locationIndexVariable.Values.Clear();
-            if (count > 0)
-            {
-                FunctionHelper.SetValuesRaw(locationIndexVariable, Enumerable.Range(0, count));
-            }
 
             IVariable component = coverage.Components[0];
             component.Values.Clear();
             component.NoDataValue = noDataValue;
+
             if (count > 0)
             {
-                FunctionHelper.SetValuesRaw(component, grid.Vertices.Select(v => v.Z));
+                FunctionHelper.SetValuesRaw(locationIndexVariable, Enumerable.Range(0, count));
+                IEnumerable<double> zValues = getZValues().ToArray();
+
+                if (zValues.Count() != count)
+                {
+                    log.WarnFormat(Resources.UnstructuredGridCoverageExtensions_LoadBathymetry_No_bathymetry_data_was_found__the_default_D_FlowFM___0___will_be_used_instead_, noDataValue);
+                    zValues = Enumerable.Repeat(noDataValue, count);
+                }
+
+                FunctionHelper.SetValuesRaw(component, zValues);
             }
 
             coverage.Grid = grid;
             coverage.EndEdit();
         }
 
-        public static void LoadGrid(this UnstructuredGridCoverage coverage, UnstructuredGrid grid,
+        /// <summary>
+        /// Loads the specified <paramref name="grid"/> onto this <see cref="UnstructuredGridCoverage"/>.
+        /// </summary>
+        /// <param name="coverage">The coverage.</param>
+        /// <param name="grid">The grid.</param>
+        /// <param name="reInterpolate">if set to <c>true</c> [re interpolate].</param>
+        public static void LoadGrid(this UnstructuredGridCoverage coverage,
+                                    UnstructuredGrid grid,
                                     bool reInterpolate = false)
         {
             if (coverage.Grid == grid)
@@ -103,7 +185,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
 
             coverage.BeginEdit(new DefaultEditAction("Inserting new grid in coverage"));
             List<Coordinate> newLocations = coverage.GetCoordinatesForGrid(grid).ToList();
-            int count = newLocations.Count();
+
+            int count = newLocations.Count;
+
             IVariable locationIndexVariable = coverage.Arguments.Last();
 
             if (!reInterpolate)
@@ -210,7 +294,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
         {
             Ensure.NotNull(coverage, nameof(coverage));
 
-            var variable = (IVariable<double>) coverage.Components[0];
+            var variable = (IVariable<double>)coverage.Components[0];
             if (Equals(variable.NoDataValue, variable.DefaultValue))
             {
                 return;
@@ -220,7 +304,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Coverages
             List<double> values = GenerateCollectionWithReplacedValues(variable).ToList();
             variable.Values.Clear();
 
-            FunctionHelper.SetValuesRaw(variable, (IList) values);
+            FunctionHelper.SetValuesRaw(variable, (IList)values);
 
             coverage.EndEdit();
         }

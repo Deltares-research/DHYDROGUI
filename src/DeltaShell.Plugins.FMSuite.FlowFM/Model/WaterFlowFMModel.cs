@@ -46,8 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     [Entity]
     public partial class WaterFlowFMModel : TimeDependentModelBase, 
-                                            IFileBased, 
-                                            IHasCoordinateSystem,
+                                            IFileBased,
                                             IRestartModel,
                                             IGridOperationApi, 
                                             IDisposable, 
