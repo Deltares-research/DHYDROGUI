@@ -32,6 +32,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// <returns>Definitions that are not coupled to cross-sections and are not shared (usually structure profiles)</returns>
         public static ICrossSectionDefinition[] ReadFile(string crossSectionLocationFilePath, string crossSectionDefinitionPath, IHydroNetwork hydroNetwork, IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
+            channelFrictionDefinitions = channelFrictionDefinitions ?? Enumerable.Empty<ChannelFrictionDefinition>();
             var frictionDefinitions = channelFrictionDefinitions.ToLookup(cfd => cfd.Channel);
 
             var csDefinitionCategories = GetCrossSectionDefinitionCategories(crossSectionDefinitionPath);
