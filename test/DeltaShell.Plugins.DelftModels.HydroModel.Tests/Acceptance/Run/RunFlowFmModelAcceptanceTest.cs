@@ -9,6 +9,7 @@ using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net.Core;
 using NUnit.Framework;
 
@@ -29,8 +30,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         {
             get
             {
-                yield return new TestCaseData("Hydamo_MoergestelBroek", "moergestels_broek", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 289).SetName("Hydamo_MoergestelBroek");
-                //yield return new TestCaseData("FlowFM_Eindhoven", "FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 0).SetName("Eindhoven"); // TODO: Add preconditions when the model can be correctly imported
+                //yield return new TestCaseData("Hydamo_MoergestelBroek", "moergestels_broek", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 289).SetName("Hydamo_MoergestelBroek");
+                yield return new TestCaseData("FlowFM_Eindhoven", "FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 398).SetName("Eindhoven");
                 //yield return new TestCaseData("Pudong", @"FM\FlowFM", new ActualCountFuncDelegate(network => network.BranchFeatures.Count()), 0).SetName("Pudong");          // TODO: Add preconditions when the model can be correctly imported
             }
         }
@@ -80,7 +81,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                                             actualCountFunc,
                                             gui,
                                             preconditionExpectedBranchFeaturesCount);
-                
+
+                Console.WriteLine("Setting model settings");
+                SetFlowFmModelSettings(fmModel);
+
                 // [When]
                 Console.WriteLine("Running model");
                 ActivityRunner.RunActivity(fmModel);
@@ -127,6 +131,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         {
             RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, acceptanceModelsReferenceOutputDirectory,
                                                              tempDirectory, keepOutput, acceptanceModelFileName);
+        }
+
+        private static void SetFlowFmModelSettings(WaterFlowFMModel fmModel)
+        {
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.DtUser, "86400");
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, "86400");
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, "86400");
         }
     }
 }
