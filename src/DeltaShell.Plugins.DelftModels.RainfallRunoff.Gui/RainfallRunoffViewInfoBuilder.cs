@@ -331,40 +331,62 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     throw new NotImplementedException("Unknown initial conditions type");
             }
         }
-
         private static void DefaultAfterCreate(IView view, object actualData, IGui gui)
         {
-            var model = GetModelForData(actualData, gui);
-            if (model == null)
+            var unitAwareView = view as IRRUnitAwareView;
+            if (unitAwareView != null)
             {
-                return;
+                if (!(actualData is CatchmentModelData))
+                {
+                    throw new NotImplementedException();
+                }
+
+                var model = GetModelForModelData(actualData as CatchmentModelData, gui);
+                if (model != null)
+                {
+                    SyncAreaUnitChanges(model, unitAwareView);
+                }
             }
 
-            switch (view)
+            var modelTimeAwareView = view as IRRModelTimeAwareView;
+            if (modelTimeAwareView != null)
             {
-                case IRRUnitAwareView unitAwareView:
-                    SyncAreaUnitChanges(model, unitAwareView);
-                    break;
-                
-                case IRRModelTimeAwareView modelTimeAwareView: 
+                var model = GetModelForData(actualData, gui);
+                if (model != null)
+                {
                     modelTimeAwareView.StartTime = model.StartTime;
                     modelTimeAwareView.StopTime = model.StopTime;
                     modelTimeAwareView.TimeStep = model.TimeStep;
-                    break;
-                
-                case IRRMeteoStationAwareView stationAwareView:
+                }
+            }
+
+            var stationAwareView = view as IRRMeteoStationAwareView;
+            if (stationAwareView != null)
+            {
+                var model = GetModelForData(actualData, gui);
+                if (model != null)
+                {
                     stationAwareView.MeteoStations = model.MeteoStations;
                     SyncUseMeteoStationChanges(model, stationAwareView);
-                    break;
+                }
+            }
 
-                case IRRTemperatureStationAwareView tempStationAwareView:
+            var tempStationAwareView = view as IRRTemperatureStationAwareView;
+            if (tempStationAwareView != null)
+            {
+                var model = GetModelForData(actualData, gui);
+                if (model != null)
+                {
                     tempStationAwareView.TemperatureStations = model.TemperatureStations;
                     SyncUseTemperatureStationChanges(model, tempStationAwareView);
-                    break;
+                }
+            }
 
-                case IRRModelRunModeAwareView modelModeAwareView:
-                    modelModeAwareView.GetIsModelRunningParallelWithFlowFunc = model.IsRunningParallelWithFlow;
-                    break;
+            var modelModeAwareView = view as IRRModelRunModeAwareView;
+            if (modelModeAwareView != null)
+            {
+                var model = GetModelForData(actualData, gui);
+                modelModeAwareView.GetIsModelRunningParallelWithFlowFunc = model.IsRunningParallelWithFlow;
             }
         }
 
