@@ -42,12 +42,12 @@
                 Value="$(var.CheckOriginOfProject)"/>
   <?endif?>
   
-  <?ifdef AdditionalCompatibleProducts?>
+  <?ifdef StartNamesCompatibleProducts?>
   <util:XmlFile Id="SetKey23$(var.GUICONFIGFILE)"
                 Action="setValue"
-                ElementPath="/configuration/appSettings/add[\[]@key=&quot;AdditionalCompatibleProducts&quot;[\]]/@value"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;StartNamesCompatibleProducts&quot;[\]]/@value"
                 File="[#$(var.GUICONFIGFILE)]"
-                Value="$(var.AdditionalCompatibleProducts)"/>
+                Value="$(var.StartNamesCompatibleProducts)"/>
   <?endif?>
 
   <?ifdef RealNumberFormat?>

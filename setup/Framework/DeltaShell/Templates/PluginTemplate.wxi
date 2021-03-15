@@ -49,7 +49,7 @@
                         
   Optional variables:
   - CheckOriginOfProject:			If you set this to true, projects from not supported products can not be opened.
-  - AdditionalCompatibleProducts:	Additional compatible products of which projects can be opened. You don't have to mention current product.
+  - StartNamesCompatibleProducts:	Start names of other compatible products. You don't have to mention current product, only start names of different products.
   - ShowStartUpScreen:               If you set this to false, the start up screen will not be shown. 
   - EnableDHydroDelft3DFMVersionNaming: Enable to use the d-hydro specific setup configuration. You must define the following variables: var.ApplicationName
                                         and var.PublicReleaseVersion.
