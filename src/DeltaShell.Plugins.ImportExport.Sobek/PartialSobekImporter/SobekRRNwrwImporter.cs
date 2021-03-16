@@ -3,11 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core.Extensions;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.Utils;
-using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -31,7 +29,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private Dictionary<string, IBranch> branchDictionary;
         private HashSet<string> singleUnitDryweatherFlowDefinitions = new HashSet<string>();
         private List<string> listOfWarnings = new List<string>();
-        
+
         public override string DisplayName => "Rainfall Runoff NWRW data";
 
         public override SobekImporterCategories Category { get; } = SobekImporterCategories.RainfallRunoff;
@@ -41,7 +39,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             Log.DebugFormat("Importing nwrw data ...");
 
             rrModel = GetModel<RainfallRunoffModel>();
-            
+
             ImportNwrwDryweatherFlowDefinitions(rrModel.NwrwDryWeatherFlowDefinitions);
             ImportNwrwDefinitions(rrModel.NwrwDefinitions);
 
@@ -66,10 +64,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             AddNwrwDefinitionsToModel(readNwrwDefinitions, lateralSourceDictionary);
 
             if (listOfWarnings.Any())
+            {
                 Log.Warn($"While importing nwrw we encountered the following {listOfWarnings.Count} warnings: {Environment.NewLine}{string.Join(Environment.NewLine, listOfWarnings)}");
+            }
         }
-
-        
 
         private bool CreateNodeAndBranchDictionary()
         {
@@ -79,25 +77,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 Log.Warn("Can't import Nwrw catchments, no existing nodes found.");
                 return false;
             }
+
             branchDictionary = fmModel.Network.Branches.ToDictionary(branch => branch.Name, StringComparer.InvariantCultureIgnoreCase);
             if (branchDictionary == null || branchDictionary.Count == 0)
             {
                 Log.Warn("Can't import Nwrw catchments, no existing branches found.");
                 return false;
             }
+
             return true;
         }
 
-
         #region Dryweather flow definitions
+
         private void ImportNwrwDryweatherFlowDefinitions(ICollection<NwrwDryWeatherFlowDefinition> existingDefinitions)
         {
-            var readDefinitions = ReadDryweatherFlowDefinitions(GetFilePath(SobekFileNames.SobekRRNwrwDwaFileName));
+            Dictionary<string, SobekRRDryWeatherFlow> readDefinitions = ReadDryweatherFlowDefinitions(GetFilePath(SobekFileNames.SobekRRNwrwDwaFileName));
 
             var existingDefinitionsSet = new HashSet<string>(existingDefinitions.Select(def => def.Name.ToLowerInvariant()));
-            foreach (var readDefinition in readDefinitions)
+            foreach (KeyValuePair<string, SobekRRDryWeatherFlow> readDefinition in readDefinitions)
             {
-                if(existingDefinitionsSet.Contains(readDefinition.Key.ToLowerInvariant()))
+                if (existingDefinitionsSet.Contains(readDefinition.Key.ToLowerInvariant()))
                 {
                     listOfWarnings.Add($"A dryweather flow definition with the name '{readDefinition.Key}' already exists, skipping import.");
                     continue;
@@ -119,10 +119,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             return new SobekRRDryWeatherFlowReader().Read(filePath).ToDictionaryWithErrorDetails(filePath, item => item.Id, item => item);
         }
-        
+
         private NwrwDryWeatherFlowDefinition CreateNewNwrwDryWeatherFlowDefinition(SobekRRDryWeatherFlow readDefinition)
         {
-            var readComputationOption = readDefinition.ComputationOption;
+            DWAComputationOption readComputationOption = readDefinition.ComputationOption;
             if (readComputationOption == DWAComputationOption.ConstantDWAPerHour || readComputationOption == DWAComputationOption.VariablePerHour)
             {
                 singleUnitDryweatherFlowDefinitions.Add(readDefinition.Id);
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 DailyVolumeConstant = readDefinition.WaterUsePerHourForConstant,
                 DailyVolumeVariable = readDefinition.WaterUsePerDayForVariable
             };
-            
+
             if (readDefinition.WaterCapacityPerHour.Length != 24)
             {
                 listOfWarnings.Add($"Expected 24 values but got {readDefinition.WaterCapacityPerHour.Length} values. Skipping import of water use per capita per hour.");
@@ -163,9 +163,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     throw new NotSupportedException($"{computationOption} is not a valid computation option.");
             }
         }
+
         #endregion
 
         #region Nwrw definitions
+
         private void ImportNwrwDefinitions(ICollection<NwrwDefinition> rrModelNwrwDefinitions)
         {
             if (rrModelNwrwDefinitions.Count != 12)
@@ -173,8 +175,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 throw new ArgumentException();
             }
 
-            var readNwrwSettings = new SobekRRNwrwSettingsReader().Read(GetFilePath(SobekFileNames.SobekRRNwrwSettingsFileName)).ToArray();
-            var readNwrwSetting = readNwrwSettings.FirstOrDefault();
+            SobekRRNwrwSettings[] readNwrwSettings = new SobekRRNwrwSettingsReader().Read(GetFilePath(SobekFileNames.SobekRRNwrwSettingsFileName)).ToArray();
+            SobekRRNwrwSettings readNwrwSetting = readNwrwSettings.FirstOrDefault();
             if (readNwrwSetting == null)
             {
                 Log.WarnFormat($"No nwrw settings were found.");
@@ -185,13 +187,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 Log.WarnFormat($"Found multiple nwrw settings. Importing the first settings and ignoring the others.");
             }
-            
+
             UpdateNwrwSettings(rrModelNwrwDefinitions, readNwrwSetting);
         }
 
         private void UpdateNwrwSettings(IEnumerable<NwrwDefinition> existingDefinitions, SobekRRNwrwSettings readSettings)
         {
-            var nwrwDefinitionArray = existingDefinitions.ToArray();
+            NwrwDefinition[] nwrwDefinitionArray = existingDefinitions.ToArray();
 
             UpdateRunoffDelayFactors(nwrwDefinitionArray, readSettings);
             UpdateMaximumStorages(nwrwDefinitionArray, readSettings);
@@ -208,10 +210,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 listOfWarnings.Add($"Could not find any runoff factors.");
                 return;
             }
-            
+
             if (readSettings.IsOldFormatData)
             {
-                for (int i = 0; i < readSettings.RunoffDelayFactors.Length; i++)
+                for (var i = 0; i < readSettings.RunoffDelayFactors.Length; i++)
                 {
                     nwrwDefinitions[i].RunoffDelay = readSettings.RunoffDelayFactors[i];
                     nwrwDefinitions[i + 3].RunoffDelay = readSettings.RunoffDelayFactors[i];
@@ -221,7 +223,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             else
             {
-                for (int i = 0; i < readSettings.RunoffDelayFactors.Length; i++)
+                for (var i = 0; i < readSettings.RunoffDelayFactors.Length; i++)
                 {
                     nwrwDefinitions[i].RunoffDelay = readSettings.RunoffDelayFactors[i];
                 }
@@ -235,8 +237,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 listOfWarnings.Add("No settings found for maximum storages.");
                 return;
             }
-            
-            for (int i = 0; i < readSettings.MaximumStorages.Length; i++)
+
+            for (var i = 0; i < readSettings.MaximumStorages.Length; i++)
             {
                 nwrwDefinitionArray[i].SurfaceStorage = readSettings.MaximumStorages[i];
             }
@@ -250,7 +252,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            for (int i = 0; i < readSettings.MaximumInfiltrationCapcaties.Length - 1; i++)
+            for (var i = 0; i < readSettings.MaximumInfiltrationCapcaties.Length - 1; i++)
             {
                 nwrwDefinitionArray[i].InfiltrationCapacityMax = readSettings.MaximumInfiltrationCapcaties[0];
                 nwrwDefinitionArray[i + 3].InfiltrationCapacityMax = readSettings.MaximumInfiltrationCapcaties[1];
@@ -267,7 +269,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            for (int i = 0; i < readSettings.MinimumInfiltrationCapcaties.Length - 1; i++)
+            for (var i = 0; i < readSettings.MinimumInfiltrationCapcaties.Length - 1; i++)
             {
                 nwrwDefinitionArray[i].InfiltrationCapacityMin = readSettings.MinimumInfiltrationCapcaties[0];
                 nwrwDefinitionArray[i + 3].InfiltrationCapacityMin = readSettings.MinimumInfiltrationCapcaties[1];
@@ -284,7 +286,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            for (int i = 0; i < readSettings.InfiltrationCapacityDecreases.Length - 1 ; i++)
+            for (var i = 0; i < readSettings.InfiltrationCapacityDecreases.Length - 1; i++)
             {
                 nwrwDefinitionArray[i].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[0];
                 nwrwDefinitionArray[i + 3].InfiltrationCapacityReduction = readSettings.InfiltrationCapacityDecreases[1];
@@ -301,10 +303,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            for (int i = 0; i < readSettings.InfiltrationCapacityIncreases.Length - 1; i++)
+            for (var i = 0; i < readSettings.InfiltrationCapacityIncreases.Length - 1; i++)
             {
                 nwrwDefinitionArray[i].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[0];
-                nwrwDefinitionArray[i + 3].InfiltrationCapacityRecovery= readSettings.InfiltrationCapacityIncreases[1];
+                nwrwDefinitionArray[i + 3].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[1];
                 nwrwDefinitionArray[i + 6].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[2];
                 nwrwDefinitionArray[i + 9].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[3];
             }
@@ -323,6 +325,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         #endregion
 
         #region Nwrw catchments
+
         private void FilterNwrwDefinitions(Dictionary<string, SobekRRNwrw> readNwrwDefinitions, Dictionary<string, LateralSource> lateralSourceDictionary)
         {
             Dictionary<string, SobekRRNode> readSobekRRNodeDictionary = ReadNwrwNodes(GetFilePath(SobekFileNames.SobekRRRunoffNodesFileName));
@@ -373,6 +376,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                         AddNwrwCatchmentDataToModel(readNwrwDefinition, targetLateralSource, helper);
                     }
+
                     AddNwrwCatchmentDataToModel(readNwrwDefinition, helper);
                 }
             }
@@ -389,13 +393,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var pipeIdentifier = "SBK_PIPE";
             var nodeIdentifier = "SBK_CONN";
 
-            foreach (var readSobekRRNodeKeyValuePair in readSobekRRNodeDictionary)
+            foreach (KeyValuePair<string, SobekRRNode> readSobekRRNodeKeyValuePair in readSobekRRNodeDictionary)
             {
-                var targetName = readSobekRRNodeKeyValuePair.Key;
-                var sobekRRNode = readSobekRRNodeKeyValuePair.Value;
-                var objectTypeName = sobekRRNode.ObjectTypeName;
-                
-                if (sobekRRNode.NodeType != SobekRRNodeType.NWRW) continue; // filter out non-nwrw node types
+                string targetName = readSobekRRNodeKeyValuePair.Key;
+                SobekRRNode sobekRRNode = readSobekRRNodeKeyValuePair.Value;
+                string objectTypeName = sobekRRNode.ObjectTypeName;
+
+                if (sobekRRNode.NodeType != SobekRRNodeType.NWRW)
+                {
+                    continue; // filter out non-nwrw node types
+                }
 
                 if (objectTypeName.Contains(nodeIdentifier)) // check if target is node
                 {
@@ -417,7 +424,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (branchDictionary.ContainsKey(sobekRRNode.ReachId))
                     {
                         filteredReadSobekRRNodeDictionary[sobekRRNode.ReachId] = sobekRRNode; // find by branchId
-                        filteredReadSobekRRNodeDictionary[targetName] = sobekRRNode; // find by targetIdentifier
+                        filteredReadSobekRRNodeDictionary[targetName] = sobekRRNode;          // find by targetIdentifier
                     }
                 }
                 else
@@ -432,8 +439,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private Dictionary<string, NwrwData> GetNwrwCatchmentModelData()
         {
             return rrModel.GetAllModelData()
-                .OfType<NwrwData>()
-                .ToDictionary(rra => rra.Name, StringComparer.InvariantCultureIgnoreCase);
+                          .OfType<NwrwData>()
+                          .ToDictionary(rra => rra.Name, StringComparer.InvariantCultureIgnoreCase);
         }
 
         private Dictionary<string, SobekRRNwrw> ReadNwrwDefinitions(string filePath)
@@ -443,19 +450,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void UpdateNwrwCatchmentData(Dictionary<string, NwrwData> catchmentModelData, SobekRRNwrw readDefinition)
         {
-            var nwrwData = catchmentModelData[readDefinition.Id];
+            NwrwData nwrwData = catchmentModelData[readDefinition.Id];
             SetNwrwCatchmentData(nwrwData, readDefinition);
         }
 
         private void AddNwrwCatchmentDataToModel(SobekRRNwrw readDefinition, LateralSource lateralSource, NwrwImporterHelper helper)
         {
-            var nodeOrBranchId = lateralSource.Name;
+            string nodeOrBranchId = lateralSource.Name;
 
             NwrwData.CreateNewNwrwDataWithCatchment(rrModel, nodeOrBranchId, helper);
-            var nwrwData = helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId[nodeOrBranchId];
+            NwrwData nwrwData = helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId[nodeOrBranchId];
             nwrwData.NodeOrBranchId = nodeOrBranchId;
-            
-            var catchment = nwrwData.Catchment;
+
+            Catchment catchment = nwrwData.Catchment;
             catchment.IsGeometryDerivedFromAreaSize = true;
             catchment.Geometry = lateralSource.Geometry;
 
@@ -471,7 +478,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             NwrwData nwrwData = helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId[nodeOrBranchId];
             nwrwData.NodeOrBranchId = nodeOrBranchId;
 
-            var catchment = nwrwData.Catchment;
+            Catchment catchment = nwrwData.Catchment;
             catchment.IsGeometryDerivedFromAreaSize = true;
 
             SetNwrwCatchmentData(nwrwData, readDefinition);
@@ -479,7 +486,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void AddNwrwCatchmentLinkToFmModel(Catchment catchment, LateralSource lateralSource)
         {
-            var hydroLink = catchment.LinkTo(lateralSource);
+            HydroLink hydroLink = catchment.LinkTo(lateralSource);
             if (hydroLink != null)
             {
                 hydroLink.Geometry = new LineString(new[]
@@ -502,11 +509,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             nwrwData.UpdateCatchmentAreaSize();
         }
 
-        private void SetDryweatherFlows(NwrwData data, 
-            Func<SobekRRNwrw, string> getDwaIdFunc,
-            Func<SobekRRNwrw, double> getNumberFunc,
-            SobekRRNwrw dataToSetFrom,
-            int index)
+        private void SetDryweatherFlows(NwrwData data,
+                                        Func<SobekRRNwrw, string> getDwaIdFunc,
+                                        Func<SobekRRNwrw, double> getNumberFunc,
+                                        SobekRRNwrw dataToSetFrom,
+                                        int index)
         {
             string dwaId = getDwaIdFunc(dataToSetFrom);
             if (!string.IsNullOrWhiteSpace(dwaId))
@@ -517,7 +524,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     return;
                 }
 
-                var dwfDefintion = new DryWeatherFlow(dwaId) { NumberOfUnits = getNumberFunc(dataToSetFrom)};
+                var dwfDefintion = new DryWeatherFlow(dwaId) {NumberOfUnits = getNumberFunc(dataToSetFrom)};
                 data.DryWeatherFlows[index] = dwfDefintion;
 
                 if (singleUnitDryweatherFlowDefinitions.Contains(dwaId))
@@ -525,16 +532,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     dwfDefintion.NumberOfUnits = 1;
                 }
             }
-
-            
         }
 
         private void SetSurfaceTypes(NwrwData nwrwData, SobekRRNwrw readDefinition)
         {
-            var surfaceTypesInCorrectOrder = NwrwSurfaceTypeHelper.SurfaceTypesInCorrectOrder.ToArray();
-            for (int i = 0; i < surfaceTypesInCorrectOrder.Length; i++)
+            NwrwSurfaceType[] surfaceTypesInCorrectOrder = NwrwSurfaceTypeHelper.SurfaceTypesInCorrectOrder.ToArray();
+            for (var i = 0; i < surfaceTypesInCorrectOrder.Length; i++)
             {
-                var currentSurfaceType = surfaceTypesInCorrectOrder[i];
+                NwrwSurfaceType currentSurfaceType = surfaceTypesInCorrectOrder[i];
                 nwrwData.SurfaceLevelDict[currentSurfaceType] = readDefinition.Areas[i];
             }
         }
