@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
@@ -109,6 +110,37 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.That(createdOrifice.CrestLevel, Is.EqualTo(crestLevel));
             Assert.That(((GatedWeirFormula)createdOrifice.WeirFormula).ContractionCoefficient, Is.EqualTo(contractionCoef));
             Assert.That(createdOrifice.MaxDischarge, Is.EqualTo(maxDischarge));
+        }
+
+        [Test]
+        [TestCase("GSL", false, false)]
+        [TestCase("OPN", true, true)]
+        [TestCase("1_2", true, false)]
+        [TestCase("2_1", false, true)]
+        public void Generate_IsValidGwswSewerConnection_SetsExpectedFlowDirection(string flowDirectionString,
+                                                                                  bool expectedPositiveFlow,
+                                                                                  bool expectedNegativeFlow)
+        {
+            // Setup
+            const string randomString = "randomString";
+            var random = new Random(80085);
+
+            GwswElement gwswElement = GetSewerConnectionGwswElement(randomString, randomString, randomString, randomString,
+                                                                    random.NextDouble(), random.NextDouble(), flowDirectionString, random.NextDouble(),
+                                                                    randomString, randomString, randomString, random.NextDouble(),
+                                                                    random.NextDouble(), random.NextDouble(), random.NextDouble());
+
+            var generator = new SewerOrificeGenerator();
+
+            // Call
+            ISewerFeature orificeSewerFeature = generator.Generate(gwswElement);
+
+            // Assert
+            Assert.That(orificeSewerFeature, Is.TypeOf<GwswConnectionOrifice>());
+
+            var orifice = (Orifice) orificeSewerFeature;
+            Assert.That(orifice.AllowPositiveFlow, Is.EqualTo(expectedPositiveFlow));
+            Assert.That(orifice.AllowNegativeFlow, Is.EqualTo(expectedNegativeFlow));
         }
     }
 }

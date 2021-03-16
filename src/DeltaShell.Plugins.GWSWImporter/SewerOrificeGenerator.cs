@@ -1,3 +1,4 @@
+using System;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
@@ -60,6 +61,33 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var waterType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.WaterType);
             if (waterType.IsValidAttribute())
                 orifice.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterType.GetValidStringValue());
+
+            var flowDirection = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.FlowDirection);
+            if (flowDirection.IsValidAttribute())
+            {
+                var flowDirectionValue = flowDirection.GetValueFromDescription<SewerConnectionMapping.FlowDirection>();
+                switch (flowDirectionValue)
+                {
+                    case SewerConnectionMapping.FlowDirection.Closed:
+                        orifice.AllowNegativeFlow = false;
+                        orifice.AllowPositiveFlow = false;
+                        break;
+                    case SewerConnectionMapping.FlowDirection.Open:
+                        orifice.AllowNegativeFlow = true;
+                        orifice.AllowPositiveFlow = true;
+                        break;
+                    case SewerConnectionMapping.FlowDirection.FromStartToEnd:
+                        orifice.AllowNegativeFlow = false;
+                        orifice.AllowPositiveFlow = true;
+                        break;
+                    case SewerConnectionMapping.FlowDirection.FromEndToStart:
+                        orifice.AllowNegativeFlow = true;
+                        orifice.AllowPositiveFlow = false;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException($"{flowDirectionValue} is not a valid flow direction.");
+                }
+            }
         }
 
         private static void AddStructureAttributesToOrifice(IOrifice orifice, GwswElement gwswElement)
