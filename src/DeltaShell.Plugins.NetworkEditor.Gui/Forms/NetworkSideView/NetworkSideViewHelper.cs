@@ -519,11 +519,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             foreach (var pipe in route.Network.Branches.OfType<IPipe>())
             {
-                var startLocationPipe = new NetworkLocation(pipe, 0);
-                var endLocationPipe = new NetworkLocation(pipe, pipe.Length);
+                if (pipe.Source is Manhole)
+                {
+                    var startLocationPipe = new NetworkLocation(pipe, 0);
+                    coverage[startLocationPipe] = pipe.SourceCompartment.SurfaceLevel;
+                }
 
-                coverage[startLocationPipe] = pipe.SourceCompartment.SurfaceLevel;
-                coverage[endLocationPipe] = pipe.TargetCompartment.SurfaceLevel;
+                if (pipe.Target is Manhole)
+                {
+                    var endLocationPipe = new NetworkLocation(pipe, pipe.Length);
+                    coverage[endLocationPipe] = pipe.TargetCompartment.SurfaceLevel;
+                }
             }
 
             var startLocationRoute = route.Locations.Values[0];
