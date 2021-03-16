@@ -43,6 +43,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.436-beta\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="DelftTools.Controls">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.436-beta\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
@@ -149,6 +152,7 @@
       <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Dynamic">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.436-beta\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
       <Private>False</Private>
@@ -172,6 +176,9 @@
     <Reference Include="Nini">
       <HintPath>.\Nini.dll</HintPath>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="NSubstitute, Version=4.2.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NSubstitute.4.2.2\lib\net46\NSubstitute.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
@@ -215,6 +222,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -226,6 +236,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\CacheFileTest.cs" />
     <Compile Include="IO\ChannelInitialConditionDefinitionFileReaderTest.cs" />
     <Compile Include="IO\ChannelInitialConditionDefinitionFileWriterTest.cs" />
     <Compile Include="Gui\MeteoFieldListViewTest.cs" />
@@ -235,6 +246,8 @@
     <Compile Include="IO\FeatureFile1D2DWriterTest.cs" />
     <Compile Include="IO\FM1DFileFunctionStoreTest.cs" />
     <Compile Include="IO\FMClassMapFileFunctionStoreTest.cs" />
+    <Compile Include="IO\Helpers\FileCopyExceptionTest.cs" />
+    <Compile Include="IO\Helpers\OverwriteCopyHandlerTest.cs" />
     <Compile Include="IO\Importers\RasterFileImporterTest.cs" />
     <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
     <Compile Include="Api\GridHelperTest.cs" />
@@ -377,6 +390,7 @@
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
     <Compile Include="Validation\WaterFlowFMRoughnessValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTest.cs" />
+    <Compile Include="WaterFlowFMModelTest.CacheFile.cs" />
     <Compile Include="WaterFlowFMTestHelper.cs" />
     <Compile Include="WaterFlowFMModelNetworkTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />

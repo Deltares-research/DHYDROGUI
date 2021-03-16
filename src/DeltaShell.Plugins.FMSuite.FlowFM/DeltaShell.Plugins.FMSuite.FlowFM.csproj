@@ -160,6 +160,7 @@
     <Compile Include="FunctionStores\IFMClassMapFileFunctionStore.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
+    <Compile Include="IO\CacheFile.cs" />
     <Compile Include="IO\ChannelFrictionDefinitionFileReader.cs" />
     <Compile Include="IO\ChannelFrictionDefinitionFileWriter.cs" />
     <Compile Include="IO\ChannelInitialConditionDefinitionFileWriter.cs" />
@@ -168,6 +169,9 @@
     <Compile Include="IO\FM1DFileFunctionStore.cs" />
     <Compile Include="IO\FMHisFileFunctionStoreHelper.cs" />
     <Compile Include="IO\FmMapFile1DOutputFileReader.cs" />
+    <Compile Include="IO\Helpers\CopyHandlers\FileCopyException.cs" />
+    <Compile Include="IO\Helpers\CopyHandlers\ICopyHandler.cs" />
+    <Compile Include="IO\Helpers\CopyHandlers\OverwriteCopyHandler.cs" />
     <Compile Include="IO\Importers\BcFile1DImporter.cs" />
     <Compile Include="IO\Importers\RasterFile.cs" />
     <Compile Include="IO\Importers\RasterFileImporter.cs" />

@@ -81,6 +81,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not copy {0} to {1} due to: {2}.
+        /// </summary>
+        public static string CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_ {
+            get {
+                return ResourceManager.GetString("CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Branch ({0}) where the roughness should be put on is not available in the model..
         /// </summary>
         public static string ChannelFrictionDefinitionFileReader_ReadFile_Branch___0___where_the_roughness_should_be_put_on_is_not_available_in_the_model1 {
@@ -101,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not read content section {0} properly; {1} is not a valid function type.
+        ///   Looks up a localized string similar to Could not read content section {0} properly; {1} is not a valid variable type.
         /// </summary>
         public static string ChannelFrictionDefinitionFileReader_ReadFile_Could_not_read_content_section__0__properly__1__is_not_a_valid_function_type {
             get {
@@ -567,7 +576,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Read SourceAndSink values failed: no function detected for SourceAndSink {0}.
+        ///   Looks up a localized string similar to Read SourceAndSink values failed: no variable detected for SourceAndSink {0}.
         /// </summary>
         public static string Read_SourceAndSink_values_failed__no_function_detected_for_SourceAndSink__0_ {
             get {
@@ -723,7 +732,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tim-file import failed: could not retrieve function for SourceAndSink: {0}.
+        ///   Looks up a localized string similar to Tim-file import failed: could not retrieve variable for SourceAndSink: {0}.
         /// </summary>
         public static string Tim_file_import_failed__could_not_retrieve_function_for_SourceAndSink___0_ {
             get {

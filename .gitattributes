@@ -2128,6 +2128,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcmFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcmFileFlowBoundaryDataBuilder.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BndExtForceFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BoundaryConditionWpsImporter.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/CacheFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ChannelFrictionDefinitionFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ChannelFrictionDefinitionFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ChannelInitialConditionDefinitionFileReader.cs -text
@@ -2161,6 +2162,9 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FMMapFileFunctionStore.hbm.xml -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FeatureFile1D2DReader.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FeatureFile1D2DWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FmMapFile1DOutputFileReader.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/FileCopyException.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/ICopyHandler.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/OverwriteCopyHandler.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/IUnsupportedFileBasedExtForceFileItem.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportRasterSamplesSpatialOperationExtension.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportRasterSamplesSpatialOperationExtension.hbm.xml -text
@@ -5021,6 +5025,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BcmFileExportImportTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BcmFileFlowBoundaryDataBuilderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BcmFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BndExtForceFileTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/CacheFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ChannelFrictionDefinitionFileReaderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ChannelFrictionDefinitionFileWriterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ChannelInitialConditionDefinitionFileReaderTest.cs -text
@@ -5047,6 +5052,8 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMModelSchemaCsvFileTest.cs -tex
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMPartitionExporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FeatureFile1D2DWriterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/GroupablePointCloudImporterTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Helpers/FileCopyExceptionTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Helpers/OverwriteCopyHandlerTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Importers/BcFileImporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Importers/BcmFileImporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Importers/CmpFileImporterTest.cs -text
@@ -5105,6 +5112,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelDefinitionTest.cs -
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelNetworkTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelSedimentFractionsIntegrationTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelSedimentFractionsTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelTest.CacheFile.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMModelTracersTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMNHibernateIntegrationTest.cs -text
@@ -7665,6 +7673,9 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/Waal_D-Flow_FM/wl_j95_5_t
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/Waal_D-Flow_FM/wl_j95_5_thd.pli -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/Waal_D-Flow_FM/x1y1x2 -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/Waal_D-Flow_FM/xyz_k_nikuradse-uv.xyz -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/WaterFlowFMModel.CacheFile/CacheFileTest.mdu -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/WaterFlowFMModel.CacheFile/FlowFM_fxw.pliz -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/WaterFlowFMModel.CacheFile/FlowFM_net.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/alex/Waal/BoundaryConditions.bc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/alex/Waal/BoundaryLocations.ini -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/alex/Waal/CrossSectionDefinitions.ini -text

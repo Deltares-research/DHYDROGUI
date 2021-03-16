@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string DtTrt = "DtTrt";
         public const string Dxmin1D = "Dxmin1D";
         public const string WaqOutputDir = "WAQOutputDir";
-
+        public const string UseCaching = "UseCaching";
     }
 
 
