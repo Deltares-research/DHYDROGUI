@@ -132,7 +132,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     rainfallRunoffModel.TemperatureStations.AddRange(buiFileReader.StationNames);
                     temperature.DataDistributionType = MeteoDataDistributionType.PerStation;
                     temperature.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
-                    temperature.Data.Arguments[1].SetValues(buiFileReader.StationNames);
+                    if (temperature.Data.Arguments[1].Values.Count == 0) // this can happen during load not during sobek2 import. During load we don't have eventing enabled to speed up the loading.
+                        temperature.Data.Arguments[1].SetValues(buiFileReader.StationNames);
 
                     foreach (var measurement in measurements)
                     {
@@ -179,7 +180,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     rainfallRunoffModel.MeteoStations.AddRange(buiFileReader.StationNames);
                     precipitation.DataDistributionType = MeteoDataDistributionType.PerStation; //via eventing fills the second argument with station names
                     precipitation.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
-                    precipitation.Data.Arguments[1].SetValues(buiFileReader.StationNames);
+                    if(precipitation.Data.Arguments[1].Values.Count == 0) // this can happen during load not during sobek2 import. During load we don't have eventing enabled to speed up the loading.
+                        precipitation.Data.Arguments[1].SetValues(buiFileReader.StationNames);
 
                     foreach (var measurement in measurements)
                     {
