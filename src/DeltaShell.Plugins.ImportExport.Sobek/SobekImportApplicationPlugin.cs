@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             yield return new ProjectTemplate
             {
-                Name = "Model from Sobek 2",
+                Name = "Sobek 2 import",
                 Category = "RHU Templates",
                 Description = "Generate a model from an existing Sobek 2 model",
                 Id = "Sobek2ImportTemplate",
