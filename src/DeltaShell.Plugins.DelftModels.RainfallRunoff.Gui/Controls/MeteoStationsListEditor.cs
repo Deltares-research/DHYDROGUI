@@ -95,14 +95,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 
         public void SetSelection(IEnumerable<string> selection)
         {
-            if (selection != null && stationsList?.Items != null && stationsList?.Items.Count > 0  && data != null)
+            if (selection == null || stationsList?.Items == null || !(stationsList?.Items.Count > 0) || data == null)
             {
-                settingSectionFromOutside = true;
-                stationsList.ClearSelected();
-                selection.Select(s => stationsList.Items.IndexOf(data.First(d => d.Equals(s)))).Where(i => i >= 0)
-                    .ToList().ForEach(i => stationsList.SetSelected(i, true));
-                settingSectionFromOutside = false;
+                return;
             }
+
+            settingSectionFromOutside = true;
+            stationsList.ClearSelected();
+            selection.Intersect(data)
+                     .Select(s => stationsList.Items.IndexOf(s))
+                     .Where(i => i >= 0)
+                     .ToList()
+                     .ForEach(i => stationsList.SetSelected(i, true));
+            settingSectionFromOutside = false;
         }
 
 
