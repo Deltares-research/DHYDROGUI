@@ -467,8 +467,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             attributeTableCompartments.AfterCreate = (v, o) =>
             {
                 baseAfterCreateCompartments(v, o);
-                var storageName = typeof(Compartment).GetProperty(nameof(Compartment.Storage))?.GetCustomAttribute<DisplayNameAttribute>().DisplayName;
-                var column = v.TableView.Columns.FirstOrDefault(c => c.Caption.Equals(storageName, StringComparison.InvariantCultureIgnoreCase));
+                var storageName = typeof(Compartment).GetProperty(nameof(Compartment.Storage))?.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+                var column = v.TableView.Columns.FirstOrDefault(c => string.Equals(c.Caption,storageName, StringComparison.InvariantCultureIgnoreCase));
                 if (column == null)
                 {
                     return;
@@ -479,7 +479,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     Name = "ViewStorageTable",
                     Caption = "...",
                     HideOnReadOnly = true,
-                    Tooltip = "Storage Table",
+                    Tooltip = storageName,
                     ButtonClickAction = () =>
                     {
                         if (v.TableView.CurrentFocusedRowObject is ICompartment compartment)
