@@ -13,7 +13,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using log4net;
 
@@ -275,29 +274,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             var hydroModel = TargetObject as HydroModel;
             if (hydroModel == null) return;
-            if (UseFm)
-            {
-                foreach (var waterFlowFmModel in hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>())
-                {
-                    try
-                    {
-                        var timeSpanImported = new List<double> {
-                            hydroModel.TimeStep.TotalMilliseconds/1000};
-                        waterFlowFmModel.ModelDefinition.GetModelProperty(KnownProperties.HisInterval).Value = timeSpanImported;
-                        waterFlowFmModel.ModelDefinition.GetModelProperty(KnownProperties.MapInterval).Value = timeSpanImported;
-                        waterFlowFmModel.ModelDefinition.GetModelProperty(KnownProperties.RstInterval).Value = timeSpanImported;
-                        waterFlowFmModel.ModelDefinition.SetGuiTimePropertiesFromMduProperties();
-                    }
-                    catch (Exception e)
-                    {
-                        log.Warn(e.Message);
-                    }
-                }
 
-                hydroModel.OverrideStopTime = true;
-                hydroModel.OverrideStartTime = true;
-                hydroModel.OverrideTimeStep = true;
-            }
+            hydroModel.OverrideStopTime = true;
+            hydroModel.OverrideStartTime = true;
+            hydroModel.OverrideTimeStep = true;
 
             var timeDependentModel = hydroModel.Activities.OfType<ITimeDependentModel>().FirstOrDefault();
             if (timeDependentModel != null)

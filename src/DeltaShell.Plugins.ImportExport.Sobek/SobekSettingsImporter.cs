@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
@@ -157,7 +158,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             waterFlowFMModel.TimeStep = sobekCaseSettings.TimeStep;
             waterFlowFMModel.OutputTimeStep = sobekCaseSettings.OutPutTimeStep;
             waterFlowFMModel.ModelDefinition.GetModelProperty(KnownProperties.DtMax).Value = sobekCaseSettings.TimeStep.TotalSeconds;
-            
+            waterFlowFMModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, sobekCaseSettings.OutPutTimeStep.TotalSeconds.ToString(CultureInfo.InvariantCulture));
             /*
             SetCaseSettingsToParameterSettings("LateralLocation", sobekCaseSettings.LateralLocation);
             SetCaseSettingsToParameterSettings("NoNegativeQlatWhenThereIsNoWater", sobekCaseSettings.NoNegativeQlatWhenThereIsNoWater);
