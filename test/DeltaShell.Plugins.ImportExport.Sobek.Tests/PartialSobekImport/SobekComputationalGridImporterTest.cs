@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var node2 = new HydroNode("node2"){Geometry = new Point(10,0)};
             var channel = new Channel("channel1", node1, node2){Geometry = new LineString(new Coordinate[]{ new Coordinate(0,0), new Coordinate(10, 0) })};
             waterFlowFmModel.Network.Branches.Add(channel);
-            ////add channel location which should be removed
+            ////add channel location which should NOT be removed because we MERGE!
             var channelLocation = new NetworkLocation(channel, 0.12345);
             waterFlowFmModel.NetworkDiscretization.Locations.Values.Add(channelLocation);
             Assert.AreEqual(1, waterFlowFmModel.NetworkDiscretization.Locations.AllValues.Count(l => l.Equals(channelLocation)));
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             //check
             Assert.GreaterOrEqual(waterFlowFmModel.NetworkDiscretization.Locations.AllValues.Count,
                 nPipeCalculationPoints);
-            Assert.AreEqual(0,waterFlowFmModel.NetworkDiscretization.Locations.AllValues.Count(l => l.Equals(channelLocation)));
+            Assert.AreEqual(1,waterFlowFmModel.NetworkDiscretization.Locations.AllValues.Count(l => l.Equals(channelLocation)));
             for (int i = 5; i < 10; i++)
             {
                 Assert.IsTrue(waterFlowFmModel.NetworkDiscretization.IsFixedPoint(waterFlowFmModel.NetworkDiscretization.Locations.Values[i]));

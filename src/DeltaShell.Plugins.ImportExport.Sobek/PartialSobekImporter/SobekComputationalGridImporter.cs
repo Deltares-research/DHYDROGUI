@@ -81,7 +81,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var fixedGridPointData = new HashSet<string>(new SobekObjectTypeReader().Read(sobekObjectTypePath).Where(sot => sot.Type == SobekObjectType.SBK_GRIDPOINTFIXED).Select(sot => sot.ID));
             var gridPointToBecomeFixed = networkDiscretization.Locations.Values.Where(gridPoint => fixedGridPointData.Contains(gridPoint.Name)).ToArray();
-            networkDiscretization.SetValues(Enumerable.Repeat(1.0d, gridPointToBecomeFixed.Length), new VariableValueFilter<INetworkLocation>(networkDiscretization.Locations, gridPointToBecomeFixed));
+            if(gridPointToBecomeFixed.Length >0)
+                networkDiscretization.SetValues(Enumerable.Repeat(1.0d, gridPointToBecomeFixed.Length), new VariableValueFilter<INetworkLocation>(networkDiscretization.Locations, gridPointToBecomeFixed));
         }
 
         private void ImportCalculationGrids(IDiscretization networkDiscretization, Dictionary<string, IChannel> channels)

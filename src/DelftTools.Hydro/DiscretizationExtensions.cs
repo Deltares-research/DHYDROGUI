@@ -146,7 +146,7 @@ namespace DelftTools.Hydro
         public static void UpdateNetworkLocations(this IDiscretization networkDiscretization, IEnumerable<INetworkLocation> newLocations, bool merge = true)
         {
             // remember network locations the user has fixed.
-            var currentLocations = networkDiscretization.Locations.Values;
+            var currentLocations = networkDiscretization.Locations.Values.ToArray();
 
             var fixedOffsetNetworkLocations = new HashSet<INetworkLocation>(currentLocations
                                               .Where(networkDiscretization.IsFixedPoint));
