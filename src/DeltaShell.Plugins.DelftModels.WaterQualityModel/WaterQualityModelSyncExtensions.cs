@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private static void UpdateOutputParameterOutputCoverageDataItems(
             WaterQualityModel waterQualityModel, NotifyCollectionChangedEventArgs e)
         {
-            var outputParameter = (WaterQualityOutputParameter) e.GetRemovedOrAddedItem();
+            var outputParameter = (WaterQualityOutputParameter)e.GetRemovedOrAddedItem();
             if (!outputParameter.ShowInMap)
             {
                 return; // Only perform output parameter output coverage updates for output parameters that should be shown in map
@@ -247,22 +247,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                {
-                    // Add a new output parameter output coverage data item
-                    int insertPosition = waterQualityModel
-                                         .SubstanceProcessLibrary.OutputParameters.Where(op => op.ShowInMap).ToList()
-                                         .IndexOf(outputParameter);
-                    AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputParametersDataItemSet,
-                                              insertPosition, outputParameter.Name);
-                    break;
-                }
+                    {
+                        // Add a new output parameter output coverage data item
+                        int insertPosition = waterQualityModel
+                                             .SubstanceProcessLibrary.OutputParameters.Where(op => op.ShowInMap).ToList()
+                                             .IndexOf(outputParameter);
+                        AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputParametersDataItemSet,
+                                                  insertPosition, outputParameter.Name);
+                        break;
+                    }
                 case NotifyCollectionChangedAction.Remove:
-                {
-                    // Remove the existing output parameter output coverage data item
-                    RemoveOutputCoverageDataItem(outputParameter.Name,
-                                                 waterQualityModel.OutputParametersDataItemSet.DataItems);
-                    break;
-                }
+                    {
+                        // Remove the existing output parameter output coverage data item
+                        RemoveOutputCoverageDataItem(outputParameter.Name,
+                                                     waterQualityModel.OutputParametersDataItemSet.DataItems);
+                        break;
+                    }
             }
         }
 
@@ -382,19 +382,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                    {
-                        // Add a new substance time series to all monitoring output data items
-                        AddMonitoringOutputDataItemTimeSeries(waterQualityModel, substance, "");
+                        {
+                            // Add a new substance time series to all monitoring output data items
+                            AddMonitoringOutputDataItemTimeSeries(waterQualityModel, substance, "");
 
-                        break;
-                    }
+                            break;
+                        }
                     case NotifyCollectionChangedAction.Remove:
-                    {
-                        // Remove the existing substance time series from all monitoring output data items
-                        RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, substance.Name);
+                        {
+                            // Remove the existing substance time series from all monitoring output data items
+                            RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, substance.Name);
 
-                        break;
-                    }
+                            break;
+                        }
                 }
             }
 
@@ -406,18 +406,18 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                    {
-                        // Add a new output parameter time series to all monitoring output data items
-                        AddMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter, "");
+                        {
+                            // Add a new output parameter time series to all monitoring output data items
+                            AddMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter, "");
 
-                        break;
-                    }
+                            break;
+                        }
                     case NotifyCollectionChangedAction.Remove:
-                    {
-                        // Remove the existing output parameter time series from all monitoring output data items
-                        RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter.Name);
-                        break;
-                    }
+                        {
+                            // Remove the existing output parameter time series from all monitoring output data items
+                            RemoveMonitoringOutputDataItemTimeSeries(waterQualityModel, outputParameter.Name);
+                            break;
+                        }
                 }
             }
         }
@@ -473,16 +473,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                                        .ToList()
                                                                        .IndexOf(outputParameter);
             }
-
-            // Todo : Enable when fraction is supported
-            /*            var fraction = outputItem as string;
-                        if (!string.IsNullOrEmpty(fraction))
-                        {
-                            monitoringOutputTimeSeriesName = fraction;
-                            monitoringOutputTimeSeriesPosition += waterQualityModel.GetUniqueFractions()
-                                .ToList()
-                                .IndexOf(fraction);
-                        }*/
         }
 
         private static void RemoveMonitoringOutputDataItem(WaterQualityModel waterQualityModel,
@@ -563,7 +553,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 waterQualityModel.MonitoringOutputDataItemSet.DataItems.Insert(
                     insertIndex,
                     new DataItem(
-                        new WaterQualityObservationVariableOutput(outputVariables) {ObservationVariable = observationPoint})
+                        new WaterQualityObservationVariableOutput(outputVariables) { ObservationVariable = observationPoint })
                     {
                         Owner = waterQualityModel,
                         Role = DataItemRole.Output
@@ -596,7 +586,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 waterQualityModel.MonitoringOutputDataItemSet.DataItems.Insert(
                     insertIndex,
                     new DataItem(
-                        new WaterQualityObservationVariableOutput(outputVariables) {Name = surfaceWaterType})
+                        new WaterQualityObservationVariableOutput(outputVariables) { Name = surfaceWaterType })
                     {
                         Owner = waterQualityModel,
                         Role = DataItemRole.Output
@@ -623,33 +613,33 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             switch (notifyCollectionChangeAction)
             {
                 case NotifyCollectionChangedAction.Add:
-                {
-                    var unstructuredGridCoverage = dataItem.Value as UnstructuredGridCellCoverage;
-                    // when an initial condition or other list of functions/coverages was altered (changed from constant to coverage in this case)
-                    // make sure that the coverage is cleared, because it was replaced and a new coverage is created.
-                    // It will receive a new grid with the right number of cells.
-                    if (unstructuredGridCoverage != null)
                     {
-                        unstructuredGridCoverage.AssignNewGridToCoverage(grid);
-
-                        // create a spatial operation value converter and add a set value operation
-                        SpatialOperationSetValueConverter valueConverter =
-                            SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
-                                dataItem, unstructuredGridCoverage.Name);
-                        var operation = new SetValueOperation
+                        var unstructuredGridCoverage = dataItem.Value as UnstructuredGridCellCoverage;
+                        // when an initial condition or other list of functions/coverages was altered (changed from constant to coverage in this case)
+                        // make sure that the coverage is cleared, because it was replaced and a new coverage is created.
+                        // It will receive a new grid with the right number of cells.
+                        if (unstructuredGridCoverage != null)
                         {
-                            Name = InitialValueOperationName,
-                            Value = WaterQualityFunctionFactory.GetDefaultValue(unstructuredGridCoverage),
-                            OperationType = PointwiseOperationType.OverwriteWhereMissing
-                        };
+                            unstructuredGridCoverage.AssignNewGridToCoverage(grid);
 
-                        // set the input mask of the set value operation
-                        SetGridExtentsAsInputMask(operation, unstructuredGridCoverage);
+                            // create a spatial operation value converter and add a set value operation
+                            SpatialOperationSetValueConverter valueConverter =
+                                SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(
+                                    dataItem, unstructuredGridCoverage.Name);
+                            var operation = new SetValueOperation
+                            {
+                                Name = InitialValueOperationName,
+                                Value = WaterQualityFunctionFactory.GetDefaultValue(unstructuredGridCoverage),
+                                OperationType = PointwiseOperationType.OverwriteWhereMissing
+                            };
 
-                        // add the operation to the set
-                        valueConverter.SpatialOperationSet.AddOperation(operation);
+                            // set the input mask of the set value operation
+                            SetGridExtentsAsInputMask(operation, unstructuredGridCoverage);
+
+                            // add the operation to the set
+                            valueConverter.SpatialOperationSet.AddOperation(operation);
+                        }
                     }
-                }
                     break;
             }
         }
@@ -661,15 +651,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                {
-                    coverage.Grid = waterQualityModel.Grid;
-                    break;
-                }
+                    {
+                        coverage.Grid = waterQualityModel.Grid;
+                        break;
+                    }
                 case NotifyCollectionChangedAction.Remove:
-                {
-                    coverage.Grid = null;
-                    break;
-                }
+                    {
+                        coverage.Grid = null;
+                        break;
+                    }
             }
         }
 
@@ -713,16 +703,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             switch (action)
             {
                 case NotifyCollectionChangedAction.Add:
-                {
-                    AddNewConstantFunction(functionCollection, functionName, defaultValue, componentUnitName,
-                                           description);
-                    break;
-                }
+                    {
+                        AddNewConstantFunction(functionCollection, functionName, defaultValue, componentUnitName,
+                                               description);
+                        break;
+                    }
                 case NotifyCollectionChangedAction.Remove:
-                {
-                    RemoveFunction(functionCollection, functionName);
-                    break;
-                }
+                    {
+                        RemoveFunction(functionCollection, functionName);
+                        break;
+                    }
             }
         }
 
@@ -751,20 +741,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             switch (action)
             {
                 case NotifyCollectionChangedAction.Add:
-                {
-                    // Add a new substance output coverage data item
-                    AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputSubstancesDataItemSet,
-                                              waterQualityModel.SubstanceProcessLibrary.Substances.IndexOf(substance),
-                                              substance.Name, substance.ConcentrationUnit);
-                    break;
-                }
+                    {
+                        // Add a new substance output coverage data item
+                        AddOutputCoverageDataItem(waterQualityModel, waterQualityModel.OutputSubstancesDataItemSet,
+                                                  waterQualityModel.SubstanceProcessLibrary.Substances.IndexOf(substance),
+                                                  substance.Name, substance.ConcentrationUnit);
+                        break;
+                    }
                 case NotifyCollectionChangedAction.Remove:
-                {
-                    // Remove the existing substance output coverage data item
-                    RemoveOutputCoverageDataItem(substance.Name,
-                                                 waterQualityModel.OutputSubstancesDataItemSet.DataItems);
-                    break;
-                }
+                    {
+                        // Remove the existing substance output coverage data item
+                        RemoveOutputCoverageDataItem(substance.Name,
+                                                     waterQualityModel.OutputSubstancesDataItemSet.DataItems);
+                        break;
+                    }
             }
         }
 
@@ -786,7 +776,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             waterQualityModel.MapFileFunctionStore.Functions.AddRange(GetAllFunctions(unstructuredGridCellCoverage));
 
             var dataItem =
-                new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, outputDataItemName) {Name = outputDataItemName};
+                new DataItem(unstructuredGridCellCoverage, DataItemRole.Output, outputDataItemName) { Name = outputDataItemName };
             dataItemSet.DataItems.Insert(insertPosition, dataItem);
         }
 
@@ -805,7 +795,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                                      && di.Name == outputCoverageToRemoveName
                                                                      && !(di.Value is FeatureCoverage));
 
-            var coverage = (UnstructuredGridCellCoverage) outputCoverageDataItem.Value;
+            var coverage = (UnstructuredGridCellCoverage)outputCoverageDataItem.Value;
             if (coverage.Store is LazyMapFileFunctionStore functionStore)
             {
                 foreach (IFunction function in GetAllFunctions(coverage))

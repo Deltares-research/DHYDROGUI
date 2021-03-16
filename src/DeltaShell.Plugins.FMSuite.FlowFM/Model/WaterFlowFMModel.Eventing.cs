@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var name = (string) e.GetRemovedOrAddedItem();
+            var name = (string)e.GetRemovedOrAddedItem();
 
             switch (e.Action)
             {
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     OnSedimentFractionChanged(fraction, e.PropertyName);
                     break;
                 case ISpatiallyVaryingSedimentProperty spatiallyVaryingSedimentProperty:
-                    OnSpatiallyVaryingSedimentPropertyChanged(spatiallyVaryingSedimentProperty, 
+                    OnSpatiallyVaryingSedimentPropertyChanged(spatiallyVaryingSedimentProperty,
                                                               e.PropertyName);
                     break;
             }
@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var prop = (WaterFlowFMProperty) sender;
+            var prop = (WaterFlowFMProperty)sender;
             if (e.PropertyName == nameof(prop.Value))
             {
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BedlevType,
                                                                    StringComparison.InvariantCultureIgnoreCase))
                 {
-                    var bedLevelType = (UnstructuredGridFileHelper.BedLevelLocation) prop.Value;
+                    var bedLevelType = (UnstructuredGridFileHelper.BedLevelLocation)prop.Value;
                     BeginEdit(new DefaultEditAction("Updating Bathymetry coverage"));
                     UpdateBathymetryCoverage(bedLevelType);
                     EndEdit();
@@ -246,19 +246,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                    StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching salinity process", KnownProperties.UseSalinity,
-                                           o => UseSalinity = (bool) o);
+                                           o => UseSalinity = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.UseMorSed,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching morphology process", GuiProperties.UseMorSed,
-                                           o => UseMorSed = (bool) o);
+                                           o => UseMorSed = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteSnappedFeatures,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching write snapped features options",
-                                           GuiProperties.WriteSnappedFeatures, o => WriteSnappedFeatures = (bool) o);
+                                           GuiProperties.WriteSnappedFeatures, o => WriteSnappedFeatures = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ISlope,
                                                                         StringComparison.InvariantCultureIgnoreCase))
@@ -276,13 +276,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching 3D dynamics", KnownProperties.Kmx,
-                                           o => UseDepthLayers = (int) o != 0);
+                                           o => UseDepthLayers = (int)o != 0);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ICdtyp,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching wind formulation type", KnownProperties.ICdtyp,
-                                           o => CdType = (int) o);
+                                           o => CdType = (int)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Temperature,
                                                                         StringComparison.InvariantCultureIgnoreCase))
@@ -295,67 +295,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching secondary flow process", KnownProperties.SecondaryFlow,
-                                           o => UseSecondaryFlow = (bool) o);
+                                           o => UseSecondaryFlow = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteHisFile,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching WriteHisFile", GuiProperties.WriteHisFile,
-                                           o => WriteHisFile = (bool) o);
+                                           o => WriteHisFile = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStart,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching SpecifyHisStart", GuiProperties.SpecifyHisStart,
-                                           o => SpecifyHisStart = (bool) o);
+                                           o => SpecifyHisStart = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStop,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching SpecifyHisStop", GuiProperties.SpecifyHisStop,
-                                           o => SpecifyHisStop = (bool) o);
+                                           o => SpecifyHisStop = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteMapFile,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching WriteMapFile", GuiProperties.WriteMapFile,
-                                           o => WriteMapFile = (bool) o);
+                                           o => WriteMapFile = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStart,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching SpecifyMapStart", GuiProperties.SpecifyMapStart,
-                                           o => SpecifyMapStart = (bool) o);
+                                           o => SpecifyMapStart = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStop,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching SpecifyMapStop", GuiProperties.SpecifyMapStop,
-                                           o => SpecifyMapStop = (bool) o);
+                                           o => SpecifyMapStop = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteClassMapFile,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching WriteClassMapFile", GuiProperties.WriteClassMapFile,
-                                           o => WriteClassMapFile = (bool) o);
+                                           o => WriteClassMapFile = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteRstFile,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching WriteRstFile", GuiProperties.WriteRstFile,
-                                           o => WriteRstFile = (bool) o);
+                                           o => WriteRstFile = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStart,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching SpecifyRstStart", GuiProperties.SpecifyRstStart,
-                                           o => SpecifyRstStart = (bool) o);
+                                           o => SpecifyRstStart = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStop,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching SpecifyRstStop", GuiProperties.SpecifyRstStop,
-                                           o => SpecifyRstStop = (bool) o);
+                                           o => SpecifyRstStop = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaveModelNr,
                                                                         StringComparison.InvariantCultureIgnoreCase))
@@ -371,19 +371,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching Waq output interval time", GuiProperties.SpecifyWaqOutputInterval,
-                                           o => SpecifyWaqOutputInterval = (bool) o);
+                                           o => SpecifyWaqOutputInterval = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStartTime,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching Waq output start time", GuiProperties.SpecifyWaqOutputStartTime,
-                                           o => SpecifyWaqOutputStartTime = (bool) o);
+                                           o => SpecifyWaqOutputStartTime = (bool)o);
                 }
                 else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStopTime,
                                                                         StringComparison.InvariantCultureIgnoreCase))
                 {
                     TriggerPropertyChanged("Switching Waq output end time", GuiProperties.SpecifyWaqOutputStopTime,
-                                           o => SpecifyWaqOutputStopTime = (bool) o);
+                                           o => SpecifyWaqOutputStopTime = (bool)o);
                 }
             }
         }
@@ -593,14 +593,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 groupableFeature.UpdateGroupName(this);
             }
 
-            bool inputSender = removedOrAddedItem is IPump || 
+            bool inputSender = removedOrAddedItem is IPump ||
                                removedOrAddedItem is IStructure;
             bool outputSender = removedOrAddedItem is ObservationCrossSection2D ||
                                 removedOrAddedItem is GroupableFeature2DPoint;
 
             if (inputSender || outputSender)
             {
-                var feature = (IFeature) removedOrAddedItem;
+                var feature = (IFeature)removedOrAddedItem;
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
@@ -618,7 +618,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         areaDataItems.Clear();
                         break;
                     case NotifyCollectionChangedAction.Replace:
-                        var oldFeature = (IFeature) e.OldItems[0];
+                        var oldFeature = (IFeature)e.OldItems[0];
                         RemoveAreaFeature(oldFeature);
                         AddAreaItem(feature, inputSender);
                         break;
@@ -630,7 +630,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is IStructure weir && 
+            if (sender is IStructure weir &&
                 e.PropertyName == nameof(IStructure.Formula))
             {
                 bool isInputSender = Area.Structures.Any(w => w.Name == weir.Name);
@@ -707,7 +707,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 Role = isInputSender ? DataItemRole.Input : DataItemRole.Output,
                 ValueType = typeof(double),
                 ValueConverter =
-                    new WaterFlowFMFeatureValueConverter(this, feature, quantity, string.Empty) // TODO: insert unit
+                    new WaterFlowFMFeatureValueConverter(this, feature, quantity, string.Empty)
             }).OfType<IDataItem>().ToList();
         }
 
@@ -722,8 +722,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
             if (areaDataItem != null)
             {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
+                ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
         }
 
@@ -734,8 +734,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             areaDataItem = GetDataItemByTag(HydroAreaTag);
             if (areaDataItem != null)
             {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
+                ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
             }
         }
 
@@ -745,8 +745,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             IDataItem areaDataItem = GetDataItemByTag(HydroAreaTag);
             if (Equals(e.Target, areaDataItem) && !e.Relinking)
             {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
+                ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
             }
 
             base.OnDataItemLinked(sender, e);
@@ -758,15 +758,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             areaDataItem = GetDataItemByTag(HydroAreaTag);
             if (Equals(e.Target, areaDataItem))
             {
-                ((INotifyCollectionChange) areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged) areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
+                ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
             }
 
             base.OnDataItemUnlinking(sender, e);
         }
 
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {}
-        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e) {}
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) { }
+        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e) { }
 
         /// <summary>
         /// Called when [clear output]. Clears all output of the model.
@@ -818,11 +818,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             syncers.Add(new FeatureDataSyncer<Feature2D, BoundaryConditionSet>(
                             Boundaries,
                             BoundaryConditionSets,
-                            feature => new BoundaryConditionSet {Feature = feature}));
+                            feature => new BoundaryConditionSet { Feature = feature }));
             syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(
                             Pipes,
                             SourcesAndSinks,
-                            feature => new SourceAndSink {Feature = feature}));
+                            feature => new SourceAndSink { Feature = feature }));
         }
 
         private void ClearSyncers()

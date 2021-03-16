@@ -13,7 +13,6 @@ using Netron.GraphLib.UI;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 {
-    // TODO: Synching on property and collection changes inside CurrentWorkflow
     public partial class WorkflowEditorControl : UserControl
     {
         private IEventedList<ICompositeActivity> workflows;
@@ -141,7 +140,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
         private void WorkflowSelectionListBoxSelectedIndexChanged(object sender, EventArgs e)
         {
-            CurrentWorkflow = (ICompositeActivity) workflowSelectionListBox.SelectedItem;
+            CurrentWorkflow = (ICompositeActivity)workflowSelectionListBox.SelectedItem;
         }
 
         private void NetronGraphOnShowProperties(object sender, object[] props)
@@ -157,7 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 return;
             }
 
-            IActivity activity = ((ActivityShapeBase) propertyBag.Owner).Activity;
+            IActivity activity = ((ActivityShapeBase)propertyBag.Owner).Activity;
             var wrapper = activity as ActivityWrapper;
             if (wrapper != null)
             {

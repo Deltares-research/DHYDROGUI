@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition)
         {
-            var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            var refDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
             ModelProperty modelProperty = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile);
             bndExtFilePath = filePath;
@@ -49,8 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        // TODO: migrate sources & sinks to new format
-
         public IList<DelftIniCategory> WriteBndExtForceFileSubFiles(string modelDefinitionModelName,
                                                                     IList<BoundaryConditionSet> boundaryConditionSets,
                                                                     DateTime refDate)
@@ -64,16 +62,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                          : null).Where(it => it != null)
                                      .ToList();
 
-            /* Write all morphology boundaries in one file.*/
-            var bcmFile = new BcmFile {MultiFileMode = bcmFileWriteMode};
+            // Write all morphology boundaries in one file.
+            var bcmFile = new BcmFile { MultiFileMode = bcmFileWriteMode };
             IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> morphologyGroupings =
                 bcmFile.GroupBoundaryConditions(boundaryConditionSets);
 
             WriteBoundaryConditions(refDate, bcmFile, morphologyGroupings, new BcmFileFlowBoundaryDataBuilder(),
                                     modelDefinitionModelName);
-            /* No longer return the morphology groupings since they will not be written to the .ext file (DELFT3DFM-1106) */
+            // No longer return the morphology groupings since they will not be written to the .ext file (DELFT3DFM-1106)
 
-            var bcFile = new BcFile {MultiFileMode = bcFileWriteMode};
+            var bcFile = new BcFile { MultiFileMode = bcFileWriteMode };
             IEnumerable<IGrouping<string, Tuple<IBoundaryCondition, BoundaryConditionSet>>> standardGroupings =
                 bcFile.GroupBoundaryConditions(boundaryConditionSets);
             resultingItems.AddRange(WriteBoundaryConditions(refDate, bcFile, standardGroupings,
@@ -256,7 +254,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     if (existingBlock != null)
                     {
                         // set thatcher harlemann time lag once it is already existent in the ext force file but it has changed.
-                        var condition = (FlowBoundaryCondition) tuple.Item1;
+                        var condition = (FlowBoundaryCondition)tuple.Item1;
                         existingBlock.SetProperty(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey, condition.ThatcherHarlemanTimeLag.TotalSeconds);
 
                         if (BcFile.IsCorrectionType(tuple.Item1.DataType) && !existingPaths.Contains(corrPath))
@@ -279,12 +277,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     if (existingBlock == null)
                     {
-                        string quantityName = ExtForceQuantNames.GetQuantityString((FlowBoundaryCondition) tuple.Item1);
+                        string quantityName = ExtForceQuantNames.GetQuantityString((FlowBoundaryCondition)tuple.Item1);
 
                         string pliFileName = existingPolyLineFiles[tuple.Item2.Feature];
 
                         DelftIniCategory bndBlock = DelftIniCategoryFactory.CreateBoundaryBlock(quantityName, pliFileName, path,
-                                                                                                ((FlowBoundaryCondition) tuple.Item1)
+                                                                                                ((FlowBoundaryCondition)tuple.Item1)
                                                                                                 .ThatcherHarlemanTimeLag);
 
                         if (BcFile.IsCorrectionType(tuple.Item1.DataType))
@@ -330,7 +328,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
             else
             {
-                tuples = new List<Tuple<IBoundaryCondition, BoundaryConditionSet>> {tuple};
+                tuples = new List<Tuple<IBoundaryCondition, BoundaryConditionSet>> { tuple };
                 fileNamesToBoundaryConditions.Add(path, tuples);
             }
         }

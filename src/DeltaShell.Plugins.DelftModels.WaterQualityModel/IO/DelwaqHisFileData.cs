@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
-    // TODO: Move this class to another namespace so that it can be shared by WFDExplorer and WaterQualityModel1D
     public class DelwaqHisFileData
     {
         private readonly string observationVariable;

@@ -26,7 +26,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         /// <summary>
         /// Save the links between models to a different file.
         /// Only used for rtc and flow now.
-        /// TODO: Use abstraction.
         /// </summary>
         public virtual void SaveLinks()
         {
@@ -161,7 +160,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             flowModel = null;
             rtcModel = null;
 
-            // TODO: Make this work upon abstractions
             foreach (IModel model in Models)
             {
                 if (model.GetEntityType().Name.Equals("WaterFlowFMModel"))
@@ -329,7 +327,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             var mapping = new Dictionary<IDataItem, string>();
             foreach (IDataItem item in filteredDataItems)
             {
-                var connectionPoint = (INameable) item.ValueConverter.OriginalValue;
+                var connectionPoint = (INameable)item.ValueConverter.OriginalValue;
                 mapping.Add(item, connectionPoint.Name);
             }
 
@@ -345,7 +343,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (mapping.ContainsKey(dataItem))
             {
-                var originalValue = (INameable) dataItem.ValueConverter.OriginalValue;
+                var originalValue = (INameable)dataItem.ValueConverter.OriginalValue;
                 originalValue.Name = mapping[dataItem];
             }
         }
@@ -365,7 +363,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (couplingFile == null)
             {
-                couplingFile = new ModelCouplingFile {FilePath = filePath};
+                couplingFile = new ModelCouplingFile { FilePath = filePath };
             }
 
             ModelSaveTo(filePath, false);
@@ -390,7 +388,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void BuildModelFromFile(string filePath)
         {
-            couplingFile = new ModelCouplingFile {FilePath = filePath};
+            couplingFile = new ModelCouplingFile { FilePath = filePath };
             LoadLinks();
         }
 
@@ -463,7 +461,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             get
             {
-                yield return ((IFileBased) this).Path;
+                yield return ((IFileBased)this).Path;
             }
         }
 
@@ -506,7 +504,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             IsOpen = true;
         }
 
-        void IFileBased.Delete() {}
+        void IFileBased.Delete() { }
 
         private string GetJSONPathFromDeltaShellPath(string dsPath)
         {

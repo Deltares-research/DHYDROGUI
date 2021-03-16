@@ -631,7 +631,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private UnstructuredGridCoverage CreateCoverage(string location, string coverageLongName, int number = -1)
         {
-            // TODO : Suffix should not be the sediment index but the actual name of the sediment - this is not currently available in the map file
             string suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
             string coverageName = coverageLongName + suffix;
             switch (location)
@@ -882,7 +881,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <see cref="UnstructuredGridCoverage"/>
         /// along the third dimensional axis for each value.
         /// </summary>
-        /// <param name="timeDependentVariable">The <see cref="NetCdfVariableInfo"/>  to process.</param>
+        /// <param name="timeDependentVariable">The <see cref="ReadOnlyNetCdfFunctionStoreBase.NetCdfVariableInfo"/>  to process.</param>
         /// <param name="dimensions">The dimension to process along to.</param>
         /// <param name="location">The name of the location which is processed.</param>
         /// <param name="coverageLongName">The long name of the <paramref name="timeDependentVariable"/>.</param>
@@ -919,7 +918,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <see cref="UnstructuredGridCoverage"/>
         /// along the third dimensional axis for each value.
         /// </summary>
-        /// <param name="timeDependentVariable">The <see cref="NetCdfVariableInfo"/>  to process.</param>
+        /// <param name="timeDependentVariable">The <see cref="ReadOnlyNetCdfFunctionStoreBase.NetCdfVariableInfo"/>  to process.</param>
         /// <param name="dimensions">The collection of <see cref="NetCdfDimension"/> to process with.</param>
         /// <param name="location">The name of the location which is processed.</param>
         /// <param name="coverageLongName">The long name of the <paramref name="timeDependentVariable"/>.</param>
@@ -952,7 +951,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// Process three dimensional time dependent variables by creating additional <see cref="UnstructuredGridCoverage"/>
         /// along the third dimensional axis for each value.
         /// </summary>
-        /// <param name="timeDependentVariable">The <see cref="NetCdfVariableInfo"/>  to process.</param>
+        /// <param name="timeDependentVariable">The <see cref="ReadOnlyNetCdfFunctionStoreBase.NetCdfVariableInfo"/>  to process.</param>
         /// <param name="dimensions">The collection of <see cref="NetCdfDimension"/> to process with.</param>
         /// <param name="location">The name of the location which is processed.</param>
         /// <param name="coverageLongName">The long name of the <paramref name="timeDependentVariable"/>.</param>
@@ -986,7 +985,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// Process three dimensional time dependent variables by creating additional <see cref="UnstructuredGridCoverage"/>
         /// along the third dimensional axis for each value.
         /// </summary>
-        /// <param name="timeDependentVariable">The <see cref="NetCdfVariableInfo"/>  to process.</param>
+        /// <param name="timeDependentVariable">The <see cref="ReadOnlyNetCdfFunctionStoreBase.NetCdfVariableInfo"/>  to process.</param>
         /// <param name="dimension">The dimension to process along to.</param>
         /// <param name="surfaceName">The name of the surfaces for each entry along the <paramref name="dimension"/>.</param>
         /// <param name="location">The name of the location which is processed.</param>
@@ -1011,7 +1010,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             int dimensionLength = netCdfFile.GetDimensionLength(dimension);
             for (var index = 0; index < dimensionLength; index++)
             {
-                // TODO : Replace index with values (i.e. sediment names) - this is not currently available in the map file
                 var coverageName = $"{coverageLongName} ({index})";
                 UnstructuredGridCoverage coverage = CreateCoverage(location, coverageName);
                 if (coverage != null)
@@ -1030,7 +1028,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// Process three dimensional time dependent variables by creating additional <see cref="UnstructuredGridCoverage"/>
         /// along the third dimensional axis for each value.
         /// </summary>
-        /// <param name="timeDependentVariable">The <see cref="NetCdfVariableInfo"/>  to process.</param>
+        /// <param name="timeDependentVariable">The <see cref="ReadOnlyNetCdfFunctionStoreBase.NetCdfVariableInfo"/>  to process.</param>
         /// <param name="dimensions">The dimensions to process along with.</param>
         /// <param name="location">The name of the location which is processed.</param>
         /// <param name="coverageLongName">The long name of the <paramref name="timeDependentVariable"/>.</param>
@@ -1086,7 +1084,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// Process three dimensional time dependent variables by creating additional <see cref="UnstructuredGridCoverage"/>
         /// along the third dimensional axis for each value.
         /// </summary>
-        /// <param name="timeDependentVariable">The <see cref="NetCdfVariableInfo"/>  to process.</param>
+        /// <param name="timeDependentVariable">The <see cref="ReadOnlyNetCdfFunctionStoreBase.NetCdfVariableInfo"/>  to process.</param>
         /// <param name="firstDimension">The first dimension to process along with.</param>
         /// <param name="secondDimension">The second dimension to process along with.</param>
         /// <param name="surfaceName">

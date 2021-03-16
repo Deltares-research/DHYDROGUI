@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             {
                 if (feature != null)
                 {
-                    ((INotifyPropertyChanged) feature).PropertyChanged -= GeometryChanged;
+                    ((INotifyPropertyChanged)feature).PropertyChanged -= GeometryChanged;
                 }
 
                 feature = value;
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 {
                     previousGeometry = feature.Geometry;
                     DataColumns.ForEach(SyncDataColumnValueList);
-                    ((INotifyPropertyChanged) feature).PropertyChanged += GeometryChanged;
+                    ((INotifyPropertyChanged)feature).PropertyChanged += GeometryChanged;
                 }
                 else
                 {
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         IFeature IModelFeatureCoordinateData.Feature
         {
             get => Feature;
-            set => Feature = (TFeature) value;
+            set => Feature = (TFeature)value;
         }
 
         public void Dispose()
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    SyncDataColumnValueList((IDataColumn) e.GetRemovedOrAddedItem());
+                    SyncDataColumnValueList((IDataColumn)e.GetRemovedOrAddedItem());
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     break;
@@ -126,7 +126,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 var coordinateComparison2D = new CoordinateComparison2D();
                 List<Coordinate> geometryCoordinates = feature.Geometry.Coordinates.ToList();
 
-                // todo increase performance (Hashset ??)
                 var pointerList = new List<int>(previousGeometry.Coordinates.Length);
                 foreach (Coordinate previousGeometryCoordinate in previousGeometry.Coordinates)
                 {

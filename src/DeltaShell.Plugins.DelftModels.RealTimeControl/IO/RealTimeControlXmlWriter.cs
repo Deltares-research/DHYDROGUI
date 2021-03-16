@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         public static XDocument GetRuntimeConfigXml(string xsdPath, RealTimeControlModel realTimeControlModel, bool limitMemory, int logLevel)
         {
-            var xmlValidator = new Validator(new List<string> {xsdPath + Path.DirectorySeparatorChar + RtcRuntimeConfigxsd});
+            var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcRuntimeConfigxsd });
 
             XDocument xDocument = GetRuntimeConfigXDocument(xsdPath);
 
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 xsdPath = DimrApiDataSet.RtcToolsDllPath;
             }
 
-            var xmlValidator = new Validator(new List<string> {xsdPath + Path.DirectorySeparatorChar + RtcToolsConfigXsd});
+            var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcToolsConfigXsd });
             XDocument xDocument = GetToolsConfigXDocument(xsdPath);
 
             if (xDocument.Root != null)
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 xsdPath = DimrApiDataSet.RtcToolsDllPath;
             }
 
-            var schemas = new List<string> {xsdPath + Path.DirectorySeparatorChar + RtcDataConfigXsd};
+            var schemas = new List<string> { xsdPath + Path.DirectorySeparatorChar + RtcDataConfigXsd };
 
             var xmlValidator = new Validator(schemas);
 
@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         public static XDocument GetTimeSeriesXml(string xsdPath, ITimeDependentModel timeDependentModel, IList<ControlGroup> controlGroups)
         {
             var xmlValidator =
-                new Validator(new List<string> {xsdPath + Path.DirectorySeparatorChar + PiTimeseriesxsd});
+                new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + PiTimeseriesxsd });
             XDocument xDocument = GetTimeSeriesXDocument(xsdPath);
             if (xDocument.Root != null)
             {
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         public static XDocument GetStateVectorXml(string xsdPath, IList<ControlGroup> controlGroups)
         {
-            var xmlValidator = new Validator(new List<string> {xsdPath + Path.DirectorySeparatorChar + TreeVectorxsd});
+            var xmlValidator = new Validator(new List<string> { xsdPath + Path.DirectorySeparatorChar + TreeVectorxsd });
 
             XDocument xDocument = GetStateVectorXDocument(xsdPath);
 
@@ -490,7 +490,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         ///         <enumeration value="Discharge"/>
         ///     </restriction>
         /// </simpleType>
-        /// todo: quantityId is enum this is blocker for rtc / waterflow integration
         /// </summary>
         /// <param name="timeDependentModel"></param>
         /// <param name="root"></param>

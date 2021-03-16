@@ -9,7 +9,6 @@ using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 {
-    // TODO: why do we have FeatureCoverageProperties in HydroNetworkEditor plugin?
     [ResourcesDisplayName(typeof(Resources), "FeatureCoverageProperties_DisplayName")]
     public class FeatureCoverageProperties : ObjectProperties<IFeatureCoverage>
     {
@@ -18,69 +17,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnly]
         public string Name
         {
-            get
-            {
-                return data.Name;
-            }
-            set
-            {
-                data.Name = value;
-            }
+            get => data.Name;
+            set => data.Name = value;
         }
 
         [Category("General")]
         [Description("Is the coverage time dependent")]
         [DisplayName("Time Dependent")]
-        public bool TimeDepedent
-        {
-            get
-            {
-                return data.IsTimeDependent;
-            }
-        }
+        public bool TimeDepedent => data.IsTimeDependent;
 
         [Category("General")]
         [Description("Default value when no data is available")]
         public double DefaultValue
         {
-            get
-            {
-                return (double) data.Components[0].DefaultValue;
-            }
-            set
-            {
-                data.Components[0].DefaultValue = value;
-            }
+            get => (double)data.Components[0].DefaultValue;
+            set => data.Components[0].DefaultValue = value;
         }
 
         [Category("General")]
         [DisplayName("Unit")]
-        public string Unit
-        {
-            get
-            {
-                return data.Components[0].Unit == null ? "-" : data.Components[0].Unit.Symbol;
-            }
-        }
+        public string Unit => data.Components[0].Unit == null ? "-" : data.Components[0].Unit.Symbol;
 
         [Category("General")]
         [DisplayName("Number of features")]
-        public int FeatureCount
-        {
-            get
-            {
-                return data.FeatureVariable?.Values.Count ?? 0;
-            }
-        }
+        public int FeatureCount => data.FeatureVariable?.Values.Count ?? 0;
 
         [TypeConverter(typeof(CoordinateSystemStringTypeConverter))]
-        public ICoordinateSystem CoordinateSystem
-        {
-            get
-            {
-                return data.CoordinateSystem;
-            }
-        }
+        public ICoordinateSystem CoordinateSystem => data.CoordinateSystem;
 
         [DynamicReadOnlyValidationMethod]
         public bool ValidateDynamicAttributes(string propertyName)

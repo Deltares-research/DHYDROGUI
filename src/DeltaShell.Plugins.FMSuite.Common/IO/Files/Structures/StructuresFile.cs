@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             var logHandler = new LogHandler($"reading the structures file ({structuresFilePath}),", Log);
             try
             {
-                List<IStructureObject> structures = 
+                List<IStructureObject> structures =
                     ReadStructures2D(structuresFilePath, logHandler)
                         .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
                         .Where(s => s != null)
@@ -126,7 +126,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                     continue;
                 }
 
-                // TODO: Check for potentially other required properties:
                 // Read required 'type' property:
                 DelftIniProperty structureTypeProperty =
                     category.Properties.FirstOrDefault(p => p.Name == KnownStructureProperties.Type);
@@ -164,7 +163,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         {
             var logHandler = new LogHandler($"reading the structures file ({filePath}),", Log);
 
-            List<IStructureObject> structures = 
+            List<IStructureObject> structures =
                 ReadStructures2D(filePath, logHandler)
                     .Select(s => ConvertStructure(s, filePath))
                     .Where(s => s != null)
@@ -200,16 +199,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private IStructureObject ConvertStructure(Structure2D structure, 
+        private IStructureObject ConvertStructure(Structure2D structure,
                                                   string structuresSubFilesReferenceFilePath)
         {
             try
             {
-                return StructureFactory.CreateStructure(structure, 
-                                                        structuresSubFilesReferenceFilePath, 
+                return StructureFactory.CreateStructure(structure,
+                                                        structuresSubFilesReferenceFilePath,
                                                         ReferenceDate);
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 Log.ErrorFormat(Resources.StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_, structure.Name);
 
@@ -407,7 +406,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
         #region Sobek Structure to DelftIni related methods:
 
-        private IEnumerable<DelftIniProperty> CreateDelftIniProperties(IStructureObject structure, 
+        private IEnumerable<DelftIniProperty> CreateDelftIniProperties(IStructureObject structure,
                                                                        string filePath,
                                                                        DateTime refDate)
         {
@@ -423,8 +422,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructGeometryProperties(IStructureObject structure, 
-                                                                          string structureType, 
+        private IEnumerable<DelftIniProperty> ConstructGeometryProperties(IStructureObject structure,
+                                                                          string structureType,
                                                                           string filePath)
         {
             if (structure.Geometry is IPoint point)
@@ -457,9 +456,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private IEnumerable<DelftIniProperty> ConstructStructureProperties(IStructureObject structure, 
-                                                                           string structureType, 
-                                                                           string path, 
+        private IEnumerable<DelftIniProperty> ConstructStructureProperties(IStructureObject structure,
+                                                                           string structureType,
+                                                                           string path,
                                                                            DateTime refDate)
         {
             switch (structure)
@@ -490,13 +489,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure structure, 
-                                                                                  string path, 
-                                                                                  string structureType, 
+        private IEnumerable<DelftIniProperty> ConstructGeneralStructureProperties(IStructure structure,
+                                                                                  string path,
+                                                                                  string structureType,
                                                                                   DateTime refDate)
         {
             var properties = new List<DelftIniProperty>();
-            var generalStructureFormula = (GeneralStructureFormula) structure.Formula;
+            var generalStructureFormula = (GeneralStructureFormula)structure.Formula;
 
             // Width
             AddDoubleOrEmptyPropertyConditionally(properties,
@@ -528,7 +527,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             if (structure.UseCrestLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path, 
+                ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
                                             StructureRegion.LevelCenter.Key,
@@ -539,7 +538,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             else
             {
                 properties.Add(ConstructProperty(StructureRegion.LevelCenter.Key,
-                                                 generalStructureFormula.BedLevelStructureCentre, 
+                                                 generalStructureFormula.BedLevelStructureCentre,
                                                  structureType));
             }
 
@@ -551,7 +550,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             // LowerEdgeLevel
             if (generalStructureFormula.UseLowerEdgeLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path, 
+                ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
                                             StructureRegion.GateHeight.Key,
@@ -561,7 +560,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
             else
             {
-                properties.Add(ConstructProperty(StructureRegion.GateHeight.Key, 
+                properties.Add(ConstructProperty(StructureRegion.GateHeight.Key,
                                                  generalStructureFormula.LowerEdgeLevel,
                                                  structureType));
             }
@@ -601,7 +600,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             // Horizontal door opening
             if (generalStructureFormula.UseHorizontalDoorOpeningWidthTimeSeries)
             {
-                ConstructTimeSeriesProperty(path, 
+                ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
                                             KnownGeneralStructureProperties.GateOpeningWidth.GetDescription(),
@@ -627,21 +626,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructPumpProperties(IPump pump, 
+        private IEnumerable<DelftIniProperty> ConstructPumpProperties(IPump pump,
                                                                       string structureType,
-                                                                      string path, 
+                                                                      string path,
                                                                       DateTime refDate)
         {
             var properties = new List<DelftIniProperty>();
 
             if (pump.UseCapacityTimeSeries)
             {
-                ConstructTimeSeriesProperty(path, 
-                                            properties, 
-                                            pump, 
-                                            KnownStructureProperties.Capacity, 
-                                            structureType, 
-                                            pump.CapacityTimeSeries, 
+                ConstructTimeSeriesProperty(path,
+                                            properties,
+                                            pump,
+                                            KnownStructureProperties.Capacity,
+                                            structureType,
+                                            pump.CapacityTimeSeries,
                                             refDate);
             }
             else
@@ -652,36 +651,36 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return properties;
         }
 
-        private IEnumerable<DelftIniProperty> ConstructSimpleWeirProperties(IStructure structure, 
-                                                                            string path, 
-                                                                            string structureType, 
+        private IEnumerable<DelftIniProperty> ConstructSimpleWeirProperties(IStructure structure,
+                                                                            string path,
+                                                                            string structureType,
                                                                             DateTime refDate)
         {
             var properties = new List<DelftIniProperty>();
 
             if (structure.UseCrestLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path, 
-                                            properties, 
-                                            structure, 
-                                            KnownStructureProperties.CrestLevel, 
-                                            structureType, 
-                                            structure.CrestLevelTimeSeries, 
+                ConstructTimeSeriesProperty(path,
+                                            properties,
+                                            structure,
+                                            KnownStructureProperties.CrestLevel,
+                                            structureType,
+                                            structure.CrestLevelTimeSeries,
                                             refDate);
             }
             else
             {
-                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel, 
-                                                 structure.CrestLevel, 
+                properties.Add(ConstructProperty(KnownStructureProperties.CrestLevel,
+                                                 structure.CrestLevel,
                                                  structureType));
             }
 
-            AddDoubleOrEmptyPropertyConditionally(properties, 
-                                                  KnownStructureProperties.CrestWidth, 
+            AddDoubleOrEmptyPropertyConditionally(properties,
+                                                  KnownStructureProperties.CrestWidth,
                                                   structure.CrestWidth,
                                                   structureType);
 
-            var formula = (SimpleWeirFormula) structure.Formula;
+            var formula = (SimpleWeirFormula)structure.Formula;
             properties.Add(ConstructProperty(KnownStructureProperties.LateralContractionCoefficient,
                                              formula.LateralContraction, structureType));
             return properties;
@@ -706,7 +705,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                                            string structureType)
         {
             if (double.IsNaN(value))
-                // we do not want to add an empty string as it will be filtered out in the write step.
+            // we do not want to add an empty string as it will be filtered out in the write step.
             {
                 properties.Add(ConstructProperty(propertyName, " ", structureType));
             }
@@ -732,13 +731,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                                                            string path,
                                                                            DateTime refDate)
         {
-            var gatedWeirFormula = (IGatedStructureFormula) structure.Formula;
+            var gatedWeirFormula = (IGatedStructureFormula)structure.Formula;
 
             var properties = new List<DelftIniProperty>();
 
             if (structure.UseCrestLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path, 
+                ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
                                             KnownStructureProperties.CrestLevel,
@@ -755,7 +754,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             if (gatedWeirFormula.UseLowerEdgeLevelTimeSeries)
             {
-                ConstructTimeSeriesProperty(path, 
+                ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
                                             KnownStructureProperties.GateLowerEdgeLevel,
@@ -772,7 +771,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             if (gatedWeirFormula.UseHorizontalDoorOpeningWidthTimeSeries)
             {
-                ConstructTimeSeriesProperty(path, 
+                ConstructTimeSeriesProperty(path,
                                             properties,
                                             structure,
                                             KnownStructureProperties.GateOpeningWidth,
@@ -798,8 +797,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                                              horizontalDoorOpeningDirection,
                                              structureType));
 
-            AddDoubleOrEmptyPropertyConditionally(properties, 
-                                                  KnownStructureProperties.CrestWidth, 
+            AddDoubleOrEmptyPropertyConditionally(properties,
+                                                  KnownStructureProperties.CrestWidth,
                                                   structure.CrestWidth,
                                                   structureType);
             return properties;
@@ -895,7 +894,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             });
         }
 
-        private string ConstructTimeFilePath(INameable structure, 
+        private string ConstructTimeFilePath(INameable structure,
                                              string propertyName)
         {
             var filePath = $"{structure.Name}_{propertyName}.tim";

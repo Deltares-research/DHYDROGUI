@@ -54,9 +54,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         {
             try
             {
-                StructureType =
-                    (StructureType) Enum.Parse(typeof(StructureType), type,
-                                               true); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
+                StructureType = (StructureType)Enum.Parse(typeof(StructureType), type, true);
             }
             catch (ArgumentException)
             {

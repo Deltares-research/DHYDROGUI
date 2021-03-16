@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             using (var writer = new StringWriter(new StringBuilder()))
             {
                 writer.WriteLine("{0}.{1}{2} ; integration option",
-                                 (int) waqSettings.NumericalScheme,
+                                 (int)waqSettings.NumericalScheme,
                                  integrationOptions, waqSettings.Balance ? 3 : 0);
 
                 writer.WriteLine("; detailed balance options");
@@ -639,9 +639,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             for (var i = 0; i < timeVariable.Values.Count; i++)
             {
                 writer.WriteLine("{0} {1}",
-                                 ((DateTime) timeVariable.Values[i]).ToString(
+                                 ((DateTime)timeVariable.Values[i]).ToString(
                                      "yyyy/MM/dd-HH:mm:ss", CultureInfo.InvariantCulture),
-                                 ((double) valueVariable.Values[i]).ToString(CultureInfo.InvariantCulture));
+                                 ((double)valueVariable.Values[i]).ToString(CultureInfo.InvariantCulture));
             }
 
             writer.WriteLine();
@@ -772,13 +772,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
         private static IDictionary<string, string> GetSegfunctions(WaqInitializationSettings initializationSettings)
         {
-            // TODO SOBEK: Check for data available on 'Chezy', 'Velocity' and 'Width'
             Dictionary<string, string> origDict = initializationSettings
                                                   .ProcessCoefficients.OfType<FunctionFromHydroDynamics>()
                                                   .ToDictionary(f => f.Name, f => f.FilePath);
             initializationSettings.ProcessCoefficients.OfType<SegmentFileFunction>()
                                   .ForEach(pc => origDict.Add(pc.Name, pc.UrlPath));
-            // TODO TOOLS-21968: 'Surf'
             return origDict;
         }
 
@@ -789,7 +787,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         {
             using (var writer = new StringWriter(new StringBuilder()))
             {
-                // WRite Delwaq flags (When on, should be written; Data value doesn't matter):
+                // Write Delwaq flags (When on, should be written; Data value doesn't matter):
                 if (set.Settings.ClosureErrorCorrection)
                 {
                     writer.WriteLine(

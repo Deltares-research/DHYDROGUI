@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         {
             get
             {
-                UpdateFunctionArgumentName(); //OMFG!!
+                UpdateFunctionArgumentName();
                 UpdateFunctionComponentName();
 
                 return data.Function;
@@ -48,14 +48,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [PropertyOrder(5)]
         public InterpolationHydraulicType Interpolation
         {
-            get => (InterpolationHydraulicType) data.Interpolation;
-            set => data.Interpolation = (InterpolationType) value;
+            get => (InterpolationHydraulicType)data.Interpolation;
+            set => data.Interpolation = (InterpolationType)value;
         }
 
         /// <summary>
         /// Update the column name for better user readability
-        /// add an extra [i] to avoid dupliclate names: crestlevel may set crestlevel
-        /// todo refactor UpdateFunctionArgumentName and UpdateFunctionComponentName
+        /// add an extra [i] to avoid duplicate names: crestlevel may set crestlevel
         /// </summary>
         private void UpdateFunctionArgumentName()
         {
@@ -85,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 
         /// <summary>
         /// Update the column name for better user readability
-        /// add an extra [o] to avoid dupliclate names: crestlevel may set crestlevel
+        /// add an extra [o] to avoid duplicate names: crestlevel may set crestlevel
         /// </summary>
         private void UpdateFunctionComponentName()
         {

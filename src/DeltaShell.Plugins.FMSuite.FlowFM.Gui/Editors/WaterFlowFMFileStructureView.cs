@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         public WaterFlowFMFileStructureView()
         {
             InitializeComponent();
-            treeView.NodePresenters.Add(new WaterFlowFMFileBasedItemNodePresenter {Model = Model});
+            treeView.NodePresenters.Add(new WaterFlowFMFileBasedItemNodePresenter { Model = Model });
             treeView.SelectedNodeChanged += SelectedNodeChanged;
         }
 
@@ -49,22 +49,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             {
                 if (model != null)
                 {
-                    ((INotifyPropertyChanged) model).PropertyChanged -= ModelPropertyChanged;
-                    ((INotifyCollectionChanged) model).CollectionChanged -= ModelCollectionChanged;
+                    ((INotifyPropertyChanged)model).PropertyChanged -= ModelPropertyChanged;
+                    ((INotifyCollectionChanged)model).CollectionChanged -= ModelCollectionChanged;
                 }
 
                 model = value;
                 if (model != null)
                 {
-                    ((INotifyPropertyChanged) model).PropertyChanged += ModelPropertyChanged;
-                    ((INotifyCollectionChanged) model).CollectionChanged += ModelCollectionChanged;
+                    ((INotifyPropertyChanged)model).PropertyChanged += ModelPropertyChanged;
+                    ((INotifyCollectionChanged)model).CollectionChanged += ModelCollectionChanged;
                 }
 
                 if (model != null)
                 {
-                    var nodePresenter =
-                        treeView.NodePresenters.FirstOrDefault() as WaterFlowFMFileBasedItemNodePresenter;
-                    if (nodePresenter != null)
+                    if (treeView.NodePresenters.FirstOrDefault() is WaterFlowFMFileBasedItemNodePresenter nodePresenter)
                     {
                         nodePresenter.Model = model;
                     }
@@ -87,12 +85,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //TODO: pick up imports, etc. for refreshes
             if (Equals(sender, Model) && e.PropertyName == nameof(Model.Name) ||
                 Model.Boundaries.Contains(sender) && e.PropertyName == nameof(Feature2D.Name) ||
                 //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
                 Model.Pipes.Contains(sender) && e.PropertyName == nameof(Feature2D.Name))
-                //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
+            //  also listen to renames of boundaries, because if the files are new, they also change file name when saving.
 
             {
                 RefreshTree();
@@ -102,8 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         [InvokeRequired]
         private void RefreshTree()
         {
-            var parentNode = treeView.Data as FileBasedModelItem;
-            if (parentNode != null)
+            if (treeView.Data is FileBasedModelItem parentNode)
             {
                 parentNode.Clear();
             }

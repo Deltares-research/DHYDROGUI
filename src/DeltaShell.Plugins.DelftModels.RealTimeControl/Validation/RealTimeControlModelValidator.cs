@@ -91,8 +91,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
 
         private static IEnumerable<IActivity> GetActuallyControlledModels(RealTimeControlModel model)
         {
-            //todo: get this from model service somehow?!
-
             var controlledModels = new List<IActivity>();
 
             foreach (IDataItem item in model.AllDataItems)

@@ -30,7 +30,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries.Calculators
 
         public IDistanceCalculator DistanceCalculator { get; }
 
-        // TODO Verify whether this could make use of the squared value.
         public IEnumerable<GridBoundaryCoordinate> SnapCoordinateToGridBoundaryCoordinate(Coordinate coordinateToSnap,
                                                                                           double? tolerance = null)
         {

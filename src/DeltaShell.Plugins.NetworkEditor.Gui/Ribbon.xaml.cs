@@ -28,18 +28,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
     /// </summary>
     public partial class Ribbon : IRibbonCommandHandler
     {
-        private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addObsCS2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationCrossSectionToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addPump2dCommand = new MapToolCommand(HydroRegionEditorMapTool.PumpToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.WeirToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) {LayerType = typeof(HydroAreaLayer)};
-        private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) {LayerType = typeof(HydroAreaLayer)};
+        private ICommand addThinDam2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ThinDamToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addFixedWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.FixedWeirToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addObs2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationPointToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addObsCS2dCommand = new MapToolCommand(HydroRegionEditorMapTool.ObservationCrossSectionToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addPump2dCommand = new MapToolCommand(HydroRegionEditorMapTool.PumpToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addWeir2dCommand = new MapToolCommand(HydroRegionEditorMapTool.WeirToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(HydroAreaLayer) };
+        private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) { LayerType = typeof(HydroAreaLayer) };
 
         public Ribbon()
         {
@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public void ValidateItems()
         {
-            var showArea2DTools = true; // regions.OfType<Area>().Any();  TODO.
+            var showArea2DTools = true;
 
             // Area2d tools
             ButtonAddNewThinDam2D.SetState(addThinDam2dCommand, showArea2DTools);

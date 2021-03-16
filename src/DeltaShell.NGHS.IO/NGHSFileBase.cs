@@ -207,7 +207,7 @@ namespace DeltaShell.NGHS.IO
         protected virtual void CreateCommonBlock()
         {
             string contentIdentifier = CreateContentIdentifier(CurrentLine);
-            if (!commentBlocks.ContainsKey(contentIdentifier)) //TODO: A key does not have to be unique in the whole file!
+            if (!commentBlocks.ContainsKey(contentIdentifier))
             {
                 commentBlocks.Add(contentIdentifier, currentCommentBlock);
             }
@@ -275,7 +275,7 @@ namespace DeltaShell.NGHS.IO
                 if (xAsDouble - xAsDoubleFloored < 1e-12)
                 {
                     // valid int, (accidentally) written as double
-                    return (int) xAsDoubleFloored;
+                    return (int)xAsDoubleFloored;
                 }
             }
 

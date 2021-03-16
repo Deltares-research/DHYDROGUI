@@ -279,7 +279,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 },
                 AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.WaveModel)
             };
-            
+
             yield return new ViewInfo<DomainSpecificValidationShortcut, WaveModel, WpfSettingsView>
             {
                 Description = "Wave settings",
@@ -301,7 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                     ConfigureWpfSettingsView(v, o.WaveModel);
                 }
             };
-            
+
             yield return new ViewInfo<WaveModel, ValidationView>
             {
                 Description = "Validation Report",
@@ -326,16 +326,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             yield return new WaveModelNodePresenter(this);
             yield return new WaveDomainNodePresenter(
                 d => WaveModels.FirstOrDefault(m => WaveDomainHelper.GetAllDomains(m.OuterDomain).Contains(d)));
-            yield return new WavmFileFunctionStoreNodePresenter {GuiPlugin = this};
-            yield return new WavhFileFunctionStoreNodePresenter {GuiPlugin = this};
-            yield return new WaveModelTreeShortcutNodePresenter {GuiPlugin = this};
+            yield return new WavmFileFunctionStoreNodePresenter { GuiPlugin = this };
+            yield return new WavhFileFunctionStoreNodePresenter { GuiPlugin = this };
+            yield return new WaveModelTreeShortcutNodePresenter { GuiPlugin = this };
 
             IBoundaryContainer GetBoundaryContainerFromBoundaryFunc(IWaveBoundary boundary) =>
                 WaveModels.Select(wm => wm.BoundaryContainer)
                           .FirstOrDefault(bc => bc.Boundaries.Contains(boundary));
 
             yield return new SpatiallyVariantBoundaryNodePresenter(GetBoundaryContainerFromBoundaryFunc);
-            yield return new WaveOutputDataNodePresenter { GuiPlugin = this};
+            yield return new WaveOutputDataNodePresenter { GuiPlugin = this };
         }
 
         public override void OnActiveViewChanged(IView view)
@@ -396,16 +396,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
 
         private static MapView FindMapView(IView activeView)
         {
-            var mapView = activeView as MapView;
-
-            if (mapView != null)
+            if (activeView is MapView mapView)
             {
                 return mapView;
             }
 
             var compositeView = activeView as ICompositeView;
 
-            //todo: recursion
             return compositeView?.ChildViews.OfType<MapView>().FirstOrDefault();
         }
 
@@ -428,7 +425,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                 }
             }
 
-            if (sender is IModel model && 
+            if (sender is IModel model &&
                 activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
             {
                 CloseWaveModelOutput(model);
@@ -494,8 +491,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
         private void SetSelectedDomain(WpfSettingsView view, IWaveDomainData domain)
         {
             ObservableCollection<WpfGuiCategory> wpfGuiCategories = view.SettingsCategories;
-            
-            WpfGuiCategory domainSpecificSettings = 
+
+            WpfGuiCategory domainSpecificSettings =
                 wpfGuiCategories.Single(c => string.Equals(
                                             c.CategoryName,
                                             Wave.Properties.Resources.Wave_Domain_specific_settings));
@@ -503,7 +500,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
             if (domainSpecificSettings.CustomControl.DataContext is MainDomainSpecificDataViewModel viewModel)
             {
                 viewModel.SelectedViewModel = viewModel.DomainSpecificDataViewModelsList.FirstOrDefault(
-                    vm => string.Equals(vm.DomainName ,domain.Name));
+                    vm => string.Equals(vm.DomainName, domain.Name));
             }
         }
     }

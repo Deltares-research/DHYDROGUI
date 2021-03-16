@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
         {
             var featurePart =
                 new string(
-                    ((Feature2D) featureData.Feature).Name?.Where(c => !Path.GetInvalidFileNameChars().Contains(c))
+                    ((Feature2D)featureData.Feature).Name?.Where(c => !Path.GetInvalidFileNameChars().Contains(c))
                                                      .ToArray());
             if (string.IsNullOrEmpty(featurePart))
             {
@@ -120,15 +120,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
             foreach (object arg in function.Arguments[0].Values)
             {
-                var amplitude = (double) function.Components[0][arg];
+                var amplitude = (double)function.Components[0][arg];
 
                 int phaseIndex = function.Components.Count == 4 ? 2 : 1;
 
-                var phase = (double) function.Components[phaseIndex][arg];
+                var phase = (double)function.Components[phaseIndex][arg];
 
                 list.Add(isAstro
-                             ? new HarmonicComponent((string) arg, amplitude, phase)
-                             : new HarmonicComponent((double) arg, amplitude, phase));
+                             ? new HarmonicComponent((string)arg, amplitude, phase)
+                             : new HarmonicComponent((double)arg, amplitude, phase));
             }
 
             return list;
@@ -290,7 +290,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files.Helpers
 
                 if (filePath == null)
                 {
-                    yield break; //TODO: emit warning.
+                    yield break;
                 }
 
                 yield return new[]
