@@ -1,13 +1,17 @@
 ﻿using System;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
+using DelftTools.Hydro.Helpers;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.Helpers;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
 {
     class CSDZWDefinitionReader : CrossSectionDefinitionReaderBase
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CSDZWDefinitionReader));
+
         public override ICrossSectionDefinition ReadDefinition(IDelftIniCategory category)
         {
             var crossSectionDefinition = new CrossSectionDefinitionZW();
@@ -27,10 +31,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
                 for (int i = 0; i < numLevels; i++)
                 {
                     var storageWidth = totalWidths[i] - flowWidths[i];
+                    if (storageWidth < 0.0)
+                    {
+                        log.WarnFormat("FlowWidth exceeds TotalWidth for cross section definition {0}. The FlowWidth has been set to the TotalWidth.", crossSectionDefinition.Name);
+                        storageWidth = 0.0;
+                    }
                     table.AddCrossSectionZWRow(levels[i], totalWidths[i], storageWidth);
                 }
                 table.EndLoadData();
-                crossSectionDefinition.ZWDataTable = table;   
+                crossSectionDefinition.ZWDataTable = table;
+                CrossSectionHelper.SetDefaultThalweg(crossSectionDefinition);
+                crossSectionDefinition.Thalweg = category.ReadProperty<double>(DefinitionPropertySettings.Thalweg.Key);
             }
             else
             {

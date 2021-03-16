@@ -87,8 +87,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     LongName = crossSectionLongName,
                     Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(chainage)
                 };
+                var shift = crossSectionCategory.ReadProperty<double>(LocationRegion.Shift);
 
-                if(AddCrossSectionToNetwork(branch, crossSection, crossSectionCategory, frictionDefinitions))
+                if (AddCrossSectionToNetwork(branch, crossSection, shift, frictionDefinitions))
                     assignedDefinitions.Add(definition);
             }
 
@@ -106,7 +107,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             return unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).ToArray();
         }
 
-        private static bool AddCrossSectionToNetwork(IBranch branch, ICrossSection crossSection,  DelftIniCategory crossSectionCategory, ILookup<IChannel, ChannelFrictionDefinition> frictionDefinitions)
+        private static bool AddCrossSectionToNetwork(IBranch branch, ICrossSection crossSection,  double shift, ILookup<IChannel, ChannelFrictionDefinition> frictionDefinitions)
         {
             switch (branch)
             {
@@ -117,18 +118,28 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     if (Math.Abs(pipe.CrossSection.Chainage) < 0.001) // chainage = 0, so set source
                     {
                         pipe.CrossSection.Chainage = 0;
-                        pipe.LevelSource = crossSectionCategory.ReadProperty<double>(LocationRegion.Shift);
+                        pipe.LevelSource = shift;
                     }
                     else
                     {
                         pipe.CrossSection.Chainage = pipe.Length;
-                        pipe.LevelTarget = crossSectionCategory.ReadProperty<double>(LocationRegion.Shift);
+                        pipe.LevelTarget = shift;
                     }
                     break;
                 }
 
                 case IChannel channel:
                 {
+                    // Reference level as used in sobek is not stored in cross section; correct z values.
+                    if (crossSection.Definition.IsProxy)
+                    {
+                        ((CrossSectionDefinitionProxy) crossSection.Definition).LevelShift = shift;
+                    }
+                    else if (Math.Abs(shift) > double.Epsilon)
+                    {
+                        crossSection.Definition.ShiftLevel(shift);
+                    }
+                    
                     channel.BranchFeatures.Add(crossSection);
 
                     if (crossSection.Definition.Sections.Count != 1
