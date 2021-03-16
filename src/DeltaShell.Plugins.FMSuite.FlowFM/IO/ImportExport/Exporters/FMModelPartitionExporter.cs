@@ -23,7 +23,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             }
 
             var waterFlowFMModel = item as WaterFlowFMModel;
-            return waterFlowFMModel != null && ExportPartitionMdu(waterFlowFMModel, path);
+
+            if (waterFlowFMModel == null)
+            {
+                return false;
+            }
+
+            bool originalOutputOutOfSync = waterFlowFMModel.OutputOutOfSync;
+            bool success = ExportPartitionMdu(waterFlowFMModel, path);
+            waterFlowFMModel.OutputOutOfSync = originalOutputOutOfSync;
+
+            return success;
         }
 
         public override IEnumerable<Type> SourceTypes()
@@ -38,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
             {
                 return false;
             }
-
+            
             using (api)
             {
                 string nonzeroPath = FilePath ?? path;

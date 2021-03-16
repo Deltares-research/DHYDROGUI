@@ -465,8 +465,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                                                            StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.TrtL,
                                                            StringComparison.InvariantCultureIgnoreCase) ||
-            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SolverType,
-                                                           StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MapFile__Obsolete,
                                                            StringComparison.InvariantCultureIgnoreCase) ||
             prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.HisFile__Obsolete,

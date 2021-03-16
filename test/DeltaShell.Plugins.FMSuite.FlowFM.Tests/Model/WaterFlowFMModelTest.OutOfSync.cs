@@ -56,7 +56,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [TestCase(KnownProperties.TrtRou, "Y")]
         [TestCase(KnownProperties.TrtDef, "test")]
         [TestCase(KnownProperties.TrtL, "test")]
-        [TestCase(KnownProperties.SolverType, "2")]
         [TestCase(KnownProperties.MapFile__Obsolete, "test")]
         [TestCase(KnownProperties.HisFile__Obsolete, "test")]
         [TestCase(KnownProperties.TStart, "0")]
@@ -189,6 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             yield return GetTestCaseData(KnownProperties.Wrishp_src, "1");
             yield return GetTestCaseData(KnownProperties.Wrishp_pump, "1");
             yield return GetTestCaseData(KnownProperties.DtTrt, "1");
+            yield return GetTestCaseData(KnownProperties.SolverType, "2");
             yield return GetTestCaseData(GuiProperties.WriteHisFile, "1");
             yield return GetTestCaseData(GuiProperties.WriteMapFile, "1");
             yield return GetTestCaseData(GuiProperties.WriteClassMapFile, "1");
