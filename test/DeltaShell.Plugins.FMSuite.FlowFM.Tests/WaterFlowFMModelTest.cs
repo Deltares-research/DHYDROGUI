@@ -51,7 +51,7 @@ using Category = NUnit.Framework.CategoryAttribute;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
     [TestFixture]
-    public class WaterFlowFMModelTest
+    public partial class WaterFlowFMModelTest
     {
         private MockRepository mocks;
 
