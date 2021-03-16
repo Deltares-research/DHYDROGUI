@@ -10,14 +10,14 @@ namespace DeltaShell.NGHS.IO.Grid
         public const string BranchGuiFileName = "branches.gui";
         public const string StorageNodeFileName = "nodeFile.ini";
 
-        public static IList<BranchFile.BranchProperties> ReadPropertiesPerBranchFromFile(string netFilePath)
+        public static IList<BranchProperties> ReadPropertiesPerBranchFromFile(string netFilePath)
         {
             var brancheTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, BranchGuiFileName);
             var propertiesPerBranch = File.Exists(brancheTypeFilePath) ? BranchFile.Read(brancheTypeFilePath, netFilePath) : null;
             return propertiesPerBranch;
         }
 
-        public static IList<NodeFile.CompartmentProperties> ReadPropertiesPerNodeFromFile(string netFilePath)
+        public static IList<CompartmentProperties> ReadPropertiesPerNodeFromFile(string netFilePath)
         {
             var nodeTypeFilePath = IoHelper.GetFilePathToLocationInSameDirectory(netFilePath, StorageNodeFileName);
             var propertiesPerNode = File.Exists(nodeTypeFilePath) ? NodeFile.Read(nodeTypeFilePath) : null;

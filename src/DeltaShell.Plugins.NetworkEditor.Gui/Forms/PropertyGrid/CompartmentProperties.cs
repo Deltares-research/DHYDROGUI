@@ -152,33 +152,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool IsFieldReadOnly(string propertyName)
         {
-            if (propertyName == nameof(SurfaceLevel) ||
-                propertyName == nameof(FloodableArea) ||
-                propertyName == nameof(Length) ||
-                propertyName == nameof(Width) ||
-                propertyName == nameof(BottomLevel) 
-                )
+            switch (propertyName)
             {
-                return GetUseTable();
+                case nameof(SurfaceLevel):
+                case nameof(FloodableArea):
+                case nameof(Length):
+                case nameof(Width):
+                case nameof(BottomLevel):
+                    return UseTable;
+                case nameof(Storage):
+                case nameof(InterpolationType):
+                    return !UseTable;
+                default:
+                    return true;
             }
-            if (propertyName == nameof(Storage) ||
-                propertyName == nameof(InterpolationType) 
-                )
-            {
-                return !GetUseTable();
-            }
-
-            return true;
-        }
-
-        private bool GetUseTable()
-        {
-            if (!UseTable)
-            {
-                InterpolationType = InterpolationType.Constant;
-            }
-
-            return UseTable;
         }
 
         [DynamicVisibleValidationMethod]

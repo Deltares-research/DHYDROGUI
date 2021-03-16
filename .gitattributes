@@ -793,6 +793,8 @@ src/DeltaShell.NGHS.IO/FileWriters/Location/DefinitionGeneratorLocation.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Location/LocationFileWriter.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Location/LocationRegion.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/BranchFile.cs -text
+src/DeltaShell.NGHS.IO/FileWriters/Network/BranchProperties.cs -text
+src/DeltaShell.NGHS.IO/FileWriters/Network/CompartmentProperties.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/NetworkAndGridWriter.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/NetworkDefinitionRegion.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Network/NetworkRegion.cs -text
@@ -858,6 +860,7 @@ src/DeltaShell.NGHS.IO/Helpers/BranchChainageExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ConfigurationSetting.cs -text
 src/DeltaShell.NGHS.IO/Helpers/DelftIniCategory.cs -text
 src/DeltaShell.NGHS.IO/Helpers/FileWritingUtils.cs -text
+src/DeltaShell.NGHS.IO/Helpers/FunctionExtensions.cs -text
 src/DeltaShell.NGHS.IO/Helpers/IoHelper.cs -text
 src/DeltaShell.NGHS.IO/Helpers/ModelDefinitionsRegion.cs -text
 src/DeltaShell.NGHS.IO/Helpers/Sobek2ModelImporters.cs -text

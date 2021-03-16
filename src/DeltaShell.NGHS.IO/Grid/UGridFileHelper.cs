@@ -260,14 +260,14 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="path">Path to the UGrid file</param>
         /// <param name="discretization">Instance of a <see cref="IDiscretization"/> to clear and fill with newly read data</param>
         /// <param name="network">Instance of a <see cref="IHydroNetwork"/> to add the newly read data to</param>
-        /// <param name="compartmentPropertiesList">List of <see cref="BranchFile.BranchProperties"/> to use when constructing branches</param>
+        /// <param name="compartmentPropertiesList">List of <see cref="BranchProperties"/> to use when constructing branches</param>
         /// <param name="branchPropertiesList">List of <see cref="NodeFile.CompartmentProperties"/> to use when constructing compartments</param>
         /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
         /// returned from a native function</exception>
         public static void ReadNetworkAndDiscretisation(string path, IDiscretization discretization,
             IHydroNetwork network,
-            IList<NodeFile.CompartmentProperties> compartmentPropertiesList,
-            IList<BranchFile.BranchProperties> branchPropertiesList)
+            IList<CompartmentProperties> compartmentPropertiesList,
+            IList<BranchProperties> branchPropertiesList)
         {
             var errorMessage = $"Could not load network and computational grid from {path}";
             if (network == null || !IsValidPath(path))
@@ -621,8 +621,8 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        private static void ReadNetwork(IUGridApi api, IHydroNetwork network, IList<NodeFile.CompartmentProperties> compartmentPropertiesList,
-            IList<BranchFile.BranchProperties> branchPropertiesList)
+        private static void ReadNetwork(IUGridApi api, IHydroNetwork network, IList<CompartmentProperties> compartmentPropertiesList,
+            IList<BranchProperties> branchPropertiesList)
         {
             var networkIds = api.GetNetworkIds();
             if (networkIds.Length != 0)

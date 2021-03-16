@@ -467,21 +467,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             attributeTableCompartments.AfterCreate = (v, o) =>
             {
                 baseAfterCreateCompartments(v, o);
-                var column = v.TableView.Columns.FirstOrDefault(c => c.Caption.Equals("Storage table", StringComparison.InvariantCultureIgnoreCase));
-                if (column != null)
-                    column.Editor = new ButtonTypeEditor()
+                var storageName = typeof(Compartment).GetProperty(nameof(Compartment.Storage))?.GetCustomAttribute<DisplayNameAttribute>().DisplayName;
+                var column = v.TableView.Columns.FirstOrDefault(c => c.Caption.Equals(storageName, StringComparison.InvariantCultureIgnoreCase));
+                if (column == null)
+                {
+                    return;
+                }
+
+                column.Editor = new ButtonTypeEditor
+                {
+                    Name = "ViewStorageTable",
+                    Caption = "...",
+                    HideOnReadOnly = true,
+                    Tooltip = "Storage Table",
+                    ButtonClickAction = () =>
                     {
-                        Name = "ViewStorageTable",
-                        Caption = "...",
-                        HideOnReadOnly = true,
-                        Tooltip = "Storage Table",
-                        ButtonClickAction = () =>
-                        {
-                            var compartment = v.TableView.CurrentFocusedRowObject as ICompartment;
-                            if (compartment != null)
-                                Gui.CommandHandler.OpenView(compartment.Storage);
-                        }
-                    };
+                        if (v.TableView.CurrentFocusedRowObject is ICompartment compartment)
+                            Gui.CommandHandler.OpenView(compartment.Storage);
+                    }
+                };
             };
             yield return attributeTableCompartments;
 

@@ -152,19 +152,19 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                 NodesTo = new int[]   { 2, 2, 3, 5, 6, 7}
             };
 
-            var compartmentProperties = new List<NodeFile.CompartmentProperties>
+            var compartmentProperties = new List<CompartmentProperties>
             {
-                new NodeFile.CompartmentProperties{ CompartmentId = "compartment1", ManholeId = "manhole1"},
-                new NodeFile.CompartmentProperties{ CompartmentId = "compartment2", ManholeId = "manhole2"},
-                new NodeFile.CompartmentProperties{ CompartmentId = "compartment3", ManholeId = "manhole2"},
-                new NodeFile.CompartmentProperties{ CompartmentId = "compartment4", ManholeId = "manhole3"},
+                new CompartmentProperties{ CompartmentId = "compartment1", ManholeId = "manhole1"},
+                new CompartmentProperties{ CompartmentId = "compartment2", ManholeId = "manhole2"},
+                new CompartmentProperties{ CompartmentId = "compartment3", ManholeId = "manhole2"},
+                new CompartmentProperties{ CompartmentId = "compartment4", ManholeId = "manhole3"},
             };
 
-            var branchProperties = new List<BranchFile.BranchProperties>
+            var branchProperties = new List<BranchProperties>
             {
-                new BranchFile.BranchProperties{Name = "pipe1", BranchType = BranchFile.BranchType.Pipe },
-                new BranchFile.BranchProperties{Name = "pipe2", BranchType = BranchFile.BranchType.Pipe },
-                new BranchFile.BranchProperties{Name = "connection", BranchType = BranchFile.BranchType.SewerConnection },
+                new BranchProperties{Name = "pipe1", BranchType = BranchFile.BranchType.Pipe },
+                new BranchProperties{Name = "pipe2", BranchType = BranchFile.BranchType.Pipe },
+                new BranchProperties{Name = "connection", BranchType = BranchFile.BranchType.SewerConnection },
             };
 
             // Act

@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -16,7 +17,7 @@ using NetTopologySuite.Geometries;
 namespace DelftTools.Hydro.SewerFeatures
 {
     [Entity]
-    public class Manhole : Node, IManhole, ISewerFeature
+    public class Manhole : Node, IManhole, ISewerFeature, IItemContainer
     {
         private IEventedList<ICompartment> compartments;
 
@@ -159,7 +160,8 @@ namespace DelftTools.Hydro.SewerFeatures
         /// <returns></returns>
         public Compartment DowngradeOutletCompartmentToCompartment(OutletCompartment outlet)
         {
-            var compartment = new Compartment(outlet);
+            var compartment = new Compartment();
+            compartment.CopyFrom(outlet);
             compartment.TakeConnectionsOverFrom(outlet);
 
             lock (Compartments)
@@ -331,5 +333,9 @@ namespace DelftTools.Hydro.SewerFeatures
             get => compartments.Count;
         }
 
+        public IEnumerable<object> GetDirectChildren()
+        {
+            return Compartments;
+        }
     }
 }

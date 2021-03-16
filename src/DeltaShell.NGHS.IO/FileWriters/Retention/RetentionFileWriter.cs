@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -51,37 +52,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
             definition.AddProperty(RetentionRegion.UseTable.Key, retention.UseTable ? 1 : 0, RetentionRegion.UseTable.Description);
             if (retention.UseTable)
             {
-                if (retention.Data == null || retention.Data.Arguments == null || retention.Data.Arguments.Count <= 0 ||
-                    retention.Data.Components == null || retention.Data.Components.Count <= 0) return definition;
-
-                var levels = retention.Data.Arguments[0].Values as IList<double>;
-                if (levels == null)
-                {
-                    var cannotWriteRetentionArea = string.Format("Cannot write retention area with id : {0} because levels / heighes in table is not defined as a list of doubles.", retention.Name);
-                    throw new FileWritingException(cannotWriteRetentionArea);
-                }
-                
-
-                var storageAreas = retention.Data.Components[0].Values as IList<double>;
-                if (storageAreas == null)
-                {
-                    var cannotWriteRetentionArea = string.Format("Cannot write retention area with id : {0} because storage areas in table is not defined as a list of doubles.", retention.Name);
-                    throw new FileWritingException(cannotWriteRetentionArea);
-                }
-                
-
-                var interpolateType = retention.Data.Arguments[0].InterpolationType;
-
-                if (interpolateType == InterpolationType.None)
-                {
-                    var cannotWriteRetentionArea = string.Format("Cannot write retention area with id : {0} because interpolation type is set to 'None'. Core cannot handle this type", retention.Name);
-                    throw new FileWritingException(cannotWriteRetentionArea);
-                }
-                
-                definition.AddProperty(RetentionRegion.NumLevels.Key, levels.Count, RetentionRegion.NumLevels.Description);
-                definition.AddProperty(RetentionRegion.Levels.Key, levels, RetentionRegion.Levels.Description, RetentionRegion.Levels.Format);
-                definition.AddProperty(RetentionRegion.StorageArea.Key, storageAreas, RetentionRegion.StorageArea.Description, RetentionRegion.StorageArea.Format);
-                definition.AddProperty(RetentionRegion.Interpolate.Key, interpolateType == InterpolationType.Linear ? "linear" : "block", RetentionRegion.Interpolate.Description);
+                retention.Data.AddStorageTable(definition, retention.Name);
+                return definition;
             }
             else
             {
@@ -94,7 +66,5 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
 
             return definition;
         }
-       
     }
-
 }

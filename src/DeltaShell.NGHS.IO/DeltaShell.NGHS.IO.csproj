@@ -231,6 +231,8 @@
     <Compile Include="FileWriters\Location\LocationFileWriter.cs" />
     <Compile Include="FileWriters\Location\LocationRegion.cs" />
     <Compile Include="FileWriters\Network\BranchFile.cs" />
+    <Compile Include="FileWriters\Network\BranchProperties.cs" />
+    <Compile Include="FileWriters\Network\CompartmentProperties.cs" />
     <Compile Include="FileWriters\Network\NetworkRegion.cs" />
     <Compile Include="FileWriters\Network\NetworkAndGridWriter.cs" />
     <Compile Include="FileWriters\Network\NetworkDefinitionRegion.cs" />
@@ -298,6 +300,7 @@
     <Compile Include="Helpers\ConfigurationSetting.cs" />
     <Compile Include="Helpers\DelftIniCategory.cs" />
     <Compile Include="Helpers\FileWritingUtils.cs" />
+    <Compile Include="Helpers\FunctionExtensions.cs" />
     <Compile Include="Helpers\IoHelper.cs" />
     <Compile Include="Helpers\ModelDefinitionsRegion.cs" />
     <Compile Include="Helpers\Sobek2ModelImporters.cs" />

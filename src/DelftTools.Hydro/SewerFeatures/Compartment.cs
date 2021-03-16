@@ -19,52 +19,21 @@ namespace DelftTools.Hydro.SewerFeatures
     public class Compartment : IPointFeature, ICompartment, ICopyFrom, IItemContainer
     {
         private IManhole parentManhole;
-        private string name;
-        
+
         public Compartment() : this("compartment")
         {
             
         }
-        public Compartment(ICompartment compartment) : this("outletCompartment")
-        {
-            Name = compartment.Name;
-            ParentManhole = compartment.ParentManhole;
-            ParentManholeName = compartment.ParentManholeName;
-            SurfaceLevel = compartment.SurfaceLevel;
-            ManholeLength = compartment.ManholeLength;
-            ManholeWidth = compartment.ManholeWidth;
-            FloodableArea = compartment.FloodableArea;
-            BottomLevel = compartment.BottomLevel;
-            Geometry = compartment.Geometry;
-            Shape = compartment.Shape;
-        }
+
         public Compartment(string name)
         {
             Name = name;
-            SurfaceLevel = 0.0;
-            BottomLevel = -2.0;
-            FloodableArea = 100.0;
-            ManholeLength = 0.64;
-            ManholeWidth = 0.64;
-            Storage = FunctionHelper.Get1DFunction<double, double>("Storage Table", "Height", "Storage");
-            Storage.Arguments[0].InterpolationType = InterpolationType.Linear;
+            InterpolationType = InterpolationType.Linear;
         }
 
         [FeatureAttribute(Order = 1)]
         [DisplayName("Name")]
-        public string Name
-        {
-            get { return name; }
-            set
-            {
-                name = value;
-                OnNameChanged();
-            }
-        }
-
-        protected virtual void OnNameChanged()
-        {
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// The manhole that contains this compartment.
@@ -103,7 +72,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 3)]
         [DynamicReadOnly]
         [DisplayName("Length")]
-        public virtual double ManholeLength { get; set; }
+        public virtual double ManholeLength { get; set; } = 0.64;
 
         /// <summary>
         /// Width of manhole (m).
@@ -111,7 +80,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 4)]
         [DynamicReadOnly]
         [DisplayName("Width")]
-        public virtual double ManholeWidth { get; set; }
+        public virtual double ManholeWidth { get; set; } = 0.64;
 
         /// <summary>
         /// The area at surface level that this manhole can flood (m2).
@@ -119,7 +88,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 5)]
         [DynamicReadOnly]
         [DisplayName("Floodable area")]
-        public virtual double FloodableArea { get; set; }
+        public virtual double FloodableArea { get; set; } = 100.0;
 
         /// <summary>
         /// The bottom level of the manhole compared to Dutch NAP (m).
@@ -127,7 +96,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 6)]
         [DynamicReadOnly]
         [DisplayName("Bottom level")]
-        public virtual double BottomLevel { get; set; }
+        public virtual double BottomLevel { get; set; } = -2.0;
 
         /// <summary>
         /// The surface level of the manhole compared to Dutch NAP (m).
@@ -135,7 +104,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 7)]
         [DynamicReadOnly]
         [DisplayName("Surface level")]
-        public virtual double SurfaceLevel { get; set; }
+        public virtual double SurfaceLevel { get; set; } = 0.0;
 
         /// <summary>
         /// The surface level of the manhole compared to Dutch NAP (m).
@@ -150,7 +119,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 9)]
         [DynamicReadOnly]
         [DisplayName("Storage table")]
-        public virtual IFunction Storage { get; set; }
+        public virtual IFunction Storage { get; set; } = FunctionHelper.Get1DFunction<double, double>("Storage Table", "Height", "Storage");
 
         [Description("Interpolate")]
         [FeatureAttribute(Order = 10)]
@@ -165,34 +134,22 @@ namespace DelftTools.Hydro.SewerFeatures
         [DynamicReadOnlyValidationMethod]
         public bool IsFieldReadOnly(string propertyName)
         {
-            if (propertyName == nameof(SurfaceLevel) ||
-                propertyName == nameof(FloodableArea) ||
-                propertyName == nameof(ManholeLength) ||
-                propertyName == nameof(ManholeWidth) ||
-                propertyName == nameof(BottomLevel)
-            )
+            switch (propertyName)
             {
-                return GetUseTable();
+                case nameof(SurfaceLevel):
+                case nameof(FloodableArea):
+                case nameof(ManholeLength):
+                case nameof(ManholeWidth):
+                case nameof(BottomLevel):
+                    return UseTable;
+                case nameof(Storage):
+                case nameof(InterpolationType):
+                    return !UseTable;
+                default:
+                    return true;
             }
-            if (propertyName == nameof(Storage) ||
-                propertyName == nameof(InterpolationType)
-            )
-            {
-                return !GetUseTable();
-            }
-
-            return true;
         }
 
-        private bool GetUseTable()
-        {
-            if (!UseTable && InterpolationType != InterpolationType.Constant)
-            {
-                InterpolationType = InterpolationType.Constant;
-            }
-
-            return UseTable;
-        }
         public virtual IEnumerable<object> GetDirectChildren()
         {
             if (Storage != null)
@@ -210,13 +167,14 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public object Clone()
         {
-            return new Compartment();
+            var compartment = new Compartment();
+            compartment.CopyFrom(this);
+            return compartment;
         }
         public virtual void CopyFrom(object source)
         {
-            var compartment = source as ICompartment;
-            if (compartment == null) return;
-            
+            if (!(source is ICompartment compartment)) 
+                return;
 
             Name = compartment.Name;
             ParentManhole = compartment.ParentManhole;
@@ -313,7 +271,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 manhole.Compartments.Add(this);
             }
 
-            if (helper != null) helper.ManholesByCompartmentName.AddOrUpdate(name, manhole, (orgManholeName, oldManhole) => manhole);
+            if (helper != null) helper.ManholesByCompartmentName.AddOrUpdate(Name, manhole, (orgManholeName, oldManhole) => manhole);
         }
         public virtual void TakeConnectionsOverFrom(ICompartment compartment)
         {

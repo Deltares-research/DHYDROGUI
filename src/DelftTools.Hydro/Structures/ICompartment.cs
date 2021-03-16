@@ -54,10 +54,20 @@ namespace DelftTools.Hydro.Structures
         CompartmentShape Shape { get; set; }
 
         CompartmentStorageType CompartmentStorageType { get; set; }
-        
+
+        /// <summary>
+        /// Use storage as function of level
+        /// </summary>
         bool UseTable { get; set; }
         
+        /// <summary>
+        /// Contains the storage table
+        /// </summary>
         IFunction Storage { get; set; }
+
+        /// <summary>
+        /// Interpolation used for <see cref="Storage"/>
+        /// </summary>
         InterpolationType InterpolationType { get; set; }
     }
 

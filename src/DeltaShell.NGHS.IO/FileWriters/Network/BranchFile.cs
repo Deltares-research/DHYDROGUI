@@ -147,16 +147,5 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         {
             return (T) Enum.Parse(typeof(T), category.ReadProperty<int>(propertyKey, true).ToString());
         }
-
-        public class BranchProperties
-        {
-            public string Name { get; set; }
-            public BranchType BranchType { get; set; }
-            public bool IsCustomLength { get; set; }
-            public SewerConnectionWaterType WaterType { get; set; }
-            public SewerProfileMapping.SewerProfileMaterial Material { get; set; }
-            public string SourceCompartmentName { get; set; }
-            public string TargetCompartmentName { get; set; }
-        }
     }
 }

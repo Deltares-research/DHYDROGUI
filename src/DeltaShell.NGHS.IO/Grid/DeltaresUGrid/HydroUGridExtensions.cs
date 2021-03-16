@@ -444,10 +444,10 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// Creates a <see cref="IHydroNetwork"/> from the provided <paramref name="networkGeometry"/>
         /// </summary>
         /// <param name="networkGeometry">Network geometry to use</param>
-        /// <param name="branchProperties">Additional properties for the branches (see: <see cref="BranchFile.BranchProperties"/>)</param>
+        /// <param name="branchProperties">Additional properties for the branches (see: <see cref="BranchProperties"/>)</param>
         /// <param name="compartmentProperties">Additional properties for the compartments (see: <see cref="NodeFile.CompartmentProperties"/>)</param>
         /// <returns>A newly created network based on the provided <paramref name="networkGeometry"/></returns>
-        public static IHydroNetwork CreateNetwork(this DisposableNetworkGeometry networkGeometry, IEnumerable<BranchFile.BranchProperties> branchProperties = null, ICollection<NodeFile.CompartmentProperties> compartmentProperties = null)
+        public static IHydroNetwork CreateNetwork(this DisposableNetworkGeometry networkGeometry, IEnumerable<BranchProperties> branchProperties = null, ICollection<CompartmentProperties> compartmentProperties = null)
         {
             var network = new HydroNetwork();
             network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
@@ -461,7 +461,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="networkGeometry"><see cref="DisposableNetworkGeometry"/> containing the network data</param>
         /// <param name="branchProperties">Additional branch properties</param>
         /// <param name="compartmentProperties">Additional compartment properties</param>
-        public static void SetNetworkGeometry(this IHydroNetwork network, DisposableNetworkGeometry networkGeometry, IEnumerable<BranchFile.BranchProperties> branchProperties = null, ICollection<NodeFile.CompartmentProperties> compartmentProperties = null)
+        public static void SetNetworkGeometry(this IHydroNetwork network, DisposableNetworkGeometry networkGeometry, IEnumerable<BranchProperties> branchProperties = null, ICollection<CompartmentProperties> compartmentProperties = null)
         {
             var nodes = CreateNetworkNodes(network, networkGeometry, compartmentProperties);
             var branches = CreateBranches(networkGeometry, nodes, branchProperties);
@@ -625,7 +625,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         }
 
-        private static IBranch[] CreateBranches(DisposableNetworkGeometry networkGeometry, INode[] nodes, IEnumerable<BranchFile.BranchProperties> branchProperties)
+        private static IBranch[] CreateBranches(DisposableNetworkGeometry networkGeometry, INode[] nodes, IEnumerable<BranchProperties> branchProperties)
         {
             var numberOfBranches = networkGeometry.BranchIds.Length;
             var nodeLookup = nodes
@@ -719,7 +719,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             yield return node.Name;
         }
 
-        private static IBranch GetBranch(IReadOnlyDictionary<string, BranchFile.BranchProperties> propertiesLookup, string branchName)
+        private static IBranch GetBranch(IReadOnlyDictionary<string, BranchProperties> propertiesLookup, string branchName)
         {
             if (propertiesLookup == null || !propertiesLookup.ContainsKey(branchName))
             {
@@ -749,10 +749,10 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             return branch;
         }
 
-        private static INode[] CreateNetworkNodes(IHydroNetwork network, DisposableNetworkGeometry networkGeometry, ICollection<NodeFile.CompartmentProperties> compartmentProperties = null)
+        private static INode[] CreateNetworkNodes(IHydroNetwork network, DisposableNetworkGeometry networkGeometry, ICollection<CompartmentProperties> compartmentProperties = null)
         {
             var propertiesLookup = compartmentProperties?.ToDictionary(p => p.CompartmentId) ??
-                                   new Dictionary<string, NodeFile.CompartmentProperties>();
+                                   new Dictionary<string, CompartmentProperties>();
 
             var manHoleLookup = network.Manholes.ToDictionary(m => m.Name);
             var nodeCount = networkGeometry.NodesX.Length;

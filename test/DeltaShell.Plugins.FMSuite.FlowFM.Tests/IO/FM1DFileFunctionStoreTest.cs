@@ -235,8 +235,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 return null;
             }
 
-            IList<BranchFile.BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
-            IList<NodeFile.CompartmentProperties> compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
+            IList<BranchProperties> branchData = NetworkPropertiesHelper.ReadPropertiesPerBranchFromFile(netFilePath);
+            IList<CompartmentProperties> compartmentData = NetworkPropertiesHelper.ReadPropertiesPerNodeFromFile(netFilePath);
             var discretization = new Discretization();
             var network = new HydroNetwork();
             UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, compartmentData,

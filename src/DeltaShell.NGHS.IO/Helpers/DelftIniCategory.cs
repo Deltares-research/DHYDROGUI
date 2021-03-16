@@ -227,7 +227,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             if (iniProperty != null)
                 return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
 
-            errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
+            errorMessage += $"Unable to parse {category.Name} property: {key}{Environment.NewLine}";
             return default(T);
         }
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false, T defaultValue = default(T), bool logError = true)
