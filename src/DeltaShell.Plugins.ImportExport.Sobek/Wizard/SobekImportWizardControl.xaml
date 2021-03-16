@@ -130,7 +130,8 @@
                   Header="Cases"
                   IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}"
                   Visibility="{Binding IsCaseList, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <ListBox ItemsSource="{Binding Cases}"
+            <ListBox MaxHeight="100"
+                     ItemsSource="{Binding Cases}"
                      SelectedItem="{Binding SelectedCase}" />
         </GroupBox>
 
