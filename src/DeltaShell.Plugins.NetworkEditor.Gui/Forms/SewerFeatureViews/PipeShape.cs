@@ -58,39 +58,47 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private double GetPipeWidth()
         {
             var shape = Pipe?.Profile?.Shape;
-            if (shape == null) return 0;
-            var rectangleShape = shape as CrossSectionStandardShapeWidthHeightBase;
-            if (rectangleShape != null)
-            {
-                return rectangleShape.Width;
-            }
 
-            var roundShape = shape as CrossSectionStandardShapeCircle;
-            if (roundShape != null)
+            switch (shape)
             {
-                return roundShape.Diameter;
+                case null:
+                    return 0;
+                case CrossSectionStandardShapeWidthHeightBase rectangleShape:
+                    return rectangleShape.Width;
+                case CrossSectionStandardShapeCircle roundShape:
+                    return roundShape.Diameter;
+                case CrossSectionStandardShapeArch archShape:
+                    return archShape.Width;
+                case CrossSectionStandardShapeSteelCunette cunetteShape:
+                    return cunetteShape.RadiusR;
+                case CrossSectionStandardShapeTrapezium trapeziumShape:
+                    return trapeziumShape.GetTabulatedDefinition().Width;
+                default:
+                    throw new ArgumentException($"Sewer pipe shape {shape?.Type} is not yet supported");
             }
-
-            throw new ArgumentException($"Pipe shape {shape?.Type} is not yet supported");
         }
 
         private double GetPipeHeight()
         {
-            var shape = Pipe?.Profile?.Shape;
-            if (shape == null) return 0;
-            var rectangleShape = shape as CrossSectionStandardShapeWidthHeightBase;
-            if (rectangleShape != null)
-            {
-                return rectangleShape.Height;
-            }
+            ICrossSectionStandardShape shape = Pipe?.Profile?.Shape;
 
-            var roundShape = shape as CrossSectionStandardShapeCircle;
-            if (roundShape != null)
+            switch (shape)
             {
-                return roundShape.Diameter;
+                case null:
+                    return 0;
+                case CrossSectionStandardShapeWidthHeightBase rectangleShape:
+                    return rectangleShape.Height;
+                case CrossSectionStandardShapeCircle roundShape:
+                    return roundShape.Diameter;
+                case CrossSectionStandardShapeArch archShape:
+                    return archShape.Height;
+                case CrossSectionStandardShapeSteelCunette cunetteShape:
+                    return cunetteShape.Height;
+                case CrossSectionStandardShapeTrapezium trapeziumShape:
+                    return trapeziumShape.GetTabulatedDefinition().HighestPoint;
+                default:
+                    throw new ArgumentException($"Sewer pipe shape {shape?.Type} is not yet supported");
             }
-
-            throw new ArgumentException($"Sewer pipe shape {shape?.Type} is not yet supported");
         }
     }
 }
