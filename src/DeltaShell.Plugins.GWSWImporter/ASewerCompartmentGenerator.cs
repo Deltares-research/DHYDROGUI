@@ -1,4 +1,6 @@
-﻿using DelftTools.Hydro.SewerFeatures;
+﻿using System;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 using NetTopologySuite.Geometries;
@@ -77,6 +79,32 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var surfaceLevelAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.SurfaceLevel);
             if (surfaceLevelAttribute.TryGetValueAsDouble(out auxDouble))
                 compartment.SurfaceLevel = auxDouble;
+
+            var compartmentStorageTypeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.CompartmentStorageType);
+            if (string.IsNullOrWhiteSpace(compartmentStorageTypeAttribute.ValueAsString))
+            {
+                compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
+            }
+            else
+            {
+                var compartmentStorageType = compartmentStorageTypeAttribute.GetValueFromDescription<ManholeMapping.CompartmentStorageType>();
+                switch (compartmentStorageType)
+                {
+                    case ManholeMapping.CompartmentStorageType.Reservoir:
+                        compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
+                        break;
+                    case ManholeMapping.CompartmentStorageType.Closed:
+                        compartment.CompartmentStorageType = CompartmentStorageType.Closed;
+                        break;
+                    case ManholeMapping.CompartmentStorageType.Loss:
+                        Log.WarnFormat($"Compartment {compartment.Name} has an unsupported compartment storage type 'VRL'. " +
+                                       $"Setting the default compartment storage type 'RES' instead.");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException($"Compartment {compartment.Name} has an unsupported compartment storage type '{compartmentStorageType}'.");
+                }
+            }
+
 
             // Set shape value of the compartment
             var nodeShapeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);

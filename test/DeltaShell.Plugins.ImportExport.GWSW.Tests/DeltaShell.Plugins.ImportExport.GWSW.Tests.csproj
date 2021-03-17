@@ -124,6 +124,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ASewerCompartmentGeneratorTest.cs" />
     <Compile Include="CompartmentShapeConverterTest.cs" />
     <Compile Include="Gui\Views\DelimeterSelectorTest.cs" />
     <Compile Include="Gui\Views\GwswImportDialogTest.cs" />

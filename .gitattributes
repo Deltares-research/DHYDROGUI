@@ -9690,6 +9690,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/windtest/windXYP.apwxwy -
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/windtest/windXYP.grd -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/windtest/windY.amv -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/xyzFiles/largeSampleFile.xyz -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/ASewerCompartmentGeneratorTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/App.config -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/CompartmentShapeConverterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/DeltaShell.Plugins.ImportExport.GWSW.Tests.csproj -text

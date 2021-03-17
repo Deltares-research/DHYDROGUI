@@ -13,6 +13,19 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             [Description("UIT")] Outlet,
             [Description("MAN")] Manhole /* Custom type, only for creating a manhole with no compartiments*/,
         }
+
+        public enum CompartmentStorageType
+        {
+            [Description("RES")]
+            Reservoir,
+
+            [Description("KNV")]
+            Closed,
+
+            [Description("VRL")]
+            Loss
+        }
+
         public static class PropertyKeys
         {
             public const string ManholeId = "MANHOLE_ID";
@@ -25,7 +38,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             public const string BottomLevel = "BOTTOM_LEVEL";
             public const string SurfaceLevel = "SURFACE_LEVEL";
             public const string XCoordinate = "X_COORDINATE";
-            public const string YCoordinate = "Y_COORDINATE";
+            public const string YCoordinate = "Y_COORDINATE"; 
+            public const string CompartmentStorageType = "SURFACE_SCHEMATISATION";
         }
     }
 }
