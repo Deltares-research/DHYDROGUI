@@ -13,5 +13,7 @@
         public double NumberOfUnits { get; set; }
         public string[] SpecialAreaNames { get; set; }
         public double[] SpecialAreaValues { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
     }
 }

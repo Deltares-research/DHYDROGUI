@@ -507,7 +507,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             SetDryweatherFlows(nwrwData, (rd) => rd.InhabitantDwaId, (rd) => rd.NumberOfPeople, readDefinition, 0);
             SetDryweatherFlows(nwrwData, (rd) => rd.CompanyDwaId, (rd) => rd.NumberOfUnits, readDefinition, 1);
             SetSurfaceTypes(nwrwData, readDefinition);
-
+            nwrwData.Catchment.Geometry = new Point(readDefinition.X, readDefinition.Y);
             nwrwData.UpdateCatchmentAreaSize();
         }
 
