@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 compartment.SurfaceLevel = auxDouble;
 
             var compartmentStorageTypeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.CompartmentStorageType);
-            if (string.IsNullOrWhiteSpace(compartmentStorageTypeAttribute.ValueAsString))
+            if (string.IsNullOrWhiteSpace(compartmentStorageTypeAttribute?.ValueAsString))
             {
                 compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
             }
