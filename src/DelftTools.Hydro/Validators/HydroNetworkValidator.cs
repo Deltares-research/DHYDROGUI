@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
@@ -45,9 +46,9 @@ namespace DelftTools.Hydro.Validators
         private static ValidationReport ValidateRetentions(IHydroNetwork network)
         {
             var issues = new List<ValidationIssue>();
-            foreach (var retention in network.Retentions)
+            foreach (var retention in network.Retentions.Where(r => !r.UseTable))
             {
-                if (retention.StorageArea == 0)
+                if (Math.Abs(retention.StorageArea) < double.Epsilon)
                 {
                     issues.Add(new ValidationIssue(retention, 
                                                    ValidationSeverity.Error, 
