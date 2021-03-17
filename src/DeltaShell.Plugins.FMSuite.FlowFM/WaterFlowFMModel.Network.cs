@@ -229,7 +229,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 // Update laterals
                 foreach (var lateralSource in Network.LateralSources)
                 {
-                    AddLateralSourceData(new Model1DLateralSourceData { Feature = (LateralSource)lateralSource, UseSalt = UseSalinity, UseTemperature = UseTemperature });
+                    AddLateralSourceData(new Model1DLateralSourceData
+                    {
+                        Feature = (LateralSource)lateralSource, 
+                        UseSalt = UseSalinity, 
+                        UseTemperature = UseTemperature
+                    });
                 }
 
                 // Update channel friction definitions
@@ -359,7 +364,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                             var channel = (IChannel) e.GetRemovedOrAddedItem();
                             foreach (var lateralSource in channel.BranchSources)
                             {
-                                AddLateralSourceData(new Model1DLateralSourceData {Feature = lateralSource, UseSalt = UseSalinity, UseTemperature = UseTemperature });
+                                AddLateralSourceData(new Model1DLateralSourceData
+                                {
+                                    Feature = lateralSource, 
+                                    UseSalt = UseSalinity, 
+                                    UseTemperature = UseTemperature
+                                });
                             }
 
                             ChannelFrictionDefinitions.Add(new ChannelFrictionDefinition(channel));
@@ -699,7 +709,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                 case NotifyCollectionChangedAction.Add:
                     
-                    var model1DLateralSourceData = new Model1DLateralSourceData { Feature = lateralSource, UseSalt = UseSalinity, UseTemperature = UseTemperature };
+                    var model1DLateralSourceData = new Model1DLateralSourceData
+                    {
+                        Feature = lateralSource, 
+                        UseSalt = UseSalinity, 
+                        UseTemperature = UseTemperature
+                    };
                     if (lateralSource.Branch is IPipe pipe)
                     {
                         model1DLateralSourceData.Compartment = pipe.SourceCompartmentName != null && pipe.SourceCompartmentName.Equals(lateralSource.Name)
