@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Networks;
 
@@ -51,8 +53,34 @@ namespace DelftTools.Hydro.Validators
                 if (Math.Abs(retention.StorageArea) < double.Epsilon)
                 {
                     issues.Add(new ValidationIssue(retention, 
-                                                   ValidationSeverity.Error, 
-                                                   string.Format("The values in the storage graph of retention {0} should be greater than zero.", retention.Name)));
+                                                   ValidationSeverity.Error,
+                                                   $"The values in the storage graph of retention {retention.Name} should be greater than zero.",network.Retentions));
+                }
+            }
+            foreach (var retention in network.Retentions.Where(r => r.UseTable))
+            {
+                if (retention.Data.Components[0].Values.Count == 0)
+                {
+                    issues.Add(new ValidationIssue(retention, 
+                                                   ValidationSeverity.Error,
+                                                   $"Table should be used for {retention.Name}, but no values are set.", network.Retentions));
+                    continue;
+                }
+
+                var levelStorageValues = retention.Data.Components[0].GetValues<double>().ToArray();
+                var levelStorageHeigth = retention.Data.Arguments[0].GetValues<double>().ToArray();
+                if(levelStorageValues.Length != levelStorageHeigth.Length) continue;
+                for (var index = 0; index < levelStorageValues.Length; index++)
+                {
+                    double value = levelStorageValues[index];
+                    double height = levelStorageHeigth[index];
+                    if (Math.Abs(value) < double.Epsilon)
+                    {
+                        issues.Add(new ValidationIssue(retention,
+                                                       ValidationSeverity.Error,
+                                                       $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", network.Retentions));
+                        continue;
+                    }
                 }
             }
             return new ValidationReport("Retentions", issues);
