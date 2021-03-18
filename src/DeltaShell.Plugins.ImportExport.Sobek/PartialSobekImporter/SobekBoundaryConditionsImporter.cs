@@ -89,22 +89,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                 }
                 waterFlowFMModel.ReplaceBoundaryCondition(flowBoundaryConditionData);
-                UpdateManholeWithOutletData(node, flowBoundaryConditionData);
-            }
-        }
-
-        private void UpdateManholeWithOutletData(INode node, Model1DBoundaryNodeData flowBoundaryConditionData)
-        {
-            var manhole = node as Manhole;
-            if (manhole != null && flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
-            {
-                //var outletCandidate = manhole.GetOutletCandidate(); // is not working. incomming branches are not set, but should be the method
-                var outletCandidate = manhole.Compartments.LastOrDefault();
-                if (outletCandidate != null)
-                {
-                    var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
-                    outlet.SurfaceWaterLevel = flowBoundaryConditionData.WaterLevel;
-                }
+                flowBoundaryConditionData.UpdateManholeWithOutletData(node);
             }
         }
 

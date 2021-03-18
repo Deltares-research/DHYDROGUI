@@ -53,7 +53,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
                     if (waterFlowModel1DBoundaryNodeData.Node is Manhole manhole)
                     {
-                        var compartment = manhole.Compartments.FirstOrDefault(c => c.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));// name is compartment name not node name
+                        // name is compartment name not node name
+                        var compartment = manhole.Compartments.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.InvariantCultureIgnoreCase));
                         OutletCompartment outlet = null;
                         
                         if (compartment == null)
@@ -62,13 +63,19 @@ namespace DeltaShell.NGHS.IO.FileReaders
                             if (outlet == null)
                             {
                                 compartment = manhole.Compartments.FirstOrDefault();
-                                if (compartment != null) manhole.UpdateCompartmentToOutletCompartment(compartment);
+                                if (compartment != null)
+                                {
+                                    manhole.UpdateCompartmentToOutletCompartment(compartment);
+                                }
+                                
                             }
-
                             outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
                         }
-
-                        if (compartment is Compartment)
+                        else if (compartment is OutletCompartment outletCompartment)
+                        {
+                            outlet = outletCompartment;
+                        }
+                        else if (compartment is Compartment)
                         {
                             manhole.UpdateCompartmentToOutletCompartment(compartment);
                             outlet = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault(oc => oc.Name.Equals(compartment.Name, StringComparison.InvariantCultureIgnoreCase));
@@ -201,6 +208,14 @@ namespace DeltaShell.NGHS.IO.FileReaders
                             {
                                 var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
                                 outlet.SurfaceWaterLevel = boundaryCondition.WaterLevel;
+                            }
+                            else
+                            {
+                                outletCandidate = manhole.Compartments.OfType<OutletCompartment>().SingleOrDefault(oc => string.Equals(oc.Name, manhole.Name, StringComparison.InvariantCultureIgnoreCase));
+                                if (outletCandidate != null)
+                                {
+                                    ((OutletCompartment) outletCandidate).SurfaceWaterLevel = boundaryCondition.WaterLevel;
+                                }
                             }
                         }
                         break;

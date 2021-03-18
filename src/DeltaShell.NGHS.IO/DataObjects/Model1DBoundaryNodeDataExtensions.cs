@@ -1,5 +1,6 @@
 using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
+using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.DataObjects
 {
@@ -14,6 +15,21 @@ namespace DeltaShell.NGHS.IO.DataObjects
                 bc.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
                 bc.WaterLevel = outlet.SurfaceWaterLevel;
                 bc.OutletCompartment = outlet;
+            }
+        }
+
+        public static void UpdateManholeWithOutletData(this Model1DBoundaryNodeData flowBoundaryConditionData, INode node)
+        {
+            var manhole = node as Manhole;
+            if (manhole != null && flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
+            {
+                //var outletCandidate = manhole.GetOutletCandidate(); // is not working. incomming branches are not set, but should be the method
+                var outletCandidate = manhole.Compartments.LastOrDefault();
+                if (outletCandidate != null)
+                {
+                    var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
+                    outlet.SurfaceWaterLevel = flowBoundaryConditionData.WaterLevel;
+                }
             }
         }
     }
