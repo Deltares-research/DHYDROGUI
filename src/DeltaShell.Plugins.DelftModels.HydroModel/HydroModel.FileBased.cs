@@ -264,7 +264,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 Region.BeginEdit(new DefaultEditAction("Removing hydro links"));
 
-                var sourceRegionsLinksGrouping = Region.Links.Where(l => l.Source is Catchment catchment && !Equals(catchment.CatchmentType, CatchmentType.NWRW)).GroupBy(l => l.Source.Region);
+                var sourceRegionsLinksGrouping = Region.Links.Where(l => l.Source is Catchment).GroupBy(l => l.Source.Region);
                 foreach (var sourceRegionGroup in sourceRegionsLinksGrouping)
                 {
                     var sourceRegion = sourceRegionGroup.Key;

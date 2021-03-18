@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DataObjects;
@@ -45,6 +46,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             // Read all NWRW definitions
             Dictionary<string, SobekRRNwrw> readNwrwDefinitions = ReadNwrwDefinitions(GetFilePath(SobekFileNames.SobekRRNwrwFileName));
+            Dictionary<string, SobekRRNode> readSobekRrNodeDictionary = ReadNwrwNodes(GetFilePath(SobekFileNames.SobekRRRunoffNodesFileName));
 
             if (HydroNetwork != null) // importing RR and FLOW
             {
@@ -53,10 +55,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     return;
                 }
                 lateralSourceFeatureDictionary = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, StringComparer.InvariantCultureIgnoreCase);
-                FilterNwrwDefinitions(readNwrwDefinitions, lateralSourceFeatureDictionary);
+                FilterNwrwDefinitions(readNwrwDefinitions, lateralSourceFeatureDictionary, readSobekRrNodeDictionary);
             }
 
-            AddNwrwDefinitionsToModel(readNwrwDefinitions.Values, lateralSourceFeatureDictionary);
+            AddNwrwDefinitionsToModel(readNwrwDefinitions.Values, lateralSourceFeatureDictionary, readSobekRrNodeDictionary);
 
             if (listOfWarnings.Any())
             {
@@ -321,10 +323,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         #region Nwrw catchments
 
-        private void FilterNwrwDefinitions(Dictionary<string, SobekRRNwrw> readNwrwDefinitions, Dictionary<string, ILateralSource> lateralSourceDictionary)
+        private void FilterNwrwDefinitions(Dictionary<string, SobekRRNwrw> readNwrwDefinitions, Dictionary<string, ILateralSource> lateralSourceDictionary, Dictionary<string, SobekRRNode> readSobekRrNodeDictionary)
         {
-            Dictionary<string, SobekRRNode> readSobekRRNodeDictionary = ReadNwrwNodes(GetFilePath(SobekFileNames.SobekRRRunoffNodesFileName));
-            Dictionary<string, SobekRRNode> filteredReadSobekRRNodeDictionary = FilterSobekRRNodes(readSobekRRNodeDictionary);
+            Dictionary<string, SobekRRNode> filteredReadSobekRRNodeDictionary = FilterSobekRRNodes(readSobekRrNodeDictionary);
 
             foreach (SobekRRNwrw readNwrwDefinition in readNwrwDefinitions.Values)
             {
@@ -343,7 +344,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private void AddNwrwDefinitionsToModel(IEnumerable<SobekRRNwrw> readNwrwDefinitions, Dictionary<string, ILateralSource> lateralSourceDictionary)
+        private void AddNwrwDefinitionsToModel(IEnumerable<SobekRRNwrw> readNwrwDefinitions, Dictionary<string, ILateralSource> lateralSourceDictionary, Dictionary<string, SobekRRNode> readSobekRrNodeDictionary)
         {
             Dictionary<string, NwrwData> catchmentModelData = GetNwrwCatchmentModelData();
 
@@ -353,6 +354,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     new ConcurrentDictionary<string, NwrwData>(catchmentModelData)
             };
 
+            var unFoundNodeIds = new List<string>();
             foreach (SobekRRNwrw readNwrwDefinition in readNwrwDefinitions)
             {
                 if (catchmentModelData.TryGetValue(readNwrwDefinition.Id, out var nwrwData))
@@ -378,7 +380,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                 }
 
-                AddNwrwCatchmentDataToModel(readNwrwDefinition, helper);
+                if (readSobekRrNodeDictionary.TryGetValue(readNwrwDefinition.Id, out var rrNode))
+                {
+                    unFoundNodeIds.Add(readNwrwDefinition.Id);
+                }
+
+                AddNwrwCatchmentDataToModel(readNwrwDefinition, helper, rrNode);
+            }
+
+            if (unFoundNodeIds.Any())
+            {
+                Log.Warn($"Could not find the following NWRW id's {string.Join(",", unFoundNodeIds)}");
             }
         }
 
@@ -472,7 +484,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             AddNwrwCatchmentLinkToFmModel(catchment, lateralSource);
         }
 
-        private void AddNwrwCatchmentDataToModel(SobekRRNwrw readDefinition, NwrwImporterHelper helper)
+        private void AddNwrwCatchmentDataToModel(SobekRRNwrw readDefinition, NwrwImporterHelper helper, SobekRRNode sobekRrNode)
         {
             string nodeOrBranchId = readDefinition.Id;
 
@@ -482,6 +494,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             Catchment catchment = nwrwData.Catchment;
             catchment.IsGeometryDerivedFromAreaSize = true;
+            catchment.Geometry = new Point(sobekRrNode.X, sobekRrNode.Y);
 
             SetNwrwCatchmentData(nwrwData, readDefinition);
         }
