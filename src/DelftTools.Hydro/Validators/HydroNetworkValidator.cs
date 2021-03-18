@@ -54,7 +54,7 @@ namespace DelftTools.Hydro.Validators
                 {
                     issues.Add(new ValidationIssue(retention, 
                                                    ValidationSeverity.Error,
-                                                   $"The values in the storage graph of retention {retention.Name} should be greater than zero.",network.Retentions));
+                                                   $"The values in the storage graph of retention {retention.Name} should be greater than zero."));
                 }
             }
             foreach (var retention in network.Retentions.Where(r => r.UseTable))
@@ -63,7 +63,7 @@ namespace DelftTools.Hydro.Validators
                 {
                     issues.Add(new ValidationIssue(retention, 
                                                    ValidationSeverity.Error,
-                                                   $"Table should be used for {retention.Name}, but no values are set.", network.Retentions));
+                                                   $"Table should be used for {retention.Name}, but no values are set.", retention.Data));
                     continue;
                 }
 
@@ -78,7 +78,7 @@ namespace DelftTools.Hydro.Validators
                     {
                         issues.Add(new ValidationIssue(retention,
                                                        ValidationSeverity.Error,
-                                                       $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", network.Retentions));
+                                                       $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", retention.Data));
                         continue;
                     }
                 }
