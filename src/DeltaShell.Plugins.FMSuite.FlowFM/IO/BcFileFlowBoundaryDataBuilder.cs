@@ -618,19 +618,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                                 foreach (var comp in quantityGroup)
                                 {
-                                    var variable = existingData.Components[comp.Key.Item2];
+                                    IVariable variable = existingData.Components.ElementAtOrDefault(comp.Key.Item2);
+                                    if (variable == null)
+                                    {
+                                        throw new ArgumentOutOfRangeException(comp.Key.Item1.ToString());
+                                    }
                                     variable.SetValues(ParseValues(comp.Value, variable.ValueType));
                                 }
                             }
                             existingData.EndEdit();
                         }
-                        catch (Exception)
+                        catch (Exception e)
                         {
+                            var ef = string.Format("Skipped DataPoint {0} for Boundary Condition {1} could not be added as the following exception was risen during import: {2}", dataPoint, boundaryCondition.Name, e.Message);
+                            Log.ErrorFormat(ef);
                             if (addedData)
                             {
                                 boundaryCondition.DataPointIndices.Remove(dataPoint);
                             }
-                            throw;
                         }
                     }
                     if (!selectedSet.BoundaryConditions.Contains(boundaryCondition))

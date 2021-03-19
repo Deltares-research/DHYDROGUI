@@ -275,6 +275,9 @@
     <Compile Include="NHibernateHydroModelIntegrationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HydroModelExtensionsTest.cs" />
+    <Compile Include="Readers\DHydroConfigXmlImporterTest.cs" />
+    <Compile Include="Readers\HydroModelConverterTest.cs" />
+    <Compile Include="Readers\HydroModelReaderTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Validation\HydroModelValidatorTest.cs" />
     <Compile Include="Validation\WorkFlowTypeValidatorFactoryTest.cs" />

@@ -236,6 +236,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\Importers\WaterFlowFMFileImporterTest.cs" />
     <Compile Include="IO\CacheFileTest.cs" />
     <Compile Include="IO\ChannelInitialConditionDefinitionFileReaderTest.cs" />
     <Compile Include="IO\ChannelInitialConditionDefinitionFileWriterTest.cs" />
