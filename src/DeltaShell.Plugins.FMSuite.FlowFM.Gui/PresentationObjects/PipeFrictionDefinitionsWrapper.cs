@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Utils.Collections.Generic;
+﻿using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
@@ -16,21 +14,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
     /// </remarks>
     public sealed class PipeFrictionDefinitionsWrapper
     {
-        private static readonly IList<PipeFrictionDefinitionsWrapper> Instances = new List<PipeFrictionDefinitionsWrapper>();
-
         public static PipeFrictionDefinitionsWrapper GetInstance(IEventedList<PipeFrictionDefinition> wrappedData)
         {
-            var instance = Instances.FirstOrDefault(i => ReferenceEquals(i.WrappedData, wrappedData));
-            if (instance != null)
-            {
-                return instance;
-            }
-
-            instance = new PipeFrictionDefinitionsWrapper(wrappedData);
-
-            Instances.Add(instance);
-
-            return instance;
+            return new PipeFrictionDefinitionsWrapper(wrappedData);
         }
 
         private PipeFrictionDefinitionsWrapper(IEventedList<PipeFrictionDefinition> wrappedData)
@@ -39,5 +25,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
         }
 
         public IEventedList<PipeFrictionDefinition> WrappedData { get; }
+
+        public override bool Equals(object Obj)
+        {
+            if (Obj is PipeFrictionDefinitionsWrapper channelFrictionDefinition)
+            {
+                return Equals(channelFrictionDefinition);
+            }
+
+            return false;
+        }
+
+        private bool Equals(PipeFrictionDefinitionsWrapper other)
+        {
+            return WrappedData == other?.WrappedData;
+        }
+
+        public override int GetHashCode()
+        {
+            return (WrappedData != null ? WrappedData.GetHashCode() : 0);
+        }
+
+        public static bool operator ==(PipeFrictionDefinitionsWrapper wrapper1, PipeFrictionDefinitionsWrapper wrapper2)
+        {
+            return wrapper1?.Equals(wrapper2) ?? ReferenceEquals(wrapper2, null);
+        }
+
+        public static bool operator !=(PipeFrictionDefinitionsWrapper wrapper1, PipeFrictionDefinitionsWrapper wrapper2)
+        {
+            return !(wrapper1 == wrapper2);
+        }
     }
 }

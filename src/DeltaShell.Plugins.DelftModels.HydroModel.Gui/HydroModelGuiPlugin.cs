@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls;
@@ -23,6 +24,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
@@ -101,6 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 {
                     Gui.AfterRun -= OnGuiAfterRun;
                     Gui.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
+                    Gui.Application.ProjectClosing -= ApplicationOnProjectClosing;
                 }
 
                 base.Gui = value;
@@ -109,6 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 {
                     Gui.AfterRun += OnGuiAfterRun;
                     Gui.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
+                    Gui.Application.ProjectClosing += ApplicationOnProjectClosing;
                 }
             }
         }
@@ -141,9 +145,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             }
         }
 
+        private void ApplicationOnProjectClosing(Project obj)
+        {
+            // remove memory leaks
+            Gui.Selection = null;
+            Gui.SelectedProjectItem = null;
+            
+            GC.Collect();
+        }
+
         [InvokeRequired]
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
+            if (sender is FileImportActivity fileImportActivity && e.NewStatus == ActivityStatus.Done)
+            {
+                // remove memory leaks
+                fileImportActivity.FileImporter.ProgressChanged = null;
+                TypeUtils.SetField(fileImportActivity, "target", null);
+            }
+
             if (!(sender is HydroModel) || e.NewStatus != ActivityStatus.Failed) return;
 
             Gui.CommandHandler.OpenView(sender, typeof(ValidationView));

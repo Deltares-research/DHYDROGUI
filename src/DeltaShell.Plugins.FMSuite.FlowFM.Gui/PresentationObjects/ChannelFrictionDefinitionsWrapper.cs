@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Utils.Collections.Generic;
+﻿using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
@@ -14,23 +12,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
     /// in unwanted selection synchronization after clicking the related node in the project explorer. Implemented
     /// the singleton pattern in order to guarantee equality.
     /// </remarks>
-    public sealed class ChannelFrictionDefinitionsWrapper 
+    public sealed class ChannelFrictionDefinitionsWrapper
     {
-        private static readonly IList<ChannelFrictionDefinitionsWrapper> Instances = new List<ChannelFrictionDefinitionsWrapper>();
-
         public static ChannelFrictionDefinitionsWrapper GetInstance(IEventedList<ChannelFrictionDefinition> wrappedData)
         {
-            var instance = Instances.FirstOrDefault(i => ReferenceEquals(i.WrappedData, wrappedData));
-            if (instance != null)
-            {
-                return instance;
-            }
-
-            instance = new ChannelFrictionDefinitionsWrapper(wrappedData);
-
-            Instances.Add(instance);
-
-            return instance;
+            return new ChannelFrictionDefinitionsWrapper(wrappedData);
         }
 
         private ChannelFrictionDefinitionsWrapper(IEventedList<ChannelFrictionDefinition> wrappedData)
@@ -39,5 +25,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
         }
 
         public IEventedList<ChannelFrictionDefinition> WrappedData { get; }
+
+        public override bool Equals(object Obj)
+        {
+            if (Obj is ChannelFrictionDefinition channelFrictionDefinition)
+            {
+                return Equals(channelFrictionDefinition);
+            }
+
+            return false;
+        }
+
+        private bool Equals(ChannelFrictionDefinitionsWrapper other)
+        {
+            return WrappedData == other?.WrappedData;
+        }
+
+        public override int GetHashCode()
+        {
+            return (WrappedData != null ? WrappedData.GetHashCode() : 0);
+        }
+
+        public static bool operator ==(ChannelFrictionDefinitionsWrapper wrapper1, ChannelFrictionDefinitionsWrapper wrapper2)
+        {
+            return wrapper1?.Equals(wrapper2) ?? ReferenceEquals(wrapper2, null);
+        }
+
+        public static bool operator !=(ChannelFrictionDefinitionsWrapper wrapper1, ChannelFrictionDefinitionsWrapper wrapper2)
+        {
+            return !(wrapper1 == wrapper2);
+        }
     }
 }

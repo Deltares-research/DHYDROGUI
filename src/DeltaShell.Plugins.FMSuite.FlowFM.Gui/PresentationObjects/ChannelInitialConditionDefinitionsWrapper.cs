@@ -16,21 +16,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
     /// </remarks>
     public sealed class ChannelInitialConditionDefinitionsWrapper
     {
-        private static readonly IList<ChannelInitialConditionDefinitionsWrapper> Instances = new List<ChannelInitialConditionDefinitionsWrapper>();
-
         public static ChannelInitialConditionDefinitionsWrapper GetInstance(IEventedList<ChannelInitialConditionDefinition> wrappedData)
         {
-            var instance = Instances.FirstOrDefault(i => ReferenceEquals(i.WrappedData, wrappedData));
-            if (instance != null)
-            {
-                return instance;
-            }
-
-            instance = new ChannelInitialConditionDefinitionsWrapper(wrappedData);
-
-            Instances.Add(instance);
-
-            return instance;
+            return new ChannelInitialConditionDefinitionsWrapper(wrappedData);
         }
 
         private ChannelInitialConditionDefinitionsWrapper(IEventedList<ChannelInitialConditionDefinition> wrappedData)
@@ -39,5 +27,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
         }
 
         public IEventedList<ChannelInitialConditionDefinition> WrappedData { get; }
+
+        public override bool Equals(object Obj)
+        {
+            if (Obj is ChannelInitialConditionDefinitionsWrapper channelFrictionDefinition)
+            {
+                return Equals(channelFrictionDefinition);
+            }
+
+            return false;
+        }
+
+        private bool Equals(ChannelInitialConditionDefinitionsWrapper other)
+        {
+            return WrappedData == other?.WrappedData;
+        }
+
+        public override int GetHashCode()
+        {
+            return (WrappedData != null ? WrappedData.GetHashCode() : 0);
+        }
+
+        public static bool operator ==(ChannelInitialConditionDefinitionsWrapper wrapper1, ChannelInitialConditionDefinitionsWrapper wrapper2)
+        {
+            return wrapper1?.Equals(wrapper2) ?? ReferenceEquals(wrapper2, null);
+        }
+
+        public static bool operator !=(ChannelInitialConditionDefinitionsWrapper wrapper1, ChannelInitialConditionDefinitionsWrapper wrapper2)
+        {
+            return !(wrapper1 == wrapper2);
+        }
     }
 }

@@ -1,7 +1,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.Aop;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using Mono.Addins;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
@@ -12,6 +17,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     [Extension(typeof(IPlugin))]
     public class SobekImportApplicationPlugin : ApplicationPlugin
     {
+        private IApplication application;
+
         static SobekImportApplicationPlugin()
         {
             Sobek2ModelImporters.RegisterSobek2Importer(() => new SobekModelToRainfallRunoffModelImporter());
@@ -55,6 +62,44 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 }
             };
         }
+
+        public override IApplication Application
+        {
+            get
+            {
+                return application;
+            }
+            set
+            {
+                if (application != null)
+                {
+                    application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
+                }
+
+                application = value;
+                
+                if (application != null)
+                {
+                    application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
+                }
+            }
+        }
+
+
+        [InvokeRequired]
+        private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
+        {
+            if (e.NewStatus != ActivityStatus.Done || 
+                !(sender is FileImportActivity fileImportActivity) || 
+                !(fileImportActivity.FileImporter is IPartialSobekImporter partialSobekImporter))
+            {
+                return;
+            }
+
+            // prevent memory leaks - importer is static
+            partialSobekImporter.TargetObject = null;
+        }
+
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new SobekHydroModelImporter();

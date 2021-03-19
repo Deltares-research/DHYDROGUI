@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             if (model.SedimentFractions != null && model.SedimentFractions.Any()) return issues;
 
-            issues.Add(new ValidationIssue(WaterFlowFMModelDefinition.GetTabName(KnownProperties.SedFile, fmModel:model),
+            issues.Add(new ValidationIssue(model.ModelDefinition.GetTabName(KnownProperties.SedFile, fmModel:model),
                 ValidationSeverity.Error,
                 Resources
                     .WaterFlowFMSedimentMorphologyValidator_ValidateAtLeastOneSedimentFractionInModel_At_least_one_sediment_fraction_is_required_when_using_morphology,

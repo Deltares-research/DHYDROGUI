@@ -65,9 +65,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public List<string> InitialTracerNames { get; private set; }
         public List<string> InitialSpatiallyVaryingSedimentPropertyNames { get; private set; }
 
-        private static StructureSchema<ModelPropertyDefinition> StructureSchemaInstance { get; set; }
-        private static ModelSchema<WaterFlowFMPropertyDefinition> MorphologyModelPropertySchema { get; set; }
-        private static ModelSchema<WaterFlowFMPropertyDefinition> ModelPropertySchema { get; set; }
+        private StructureSchema<ModelPropertyDefinition> StructureSchemaInstance { get; set; }
+        private ModelSchema<WaterFlowFMPropertyDefinition> MorphologyModelPropertySchema { get; set; }
+        private ModelSchema<WaterFlowFMPropertyDefinition> ModelPropertySchema { get; set; }
         public IEventedList<WaterFlowFMProperty> Properties { get; private set; }
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// <value>
         /// The GUI property groups.
         /// </value>
-        public static Dictionary<string, ModelPropertyGroup> GuiPropertyGroups
+        public Dictionary<string, ModelPropertyGroup> GuiPropertyGroups
         {
             get
             {
@@ -128,38 +128,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
         public IList<Embankment> Embankments { get; set; }
 
-        static WaterFlowFMModelDefinition()
-        {
-            const string dflowfmPropertiesCsvFileName = "dflowfm-properties.csv";
-            const string dflowfmStructurePropertiesCsvFileName = "structure-properties.csv";
-            const string dflowfmMorPropertiesCsvFileName = "dflowfm-mor-properties.csv";
-            var assembly = typeof (WaterFlowFMModelDefinition).Assembly;
-            var assemblyLocation = assembly.Location;
-            var directoryInfo = new FileInfo(assemblyLocation).Directory;
-            if (directoryInfo != null)
-            {
-                var path = directoryInfo.FullName;
-                var propertiesDefinitionFile = Path.Combine(path, dflowfmPropertiesCsvFileName);
-                ModelPropertySchema =
-                    new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(propertiesDefinitionFile,
-                        "MduGroup");
-
-                var structurePropertiesDefinitionFile = Path.Combine(path, dflowfmStructurePropertiesCsvFileName);
-                StructureSchemaInstance =
-                    new StructureFMPropertiesFile().ReadProperties(structurePropertiesDefinitionFile);
-
-                var morPropertiesDefinitionFile = Path.Combine(path, dflowfmMorPropertiesCsvFileName);
-                MorphologyModelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(
-                        morPropertiesDefinitionFile, "MduGroup");
-            }
-            else
-            {
-                throw new Exception("Invalid path for DFlowFM properties definition file");
-            }
-        }
-
         public WaterFlowFMModelDefinition()
         {
+            ReadProperties();
+
             HeatFluxModel = new HeatFluxModel();
             Properties = new EventedList<WaterFlowFMProperty>();
 
@@ -213,6 +185,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
 
 
             UpdateWriteOutputSnappedFeatures();
+        }
+
+        private void ReadProperties()
+        {
+            const string dflowfmPropertiesCsvFileName = "dflowfm-properties.csv";
+            const string dflowfmStructurePropertiesCsvFileName = "structure-properties.csv";
+            const string dflowfmMorPropertiesCsvFileName = "dflowfm-mor-properties.csv";
+            var assembly = typeof(WaterFlowFMModelDefinition).Assembly;
+            var assemblyLocation = assembly.Location;
+            var directoryInfo = new FileInfo(assemblyLocation).Directory;
+            if (directoryInfo != null)
+            {
+                var path = directoryInfo.FullName;
+                var propertiesDefinitionFile = Path.Combine(path, dflowfmPropertiesCsvFileName);
+                ModelPropertySchema =
+                    new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(propertiesDefinitionFile,
+                                                                                            "MduGroup");
+
+                var structurePropertiesDefinitionFile = Path.Combine(path, dflowfmStructurePropertiesCsvFileName);
+                StructureSchemaInstance =
+                    new StructureFMPropertiesFile().ReadProperties(structurePropertiesDefinitionFile);
+
+                var morPropertiesDefinitionFile = Path.Combine(path, dflowfmMorPropertiesCsvFileName);
+                MorphologyModelPropertySchema = new ModelSchemaCsvFile().ReadModelSchema<WaterFlowFMPropertyDefinition>(
+                    morPropertiesDefinitionFile, "MduGroup");
+            }
+            else
+            {
+                throw new Exception("Invalid path for DFlowFM properties definition file");
+            }
         }
 
         /// <summary>
@@ -971,7 +973,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         /// <param name="messageKey">The message key.</param>
         /// <param name="fmModel">The fm model.</param>
         /// <returns></returns>
-        public static string GetTabName(string key, string messageKey = null, WaterFlowFMModel fmModel = null)
+        public string GetTabName(string key, string messageKey = null, WaterFlowFMModel fmModel = null)
         {
             if (key == KnownProperties.SedFile)
             {

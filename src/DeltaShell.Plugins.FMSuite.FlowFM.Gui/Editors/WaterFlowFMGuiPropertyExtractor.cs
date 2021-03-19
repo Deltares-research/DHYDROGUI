@@ -23,8 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var modelDefinition = Model.ModelDefinition;
 
             foreach (
-                var propertyGroup in
-                    WaterFlowFMModelDefinition.GuiPropertyGroups.Values.Where(g => !groupsToSkip.Contains(g.Name)))
+                var propertyGroup in Model.ModelDefinition.GuiPropertyGroups.Values.Where(g => !groupsToSkip.Contains(g.Name)))
             {
                 fieldUIDescriptions.AddRange(
                     modelDefinition.Properties.Where(

@@ -1362,10 +1362,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void Test_GetTabName_WithValidKeysAndModel_ExpectedTabNamesAreGiven(string key, string expectedName)
         {
             var tabName = string.Empty;
+            var modelDefinition = new WaterFlowFMModelDefinition();
             Assert.DoesNotThrow(() =>
                 {
                     TestHelper.AssertLogMessagesCount(
-                        () => tabName = WaterFlowFMModelDefinition.GetTabName(key, fmModel:new WaterFlowFMModel()), 0);
+                        () => tabName = modelDefinition.GetTabName(key, fmModel:new WaterFlowFMModel()), 0);
                 }
             );
             Assert.NotNull(tabName);
@@ -1378,11 +1379,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var key = KnownProperties.SedFile;
             var expectedName = string.Empty;
             string tabName = "Not Empty";
+            var modelDefinition = new WaterFlowFMModelDefinition();
 
             Assert.DoesNotThrow(() =>
                 {
                     TestHelper.AssertLogMessagesCount(
-                        () => tabName = WaterFlowFMModelDefinition.GetTabName(key), 0);
+                        () => tabName = modelDefinition.GetTabName(key), 0);
                 }
             );
 
@@ -1402,11 +1404,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var expectedName = string.Empty;
             string tabName = "Not Empty";
+            var modelDefinition = new WaterFlowFMModelDefinition();
 
             Assert.DoesNotThrow(() =>
             {
                 TestHelper.AssertAtLeastOneLogMessagesContains(
-                    () => tabName = WaterFlowFMModelDefinition.GetTabName(key, message),
+                    () => tabName = modelDefinition.GetTabName(key, message),
                     expectedMessage);
             });
 
@@ -1417,8 +1420,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void Test_GuiPropertyGroups_GetUniqueGuiPropertyGroupsFromModelAndMorphologyPropertyGroups()
         {
+            var modelDefinition = new WaterFlowFMModelDefinition();
             Dictionary<string, ModelPropertyGroup> dummyVar;
-            Assert.DoesNotThrow(() => dummyVar = WaterFlowFMModelDefinition.GuiPropertyGroups );
+            Assert.DoesNotThrow(() => dummyVar = modelDefinition.GuiPropertyGroups );
          }
     }
 }
