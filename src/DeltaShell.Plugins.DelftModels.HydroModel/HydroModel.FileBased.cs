@@ -14,6 +14,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.ModelExchanges;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.IO;
+using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {
@@ -153,11 +154,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                         if (source.CanLinkTo(target) && !Region.Links.Any(l => l.Source.Equals(source) && l.Target.Equals(target)))
                         {
-                            Region.Links.Add(new HydroLink(source, target)
-                                {
-                                    Name = regionExchange.LinkName,
-                                    Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt)
-                                });
+                            var hydroLink = new HydroLink(source, target)
+                            {
+                                Name = regionExchange.LinkName
+                            };
+                            if (source is Catchment catchment && Equals(catchment.CatchmentType, CatchmentType.NWRW))
+                            {
+                                source.Geometry = target.Geometry;
+                                hydroLink.Geometry = new LineString(new []{source.Geometry?.Coordinate, target.Geometry?.Coordinate});
+                            }
+                            else
+                            {
+                                hydroLink.Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt);
+                            }
+                                
+                            Region.Links.Add(hydroLink);
                         }
                     }
                 }
