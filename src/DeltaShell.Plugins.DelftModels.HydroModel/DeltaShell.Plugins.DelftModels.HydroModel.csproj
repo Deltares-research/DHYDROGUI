@@ -51,6 +51,11 @@
     <Compile Include="Export\IDimrConfigModelCouplerProvider.cs" />
     <Compile Include="HydroModelDataAccessListener.cs" />
     <Compile Include="HydroModelSettings.cs" />
+    <Compile Include="Import\DHydroConfigXmlImporter.cs" />
+    <Compile Include="Import\HydroModelConverter.cs" />
+    <Compile Include="Import\HydroModelReader.cs" />
+    <Compile Include="Import\ImportingFullModelAction.cs" />
+    <Compile Include="Import\RtcXmlDirectoryLookup.cs" />
     <Compile Include="ModelExchanges\IHydroModelExchangeInfo.cs" />
     <Compile Include="ModelExchanges\ModelExchange.cs" />
     <Compile Include="ModelExchanges\RegionExchange.cs" />
@@ -190,6 +195,11 @@
       <Name>DeltaShell.NGHS.Common</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
+      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
+      <Name>DeltaShell.NGHS.IO</Name>
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -233,9 +243,7 @@
   <ItemGroup>
     <None Include="Resources\1d2d.gif" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Import\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>

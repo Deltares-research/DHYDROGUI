@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     public class NwrwData : CatchmentModelData
     {
         public const string DEFAULT_DWA_ID = "Default_DWA";
-        
+        private static readonly RainfallRunoffCatchmentModelDataFactory modelDataFactory = new RainfallRunoffCatchmentModelDataFactory();
         //nhib
         public NwrwData(): base(null) { }
 
@@ -71,6 +71,31 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             rrModel.ModelDataAdded += RrModelOnModelDataAdded; 
             rrModel.Basin.Catchments.Add(catchment);
             rrModel.ModelDataAdded -= RrModelOnModelDataAdded;
+            var nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));
+
+            if (nwrwData == null)
+            {
+                var catchmentModelData = modelDataFactory.CreateDefaultModelData(catchment);
+
+                if (catchmentModelData == null)
+                    return;
+
+                if (rrModel.Basin.Catchments.Contains(catchment))
+                {
+                    rrModel.ModelData.Add(catchmentModelData);
+                }
+                else
+                {
+                    var parentCatchment = rrModel.Basin.AllCatchments.First(c => c.SubCatchments.Contains(catchment));
+                    var parentModelData = rrModel.GetCatchmentModelData(parentCatchment);
+                    parentModelData.SubCatchmentModelData.Add(catchmentModelData);
+                }
+
+                rrModel.FireModelDataAdded(catchmentModelData);
+                nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));
+                if (nwrwData != null)
+                    CurrentNwrwCatchmentModelDataByNodeOrBranchId?.TryAdd(nwrwData.Name, nwrwData);
+            }
             CurrentNwrwCatchmentModelDataByNodeOrBranchId = null;
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils.Validation;
@@ -142,6 +143,20 @@ namespace DeltaShell.Dimr
         /// The file exceptions cleaning working directory.
         /// </value>
         ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory { get; }
+
+        /// <summary>
+        /// Gets the data items that match the given item string.
+        /// </summary>
+        /// <param name="itemString">The item string.</param>
+        /// <returns>A collection of matching data items.</returns>
+        IEnumerable<IDataItem> GetDataItemsByItemString(string itemString);
+
+        /// <summary>
+        /// Gets the hydro object that match the given item string.
+        /// </summary>
+        /// <param name="itemString">The item string.</param>
+        /// <returns>A matching ihydro object.</returns>
+        IHydroObject GetLinkHydroObjectByItemString(string itemString);
     }
 
     public enum ModelType

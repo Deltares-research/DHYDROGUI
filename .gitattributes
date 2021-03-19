@@ -975,6 +975,11 @@ src/DeltaShell.Plugins.DelftModels.HydroModel/HydroModelSettings.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/IHydroModelWorkFlow.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/IHydroModelWorkFlow.hbm.xml -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/IHydroModelWorkFlowData.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel/Import/DHydroConfigXmlImporter.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel/Import/HydroModelConverter.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel/Import/HydroModelReader.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel/Import/ImportingFullModelAction.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel/Import/RtcXmlDirectoryLookup.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/Iterative1D2DCouplerLink.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/ModelExchanges/HydroModelExchangeJsonFileExtensions.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/ModelExchanges/IHydroModelExchangeInfo.cs -text
@@ -2202,6 +2207,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/WaterFlowFMFileImporter.cs -t
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionInitialFieldsFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionInitialFieldsFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionRegion.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/KnownFeatureCategories.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/LdbFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/LinkCoveragesDoneReadingEventArgs.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Links1D2DHelper.cs -text

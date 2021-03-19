@@ -180,6 +180,7 @@
     <Compile Include="IO\InitialConditionInitialFieldsFileReader.cs" />
     <Compile Include="IO\InitialConditionInitialFieldsFileWriter.cs" />
     <Compile Include="IO\InitialConditionRegion.cs" />
+    <Compile Include="IO\KnownFeatureCategories.cs" />
     <Compile Include="IO\LocationMetaData.cs" />
     <Compile Include="IO\MeteoExtForceFile.cs" />
     <Compile Include="IO\NetworkDataLocation.cs" />

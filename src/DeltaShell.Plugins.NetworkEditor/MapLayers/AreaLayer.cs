@@ -1,3 +1,4 @@
+using System;
 using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
@@ -47,8 +48,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 return;
 
             layersInitialized = true; // set it here since it is accessed locally
-
-            base.Name = hydroArea.Name;
+            if (!string.Equals(base.Name,hydroArea.Name, StringComparison.InvariantCultureIgnoreCase)
+                && !ReadOnly)
+                base.Name = hydroArea.Name;
 
             LayersReadOnly = true;
         }

@@ -928,6 +928,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return dataItem;
         }
 
+        public virtual IHydroObject GetLinkHydroObjectByItemString(string itemString)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Cleans up model after model coupling at the end of a
         /// DIMR import. All input and output points

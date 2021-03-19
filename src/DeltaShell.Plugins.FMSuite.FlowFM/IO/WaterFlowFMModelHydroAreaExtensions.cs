@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Feature;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -14,6 +17,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     public static class WaterFlowFMModelHydroAreaExtensions
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(WaterFlowFMModelHydroAreaExtensions));
+
+        /// <summary>
+        /// Gets the features from a category mentioned in the dimr xml.
+        /// </summary>
+        /// <param name="area"> The hydro area of a model. </param>
+        /// <param name="category"> The category. </param>
+        /// <returns> Features of the hydro area of a model from a specific category. </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="category"/> is unknown.
+        /// </exception>
+        public static IEnumerable<IFeature> GetFeaturesFromCategory(this HydroArea area, string category)
+        {
+            switch (category)
+            {
+                case KnownFeatureCategories.Pumps:
+                    return area.Pumps;
+                case KnownFeatureCategories.GeneralStructures:
+                    return area.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula);
+                case KnownFeatureCategories.Gates:
+                    return area.Weirs.Where(w => w.WeirFormula is GatedWeirFormula);
+                case KnownFeatureCategories.Weirs:
+                    return area.Weirs.Where(w => w.WeirFormula is SimpleWeirFormula);
+                case KnownFeatureCategories.ObservationPoints:
+                    return area.ObservationPoints;
+                case KnownFeatureCategories.ObservationCrossSections:
+                    return area.ObservationCrossSections;
+                default:
+                    throw new ArgumentException(string.Format("unknown category {0} used.", category));
+            }
+        }
+
+        
 
         #region RemoveDuplicateFeatures
 

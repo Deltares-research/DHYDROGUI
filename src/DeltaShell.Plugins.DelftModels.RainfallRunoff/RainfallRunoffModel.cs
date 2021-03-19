@@ -11,6 +11,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Units;
 using DelftTools.Units.Generics;
 using DelftTools.Utils;
@@ -1253,6 +1254,61 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         ~RainfallRunoffModel()
         {
             Dispose(false);
+        }
+        
+        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets the hydro object item string.
+        /// </summary>
+        /// <param name="itemString"> The item string. </param>
+        /// <returns> The matching data item. </returns>
+        /// <remarks>
+        /// <paramref name="itemString"/> cannot be null.
+        /// </remarks>
+        /// <exception cref="ArgumentException">
+        /// Thrown when
+        /// - <paramref name="itemString"/> does not contain 3 elements
+        /// - category in <paramref name="itemString"/> is unknown
+        /// - feature in <paramref name="itemString"/> is unknown
+        /// </exception>
+        public IHydroObject GetLinkHydroObjectByItemString(string itemString)
+        {
+            string[] stringParts = itemString.Split('/');
+
+            if (stringParts.Length != 3)
+            {
+                throw new ArgumentException(string.Format("{0} should contain a category, feature name and a parameter name.",
+                                                          itemString));
+            }
+
+            string category = stringParts[0];
+            string featureName = stringParts[1];
+            
+
+            IHydroObject hydroObject = GetBasinHydroObject(category, featureName);
+
+            if (hydroObject == null)
+            {
+                throw new ArgumentException(string.Format("feature {0} in {1} cannot be found in the FM model.",
+                                                          featureName, itemString));
+            }
+
+            return hydroObject;
+        }
+
+        private IHydroObject GetBasinHydroObject(string category, string featureName)
+        {
+            switch (category)
+            {
+                case "catchments":
+                    return Basin.AllCatchments.SingleOrDefault(c => string.Equals(c.Name, featureName, StringComparison.InvariantCultureIgnoreCase));
+                default:
+                    return null;
+            }
         }
     }
 

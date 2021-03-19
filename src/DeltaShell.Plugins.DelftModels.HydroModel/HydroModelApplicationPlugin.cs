@@ -13,6 +13,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using log4net;
 using Mono.Addins;
 
@@ -174,7 +175,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             yield return new DHydroConfigXmlExporter();
         }
-
+        public override IEnumerable<IFileImporter> GetFileImporters()
+        {
+            yield return new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList(),
+                                                     () => Application.WorkDirectory);
+        }
         private void InitializeModelBuilder()
         {
             new HydroModelBuilder();

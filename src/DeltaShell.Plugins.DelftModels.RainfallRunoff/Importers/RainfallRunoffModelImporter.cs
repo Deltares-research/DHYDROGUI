@@ -6,6 +6,10 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.IO;
+using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
@@ -19,60 +23,116 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
 {
-    public class RainfallRunoffModelImporter : IFileImporter
+    public class RainfallRunoffModelImporter : ModelFileImporterBase, IDimrModelFileImporter
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModelImporter));
 
         [ExcludeFromCodeCoverage]
-        public string Name
+        public override string Name
         {
             get { return "Rainfall Runoff Model importer"; }
         }
 
         [ExcludeFromCodeCoverage]
-        public string Category
+        public override string Category
         {
-            get { return ""; }
+            get { return "1D / 2D"; }
         }
 
-        public string Description
+        public override string Description
         {
             get { return Name; }
         }
         
-        public IEnumerable<Type> SupportedItemTypes
+        public override IEnumerable<Type> SupportedItemTypes
         {
-            get { yield return typeof(RainfallRunoffModel); }
+            get { yield return typeof(IHydroModel); }
         }
 
 
-        public string FileFilter
+        public override string FileFilter
         {
             get { return "RR Sobek_3b.fnm file model import|Sobek_3b.fnm"; }
         }
 
-        public string TargetDataDirectory { get; set; }
-        public bool ShouldCancel { get; set; }
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public override string TargetDataDirectory { get; set; }
+        public override bool ShouldCancel { get; set; }
+        public override ImportProgressChangedDelegate ProgressChanged { get; set; }
 
         [ExcludeFromCodeCoverage] public Bitmap Icon { get; private set; }
 
         
-        public bool CanImportOn(object targetObject)
+        public override bool CanImportOn(object targetObject)
         {
-            return true;
+            return targetObject is ICompositeActivity || targetObject is RainfallRunoffModel;
         }
 
-        public object ImportItem(string path, object target = null)
+        protected override object OnImportItem(string path, object target = null)
         {
-            BaseDir = Path.GetDirectoryName(path);
+            /*BaseDir = Path.GetDirectoryName(path);
             if (!(target is RainfallRunoffModel rrModel)) return null;
             BasinImport(rrModel);
             SettingsImport(rrModel);
-            return rrModel;
+            return rrModel;*/
+            //if (!(target is RainfallRunoffModel rainfallRunoffModel)) return null;
+            //return rainfallRunoffModel;
+            try
+            {
+                var importedRRModel = new RainfallRunoffModel();
+                var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
+                importer?.ImportItem(path, importedRRModel);
 
+                //replace the RR Model
+                if (target is RainfallRunoffModel targetRRModel)
+                {
+                    var parent = targetRRModel.Owner;
 
+                    //add / replace the RR Model in the project
+                    var folder = parent as Folder;
+                    if (folder != null)
+                    {
+                        folder.Items.Remove(targetRRModel);
+                        folder.Items.Add(importedRRModel);
+                    }
+
+                    //add / replace the RR Model in the integrated model
+                    var compositeActivity = parent as ICompositeActivity;
+                    if (compositeActivity != null)
+                    {
+                        importedRRModel.MoveModelIntoIntegratedModel(null, compositeActivity);
+                    }
+
+                    ProgressChanged?.Invoke("Import finished", 10, 10);
+                    return ShouldCancel ? null : importedRRModel;
+                }
+
+                //add / replace the RR Model in the integrated model
+                var hydroModel = target as ICompositeActivity;
+                if (hydroModel != null)
+                {
+                    importedRRModel.MoveModelIntoIntegratedModel(null, hydroModel);
+                    ProgressChanged?.Invoke("Import finished", 10, 10);
+                    return hydroModel;
+                }
+
+                ProgressChanged?.Invoke("Import finished", 10, 10);
+                return ShouldCancel ? null : importedRRModel;
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
+                    e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
+                {
+                    log.Error(String.Format("An error occurred while trying to import a {0}; Cause: ",
+                                            Name), e);
+                    return null;
+                }
+
+                // !!Unexpected type of exception (like NotSupportedException or NotImplementedException), so fail fast!!
+                throw;
+            }
         }
+
 
         private void SettingsImport(RainfallRunoffModel rrModel)
         {
@@ -404,16 +464,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
             return Path.Combine(BaseDir, fileName);
         }
 
-        public Bitmap Image { get; }
+        public override Bitmap Image { get; }
 
-        public bool CanImportOnRootLevel
+        public override bool CanImportOnRootLevel
         {
             get { return true; }
         }
 
-        public bool OpenViewAfterImport
+        public override bool OpenViewAfterImport
         {
             get { return true; }
         }
+
+        public string MasterFileExtension => "fnm";
     }
 }

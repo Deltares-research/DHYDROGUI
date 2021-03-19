@@ -128,6 +128,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
+            yield return new RainfallRunoffModelImporter();
             yield return new MeteoDataImporter();
             yield return new PolderFromGisImporter();
             yield return new NWRWCatchmentFrom3BImporter();

@@ -654,7 +654,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         DataSource =
                             new ComplexFeatureCollection(drainageBasin,
                                 (IList) runoffBoundaries, typeof(RunoffBoundary))
-                            ,
+                            {
+                                CoordinateSystem = drainageBasin.CoordinateSystem
+                            },
                         FeatureEditor = new RunoffBoundaryFeatureEditor {DrainageBasin = drainageBasin}
                     };
                 case IEventedList<Catchment> catchments when drainageBasin != null:
@@ -668,7 +670,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             new ComplexFeatureCollection(drainageBasin,
                                 new WrappedEnumerableList<Catchment>(flattenedCatchments, catchments),
                                 typeof(Catchment))
-                        ,
+                            {
+                                CoordinateSystem = drainageBasin.CoordinateSystem
+                            },
                         FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
                         CustomRenderers = {new CatchmentAnchorPointRenderer()},
                         NameIsReadOnly = true,
@@ -681,7 +685,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         DataSource =
                             new ComplexFeatureCollection(drainageBasin,
                                 (IList) catchments, typeof(Catchment))
-                            ,
+                            {
+                                CoordinateSystem = drainageBasin.CoordinateSystem
+                            },
                         FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
                         NameIsReadOnly = true
                     };

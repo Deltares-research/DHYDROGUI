@@ -6,12 +6,14 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class WaterFlowFMFileImporter : IFileImporter
+    public class WaterFlowFMFileImporter : ModelFileImporterBase, IDimrModelFileImporter
     {
         private readonly ILog log = LogManager.GetLogger(typeof (WaterFlowFMFileImporter));
         private readonly Func<string> StoreWorkingDirectoryPathFunc;
@@ -25,53 +27,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
         }
 
-        public string Name
+        public override string Name
         {
             get { return "Flow Flexible Mesh Model"; }
         }
-        public string Description { get { return Name; } }
-        public string Category
+        public override string Description { get { return Name; } }
+        public override string Category
         {
-            get { return "2D / 3D"; }
+            get { return "1D / 2D"; }
         }
         
-        public Bitmap Image
+        public override Bitmap Image
         {
             get { return Resources.unstrucModel; }
         }
 
-        public IEnumerable<Type> SupportedItemTypes
+        public override IEnumerable<Type> SupportedItemTypes
         {
             get { yield return typeof(IHydroModel); }
         }
 
-        public bool OpenViewAfterImport
+        public override bool OpenViewAfterImport
         {
             get { return true; }
         }
 
-        public bool CanImportOn(object targetObject)
+        public override bool CanImportOn(object targetObject)
         {
            return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
         }
 
-        public bool CanImportOnRootLevel
+        public override bool CanImportOnRootLevel
         {
             get { return true; }
         }
 
-        public string FileFilter
+        public override string FileFilter
         {
             get { return "Flexible Mesh Model Definition|*.mdu"; }
         }
 
-        public string TargetDataDirectory { get; set; }
+        public override string TargetDataDirectory { get; set; }
 
-        public bool ShouldCancel { get; set; }
+        public override bool ShouldCancel { get; set; }
 
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+        public override ImportProgressChangedDelegate ProgressChanged { get; set; }
 
-        public object ImportItem(string path, object target = null)
+        protected override object OnImportItem(string path, object target = null)
         {
             try
             {
@@ -137,5 +139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             
             ProgressChanged(currentStepName, currentStep, totalSteps);
         }
+
+        public string MasterFileExtension => "mdu";
     }
 }
