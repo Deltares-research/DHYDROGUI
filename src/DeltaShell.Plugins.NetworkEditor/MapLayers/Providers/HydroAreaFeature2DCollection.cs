@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
+            AddNewFeatureFromGeometryDelegate = null;
             Area2D = null;
         }
 

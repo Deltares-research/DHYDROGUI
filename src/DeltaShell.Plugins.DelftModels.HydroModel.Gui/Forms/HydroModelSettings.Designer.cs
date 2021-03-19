@@ -17,6 +17,9 @@
             {
                 components.Dispose();
             }
+
+            AddNewActivityCallback = null;
+            Layer = null;
             base.Dispose(disposing);
         }
 

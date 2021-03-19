@@ -17,6 +17,9 @@
             {
                 components.Dispose();
             }
+            Workflows = null;
+            CurrentWorkflow = null;
+
             base.Dispose(disposing);
         }
 

@@ -120,12 +120,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             set
             {
                 addNewActivityCallback = value;
-                view.ViewModel.AddNewActivityCallback = (hm) =>
-                {
-                    var activity = addNewActivityCallback(hm);
-                    RefreshWorkflowsControls();
-                    return activity;
-                };
+
+                view.ViewModel.AddNewActivityCallback = addNewActivityCallback != null
+                                                            ? hm =>
+                                                            {
+                                                                var activity = addNewActivityCallback(hm);
+                                                                RefreshWorkflowsControls();
+                                                                return activity;
+                                                            }
+                                                            : (Func<HydroModel, IActivity>) null;
             }
         }
 
