@@ -14,6 +14,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
@@ -21,6 +22,10 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Mono.Addins;
+using NetTopologySuite.Extensions.Coverages;
+using SharpMap.Api.Layers;
+using SharpMap.Data.Providers;
+using SharpMap.Layers;
 using HydroModelGuiProperties = DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
@@ -107,6 +112,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 }
             }
         }
+
+        public override void OnViewRemoved(IView view)
+        {
+            view.GetViewsOfType<MapView>()
+                .ForEach(mv => mv.Map.Layers.GetLayersRecursive(true, true)
+                                 .ForEach(CleanUpLayer));
+        }
+
+        private static void CleanUpLayer(ILayer layer)
+        {
+            switch (layer)
+            {
+                // set with dummy coverage to release event handlers -> null gives null ref exception
+                // should be handled in NetworkCoverageGroupLayer dispose
+
+                case NetworkCoverageGroupLayer networkCoverageGroupLayer:
+                    networkCoverageGroupLayer.NetworkCoverage = new NetworkCoverage("dummy", false);
+                    break;
+                case FeatureCoverageLayer featureCoverageLayer:
+                    featureCoverageLayer.FeatureCoverage = new FeatureCoverage();
+                    break;
+            }
+
+            if (layer.DataSource is FeatureCollection featureCollection)
+            {
+                featureCollection.AddNewFeatureFromGeometryDelegate = null;
+            }
+        }
+
         [InvokeRequired]
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
