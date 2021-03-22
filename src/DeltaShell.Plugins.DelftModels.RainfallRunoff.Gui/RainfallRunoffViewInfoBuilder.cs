@@ -155,6 +155,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
                 };
 
+            yield return new ViewInfo<Catchment, PolderConcept, PolderConceptView>
+                {
+                    Description = "Polder Concept view",
+                    GetViewData = o => (PolderConcept)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
+                    AdditionalDataCheck = o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is PolderConcept,
+                    AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
+                };
+
             yield return new ViewInfo<MeteoData, PrecipitationMeteoDataView>
                 {
                     Description = "Meteorological data viewer",
