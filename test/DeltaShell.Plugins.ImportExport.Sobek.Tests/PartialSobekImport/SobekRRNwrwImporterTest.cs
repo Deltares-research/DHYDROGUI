@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             Assert.That(rrModel.NwrwDefinitions.Count, Is.EqualTo(12));
             Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count, Is.EqualTo(3));
-            Assert.That(rrModel.ModelData.OfType<NwrwData>().Count(), Is.EqualTo(0));
+            Assert.That(rrModel.ModelData.OfType<NwrwData>().Count(), Is.EqualTo(75));
             AssertNwrwDefinitionsAreCorrect(rrModel.NwrwDefinitions);
             AssertNwrwDryweatherFlowDefinitionsAreCorrect(rrModel.NwrwDryWeatherFlowDefinitions);
 

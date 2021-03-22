@@ -386,12 +386,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                 }
 
-                if (readSobekRrNodeDictionary.TryGetValue(readNwrwDefinition.Id, out var rrNode))
+                if (!readSobekRrNodeDictionary.TryGetValue(readNwrwDefinition.Id, out var rrNode))
                 {
                     unFoundNodeIds.Add(readNwrwDefinition.Id);
                 }
-
-                AddNwrwCatchmentDataToModel(readNwrwDefinition, helper, rrNode);
+                else
+                {
+                    AddNwrwCatchmentDataToModel(readNwrwDefinition, helper, rrNode);
+                }
             }
 
             if (unFoundNodeIds.Any())
@@ -500,7 +502,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             Catchment catchment = nwrwData.Catchment;
             catchment.IsGeometryDerivedFromAreaSize = true;
-            catchment.Geometry = new Point(sobekRrNode.X, sobekRrNode.Y);
+            if (sobekRrNode != null)
+                catchment.Geometry = new Point(sobekRrNode.X, sobekRrNode.Y);
 
             SetNwrwCatchmentData(nwrwData, readDefinition);
         }
