@@ -26,9 +26,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
 
         public IEventedList<ChannelInitialConditionDefinition> WrappedData { get; }
 
-        public override bool Equals(object Obj)
+        public override bool Equals(object obj)
         {
-            if (Obj is ChannelInitialConditionDefinitionsWrapper channelFrictionDefinition)
+            if (obj is ChannelInitialConditionDefinitionsWrapper channelFrictionDefinition)
             {
                 return Equals(channelFrictionDefinition);
             }

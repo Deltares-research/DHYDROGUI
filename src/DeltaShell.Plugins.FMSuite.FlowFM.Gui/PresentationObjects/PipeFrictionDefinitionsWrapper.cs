@@ -26,9 +26,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects
 
         public IEventedList<PipeFrictionDefinition> WrappedData { get; }
 
-        public override bool Equals(object Obj)
+        public override bool Equals(object obj)
         {
-            if (Obj is PipeFrictionDefinitionsWrapper channelFrictionDefinition)
+            if (obj is PipeFrictionDefinitionsWrapper channelFrictionDefinition)
             {
                 return Equals(channelFrictionDefinition);
             }

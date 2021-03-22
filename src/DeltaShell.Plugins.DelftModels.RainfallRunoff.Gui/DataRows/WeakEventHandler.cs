@@ -37,9 +37,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows
 
         private delegate void LocalHandler(object sender, E e);
 
-        private WeakReference m_TargetRef;
-        private OpenEventHandler m_OpenHandler;
-        private H m_Handler;
+        private readonly WeakReference m_TargetRef;
+        private readonly OpenEventHandler m_OpenHandler;
+        private readonly H m_Handler;
         private UnregisterDelegate<H> m_Unregister;
 
         public WeakEventHandlerGeneric(H eventHandler, UnregisterDelegate<H> unregister)
