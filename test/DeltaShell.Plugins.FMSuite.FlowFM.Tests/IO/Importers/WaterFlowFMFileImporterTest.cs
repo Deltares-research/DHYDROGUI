@@ -65,6 +65,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("Quarantine")]
         public void GivenGeneralStructureMduFileWithUnhandledType_WhenImportItem_ThenNotImplementedExceptionThrown()
         {
             // Given
@@ -96,6 +97,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
         }
 
         [Test]
+        [Category("Quarantine")]
         [Category(TestCategory.Integration)]
         public void GivenGeneralStructureMduFileWithUnhandledType_WhenImportItem_ThenLoggedExpectedMessages()
         {
