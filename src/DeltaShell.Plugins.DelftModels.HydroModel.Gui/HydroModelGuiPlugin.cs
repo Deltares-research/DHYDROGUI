@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls;
@@ -24,7 +23,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Features;
 using SharpMap.Api.Layers;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;

@@ -9,8 +9,6 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
-using DeltaShell.NGHS.Common.Extensions;
-using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import

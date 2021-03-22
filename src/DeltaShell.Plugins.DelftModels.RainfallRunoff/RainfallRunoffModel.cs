@@ -11,7 +11,6 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Shell.Core.Workflow.DataItems.ValueConverters;
 using DelftTools.Units;
 using DelftTools.Units.Generics;
 using DelftTools.Utils;

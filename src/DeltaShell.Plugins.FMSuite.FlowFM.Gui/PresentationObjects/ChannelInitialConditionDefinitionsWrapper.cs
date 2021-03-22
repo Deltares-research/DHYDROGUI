@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using DelftTools.Utils.Collections.Generic;
+﻿using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects

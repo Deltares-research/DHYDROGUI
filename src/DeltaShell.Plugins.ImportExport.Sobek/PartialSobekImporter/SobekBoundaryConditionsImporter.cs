@@ -2,13 +2,11 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
