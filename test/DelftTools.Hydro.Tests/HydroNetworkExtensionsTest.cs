@@ -70,14 +70,14 @@ namespace DelftTools.Hydro.Tests
             var compositeStructureList = new IBranchFeature[] {compositeStructure1, compositeStructure2};
 
             network.Expect(n => n.BranchFeatures).Return(compositeStructureList).Repeat.Any();
-            compositeStructure1.Expect(c => c.Name).Return("Test");
+            compositeStructure1.Expect(c => c.Name).Return("Test").Repeat.Times(2);
             compositeStructure2.Name = "Test";
 
             mocks.ReplayAll();
 
             network.MakeNamesUnique<ICompositeBranchStructure>();
 
-            Assert.AreEqual("Test1",compositeStructure2.Name);
+            Assert.AreEqual("Test_1",compositeStructure2.Name);
 
             mocks.VerifyAll();
         }

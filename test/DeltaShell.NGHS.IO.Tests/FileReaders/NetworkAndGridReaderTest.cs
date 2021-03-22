@@ -97,7 +97,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             IHydroNetwork readNetwork = new HydroNetwork();
             IDiscretization readDiscretization = new Discretization();
 
-            Assert.Throws<FileReadingException>(() => NetworkAndGridReader.ReadFile(FileWriterTestHelper.ModelFileNames.Network, readNetwork, readDiscretization));
+            Assert.DoesNotThrow(() => NetworkAndGridReader.ReadFile(FileWriterTestHelper.ModelFileNames.Network, readNetwork, readDiscretization));
         }
     }
 }

@@ -172,8 +172,15 @@ namespace DelftTools.Hydro
             }
             else
             {
-                FunctionHelper.SetValuesRaw<INetworkLocation>(networkDiscretization.Locations, networkLocations);
-                FunctionHelper.SetValuesRaw(networkDiscretization.Components[0], Enumerable.Repeat(0d, networkLocations.Length));
+                var locationsMerged = networkLocations
+                                      .GroupBy(lv => lv.Geometry.Coordinate)
+                                      .Select(crdGroup =>
+                                                  crdGroup.Select(nl => fixedOffsetNetworkLocations.Contains(nl) ? nl : null).FirstOrDefault() ??
+                                                  crdGroup.Min())
+                                      .OrderBy(l => l)
+                                      .ToArray();
+                FunctionHelper.SetValuesRaw<INetworkLocation>(networkDiscretization.Locations, locationsMerged);
+                FunctionHelper.SetValuesRaw(networkDiscretization.Components[0], Enumerable.Repeat(0d, locationsMerged.Length));
             }
 
             fixedOffsetNetworkLocations.ForEach(networkDiscretization.ToggleFixedPoint);
