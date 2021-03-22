@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -34,7 +35,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(importer.Category, Is.EqualTo(Resources.FMImporters_Category_D_Flow_FM_2D_3D));
             Assert.That(importer.Description, Is.Empty);
 
-            Assert.That(importer.SupportedItemTypes, Is.EquivalentTo(new[] { typeof(UnstructuredGrid)}));
+            Assert.That(importer.SupportedItemTypes, Is.EquivalentTo(new[]
+            {
+                typeof(UnstructuredGrid)
+            }));
 
             Assert.That(importer.CanImportOnRootLevel, Is.True);
             Assert.That(importer.FileFilter, Is.EqualTo($"Net file|*{FileConstants.NetCdfFileExtension}"));
@@ -48,27 +52,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             yield return new TestCaseData(new UnstructuredGrid(), null, false);
 
             WaterFlowFMModel ReturnsNull(UnstructuredGrid grid) => null;
-            yield return new TestCaseData(new UnstructuredGrid(), 
-                                          (Func<UnstructuredGrid, IWaterFlowFMModel>) ReturnsNull, 
+            yield return new TestCaseData(new UnstructuredGrid(),
+                                          (Func<UnstructuredGrid, IWaterFlowFMModel>) ReturnsNull,
                                           false);
 
             var model = Substitute.For<IWaterFlowFMModel>();
             IWaterFlowFMModel ReturnsModel(UnstructuredGrid grid) => model;
-            yield return new TestCaseData(new UnstructuredGrid(), 
-                                          (Func<UnstructuredGrid, IWaterFlowFMModel>) ReturnsModel, 
+            yield return new TestCaseData(new UnstructuredGrid(),
+                                          (Func<UnstructuredGrid, IWaterFlowFMModel>) ReturnsModel,
                                           true);
 
         }
-
-
+        
         [Test]
         [TestCaseSource(nameof(GetCanImportOnData))]
-        public void CanImportOn_ExpectedResults(object targetObject, 
+        public void CanImportOn_ExpectedResults(object targetObject,
                                                 Func<UnstructuredGrid, IWaterFlowFMModel> getModelForGridFunc,
                                                 bool expectedResult)
         {
             // Setup
-            var importer = new FlowFMNetFileImporter { GetModelForGrid = getModelForGridFunc };
+            var importer = new FlowFMNetFileImporter {GetModelForGrid = getModelForGridFunc};
 
             // Call
             bool result = importer.CanImportOn(targetObject);
@@ -126,10 +129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 string sourcePath = TestHelper.GetTestFilePath(relativeSourceGridPath);
                 string path = tempDir.CopyTestDataFileToTempDirectory(sourcePath);
 
-                var importer = new FlowFMNetFileImporter
-                {
-                    GetModelForGrid = _ => model
-                };
+                var importer = new FlowFMNetFileImporter { GetModelForGrid = _ => model };
 
                 // Call
                 var result = importer.ImportItem(path, model.Grid) as UnstructuredGrid;
@@ -195,5 +195,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
                 Assert.That(result, Is.Null);
             }
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void ImportItem_ForANewGrid_ShouldMarkOutputOutOfSync()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
+            {
+                // Arrange
+                string restartFilePath = Path.Combine(tempDirectory.Path, "test_rst.nc");
+                const string text = "This is some text in the file.";
+
+                using (FileStream fs = File.Create(restartFilePath))
+                {
+                    byte[] info = new UTF8Encoding(true).GetBytes(text);
+                    fs.Write(info, 0, info.Length);
+                }
+                
+                model.ImportFromMdu(TestHelper.GetTestFilePath(@"chezy_samples\chezy.mdu"));
+                model.ConnectOutput(tempDirectory.Path);
+
+                // Act
+                new FlowFMNetFileImporter().ImportItem(TestHelper.GetTestFilePath(@"harlingen\fm_003_net.nc"), model);
+
+                // Assert
+                Assert.IsTrue(model.OutputOutOfSync);
+            }
+        }
     }
 }
+
+        
+    

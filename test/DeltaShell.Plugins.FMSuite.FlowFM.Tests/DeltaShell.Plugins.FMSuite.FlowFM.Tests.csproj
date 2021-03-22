@@ -404,6 +404,7 @@
     <Compile Include="ModelSchema\ModelPropertySchemaExtensionsTest.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.DimrModel.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.CacheFile.cs" />
+    <Compile Include="Model\WaterFlowFMModelTest.OutOfSync.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.IO.Import.cs" />
     <Compile Include="Model\WaterFlowFMModelTest.Spatial.cs" />
     <Compile Include="QuantityGeneratorTest.cs" />

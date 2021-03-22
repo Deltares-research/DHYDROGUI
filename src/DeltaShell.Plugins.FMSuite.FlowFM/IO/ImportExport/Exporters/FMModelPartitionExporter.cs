@@ -13,17 +13,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters
     public class FMModelPartitionExporter : FMPartitionExporterBase
     {
         public override string FileFilter => $"Flexible Mesh Model Definition|*{FileConstants.MduFileExtension}";
+
         public int SolverType { private get; set; }
 
         public override bool Export(object item, string path)
         {
-            if (PolygonFile == null && NumDomains <= 0)
+            if ((PolygonFile == null && NumDomains <= 0) ||
+                !(item is WaterFlowFMModel waterFlowFMModel))
             {
                 return false;
             }
 
-            var waterFlowFMModel = item as WaterFlowFMModel;
-            return waterFlowFMModel != null && ExportPartitionMdu(waterFlowFMModel, path);
+            bool originalOutputOutOfSync = waterFlowFMModel.OutputOutOfSync;
+            bool success = ExportPartitionMdu(waterFlowFMModel, path);
+            waterFlowFMModel.OutputOutOfSync = originalOutputOutOfSync;
+
+            return success;
         }
 
         public override IEnumerable<Type> SourceTypes()
