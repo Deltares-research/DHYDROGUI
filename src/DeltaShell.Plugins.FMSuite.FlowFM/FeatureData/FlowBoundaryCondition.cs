@@ -730,7 +730,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             }
         }
 
-        //TODO: move the vertical profile, depends upon support point.
         public VerticalInterpolationType VerticalInterpolationType
         {
             get => verticalInterpolationType;
@@ -910,7 +909,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
                 SedimentFractionNames.Add(fraction);
             }
 
-            loadTransport.Components.Add(new Variable<double>(fraction, VariableUnit) {NoDataValue = double.NaN});
+            loadTransport.Components.Add(new Variable<double>(fraction, VariableUnit) { NoDataValue = double.NaN });
         }
 
         public void RemoveSedimentFractionFromFunction(IFunction loadTransport, string fraction)
@@ -972,7 +971,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
             {
                 var function = new Function(VariableName);
                 function.Arguments.Add(new Variable<double>("Q", new Unit("cubic meters", "m3/s")));
-                function.Components.Add(new Variable<double>("h", new Unit("meters", "m")) {NoDataValue = double.NaN});
+                function.Components.Add(new Variable<double>("h", new Unit("meters", "m")) { NoDataValue = double.NaN });
 
                 return function;
             }

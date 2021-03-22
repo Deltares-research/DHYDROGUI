@@ -113,7 +113,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     continue;
                 }
 
-                var morphologyQuantityTypeAsInt = (int) BoundaryConditionQuantityTypeConverter
+                var morphologyQuantityTypeAsInt = (int)BoundaryConditionQuantityTypeConverter
                     .ConvertFlowBoundaryConditionQuantityTypeToMorphologyBoundaryConditionQuantityType(
                         boundary.FlowQuantity);
 
@@ -170,13 +170,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             var logHandler = new LogHandler("reading the morphology file");
 
-            var sedimentModelNumber = (int) modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).Value;
+            var sedimentModelNumber = (int)modelDefinition.GetModelProperty(KnownProperties.SedimentModelNumber).Value;
             if (sedimentModelNumber >= 1 && sedimentModelNumber <= 3)
             {
                 throw new FormatException(Resources.MorphologyFile_Read_Sediment_model_numbers_1_2_3_are_not_supported_);
             }
 
-            var morFileName = (string) modelDefinition.GetModelProperty(KnownProperties.MorFile).Value;
+            var morFileName = (string)modelDefinition.GetModelProperty(KnownProperties.MorFile).Value;
             if (sedimentModelNumber == 4 && !string.IsNullOrEmpty(morFileName))
             {
                 ReadMorphologyProperties(mduFilePath,
@@ -199,7 +199,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 modelDefinition.UseMorphologySediment = false;
             }
 
-            // TODO: Remove this please!
             // This is a bloody awful HACK, because we do not want to adapt the MapFormat to the kernels
             modelDefinition.SetMapFormatPropertyValue();
 
@@ -365,7 +364,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         {
             string propertyValue = delftIniCategory.GetPropertyValue(BoundaryBedCondition);
 
-            var iBedCond = (int) MorphologyBoundaryConditionQuantityType.NoBedLevelConstraint;
+            var iBedCond = (int)MorphologyBoundaryConditionQuantityType.NoBedLevelConstraint;
             if (!int.TryParse(propertyValue, out iBedCond))
             {
                 Log.ErrorFormat(
@@ -378,7 +377,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             FlowBoundaryQuantityType flowBoundaryQuantityType =
                 BoundaryConditionQuantityTypeConverter
                     .ConvertMorphologyBoundaryConditionQuantityTypeToFlowBoundaryConditionQuantityType(
-                        (MorphologyBoundaryConditionQuantityType) iBedCond);
+                        (MorphologyBoundaryConditionQuantityType)iBedCond);
 
             BcFileFlowBoundaryDataBuilder builder = new BcmFileFlowBoundaryDataBuilder
             {
@@ -393,7 +392,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             };
 
             List<BoundaryConditionSet> bcSets = modelDefinition.BoundaryConditionSets
-                                                               .Select(bcs => new BoundaryConditionSet {Feature = bcs.Feature})
+                                                               .Select(bcs => new BoundaryConditionSet { Feature = bcs.Feature })
                                                                .ToList();
 
             if (featureBlockData != null)
@@ -446,7 +445,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             foreach (Feature2D feature in features)
             {
                 modelDefinition.Boundaries.Add(feature);
-                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet {Feature = feature});
+                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet { Feature = feature });
             }
 
             return features;

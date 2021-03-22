@@ -18,12 +18,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         ICoordinateSystem CoordinateSystem { get; set; }
 
-        IEnumerable<IModel> ControlledModels { get; } // TODO: rename to ControlledModels once RTC model will not be ICompositeModel
-        
+        IEnumerable<IModel> ControlledModels { get; }
+
         DateTime SaveStateStartTime { get; set; }
         TimeSpan SaveStateTimeStep { get; set; }
         DateTime SaveStateStopTime { get; set; }
-        
+
         bool WriteRestart { get; set; }
         bool UseRestart { get; }
         RealTimeControlRestartFile RestartInput { get; set; }

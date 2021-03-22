@@ -41,7 +41,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             throw new NotImplementedException();
         }
 
-        // todo: this is snapping for boundaries only...
         private IGeometry GetGridSnappedGeometry(IGeometry geometry)
         {
             if (geometry == null)
@@ -64,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
                 return null;
             }
 
-            var finalCoordinates = new List<GridCoordinate> {snappedCoords[0]};
+            var finalCoordinates = new List<GridCoordinate> { snappedCoords[0] };
             for (var i = 1; i < snappedCoords.Count; ++i)
             {
                 // check if same segment:

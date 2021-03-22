@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         /// When evaluating at a location outside
         /// the grid or when it is ambiguous in which cell it falls.
         /// </exception>
-        public int GetWaqSegmentIndex(double x, double y, double z) // TODO: ICoordinate as parameter instead?
+        public int GetWaqSegmentIndex(double x, double y, double z)
         {
             if (sigmaLayerThicknesses == null)
             {

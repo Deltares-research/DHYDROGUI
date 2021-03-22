@@ -8,9 +8,6 @@ using BasicModelInterface;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 {
-    /// <summary>
-    /// TODO: We use this class only until the BMI package (i.e. the dynamic BasicModelInterfaceLibrary) is working properly...
-    /// </summary>
     public class FlexibleMeshBasicModelInterface : IBasicModelInterface
     {
         private string originalCurrentDirectory;
@@ -51,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             {
                 double dt;
                 FlexibleMeshModelDll.get_time_step(out dt);
-                return new TimeSpan((long) (TimeSpan.TicksPerSecond * dt));
+                return new TimeSpan((long)(TimeSpan.TicksPerSecond * dt));
             }
         }
 
@@ -106,8 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public int[] GetShape(string variable)
         {
             // get rank
-            int rank;
-            FlexibleMeshModelDll.get_var_rank(variable, out rank);
+            FlexibleMeshModelDll.get_var_rank(variable, out int rank);
 
             // get shape
             var shape = new int[FlexibleMeshModelDll.MAXDIMS];
@@ -126,8 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
 
             // get rank
-            int rank;
-            FlexibleMeshModelDll.get_var_rank(variable, out rank);
+            FlexibleMeshModelDll.get_var_rank(variable, out int rank);
 
             // get shape
             var shape = new int[FlexibleMeshModelDll.MAXDIMS];
@@ -169,8 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
 
         public void SetValues(string variable, Array values)
         {
-            var valuesDouble1D = values as double[];
-            if (valuesDouble1D != null)
+            if (values is double[] valuesDouble1D)
             {
                 FlexibleMeshModelDll.set_var(variable, valuesDouble1D);
             }

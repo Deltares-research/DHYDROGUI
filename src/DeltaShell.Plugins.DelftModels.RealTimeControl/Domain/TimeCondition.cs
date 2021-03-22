@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 if (timeSeries == null)
                 {
-                    timeSeries = new TimeSeries {Name = "Time Series"};
+                    timeSeries = new TimeSeries { Name = "Time Series" };
                     timeSeries.Time.ExtrapolationType = ExtrapolationType.Constant;
                     timeSeries.Time.InterpolationType = InterpolationType.Constant;
                     timeSeries.Components.Add(new Variable<bool>
@@ -102,10 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             }
         }
 
-        public override string GetDescription()
-        {
-            return ""; //todo: show compact notion of time range?
-        }
+        public override string GetDescription() => "";
 
         public override object Clone()
         {
@@ -121,7 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             {
                 base.CopyFrom(source);
                 Reference = timeCondition.Reference;
-                TimeSeries = (TimeSeries) timeCondition.TimeSeries.Clone();
+                TimeSeries = (TimeSeries)timeCondition.TimeSeries.Clone();
                 InterpolationOptionsTime = timeCondition.InterpolationOptionsTime;
                 Extrapolation = timeCondition.Extrapolation;
             }

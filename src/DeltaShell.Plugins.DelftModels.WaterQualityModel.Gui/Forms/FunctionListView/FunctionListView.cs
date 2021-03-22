@@ -47,7 +47,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
                 {
                     UpdateTableView();
                     UpdateFunctionViewPanel();
-                }) {SynchronizingObject = this};
+                })
+                { SynchronizingObject = this };
 
             splitContainer1.Panel2Collapsed = true;
 
@@ -154,13 +155,13 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
                 dataOwner = value;
 
                 // Update FunctionOwner of FunctionWrapper objects
-                var functionWrappers = (IEnumerable<FunctionWrapper>) tableView.Data;
+                var functionWrappers = (IEnumerable<FunctionWrapper>)tableView.Data;
                 foreach (FunctionWrapper functionWrapper in functionWrappers)
                 {
                     functionWrapper.FunctionOwner = dataOwner;
                 }
             }
-        } // TODO: Set DataOwner on all FunctionWrappers in tableView
+        }
 
         public ISet<string> ExcludeList { get; private set; }
 
@@ -172,15 +173,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
                 if (functions != null)
                 {
                     functions.CollectionChanged -= functionCollectionChangedDelayedEventHandler;
-                    ((INotifyPropertyChange) functions).PropertyChanged -= OnPropertyChanged;
+                    ((INotifyPropertyChange)functions).PropertyChanged -= OnPropertyChanged;
                 }
 
-                functions = (IEventedList<IFunction>) value;
+                functions = (IEventedList<IFunction>)value;
 
                 if (functions != null)
                 {
                     functions.CollectionChanged += functionCollectionChangedDelayedEventHandler;
-                    ((INotifyPropertyChange) functions).PropertyChanged += OnPropertyChanged;
+                    ((INotifyPropertyChange)functions).PropertyChanged += OnPropertyChanged;
                 }
 
                 UpdateTableView();
@@ -214,7 +215,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             }
         }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item) { }
 
         protected override void Dispose(bool disposing)
         {
@@ -256,7 +257,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             tableView.AddColumn(editPropertyName, Resources.FunctionListView_InitializeTableView_Edit);
 
             tableView.GetColumnByName(editPropertyName).Editor =
-                new ButtonTypeEditor {ButtonClickAction = OpenViewForFunction};
+                new ButtonTypeEditor { ButtonClickAction = OpenViewForFunction };
 
             //Execute BestFitColumns to make the columns always readable and add a scrollbar if not.
             tableView.BestFitColumns();
@@ -313,7 +314,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 
             if (viewData is ICoverage)
             {
-                viewData = ((WaterQualityModel) DataOwner).GetDataItemByValue(viewData);
+                viewData = ((WaterQualityModel)DataOwner).GetDataItemByValue(viewData);
             }
 
             if (functionWrapper.Function.IsSegmentFile())

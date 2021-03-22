@@ -20,7 +20,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
             set => base.Z = value;
         }
 
-        // TODO: UI logic on Domain class; Extract view model wrapper when more data is added.
         [DisplayName("Observation point type")]
         [FeatureAttribute(Order = 4, ExportName = ObservationPointTypeAttributeName)]
         public virtual ObservationPointType ObservationPointType { get; set; }

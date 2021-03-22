@@ -32,13 +32,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         /// <see cref="CompositeActivityShape(IGraphSite,string)"/> instead.
         /// </Deprecated>
         [Obsolete("Used only for Netron.GraphLib.UI.GraphControl")]
-        public CompositeActivityShape() {}
+        public CompositeActivityShape() { }
 
         /// <summary>
         /// Creates a shape for a composite activity for a given <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
         /// </summary>
         /// <param name="graphControl">The control hosting this shape.</param>
-        public CompositeActivityShape(IGraphSite graphControl) : this(graphControl, "Composite activity") {}
+        public CompositeActivityShape(IGraphSite graphControl) : this(graphControl, "Composite activity") { }
 
         /// <summary>
         /// Creates a shape for a composite activity with a given name for a given
@@ -140,7 +140,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
             // Determine additional size requirements based on child activities:
             if (Activity != null)
             {
-                // TODO: Extract reusable Horizontal Layout method.
                 var activitiesOrigin = new PointF(Rectangle.X, Rectangle.Y + requiredSize.Height);
                 var activitiesSize = new Size(0, 0);
                 foreach (KeyValuePair<IActivity, ActivityShapeBase> activityAndShape in cachedChildShapes)
@@ -165,10 +164,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                     }
 
                     // Increase width due to horizontal layout placement:
-                    activitiesSize.Width += (int) Math.Ceiling(activityRectangle.Width + HorizontalPadding);
+                    activitiesSize.Width += (int)Math.Ceiling(activityRectangle.Width + HorizontalPadding);
 
                     // Take largest height of placeholders due to horizontal layout placement:
-                    var height = (int) Math.Ceiling(activityRectangle.Height);
+                    var height = (int)Math.Ceiling(activityRectangle.Height);
                     if (height > activitiesSize.Height)
                     {
                         activitiesSize.Height = height;

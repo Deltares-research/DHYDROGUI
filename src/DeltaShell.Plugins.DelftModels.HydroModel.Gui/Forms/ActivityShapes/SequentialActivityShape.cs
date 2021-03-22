@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
         /// </summary>
         /// <Deprecated>Please use <see cref="SequentialActivityShape(IGraphSite)"/> instead.</Deprecated>
         [Obsolete("Used only for Netron.GraphLib.UI.GraphControl")]
-        public SequentialActivityShape() {}
+        public SequentialActivityShape() { }
 
         /// <summary>
         /// Creates a shape for a sequential activity for a given <see cref="Netron.GraphLib.Interfaces.IGraphSite"/>.
@@ -132,7 +132,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
 
             if (Activity != null)
             {
-                // TODO: Extract reusable Vertical Layout method.
                 var parallelActivitiesOrigin = new PointF(Rectangle.X, Rectangle.Y + requiredSize.Height);
                 var parallelActivitiesSize = new Size(0, 0);
                 foreach (KeyValuePair<IActivity, ActivityShapeBase> activityAndShape in cachedChildShapes)
@@ -157,10 +156,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ActivityShapes
                     }
 
                     // Increase height due to vertical layout placement:
-                    parallelActivitiesSize.Height += (int) Math.Ceiling(activityRectangle.Height + VerticalPadding);
+                    parallelActivitiesSize.Height += (int)Math.Ceiling(activityRectangle.Height + VerticalPadding);
 
                     // Take largest width of placeholders due to vertical layout placement:
-                    var width = (int) Math.Ceiling(activityRectangle.Width);
+                    var width = (int)Math.Ceiling(activityRectangle.Width);
                     if (width > parallelActivitiesSize.Width)
                     {
                         parallelActivitiesSize.Width = width;

@@ -172,10 +172,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             yield return new PropertyInfo<WaterQualityModel, WaterQualityModelProperties>();
             yield return new
                 PropertyInfo<WaterQualityFunctionWrapper, WaterQualityModelUnstructuredGridCellCoverageProperties>
-                {
-                    AdditionalDataCheck = o => o.Function != null && o.Function.IsUnstructuredGridCellCoverage(),
-                    GetObjectPropertiesData = o => o.Function
-                };
+            {
+                AdditionalDataCheck = o => o.Function != null && o.Function.IsUnstructuredGridCellCoverage(),
+                GetObjectPropertiesData = o => o.Function
+            };
             yield return new PropertyInfo<WaterQualityFunctionDataWrapper, WaterQualityFunctionDataWrapperProperties>();
             yield return new PropertyInfo<SubstanceProcessLibrary, SubstanceProcessLibraryProperties>();
             yield return new PropertyInfo<WaterQualityObservationVariableOutput,
@@ -215,22 +215,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
             yield return new
                 ViewInfo<WaterQualityBloomFunctionWrapper, IEventedList<IFunction>, BloomFunctionsTableView>()
+            {
+                Description = "Bloom Algae",
+                GetViewData = o => o.Functions,
+                GetViewName = (v, o) => "Bloom Algae",
+                Image = Properties.Resources.Folder,
+                AfterCreate = (v, o) =>
                 {
-                    Description = "Bloom Algae",
-                    GetViewData = o => o.Functions,
-                    GetViewName = (v, o) => "Bloom Algae",
-                    Image = Properties.Resources.Folder,
-                    AfterCreate = (v, o) =>
-                    {
-                        v.Gui = gui;
-                        v.BloomInfo = BloomInfo;
+                    v.Gui = gui;
+                    v.BloomInfo = BloomInfo;
 
-                        if (Gui.SelectedModel is WaterQualityModel)
-                        {
-                            v.DataOwner = Gui.SelectedModel as WaterQualityModel;
-                        }
+                    if (Gui.SelectedModel is WaterQualityModel)
+                    {
+                        v.DataOwner = Gui.SelectedModel as WaterQualityModel;
                     }
-                };
+                }
+            };
 
             yield return new ViewInfo<WaterQualityFunctionWrapper, IFunction, FunctionView>
             {
@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 GetCompositeViewData =
                     o => gui.Application.DataItemService.GetDataItemByValue(gui.Application.Project, o.Function),
                 Image = Properties.Resources.LocationFunction,
-                GetViewData = o => (ICoverage) o.Function,
+                GetViewData = o => (ICoverage)o.Function,
                 GetViewName = (v, o) => o.Name
             };
 
@@ -261,20 +261,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
             yield return new
                 ViewInfo<WaterQualityObservationVariableOutput, IEnumerable<IFunction>, MultipleFunctionView>
+            {
+                Description = "Monitoring output view",
+                AdditionalDataCheck = o => o.TimeSeriesList.Any(),
+                GetViewData = o => null,
+                GetViewName = (view, functions) => view.Text,
+                AfterCreate = (v, o) =>
                 {
-                    Description = "Monitoring output view",
-                    AdditionalDataCheck = o => o.TimeSeriesList.Any(),
-                    GetViewData = o => null,
-                    GetViewName = (view, functions) => view.Text,
-                    AfterCreate = (v, o) =>
-                    {
-                        v.Data = GetMultipleFunctionViewData(o);
-                        v.Text = o.Name;
-                        v.TableView.ReadOnly = true;
-                    },
-                    CloseForData = (v, o) =>
-                        v.Data != null && o.TimeSeriesList.Any(ts => ((IEnumerable<IFunction>) v.Data).Contains(ts))
-                };
+                    v.Data = GetMultipleFunctionViewData(o);
+                    v.Text = o.Name;
+                    v.TableView.ReadOnly = true;
+                },
+                CloseForData = (v, o) =>
+                    v.Data != null && o.TimeSeriesList.Any(ts => ((IEnumerable<IFunction>)v.Data).Contains(ts))
+            };
 
             yield return new ViewInfo<SubFileImporter, SubstanceProcessLibraryWizard>
             {
@@ -382,7 +382,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
-            yield return new SubstanceProcessLibraryNodePresenter {GuiPlugin = this};
+            yield return new SubstanceProcessLibraryNodePresenter { GuiPlugin = this };
             yield return new WaterQualityFunctionDataWrapperNodePresenter();
             yield return new WaterQualityFunctionWrapperNodePresenter();
             yield return new WaterQualityObservationVariableOutputNodePresenter();
@@ -408,7 +408,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         {
             IMenuItem baseContextMenu = base.GetContextMenu(sender, data) ??
                                         new MenuItemContextMenuStripAdapter(new ContextMenuStrip());
-            ContextMenuStrip contextMenuStrip = ((MenuItemContextMenuStripAdapter) baseContextMenu).ContextMenuStrip;
+            ContextMenuStrip contextMenuStrip = ((MenuItemContextMenuStripAdapter)baseContextMenu).ContextMenuStrip;
 
             if (data is TextDocument && GetModelsOfType<WaterQualityModel>().Any(m => Equals(m.InputFile, data)))
             {
@@ -501,7 +501,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
 
             var compositeView = activeView as ICompositeView;
 
-            //todo: recursion
             return compositeView?.ChildViews.OfType<MapView>().FirstOrDefault();
         }
 
@@ -637,17 +636,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 return;
             }
 
-            var model = (WaterQualityModel) sender;
-            var mainWindow = (ISynchronizeInvoke) Gui.MainWindow;
+            var model = (WaterQualityModel)sender;
+            var mainWindow = (ISynchronizeInvoke)Gui.MainWindow;
 
             showingSyncMessage = true;
 
             mainWindow.BeginInvoke(new Action(() =>
             {
-                var dialog = new ImportHydFileDialog(model, model.HydroData.FilePath) {ShowCancelButton = false};
+                var dialog = new ImportHydFileDialog(model, model.HydroData.FilePath) { ShowCancelButton = false };
                 dialog.SetLabelMessage($"Hydro data of '{model.Name}' has changed ('{Path.GetFileName(model.HydroData.FilePath)}', or related files).\nPress Ok to reload the hydro data.");
 
-                dialog.ShowDialog((IWin32Window) Gui.MainWindow);
+                dialog.ShowDialog((IWin32Window)Gui.MainWindow);
                 showingSyncMessage = false;
             }), null);
         }
@@ -752,7 +751,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             List<MultipleFunctionView> viewsToClose = multipleFunctionViews
                                                       .Where(v => observationVariableOutput
                                                                   .TimeSeriesList
-                                                                  .Intersect(((IEnumerable<IFunction>) v.Data)
+                                                                  .Intersect(((IEnumerable<IFunction>)v.Data)
                                                                              .OfType<TimeSeries>()).Any()).ToList();
 
             foreach (MultipleFunctionView viewToClose in viewsToClose)
@@ -768,14 +767,14 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                    .ToList();
             IEnumerable<WaterQualityObservationVariableOutput> observationVariableOutputs =
                 observationVariableOutputsDataItemSet.DataItems.Select(
-                    di => (WaterQualityObservationVariableOutput) di.Value);
+                    di => (WaterQualityObservationVariableOutput)di.Value);
 
             foreach (WaterQualityObservationVariableOutput observationVariableOutput in observationVariableOutputs)
             {
                 List<MultipleFunctionView> viewsToClose = multipleFunctionViews
                                                           .Where(v => observationVariableOutput
                                                                       .TimeSeriesList
-                                                                      .Intersect(((IEnumerable<IFunction>) v.Data)
+                                                                      .Intersect(((IEnumerable<IFunction>)v.Data)
                                                                                  .OfType<TimeSeries>()).Any()).ToList();
 
                 foreach (MultipleFunctionView viewToClose in viewsToClose)
@@ -815,7 +814,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             // Add function creators
             view.FunctionCreators.Add(FunctionTypeCreatorFactory.CreateConstantCreator());
 
-            var viewInfoClone = (ViewInfo) view.ViewInfo.Clone();
+            var viewInfoClone = (ViewInfo)view.ViewInfo.Clone();
             if (Equals(view.Data, model.InitialConditions))
             {
                 viewInfoClone.GetViewName = (v, o) => "Initial Conditions";
@@ -901,7 +900,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                 return;
             }
 
-            var document = (TextDocument) ((ToolStripMenuItem) sender).Tag;
+            var document = (TextDocument)((ToolStripMenuItem)sender).Tag;
             document.Content = WaqResources.TemplateInpFileNew; // revert input file back to template.
         }
     }

@@ -301,7 +301,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 return;
             }
 
-            var location = (UnstructuredGridFileHelper.BedLevelLocation) bedLevelTypeProperty.Value;
+            var location = (UnstructuredGridFileHelper.BedLevelLocation)bedLevelTypeProperty.Value;
             double[] values = modelDefinition.Bathymetry.Components[0].GetValues<double>().ToArray();
             UnstructuredGridFileHelper.WriteZValues(path, location, values);
         }
@@ -435,7 +435,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     ExternalForcingsFile.ExistingBoundaryConditions.Where(bc => bc.Feature != null)
                                         .Select(bc => bc.Feature)).Any();
 
-            // TODO: fix this, also, multiple FM models for a single integrated hydroregion to be expected?!
             bool hasEmbankments = hydroArea.Embankments.Any();
             modelDefinition.Embankments = hydroArea.Embankments;
 
@@ -781,7 +780,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     for (var i = 0; i < dataColumnWithData.Count; ++i)
                     {
-                        syncedList[i] = (double) dataColumnWithData[i];
+                        syncedList[i] = (double)dataColumnWithData[i];
                     }
                 }
             }
@@ -918,7 +917,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var fixedWeirFile = fileWriter as PlizFile<FixedWeir>;
             if (fixedWeirFile != null)
             {
-                fixedWeirFile.CreateDelegate = delegate(List<Coordinate> points, string name)
+                fixedWeirFile.CreateDelegate = delegate (List<Coordinate> points, string name)
                 {
                     var feature = new FixedWeir
                     {
@@ -932,7 +931,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             var bridgePillarFile = fileWriter as PlizFile<BridgePillar>;
             if (bridgePillarFile != null)
             {
-                bridgePillarFile.CreateDelegate = delegate(List<Coordinate> points, string name) { return CreateDelegateBridgePillar(name, points); };
+                bridgePillarFile.CreateDelegate = delegate (List<Coordinate> points, string name) { return CreateDelegateBridgePillar(name, points); };
             }
 
             var structuresFileWriter = fileWriter as StructuresFile;
@@ -940,7 +939,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 structuresFileWriter.StructureSchema = modelDefinition.StructureSchema;
                 structuresFileWriter.ReferenceDate =
-                    (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+                    (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             }
 
             return fileWriter;
@@ -948,7 +947,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
         internal static BridgePillar CreateDelegateBridgePillar(string name, List<Coordinate> points)
         {
-            var feature = new BridgePillar {Name = name};
+            var feature = new BridgePillar { Name = name };
             feature.Geometry = LineStringCreator.CreateLineString(points);
             return feature;
         }
@@ -1051,7 +1050,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             Path = filePath;
             if (reportProgress == null)
             {
-                reportProgress = (name, current, total) => {};
+                reportProgress = (name, current, total) => { };
             }
 
             var totalSteps = 5;
@@ -1063,7 +1062,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
 
             var pathsRelativeToParent =
-                (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
+                (bool)modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
 
             reportProgress("Reading morphology properties", 3, totalSteps);
             MorphologyFile.Read(filePath, modelDefinition);
@@ -1078,7 +1077,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             foreach (FixedWeir fixedWeir in hydroArea.FixedWeirs)
             {
-                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> { Feature = fixedWeir };
                 string scheme = modelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
                 modelFeatureCoordinateData.UpdateDataColumns(scheme);
 
@@ -1140,7 +1139,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 foreach (BridgePillar bridgePillar in hydroArea.BridgePillars)
                 {
                     var modelFeatureCoordinateData =
-                        new ModelFeatureCoordinateData<BridgePillar>() {Feature = bridgePillar};
+                        new ModelFeatureCoordinateData<BridgePillar>() { Feature = bridgePillar };
 
                     string bpFile = modelDefinition.GetModelProperty(KnownProperties.BridgePillarFile)
                                                    .GetValueAsString();
@@ -1250,12 +1249,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 if (fileReader is StructuresFile)
                 {
                     string structuresSubFilesReferenceFilePath =
-                        (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value
+                        (bool)modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value
                             ? featuresFilePath
                             : mduFilePath;
                     var structuresFile = fileReader as StructuresFile;
                     featuresToAdd =
-                        (IList<TFeat>) structuresFile.ReadStructuresFileRelativeToReferenceFile(featuresFilePath, structuresSubFilesReferenceFilePath);
+                        (IList<TFeat>)structuresFile.ReadStructuresFileRelativeToReferenceFile(featuresFilePath, structuresSubFilesReferenceFilePath);
                 }
                 else
                 {
@@ -1290,11 +1289,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             ReadFeatures(filePath, modelDefinition, KnownProperties.LandBoundaryFile, hydroArea.LandBoundaries,
                          ref landBoundariesFile, FileConstants.LandBoundaryFileExtension);
 
-            ReadFeatures(filePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams, 
+            ReadFeatures(filePath, modelDefinition, KnownProperties.ThinDamFile, hydroArea.ThinDams,
                          ref thinDamFile, FileConstants.ThinDamPliFileExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.FixedWeirFile, hydroArea.FixedWeirs,
                          ref fixedWeirFile, FileConstants.FixedWeirPlizFileExtension);
-            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, 
+            ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints,
                          ref obsFile, FileConstants.ObsPointFileExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections,
                          ref obsCrsFile, FileConstants.ObsCrossSectionPliFileExtension);
@@ -1303,7 +1302,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             var structures = new List<IStructureObject>();
 
-            ReadFeatures(filePath, modelDefinition, KnownProperties.StructuresFile, structures, 
+            ReadFeatures(filePath, modelDefinition, KnownProperties.StructuresFile, structures,
                          ref structuresFile, FileConstants.StructuresFileExtension);
 
             foreach (IStructureObject structure in structures)
@@ -1323,7 +1322,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
             ReadDryPointsAndDryAreas(filePath, modelDefinition, hydroArea);
 
-            IList<string> enclosureMultipleFilePath = 
+            IList<string> enclosureMultipleFilePath =
                 MduFileHelper.GetMultipleSubfilePath(
                     filePath, modelDefinition.GetModelProperty(KnownProperties.EnclosureFile));
 
@@ -1480,7 +1479,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                       WaterFlowFMModelDefinition modelDefinition)
         {
             var pathsRelativeToParent =
-                (bool) modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
+                (bool)modelDefinition.GetModelProperty(KnownProperties.PathsRelativeToParent).Value;
 
             var structureFilesWithBadReferences = new List<string>();
             foreach (string filePath in featureFilePaths)
@@ -1494,7 +1493,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 var fileReader = new StructuresFile
                 {
                     StructureSchema = modelDefinition.StructureSchema,
-                    ReferenceDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
+                    ReferenceDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
                 };
 
                 List<Structure2D> featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
@@ -1593,7 +1592,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     for (var i = 0; i < dataColumnWithData.Count; ++i)
                     {
-                        syncedList[i] = (double) dataColumnWithData[i];
+                        syncedList[i] = (double)dataColumnWithData[i];
                     }
                 }
             }

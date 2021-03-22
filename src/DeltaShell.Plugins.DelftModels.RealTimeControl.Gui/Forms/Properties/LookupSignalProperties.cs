@@ -17,14 +17,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "Rule_Name_Description")]
         public string Name
         {
-            get
-            {
-                return data.Name;
-            }
-            set
-            {
-                data.Name = value;
-            }
+            get => data.Name;
+            set => data.Name = value;
         }
 
         [ResourcesCategory(typeof(Resources), "Categories_General")]
@@ -32,14 +26,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "Rule_LongName_Description")]
         public string LongName
         {
-            get
-            {
-                return data.LongName;
-            }
-            set
-            {
-                data.LongName = value;
-            }
+            get => data.LongName;
+            set => data.LongName = value;
         }
 
         [ResourcesCategory(typeof(Resources), "Category_Table")]
@@ -47,26 +35,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDescription(typeof(Resources), "RTC_Interpolation_Description")]
         public InterpolationHydraulicType Interpolation
         {
-            get
-            {
-                return (InterpolationHydraulicType) data.Interpolation;
-            }
-            set
-            {
-                data.Interpolation = (InterpolationType) value;
-            }
+            get => (InterpolationHydraulicType)data.Interpolation;
+            set => data.Interpolation = (InterpolationType)value;
         }
 
         [ResourcesCategory(typeof(Resources), "Category_Table")]
         [ResourcesDisplayName(typeof(Resources), "RTC_Extrapolation_DisplayName")]
         [ResourcesDescription(typeof(Resources), "RTC_Extrapolation_Description")]
-        public ExtrapolationHydraulicType Extrapolation
-        {
-            get
-            {
-                return (ExtrapolationHydraulicType) data.Extrapolation;
-            }
-        }
+        public ExtrapolationHydraulicType Extrapolation => (ExtrapolationHydraulicType)data.Extrapolation;
 
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [ResourcesCategory(typeof(Resources), "Category_Table")]
@@ -80,16 +56,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 
                 return data.Function;
             }
-            set
-            {
-                data.Function = value;
-            }
+            set => data.Function = value;
         }
 
         /// <summary>
         /// Update the column name for better user readability
         /// add an extra [i] to avoid duplicate names: crestlevel may set crestlevel
-        /// todo refactor UpdateFunctionArgumentName and UpdateFunctionComponentName
         /// </summary>
         private void UpdateFunctionArgumentName()
         {

@@ -258,7 +258,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             for (var i = 0; i < rowCount; ++i)
             {
                 var j = 0;
-                // TODO: Agree on formatting conventions: for times, use min. since reftime
                 WriteLine(string.Join(" ", block.Quantities.Select(q => q.Values[i].PadRight(columnWidths[j++])))
                                 .TrimEnd());
             }
@@ -411,7 +410,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     if (split.Length == 2)
                     {
-                        quantityData = new BcQuantityData {QuantityName = split[1]};
+                        quantityData = new BcQuantityData { QuantityName = split[1] };
                     }
                 }
 

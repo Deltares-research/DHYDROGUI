@@ -46,7 +46,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        //TODO: add support for harmonic/astronomic corrections 
         public BoundaryConditionDataType GetForcingType(string cmpFilePath)
         {
             OpenInputFile(cmpFilePath);

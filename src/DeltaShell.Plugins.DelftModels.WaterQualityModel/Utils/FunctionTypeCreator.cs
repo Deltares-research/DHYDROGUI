@@ -83,7 +83,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
 
             IFunction newfunction = creator.TransformToFunctionType(function);
 
-            // TODO : replace with "functions[oldFunctionIndex] = Function;" and remove BeginEdit/EndEdit when treeview can handle replace
             string editActionMessage = string.Format("Changing function type of {0} {1}to {2}", function, previousType,
                                                      creator.FunctionTypeName);
             dataOwner.BeginEdit(new DefaultEditAction(editActionMessage));

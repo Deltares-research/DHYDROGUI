@@ -21,7 +21,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Boundaries
         /// <exception cref="ArgumentNullException">
         /// Thrown when any argument is <c>null</c> or <paramref name="name"/> is empty.
         /// </exception>
-        // TODO (MWT): Verify whether we accept white space characters.
         public WaveBoundary(string name,
                             IWaveBoundaryGeometricDefinition geometricDefinition,
                             IWaveBoundaryConditionDefinition conditionDefinition)

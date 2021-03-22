@@ -78,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private RealTimeControlRestartFile restartInput = new RealTimeControlRestartFile();
 
-        public RealTimeControlModel() : this("RTC Model") {}
+        public RealTimeControlModel() : this("RTC Model") { }
 
         public RealTimeControlModel(string name)
             : base(name)
@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 if (ControlledModels.Any())
                 {
-                    return (ITimeDependentModel) ControlledModels.First();
+                    return (ITimeDependentModel)ControlledModels.First();
                 }
 
                 //locally defined
@@ -277,9 +277,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (controlGroups != null)
                 {
                     controlGroups.CollectionChanged -= ControlGroupsCollectionChanged;
-                    ((INotifyPropertyChange) controlGroups).PropertyChanged -= SetOutputOutOfSync;
-                    ((INotifyPropertyChanging) controlGroups).PropertyChanging -= ControlGroupsPropertyChanging;
-                    ((INotifyPropertyChange) controlGroups).PropertyChanged -= ControlGroupsPropertyChanged;
+                    ((INotifyPropertyChange)controlGroups).PropertyChanged -= SetOutputOutOfSync;
+                    ((INotifyPropertyChanging)controlGroups).PropertyChanging -= ControlGroupsPropertyChanging;
+                    ((INotifyPropertyChange)controlGroups).PropertyChanged -= ControlGroupsPropertyChanged;
                 }
 
                 controlGroups = value;
@@ -287,9 +287,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 if (controlGroups != null)
                 {
                     controlGroups.CollectionChanged += ControlGroupsCollectionChanged;
-                    ((INotifyPropertyChange) controlGroups).PropertyChanged += SetOutputOutOfSync;
-                    ((INotifyPropertyChanging) controlGroups).PropertyChanging += ControlGroupsPropertyChanging;
-                    ((INotifyPropertyChange) controlGroups).PropertyChanged += ControlGroupsPropertyChanged;
+                    ((INotifyPropertyChange)controlGroups).PropertyChanged += SetOutputOutOfSync;
+                    ((INotifyPropertyChanging)controlGroups).PropertyChanging += ControlGroupsPropertyChanging;
+                    ((INotifyPropertyChange)controlGroups).PropertyChanged += ControlGroupsPropertyChanged;
                 }
             }
         }
@@ -333,7 +333,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     IDataItem outputDataItem = GetDataItemByValue(output);
                     if (outputDataItem != null && outputDataItem.LinkedBy.Count > 0)
                     {
-                        output.Value = (double) outputDataItem.LinkedBy[0].Value;
+                        output.Value = (double)outputDataItem.LinkedBy[0].Value;
                     }
                 }
             }
@@ -358,7 +358,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// </exception>
         public override IProjectItem DeepClone()
         {
-            var clonedModel = new RealTimeControlModel {Name = Name};
+            var clonedModel = new RealTimeControlModel { Name = Name };
             // with rewiring of links between models the origin is changed as well as the clone.
             cloning = true;
             suspendUpdateFeatureAndParameter = true;
@@ -370,7 +370,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             clonedModel.DataItems.Clear(); // re-clone all data items
             foreach (IDataItem dataItem in DataItems)
             {
-                clonedModel.DataItems.Add((IDataItem) dataItem.DeepClone());
+                clonedModel.DataItems.Add((IDataItem)dataItem.DeepClone());
             }
 
             // add control groups from the cloned data items, otherwise they are cloned twice
@@ -386,14 +386,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 foreach (IDataItem childDataItem in controlGroupDataItemClone.Children.Where(di => di.ValueConverter is PropertyValueConverter))
                 {
-                    var propertyValueConverterClone = (PropertyValueConverter) childDataItem.ValueConverter;
-                    var propertyValueConverter = (PropertyValueConverter) controlGroupDataItemObjects[controlGroupDataItemCloneObjects.IndexOf(propertyValueConverterClone)];
+                    var propertyValueConverterClone = (PropertyValueConverter)childDataItem.ValueConverter;
+                    var propertyValueConverter = (PropertyValueConverter)controlGroupDataItemObjects[controlGroupDataItemCloneObjects.IndexOf(propertyValueConverterClone)];
 
                     int originalValueIndex = controlGroupDataItemObjects.IndexOf(propertyValueConverter.OriginalValue);
                     propertyValueConverterClone.OriginalValue = controlGroupDataItemCloneObjects[originalValueIndex];
                 }
 
-                var clonedControlGroup = (ControlGroup) controlGroupDataItemClone.Value;
+                var clonedControlGroup = (ControlGroup)controlGroupDataItemClone.Value;
                 clonedControlGroup.Name = controlGroup.Name;
                 clonedModel.ControlGroups.Add(clonedControlGroup);
             }
@@ -407,7 +407,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             if (outputFileFunctionStore != null && File.Exists(outputFileFunctionStore.Path))
             {
-                clonedModel.OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore {Path = outputFileFunctionStore.Path};
+                clonedModel.OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore { Path = outputFileFunctionStore.Path };
             }
 
             return clonedModel;
@@ -440,7 +440,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             {
                 if (internalControlledModelsList != null)
                 {
-                    ((INotifyPropertyChanged) internalControlledModelsList).PropertyChanged -= ModelsPropertyChanged;
+                    ((INotifyPropertyChanged)internalControlledModelsList).PropertyChanged -= ModelsPropertyChanged;
                     internalControlledModelsList.CollectionChanged -= ControlledModelsCollectionChanged;
                 }
 
@@ -448,7 +448,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                 if (internalControlledModelsList != null)
                 {
-                    ((INotifyPropertyChanged) internalControlledModelsList).PropertyChanged += ModelsPropertyChanged;
+                    ((INotifyPropertyChanged)internalControlledModelsList).PropertyChanged += ModelsPropertyChanged;
                     internalControlledModelsList.CollectionChanged += ControlledModelsCollectionChanged;
                 }
             }
@@ -585,7 +585,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void OwnerModelsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            //todo: test aggregation of list
             if (!(e.GetRemovedOrAddedItem() is IModel model) || model is RealTimeControlModel)
             {
                 return;
@@ -601,7 +600,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     OnRemoveModel();
                     break;
                 default:
-                    throw new InvalidEnumArgumentException(nameof(e.Action), (int) e.Action, typeof(NotifyCollectionChangeAction));
+                    throw new InvalidEnumArgumentException(nameof(e.Action), (int)e.Action, typeof(NotifyCollectionChangeAction));
             }
         }
 
@@ -615,7 +614,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         private void ConnectionPointsCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             // add/remove data items for control groups and their inputs/outputs
-            var connectionPoint = (ConnectionPoint) e.GetRemovedOrAddedItem();
+            var connectionPoint = (ConnectionPoint)e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
@@ -671,7 +670,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
             if (Equals(sender, ControlGroups))
             {
-                var controlGroup = (ControlGroup) e.GetRemovedOrAddedItem();
+                var controlGroup = (ControlGroup)e.GetRemovedOrAddedItem();
                 // add/remove data items for control groups and their inputs/outputs
                 switch (e.Action)
                 {
@@ -701,7 +700,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         private void AddDataItemsForControlGroup(ControlGroup controlGroup)
         {
-            var controlGroupDataItem = new DataItem(controlGroup, DataItemRole.Input) {ValueType = typeof(ControlGroup)};
+            var controlGroupDataItem = new DataItem(controlGroup, DataItemRole.Input) { ValueType = typeof(ControlGroup) };
 
             // add control group inputs/outputs
             foreach (Input input in controlGroup.Inputs)
@@ -724,13 +723,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             if ((role & DataItemRole.Input) == DataItemRole.Input)
             {
                 int count = controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Input) == DataItemRole.Input);
-                name = ((IControlGroup) controlGroupDataItem.Value).Name + InputPostFix + count;
+                name = ((IControlGroup)controlGroupDataItem.Value).Name + InputPostFix + count;
             }
 
             if ((role & DataItemRole.Output) == DataItemRole.Output)
             {
                 int count = controlGroupDataItem.Children.Count(di => (di.Role & DataItemRole.Output) == DataItemRole.Output);
-                name = ((IControlGroup) controlGroupDataItem.Value).Name + OutputPostFix + count;
+                name = ((IControlGroup)controlGroupDataItem.Value).Name + OutputPostFix + count;
             }
 
             var dataItem = new DataItem
@@ -800,7 +799,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                     return;
                 }
 
-                connection = (ConnectionPoint) dataItem.ValueConverter.OriginalValue;
+                connection = (ConnectionPoint)dataItem.ValueConverter.OriginalValue;
                 if (connection.Feature != null)
                 {
                     lastRelinkedFeature = connection.Feature;
@@ -823,7 +822,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 throw new NotSupportedException("Use of RTC output in more than one consumer is not supported yet");
             }
 
-            connection = (ConnectionPoint) dataItem.ValueConverter.OriginalValue;
+            connection = (ConnectionPoint)dataItem.ValueConverter.OriginalValue;
             if (connection.Feature != null)
             {
                 lastRelinkedFeature = connection.Feature;
@@ -1412,7 +1411,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 });
             }
 
-            return new RealTimeControlModelMergeValidator().Validate(this, (RealTimeControlModel) sourceModel);
+            return new RealTimeControlModelMergeValidator().Validate(this, (RealTimeControlModel)sourceModel);
         }
 
         public virtual bool Merge(IModelMerge sourceModel, IDictionary<IModelMerge, IModelMerge> mergedDependentModelsLookup)
@@ -1431,7 +1430,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             List<string> existingControlGroupNames = ControlGroups.Select(cg => cg.Name).ToList();
             foreach (ControlGroup controlGroup in srcModel.ControlGroups)
             {
-                var clonedControlGroup = (ControlGroup) controlGroup.Clone();
+                var clonedControlGroup = (ControlGroup)controlGroup.Clone();
                 if (existingControlGroupNames.Contains(clonedControlGroup.Name))
                 {
                     string uniqueName = NamingHelper.GenerateUniqueNameFromList(controlGroup.Name + "{0}", true, existingControlGroupNames);
@@ -1822,7 +1821,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         {
             get
             {
-                yield return ((IFileBased) this).Path;
+                yield return ((IFileBased)this).Path;
             }
         }
 

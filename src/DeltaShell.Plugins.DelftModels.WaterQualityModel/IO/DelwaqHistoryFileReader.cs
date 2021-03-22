@@ -4,7 +4,6 @@ using System.IO;
 
 namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 {
-    // TODO: Move this class to another namespace so that it can be shared by WFDExplorer and WaterQualityModel1D
     public static class DelwaqHistoryFileReader
     {
         /// <summary>
@@ -61,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
                     {
                         reader.ReadInt32(); // Skip the variable number
                         string observationVariable = new string(reader.ReadChars(20)).Trim(' ');
-                        result[i] = new DelwaqHisFileData(observationVariable) {OutputVariables = outputVariables};
+                        result[i] = new DelwaqHisFileData(observationVariable) { OutputVariables = outputVariables };
                     }
                 }
 

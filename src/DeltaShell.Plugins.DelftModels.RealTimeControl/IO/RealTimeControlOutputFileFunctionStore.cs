@@ -94,8 +94,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         protected override string ReadReferenceDateFromFile(string timeVariableName)
         {
             // Note: This override is only here while the RTC kernel does not create a file with a valid reference date!
-            // TODO: this whole override should be removed once the RTC kernel correctly writes a reference date 
-            // TODO: also consider updating the test-data with the new valid file!
+            //       this whole override should be removed once the RTC kernel correctly writes a reference date 
+            //       also consider updating the test-data with the new valid file!
             var result = new DateTime(1970, 1, 1);
             return result.ToString(DateTimeFormatInfo.InvariantInfo.FullDateTimePattern, CultureInfo.InvariantCulture);
         }
@@ -107,10 +107,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 NetCdfVariable netcdfVariable = timeVariable.NetCdfDataVariable;
                 string longName = netCdfFile.GetAttributeValue(netcdfVariable, LongNameAttribute);
 
-                string coverageLongName;
-                string outputVariableName;
-                string featureName;
-                ParseUserFriendlyVariableNamesFromLongName(longName, out coverageLongName, out outputVariableName, out featureName);
+                ParseUserFriendlyVariableNamesFromLongName(longName,
+                                                           out string coverageLongName,
+                                                           out string outputVariableName,
+                                                           out string featureName);
 
                 IFunction function;
                 IVariable<DateTime> functionTimeVariable;
@@ -192,10 +192,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             {
                 if (cachedFeatureArrays.ContainsKey(function.Name))
                 {
-                    return (MultiDimensionalArray<T>) cachedFeatureArrays[function.Name];
+                    return (MultiDimensionalArray<T>)cachedFeatureArrays[function.Name];
                 }
 
-                IMultiDimensionalArray<IFeature> featureArray = new MultiDimensionalArray<IFeature>(new List<IFeature>() {null}, new[]
+                IMultiDimensionalArray<IFeature> featureArray = new MultiDimensionalArray<IFeature>(new List<IFeature>() { null }, new[]
                 {
                     GetSize(function)
                 });
@@ -210,7 +210,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                     cachedFeatureArrays.Add(function.Name, featureArray);
                 }
 
-                return (MultiDimensionalArray<T>) featureArray;
+                return (MultiDimensionalArray<T>)featureArray;
             }
 
             return base.GetVariableValuesCore<T>(function, filters);
@@ -218,7 +218,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
         private bool SetFeatureCoverageFeatures(IFeatureCoverage coverage)
         {
-            IFeature matchingFeature = Features.Where(f => f is INameable).FirstOrDefault(f => coverage.Name.Contains('_' + ((INameable) f).Name + '_'));
+            IFeature matchingFeature = Features.Where(f => f is INameable).FirstOrDefault(f => coverage.Name.Contains('_' + ((INameable)f).Name + '_'));
 
             coverage.Features = new EventedList<IFeature>();
             if (matchingFeature == null)

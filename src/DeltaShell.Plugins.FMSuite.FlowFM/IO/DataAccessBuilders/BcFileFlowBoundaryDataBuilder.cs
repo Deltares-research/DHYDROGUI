@@ -17,7 +17,6 @@ using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 {
-    // TODO: this class is a mess, needs refactoring
     public class BcFileFlowBoundaryDataBuilder
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(BcFileFlowBoundaryDataBuilder));
@@ -224,7 +223,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             }
         }
 
-        // TODO: This method needs to be split up and re-worked - over 400 lines ffs!
         public bool InsertBoundaryData(IEnumerable<BoundaryConditionSet> boundaryConditionSets, BcBlockData dataBlock,
                                        string thatcherHarlemanTimeLag = null)
         {
@@ -447,7 +445,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                                ? Enumerable
                                                  .Range(0, boundaryCondition.Feature.Geometry.Coordinates.Count())
                                                  .ToList()
-                                               : new List<int> {dataIndex};
+                                               : new List<int> { dataIndex };
 
                     // import and add the actual dataBlock
                     foreach (int dataPoint in dataPoints)
@@ -476,7 +474,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                 daoDataBlock.VerticalProfileDefinition;
                         }
 
-                        // TODO: move this code to vertical profile (see TOOLS-21777)
                         boundaryCondition.VerticalInterpolationType = daoDataBlock.VerticalInterpolationType;
 
                         IFunction existingData = boundaryCondition.GetDataAtPoint(dataPoint);
@@ -520,7 +517,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                                             break;
                                         }
 
-                                        variableValues[index] = (double) values[i];
+                                        variableValues[index] = (double)values[i];
                                     }
 
                                     variable.Values.Clear();
@@ -629,7 +626,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             var boundaryCondition =
                 new FlowBoundaryCondition(flowBoundaryQuantityType,
-                                          BoundaryConditionDataType.Empty) {Feature = selectedSet.Feature};
+                                          BoundaryConditionDataType.Empty)
+                { Feature = selectedSet.Feature };
 
             if (!selectedSet.BoundaryConditions.Contains(boundaryCondition))
             {
@@ -993,7 +991,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             try
             {
                 // C-style indexing.
-                return dataBlock.SeriesIndex != null ? int.Parse(dataBlock.SeriesIndex) -1: 0;
+                return dataBlock.SeriesIndex != null ? int.Parse(dataBlock.SeriesIndex) - 1 : 0;
             }
             catch
             {
@@ -1123,10 +1121,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             if (dataBlock.TimeInterpolationType.ToLower().Contains("block"))
             {
-                //TODO: implement this correctly
                 return InterpolationType.Constant;
             }
-            
+
             LogWarningParsePropertyFailed(dataBlock, "time interpolation type",
                                           dataBlock.TimeInterpolationType);
             throw new NotSupportedException($"Not able to map {dataBlock.TimeInterpolationType} to any valid type.");
@@ -1258,9 +1255,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 dataBlock.Quantities.Add(CreateBcQuantityDataForArgument(quantity, argument, referenceTime));
             }
 
-            bool skipCorrection = BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType) &&
+            bool skipCorrection = BcFile.IsCorrectionType(((IBoundaryCondition)boundaryCondition).DataType) &&
                                   !correctionFile;
-            bool skipSignal = BcFile.IsCorrectionType(((IBoundaryCondition) boundaryCondition).DataType) &&
+            bool skipSignal = BcFile.IsCorrectionType(((IBoundaryCondition)boundaryCondition).DataType) &&
                               correctionFile;
 
             int componentCount = forcingTypeDefinition.ComponentDefinitions.Count();
@@ -1416,7 +1413,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 }
                 Log.InfoFormat(Resources.BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___skipping_boundary_dataBlock_of_function_type__2__, dataBlock.FilePath, dataBlock.LineNumber, daoDataBlock.ForcingTypeDefinition.ForcingType);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 Log.ErrorFormat(Resources.BcFileFlowBoundaryDataBuilder_GetDaoDataBlock_File__0___block_starting_at_line__1___not_possible_to_parse_boundary_data_block_, dataBlock.FilePath, dataBlock.LineNumber);
             }

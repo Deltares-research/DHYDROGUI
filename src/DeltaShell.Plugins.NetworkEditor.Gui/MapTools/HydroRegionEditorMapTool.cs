@@ -8,7 +8,6 @@ using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
-    //class is swiss army knife..todo identify separate responsibilities and split it
     public class HydroRegionEditorMapTool : MapTool
     {
         public const string ThinDamToolName = "Thin dam tool (2D)";
@@ -26,7 +25,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private static bool topologyRulesEnabledState;
 
-        // TODO: Why does a maptool needs a list of other maptools, if they are available through the MapControl anyway? 
         private readonly List<IMapTool> mapTools = new List<IMapTool>();
 
         public HydroRegionEditorMapTool()
@@ -43,7 +41,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 {
                     RemoveNetworkEditorTools();
 
-                    var control = (MapControl) MapControl;
+                    var control = (MapControl)MapControl;
                     control.MouseUp -= MapControlMouseUp;
                     control.KeyDown -= MapControlKeyDown;
                     control.KeyUp -= MapControlKeyUp;
@@ -55,7 +53,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 {
                     AddNetworkEditorTools();
 
-                    var control = (MapControl) MapControl;
+                    var control = (MapControl)MapControl;
                     control.MouseUp += MapControlMouseUp;
                     control.KeyDown += MapControlKeyDown;
                     control.KeyUp += MapControlKeyUp;
@@ -66,7 +64,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public override bool IsActive
         {
             get => true;
-            set {}
+            set { }
         }
 
         /// <summary>
@@ -75,8 +73,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public bool TopologyRulesEnabled { get; set; }
 
         public virtual float Tolerance { get; set; }
-
-        // TODO: currently interactor is always active, should be removed after "Edit Network ..." menu or toolbar will be added to activate interactor for a selected network
 
         public override void OnMouseDown(Coordinate worldPosition, MouseEventArgs e)
         {
@@ -101,12 +97,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.ObservationPointsPluralName, ObservationPointToolName, Resources.Observation));
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.ObservationCrossSectionsPluralName, ObservationCrossSectionToolName, Resources.observationcs2d));
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.PumpsPluralName, PumpToolName, Resources.pump));
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.StructuresPluralName, WeirToolName, Resources.Weir) {MaxPoints = 2});
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.StructuresPluralName, WeirToolName, Resources.Weir) { MaxPoints = 2 });
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
             AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.DryPointsPluralName, DryPointToolName, Resources.dry_point));
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.DryAreasPluralName, DryAreaToolName, Resources.dry_area) {CloseLine = true});
+            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
-            AddMapTool(new SingleFeature2DLineTool(HydroAreaLayerNames.EnclosureName, EnclosureToolName, Resources.enclosure) {CloseLine = true});
+            AddMapTool(new SingleFeature2DLineTool(HydroAreaLayerNames.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
 
             MapControl.ActivateTool(MapControl.SelectTool);

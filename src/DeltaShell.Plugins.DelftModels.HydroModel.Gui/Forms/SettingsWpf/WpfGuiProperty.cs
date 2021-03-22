@@ -54,18 +54,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
                 if (description.HasMinValue || description.HasMaxValue)
                 {
-                    /*ToDo: investigate why properties with doubles do not validate with Error method.
-                     For instance, MaxCourant, value = -5, minValue=0 does not return Validates in the Error getter.
-                     If possible, remove this code and just make a 'return Error;'
-                     */
                     if (Value is int)
                     {
-                        return CheckValueWithinBoundaries(Convert.ToDouble((int) Value));
+                        return CheckValueWithinBoundaries(Convert.ToDouble((int)Value));
                     }
 
                     if (Value is double)
                     {
-                        return CheckValueWithinBoundaries(Convert.ToDouble((double) Value));
+                        return CheckValueWithinBoundaries(Convert.ToDouble((double)Value));
                     }
                 }
 
@@ -268,7 +264,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             string bindedProperty = unformattedSymbol.Split(symbolSeparator)[0];
             string[] symbols = unformattedSymbol.Split(symbolSeparator)[1].Split('|');
             WpfGuiProperty lbv = GetBindedProperty.Invoke(bindedProperty);
-            var enumVal = (int) Enum.Parse(lbv.ValueType, lbv.Value.ToString());
+            var enumVal = (int)Enum.Parse(lbv.ValueType, lbv.Value.ToString());
             if (symbols.Length <= enumVal)
             {
                 return symbols[0].Trim();

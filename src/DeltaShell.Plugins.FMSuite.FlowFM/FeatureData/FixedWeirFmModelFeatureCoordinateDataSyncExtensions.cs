@@ -18,10 +18,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
 
         public static void UpdateDataColumns(this ModelFeatureCoordinateData<FixedWeir> data, string fixedWeirScheme)
         {
-            FixedWeirSchemes scheme;
-            if (!Enum.TryParse(fixedWeirScheme, true, out scheme))
+            if (!Enum.TryParse(fixedWeirScheme, true, out FixedWeirSchemes scheme))
             {
-                return; // Todo : error ??
+                return;
             }
 
             List<IDataColumn> expectedColumns = GetExpectedColumns(scheme).ToList();
@@ -64,15 +63,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         private static IEnumerable<IDataColumn> DataColumnsForScheme6And8And0(double defaultValueGroundHeight)
         {
             yield return new DataColumn<double>(CrestLevelColumnName);
-            yield return new DataColumn<double>(SillUpColumnName) {DefaultValue = defaultValueGroundHeight};
-            yield return new DataColumn<double>(SillDownColumnName) {DefaultValue = defaultValueGroundHeight};
+            yield return new DataColumn<double>(SillUpColumnName) { DefaultValue = defaultValueGroundHeight };
+            yield return new DataColumn<double>(SillDownColumnName) { DefaultValue = defaultValueGroundHeight };
         }
 
         private static IEnumerable<IDataColumn> DataColumnsScheme9()
         {
-            yield return new DataColumn<double>(CrestLengthColumnName) {DefaultValue = 3.0};
-            yield return new DataColumn<double>(TaludUpColumnName) {DefaultValue = 4.0};
-            yield return new DataColumn<double>(TaludDownColumnName) {DefaultValue = 4.0};
+            yield return new DataColumn<double>(CrestLengthColumnName) { DefaultValue = 3.0 };
+            yield return new DataColumn<double>(TaludUpColumnName) { DefaultValue = 4.0 };
+            yield return new DataColumn<double>(TaludDownColumnName) { DefaultValue = 4.0 };
             yield return new DataColumn<double>(VegetationCoefficientColumnName);
         }
     }

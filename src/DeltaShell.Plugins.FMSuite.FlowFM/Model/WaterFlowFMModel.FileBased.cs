@@ -8,8 +8,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     public partial class WaterFlowFMModel
     {
-        #region Implementation of IFileBased
-
         string IFileBased.Path
         {
             get => filePath;
@@ -38,7 +36,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             get
             {
-                yield return ((IFileBased) this).Path;
+                yield return ((IFileBased)this).Path;
             }
         }
 
@@ -106,7 +104,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         void IFileBased.Delete()
         {
-            // todo: delete mdu & stuff
+            // There currently does not occur any delete when the WaterFlowFMModel is 
+            // deleted as a FileBased item.
         }
 
         private void OnSwitchTo(string mduPath)
@@ -151,9 +150,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             MduFilePath = mduPath;
             ExportTo(MduFilePath);
         }
-
-        #endregion
-
-        //Do not remove, is used by python code
     }
 }

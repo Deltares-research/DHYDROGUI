@@ -6,8 +6,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FunctionStores
 {
     public static class FunctionExtensions
     {
-        // TODO: candidate for moving to the Framework?
-
         public static void RemoveComponentByName(this IFunction function, string componentName)
         {
             int componentIndex = function.GetComponentIndexByName(componentName);

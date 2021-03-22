@@ -136,29 +136,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new WaterFlowFMModelNodePresenter(this);
-            yield return new FmModelTreeShortcutNodePresenter {GuiPlugin = this};
-            yield return new BoundaryConditionSetNodePresenter {GuiPlugin = this};
-            yield return new SourceSinkNodePresenter {GuiPlugin = this};
-            yield return new FMMapFileFunctionStoreNodePresenter {GuiPlugin = this};
+            yield return new FmModelTreeShortcutNodePresenter { GuiPlugin = this };
+            yield return new BoundaryConditionSetNodePresenter { GuiPlugin = this };
+            yield return new SourceSinkNodePresenter { GuiPlugin = this };
+            yield return new FMMapFileFunctionStoreNodePresenter { GuiPlugin = this };
             yield return new FMHisFileFunctionStoreNodePresenter();
-            yield return new FMClassMapFileFunctionStoreNodePresenter {GuiPlugin = this};
-            yield return new ImportedFMNetFileNodePresenter {GuiPlugin = this};
-            yield return new HeatFluxModelNodePresenter {GuiPlugin = this};
-            yield return new WindItemListNodePresenter {GuiPlugin = this};
-            yield return new WindItemNodePresenter {GuiPlugin = this};
+            yield return new FMClassMapFileFunctionStoreNodePresenter { GuiPlugin = this };
+            yield return new ImportedFMNetFileNodePresenter { GuiPlugin = this };
+            yield return new HeatFluxModelNodePresenter { GuiPlugin = this };
+            yield return new WindItemListNodePresenter { GuiPlugin = this };
+            yield return new WindItemNodePresenter { GuiPlugin = this };
             yield return new RestartFileNodePresenter(this);
 
-            yield return new Feature2DPolygonTreeViewNodePresenter {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroAreaLayerNames.LandBoundariesPluralName, Properties.Resources.landboundary) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<GroupablePointFeature>(HydroAreaLayerNames.DryPointsPluralName, Properties.Resources.dry_point) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<ThinDam2D>(HydroAreaLayerNames.ThinDamsPluralName, Properties.Resources.thindam) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<FixedWeir>(HydroAreaLayerNames.FixedWeirsPluralName, Properties.Resources.fixedweir) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroAreaLayerNames.ObservationPointsPluralName, Properties.Resources.Observation) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroAreaLayerNames.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<Pump>(HydroAreaLayerNames.PumpsPluralName, Properties.Resources.Pump) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<Structure>(HydroAreaLayerNames.StructuresPluralName, Properties.Resources.Weir) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroAreaLayerNames.EmbankmentsPluralName, Properties.Resources.Embankment) {GuiPlugin = this};
-            yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroAreaLayerNames.BridgePillarsPluralName, Properties.Resources.BridgeSmall) {GuiPlugin = this};
+            yield return new Feature2DPolygonTreeViewNodePresenter { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<LandBoundary2D>(HydroAreaLayerNames.LandBoundariesPluralName, Properties.Resources.landboundary) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<GroupablePointFeature>(HydroAreaLayerNames.DryPointsPluralName, Properties.Resources.dry_point) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<ThinDam2D>(HydroAreaLayerNames.ThinDamsPluralName, Properties.Resources.thindam) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<FixedWeir>(HydroAreaLayerNames.FixedWeirsPluralName, Properties.Resources.fixedweir) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPoint>(HydroAreaLayerNames.ObservationPointsPluralName, Properties.Resources.Observation) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroAreaLayerNames.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<Pump>(HydroAreaLayerNames.PumpsPluralName, Properties.Resources.Pump) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<Structure>(HydroAreaLayerNames.StructuresPluralName, Properties.Resources.Weir) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroAreaLayerNames.EmbankmentsPluralName, Properties.Resources.Embankment) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroAreaLayerNames.BridgePillarsPluralName, Properties.Resources.BridgeSmall) { GuiPlugin = this };
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
@@ -207,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AfterCreate = (v, o) => ConfigureWpfSettingsView(v, o.FlowFmModel)
             };
 
-            yield return new ViewInfo<WaterFlowFMModel, WaterFlowFMFileStructureView> {Description = "File tree"};
+            yield return new ViewInfo<WaterFlowFMModel, WaterFlowFMFileStructureView> { Description = "File tree" };
 
             yield return new ViewInfo<FixedWeir, IModelFeatureCoordinateData, ModelFeatureCoordinateDataView>
             {
@@ -262,11 +262,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     // the FlowBoundaryQuantityType.
                     string currentSelectedCategory = v.SelectedCategory;
 
-                    v.BoundaryConditionFactory = new FlowBoundaryConditionFactory {Model = model};
+                    v.BoundaryConditionFactory = new FlowBoundaryConditionFactory { Model = model };
 
-                    var controller = new FlowBoundaryConditionEditorController {Model = model};
+                    var controller = new FlowBoundaryConditionEditorController { Model = model };
                     v.Controller = controller;
-                    v.BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl {Controller = controller};
+                    v.BoundaryConditionPropertiesControl = new FlowBoundaryConditionPropertiesControl { Controller = controller };
 
                     v.ShowSupportPointNames = true;
 
@@ -408,9 +408,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AfterCreate = (v, o) => tableViewTimeSeriesGeneratorTool.ConfigureTableView(v.TableView)
             };
 
-            yield return new ViewInfo<GriddedWindField, GriddedWindView> {AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null};
+            yield return new ViewInfo<GriddedWindField, GriddedWindView> { AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null };
 
-            yield return new ViewInfo<SpiderWebWindField, GriddedWindView> {AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null};
+            yield return new ViewInfo<SpiderWebWindField, GriddedWindView> { AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => m.WindFields.Contains(t)) != null };
 
             // Importers and exporters
             yield return new ViewInfo<BcmFileImporter, BcmFileImportDialog>();
@@ -453,7 +453,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
-            yield return new PropertyInfo<Structure, FMWeirProperties> {AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Structures.Contains(w))};
+            yield return new PropertyInfo<Structure, FMWeirProperties> { AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Structures.Contains(w)) };
         }
 
         public override void OnActiveViewChanged(IView view)
@@ -568,19 +568,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private DateTime? GetModelStartTime()
         {
             WaterFlowFMModel model = FlowModels.FirstOrDefault();
-            return model != null ? model.StartTime : (DateTime?) null;
+            return model != null ? model.StartTime : (DateTime?)null;
         }
 
         private DateTime? GetModelStopTime()
         {
             WaterFlowFMModel model = FlowModels.FirstOrDefault();
-            return model != null ? model.StopTime : (DateTime?) null;
+            return model != null ? model.StopTime : (DateTime?)null;
         }
 
         private TimeSpan? GetModelTimeStep()
         {
             WaterFlowFMModel model = FlowModels.FirstOrDefault();
-            return model != null ? model.TimeStep : (TimeSpan?) null;
+            return model != null ? model.TimeStep : (TimeSpan?)null;
         }
 
         private void SubscribeToProjectEvents()
@@ -683,8 +683,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return;
             }
 
-            ((INotifyPropertyChange) project).PropertyChanging += ProjectPropertyChanging;
-            ((INotifyPropertyChanged) project).PropertyChanged += ProjectPropertyChanged;
+            ((INotifyPropertyChange)project).PropertyChanging += ProjectPropertyChanging;
+            ((INotifyPropertyChanged)project).PropertyChanged += ProjectPropertyChanged;
         }
 
         private void UnsubscribeToProjectPropertyChanged(Project project)
@@ -694,8 +694,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return;
             }
 
-            ((INotifyPropertyChange) project).PropertyChanging -= ProjectPropertyChanging;
-            ((INotifyPropertyChanged) project).PropertyChanged -= ProjectPropertyChanged;
+            ((INotifyPropertyChange)project).PropertyChanging -= ProjectPropertyChanging;
+            ((INotifyPropertyChanged)project).PropertyChanged -= ProjectPropertyChanged;
         }
 
         private void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -750,7 +750,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             if (e.PropertyName.Equals(OutputHisFileStoreMemberName))
             {
-                IFMHisFileFunctionStore fmHisFileFunctionStore = ((WaterFlowFMModel) sender).OutputHisFileStore;
+                IFMHisFileFunctionStore fmHisFileFunctionStore = ((WaterFlowFMModel)sender).OutputHisFileStore;
                 if (fmHisFileFunctionStore != null)
                 {
                     CloseViewDataForOutdatedStore(fmHisFileFunctionStore);
@@ -759,7 +759,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             if (e.PropertyName.Equals(HeatFluxModelTypeMemberName))
             {
-                HeatFluxModel heatFluxModel = ((WaterFlowFMModel) sender).ModelDefinition.HeatFluxModel;
+                HeatFluxModel heatFluxModel = ((WaterFlowFMModel)sender).ModelDefinition.HeatFluxModel;
                 if (heatFluxModel != null)
                 {
                     CloseViewsForOutDatedHeatFluxModel(heatFluxModel);
@@ -947,7 +947,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             var compositeView = activeView as ICompositeView;
 
-            //todo: recursion
             return compositeView?.ChildViews.OfType<MapView>().FirstOrDefault();
         }
 
@@ -960,8 +959,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             Func<object, string, string> fmSettingsPropertyChanged = (sender, propertyName) =>
             {
-                var property = sender as WaterFlowFMProperty;
-                if (property != null)
+                if (sender is WaterFlowFMProperty property)
                 {
                     return property.PropertyDefinition.MduPropertyName;
                 }
