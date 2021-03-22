@@ -112,6 +112,8 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test, Category(TestCategory.Performance)]
+        //[Ignore("Need framework update on MakeNamesUnique")]
+        [Category("ToCheck")]
         public void EnsureCompositeBranchStructureNamesAreUniqueShouldBeFast()
         {
             var mocks = new MockRepository();
