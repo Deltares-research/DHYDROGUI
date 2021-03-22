@@ -1611,9 +1611,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 "(97,22%)",
                 "(98,61%)",
                 "(100,00%)",
+                "Reading dia file",
                 "Reading map file",
                 "Reading his file",
-                "Reading dia file",
+                "Reading class map file",
                 "00:00:00 (100,00%)"
             };
 
