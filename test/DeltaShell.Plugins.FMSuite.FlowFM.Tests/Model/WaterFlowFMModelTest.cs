@@ -2373,7 +2373,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 }
             }
         }
-        
+
         private static IEnumerable<SourceAndSink> CreateSourcesAndSinks()
         {
             yield return new SourceAndSink();

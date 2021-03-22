@@ -275,10 +275,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             if (!ReferenceEquals(o, existingItem.Value))
             {
+                UpdateModelReferenceIfNeeded(model, existingItem);
                 existingItem.Value = o;
             }
 
             return existingItem;
+        }
+
+        /// <summary>
+        /// Needed to restore the reference to the model in some situations, like after closing project and opening the same project
+        /// without closing the GUI. Opening a project will create a new instance of the model and DataItems are still existing
+        /// and referring to the old instance. 
+        /// </summary>
+        /// <param name="model"> Current instance of the model. </param>
+        /// <param name="existingItem"> Retrieved dataItem for specific output. </param>
+        private static void UpdateModelReferenceIfNeeded(IDataItemOwner model, DataItem existingItem)
+        {
+            if (!ReferenceEquals(existingItem.Owner, model))
+            {
+                existingItem.Owner = model;
+            }
         }
 
         private ClonableToolStripMenuItem CreateWpfSettingsMenuItem(WaterFlowFMModel model)

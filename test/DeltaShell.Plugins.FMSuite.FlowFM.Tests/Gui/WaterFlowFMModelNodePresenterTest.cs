@@ -1,21 +1,29 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Functions;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
+using DeltaShell.Plugins.CommonTools;
+using DeltaShell.Plugins.CommonTools.Gui;
+using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
@@ -256,5 +264,91 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             Assert.That(restartTreeFolders.Length, Is.EqualTo(1));
         }
+        
+        [Test]
+        [Category(TestCategory.Wpf)]
+        [Category(TestCategory.Slow)]
+        public void GivenARunningGui_WhenSavingClosingAndOpeningTheSameProject_ShouldReturnAProjectTreeWithOutputReferencedToTheLastInstanceOfTheModel()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            using (var gui = new DeltaShellGui())
+            {
+                IApplication app = gui.Application;
+                
+                gui.Plugins.Add(new CommonToolsGuiPlugin());
+                gui.Plugins.Add(new FlowFMGuiPlugin());
+                gui.Plugins.Add(new NetworkEditorGuiPlugin());
+                gui.Plugins.Add(new ProjectExplorerGuiPlugin());
+                gui.Plugins.Add(new SharpMapGisGuiPlugin());
+                
+                app.Plugins.Add(new CommonToolsApplicationPlugin());
+                app.Plugins.Add(new NHibernateDaoApplicationPlugin());
+                app.Plugins.Add(new FlowFMApplicationPlugin());
+                app.Plugins.Add(new NetCdfApplicationPlugin());
+                app.Plugins.Add(new NetworkEditorApplicationPlugin());
+                app.Plugins.Add(new SharpMapGisApplicationPlugin());
+
+                gui.Run();
+                
+                string mapFilePath = TestHelper.GetTestFilePath(@"Model\Output\FlowFM");
+
+                string modelFolder = tempDirectory.CopyDirectoryToTempDirectory(mapFilePath);
+                
+                WpfTestHelper.ShowModal((Control)gui.MainWindow, () => ReopenANewCreatedProjectAndCheckItsProjectTree(tempDirectory, modelFolder, gui));
+            }
+        }
+
+        private void ReopenANewCreatedProjectAndCheckItsProjectTree(TemporaryDirectory tempDirectory, string modelFolder, IGui gui)
+        {
+            IApplication app = gui.Application;
+
+            CreateModelWithOutputCollapsed(Path.Combine(tempDirectory.Path, modelFolder), gui, out int nrOfDataItems);
+
+            string savePath = Path.Combine(tempDirectory.Path, "SaveLocation", "TestProject.dsproj");
+            app.SaveProjectAs(savePath);
+
+            app.CloseProject();
+
+            app.OpenProject(savePath);
+
+            CheckProjectTree(gui, nrOfDataItems);
+        }
+
+        private static void CheckProjectTree(IGui gui, int nrOfDataItems)
+        {
+            gui.MainWindow.ProjectExplorer.TreeView.CollapseAll();
+
+            var dataItemsAfterOpening = (IList<DataItem>) TypeUtils.GetField(gui.Plugins[1].GetProjectTreeViewNodePresenters().First(), "DataItems");
+            Assert.AreEqual(nrOfDataItems, dataItemsAfterOpening.Count);
+
+            foreach (DataItem dataItem in dataItemsAfterOpening)
+            {
+                Assert.AreSame(dataItem.Owner, gui.Application.Project.RootFolder.Models.First());
+            }
+        }
+
+        private static void CreateModelWithOutputCollapsed(string absoluteModelFolderPath, IGui gui, out int nrOfDataItems)
+        {
+            var model = new WaterFlowFMModel();
+            model.ImportFromMdu(Path.Combine(absoluteModelFolderPath, "input", "FlowFM.mdu"));
+
+            gui.Application.Project.RootFolder.Items.Add(model);
+
+            ActivityRunner.RunActivity(model);
+            Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
+
+            gui.MainWindow.ProjectExplorer.TreeView.CollapseAll();
+            var dataItemsBeforeOpening = (IList<DataItem>) TypeUtils.GetField(gui.Plugins[1].GetProjectTreeViewNodePresenters().First(), "DataItems");
+
+            foreach (DataItem dataItem in dataItemsBeforeOpening)
+            {
+                Assert.AreSame(dataItem.Owner, gui.Application.Project.RootFolder.Models.First());
+            }
+
+            nrOfDataItems = dataItemsBeforeOpening.Count;
+
+            Assert.IsTrue(nrOfDataItems != 0);
+        }
     }
+
 }

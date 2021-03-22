@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         {
             switch (target)
             {
-                case IWaterFlowFMModel targetAsModel:
+                case WaterFlowFMModel targetAsModel:
                     return targetAsModel;
                 case UnstructuredGrid grid when GetModelForGrid != null:
                 {
@@ -159,6 +159,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
             model.ModelDefinition
                  .GetModelProperty(KnownProperties.NetFile)
                  .SetValueAsString(Path.GetFileName(destFileName));
+
+            model.MarkOutputOutOfSync();
         }
     }
 }
