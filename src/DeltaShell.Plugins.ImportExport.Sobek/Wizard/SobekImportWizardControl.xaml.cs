@@ -102,14 +102,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             set { ViewModel.CancelProjectTemplate = value; }
         }
 
-        public void Dispose()
-        {
-            
-        }
-
         public void EnsureVisible(object item)
         {
-            
+            // no elements to focus
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Image?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

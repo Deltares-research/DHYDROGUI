@@ -148,8 +148,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             // remove memory leaks
             Gui.Selection = null;
             Gui.SelectedProjectItem = null;
-            
-            GC.Collect();
         }
 
         [InvokeRequired]
