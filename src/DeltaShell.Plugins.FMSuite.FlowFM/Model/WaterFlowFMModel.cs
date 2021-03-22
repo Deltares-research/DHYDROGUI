@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     [Entity]
     public partial class WaterFlowFMModel : TimeDependentModelBase, 
-                                            IFileBased, 
+                                            IFileBased,
                                             IRestartModel,
                                             IGridOperationApi, 
                                             IDisposable, 
@@ -240,6 +240,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         private IEventedList<ISedimentFraction> sedimentFractions;
         private IEventedList<string> tracerDefinitions;
         private IEventedList<SourceAndSink> sourcesAndSinks;
+        private IEventedList<Feature2D> pipes;
+        private IEventedList<Feature2D> boundaries;
         private IDataItem areaDataItem;
         private DepthLayerDefinition depthLayerDefinition;
 
@@ -588,11 +590,47 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
         }
 
-        public IEventedList<Feature2D> Boundaries { get; private set; }
+        public IEventedList<Feature2D> Boundaries 
+        {
+            get => boundaries;
+            private set
+            {
+                if (boundaries != null)
+                {
+                    boundaries.CollectionChanged -= FMRegionCollectionChanged;
+                }
+
+                boundaries = value;
+
+                if (boundaries != null)
+                {
+                    boundaries.CollectionChanged += FMRegionCollectionChanged;
+                }
+            }
+        }
 
         public IEventedList<BoundaryConditionSet> BoundaryConditionSets { get; private set; }
 
-        public IEventedList<Feature2D> Pipes { get; private set; }
+        public IEventedList<Feature2D> Pipes
+        {
+            get => pipes;
+            private set
+            {
+                if (pipes != null)
+                {
+                    Pipes.CollectionChanged -= FMRegionCollectionChanged;
+                }
+
+                pipes = value;
+
+                if (pipes != null)
+                {
+                    Pipes.CollectionChanged += FMRegionCollectionChanged;
+                }
+            }
+        }
+
+
 
         public IEventedList<SourceAndSink> SourcesAndSinks
         {
@@ -602,12 +640,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (sourcesAndSinks != null)
                 {
                     SourcesAndSinks.CollectionChanged -= SourcesAndSinksCollectionChanged;
+                    SourcesAndSinks.CollectionChanged -= FMRegionCollectionChanged;
                 }
 
                 sourcesAndSinks = value;
+
                 if (sourcesAndSinks != null)
                 {
                     SourcesAndSinks.CollectionChanged += SourcesAndSinksCollectionChanged;
+                    SourcesAndSinks.CollectionChanged += FMRegionCollectionChanged;
                 }
             }
         }

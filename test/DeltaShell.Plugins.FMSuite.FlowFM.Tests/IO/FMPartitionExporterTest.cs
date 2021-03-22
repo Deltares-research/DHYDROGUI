@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Text;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
@@ -424,6 +425,60 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             if (Directory.Exists(relativePath))
             {
                 Directory.Delete(relativePath, true);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        [TestCase(false)]
+        [TestCase(true)]
+        public void FMPartitionExporter_ShouldNotChangeModelOutputOutOfSyncStatus(bool outputOutOfSync)
+        {
+            // Arrange
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string exportPartitionDirectory = Path.Combine(tempDirectory.Path, "Partition");
+                Directory.CreateDirectory(exportPartitionDirectory);
+
+                string mduDirectoryPathInTemp = tempDirectory.CopyDirectoryToTempDirectory(Path.Combine(TestHelper.GetTestDataDirectory(), "harlingen"));
+                string mduFilePathInTemp = Path.Combine(mduDirectoryPathInTemp, "har.mdu");
+
+                string polygonFile = TestHelper.GetTestFilePath(@"har_part\ThreeDomains.pol");
+                string polygonFileInTemp = tempDirectory.CopyTestDataFileToTempDirectory(polygonFile);
+
+                var model = new WaterFlowFMModel();
+                model.ImportFromMdu(mduFilePathInTemp);
+                
+                CreateRestartOutputFile(tempDirectory.Path);
+                model.ConnectOutput(tempDirectory.Path);
+
+                model.OutputOutOfSync = outputOutOfSync;
+
+                var exporter = new FMModelPartitionExporter
+                {
+                    NumDomains = 4,
+                    IsContiguous = true,
+                    PolygonFile = polygonFileInTemp
+                };
+
+                // Act
+                exporter.Export(model, Path.Combine(exportPartitionDirectory, "test.mdu"));
+
+                // Assert
+                Assert.AreEqual(outputOutOfSync, model.OutputOutOfSync);
+            }
+        }
+
+        private static void CreateRestartOutputFile(string tempDirectoryPath)
+        {
+            string restartFilePath = Path.Combine(tempDirectoryPath, "test_rst.nc");
+            const string text = "This is some text in the file.";
+
+            using (FileStream fs = File.Create(restartFilePath))
+            {
+                byte[] info = new UTF8Encoding(true).GetBytes(text);
+                fs.Write(info, 0, info.Length);
             }
         }
     }

@@ -385,8 +385,94 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     TriggerPropertyChanged("Switching Waq output end time", GuiProperties.SpecifyWaqOutputStopTime,
                                            o => SpecifyWaqOutputStopTime = (bool) o);
                 }
+                else if (PropertyIsDataAccessObject(prop))
+                {
+                    return;
+                }
+
+                BeginEdit(new DefaultEditAction(""));
+                MarkOutputOutOfSync();
+                EndEdit();
             }
         }
+
+        private static bool PropertyIsDataAccessObject(WaterFlowFMProperty prop) =>
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.RestartFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.LandBoundaryFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ThinDamFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BridgePillarFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ObsFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ObsCrsFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.StructuresFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.EnclosureFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.DryPointsFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.PathsRelativeToParent,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.OutputDir,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaqOutputDir,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ExtForceFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BndExtForceFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MorFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.HisInterval,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MapInterval,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.RstInterval,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaqInterval,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ClassMapInterval,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Version,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.GuiVersion,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.NetFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.StructuresFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.PartitionFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ManholeFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ProfdefFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ProflocFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaterLevIniFile,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.TrtRou,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.TrtDef,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.TrtL,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.MapFile__Obsolete,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.HisFile__Obsolete,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.TStart,
+                                                           StringComparison.InvariantCultureIgnoreCase) ||
+            prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.TStop,
+                                                           StringComparison.InvariantCultureIgnoreCase);
 
         private void TriggerPropertyChanged(string defaultEditActionName, string propertyName,
                                             Action<object> setPropertyAction)
@@ -503,6 +589,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            MarkOutputOutOfSync();
+
             object removedOrAddedItem = e.GetRemovedOrAddedItem();
             if (!isLoading)
             {
@@ -630,8 +718,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is IStructure weir && 
-                e.PropertyName == nameof(IStructure.Formula))
+            MarkOutputOutOfSync();     
+            
+            if (sender is IStructure weir && e.PropertyName == nameof(IStructure.Formula))
             {
                 bool isInputSender = Area.Structures.Any(w => w.Name == weir.Name);
                 UpdateAreaDataItems(weir, isInputSender);
@@ -765,8 +854,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             base.OnDataItemUnlinking(sender, e);
         }
 
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {}
-        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e) {}
+        private void FMRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            MarkOutputOutOfSync();
+        }
+
+        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            // empty to override Delta Shell framework logic, like removing output when input has been changed. 
+        }
+
+        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // empty to override Delta Shell framework logic, like removing output when input has been changed. 
+        }
 
         /// <summary>
         /// Called when [clear output]. Clears all output of the model.

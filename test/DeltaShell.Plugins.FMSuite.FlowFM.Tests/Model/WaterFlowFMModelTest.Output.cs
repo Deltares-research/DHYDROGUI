@@ -240,6 +240,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ExportTo_WhenSwitchToIsTrueAndModelHasOutput_ShouldNotChangeOutOfSync(bool outOfSync)
+        {
+            // Setup
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
+            {
+                CreateRestartFiles(tempDir).ToArray();
+              
+                model.ConnectOutput(tempDir.Path);
+                model.OutputOutOfSync = outOfSync;
+                
+                Assert.AreEqual(outOfSync, model.OutputOutOfSync);
+                Assert.AreEqual(false, model.OutputIsEmpty);
+
+                // Call
+                model.ExportTo(Path.Combine(tempDir.Path, "export"), true, true, true);
+
+                // Assert
+                Assert.AreEqual(outOfSync, model.OutputOutOfSync);
+            }
+        }
+
         private static IEnumerable<string> CreateRestartFiles(TemporaryDirectory tempDir)
         {
             for (var i = 0; i < 5; i++)

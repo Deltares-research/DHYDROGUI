@@ -81,7 +81,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             }
             
             currentOutputDirectoryPath = targetOutputDirectoryPath;
+            
+            bool originalOutputOutOfSync = OutputOutOfSync;
             ReconnectOutputFiles(currentOutputDirectoryPath, true);
+            OutputOutOfSync = originalOutputOutOfSync;
 
             if (sourceIsWorkingDir)
             {
