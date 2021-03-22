@@ -629,7 +629,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             SetGuiStartStopDeltaTFromMdu(intervalPropName, doWritePropName, deltaTPropName);
             var timeFrame = (IList<double>) GetModelProperty(intervalPropName).Value;
-            if (timeFrame.Count == 0)
+            if (timeFrame.Count > 0)
             {
 
                 if (timeFrame.Count > 1)
