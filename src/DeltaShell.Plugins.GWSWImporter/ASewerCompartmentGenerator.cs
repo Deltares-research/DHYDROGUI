@@ -99,6 +99,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     case ManholeMapping.CompartmentStorageType.Loss:
                         Log.WarnFormat($"Compartment {compartment.Name} has an unsupported compartment storage type 'VRL'. " +
                                        $"Setting the default compartment storage type 'RES' instead.");
+                        compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException($"Compartment {compartment.Name} has an unsupported compartment storage type '{compartmentStorageType}'.");
