@@ -275,7 +275,7 @@ output,Wrihis_upward_velocity_component,output,History,Write upward velocity,0|1
 output,Wrihis_sediment,output,History,Write sediment transport,0|1,0,,,FALSE,,WriteHisFile,,,,"Write sediment transport to his file (1: yes, 0: no)",
 output,Wrihis_constituents,output,History,Write tracers,0|1,0,,,FALSE,,WriteHisFile,,,,"Write tracers to his file (1: yes, 0: no)",
 output,Wrihis_infiltration,output,History,Write infiltration,0|1,0,,,FALSE,,WriteHisFile,,,,"Write infiltration to his file (1: yes, 0: no)",
-output,Wrihis_lateral,output,History,Write lateral data,0|1,0,,,FALSE,,WriteHisFile,,,,"Write lateral data to his file (1: yes, 0: no)",
+output,Wrihis_lateral,output,History,Write lateral data,0|1,1,,,FALSE,,WriteHisFile,,,,"Write lateral data to his file (1: yes, 0: no)",
 output,Wrihis_taucurrent,output,History,Write mean bed shear stress,0|1,0,,,FALSE,,WriteHisFile,,,,"Write mean bed shear stress to his file (1: yes, 0: no)",
 output,Wrimap_waterlevel_s0,output,Map,Write water levels of previous time step,0|1,0,,,FALSE,,WriteMapFile,,,,"Write water levels for previous time step to map file (1: yes, 0: no)",
 output,Wrimap_waterlevel_s1,output,Map,Write water levels,0|1,1,,,FALSE,,WriteMapFile,,,,"Write water levels to map file (1: yes, 0: no)",
