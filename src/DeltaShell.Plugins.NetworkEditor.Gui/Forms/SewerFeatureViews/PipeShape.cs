@@ -1,13 +1,17 @@
 using System;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
+using log4net;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     [Entity]
     public class PipeShape : DrawingShape
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(PipeShape));
+        
         public IPipe Pipe { get; set; }
 
         public CompartmentShape ConnectedCompartmentShape { get; set; }
@@ -72,9 +76,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 case CrossSectionStandardShapeSteelCunette cunetteShape:
                     return cunetteShape.RadiusR;
                 case CrossSectionStandardShapeTrapezium trapeziumShape:
-                    return trapeziumShape.GetTabulatedDefinition().Width;
+                    try
+                    {
+                        CrossSectionDefinitionZW trapeziumTabulatedDefinition = trapeziumShape.GetTabulatedDefinition();
+                        if (trapeziumTabulatedDefinition == null)
+                        {
+                            log.WarnFormat($"Could not get the width for the cross section {Pipe?.Profile?.Name} of type trapezium.");
+                            return 0;
+                        }
+                        return trapeziumTabulatedDefinition.Width;
+                    }
+                    catch (Exception e)
+                    {
+                        log.WarnFormat($"Could not get the width for the cross section {Pipe?.Profile?.Name} of type trapezium.");
+                        return 0;
+                    }
                 default:
-                    throw new ArgumentException($"Sewer pipe shape {shape?.Type} is not yet supported");
+                    log.WarnFormat($"Could not get the width for the cross section {Pipe?.Profile?.Name} of type trapezium.");
+                    return 0;
             }
         }
 
@@ -95,9 +114,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 case CrossSectionStandardShapeSteelCunette cunetteShape:
                     return cunetteShape.Height;
                 case CrossSectionStandardShapeTrapezium trapeziumShape:
-                    return trapeziumShape.GetTabulatedDefinition().HighestPoint;
+                    try
+                    {
+                        CrossSectionDefinitionZW trapeziumTabulatedDefinition = trapeziumShape.GetTabulatedDefinition();
+                        if (trapeziumTabulatedDefinition == null)
+                        {
+                            log.WarnFormat($"Could not get the highest point for the cross section {Pipe?.Profile?.Name} of type trapezium.");
+                            return 0;
+                        }
+                        return trapeziumTabulatedDefinition.HighestPoint;
+                    }
+                    catch (Exception e)
+                    {
+                        log.WarnFormat($"Could not get the highest point for the cross section {Pipe?.Profile?.Name} of type trapezium.");
+                        return 0;
+                    }
                 default:
-                    throw new ArgumentException($"Sewer pipe shape {shape?.Type} is not yet supported");
+                    log.WarnFormat($"Could not get the highest point for the cross section {Pipe?.Profile?.Name} of type trapezium.");
+                    return 0;
             }
         }
     }
