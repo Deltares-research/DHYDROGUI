@@ -70,7 +70,7 @@ namespace DelftTools.Hydro.Tests
             var compositeStructureList = new IBranchFeature[] {compositeStructure1, compositeStructure2};
 
             network.Expect(n => n.BranchFeatures).Return(compositeStructureList).Repeat.Any();
-            compositeStructure1.Expect(c => c.Name).Return("Test").Repeat.Times(2);
+            compositeStructure1.Expect(c => c.Name).Return("Test");
             compositeStructure2.Name = "Test";
 
             mocks.ReplayAll();
@@ -112,8 +112,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test, Category(TestCategory.Performance)]
-        //[Ignore("Need framework update on MakeNamesUnique")]
-        [Category("ToCheck")]
         public void EnsureCompositeBranchStructureNamesAreUniqueShouldBeFast()
         {
             var mocks = new MockRepository();
