@@ -38,7 +38,7 @@ namespace DelftTools.Hydro
         public static void AddNetworkLocationsIfNotAlreadyCreated(this IDiscretization discretization, IEnumerable<NetworkLocation> locationToAdd)
         {
             var locations = new HashSet<Coordinate>(discretization.Locations.Values.Select(l => l.Geometry?.Coordinate));
-            var nonExistingLocations = new List<NetworkLocation>();
+            
             foreach (var location in locationToAdd)
             {
                 var coordinate = location.Geometry?.Coordinate;
@@ -50,14 +50,9 @@ namespace DelftTools.Hydro
 
                 if (!locations.Contains(coordinate))
                 {
-                    nonExistingLocations.Add(location);
+                    discretization.Locations.AddValues(new[] { location });
                 }
             }
-
-            if (!nonExistingLocations.Any())
-                return;
-
-            discretization.Locations.AddValues(new[] { nonExistingLocations });
         }
 
         public static void AddLocations(this IDiscretization discretization, IEnumerable<INetworkLocation> locationsToAdd)
