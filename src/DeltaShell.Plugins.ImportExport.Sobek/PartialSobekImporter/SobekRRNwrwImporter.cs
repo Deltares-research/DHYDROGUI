@@ -391,9 +391,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                 }
 
-                if (readSobekRrNodeDictionary.TryGetValue(readNwrwDefinition.Id, out var rrNode))
+                if (!readSobekRrNodeDictionary.TryGetValue(readNwrwDefinition.Id, out var rrNode))
                 {
                     unFoundNodeIds.Add(readNwrwDefinition.Id);
+                    continue;
                 }
 
                 objectDefinitionList.Add(new Tuple<SobekRRNwrw, object>(readNwrwDefinition, rrNode));
