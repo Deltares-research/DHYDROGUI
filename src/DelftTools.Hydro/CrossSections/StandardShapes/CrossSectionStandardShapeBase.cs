@@ -80,13 +80,13 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             {
                 helper?.CrossSectionDefinitionsByPipe?.AddOrUpdate(Name, sharedCrossSectionDefinitionToAdd,
                     (existingName, crossSectionDefinition) => { return crossSectionDefinition; });
+                
+                var materialEnumValue = string.IsNullOrWhiteSpace(MaterialName)
+                                            ? null
+                                            : (SewerProfileMapping.SewerProfileMaterial?) typeof(SewerProfileMapping.SewerProfileMaterial)
+                                                .GetEnumValueFromDescription(MaterialName);
 
-                object materialEnumValue = typeof(SewerProfileMapping.SewerProfileMaterial)
-                    .GetEnumValueFromDescription(MaterialName);
-
-                var material = materialEnumValue == null || Equals(materialEnumValue, MaterialName)
-                                   ? SewerProfileMapping.SewerProfileMaterial.Unknown
-                                   : (SewerProfileMapping.SewerProfileMaterial) materialEnumValue;
+                var material = materialEnumValue ?? SewerProfileMapping.SewerProfileMaterial.Unknown;
 
                 helper?.SewerProfileMaterialsByPipe?.AddOrUpdate(Name, material,
                                                                  (existingName, oldMaterial) => { return oldMaterial; });
