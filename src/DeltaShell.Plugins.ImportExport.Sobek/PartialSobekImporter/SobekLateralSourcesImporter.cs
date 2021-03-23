@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     AddOrReplaceLateralSource(lateralSource, lateralSources);
                 }
 
-                model.AddMissingLateralSourceData(lateralSourcesToAdd);
+                model.AddMissingLateralSourceData(HydroNetwork.LateralSources.OfType<LateralSource>());
             
                 // now process the laterals at nodes; in SOBEK 3.x we do not use a separate type for this. However, in theory this could introduce multiple laterals with identical id
                 // We give preference to importing 'laterals at branches'. If after importing these 'laterals at nodes' exist that have identical ids they are ignored

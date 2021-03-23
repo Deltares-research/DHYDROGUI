@@ -47,12 +47,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return otherBasin != subscribedBasin;
         }
 
-        private void OnCatchmentAdded(Catchment catchment)
+        private void OnCatchmentAdded(Catchment catchment, bool catchmentInBasin)
         {
-            AddDefaultModelDataForCatchment(catchment, true);
+            AddDefaultModelDataForCatchment(catchment, catchmentInBasin);
             foreach(var subcatchment in catchment.SubCatchments)
             {
-                OnCatchmentAdded(subcatchment);
+                OnCatchmentAdded(subcatchment, false);
             }
         }
 
@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 !catchmentList.SkipChildItemEventBubbling) //basin catchments or subcatchments
             {
                 //not aggregation list
-                CatchmentsCollectionChanged(e);
+                CatchmentsCollectionChanged(sender, e);
             }
 
             if (Equals(sender, Basin.Boundaries))
@@ -205,13 +205,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
 
-        private void CatchmentsCollectionChanged(NotifyCollectionChangedEventArgs e)
+        private void CatchmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var catchment = (Catchment) e.GetRemovedOrAddedItem();
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    OnCatchmentAdded(catchment);
+                    OnCatchmentAdded(catchment, sender == Model?.Basin);
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     OnCatchmentRemoved(catchment);
@@ -251,7 +251,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             if (Basin != null)
             {
-                Basin.Catchments.ForEach(OnCatchmentAdded);
+                Basin.Catchments.ForEach(c => OnCatchmentAdded(c, true));
                 Basin.Boundaries.ForEach(OnBoundaryAdded);
 
                 Model.OutputCoverages.ForEach(c => c.CoordinateSystem = Basin?.CoordinateSystem);
