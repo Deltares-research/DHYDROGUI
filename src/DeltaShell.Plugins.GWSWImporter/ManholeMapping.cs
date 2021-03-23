@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             [Description("MAN")] Manhole /* Custom type, only for creating a manhole with no compartiments*/,
         }
 
-        public enum CompartmentStorageType
+        public enum GwswCompartmentStorageType
         {
             [Description("RES")]
             Reservoir,
