@@ -2,8 +2,11 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
+using NetTopologySuite.Operation.Valid;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
@@ -56,6 +59,49 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             CalculationArea = Catchment.AreaSize;
         }
 
+        public static Dictionary<string, NwrwData> CreateNewNwrwDataAndCatchments(IHydroModel model, string[] names)
+        {
+            var rrModel = model as RainfallRunoffModel;
+            if (rrModel == null)
+            {
+                throw new ArgumentNullException("Can not add Nwrw catchment without a model.");
+            }
+
+            var catchments = names.Select(n =>
+            {
+                var catchment = Catchment.CreateDefault();
+                catchment.CatchmentType = CatchmentType.NWRW;
+                catchment.Name = n;
+                return catchment;
+            }).ToArray();
+
+            //todo disable eventing add catchmentData here
+            rrModel.Basin.Catchments.AddRange(catchments);
+
+            var nwrwDataLookup = rrModel.GetAllModelData()
+                                        .OfType<NwrwData>()
+                                        .ToDictionary(d => d.Catchment.Name, StringComparer.InvariantCultureIgnoreCase);
+
+            foreach (var catchment in catchments)
+            {
+                if (nwrwDataLookup.ContainsKey(catchment.Name))
+                {
+                    continue;
+                }
+
+                // add missing data
+                var catchmentModelData = modelDataFactory.CreateDefaultModelData(catchment);
+                if (catchmentModelData == null)
+                    continue;
+
+                rrModel.ModelData.Add(catchmentModelData);
+                rrModel.FireModelDataAdded(catchmentModelData);
+                nwrwDataLookup[catchment.Name] = catchmentModelData as NwrwData;
+            }
+
+            return nwrwDataLookup;
+        }
+
         public static void CreateNewNwrwDataWithCatchment(IHydroModel model, string name, NwrwImporterHelper helper)
         {
             var rrModel = model as RainfallRunoffModel;
@@ -71,6 +117,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             rrModel.ModelDataAdded += RrModelOnModelDataAdded; 
             rrModel.Basin.Catchments.Add(catchment);
             rrModel.ModelDataAdded -= RrModelOnModelDataAdded;
+            
             var nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));
 
             if (nwrwData == null)
@@ -103,8 +150,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
         private static void RrModelOnModelDataAdded(object sender, EventArgs e)
         {
-            var nwrwData = sender as NwrwData;
-            if (nwrwData == null) return;
+            if (!(sender is NwrwData nwrwData)) 
+                return;
+
             CurrentNwrwCatchmentModelDataByNodeOrBranchId?.TryAdd(nwrwData.Name, nwrwData);
         }
     }
