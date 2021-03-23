@@ -22,13 +22,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var structFile = new StructureFMPropertiesFile();
             structFile.ReadProperties(filePath);
 
-            Assert.AreEqual(4, StructurePropertyDefinition.StructurePropertyGroups.Count);
+            Assert.AreEqual(4, structFile.StructurePropertyGroups.Count);
 
             var supportedStructures = new[] {"structure", "weir", "gate", "pump"};
             foreach (var supportedStructure in supportedStructures)
             {
-                Assert.Contains(supportedStructure, StructurePropertyDefinition.StructurePropertyGroups.Keys);
-                Assert.AreEqual(1, StructurePropertyDefinition.StructurePropertyGroups[supportedStructure].PropertyDefinitions.Count);
+                Assert.Contains(supportedStructure, structFile.StructurePropertyGroups.Keys);
+                Assert.AreEqual(1, structFile.StructurePropertyGroups[supportedStructure].PropertyDefinitions.Count);
             }
         }
     }

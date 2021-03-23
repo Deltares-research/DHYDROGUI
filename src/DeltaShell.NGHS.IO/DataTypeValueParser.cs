@@ -99,8 +99,18 @@ namespace DeltaShell.NGHS.IO
                                                 ? typeChoices.Select(int.Parse).ToArray()
                                                 : Enumerable.Range(0, typeChoices.Length).ToArray();
 
-                    dataType = DynamicTypeUtils.CreateDynamicEnum(propertyKeyName, typeChoicesInts, captionChoices,
-                                                                  typeChoices);
+                    lock (EnumPropertyTypes)
+                    {
+                        if (!EnumPropertyTypes.TryGetValue(propertyKeyName, out var type))
+                        {
+                            dataType = DynamicTypeUtils.CreateDynamicEnum(propertyKeyName, typeChoicesInts, captionChoices, typeChoices);
+                            EnumPropertyTypes[propertyKeyName] = dataType;
+                        }
+                        else
+                        {
+                            dataType = type;
+                        }
+                    }
                 }
             }
             else
@@ -109,7 +119,7 @@ namespace DeltaShell.NGHS.IO
             }
             return dataType;
         }
-
+        private static Dictionary<string, Type> EnumPropertyTypes { get; } = new Dictionary<string, Type>();
         public static string ToString(object obj, Type dataType)
         {
             if (dataType == typeof(string))
