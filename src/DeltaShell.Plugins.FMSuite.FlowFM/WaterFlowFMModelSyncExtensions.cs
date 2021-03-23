@@ -14,6 +14,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public static void AddMissingBranchData(this WaterFlowFMModel fmModel, IEnumerable<IBranch> branches)
         {
+            if (fmModel == null)
+                return;
+
             var pointsToAdd = new List<NetworkLocation>();
             var lateralSourcesToAdd = new List<LateralSource>();
 
@@ -49,6 +52,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public static void AddMissingLateralSourceData(this WaterFlowFMModel fmModel, IEnumerable<LateralSource> lateralSources)
         {
+            if (fmModel == null)
+                return;
+
             var lateralDataLookup = fmModel.LateralSourcesData.ToDictionary(d => d.Feature);
             foreach (var lateralSource in lateralSources)
             {

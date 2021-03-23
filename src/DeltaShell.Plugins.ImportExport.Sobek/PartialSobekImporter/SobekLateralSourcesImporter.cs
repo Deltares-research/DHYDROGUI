@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var lateralSources = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
             
-            var model = GetModel<WaterFlowFMModel>();
+            var model = TryGetModel<WaterFlowFMModel>();
             model.DoWithPropertySet(nameof(model.DisableNetworkSynchronization), true, () =>
             {
                 foreach (var lateralSource in lateralSourcesToAdd)
@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     lateralsAdded.Add(lateralSource);
                 }
 
-                model.AddMissingLateralSourceData(lateralsAdded);
+                model?.AddMissingLateralSourceData(lateralsAdded);
                 NamingHelper.MakeNamesUnique(HydroNetwork.LateralSources);
             });
         }
