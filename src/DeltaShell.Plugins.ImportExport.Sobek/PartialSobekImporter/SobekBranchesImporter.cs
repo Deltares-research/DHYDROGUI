@@ -7,6 +7,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Utils;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -87,9 +88,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             TryToReconstructManholesWithCompartmentsForExternalSobekNodes(createdNodes, createdBranches, nodeTypes);
             TryToReconstructUrbanOutlets(createdNodes,createdBranches, nodeTypes);
 
-            AddToNetwork(createdNodes, nodesLookup, HydroNetwork);
-            AddToNetwork(createdBranches, branchesLookUp, nodesLookup, HydroNetwork);
+            var fmModel = TryGetModel<WaterFlowFMModel>();
 
+            fmModel.DoWithPropertySet(nameof(WaterFlowFMModel.DisableNetworkSynchronization), true, () =>
+            {
+                AddToNetwork(createdNodes, nodesLookup, HydroNetwork);
+                AddToNetwork(createdBranches, branchesLookUp, nodesLookup, HydroNetwork);
+                fmModel.AddMissingBranchData(createdBranches.Values);
+            });
 
             ReadAndUpdateBranchOrderNumber(nodesPath, HydroNetwork, branchesLookUp);
         }

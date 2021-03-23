@@ -155,6 +155,7 @@
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="WaterFlowFMModelSyncExtensions.cs" />
     <Compile Include="Grid\UnstructuredGridExtensions.cs" />
     <Compile Include="FunctionStores\FMClassMapFileFunctionStore.cs" />
     <Compile Include="FunctionStores\IFMClassMapFileFunctionStore.cs" />

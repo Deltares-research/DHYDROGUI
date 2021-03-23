@@ -30,6 +30,36 @@ namespace DelftTools.Hydro
             }
         }
 
+        /// <summary>
+        /// Adds the given <paramref name="locationToAdd"/> to the <paramref name="discretization"/> if they are not already present (based on geometry)
+        /// </summary>
+        /// <param name="discretization">Discretization to add the locations to</param>
+        /// <param name="locationToAdd">Locations that need to be added</param>
+        public static void AddNetworkLocationsIfNotAlreadyCreated(this IDiscretization discretization, IEnumerable<NetworkLocation> locationToAdd)
+        {
+            var locations = new HashSet<Coordinate>(discretization.Locations.Values.Select(l => l.Geometry?.Coordinate));
+            var nonExistingLocations = new List<NetworkLocation>();
+            foreach (var location in locationToAdd)
+            {
+                var coordinate = location.Geometry?.Coordinate;
+                if (coordinate == null)
+                {
+                    Log.Warn($"No geometry set for {location.Name}");
+                    continue;
+                }
+
+                if (!locations.Contains(coordinate))
+                {
+                    nonExistingLocations.Add(location);
+                }
+            }
+
+            if (!nonExistingLocations.Any())
+                return;
+
+            discretization.Locations.AddValues(new[] { nonExistingLocations });
+        }
+
         public static void AddLocations(this IDiscretization discretization, IEnumerable<INetworkLocation> locationsToAdd)
         {
             var autoSortedValue = discretization.Locations.IsAutoSorted;

@@ -39,6 +39,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public const string DiscretizationObjectName = "Computational 1D Grid";
 
+        public virtual bool DisableNetworkSynchronization { get; set; }
+
         [NoNotifyPropertyChange]
         public virtual IHydroNetwork Network
         {
@@ -79,23 +81,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void NetworkCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (SuspendClearOutputOnInputChange)
+            if (SuspendClearOutputOnInputChange ||
+                sender is IEventedList<Route> ||
+                DisableNetworkSynchronization)
                 return;
-            //uitzonderingen voor route
-            if (sender is IEventedList<Route>) return;
+
             if (!OutputIsEmpty)
             {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangeAction.Add:
-                        return;
-
-                    case NotifyCollectionChangeAction.Remove:
-                        break;
-                }
                 OnClearOutput();
             }
-
         }
 
         public virtual void UnSubscribeFromNetwork(IHydroNetwork network)
@@ -114,6 +108,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [EditAction]
         private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (DisableNetworkSynchronization) return;
+
             //is dit nodig?
             if (sender is IDataItem item && 
                 item.Value is IHydroNetwork && 
@@ -287,6 +283,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [EditAction]
         private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            if (DisableNetworkSynchronization) return;
+
             // Manual call of OnInputCollectionChanged if the model is not owner of the network, i.e. the network is wrapped in a linked data item:
             if (GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag).LinkedTo != null)
             {
@@ -307,7 +305,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 UpdateCrossSectionSectionType(e);
             }
-            else if (removedOrAddedItem is IChannel)
+            else if (removedOrAddedItem is IChannel channel)
             {
                 if (Equals(sender, Network.Branches))
                 {
@@ -315,7 +313,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     {
                         case NotifyCollectionChangedAction.Remove:
                         {
-                            var channel = (IChannel) e.GetRemovedOrAddedItem();
                             foreach (var lateralSource in channel.BranchSources)
                             {
                                 RemoveLateralSourceData(lateralSource);
@@ -361,7 +358,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         }
                         case NotifyCollectionChangedAction.Add:
                         {
-                            var channel = (IChannel) e.GetRemovedOrAddedItem();
                             foreach (var lateralSource in channel.BranchSources)
                             {
                                 AddLateralSourceData(new Model1DLateralSourceData
@@ -387,12 +383,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 switch (e.Action)
                 {
                     case NotifyCollectionChangedAction.Add:
-                        NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
-                            new NetworkLocation(sewerConnection, 0.0));
+                        NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, 0.0));
                         if (sewerConnection?.Length > 0)
                         {
-                            NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
-                                new NetworkLocation(sewerConnection, sewerConnection.Length));
+                            NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, sewerConnection.Length));
                         }
 
                         break;
@@ -451,8 +445,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
-
-
+        
         /// <summary>
         /// - Synchronize the coordinate system in the model with the network coordinate system
         /// </summary>
@@ -461,6 +454,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void NetworkCoordinateSystemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if (DisableNetworkSynchronization) return;
+
             if (sender == Network && e.PropertyName == nameof(CoordinateSystem))
             {
                 CoordinateSystem = Network.CoordinateSystem;
@@ -735,12 +730,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var lateralSourceData = LateralSourcesData?.FirstOrDefault(ls => ls.Feature == lateralSource);
             if (lateralSourceData == null) return;
 
-            RemoveLateralSourceData(lateralSourceData);
-        }
-        private void RemoveLateralSourceData(Model1DLateralSourceData lateralSourceData)
-        {
             LateralSourcesData.Remove(lateralSourceData);
         }
+
         public virtual void ReplaceBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
             if (boundaryNodeData == null) return;
