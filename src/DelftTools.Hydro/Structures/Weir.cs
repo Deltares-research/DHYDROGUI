@@ -303,7 +303,6 @@ namespace DelftTools.Hydro.Structures
             {
                 sewerConnection = GetNewSewerConnectionWithWeirToNetwork(hydroNetwork, helper);
                 sewerConnection.AddToHydroNetwork(hydroNetwork, helper);
-                return;
             }
 
             var weirs = sewerConnection?.BranchFeatures.OfType<IWeir>().Where(bf =>
@@ -327,7 +326,6 @@ namespace DelftTools.Hydro.Structures
                     var composite = sewerConnection.AddStructureToBranch(this, false);
                     composite.Name = "CompositeBranchStructure_1D_";
                     helper?.CompositeBranchStructures?.Enqueue(composite);
-
                 }
             }
         }

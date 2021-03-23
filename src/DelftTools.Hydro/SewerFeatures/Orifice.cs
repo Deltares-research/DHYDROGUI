@@ -27,7 +27,13 @@ namespace DelftTools.Hydro.SewerFeatures
             if(orifice == null) return;
 
             orifice.CrestLevel = CrestLevel;
-            ((GatedWeirFormula)orifice.WeirFormula).ContractionCoefficient = ((GatedWeirFormula)WeirFormula).ContractionCoefficient;
+
+            var targetFormula = (GatedWeirFormula) orifice.WeirFormula;
+            var sourceFormula = (GatedWeirFormula) WeirFormula;
+
+            targetFormula.ContractionCoefficient = sourceFormula.ContractionCoefficient;
+            targetFormula.MaxFlowNeg = sourceFormula.MaxFlowNeg;
+            targetFormula.MaxFlowPos = sourceFormula.MaxFlowPos;
             orifice.MaxDischarge = MaxDischarge;
         }
 

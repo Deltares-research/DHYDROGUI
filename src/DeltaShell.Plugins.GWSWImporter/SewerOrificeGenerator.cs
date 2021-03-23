@@ -106,9 +106,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 gatedWeirFormula.ContractionCoefficient = auxDouble;
 
             var maxDischarge = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.MaxDischarge);
+            
             if (maxDischarge.TryGetValueAsDouble(out auxDouble))
+            {
+                gatedWeirFormula.MaxFlowNeg = auxDouble;
+                gatedWeirFormula.MaxFlowPos = auxDouble;
                 orifice.MaxDischarge = auxDouble;
+            }
         }
-
     }
 }
