@@ -9820,6 +9820,7 @@ test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerCrossSectionDefinitionGener
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerFeatureFactoryTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerFeatureFactoryTestHelper.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerFeatures/GwswOrificeTest.cs -text
+test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerFeatures/GwswStructurePumpTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerProfileDefinitionGenerationTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerPumpGeneratorTest.cs -text
 test/DeltaShell.Plugins.ImportExport.GWSW.Tests/SewerWeirGeneratorTest.cs -text

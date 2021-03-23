@@ -6,6 +6,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
     {
         public GwswStructurePump(string name) : base(name)
         {
+            StartSuction = 0;
+            StopSuction = 0;
         }
 
         protected override void CopyPropertyValuesToExistingPump(IPump pump)

@@ -144,6 +144,7 @@
     <Compile Include="SewerCrossSectionDefinitionGeneratorTest.cs" />
     <Compile Include="SewerFeatureFactoryTest.cs" />
     <Compile Include="SewerFeatureFactoryTestHelper.cs" />
+    <Compile Include="SewerFeatures\GwswStructurePumpTest.cs" />
     <Compile Include="SewerFeatures\GwswOrificeTest.cs" />
     <Compile Include="SewerProfileDefinitionGenerationTest.cs" />
     <Compile Include="SewerPumpGeneratorTest.cs" />
