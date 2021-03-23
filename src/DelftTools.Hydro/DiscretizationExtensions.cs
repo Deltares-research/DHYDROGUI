@@ -51,6 +51,7 @@ namespace DelftTools.Hydro
                 if (!locations.Contains(coordinate))
                 {
                     discretization.Locations.AddValues(new[] { location });
+                    locations.Add(coordinate);
                 }
             }
         }
