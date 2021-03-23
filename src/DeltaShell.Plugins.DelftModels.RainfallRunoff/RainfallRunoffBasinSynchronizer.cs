@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private void OnCatchmentAdded(Catchment catchment)
         {
-            AddDefaultModelDataForCatchment(catchment);
+            AddDefaultModelDataForCatchment(catchment, true);
             foreach(var subcatchment in catchment.SubCatchments)
             {
                 OnCatchmentAdded(subcatchment);
@@ -258,14 +258,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
 
-        private void AddDefaultModelDataForCatchment(Catchment catchment)
+        private void AddDefaultModelDataForCatchment(Catchment catchment, bool catchmentInBasin = false)
         {
             var catchmentModelData = modelDataFactory.CreateDefaultModelData(catchment);
 
             if (catchmentModelData == null)
                 return;
 
-            if (Model.Basin.Catchments.Contains(catchment))
+            if (catchmentInBasin || Model.Basin.Catchments.Contains(catchment))
             {
                 Model.ModelData.Add(catchmentModelData);
             }

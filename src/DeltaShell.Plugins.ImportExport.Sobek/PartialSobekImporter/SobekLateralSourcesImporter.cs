@@ -4,6 +4,8 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
+using DeltaShell.NGHS.Utils;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.Networks;
@@ -34,22 +36,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            var boundaryConditionToFeatureLookup = new Dictionary<string, string>();
-            var lateralSources = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
             var sobekBoundaryLocationReader = new SobekBoundaryLocationReader { SobekType = SobekType };
             var branches = HydroNetwork.Branches.ToDictionary(b => b.Name, b => b);
             var nodes = HydroNetwork.Nodes.ToDictionary(n => n.Name, n => n);
 
             var lateralsAtNode = new List<SobekBoundaryLocation>();
+            var lateralSourcesToAdd = new List<LateralSource>();
 
             foreach (var sobekBoundaryLocation in sobekBoundaryLocationReader.Read(path))
             {
                 // mapping from NETWORK.CN/DEFCND.1 file
-                if (sobekBoundaryLocation.SobekBoundaryLocationType == SobekBoundaryLocationType.Node)
-                {
-                    boundaryConditionToFeatureLookup[sobekBoundaryLocation.Id] = sobekBoundaryLocation.ConnectionId;
-                }
-
                 if ((sobekBoundaryLocation.SobekBoundaryLocationType == SobekBoundaryLocationType.Branch) ||
                     (sobekBoundaryLocation.SobekBoundaryLocationType == SobekBoundaryLocationType.SaltLateral) || // valid for Sobek RE only
                     (sobekBoundaryLocation.SobekBoundaryLocationType == SobekBoundaryLocationType.Diffuse))
@@ -103,7 +99,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     {
                         lateralSource.Geometry = GeometryHelper.GetPointGeometry(branch, lateralSource.Chainage);
                     }
-                    AddOrReplaceLateralSource(branch, lateralSource, lateralSources);
+                    lateralSourcesToAdd.Add(lateralSource);
                 }
                 else if (sobekBoundaryLocation.SobekBoundaryLocationType == SobekBoundaryLocationType.LateralAtNode)
                 {
@@ -112,13 +108,28 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
             }
 
-            // now process the laterals at nodes; in SOBEK 3.x we do not use a separate type for this. However, in theory this could introduce multiple laterals with identical id
-            // We give preference to importing 'laterals at branches'. If after importing these 'laterals at nodes' exist that have identical ids they are ignored
-            lateralSources = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
-            foreach (var lateralAtNode in lateralsAtNode)
+            var lateralSources = HydroNetwork.LateralSources.ToDictionary(ls => ls.Name, ls => ls);
+            
+            var model = GetModel<WaterFlowFMModel>();
+            model.DoWithPropertySet(nameof(model.DisableNetworkSynchronization), true, () =>
             {
-                if (nodes.ContainsKey(lateralAtNode.Id))
+                foreach (var lateralSource in lateralSourcesToAdd)
                 {
+                    AddOrReplaceLateralSource(lateralSource, lateralSources);
+                }
+
+                model.AddMissingLateralSourceData(lateralSourcesToAdd);
+            
+                // now process the laterals at nodes; in SOBEK 3.x we do not use a separate type for this. However, in theory this could introduce multiple laterals with identical id
+                // We give preference to importing 'laterals at branches'. If after importing these 'laterals at nodes' exist that have identical ids they are ignored
+                var lateralsAdded = new List<LateralSource>();
+                foreach (var lateralAtNode in lateralsAtNode)
+                {
+                    if (!nodes.ContainsKey(lateralAtNode.Id))
+                    {
+                        continue;
+                    }
+
                     if (lateralSources.ContainsKey(lateralAtNode.Id))
                     {
                         log.ErrorFormat("Lateral source (at node '{0}') with id '{1}' and name '{2}' already exists and cannot be added.", nodes[lateralAtNode.Id], lateralAtNode.Id, lateralAtNode.Name);
@@ -127,11 +138,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
                     INode node = nodes[lateralAtNode.Id];
 
-                    var lateralSource = new LateralSource();
-                    lateralSource.Name = lateralAtNode.Id;
-                    lateralSource.LongName = lateralAtNode.Name;
-                    lateralSource.Network = node.Network;
-                    lateralSource.Geometry = (IGeometry)node.Geometry.Clone();
+                    var lateralSource = new LateralSource
+                    {
+                        Name = lateralAtNode.Id,
+                        LongName = lateralAtNode.Name,
+                        Network = node.Network,
+                        Geometry = (IGeometry) node.Geometry.Clone()
+                    };
 
                     if (node.OutgoingBranches.Count > 0)
                     {
@@ -143,8 +156,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
 
                     lateralSources[lateralSource.Name] = lateralSource;
+                    lateralsAdded.Add(lateralSource);
                 }
-            }
+
+                model.AddMissingLateralSourceData(lateralsAdded);
+                NamingHelper.MakeNamesUnique(HydroNetwork.LateralSources);
+            });
         }
 
         /// <summary>
@@ -156,27 +173,27 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         /// <returns></returns>
         private double MoveLateralToNodeForSewerSystems(IBranch branch, double offset)
         {
-            if (branch is IPipe)
-            {
-                return branch.Length;
-            }
-
-            return offset;
+            return branch is IPipe ? branch.Length : offset;
         }
 
-        private void AddOrReplaceLateralSource(IBranch branch, LateralSource lateralSource, Dictionary<string, ILateralSource> lateralSources)
+        private void AddOrReplaceLateralSource(ILateralSource lateralSource, Dictionary<string, ILateralSource> lateralSources)
         {
+            var branch = lateralSource.Branch;
+
             if (lateralSources.ContainsKey(lateralSource.Name))
             {
                 var targetLateralSource = lateralSources[lateralSource.Name];
+
                 targetLateralSource.CopyFrom(lateralSource);
                 targetLateralSource.Chainage = lateralSource.Chainage;
                 targetLateralSource.Geometry = lateralSource.Geometry;
+
                 if (targetLateralSource.Branch != branch)
                 {
                     targetLateralSource.Branch.BranchFeatures.Remove(targetLateralSource);
                     NetworkHelper.AddBranchFeatureToBranch(targetLateralSource, branch, lateralSource.Chainage);
                 }
+
                 return;
             }
 

@@ -173,8 +173,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             FilePath = filePath;
             var bndExtForceFileItems = WriteBndExtForceFileSubFiles(modelDefinitionModelName, boundaryConditionSets, refDate);
-            var bnd1DExtForceFileItems = Write1DBndExtForceFileSubFiles(modelDefinitionModelName, modelDefinitionBoundaryConditions1D, refDate);
-            var lateralSourcesDataExtForceFileItems = WriteLateralSourcesDataExtForceFileSubFiles(modelDefinitionModelName, modelDefinitionLateralSourcesData, refDate);
+            var bnd1DExtForceFileItems = Write1DBndExtForceFileSubFiles(modelDefinitionModelName, modelDefinitionBoundaryConditions1D, refDate).ToList();
+            var lateralSourcesDataExtForceFileItems = WriteLateralSourcesDataExtForceFileSubFiles(modelDefinitionModelName, modelDefinitionLateralSourcesData, refDate).ToList();
             var embankmentForceFileItems = WriteEmbankmentFiles(embankments);
             var meteoExtForceFileItems = WriteMeteoExtForceFileSubFiles(modelDefinitionModelName, fmMeteoFields, refDate);
 
@@ -201,50 +201,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private IEnumerable<DelftIniCategory> WriteLateralSourcesDataExtForceFileSubFiles(string modelDefinitionModelName, IEnumerable<Model1DLateralSourceData> modelDefinitionLateralSourcesData, DateTime refDate)
         {
-            if (modelDefinitionLateralSourcesData != null)
+            if (modelDefinitionLateralSourcesData == null)
             {
-                var model1DLateralSourceDatas = modelDefinitionLateralSourcesData as Model1DLateralSourceData[] ?? modelDefinitionLateralSourcesData.ToArray();
-                var generateModel1DLateralSourceDataDelftIniCategories = new Model1DBoundaryFileWriter().GenerateModel1DLateralSourceDataDelftIniCategories(refDate, model1DLateralSourceDatas, false, false, BoundaryRegion.BcForcingHeader);
-                var filename = AddExtension(modelDefinitionModelName + "_lateral_sources", BcFile.Extension);
-                // now generate bc files with the data
-                var model1DLateralSourceDataDelftIniCategories = generateModel1DLateralSourceDataDelftIniCategories as IDelftIniCategory[] ?? generateModel1DLateralSourceDataDelftIniCategories.ToArray();
-                foreach (var model1DNodeBoundaryDelftIniCategory in model1DLateralSourceDataDelftIniCategories.OfType<DelftBcCategory>())
-                {
-
-                    var lateralName = model1DNodeBoundaryDelftIniCategory.GetPropertyValue(BoundaryRegion.Name.Key);
-                    var lateralData = model1DLateralSourceDatas.FirstOrDefault(lsd => lsd.Feature.Name == lateralName);
-                    if (lateralData == null) continue;
-                    var lateral = lateralData.Feature;
-
-                    if (lateral == null) continue;
-
-                    var lateralDef = new LateralSourceForcingDefinition {Name = lateral.Name, LongName = lateral.LongName ?? lateral.Name};
-                    if (Math.Abs(lateral.Chainage) < double.Epsilon)
-                    {
-                        lateralDef.NodeId = lateral.Branch.Source.Name;
-                    }
-                    else if (Math.Abs(lateral.Chainage - lateral.Branch.Length) < double.Epsilon)
-                    {
-                        lateralDef.NodeId = lateral.Branch.Target.Name;
-                    }
-                    else
-                    {
-                        lateralDef.BranchId = lateral.Branch.Name;
-                        lateralDef.Chainage = lateral.Chainage;
-                    }
-
-                    lateralDef.RealTime = lateralData.DataType == Model1DLateralDataType.FlowRealTime;
-                    if ((lateralData.DataType == Model1DLateralDataType.FlowRealTime || lateralData.DataType == Model1DLateralDataType.FlowConstant) && lateralData.Compartment is ICompartment lateralCompartment)
-                    {
-                        lateralDef.NodeId = lateralCompartment.Name;
-                    }
-
-                    lateralDef.DischargeForcingFile = filename;
-                    yield return CreateBoundaryBlock(null, null, null, null, TimeSpan.Zero, lateralSourceForcingDefinition:lateralDef);
-                }
-                var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile };//single file want ff niet anders
-                bcFile.Write(model1DLateralSourceDataDelftIniCategories, filename, Path.GetDirectoryName(FilePath));
+                yield break;
             }
+
+            var model1DLateralSourceDatas = modelDefinitionLateralSourcesData as Model1DLateralSourceData[] ?? modelDefinitionLateralSourcesData.ToArray();
+            var lateralSourceDataLookup = model1DLateralSourceDatas
+                                      .Where(d => d?.Feature != null)
+                                      .ToDictionary(d => d.Feature.Name, StringComparer.InvariantCultureIgnoreCase);
+            var generateModel1DLateralSourceDataDelftIniCategories = new Model1DBoundaryFileWriter().GenerateModel1DLateralSourceDataDelftIniCategories(refDate, model1DLateralSourceDatas, false, false, BoundaryRegion.BcForcingHeader);
+            var filename = AddExtension(modelDefinitionModelName + "_lateral_sources", BcFile.Extension);
+
+            // now generate bc files with the data
+            var model1DLateralSourceDataDelftIniCategories = generateModel1DLateralSourceDataDelftIniCategories as IDelftIniCategory[] ?? generateModel1DLateralSourceDataDelftIniCategories.ToArray();
+            foreach (var model1DNodeBoundaryDelftIniCategory in model1DLateralSourceDataDelftIniCategories.OfType<DelftBcCategory>())
+            {
+                var lateralName = model1DNodeBoundaryDelftIniCategory.GetPropertyValue(BoundaryRegion.Name.Key);
+                if (!lateralSourceDataLookup.TryGetValue(lateralName, out var lateralData))
+                {
+                    continue;
+                }
+                
+                var lateral = lateralData.Feature;
+                if (lateral == null) continue;
+
+                var lateralDef = new LateralSourceForcingDefinition {Name = lateral.Name, LongName = lateral.LongName ?? lateral.Name};
+                if (Math.Abs(lateral.Chainage) < double.Epsilon)
+                {
+                    lateralDef.NodeId = lateral.Branch.Source.Name;
+                }
+                else if (Math.Abs(lateral.Chainage - lateral.Branch.Length) < double.Epsilon)
+                {
+                    lateralDef.NodeId = lateral.Branch.Target.Name;
+                }
+                else
+                {
+                    lateralDef.BranchId = lateral.Branch.Name;
+                    lateralDef.Chainage = lateral.Chainage;
+                }
+
+                lateralDef.RealTime = lateralData.DataType == Model1DLateralDataType.FlowRealTime;
+                if ((lateralData.DataType == Model1DLateralDataType.FlowRealTime || lateralData.DataType == Model1DLateralDataType.FlowConstant) && lateralData.Compartment is ICompartment lateralCompartment)
+                {
+                    lateralDef.NodeId = lateralCompartment.Name;
+                }
+
+                lateralDef.DischargeForcingFile = filename;
+                yield return CreateBoundaryBlock(null, null, null, null, TimeSpan.Zero, lateralSourceForcingDefinition:lateralDef);
+            }
+            var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile }; //single file want ff niet anders
+            bcFile.Write(model1DLateralSourceDataDelftIniCategories, filename, Path.GetDirectoryName(FilePath));
         }
 
         private void WriteMeteoExtForceFile(IEnumerable<DelftIniCategory> meteoExtForceFileItems)
