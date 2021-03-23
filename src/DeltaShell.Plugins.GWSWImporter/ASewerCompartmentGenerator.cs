@@ -81,32 +81,27 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 compartment.SurfaceLevel = auxDouble;
 
             var compartmentStorageTypeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.CompartmentStorageType);
-            if (string.IsNullOrWhiteSpace(compartmentStorageTypeAttribute?.ValueAsString))
-            {
-                compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
-            }
-            else
-            {
-                var compartmentStorageType = compartmentStorageTypeAttribute.GetValueFromDescription<ManholeMapping.CompartmentStorageType>();
-                switch (compartmentStorageType)
-                {
-                    case ManholeMapping.CompartmentStorageType.Reservoir:
-                        compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
-                        break;
-                    case ManholeMapping.CompartmentStorageType.Closed:
-                        compartment.CompartmentStorageType = CompartmentStorageType.Closed;
-                        break;
-                    case ManholeMapping.CompartmentStorageType.Loss:
-                        Log.WarnFormat($"Compartment {compartment.Name} has an unsupported compartment storage type 'VRL'. " +
-                                       $"Setting the default compartment storage type 'RES' instead.");
-                        compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException($"Compartment {compartment.Name} has an unsupported compartment storage type '{compartmentStorageType}'.");
-                }
-            }
 
-
+            var compartmentStorageType = compartmentStorageTypeAttribute?.GetValueFromDescription<ManholeMapping.GwswCompartmentStorageType>();
+            switch (compartmentStorageType)
+            {
+                case ManholeMapping.GwswCompartmentStorageType.Reservoir:
+                    compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
+                    break;
+                case ManholeMapping.GwswCompartmentStorageType.Closed:
+                    compartment.CompartmentStorageType = CompartmentStorageType.Closed;
+                    break;
+                case ManholeMapping.GwswCompartmentStorageType.Loss:
+                    Log.WarnFormat($"Compartment {compartment.Name} has an unsupported compartment storage type 'VRL'. " +
+                                   $"Setting the default compartment storage type 'RES' instead.");
+                    compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
+                    break;
+                default:
+                    Log.WarnFormat($"Compartment {compartment.Name} has an unsupported compartment storage type. Setting default 'Reservoir'.");
+                    compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
+                    break;
+            }
+            
             // Set shape value of the compartment
             var nodeShapeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);
             if (nodeShapeAttribute.IsValidAttribute())
