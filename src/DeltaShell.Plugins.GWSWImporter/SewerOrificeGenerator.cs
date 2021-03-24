@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 var flowDirectionValue = flowDirection.GetValueFromDescription<SewerConnectionMapping.FlowDirection>();
                 switch (flowDirectionValue)
                 {
-                    case SewerConnectionMapping.FlowDirection.Closed:
+                    case SewerConnectionMapping.FlowDirection.Closed://this is also the default....
                         orifice.AllowNegativeFlow = false;
                         orifice.AllowPositiveFlow = false;
                         break;
@@ -85,9 +85,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     case SewerConnectionMapping.FlowDirection.FromEndToStart:
                         orifice.AllowNegativeFlow = true;
                         orifice.AllowPositiveFlow = false;
-                        break;
-                    default:
-                        log.Warn($"{flowDirectionValue} is not a valid flow direction.");
                         break;
                 }
             }
