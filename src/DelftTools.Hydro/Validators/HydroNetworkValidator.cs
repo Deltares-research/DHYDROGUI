@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
@@ -46,41 +47,41 @@ namespace DelftTools.Hydro.Validators
         private static ValidationReport ValidateRetentions(IHydroNetwork network)
         {
             var issues = new List<ValidationIssue>();
-            foreach (var retention in network.Retentions.Where(r => !r.UseTable))
+            foreach (var retention in network.Retentions)
             {
-                if (Math.Abs(retention.StorageArea) < double.Epsilon)
+                if (!retention.UseTable && Math.Abs(retention.StorageArea) < double.Epsilon)
                 {
-                    issues.Add(new ValidationIssue(retention, 
+                    issues.Add(new ValidationIssue(retention,
                                                    ValidationSeverity.Error,
                                                    $"The values in the storage graph of retention {retention.Name} should be greater than zero."));
-                }
-            }
-            foreach (var retention in network.Retentions.Where(r => r.UseTable))
-            {
-                if (retention.Data.Components[0].Values.Count == 0)
-                {
-                    issues.Add(new ValidationIssue(retention, 
-                                                   ValidationSeverity.Error,
-                                                   $"Table should be used for {retention.Name}, but no values are set.", retention.Data));
-                    continue;
-                }
 
-                var levelStorageValues = retention.Data.Components[0].GetValues<double>().ToArray();
-                var levelStorageHeigth = retention.Data.Arguments[0].GetValues<double>().ToArray();
-                if(levelStorageValues.Length != levelStorageHeigth.Length) continue;
-                for (var index = 0; index < levelStorageValues.Length; index++)
-                {
-                    double value = levelStorageValues[index];
-                    double height = levelStorageHeigth[index];
-                    if (Math.Abs(value) < double.Epsilon)
+                    IFunction retentionTableData = retention.Data;
+                    
+                    if (retention.UseTable && retentionTableData?.Components?[0] == null || retentionTableData.Components[0].Values.Count == 0)
                     {
                         issues.Add(new ValidationIssue(retention,
                                                        ValidationSeverity.Error,
-                                                       $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", retention.Data));
+                                                       $"Table should be used for {retention.Name}, but no values are set.", retentionTableData));
                         continue;
+                    }
+
+                    var levelStorageValues = retentionTableData.Components[0].GetValues<double>().ToArray();
+                    var levelStorageHeigth = retentionTableData.Arguments[0].GetValues<double>().ToArray();
+                    if (levelStorageValues.Length != levelStorageHeigth.Length) continue;
+                    for (var index = 0; index < levelStorageValues.Length; index++)
+                    {
+                        double value = levelStorageValues[index];
+                        double height = levelStorageHeigth[index];
+                        if (Math.Abs(value) < double.Epsilon)
+                        {
+                            issues.Add(new ValidationIssue(retention,
+                                                           ValidationSeverity.Error,
+                                                           $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", retentionTableData));
+                        }
                     }
                 }
             }
+
             return new ValidationReport("Retentions", issues);
         }
 
