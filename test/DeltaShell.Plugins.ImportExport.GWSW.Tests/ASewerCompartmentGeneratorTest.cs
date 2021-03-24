@@ -38,6 +38,32 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.That(compartment.CompartmentStorageType, Is.EqualTo(expectedStorageType));
         }
 
+        [Test]
+        public void SetBaseCompartmentProperties_WhenSettingClosedCompartmentStorageType_FloodableAreaIsZero()
+        {
+            // Setup
+            var random = new Random(80085);
+
+            var generator = new TestSewerCompartmentGenerator();
+            var compartment = new Compartment("randomName");
+
+            GwswElement gwswElement = GetNodeGwswElement("randomString", "randomString", "randomString",
+                                                         random.NextDouble(), random.NextDouble(), random.NextDouble(),
+                                                         random.NextDouble(), "randomString", random.NextDouble(),
+                                                         random.NextDouble(), random.NextDouble());
+
+            const string closedCompartmentStorageType = "KNV";
+            GwswAttribute compartmentStorageAttribute = GetDefaultGwswAttribute("SURFACE_SCHEMATISATION", closedCompartmentStorageType, "RES");
+            gwswElement.GwswAttributeList.Add(compartmentStorageAttribute);
+
+            // Call
+            generator.TestSetBaseCompartmentProperties(compartment, gwswElement);
+
+            // Assert
+            Assert.That(compartment.CompartmentStorageType, Is.EqualTo(CompartmentStorageType.Closed));
+            Assert.That(compartment.FloodableArea, Is.Zero);
+        }
+
         private class TestSewerCompartmentGenerator : ASewerCompartmentGenerator
         {
             public void TestSetBaseCompartmentProperties(Compartment compartment, GwswElement gwswElement)

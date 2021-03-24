@@ -89,6 +89,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
                     break;
                 case ManholeMapping.GwswCompartmentStorageType.Closed:
+                    compartment.FloodableArea = 0;
                     compartment.CompartmentStorageType = CompartmentStorageType.Closed;
                     break;
                 case ManholeMapping.GwswCompartmentStorageType.Loss:
