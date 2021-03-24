@@ -30,12 +30,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
 
         protected override void CopyPropertyValuesToExistingWeir(IWeir weir)
         {
-            var orifice = weir as IOrifice;
-            if(orifice == null) return;
-            
-            var targetFormula = ((GatedWeirFormula) orifice.WeirFormula);
-            targetFormula.UseMaxFlowNeg = AllowNegativeFlow;
-            targetFormula.UseMaxFlowPos = AllowPositiveFlow;
+            if(weir?.WeirFormula is GatedWeirFormula targetFormula)
+            {
+                targetFormula.UseMaxFlowNeg = AllowNegativeFlow;
+                targetFormula.UseMaxFlowPos = AllowPositiveFlow;
+            }
         }
     }
 }

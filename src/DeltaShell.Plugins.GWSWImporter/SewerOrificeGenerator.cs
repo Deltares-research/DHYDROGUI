@@ -2,11 +2,13 @@ using System;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
+using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class SewerOrificeGenerator : IGwswFeatureGenerator<ISewerFeature>
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(SewerOrificeGenerator));
         public ISewerFeature Generate(GwswElement gwswElement)
         {
             var orifice = CreateNewOrifice(gwswElement);
@@ -85,7 +87,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         orifice.AllowPositiveFlow = false;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException($"{flowDirectionValue} is not a valid flow direction.");
+                        log.Warn($"{flowDirectionValue} is not a valid flow direction.");
+                        break;
                 }
             }
         }

@@ -4,6 +4,7 @@ using System.Globalization;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 using NUnit.Framework;
@@ -113,13 +114,18 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
-        [TestCase("GSL", false, false)]
-        [TestCase("OPN", true, true)]
-        [TestCase("1_2", true, false)]
-        [TestCase("2_1", false, true)]
+        [TestCase("GSL", false, false, false)]
+        [TestCase("OPN", true, true, false)]
+        [TestCase("1_2", true, false, false)]
+        [TestCase("2_1", false, true, false)]
+        [TestCase("", false, false, true)]
+        [TestCase(" ", false, false, true)]
+        [TestCase("null", false, false, true)]
+        [TestCase(null, false, false, true)]
         public void Generate_IsValidGwswSewerConnection_SetsExpectedFlowDirection(string flowDirectionString,
                                                                                   bool expectedPositiveFlow,
-                                                                                  bool expectedNegativeFlow)
+                                                                                  bool expectedNegativeFlow,
+                                                                                  bool expectedLogMessagge)
         {
             // Setup
             const string randomString = "randomString";
@@ -133,7 +139,15 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var generator = new SewerOrificeGenerator();
 
             // Call
-            ISewerFeature orificeSewerFeature = generator.Generate(gwswElement);
+            ISewerFeature orificeSewerFeature = null;
+            if (expectedLogMessagge)
+            {
+                TestHelper.AssertAtLeastOneLogMessagesContains(()=> orificeSewerFeature = generator.Generate(gwswElement), string.Format(GWSW.Properties.Resources.SewerFeatureFactory_GetValueFromDescription_Type__0__is_not_recognized__please_check_the_syntax, flowDirectionString));
+            }
+            else
+            {
+                orificeSewerFeature = generator.Generate(gwswElement);
+            }
 
             // Assert
             Assert.That(orificeSewerFeature, Is.TypeOf<GwswConnectionOrifice>());

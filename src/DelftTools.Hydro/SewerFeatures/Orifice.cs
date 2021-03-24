@@ -23,18 +23,17 @@ namespace DelftTools.Hydro.SewerFeatures
 
         protected override void CopyPropertyValuesToExistingWeir(IWeir weir)
         {
-            var orifice = weir as IOrifice;
-            if(orifice == null) return;
-
-            orifice.CrestLevel = CrestLevel;
-
-            var targetFormula = (GatedWeirFormula) orifice.WeirFormula;
-            var sourceFormula = (GatedWeirFormula) WeirFormula;
-
-            targetFormula.ContractionCoefficient = sourceFormula.ContractionCoefficient;
-            targetFormula.MaxFlowNeg = sourceFormula.MaxFlowNeg;
-            targetFormula.MaxFlowPos = sourceFormula.MaxFlowPos;
-            orifice.MaxDischarge = MaxDischarge;
+            if (weir is IOrifice orifice)
+            {
+                orifice.CrestLevel = CrestLevel;
+                orifice.MaxDischarge = MaxDischarge;
+                if (WeirFormula is GatedWeirFormula sourceFormula && orifice.WeirFormula is GatedWeirFormula targetFormula)
+                {
+                    targetFormula.ContractionCoefficient = sourceFormula.ContractionCoefficient;
+                    targetFormula.MaxFlowNeg = sourceFormula.MaxFlowNeg;
+                    targetFormula.MaxFlowPos = sourceFormula.MaxFlowPos;
+                }
+            }
         }
 
         public override StructureType GetStructureType()
