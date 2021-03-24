@@ -32,8 +32,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             var nodes = HydroNetwork.Nodes.ToDictionary(n => n.Name, n => n);
+            var waterFlowFMModel = GetModel<WaterFlowFMModel>(); 
+            // Update boundary conditions
+            foreach (var node in HydroNetwork.Nodes)
+            {
+                waterFlowFMModel.BoundaryConditions1D.Add((Helper1D.CreateDefaultBoundaryCondition(
+                                                                  node, 
+                                                                  waterFlowFMModel.UseSalinity, 
+                                                                  waterFlowFMModel.UseTemperature)));
+            }
             var boundaryConditionToFeatureLookup = CreateLookUpDictionary();
-            var waterFlowFMModel = GetModel<WaterFlowFMModel>();
+            
             var useSalt = waterFlowFMModel.UseSalinity;
             var useTemperature = waterFlowFMModel.UseTemperature;
 
