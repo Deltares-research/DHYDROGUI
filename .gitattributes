@@ -1986,8 +1986,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/MapTools/GridWizardMapToolHelper.cs -t
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/MapTools/MapTool1D2DLinksHelper.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/MapTools/MergeEmbankmentsMapTool.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/BoundaryConditionSetNodePresenter.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/ChannelFrictionDefinitionsWrapperNodePresenter.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/ChannelInitialConditionDefinitionsWrapperNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FMClassMapFileFunctionStoreNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FMHisFileFunctionStoreNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FMMapFileFunctionStoreNodePresenter.cs -text
@@ -1996,15 +1994,11 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FmMeteoItemNodePresente
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/FmModelTreeShortcutNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/HeatFluxModelNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/ImportedFMNetFileNodePresenter.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/PipeFrictionDefinitionsWrapperNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/SourceSinkNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WaterFlowFMFileBasedItemNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WaterFlowFMModelNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WindItemListNodePresenter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/NodePresenters/WindItemNodePresenter.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/PresentationObjects/ChannelFrictionDefinitionsWrapper.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/PresentationObjects/ChannelInitialConditionDefinitionsWrapper.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/PresentationObjects/PipeFrictionDefinitionsWrapper.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Properties/AssemblyInfo.cs.svn -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Properties/Resources.Designer.cs -text

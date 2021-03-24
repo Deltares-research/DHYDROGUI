@@ -30,7 +30,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -330,7 +329,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 };
             }
 
-            if (data is ChannelFrictionDefinitionsWrapper channelFrictionDefinitionsWrapper)
+            if (data is IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
             {
                 return new VectorLayer(Properties.Resources.ChannelFrictionDefinitions_Name)
                 {
@@ -338,11 +337,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     Selectable = true,
                     NameIsReadOnly = true,
                     CanBeRemovedByUser = false,
-                    DataSource = new ComplexFeatureCollection(((FrictionGroupLayerData)parentData).Network, (IList)channelFrictionDefinitionsWrapper.WrappedData, typeof(ChannelFrictionDefinition))
+                    DataSource = new ComplexFeatureCollection(((FrictionGroupLayerData)parentData).Network, (IList)channelFrictionDefinitions, typeof(ChannelFrictionDefinition))
                 };
             }
 
-            if (data is PipeFrictionDefinitionsWrapper pipeFrictionDefinitionsWrapper)
+            if (data is IEventedList<PipeFrictionDefinition> pipeFrictionDefinitions)
             {
                 return new VectorLayer(Properties.Resources.PipeFrictionDefinitions_Name)
                 {
@@ -350,7 +349,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     Selectable = true,
                     NameIsReadOnly = true,
                     CanBeRemovedByUser = false,
-                    DataSource = new ComplexFeatureCollection(((FrictionGroupLayerData)parentData).Network, (IList)pipeFrictionDefinitionsWrapper.WrappedData, typeof(PipeFrictionDefinition))
+                    DataSource = new ComplexFeatureCollection(((FrictionGroupLayerData)parentData).Network, (IList)pipeFrictionDefinitions, typeof(PipeFrictionDefinition))
                 };
             }
 
@@ -364,7 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 };
             }
 
-            if (data is ChannelInitialConditionDefinitionsWrapper channelInitialConditionDefinitionsWrapper)
+            if (data is IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
             {
                 return new VectorLayer(RoughnessDataRegion.SectionId.DefaultValue)
                 {
@@ -372,7 +371,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     Selectable = true,
                     NameIsReadOnly = true,
                     CanBeRemovedByUser = false,
-                    DataSource = new ComplexFeatureCollection(((InitialConditionGroupLayerData)parentData).Network, (IList)channelInitialConditionDefinitionsWrapper.WrappedData, typeof(ChannelInitialConditionDefinition))
+                    DataSource = new ComplexFeatureCollection(((InitialConditionGroupLayerData)parentData).Network, (IList)channelInitialConditionDefinitions, typeof(ChannelInitialConditionDefinition))
                 };
             }
 
@@ -454,10 +453,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is CoverageDepthLayersList
                    || data is IEventedList<Feature2D> // Boundaries and sources&sinks
                    || data is FrictionGroupLayerData
-                   || data is ChannelFrictionDefinitionsWrapper
-                   || data is PipeFrictionDefinitionsWrapper
+                   || data is IEventedList<ChannelFrictionDefinition>
+                   || data is IEventedList<PipeFrictionDefinition>
                    || data is InitialConditionGroupLayerData
-                   || data is ChannelInitialConditionDefinitionsWrapper;
+                   || data is IEventedList<ChannelInitialConditionDefinition>;
         }
 
         private bool IsCoverageLeveeBreachWidth(INameable data)
@@ -672,9 +671,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     model.Output1DFileStore,
                     model.LateralSourcesData,
                     model.InitialWaterLevel,
-                    ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions),
-                    PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions),
-                    ChannelInitialConditionDefinitionsWrapper.GetInstance(model.ChannelInitialConditionDefinitions),
+                    model.ChannelFrictionDefinitions,
+                    model.PipeFrictionDefinitions,
+                    model.ChannelInitialConditionDefinitions,
                     model.RoughnessSections,
                     model.NetworkDiscretization,
                     model.Links,
@@ -895,8 +894,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             public IHydroNetwork Network => model.Network;
             public IEnumerable<object> ChildLayerObjects()
             {
-                yield return ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions);
-                yield return PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions);
+                yield return model.ChannelFrictionDefinitions;
+                yield return model.PipeFrictionDefinitions;
                 yield return model.RoughnessSections;
             }
         }
@@ -913,7 +912,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             public IEnumerable<object> ChildLayerObjects()
             {
-                yield return ChannelInitialConditionDefinitionsWrapper.GetInstance(model.ChannelInitialConditionDefinitions);
+                yield return model.ChannelInitialConditionDefinitions;
             }
         }
     }

@@ -381,7 +381,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         flowFmModel?.LateralSourcesData != null)
                     {
                         if (lateralDataLookup.TryGetValue(targetLateralSource, out var lateralData) && 
-                            lateralData.DataType == Model1DLateralDataType.FlowRealTime)
+                            lateralData.DataType != Model1DLateralDataType.FlowRealTime)
                         {
                             lateralData.DataType = Model1DLateralDataType.FlowRealTime;
                         }

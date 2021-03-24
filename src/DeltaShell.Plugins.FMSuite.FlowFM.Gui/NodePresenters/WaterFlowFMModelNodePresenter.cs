@@ -18,10 +18,10 @@ using DelftTools.Utils;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
@@ -116,13 +116,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 new FmModelTreeShortcut(model.NetworkDiscretization.Name, NetworkDiscretizationIcon, model, model.NetworkDiscretization, ShortCutType.Default),
                 new TreeFolder(model, new List<object>
                 {
-                    ChannelFrictionDefinitionsWrapper.GetInstance(model.ChannelFrictionDefinitions),
-                    PipeFrictionDefinitionsWrapper.GetInstance(model.PipeFrictionDefinitions),
+                    new FmModelTreeShortcut("Channels", Resources.FrictionDefinition, model, model.ChannelFrictionDefinitions, ShortCutType.FeatureSet),
+                    new FmModelTreeShortcut("Sewer", Resources.FrictionDefinition, model, model.PipeFrictionDefinitions, ShortCutType.FeatureSet),
                     new FmModelTreeShortcut("Lanes", FolderIcon, model, null, ShortCutType.FeatureSet, model.RoughnessSections)
                 }, "1D Roughness", FolderImageType.None),
                 new TreeFolder(model, new List<object>
                 {
-                    ChannelInitialConditionDefinitionsWrapper.GetInstance(model.ChannelInitialConditionDefinitions)
+                    new FmModelTreeShortcut(GetInitialConditionsShortCutName(model), Resources.waterLayers, model, model.ChannelInitialConditionDefinitions, ShortCutType.FeatureSet),
                 }, "1D Initial Conditions", FolderImageType.None),
                 new FmModelTreeShortcut("1D Boundary Conditions", BoundaryConditionIcon, model, model.BoundaryConditions1D, ShortCutType.FeatureSet, model.BoundaryConditions1D.Where(m1dbnd => m1dbnd.DataType != Model1DBoundaryNodeDataType.None)),
                 new FmModelTreeShortcut("Lateral Sources", FolderIcon, model, model.LateralSourcesData, ShortCutType.FeatureSet, model.LateralSourcesData.Where(m1dlat => m1dlat.DataType != Model1DLateralDataType.FlowRealTime)),
@@ -140,6 +140,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             }, "2D", FolderImageType.None);
 
             yield return new FmModelTreeShortcut("1D2D Links", Link1D2DIcon, model, model.Links, ShortCutType.FeatureSet);
+        }
+
+        private string GetInitialConditionsShortCutName(WaterFlowFMModel fmModel)
+        {
+            var property = fmModel.ModelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity1D);
+
+            if (property != null && int.TryParse(property.GetValueAsString(), out var quantity) && Enum.IsDefined(typeof(InitialConditionQuantity), quantity))
+            {
+                var quantityAsString = InitialConditionQuantityTypeConverter
+                    .ConvertInitialConditionQuantityToString((InitialConditionQuantity) quantity);
+                return $"{RoughnessDataRegion.SectionId.DefaultValue} - {quantityAsString}";
+            }
+            return $"{RoughnessDataRegion.SectionId.DefaultValue}";
         }
 
         private static IEnumerable<object> GetInitialConditionsItems(WaterFlowFMModel model)

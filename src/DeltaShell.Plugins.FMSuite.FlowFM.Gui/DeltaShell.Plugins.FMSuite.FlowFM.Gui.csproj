@@ -379,15 +379,9 @@
     <Compile Include="MapTools\Base1D2DLinksMapTool.cs" />
     <Compile Include="MapTools\GenerateLinksMapTool.cs" />
     <Compile Include="MapTools\MapTool1D2DLinksHelper.cs" />
-    <Compile Include="NodePresenters\ChannelInitialConditionDefinitionsWrapperNodePresenter.cs" />
     <Compile Include="NodePresenters\FMClassMapFileFunctionStoreNodePresenter.cs" />
-    <Compile Include="NodePresenters\PipeFrictionDefinitionsWrapperNodePresenter.cs" />
-    <Compile Include="NodePresenters\ChannelFrictionDefinitionsWrapperNodePresenter.cs" />
     <Compile Include="NodePresenters\FmMeteoItemListNodePresenter.cs" />
     <Compile Include="NodePresenters\FmMeteoItemNodePresenter.cs" />
-    <Compile Include="PresentationObjects\ChannelInitialConditionDefinitionsWrapper.cs" />
-    <Compile Include="PresentationObjects\PipeFrictionDefinitionsWrapper.cs" />
-    <Compile Include="PresentationObjects\ChannelFrictionDefinitionsWrapper.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Ribbon\ImportBedlevelFromFileCommand.cs" />
     <Compile Include="Ribbon\RelayMapToolCommand.cs" />

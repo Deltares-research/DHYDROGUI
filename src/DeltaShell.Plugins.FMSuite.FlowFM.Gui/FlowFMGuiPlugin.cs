@@ -23,6 +23,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
+using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -37,7 +38,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.PresentationObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -110,9 +110,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new WindItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemListNodePresenter { GuiPlugin = this };
-            yield return new ChannelFrictionDefinitionsWrapperNodePresenter { GuiPlugin = this };
-            yield return new PipeFrictionDefinitionsWrapperNodePresenter { GuiPlugin = this };
-            yield return new ChannelInitialConditionDefinitionsWrapperNodePresenter { GuiPlugin = this };
         }
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
@@ -328,6 +325,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
+            var channelInitialConditionDefinitionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<ChannelInitialConditionDefinition, WaterFlowFMModel>("1D Initial Conditions", m => m.ChannelInitialConditionDefinitions, () => Gui);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(channelInitialConditionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
+
+            var channelFrictionDefinitionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<ChannelFrictionDefinition, WaterFlowFMModel>("Channel Friction Definitions", m => m.ChannelFrictionDefinitions, () => Gui);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(channelFrictionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
+
+            var pipeFrictionDefinitionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<PipeFrictionDefinition, WaterFlowFMModel>("Pipe Friction Definitions", m => m.PipeFrictionDefinitions, () => Gui);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipeFrictionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
+
 
             var model1DBoundaryConditionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>("1D Boundary Conditions", m => m.BoundaryConditions1D, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(model1DBoundaryConditionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
@@ -477,135 +483,104 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
 
-            yield return CreateChannelFrictionDefinitionsWrapperViewInfo<ChannelFrictionDefinitionsWrapper>(() => Gui, cfdw => cfdw, cfdw => cfdw.WrappedData);
-            yield return CreateChannelFrictionDefinitionsWrapperViewInfo<IEventedList<ChannelFrictionDefinition>>(() => Gui, ChannelFrictionDefinitionsWrapper.GetInstance, cfd => cfd);
-            yield return CreatePipeFrictionDefinitionsWrapperViewInfo(() => Gui);
-            yield return CreateChannelInitialConditionDefinitionsWrapperViewInfo(() => Gui);
-        }
-
-        private static ViewInfo<TData, ILayer, ChannelFrictionDefinitionsView> CreateChannelFrictionDefinitionsWrapperViewInfo<TData>(
-            Func<IGui> getGui,
-            Func<TData, ChannelFrictionDefinitionsWrapper> getChannelFrictionDefinitionsWrapper,
-            Func<TData, IEventedList<ChannelFrictionDefinition>> getChannelFrictionDefinitions)
-        {
-            return new ViewInfo<TData, ILayer, ChannelFrictionDefinitionsView>
+            
+            yield return new ViewInfo<IEventedList<ChannelFrictionDefinition>, ILayer, ChannelFrictionDefinitionsView>
             {
                 Description = "1D Roughness - Channels",
-                GetViewName = (view, layer) => layer.Name,
+                GetViewName = (view, layer) => layer?.Name,
                 GetViewData = data =>
                 {
-                    return getGui().DocumentViews
-                        .OfType<ProjectItemMapView>()
-                        .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(getChannelFrictionDefinitionsWrapper(data)))
-                        .FirstOrDefault(layerData => layerData != null);
+                    return Gui?.DocumentViews
+                              .OfType<ProjectItemMapView>()
+                              .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(data))
+                              .FirstOrDefault(layerData => layerData != null);
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = data => getGui().Application.Project.RootFolder
-                    .GetAllItemsRecursive()
-                    .OfType<WaterFlowFMModel>()
-                    .First(waterFlowFmModel => Equals(getChannelFrictionDefinitions(data), waterFlowFmModel.ChannelFrictionDefinitions)),
+                AdditionalDataCheck = data => FlowModels.Any(waterFlowFmModel => Equals(data, waterFlowFmModel.ChannelFrictionDefinitions)),
+                GetCompositeViewData = data => FlowModels.FirstOrDefault(waterFlowFmModel => Equals(data, waterFlowFmModel.ChannelFrictionDefinitions)),
                 AfterCreate = (view, data) =>
                 {
-                    var gui = getGui();
-                    var flowFmModel = gui.Application.Project.RootFolder.GetAllItemsRecursive()
-                        .OfType<WaterFlowFMModel>()
-                        .First(waterFlowFmModel => Equals(getChannelFrictionDefinitions(data), waterFlowFmModel.ChannelFrictionDefinitions));
+                    var flowFmModel = FlowModels.FirstOrDefault(waterFlowFmModel => Equals(data, waterFlowFmModel.ChannelFrictionDefinitions));
 
-                    view.SetWaterFlowFmModel(flowFmModel);
-
-                    view.SetOpenGlobalFrictionSettingsMethod(() =>
+                    if (flowFmModel != null)
                     {
-                        gui.DocumentViewsResolver.OpenViewForData(new FmValidationShortcut
+                        view.SetWaterFlowFmModel(flowFmModel);
+
+                        view.SetOpenGlobalFrictionSettingsMethod(() =>
                         {
-                            FlowFmModel = flowFmModel,
-                            TabName = "Physical Parameters"
+                            Gui?.DocumentViewsResolver.OpenViewForData(new FmValidationShortcut
+                            {
+                                FlowFmModel = flowFmModel,
+                                TabName = "Physical Parameters"
+                            });
                         });
-                    });
+                    }
 
-                    var centralMap = gui.DocumentViews
-                        .OfType<ProjectItemMapView>()
-                        .First(vi => vi.MapView.GetLayerForData(getChannelFrictionDefinitionsWrapper(data)) != null);
-                    if (centralMap == null) return;
+                    var centralMap2 = view.GetViewsOfType<ProjectItemMapView>().FirstOrDefault(vi => vi.MapView.GetLayerForData(data) != null);
+                    if (centralMap2 == null) return;
 
-                    view.SetZoomToFeatureMethod(feature => centralMap.MapView.EnsureVisible(feature));
+                    view.SetZoomToFeatureMethod(feature => centralMap2.MapView.EnsureVisible(feature));
                 }
             };
-        }
 
-        private static ViewInfo<PipeFrictionDefinitionsWrapper, ILayer, VectorLayerAttributeTableView> CreatePipeFrictionDefinitionsWrapperViewInfo(Func<IGui> getGui)
-        {
-            return new ViewInfo<PipeFrictionDefinitionsWrapper, ILayer, VectorLayerAttributeTableView>
+            yield return new ViewInfo<IEventedList<PipeFrictionDefinition>, ILayer, VectorLayerAttributeTableView>
             {
                 Description = "1D Roughness - Sewer",
-                GetViewName = (view, layer) => layer.Name,
-                GetViewData = pipeFrictionDefinitionsWrapper =>
+                GetViewName = (view, layer) => layer?.Name,
+                GetViewData = pipeFrictionDefinitions =>
                 {
-                    return getGui().DocumentViews
-                        .OfType<ProjectItemMapView>()
-                        .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(pipeFrictionDefinitionsWrapper))
-                        .FirstOrDefault(layerData => layerData != null);
+                    return Gui?.DocumentViews
+                              .OfType<ProjectItemMapView>()
+                              .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(pipeFrictionDefinitions))
+                              .FirstOrDefault(layerData => layerData != null);
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = pipeFrictionDefinitionsWrapper => getGui().Application.Project.RootFolder
-                    .GetAllItemsRecursive()
-                    .OfType<WaterFlowFMModel>()
-                    .First(waterFlowFmModel => Equals(pipeFrictionDefinitionsWrapper.WrappedData, waterFlowFmModel.PipeFrictionDefinitions)),
-                AfterCreate = (view, pipeFrictionDefinitionsWrapper) =>
+                AdditionalDataCheck = pipeFrictionDefinitions => FlowModels.Any(waterFlowFmModel => Equals(pipeFrictionDefinitions, waterFlowFmModel.PipeFrictionDefinitions)),
+                GetCompositeViewData = pipeFrictionDefinitions => FlowModels.FirstOrDefault(waterFlowFmModel => Equals(pipeFrictionDefinitions, waterFlowFmModel.PipeFrictionDefinitions)),
+                AfterCreate = (view, pipeFrictionDefinitions) =>
                 {
-                    var centralMap = getGui().DocumentViews
-                        .OfType<ProjectItemMapView>()
-                        .First(vi => vi.MapView.GetLayerForData(pipeFrictionDefinitionsWrapper) != null);
-                    if (centralMap == null) return;
+                    var centralMap4 = view.GetViewsOfType<MapView>().FirstOrDefault(mv => mv.GetLayerForData(pipeFrictionDefinitions) != null);
+                    if (centralMap4 == null) return;
 
-                    view.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
+                    view.ZoomToFeature = feature => centralMap4.EnsureVisible(feature);
                 }
             };
-        }
 
-        private static ViewInfo<ChannelInitialConditionDefinitionsWrapper, ILayer, ChannelInitialConditionDefinitionsView> CreateChannelInitialConditionDefinitionsWrapperViewInfo(Func<IGui> getGui)
-        {
-            return new ViewInfo<ChannelInitialConditionDefinitionsWrapper, ILayer, ChannelInitialConditionDefinitionsView>
+            yield return new ViewInfo<IEventedList<ChannelInitialConditionDefinition>, ILayer, ChannelInitialConditionDefinitionsView>
             {
                 Description = "1D Initial Conditions - Channels",
-                GetViewName = (view, layer) => layer.Name,
-                GetViewData = channelInitialConditionDefinitionsWrapper =>
+                GetViewName = (view, layer) => layer?.Name,
+                GetViewData = channelInitialConditionDefinitions =>
                 {
-                    return getGui().DocumentViews
-                        .OfType<ProjectItemMapView>()
-                        .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(channelInitialConditionDefinitionsWrapper))
-                        .FirstOrDefault(layerData => layerData != null);
+                    return Gui?.DocumentViews
+                              .OfType<ProjectItemMapView>()
+                              .Select(projectItemMapView => projectItemMapView.MapView.GetLayerForData(channelInitialConditionDefinitions))
+                              .FirstOrDefault(layerData => layerData != null);
                 },
                 CompositeViewType = typeof(ProjectItemMapView),
-                GetCompositeViewData = channelInitialConditionDefinitionsWrapper => getGui().Application.Project.RootFolder
-                    .GetAllItemsRecursive()
-                    .OfType<WaterFlowFMModel>()
-                    .First(waterFlowFmModel => Equals(channelInitialConditionDefinitionsWrapper.WrappedData, waterFlowFmModel.ChannelInitialConditionDefinitions)),
-                AfterCreate = (view, channelInitialConditionDefinitionsWrapper) =>
+                AdditionalDataCheck = channelInitialConditionDefinitions => FlowModels.Any(waterFlowFmModel => Equals(channelInitialConditionDefinitions, waterFlowFmModel.ChannelInitialConditionDefinitions)),
+                GetCompositeViewData = channelInitialConditionDefinitions => FlowModels.FirstOrDefault(waterFlowFmModel => Equals(channelInitialConditionDefinitions, waterFlowFmModel.ChannelInitialConditionDefinitions)),
+                AfterCreate = (view, channelInitialConditionDefinitions) =>
                 {
-                    var gui = getGui();
-                    var flowFmModel = gui.Application.Project.RootFolder.GetAllItemsRecursive()
-                        .OfType<WaterFlowFMModel>()
-                        .First(waterFlowFmModel => Equals(channelInitialConditionDefinitionsWrapper.WrappedData, waterFlowFmModel.ChannelInitialConditionDefinitions));
+                    var flowFmModel1 = FlowModels.FirstOrDefault(waterFlowFmModel => Equals(channelInitialConditionDefinitions, waterFlowFmModel.ChannelInitialConditionDefinitions));
 
-                    view.SetWaterFlowFmModel(flowFmModel);
+                    view.SetWaterFlowFmModel(flowFmModel1);
                     view.SetInitialConditionValuesByQuantity();
                     view.SetCurrentQuantity();
 
                     view.SetOpenGlobalInitialConditionSettingsMethod(() =>
                     {
-                        gui.DocumentViewsResolver.OpenViewForData(new FmValidationShortcut
+                        Gui?.DocumentViewsResolver.OpenViewForData(new FmValidationShortcut
                         {
-                            FlowFmModel = flowFmModel,
+                            FlowFmModel = flowFmModel1,
                             TabName = "Initial Conditions"
                         });
                     });
 
-                    var centralMap = gui.DocumentViews
-                        .OfType<ProjectItemMapView>()
-                        .First(vi => vi.MapView.GetLayerForData(channelInitialConditionDefinitionsWrapper) != null);
-                    if (centralMap == null) return;
+                    var centralMap3 = view.GetViewsOfType<MapView>().FirstOrDefault(mv => mv.GetLayerForData(channelInitialConditionDefinitions) != null);
+                    if (centralMap3 == null) return;
 
-                    view.SetZoomToFeatureMethod(feature => centralMap.MapView.EnsureVisible(feature));
+                    view.SetZoomToFeatureMethod(feature => centralMap3.EnsureVisible(feature));
                 }
             };
         }
