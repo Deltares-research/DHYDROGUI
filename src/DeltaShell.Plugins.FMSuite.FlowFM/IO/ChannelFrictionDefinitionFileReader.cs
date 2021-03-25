@@ -51,8 +51,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var channelFrictionDefinitionsCategories = categories.Where(category => category.Name.Equals(RoughnessDataRegion.BranchPropertiesIniHeader));
             ReadChannelFrictionDefinitions(network, channelFrictionDefinitions, channelFrictionDefinitionsCategories);
             
-            var channelFrictionDefinitionsLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel, cfd => cfd);
-            SynchronizeOnLanesSpecificationBasedOnSharedCrossSectionDefinitions(network, channelFrictionDefinitions, channelFrictionDefinitionsLookup);
+            var channelFrictionDefinitionsLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel);
+            SynchronizeOnLanesSpecificationBasedOnSharedCrossSectionDefinitions(network, channelFrictionDefinitionsLookup);
         }
 
         private static void SetGlobalDefinition(IDelftIniCategory globalCategory, WaterFlowFMModelDefinition modelDefinition, string filePath)
@@ -113,21 +113,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static void SynchronizeOnLanesSpecificationBasedOnSharedCrossSectionDefinitions(IHydroNetwork network, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions, Dictionary<IChannel, ChannelFrictionDefinition> channelFrictionDefinitionsLookup)
+        private static void SynchronizeOnLanesSpecificationBasedOnSharedCrossSectionDefinitions(IHydroNetwork network, Dictionary<IChannel, ChannelFrictionDefinition> channelFrictionDefinitionsLookup)
         {
             foreach (var sharedCrossSectionDefinition in network.SharedCrossSectionDefinitions)
             {
                 var crossSectionsUsingDefinition = sharedCrossSectionDefinition.FindUsage(network);
                 var correspondingChannels = crossSectionsUsingDefinition.Select(cs => cs.Branch).Distinct().OfType<IChannel>();
                 var correspondingChannelFrictionDefinitions = correspondingChannels.Select(channel => channelFrictionDefinitionsLookup[channel]);
-                if (correspondingChannelFrictionDefinitions.Any(cfd => cfd.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections))
+                
+                if (!correspondingChannelFrictionDefinitions.Any(cfd => cfd.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections))
                 {
-                    foreach (var channelFrictionDefinition in correspondingChannelFrictionDefinitions)
+                    continue;
+                }
+
+                foreach (var channelFrictionDefinition in correspondingChannelFrictionDefinitions)
+                {
+                    if (channelFrictionDefinitionsLookup.Values.Contains(channelFrictionDefinition))
                     {
-                        if (channelFrictionDefinitions.Contains(channelFrictionDefinition))
-                        {
-                            channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
-                        }
+                        channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
                     }
                 }
             }
