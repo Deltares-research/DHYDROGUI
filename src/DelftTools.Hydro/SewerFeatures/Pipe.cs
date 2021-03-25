@@ -46,7 +46,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
         [DisplayName("Definition")]
         [FeatureAttribute(Order = 32, ExportName = "DefName")]
-        public override string DefinitionName
+        public virtual string DefinitionName
         {
             get { return CrossSection.Definition.Name; }
             set
