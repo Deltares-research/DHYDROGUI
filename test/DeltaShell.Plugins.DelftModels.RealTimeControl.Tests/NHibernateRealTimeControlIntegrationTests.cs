@@ -36,11 +36,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         }
 
         [Test]
-        [Ignore("WIP")]
-        [Category("ToCheck")]
         public void TestRtcOutputFileFunctionStoreIsPersisted()
         {
-            var rtcModel = new RealTimeControlModel()
+            var rtcModel = new RealTimeControlModel
             {
                 OutputFileFunctionStore = new RealTimeControlOutputFileFunctionStore
                 {
