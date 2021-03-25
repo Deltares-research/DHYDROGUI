@@ -211,7 +211,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    OnCatchmentAdded(catchment, sender == Model?.Basin);
+                    OnCatchmentAdded(catchment, sender == Model?.Basin.Catchments);
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     OnCatchmentRemoved(catchment);
