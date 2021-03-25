@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO;
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public static void ReadFile(
             string filePath,
             WaterFlowFMModelDefinition modelDefinition,
-            INetwork network,
+            IHydroNetwork network,
             IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
             if (!File.Exists(filePath)) throw new FileReadingException(string.Format(Resources.ReadFile_Could_not_read_file__0__properly__it_doesn_t_exist, filePath));
@@ -49,6 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // [Branch]
             var channelFrictionDefinitionsCategories = categories.Where(category => category.Name.Equals(RoughnessDataRegion.BranchPropertiesIniHeader));
             ReadChannelFrictionDefinitions(network, channelFrictionDefinitions, channelFrictionDefinitionsCategories);
+            
+            var channelFrictionDefinitionsLookup = channelFrictionDefinitions.ToDictionary(cfd => cfd.Channel, cfd => cfd);
+            SynchronizeOnLanesSpecificationBasedOnSharedCrossSectionDefinitions(network, channelFrictionDefinitions, channelFrictionDefinitionsLookup);
         }
 
         private static void SetGlobalDefinition(IDelftIniCategory globalCategory, WaterFlowFMModelDefinition modelDefinition, string filePath)
@@ -66,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         private static void ReadChannelFrictionDefinitions(
-            INetwork network,
+            IHydroNetwork network,
             IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions,
             IEnumerable<DelftIniCategory> channelFrictionDefinitionsCategories)
         {
@@ -105,6 +109,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         break;
                     default:
                         throw new InvalidOperationException();
+                }
+            }
+        }
+
+        private static void SynchronizeOnLanesSpecificationBasedOnSharedCrossSectionDefinitions(IHydroNetwork network, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions, Dictionary<IChannel, ChannelFrictionDefinition> channelFrictionDefinitionsLookup)
+        {
+            foreach (var sharedCrossSectionDefinition in network.SharedCrossSectionDefinitions)
+            {
+                var crossSectionsUsingDefinition = sharedCrossSectionDefinition.FindUsage(network);
+                var correspondingChannels = crossSectionsUsingDefinition.Select(cs => cs.Branch).Distinct().OfType<IChannel>();
+                var correspondingChannelFrictionDefinitions = correspondingChannels.Select(channel => channelFrictionDefinitionsLookup[channel]);
+                if (correspondingChannelFrictionDefinitions.Any(cfd => cfd.SpecificationType == ChannelFrictionSpecificationType.RoughnessSections))
+                {
+                    foreach (var channelFrictionDefinition in correspondingChannelFrictionDefinitions)
+                    {
+                        if (channelFrictionDefinitions.Contains(channelFrictionDefinition))
+                        {
+                            channelFrictionDefinition.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections;
+                        }
+                    }
                 }
             }
         }

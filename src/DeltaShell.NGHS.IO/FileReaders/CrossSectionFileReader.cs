@@ -142,9 +142,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     
                     channel.BranchFeatures.Add(crossSection);
 
-                    if (crossSection.Definition.Sections.Count != 1
-                        && crossSection.Definition.Sections.Count != 0
-                        || !string.Equals(crossSection.Definition.Sections[0].SectionType.Name, RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase)
+                    if ((crossSection.Definition.Sections.Count != 1 && crossSection.Definition.Sections.Count != 0
+                            || !string.Equals(crossSection.Definition.Sections[0].SectionType.Name, RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase) ) 
                         && frictionDefinitions.Contains(channel))
                     {
                         frictionDefinitions[channel].ForEach(cfd => cfd.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections);
