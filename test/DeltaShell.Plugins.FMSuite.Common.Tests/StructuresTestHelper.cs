@@ -5,9 +5,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests
 {
     public static class StructuresTestHelper
     {
-        public static void AddProperty(this Structure2D structure, string attributeName, Type type, string value)
+        public static void AddProperty(this StructureDAO structureDataAccessObject, string attributeName, Type type, string value)
         {
-            structure.Properties.Add(new StructureProperty(new StructurePropertyDefinition
+            structureDataAccessObject.Properties.Add(new StructureProperty(new StructurePropertyDefinition
             {
                 FilePropertyName = attributeName,
                 DataType = type

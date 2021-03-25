@@ -55,22 +55,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             string path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
 
             var structureFile = new StructuresFile {StructureSchema = schema};
-            List<Structure2D> structures = structureFile.ReadStructures2D(path).ToList();
+            List<StructureDAO> structureDataAccessObjects = structureFile.ReadStructuresFromFile(path).ToList();
 
-            Assert.AreEqual(7, structures.Count);
-            Assert.AreEqual(2, structures.Count(s => s.StructureType == StructureType.Weir));
-            Assert.AreEqual(3, structures.Count(s => s.StructureType == StructureType.Pump));
-            Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.Gate));
-            Assert.AreEqual(1, structures.Count(s => s.StructureType == StructureType.GeneralStructure));
+            Assert.AreEqual(7, structureDataAccessObjects.Count);
+            Assert.AreEqual(2, structureDataAccessObjects.Count(s => s.StructureType == StructureType.Weir));
+            Assert.AreEqual(3, structureDataAccessObjects.Count(s => s.StructureType == StructureType.Pump));
+            Assert.AreEqual(1, structureDataAccessObjects.Count(s => s.StructureType == StructureType.Gate));
+            Assert.AreEqual(1, structureDataAccessObjects.Count(s => s.StructureType == StructureType.GeneralStructure));
 
-            Structure2D weirDown = structures.First(s => s.Name == "Weir_down");
+            StructureDAO weirDown = structureDataAccessObjects.First(s => s.Name == "Weir_down");
             Assert.AreEqual(6, weirDown.Properties.Count);
             Assert.AreEqual("680", weirDown.GetProperty(KnownStructureProperties.X).GetValueAsString());
             Assert.AreEqual("360", weirDown.GetProperty(KnownStructureProperties.Y).GetValueAsString());
             Assert.AreEqual("2", weirDown.GetProperty(KnownStructureProperties.CrestLevel).GetValueAsString());
             Assert.AreEqual("1", weirDown.GetProperty(KnownStructureProperties.LateralContractionCoefficient).GetValueAsString());
 
-            Structure2D generalStructure = structures.First(s => s.Name == "gs_01");
+            StructureDAO generalStructure = structureDataAccessObjects.First(s => s.Name == "gs_01");
             Assert.That(generalStructure.Properties.Count, Is.EqualTo(4));
             Assert.That(generalStructure.GetProperty(KnownStructureProperties.PolylineFile).GetValueAsString(), Is.EqualTo("gs_01.pli"));
             Assert.That(generalStructure.GetProperty(KnownGeneralStructureProperties.CrestWidth).GetValueAsString(), Is.EqualTo("2.3"));
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         {
             string path = TestHelper.GetTestFilePath(@"structures\invalidFormat.imp");
             var structuresFile = new StructuresFile {StructureSchema = schema};
-            IEnumerable<Structure2D> structures = structuresFile.ReadStructures2D(path);
+            IEnumerable<StructureDAO> structures = structuresFile.ReadStructuresFromFile(path);
             Assert.AreEqual(0, structures.Count(), "Nothing should have been read.");
         }
 
@@ -111,10 +111,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // When
                 logHandlerMock.Replay();
 
-                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandlerMock).ToList();
+                IList<StructureDAO> structureDataAccessObjects = structuresFile.ReadStructuresFromFile(path, logHandlerMock).ToList();
 
                 // Then
-                Assert.AreEqual(0, structures.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
+                Assert.AreEqual(0, structureDataAccessObjects.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
                 logHandlerMock.VerifyAllExpectations();
             }
         }
@@ -145,10 +145,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // When
                 logHandlerMock.Replay();
 
-                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandlerMock).ToList();
+                IList<StructureDAO> structureDataAccessObjects = structuresFile.ReadStructuresFromFile(path, logHandlerMock).ToList();
 
                 // Then
-                Assert.AreEqual(0, structures.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
+                Assert.AreEqual(0, structureDataAccessObjects.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
                 logHandlerMock.VerifyAllExpectations();
             }
         }
@@ -186,10 +186,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // When
                 logHandlerMock.Replay();
 
-                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandlerMock).ToList();
+                IList<StructureDAO> structureDataAccessObjects = structuresFile.ReadStructuresFromFile(path, logHandlerMock).ToList();
 
                 // Then
-                Assert.AreEqual(1, structures.Count, "One structure should have been created");
+                Assert.AreEqual(1, structureDataAccessObjects.Count, "One structure should have been created");
                 logHandlerMock.VerifyAllExpectations();
             }
         }
@@ -219,10 +219,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 // When
                 logHandlerMock.Replay();
 
-                IList<Structure2D> structures = structuresFile.ReadStructures2D(path, logHandlerMock).ToList();
+                IList<StructureDAO> structureDataAccessObjects = structuresFile.ReadStructuresFromFile(path, logHandlerMock).ToList();
 
                 // Then
-                Assert.AreEqual(0, structures.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
+                Assert.AreEqual(0, structureDataAccessObjects.Count, "A valid structure has been read from the file, while an invalid structure was written in the file");
                 logHandlerMock.VerifyAllExpectations();
             }
         }
@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 File.Delete(exportFilePath);
             }
 
-            var weir = new Structure2D("weir");
+            var weir = new StructureDAO("weir");
             weir.AddProperty(KnownStructureProperties.Type, typeof(string), "weir");
             weir.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_down");
             weir.AddProperty(KnownStructureProperties.X, typeof(double), "680");
@@ -245,12 +245,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             weir.AddProperty(KnownStructureProperties.CrestLevel, typeof(double), "2");
             weir.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "1");
 
-            Structure2D[] structures = new[]
+            StructureDAO[] structures = new[]
             {
                 weir
             };
 
-            StructuresFile.WriteStructures2D(exportFilePath, structures);
+            StructuresFile.WriteStructuresDataAccessObjects(exportFilePath, structures);
 
             string fileContents = File.ReadAllText(exportFilePath);
             Assert.AreEqual(
@@ -272,17 +272,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             string path = TestHelper.GetTestFilePath(@"structures\example-structures.imp");
 
             var structureFile = new StructuresFile {StructureSchema = schema};
-            List<Structure2D> structures = structureFile.ReadStructures2D(path).ToList();
+            List<StructureDAO> structures = structureFile.ReadStructuresFromFile(path).ToList();
 
             string exportFilePath = TestHelper.GetCurrentMethodName() + ".imp";
             var newStructuresFile = new StructuresFile {StructureSchema = schema};
-            StructuresFile.WriteStructures2D(exportFilePath, structures);
+            StructuresFile.WriteStructuresDataAccessObjects(exportFilePath, structures);
 
             CompareStructureIniFiles(path, exportFilePath); // Note: Comments in user file can differ from schema!
 
-            List<Structure2D> newStructures = newStructuresFile.ReadStructures2D(exportFilePath).ToList();
+            List<StructureDAO> newStructuresDataAccessObjects = newStructuresFile.ReadStructuresFromFile(exportFilePath).ToList();
 
-            CompareStructures(structures, newStructures);
+            CompareStructures(structures, newStructuresDataAccessObjects);
 
             File.Delete(exportFilePath);
         }
@@ -412,7 +412,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void ReadThrowsForInvalidFilePath()
         {
             var structureFile = new StructuresFile {StructureSchema = new StructureSchema<ModelPropertyDefinition>()};
-            Assert.Throws<FileNotFoundException>(() => structureFile.ReadStructures2D("I do not exist").ToList());
+            Assert.Throws<FileNotFoundException>(() => structureFile.ReadStructuresFromFile("I do not exist").ToList());
         }
 
         [Test]
@@ -424,7 +424,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 var structuresFile = new StructuresFile {StructureSchema = schema};
                 string writePath = Path.Combine(tempDir, "structures.ini");
 
-                var pump = new Pump()
+                var pump = new Pump
                 {
                     Name = "TestStructure",
                     Capacity = 20.0
@@ -1242,7 +1242,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         #region Comparison helper methods for structure collections:
 
-        private static void CompareStructures(IList<Structure2D> structures, IList<Structure2D> newStructures)
+        private static void CompareStructures(IList<StructureDAO> structures, IList<StructureDAO> newStructures)
         {
             Assert.AreEqual(structures.Count, newStructures.Count, "Expected the same number of structures.");
             for (var i = 0; i < structures.Count; i++)

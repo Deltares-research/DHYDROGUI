@@ -181,7 +181,7 @@
     <Compile Include="IO\Files\PliFile.cs" />
     <Compile Include="IO\Files\PlizFile.cs" />
     <Compile Include="IO\Files\PolFile.cs" />
-    <Compile Include="IO\Files\Structures\Structure2D.cs" />
+    <Compile Include="IO\Files\Structures\StructureDAO.cs" />
     <Compile Include="IO\Files\Structures\StructureFactory.cs" />
     <Compile Include="IO\Files\Structures\StructureFactoryValidator.cs" />
     <Compile Include="IO\Files\Structures\StructureProperty.cs" />

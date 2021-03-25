@@ -177,7 +177,7 @@
     <Compile Include="FeatureData\BoundaryConditionsPointsSyncedListTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionTest.cs" />
     <Compile Include="Dependency\DependenciesTest.cs" />
-    <Compile Include="FeatureData\Structure2DTest.cs" />
+    <Compile Include="FeatureData\StructureDAOTest.cs" />
     <Compile Include="FeatureData\WindFieldTest.cs" />
     <Compile Include="FileBasedWindDefinitionTest.cs" />
     <Compile Include="FMSuiteCommonTestHelper.cs" />

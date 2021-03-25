@@ -115,16 +115,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void CreatePumpWithConstantCapacityTest()
         {
-            var structure = new Structure2D("pump");
-            structure.AddProperty(KnownStructureProperties.Type, typeof(string), "pump");
-            structure.AddProperty(KnownStructureProperties.Name, typeof(string), "pump01");
-            structure.AddProperty(KnownStructureProperties.X, typeof(double), "680");
-            structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
-            structure.AddProperty(KnownStructureProperties.Capacity, typeof(Steerable), "2");
+            var structureDataAccessObject = new StructureDAO("pump");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Type, typeof(string), "pump");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Name, typeof(string), "pump01");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.X, typeof(double), "680");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Capacity, typeof(Steerable), "2");
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            IPump pump = StructureFactory.CreatePump(structure, dummyPath, new DateTime());
+            IPump pump = StructureFactory.CreatePump(structureDataAccessObject, dummyPath, new DateTime());
             Assert.AreEqual("pump01", pump.Name);
             Assert.AreEqual(new Point(680, 360), pump.Geometry);
             Assert.IsFalse(pump.UseCapacityTimeSeries);
@@ -137,17 +137,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void CreatePumpWithCapacityTimeSeriesTest()
         {
             // Setup
-            var structure = new Structure2D("pump");
+            var structureDataAccessObject = new StructureDAO("pump");
 
-            structure.AddProperty(KnownStructureProperties.Type, typeof(string), "pump");
-            structure.AddProperty(KnownStructureProperties.Name, typeof(string), "pump05");
-            structure.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
-            structure.AddProperty(KnownStructureProperties.Capacity, typeof(Steerable), "pump05_capacity.tim");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Type, typeof(string), "pump");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Name, typeof(string), "pump05");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Capacity, typeof(Steerable), "pump05_capacity.tim");
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
             // Call
-            IPump pump = StructureFactory.CreatePump(structure, dummyPath, new DateTime(2013, 1, 1));
+            IPump pump = StructureFactory.CreatePump(structureDataAccessObject, dummyPath, new DateTime(2013, 1, 1));
 
             // Assert
             Assert.AreEqual("pump05", pump.Name);
@@ -168,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void CreatePumpFromIncorrectType()
         {
-            var structure = new Structure2D("test");
+            var structure = new StructureDAO("test");
             Assert.Throws<FormatException>(() => StructureFactory.CreatePump(structure, null, new DateTime()));
         }
 
@@ -179,16 +179,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenTypeIsWeir()
         {
-            var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            IStructureObject result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            var generalStructureDataAccessObject = new StructureDAO(StructureRegion.StructureTypeName.GeneralStructure);
+            IStructureObject result = StructureFactory.CreateStructure(generalStructureDataAccessObject, null, new DateTime());
             Assert.IsTrue(result is IStructure);
         }
 
         [Test]
         public void GivenGeneralStructureAsStructure2D_WhenCreatingStructure_ThenWeirFormulaIsAGeneralStructureWeirFormula()
         {
-            var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            IStructureObject result = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            var generalStructureDataAccessObject = new StructureDAO(StructureRegion.StructureTypeName.GeneralStructure);
+            IStructureObject result = StructureFactory.CreateStructure(generalStructureDataAccessObject, null, new DateTime());
             Assert.IsTrue(result is IStructure);
 
             var weir = (IStructure) result;
@@ -206,22 +206,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void GivenGeneralStructureAsStructure2DWithKnownPropertyUnequalToZero_WhenCreatingStructure_ThenWeirAdaptsProperty(KnownGeneralStructureProperties property)
         {
             // Setup
-            var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
+            var generalStructureDataAccessObject = new StructureDAO(StructureRegion.StructureTypeName.GeneralStructure);
 
             if (property == KnownGeneralStructureProperties.GateOpeningWidth ||
                 property == KnownGeneralStructureProperties.GateLowerEdgeLevel ||
                 property == KnownGeneralStructureProperties.CrestLevel)
             {
-                generalStructure.AddProperty(property.GetDescription(), typeof(Steerable), "12.34");
+                generalStructureDataAccessObject.AddProperty(property.GetDescription(), typeof(Steerable), "12.34");
             }
             else
             {
-                generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
+                generalStructureDataAccessObject.AddProperty(property.GetDescription(), typeof(double), "12.34");
             }
 
             // Call
             IStructureObject resultingStructure = 
-                StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+                StructureFactory.CreateStructure(generalStructureDataAccessObject, null, new DateTime());
 
             // Assert
             var weir = resultingStructure as IStructure;
@@ -234,10 +234,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void GivenGeneralStructureAsStructure2DWithExtraResistanceEqualToZero_WhenCreatingStructure_ThenUseExtraResistanceIsFalse()
         {
-            var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
-            generalStructure.AddProperty(KnownGeneralStructureProperties.ExtraResistance.GetDescription(), typeof(double), "0.0");
+            var generalStructureDataAccessObject = new StructureDAO(StructureRegion.StructureTypeName.GeneralStructure);
+            generalStructureDataAccessObject.AddProperty(KnownGeneralStructureProperties.ExtraResistance.GetDescription(), typeof(double), "0.0");
 
-            IStructureObject resultingStructure = StructureFactory.CreateStructure(generalStructure, null, new DateTime());
+            IStructureObject resultingStructure = StructureFactory.CreateStructure(generalStructureDataAccessObject, null, new DateTime());
             var weir = resultingStructure as IStructure;
             Assert.NotNull(weir);
 
@@ -288,24 +288,24 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void CreateWeirFromIncorrectType()
         {
-            var structure = new Structure2D("test");
-            Assert.Throws<FormatException>(() => StructureFactory.CreateWeir(structure, null, new DateTime()));
+            var structureDataAccessObject = new StructureDAO("test");
+            Assert.Throws<FormatException>(() => StructureFactory.CreateWeir(structureDataAccessObject, null, new DateTime()));
         }
 
         [Test]
         public void CreateWeirWithConstantCrestLevel()
         {
-            var structure = new Structure2D("weir");
-            structure.AddProperty(KnownStructureProperties.Type, typeof(string), "weir");
-            structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_down");
-            structure.AddProperty(KnownStructureProperties.X, typeof(double), "680");
-            structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
-            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "2");
-            structure.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
+            var structureDataAccessObject = new StructureDAO("weir");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Type, typeof(string), "weir");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_down");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.X, typeof(double), "680");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "2");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            IStructure weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime());
+            IStructure weir = StructureFactory.CreateWeir(structureDataAccessObject, dummyPath, new DateTime());
             Assert.AreEqual("Weir_down", weir.Name);
             Assert.AreEqual(new Point(680, 360), weir.Geometry);
             Assert.IsFalse(weir.UseCrestLevelTimeSeries);
@@ -320,18 +320,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [Test]
         public void CreateWeirWithCrestLevelTimeSeries()
         {
-            var structure = new Structure2D("weir");
-            structure.AddProperty(KnownStructureProperties.Type, typeof(string), "weir");
-            structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_moving");
-            structure.AddProperty(KnownStructureProperties.X, typeof(double), "680");
-            structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
-            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "weir_CrestLevel.tim");
-            structure.AddProperty(KnownStructureProperties.CrestWidth, typeof(double), "23.5");
-            structure.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
+            var structureDataAccessObject = new StructureDAO("weir");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Type, typeof(string), "weir");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Name, typeof(string), "Weir_moving");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.X, typeof(double), "680");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "weir_CrestLevel.tim");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.CrestWidth, typeof(double), "23.5");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.LateralContractionCoefficient, typeof(double), "0.7");
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            IStructure weir = StructureFactory.CreateWeir(structure, dummyPath, new DateTime(2013, 1, 1));
+            IStructure weir = StructureFactory.CreateWeir(structureDataAccessObject, dummyPath, new DateTime(2013, 1, 1));
             Assert.AreEqual("Weir_moving", weir.Name);
             Assert.AreEqual(new Point(680, 360), weir.Geometry);
             Assert.AreEqual(23.5, weir.CrestWidth);
@@ -354,21 +354,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             StructureSchema<ModelPropertyDefinition> schema = new StructureSchemaCsvFile().ReadStructureSchema(StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
             ModelPropertyDefinition openingDirectionDefinition = schema.GetDefinition("gate", KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
 
-            var structure = new Structure2D("gate");
-            structure.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
-            structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate01");
-            structure.AddProperty(KnownStructureProperties.X, typeof(double), "500");
-            structure.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
-            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "2");
-            structure.AddProperty(KnownStructureProperties.CrestWidth, typeof(double), "55.7");
-            structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable), "1");
-            structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable), "2.8");
-            structure.AddProperty(KnownStructureProperties.GateHeight, typeof(double), "10");
-            structure.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, openingDirectionDefinition.DataType, "from_right");
+            var structureDataAccessObject = new StructureDAO("gate");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate01");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.X, typeof(double), "500");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Y, typeof(double), "360");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable), "2");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.CrestWidth, typeof(double), "55.7");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable), "1");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable), "2.8");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.GateHeight, typeof(double), "10");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection, openingDirectionDefinition.DataType, "from_right");
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            IStructure gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime());
+            IStructure gate = StructureFactory.CreateGate(structureDataAccessObject, dummyPath, new DateTime());
             var gateWeirFormula = gate.Formula as IGatedStructureFormula;
 
             Assert.NotNull(gateWeirFormula);
@@ -396,23 +396,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                     StructureSchemaCsvFileTest.ApplicationStructuresSchemaCsvFilePath);
             ModelPropertyDefinition openingDirectionDefinition = schema.GetDefinition("gate", KnownGeneralStructureProperties.GateOpeningHorizontalDirection.GetDescription());
 
-            var structure = new Structure2D("gate");
-            structure.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
-            structure.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate02");
-            structure.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
-            structure.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable),
+            var structureDataAccessObject = new StructureDAO("gate");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Type, typeof(string), "gate");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.Name, typeof(string), "Gate02");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.PolylineFile, typeof(string), "pump05.pli");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.CrestLevel, typeof(Steerable),
                                   $"Gate02_{KnownStructureProperties.GateLowerEdgeLevel}.tim");
-            structure.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable),
+            structureDataAccessObject.AddProperty(KnownStructureProperties.GateLowerEdgeLevel, typeof(Steerable),
                                   $"Gate02_{KnownStructureProperties.GateLowerEdgeLevel}.tim");
-            structure.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable),
+            structureDataAccessObject.AddProperty(KnownStructureProperties.GateOpeningWidth, typeof(Steerable),
                                   $"Gate02_{KnownStructureProperties.GateOpeningWidth}.tim");
-            structure.AddProperty(KnownStructureProperties.GateHeight, typeof(double), "10");
-            structure.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection,
+            structureDataAccessObject.AddProperty(KnownStructureProperties.GateHeight, typeof(double), "10");
+            structureDataAccessObject.AddProperty(KnownStructureProperties.GateOpeningHorizontalDirection,
                                   openingDirectionDefinition.DataType, "from_right");
 
             string dummyPath = TestHelper.GetTestFilePath(@"structures/nonExistentFile_structures.ini");
 
-            IStructure gate = StructureFactory.CreateGate(structure, dummyPath, new DateTime(2013, 1, 1));
+            IStructure gate = StructureFactory.CreateGate(structureDataAccessObject, dummyPath, new DateTime(2013, 1, 1));
             var gateWeirFormula = gate.Formula as IGatedStructureFormula;
 
             Assert.NotNull(gateWeirFormula);
@@ -450,17 +450,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         #region CreateStructureWeir
 
         /// <summary>
-        /// GIVEN a simple weir Structure2D
+        /// GIVEN a simple weir StructureDAO
         /// WHEN CreateStructure is called
         /// THEN the corresponding simple weir is returned
         /// </summary>
         [TestCase(true)]
         [TestCase(false)]
         [Category(TestCategory.DataAccess)]
-        public void GivenASimpleWeirStructure2D_WhenCreateStructureIsCalled_ThenTheCorrespondingSimpleWeirIsReturned(bool isConstCrestLevel)
+        public void GivenASimpleWeirStructureDAO_WhenCreateStructureIsCalled_ThenTheCorrespondingSimpleWeirIsReturned(bool isConstCrestLevel)
         {
             // Given
-            Structure2D simpleWeirPrecursor = ComposeSimpleWeir(isConstCrestLevel);
+            StructureDAO simpleWeirPrecursor = ComposeSimpleWeir(isConstCrestLevel);
 
             // When
             IStructureObject result = StructureFactory.CreateStructure(simpleWeirPrecursor, structuresPath, refDate);
@@ -470,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         /// <summary>
-        /// GIVEN a gated weir Structure2D
+        /// GIVEN a gated weir StructureDAO
         /// WHEN CreateStructure is called
         /// THEN the corresponding gated weir is returned
         /// </summary>
@@ -483,12 +483,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         [TestCase(false, true, true)]
         [TestCase(true, true, true)]
         [Category(TestCategory.DataAccess)]
-        public void GivenAGatedWeirStructure2D_WhenCreateStructureIsCalled_ThenTheCorrespondingGatedWeirIsReturned(bool isConstCrestLevel,
+        public void GivenAGatedWeirStructureDAO_WhenCreateStructureIsCalled_ThenTheCorrespondingGatedWeirIsReturned(bool isConstCrestLevel,
                                                                                                                    bool isConstLowerEdgeLevel,
                                                                                                                    bool isConstHorizontalOpeningWidth)
         {
             // Given
-            Structure2D gatedWeirPrecursor = ComposeGatedWeir(isConstCrestLevel,
+            StructureDAO gatedWeirPrecursor = ComposeGatedWeir(isConstCrestLevel,
                                                               isConstLowerEdgeLevel,
                                                               isConstHorizontalOpeningWidth);
 
@@ -512,7 +512,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         public void CreateStructure_WhenAGatePropertyIsMissing_ThenNoExceptionIsThrown(string propertyName)
         {
             // Set-up
-            Structure2D gatedWeirPrecursor = ComposeGatedWeir(true, true, true);
+            StructureDAO gatedWeirPrecursor = ComposeGatedWeir(true, true, true);
             ModelProperty property = gatedWeirPrecursor.GetProperty(propertyName);
             gatedWeirPrecursor.Properties.Remove(property);
 
@@ -528,7 +528,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
         }
 
         /// <summary>
-        /// GIVEN a general structure Structure2D
+        /// GIVEN a general structure StructureDAO
         /// WHEN CreateStructure is called
         /// THEN the corresponding general structure is returned
         /// </summary>
@@ -546,7 +546,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                                                                                                                                  bool isConstHorizontalOpeningWidth)
         {
             // Given
-            Structure2D generalStructurePrecursor = ComposeGeneralStructure(isConstCrestLevel,
+            StructureDAO generalStructurePrecursor = ComposeGeneralStructure(isConstCrestLevel,
                                                                             isConstLowerEdgeLevel,
                                                                             isConstHorizontalOpeningWidth);
 
@@ -561,10 +561,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 
         #region CreateStructure
 
-        private Structure2D ComposeSimpleWeir(bool isConstCrestLevel)
+        private StructureDAO ComposeSimpleWeir(bool isConstCrestLevel)
         {
             const string t = StructureRegion.StructureTypeName.Weir;
-            Structure2D result = ComposeCommon(t, isConstCrestLevel);
+            StructureDAO result = ComposeCommon(t, isConstCrestLevel);
 
             // SimpleWeir specific
             const string contractionCoefficientProperty = KnownStructureProperties.LateralContractionCoefficient;
@@ -576,23 +576,23 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             return result;
         }
 
-        private Structure2D ComposeGatedWeir(bool isConstCrestLevel,
+        private StructureDAO ComposeGatedWeir(bool isConstCrestLevel,
                                              bool isConstLowerEdgeLevel,
                                              bool isConstHorizontalOpeningWidth)
         {
             const string t = StructureRegion.StructureTypeName.Gate;
-            Structure2D result = ComposeCommon(t, isConstCrestLevel);
+            StructureDAO result = ComposeCommon(t, isConstCrestLevel);
             AddGatedProperties(result, t, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
 
             return result;
         }
 
-        private Structure2D ComposeGeneralStructure(bool isConstCrestLevel,
+        private StructureDAO ComposeGeneralStructure(bool isConstCrestLevel,
                                                     bool isConstLowerEdgeLevel,
                                                     bool isConstHorizontalOpeningWidth)
         {
             const string t = StructureRegion.StructureTypeName.GeneralStructure;
-            Structure2D result = ComposeCommon(t, isConstCrestLevel);
+            StructureDAO result = ComposeCommon(t, isConstCrestLevel);
             AddGatedProperties(result, t, isConstLowerEdgeLevel, isConstHorizontalOpeningWidth);
 
             // GeneralStructure specific
@@ -625,9 +625,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             return result;
         }
 
-        private Structure2D ComposeCommon(string structureType, bool isConstCrestLevel)
+        private StructureDAO ComposeCommon(string structureType, bool isConstCrestLevel)
         {
-            var result = new Structure2D(structureType);
+            var result = new StructureDAO(structureType);
 
             result.AddProperty(KnownStructureProperties.Type, typeof(string), structureType);
             result.AddProperty(KnownStructureProperties.Name, typeof(string), "SomeName");
@@ -656,7 +656,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             return result;
         }
 
-        private void AddGatedProperties(Structure2D result,
+        private void AddGatedProperties(StructureDAO result,
                                         string structureType,
                                         bool isConstLowerEdgeLevel,
                                         bool isConstHorizontalOpeningWidth)

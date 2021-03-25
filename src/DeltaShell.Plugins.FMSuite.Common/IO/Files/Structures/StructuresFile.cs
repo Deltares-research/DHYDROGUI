@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             try
             {
                 List<IStructureObject> structures =
-                    ReadStructures2D(structuresFilePath, logHandler)
+                    ReadStructuresFromFile(structuresFilePath, logHandler)
                         .Select(s => ConvertStructure(s, structuresSubFilesReferenceFilePath))
                         .Where(s => s != null)
                         .ToList();
@@ -105,8 +105,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// Log messages collector and reporter. Not required if you are not interested in the log
         /// messages.
         /// </param>
-        /// <returns>List with structures</returns>
-        public IEnumerable<Structure2D> ReadStructures2D(string filePath, ILogHandler logHandler = null)
+        /// <returns>List with structure data access objects. </returns>
+        public IEnumerable<StructureDAO> ReadStructuresFromFile(string filePath, ILogHandler logHandler = null)
         {
             IList<DelftIniCategory> categories;
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -137,9 +137,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                     continue;
                 }
 
-                Structure2D structure2D =
-                    CreateStructure2D(StructureSchema, structureTypeProperty.Value, category, filePath, logHandler);
-                string errorMessage = StructureFactoryValidator.Validate(structure2D);
+                StructureDAO structureDataAccessObject =
+                    CreateStructureDao(StructureSchema, structureTypeProperty.Value, category, filePath, logHandler);
+                string errorMessage = StructureFactoryValidator.Validate(structureDataAccessObject);
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
                     logHandler?.ReportErrorFormat(Resources.StructureFile_Failed_to_convert_ini_structure_definition_to_actual_structure_Line__0____1__,
@@ -150,13 +150,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
                 PropertyTypesFromIni.Add(structureTypeProperty.Value);
 
-                yield return structure2D;
+                yield return structureDataAccessObject;
             }
         }
 
-        public static void WriteStructures2D(string path, IEnumerable<Structure2D> structures)
+        public static void WriteStructuresDataAccessObjects(string path, IEnumerable<StructureDAO> structuresDataAccessObjects)
         {
-            new DelftIniWriter().WriteDelftIniFile(structures.Select(CreateDelftIniCategory), path);
+            new DelftIniWriter().WriteDelftIniFile(structuresDataAccessObjects.Select(CreateDelftIniCategory), path);
         }
 
         public IList<IStructureObject> Read(string filePath)
@@ -164,7 +164,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             var logHandler = new LogHandler($"reading the structures file ({filePath}),", Log);
 
             List<IStructureObject> structures =
-                ReadStructures2D(filePath, logHandler)
+                ReadStructuresFromFile(filePath, logHandler)
                     .Select(s => ConvertStructure(s, filePath))
                     .Where(s => s != null)
                     .ToList();
@@ -199,18 +199,18 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private IStructureObject ConvertStructure(Structure2D structure,
+        private IStructureObject ConvertStructure(StructureDAO structureDataAccessObject,
                                                   string structuresSubFilesReferenceFilePath)
         {
             try
             {
-                return StructureFactory.CreateStructure(structure,
+                return StructureFactory.CreateStructure(structureDataAccessObject,
                                                         structuresSubFilesReferenceFilePath,
                                                         ReferenceDate);
             }
             catch (Exception e)
             {
-                Log.ErrorFormat(Resources.StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_, structure.Name);
+                Log.ErrorFormat(Resources.StructuresFile_ConvertStructure_Failed_to_convert__ini_structure_definition___0___to_actual_structure_, structureDataAccessObject.Name);
 
                 if (e is ArgumentNullException || e is ArgumentException || e is FileNotFoundException ||
                     e is DirectoryNotFoundException || e is IOException || e is OutOfMemoryException ||
@@ -242,11 +242,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return list;
         }
 
-        private static DelftIniCategory CreateDelftIniCategory(Structure2D structure)
+        private static DelftIniCategory CreateDelftIniCategory(StructureDAO structureDataAccessObject)
         {
             var delftIniCategory = new DelftIniCategory(StructureCategoryName);
 
-            foreach (ModelProperty property in structure.Properties)
+            foreach (ModelProperty property in structureDataAccessObject.Properties)
             {
                 if (property.PropertyDefinition.FilePropertyName == KnownStructureProperties.CrestWidth &&
                     FMParser.FromString<double>(property.GetValueAsString()) <= 0.0)
@@ -284,13 +284,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return delftIniCategory;
         }
 
-        private Structure2D CreateStructure2D(StructureSchema<ModelPropertyDefinition> schema,
+        private StructureDAO CreateStructureDao(StructureSchema<ModelPropertyDefinition> schema,
                                               string structureType,
                                               DelftIniCategory category,
                                               string filePath,
                                               ILogHandler logHandler)
         {
-            var newStructure = new Structure2D(structureType);
+            var newStructureDataAccessObject = new StructureDAO(structureType);
 
             foreach (DelftIniProperty property in category.Properties)
             {
@@ -312,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                         SetOrUpdateTimFolder(propertyValue.TimeSeriesFilename, property.LineNumber, logHandler);
                     }
 
-                    newStructure.Properties.Add(structureProperty);
+                    newStructureDataAccessObject.Properties.Add(structureProperty);
                 }
                 catch (FormatException e)
                 {
@@ -325,7 +325,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
                 }
             }
 
-            return newStructure;
+            return newStructureDataAccessObject;
         }
 
         private void SetOrUpdateTimFolder(string timeSeriesFilename, int propertyLineNumber, ILogHandler logHandler)

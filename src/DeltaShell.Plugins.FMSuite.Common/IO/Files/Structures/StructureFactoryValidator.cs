@@ -20,21 +20,21 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <summary>
         /// Checks if the given structure is valid or not.
         /// </summary>
-        /// <param name="structure"> The structure to be checked. </param>
+        /// <param name="structureDataAccessObject"> The structure data access object to be checked. </param>
         /// <returns> Error message, or empty if ok. </returns>
-        public static string Validate(Structure2D structure)
+        public static string Validate(StructureDAO structureDataAccessObject)
         {
-            if (structure == null)
+            if (structureDataAccessObject == null)
             {
                 return "";
             }
 
-            if (ValidateGeneralStructureProperties(structure, out string name, out string errorMessage))
+            if (ValidateGeneralStructureProperties(structureDataAccessObject, out string name, out string errorMessage))
             {
                 return errorMessage;
             }
 
-            if (ValidateSpecificStructureProperties(structure, name, out errorMessage))
+            if (ValidateSpecificStructureProperties(structureDataAccessObject, name, out errorMessage))
             {
                 return errorMessage;
             }
@@ -46,10 +46,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// Throws <see cref="FormatException"/> is case structure does not match expected type.
         /// </summary>
         /// <exception cref="FormatException"> </exception>
-        public static void ThrowIfInvalidType(Structure2D structure, IEnumerable<StructureType> expectedTypes)
+        public static void ThrowIfInvalidType(StructureDAO structureDataAccessObject, IEnumerable<StructureType> expectedTypes)
         {
             StructureType[] enumerable = expectedTypes as StructureType[] ?? expectedTypes.ToArray();
-            StructureType structureType = structure.StructureType;
+            StructureType structureType = structureDataAccessObject.StructureType;
             if (enumerable.All(type => type != structureType))
             {
                 bool isSingularItem = enumerable.Length > 1;
@@ -57,11 +57,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             }
         }
 
-        private static bool ValidateSpecificStructureProperties(Structure2D structure, string name,
+        private static bool ValidateSpecificStructureProperties(StructureDAO structureDataAccessObject, string name,
                                                                 out string errorMessage)
         {
-            if (structure.StructureType == StructureType.Pump &&
-                ValidateGeneralPumpProperties(structure, name, out string errorMessage1))
+            if (structureDataAccessObject.StructureType == StructureType.Pump &&
+                ValidateGeneralPumpProperties(structureDataAccessObject, name, out string errorMessage1))
             {
                 errorMessage = errorMessage1;
                 return true;
@@ -71,14 +71,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
             return false;
         }
 
-        private static bool ValidateGeneralPumpProperties(Structure2D structure, string name,
+        private static bool ValidateGeneralPumpProperties(StructureDAO structureDataAccessObject, string name,
                                                           out string errorMessage)
         {
-            ModelProperty property = structure.GetProperty(KnownStructureProperties.NrOfReductionFactors);
+            ModelProperty property = structureDataAccessObject.GetProperty(KnownStructureProperties.NrOfReductionFactors);
             if (property != null)
             {
                 var numberOfLevels = FMParser.FromString<int>(property.GetValueAsString());
-                if (numberOfLevels == 1 && structure.GetProperty(KnownStructureProperties.ReductionFactor) == null)
+                if (numberOfLevels == 1 && structureDataAccessObject.GetProperty(KnownStructureProperties.ReductionFactor) == null)
                 {
                     errorMessage = $"Structure '{name}' with constant reduction factor does not have factor defined.";
                     return true;
@@ -86,13 +86,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
                 if (numberOfLevels > 1)
                 {
-                    if (structure.GetProperty(KnownStructureProperties.Head) == null)
+                    if (structureDataAccessObject.GetProperty(KnownStructureProperties.Head) == null)
                     {
                         errorMessage = $"Structure '{name}' with multiple reduction factors does not have reference levels defined.";
                         return true;
                     }
 
-                    if (structure.GetProperty(KnownStructureProperties.ReductionFactor) == null)
+                    if (structureDataAccessObject.GetProperty(KnownStructureProperties.ReductionFactor) == null)
                     {
                         errorMessage = $"Structure '{name}' with multiple reduction factors does not have factors defined.";
                         return true;
@@ -107,16 +107,16 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
         /// <summary>
         /// Validates general structure properties.
         /// </summary>
-        /// <param name="structure"> Structure to be validated. </param>
+        /// <param name="structureDataAccessObject"> Structure data access object to be validated. </param>
         /// <param name="name"> Name of the structure </param>
         /// <param name="errorMessage"> Error message output. </param>
         /// <returns> True if <paramref name="errorMessage"/> is set; False otherwise. </returns>
-        private static bool ValidateGeneralStructureProperties(Structure2D structure,
+        private static bool ValidateGeneralStructureProperties(StructureDAO structureDataAccessObject,
                                                                out string name,
                                                                out string errorMessage)
         {
             name = "";
-            ModelProperty idProperty = structure.GetProperty(KnownStructureProperties.Name);
+            ModelProperty idProperty = structureDataAccessObject.GetProperty(KnownStructureProperties.Name);
             if (idProperty == null || string.IsNullOrEmpty(name = idProperty.GetValueAsString()))
             {
                 errorMessage = "Id of structure must be specified.";
@@ -125,22 +125,22 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             #region Type property
 
-            StructureType structureType = structure.StructureType;
+            StructureType structureType = structureDataAccessObject.StructureType;
             if (SupportedTypes.All(t => t != structureType))
             {
-                if (structure.InvalidStructureType == null)
+                if (structureDataAccessObject.InvalidStructureType == null)
                 {
                     errorMessage = $"Structure '{name}' cannot have null as type.";
                 }
                 else
                 {
-                    errorMessage = $"Structure '{name}' has unsupported type ({structure.InvalidStructureType}) specified.";
+                    errorMessage = $"Structure '{name}' has unsupported type ({structureDataAccessObject.InvalidStructureType}) specified.";
                 }
 
                 return true;
             }
 
-            ModelProperty typeProperty = structure.GetProperty(KnownStructureProperties.Type);
+            ModelProperty typeProperty = structureDataAccessObject.GetProperty(KnownStructureProperties.Type);
             string typeAsString;
             if (typeProperty == null || string.IsNullOrEmpty(typeAsString = typeProperty.GetValueAsString()))
             {
@@ -159,9 +159,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files.Structures
 
             #region Geometry related properties
 
-            ModelProperty xProperty = structure.GetProperty(KnownStructureProperties.X);
-            ModelProperty yProperty = structure.GetProperty(KnownStructureProperties.Y);
-            ModelProperty polylineProperty = structure.GetProperty(KnownStructureProperties.PolylineFile);
+            ModelProperty xProperty = structureDataAccessObject.GetProperty(KnownStructureProperties.X);
+            ModelProperty yProperty = structureDataAccessObject.GetProperty(KnownStructureProperties.Y);
+            ModelProperty polylineProperty = structureDataAccessObject.GetProperty(KnownStructureProperties.PolylineFile);
             if (xProperty == null && yProperty == null)
             {
                 if (polylineProperty == null)

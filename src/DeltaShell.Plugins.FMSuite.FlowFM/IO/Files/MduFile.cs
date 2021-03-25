@@ -1496,7 +1496,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                     ReferenceDate = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value
                 };
 
-                List<Structure2D> featuresToAdd = fileReader.ReadStructures2D(structureFilePath).ToList();
+                List<StructureDAO> featuresToAdd = fileReader.ReadStructuresFromFile(structureFilePath).ToList();
                 var hasBadFileReferences = false;
                 featuresToAdd.ForEach(f =>
                 {
