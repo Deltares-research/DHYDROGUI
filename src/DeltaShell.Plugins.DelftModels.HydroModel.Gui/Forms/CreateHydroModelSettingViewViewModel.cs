@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             coordinateSystemsView = (CollectionView)CollectionViewSource.GetDefaultView(Map.CoordinateSystemFactory.SupportedCoordinateSystems);
             coordinateSystemsView.Filter = null;
 
-            ModelSettings.CoordinateSystem = Map.CoordinateSystemFactory.SupportedCoordinateSystems.FirstOrDefault(c => c.AuthorityCode == 28992);
+            ModelSettings.CoordinateSystem = Map.CoordinateSystemFactory?.SupportedCoordinateSystems?.FirstOrDefault(c => c.AuthorityCode == 28992);
         }
 
         /// <summary>

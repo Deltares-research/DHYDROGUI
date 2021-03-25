@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
                     });
                 }
             };
-            CoordinateSystem = Map.CoordinateSystemFactory.SupportedCoordinateSystems.FirstOrDefault(c => c.AuthorityCode == 28992);
+            CoordinateSystem = Map.CoordinateSystemFactory?.SupportedCoordinateSystems?.FirstOrDefault(c => c.AuthorityCode == 28992);
         }
 
         public IApplication Application
