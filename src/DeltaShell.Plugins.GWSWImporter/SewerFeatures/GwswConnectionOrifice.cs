@@ -16,6 +16,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
         public double LevelSource { get; set; }
         public double LevelTarget { get; set; }
         public SewerConnectionWaterType WaterType { get; set; }
+        
+        public virtual string CrossSectionDefinitionName { get; set; }
 
         protected override void SetSewerConnectionProperties(ISewerConnection sewerConnection, IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {

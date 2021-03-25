@@ -88,6 +88,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         break;
                 }
             }
+            
+            var profileDefinitionIdAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId);
+            orifice.CrossSectionDefinitionName = profileDefinitionIdAttribute.GetValidStringValue();
         }
 
         private static void AddStructureAttributesToOrifice(IOrifice orifice, GwswElement gwswElement)

@@ -28,6 +28,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
+using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using log4net;
@@ -639,7 +640,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 if (helper.CrossSectionDefinitionsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var crossSectionDefinition))
                 {
-                    var crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2, false);
+                    ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2, false);
                     crossSection.Name = $"SewerProfile_";
                     crossSection.UseSharedDefinition(crossSectionDefinition);
                     pipe.CrossSection = crossSection;
@@ -649,8 +650,28 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 if (helper.SewerProfileMaterialsByPipe.TryGetValue(pipe.CrossSectionDefinitionName, out var material))
                     pipe.Material = material;
             }, "Update cross sections in network");
+            
+            ParallelHelper.RunActionInParallel(this, network.Orifices.OfType<GwswConnectionOrifice>().Cast<GwswConnectionOrifice>().ToArray(), (orifice) =>
+            {
+                try
+                {
+                    var definition = network.GetNetworkCrossSectionDefinitions().SingleOrDefault(csd => string.Equals(csd.Name, orifice.CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase)) 
+                                     ?? network.SharedCrossSectionDefinitions.SingleOrDefault(scsd => string.Equals(scsd.Name, orifice.CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase));
+                    if (definition == null)
+                    {
+                        return;
+                    }
 
-
+                    orifice.CrestWidth = definition.Width;
+                    orifice.CrestLevel = definition.HighestPoint;
+                }
+                catch
+                {
+                    Log.Warn($"Could not update the orifice crest width or level for '{orifice.Name}'.");
+                    return;
+                }
+            }, "Update orifices width and level");
+            
             NamingHelper.MakeNamesUnique(helper.PipeCrossSections);
             NamingHelper.MakeNamesUnique(helper.CompositeBranchStructures);
         }

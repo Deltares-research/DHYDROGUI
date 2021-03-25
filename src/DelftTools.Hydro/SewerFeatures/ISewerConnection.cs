@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.SewerFeatures
@@ -10,6 +11,8 @@ namespace DelftTools.Hydro.SewerFeatures
         double LevelSource { get; set; }
 
         double LevelTarget { get; set; }
+        
+        string CrossSectionDefinitionName { get; set; }
 
         SewerConnectionWaterType WaterType { get; set; }
 

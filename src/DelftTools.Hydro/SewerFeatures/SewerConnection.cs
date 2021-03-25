@@ -68,6 +68,10 @@ namespace DelftTools.Hydro.SewerFeatures
             get { return source; }
             set { SetSource(value); }
         }
+        
+        [DisplayName("Definition")]
+        [FeatureAttribute(Order = 32, ExportName = "DefName")]
+        public virtual string DefinitionName { get; set; }
 
         
         private void SetSource(INode value)
