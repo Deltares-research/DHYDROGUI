@@ -9,7 +9,10 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Shell.Core;
+using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
+using GeoAPI.Extensions.CoordinateSystems;
+using SharpMap;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 {
@@ -23,10 +26,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
         private int progressCurrentStep;
         private bool isRunning;
         private bool canImportFlowRtc;
-        private bool canImportRR;
+        private bool canImportRr;
         private IEnumerable<IPartialSobekImporter> importersRtc;
         private IEnumerable<IPartialSobekImporter> importersWaterFlow1d;
         private IEnumerable<IPartialSobekImporter> importersRainfallRunoff;
+        private ICoordinateSystem coordinateSystem;
+        private SobekHydroModelImporter sobekImporter;
+
 
         public SobekImportWizardControlViewModel()
         {
@@ -39,8 +45,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
                 {
                     var model = await Task.Run(() =>
                     {
-                        SobekImporter.ImportItem(SobekImporter.PathSobek);
-                        return SobekImporter.TargetObject;
+                        sobekImporter.ImportItem(sobekImporter.PathSobek);
+
+                        if (sobekImporter.TargetObject is HydroModel hydroModel)
+                        {
+                            hydroModel.CoordinateSystem = coordinateSystem;
+                        }
+
+                        return sobekImporter.TargetObject;
                     });
                     ExecuteProjectTemplate?.Invoke(model);
                 }
@@ -60,7 +72,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 
             CancelCommand = new RelayCommand(o => CancelProjectTemplate?.Invoke());
 
-            SobekImporter = new SobekHydroModelImporter
+            sobekImporter = new SobekHydroModelImporter
             {
                 ProgressChanged = (currentStepName, currentStep, totalSteps) =>
                 {
@@ -72,15 +84,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
                     });
                 }
             };
+            CoordinateSystem = Map.CoordinateSystemFactory.SupportedCoordinateSystems.FirstOrDefault(c => c.AuthorityCode == 28992);
         }
 
         public IApplication Application
         {
-            get { return SobekImporter.Application;}
-            set { SobekImporter.Application = value; }
+            get { return sobekImporter.Application;}
+            set { sobekImporter.Application = value; }
         }
-
-        public SobekHydroModelImporter SobekImporter { get; }
 
         public Func<string> GetFilePath { get; set; }
 
@@ -195,21 +206,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             }
         }
 
-        public bool CanImportRR
+        public bool CanImportRr
         {
-            get { return canImportRR; }
+            get { return canImportRr; }
             set
             {
-                canImportRR = value;
+                canImportRr = value;
                 OnPropertyChanged();
             }
         }
-        public bool ImportRR
+        public bool ImportRr
         {
-            get { return SobekImporter.UseRR; }
+            get { return sobekImporter.UseRR; }
             set
             {
-                SobekImporter.UseRR = value;
+                sobekImporter.UseRR = value;
                 OnPropertyChanged();
                 RefreshImporters();
             }
@@ -217,20 +228,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 
         public bool ImportRtc
         {
-            get { return SobekImporter.UseRTC; }
+            get { return sobekImporter.UseRTC; }
             set
             {
-                SobekImporter.UseRTC = value;
+                sobekImporter.UseRTC = value;
                 OnPropertyChanged();
                 RefreshImporters();
             }
         }
         public bool ImportFlow
         {
-            get { return SobekImporter.UseFm; }
+            get { return sobekImporter.UseFm; }
             set
             {
-                SobekImporter.UseFm = value;
+                sobekImporter.UseFm = value;
                 OnPropertyChanged();
                 RefreshImporters();
             }
@@ -280,11 +291,24 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 
         public Action FinishedImport { get; set; }
 
+        public ICoordinateSystem CoordinateSystem
+        {
+            get
+            {
+                return coordinateSystem;
+            }
+            set
+            {
+                coordinateSystem = value;
+                OnPropertyChanged();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RefreshImporters()
         {
-            var importers = GetImporters(SobekImporter).Reverse().ToList();
+            var importers = GetImporters(sobekImporter).Reverse().ToList();
             ImportersWaterFlow1d = importers.Where(i => i.Category == SobekImporterCategories.WaterFlow1D);
             ImportersRainfallRunoff = importers.Where(i => i.Category == SobekImporterCategories.RainfallRunoff);
             ImportersRtc = importers.Where(i => i.Category == SobekImporterCategories.Rtc);
@@ -292,16 +316,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 
         private void SetSelectedPath(string path)
         {
-            SobekImporter.PathSobek = path;
+            sobekImporter.PathSobek = path;
 
             if (path?.ToLower().EndsWith("deftop.1") ?? false)
             {
                 // This is a SobekRE model. 
-                SobekImporter.UseFm = true;
-                SobekImporter.UseRTC = true;
-                SobekImporter.UseRR = false;
+                sobekImporter.UseFm = true;
+                sobekImporter.UseRTC = true;
+                sobekImporter.UseRR = false;
                 CanImportFlowRtc = true;
-                CanImportRR = false;
+                CanImportRr = false;
             }
             else if (path?.ToLower().EndsWith("network.tp") ?? false)
             {
@@ -316,21 +340,21 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 
                 // Add RTC in case that a flow model is detected. In case no controls are detected afterwards, this will be deleted. 
                 var hasFlowRtc = settingsDat.Contains("channel=-1") || settingsDat.Contains("river=-1") || settingsDat.Contains("sewer=-1");
-                var hasRR = settingsDat.Contains("3b=-1");
+                var hasRr = settingsDat.Contains("3b=-1");
 
-                SobekImporter.UseFm = hasFlowRtc;
-                SobekImporter.UseRTC = hasFlowRtc;
-                SobekImporter.UseRR = hasRR;
+                sobekImporter.UseFm = hasFlowRtc;
+                sobekImporter.UseRTC = hasFlowRtc;
+                sobekImporter.UseRR = hasRr;
                 CanImportFlowRtc = hasFlowRtc;
-                CanImportRR = hasRR;
+                CanImportRr = hasRr;
             }
             else
             {
-                SobekImporter.UseFm = false;
-                SobekImporter.UseRTC = false;
-                SobekImporter.UseRR = false;
+                sobekImporter.UseFm = false;
+                sobekImporter.UseRTC = false;
+                sobekImporter.UseRR = false;
                 CanImportFlowRtc = false;
-                CanImportRR = false;
+                CanImportRr = false;
             }
 
             RefreshImporters();

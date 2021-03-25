@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel;
@@ -29,7 +28,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
             Assert.AreEqual(0, viewmodel.ImportersRainfallRunoff.Count());
             Assert.AreEqual(0, viewmodel.ImportersRtc.Count());
             Assert.IsFalse(viewmodel.CanImportFlowRtc);
-            Assert.IsFalse(viewmodel.CanImportRR);
+            Assert.IsFalse(viewmodel.CanImportRr);
         }
 
         [Test]
@@ -51,7 +50,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
             Assert.AreEqual(9, viewmodel.ImportersRainfallRunoff.Count());
             Assert.AreEqual(0, viewmodel.ImportersRtc.Count());
             Assert.IsFalse(viewmodel.CanImportFlowRtc);
-            Assert.IsTrue(viewmodel.CanImportRR);
+            Assert.IsTrue(viewmodel.CanImportRr);
         }
 
         [Test]
@@ -72,7 +71,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
             Assert.AreEqual(0, viewmodel.ImportersRainfallRunoff.Count());
             Assert.AreEqual(1, viewmodel.ImportersRtc.Count());
             Assert.IsTrue(viewmodel.CanImportFlowRtc);
-            Assert.IsFalse(viewmodel.CanImportRR);
+            Assert.IsFalse(viewmodel.CanImportRr);
         }
 
         [Test]
@@ -95,7 +94,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
             Assert.AreEqual(0, viewmodel.ImportersRainfallRunoff.Count());
             Assert.AreEqual(1, viewmodel.ImportersRtc.Count());
             Assert.IsTrue(viewmodel.CanImportFlowRtc);
-            Assert.IsFalse(viewmodel.CanImportRR);
+            Assert.IsFalse(viewmodel.CanImportRr);
         }
         
         [Test]
@@ -179,10 +178,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
 
             // Act & Assert
             Assert.IsTrue(viewmodel.CanImportFlowRtc);
-            Assert.IsTrue(viewmodel.CanImportRR);
+            Assert.IsTrue(viewmodel.CanImportRr);
             Assert.IsTrue(viewmodel.ImportFlow);
             Assert.IsTrue(viewmodel.ImportRtc);
-            Assert.IsTrue(viewmodel.ImportRR);
+            Assert.IsTrue(viewmodel.ImportRr);
 
             Assert.AreEqual(12, viewmodel.ImportersWaterFlow1d.Count());
             Assert.AreEqual(9, viewmodel.ImportersRainfallRunoff.Count());
@@ -194,7 +193,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
             Assert.AreEqual(9, viewmodel.ImportersRainfallRunoff.Count());
             Assert.AreEqual(0, viewmodel.ImportersRtc.Count());
 
-            viewmodel.ImportRR = false;
+            viewmodel.ImportRr = false;
 
             Assert.AreEqual(12, viewmodel.ImportersWaterFlow1d.Count());
             Assert.AreEqual(0, viewmodel.ImportersRainfallRunoff.Count());

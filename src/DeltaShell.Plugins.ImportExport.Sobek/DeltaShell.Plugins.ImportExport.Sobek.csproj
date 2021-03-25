@@ -102,6 +102,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="GeoAPI.CoordinateSystems">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="GeoAPI.Extensions">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
@@ -130,6 +134,10 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SharpMap">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
