@@ -607,8 +607,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 }
                 if (intervalPropName == KnownProperties.ClassMapInterval)
                 {
-                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 5, 0);
-                    GetModelProperty(doWritePropName).Value = true;
+                    GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 0, 0, 0);
+                    GetModelProperty(doWritePropName).Value = false;
                 }
             }
 

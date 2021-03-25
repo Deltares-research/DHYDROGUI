@@ -318,7 +318,7 @@ GUIOnly,WaqOutputStopTime, output, Others,WAQ output-end-time,Datetime,,,,TRUE,S
 output,ClassMapFile,,,,FileName,,,,TRUE,,,,,,"Class map file *_clm.nc"
 output,WaterlevelClasses,output,Class,Water level classes,String,0.0,,,,,WriteClassMapFile,,,,"Water level classes", m
 output,WaterdepthClasses,output,Class,Water depth classes,String,0.0,,,,,WriteClassMapFile,,,,"Water depth classes", m
-output,ClassMapInterval,,,Class map interval,DoubleArray,300,0,,TRUE,,WriteClassMapFile,,,,"Class output interval [Dd HH:MM:SS.ZZZ]"
+output,ClassMapInterval,,,Class map interval,DoubleArray,0,0,,TRUE,,WriteClassMapFile,,,,"Class output interval [Dd HH:MM:SS.ZZZ]"
 output,VelocityMagnitudeClasses,output,Class,Class map's list of class values for velocity magnitudes,String,0,,,,,WriteClassMapFile,,,,Water level classes, m
 output,VelocityDirectionClassesInterval,output,Class,Class map's step size of class values for velocity direction,String,30,,,,,WriteClassMapFile,,,,Water depth classes, m
 output,StatsInterval,output,Others,Statistics output interval,Interval,0,,,FALSE,,,,,,Interval (in s) between simulation statistics output,
