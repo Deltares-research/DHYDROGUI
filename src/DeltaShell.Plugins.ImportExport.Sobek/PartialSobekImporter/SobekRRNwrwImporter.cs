@@ -477,36 +477,43 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void AddNwrwCatchmentDataToModel(List<Tuple<SobekRRNwrw, object>> tuples)
         {
-            var catchmentModelData = NwrwData.CreateNewNwrwDataAndCatchments(rrModel, tuples
-                                                                                      .Select(t => GetIdForObject(t.Item2))
-                                                                                      .ToArray());
-
-            var data = tuples.Select(t => new
+            try
             {
-                Definition = t.Item1,
-                Object = t.Item2,
-                Id = GetIdForObject(t.Item2),
-                catchmentData = catchmentModelData[GetIdForObject(t.Item2)]
-            }).ToArray();
+                var catchmentModelData = NwrwData.CreateNewNwrwDataAndCatchments(rrModel, tuples
+                                                                                          .Select(t => GetIdForObject(t.Item2))
+                                                                                          .ToArray());
 
-            foreach (var dataObject in data)
-            {
-                dataObject.catchmentData.NodeOrBranchId = dataObject.Id;
+                var data = tuples.Select(t => new
+                {
+                    Definition = t.Item1,
+                    Object = t.Item2,
+                    Id = GetIdForObject(t.Item2),
+                    catchmentData = catchmentModelData[GetIdForObject(t.Item2)]
+                }).ToArray();
 
-                Catchment catchment = dataObject.catchmentData.Catchment;
-                catchment.IsGeometryDerivedFromAreaSize = true;
+                foreach (var dataObject in data)
+                {
+                    dataObject.catchmentData.NodeOrBranchId = dataObject.Id;
+
+                    Catchment catchment = dataObject.catchmentData.Catchment;
+                    catchment.IsGeometryDerivedFromAreaSize = true;
                 
-                if (dataObject.Object is LateralSource lateralSource)
-                {
-                    catchment.Geometry = lateralSource.Geometry;
-                    AddNwrwCatchmentLinkToFmModel(catchment, lateralSource);
-                }
-                else if (dataObject.Object is SobekRRNode rrNode)
-                {
-                    catchment.Geometry = new Point(rrNode.X, rrNode.Y);
-                }
+                    if (dataObject.Object is LateralSource lateralSource)
+                    {
+                        catchment.Geometry = lateralSource.Geometry;
+                        AddNwrwCatchmentLinkToFmModel(catchment, lateralSource);
+                    }
+                    else if (dataObject.Object is SobekRRNode rrNode)
+                    {
+                        catchment.Geometry = new Point(rrNode.X, rrNode.Y);
+                    }
 
-                SetNwrwCatchmentData(dataObject.catchmentData, dataObject.Definition);
+                    SetNwrwCatchmentData(dataObject.catchmentData, dataObject.Definition);
+                }
+            }
+            catch (ArgumentNullException exception)
+            {
+                Log.Error(exception.Message);
             }
         }
 
