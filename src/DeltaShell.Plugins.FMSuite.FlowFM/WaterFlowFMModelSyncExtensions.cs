@@ -12,6 +12,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public static class WaterFlowFMModelSyncExtensions
     {
+        public static void AddMissingNodeData(this WaterFlowFMModel fmModel, IEnumerable<INode> nodes)
+        {
+            if (fmModel == null)
+                return;
+
+            foreach (var node in nodes)
+            {
+                var bc = Helper1D.CreateDefaultBoundaryCondition(node, fmModel.UseSalinity, fmModel.UseTemperature);
+                bc.SetBoundaryConditionDataForOutlet();
+                fmModel.BoundaryConditions1D.Add(bc);
+            }
+        }
+
         public static void AddMissingBranchData(this WaterFlowFMModel fmModel, IEnumerable<IBranch> branches)
         {
             if (fmModel == null)

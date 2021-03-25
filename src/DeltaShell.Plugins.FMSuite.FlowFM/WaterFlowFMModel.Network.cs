@@ -761,7 +761,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     throw new NotImplementedException();
 
                 case NotifyCollectionChangedAction.Add:
-                    var bc = Helper1D.CreateDefaultBoundaryCondition(node, false, false);
+                    var bc = Helper1D.CreateDefaultBoundaryCondition(node, UseSalinity, UseTemperature);
                     bc.SetBoundaryConditionDataForOutlet();
                     AddBoundaryCondition(bc);
                     break;

@@ -9,13 +9,16 @@ namespace DeltaShell.NGHS.IO.DataObjects
         public static void SetBoundaryConditionDataForOutlet(this Model1DBoundaryNodeData bc)
         {
             var manhole = bc?.Node as Manhole;
-            if (manhole != null && manhole.Compartments.OfType<OutletCompartment>().Any())
+            var outlet = manhole?.Compartments.OfType<OutletCompartment>().FirstOrDefault();
+         
+            if (outlet == null)
             {
-                var outlet = manhole.Compartments.OfType<OutletCompartment>().First();
-                bc.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
-                bc.WaterLevel = outlet.SurfaceWaterLevel;
-                bc.OutletCompartment = outlet;
+                return;
             }
+
+            bc.DataType = Model1DBoundaryNodeDataType.WaterLevelConstant;
+            bc.WaterLevel = outlet.SurfaceWaterLevel;
+            bc.OutletCompartment = outlet;
         }
 
         public static void UpdateManholeWithOutletData(this Model1DBoundaryNodeData flowBoundaryConditionData, INode node)

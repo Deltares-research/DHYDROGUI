@@ -94,6 +94,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 AddToNetwork(createdNodes, nodesLookup, HydroNetwork);
                 AddToNetwork(createdBranches, branchesLookUp, nodesLookup, HydroNetwork);
+                
+                fmModel?.AddMissingNodeData(createdNodes.Values);
                 fmModel?.AddMissingBranchData(createdBranches.Values);
             });
 
