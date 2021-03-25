@@ -718,29 +718,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            MarkOutputOutOfSync();     
-            
             if (sender is IStructure weir && e.PropertyName == nameof(IStructure.Formula))
             {
                 bool isInputSender = Area.Structures.Any(w => w.Name == weir.Name);
                 UpdateAreaDataItems(weir, isInputSender);
             }
 
-            if (updatingGroupName || Area.IsEditing || !(sender is IGroupableFeature groupableFeature) || e.PropertyName != nameof(IGroupableFeature.GroupName))
+            if (updatingGroupName || Area.IsEditing)
             {
                 return;
             }
 
-            updatingGroupName = true; // prevent recursive calls
-
-            groupableFeature.UpdateGroupName(this);
-
-            if (groupableFeature.IsDefaultGroup)
+            if (!(sender is IGroupableFeature groupableFeature))
             {
-                groupableFeature.IsDefaultGroup = false;
+                MarkOutputOutOfSync();
+                return;
             }
 
-            updatingGroupName = false;
+            if (e.PropertyName == nameof(IGroupableFeature.GroupName))
+            {
+                updatingGroupName = true; // prevent recursive calls
+
+                groupableFeature.UpdateGroupName(this);
+
+                if (groupableFeature.IsDefaultGroup)
+                {
+                    groupableFeature.IsDefaultGroup = false;
+                }
+
+                updatingGroupName = false;
+                
+                return;
+            }
+
+            if (e.PropertyName != nameof(IGroupableFeature.IsDefaultGroup))
+            {
+                MarkOutputOutOfSync();
+            }
         }
 
         private void RemoveAreaFeature(IFeature feature)

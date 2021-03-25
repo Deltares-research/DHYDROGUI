@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
@@ -11,7 +12,9 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMapTestUtils;
 
@@ -84,44 +87,85 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         [Test]
         [Category(TestCategory.DataAccess)]
         [TestCaseSource(nameof(GetTestStepsForChangingModelDefinitionInputData))]
-        public void ChangingRealModelDefinitionInputProperties_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data)
+        public void ChangingRealModelDefinitionInputProperties_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data, bool expectedResult)
         {
-            MarkingOutputOutOfSyncWhenInputChangedTest(data);
+            MarkingOutputOutOfSyncWhenInputChangedTest(data, expectedResult);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         [TestCaseSource(nameof(GetTestStepsForHydroAreaObjects))]
-        public void AddingOrRemovingAHydroAreaObject_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data)
+        public void AddingOrRemovingAHydroAreaObject_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data, bool expectedResult)
         {
-            MarkingOutputOutOfSyncWhenInputChangedTest(data);
+            MarkingOutputOutOfSyncWhenInputChangedTest(data, expectedResult);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         [TestCaseSource(nameof(GetTestStepsForFMRegionObjects))]
-        public void AddingOrRemovingAFMRegionObject_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data)
+        public void AddingOrRemovingAFMRegionObject_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data, bool expectedResult)
         {
-            MarkingOutputOutOfSyncWhenInputChangedTest(data);
+            MarkingOutputOutOfSyncWhenInputChangedTest(data, expectedResult);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         [TestCaseSource(nameof(GetTestStepsForHydroAreaPropertyChanges))]
-        public void ChangingAStructureProperty_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data)
+        public void ChangingAStructureProperty_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data, bool expectedResult)
         {
-            MarkingOutputOutOfSyncWhenInputChangedTest(data);
+            MarkingOutputOutOfSyncWhenInputChangedTest(data, expectedResult);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(GetTestStepsForHydroAreaDataAccessPropertyChanges))]
+        public void ChangingDataAccessPropertiesOfHydroAreaFeature_ShouldNotMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data, bool expectedResult)
+        {
+            MarkingOutputOutOfSyncWhenInputChangedTest(data, expectedResult);
         }
 
         [Test]
         [Category(TestCategory.DataAccess)]
         [TestCaseSource(nameof(GetTestStepsForGridChanges))]
-        public void ChangingTheGrid_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data)
+        public void ChangingTheGrid_ShouldMarkOutputOutOfSync(ITestStepsForModelOutputOutOfSync data, bool expectedResult)
         {
-            MarkingOutputOutOfSyncWhenInputChangedTest(data);
+            MarkingOutputOutOfSyncWhenInputChangedTest(data, expectedResult);
         }
 
-        private static void MarkingOutputOutOfSyncWhenInputChangedTest(ITestStepsForModelOutputOutOfSync data)
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(GetTestStepsForExporting))]
+        public void ExportingTheModel_WithHydroAreaFeatures_ShouldNotMarkOutputOutOfSync(ITestStepForAddingHydroAreaFeatureForExport data)
+        {
+            using (var tempDir = new TemporaryDirectory())
+            using (var model = new WaterFlowFMModel())
+            {
+                string exportDirectory = Path.Combine(tempDir.Path, "Export");
+                string targetFilePath = Path.Combine(exportDirectory, "test.mdu");
+                string outputDirectoryPath = Path.Combine(tempDir.Path, "Output");
+
+                Directory.CreateDirectory(exportDirectory);
+                Directory.CreateDirectory(outputDirectoryPath);
+                
+                CreateRestartOutputFile(outputDirectoryPath);
+                
+                data.AddExportableHydroAreaFeature(model);
+                
+                model.ConnectOutput(outputDirectoryPath);
+
+                // Check pre-condition
+                Assert.IsFalse(model.OutputOutOfSync);
+                Assert.IsFalse(model.OutputIsEmpty);
+
+                // Call
+                model.ExportTo(targetFilePath);
+
+                // Assert
+                Assert.IsFalse(model.OutputOutOfSync);
+            }
+        }
+
+        private static void MarkingOutputOutOfSyncWhenInputChangedTest(ITestStepsForModelOutputOutOfSync data, bool expectedResult)
         {
             // Setup
             using (var tempDir = new TemporaryDirectory())
@@ -140,7 +184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 data.Act(model);
 
                 // Assert
-                Assert.IsTrue(model.OutputOutOfSync);
+                Assert.That(model.OutputOutOfSync.Equals(expectedResult));
             }
         }
 
@@ -152,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         private static IEnumerable<TestCaseData> GetTestStepsForChangingModelDefinitionBySettingValueAsString()
         {
             TestCaseData GetTestCaseData(string propertyName, string value) =>
-                new TestCaseData(new ModelDefinitionSetValueAsStringTestSteps(propertyName, value))
+                new TestCaseData(new ModelDefinitionSetValueAsStringTestSteps(propertyName, value), true)
                     .SetName($"Modifying the real model definition input property '{propertyName}' should mark the output out of sync.");
 
             yield return GetTestCaseData(KnownProperties.FixedWeirScheme, "0");
@@ -208,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         private static IEnumerable<TestCaseData> GetTestStepsForChangingDateTimeObjectsInModelDefinition()
         {
             TestCaseData GetTestCaseData(string propertyName) =>
-                new TestCaseData(new ModelDefinitionSetValueDirectlyTestSteps(propertyName, new DateTime()))
+                new TestCaseData(new ModelDefinitionSetValueDirectlyTestSteps(propertyName, new DateTime()), true)
                     .SetName($"Modifying the DateTime property '{propertyName}' should mark the output out of sync.");
 
             yield return GetTestCaseData(GuiProperties.StartTime);
@@ -227,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         private static IEnumerable<TestCaseData> GetTestStepsForChangingTimeSpanObjectsInModelDefinition()
         {
             TestCaseData GetTestCaseData(string propertyName) =>
-                new TestCaseData(new ModelDefinitionSetValueDirectlyTestSteps(propertyName, new TimeSpan()))
+                new TestCaseData(new ModelDefinitionSetValueDirectlyTestSteps(propertyName, new TimeSpan()), true)
                     .SetName($"Modifying the TimeSpan property '{propertyName}' should mark the output out of sync.");
 
             yield return GetTestCaseData(GuiProperties.HisOutputDeltaT);
@@ -239,51 +283,81 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         private static IEnumerable<TestCaseData> GetTestStepsForHydroAreaObjects()
         {
-            yield return new TestCaseData(new AddingObservationPointTestSteps()).SetName("Adding an observation point should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingObservationPointTestSteps()).SetName("Removing an observation point should mark the output out of sync.");
-            yield return new TestCaseData(new AddingFixedWeirTestSteps()).SetName("Adding a fixed weir should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingFixedWeirTestSteps()).SetName("Removing a fixed weir should mark the output out of sync.");
-            yield return new TestCaseData(new AddingStructureTestSteps()).SetName("Adding a structure should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingStructureTestSteps()).SetName("Removing a structure should mark the output out of sync.");
-            yield return new TestCaseData(new AddingObservationCrossSectionTestSteps()).SetName("Adding an observation cross section should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingObservationCrossSectionTestSteps()).SetName("Removing an observation cross section should mark the output out of sync.");
-            yield return new TestCaseData(new AddingPumpTestSteps()).SetName("Adding a pump should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingPumpTestSteps()).SetName("Removing a pump should mark the output out of sync.");
-            yield return new TestCaseData(new AddingBridgePillarTestSteps()).SetName("Adding a bridge pillar should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingBridgePillarTestSteps()).SetName("Removing a bridge pillar should mark the output out of sync.");
-            yield return new TestCaseData(new AddingDryPointTestSteps()).SetName("Adding a dry point should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingDryPointTestSteps()).SetName("Removing a dry point should mark the output out of sync.");
-            yield return new TestCaseData(new AddingDryAreaTestSteps()).SetName("Adding a dry area should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingDryAreaTestSteps()).SetName("Removing a dry area should mark the output out of sync.");
-            yield return new TestCaseData(new AddingThinDamTestSteps()).SetName("Adding a thin dam should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingThinDamTestSteps()).SetName("Removing a thin dam should mark the output out of sync.");
+            yield return new TestCaseData(new AddingObservationPointTestSteps(), true).SetName("Adding an observation point should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingObservationPointTestSteps(), true).SetName("Removing an observation point should mark the output out of sync.");
+            yield return new TestCaseData(new AddingFixedWeirTestSteps(), true).SetName("Adding a fixed weir should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingFixedWeirTestSteps(), true).SetName("Removing a fixed weir should mark the output out of sync.");
+            yield return new TestCaseData(new AddingStructureTestSteps(), true).SetName("Adding a structure should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingStructureTestSteps(), true).SetName("Removing a structure should mark the output out of sync.");
+            yield return new TestCaseData(new AddingObservationCrossSectionTestSteps(), true).SetName("Adding an observation cross section should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingObservationCrossSectionTestSteps(), true).SetName("Removing an observation cross section should mark the output out of sync.");
+            yield return new TestCaseData(new AddingPumpTestSteps(), true).SetName("Adding a pump should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingPumpTestSteps(), true).SetName("Removing a pump should mark the output out of sync.");
+            yield return new TestCaseData(new AddingBridgePillarTestSteps(), true).SetName("Adding a bridge pillar should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingBridgePillarTestSteps(), true).SetName("Removing a bridge pillar should mark the output out of sync.");
+            yield return new TestCaseData(new AddingDryPointTestSteps(), true).SetName("Adding a dry point should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingDryPointTestSteps(), true).SetName("Removing a dry point should mark the output out of sync.");
+            yield return new TestCaseData(new AddingDryAreaTestSteps(), true).SetName("Adding a dry area should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingDryAreaTestSteps(), true).SetName("Removing a dry area should mark the output out of sync.");
+            yield return new TestCaseData(new AddingThinDamTestSteps(), true).SetName("Adding a thin dam should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingThinDamTestSteps(), true).SetName("Removing a thin dam should mark the output out of sync.");
         }
 
         private static IEnumerable<TestCaseData> GetTestStepsForFMRegionObjects()
         {
-            yield return new TestCaseData(new AddingBoundaryTestSteps()).SetName("Adding a boundary should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingBoundaryTestSteps()).SetName("Removing a boundary should mark the output out of sync.");
-            yield return new TestCaseData(new AddingPipeTestSteps()).SetName("Adding a pipe should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingPipeTestSteps()).SetName("Removing a pipe should mark the output out of sync.");
-            yield return new TestCaseData(new AddingSourceAndSinkTestSteps()).SetName("Adding a source and sink should mark the output out of sync.");
-            yield return new TestCaseData(new RemovingSourceAndSinkTestSteps()).SetName("Removing a source and sink should mark the output out of sync.");
+            yield return new TestCaseData(new AddingBoundaryTestSteps(), true).SetName("Adding a boundary should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingBoundaryTestSteps(), true).SetName("Removing a boundary should mark the output out of sync.");
+            yield return new TestCaseData(new AddingPipeTestSteps(), true).SetName("Adding a pipe should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingPipeTestSteps(), true).SetName("Removing a pipe should mark the output out of sync.");
+            yield return new TestCaseData(new AddingSourceAndSinkTestSteps(), true).SetName("Adding a source and sink should mark the output out of sync.");
+            yield return new TestCaseData(new RemovingSourceAndSinkTestSteps(), true).SetName("Removing a source and sink should mark the output out of sync.");
         }
 
         private static IEnumerable<TestCaseData> GetTestStepsForHydroAreaPropertyChanges()
         {
-            yield return new TestCaseData(new ChangingTheFormulaOfAStructureTestSteps()).SetName("Changing the formula of a structure should mark the output out of sync.");
-            yield return new TestCaseData(new ChangingAPropertyInTheFormulaOfAStructureTestSteps()).SetName("Changing a property in the formula of a structure should mark the output out of sync.");
+            yield return new TestCaseData(new ChangingTheFormulaOfAStructureTestSteps(), true).SetName("Changing the formula of a structure should mark the output out of sync.");
+            yield return new TestCaseData(new ChangingAPropertyInTheFormulaOfAStructureTestSteps(), true).SetName("Changing a property in the formula of a structure should mark the output out of sync.");
+            yield return new TestCaseData(new ChangingTheNameOfAnObservationPointTestSteps(), true).SetName("Changing the name of an observation point should mark the output out of sync.");
+        }
+
+        private static IEnumerable<TestCaseData> GetTestStepsForHydroAreaDataAccessPropertyChanges()
+        {
+            yield return new TestCaseData(new ChangingTheGroupNameOfHydroAreaFeatureTestSteps(), false).SetName("Changing the group name of a hydro area feature should not mark the output out of sync.");
+            yield return new TestCaseData(new ChangingIsDefaultGroupOfHydroAreaFeatureTestSteps(), false).SetName("Changing the IsDefaultGroup property of a hydro area feature should not mark the output out of sync.");
         }
 
         private static IEnumerable<TestCaseData> GetTestStepsForGridChanges()
         {
-            yield return new TestCaseData(new ChangingTheGridTestSteps()).SetName("Changing the grid of the model should mark the output out of sync.");
+            yield return new TestCaseData(new ChangingTheGridTestSteps(), true).SetName("Changing the grid of the model should mark the output out of sync.");
+        }
+
+        private static IEnumerable<TestCaseData> GetTestStepsForExporting()
+        {
+            yield return new TestCaseData(new AddingObservationPointForExportTestStep()).SetName("Exporting model with observation point should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingPumpForExportTestStep()).SetName("Exporting model with pump should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingBridgePillarForExportTestStep()).SetName("Exporting model with bridge pillar should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingLandBoundaryForExportTestStep()).SetName("Exporting model with land boundary should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingObservationCrossSectionForExportTestStep()).SetName("Exporting model with observation cross section should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingDredgingLocationForExportTestStep()).SetName("Exporting model with dredging location should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingDumpingLocationForExportTestStep()).SetName("Exporting model with dumping location should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingDryAreaForExportTestStep()).SetName("Exporting model with dry area should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingDryPointForExportTestStep()).SetName("Exporting model with dry point should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingFixedWeirForExportTestStep()).SetName("Exporting model with fixed weir should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingEmbankmentForExportTestStep()).SetName("Exporting model with embankment should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingEnclosureForExportTestStep()).SetName("Exporting model with enclosure should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingThinDamForExportTestStep()).SetName("Exporting model with thin dam should not mark the output out of sync.");
+            yield return new TestCaseData(new AddingStructureForExportTestStep()).SetName("Exporting model with structure should not mark the output out of sync.");
         }
 
         public interface ITestStepsForModelOutputOutOfSync
         {
             void Arrange(WaterFlowFMModel model);
             void Act(WaterFlowFMModel model);
+        }
+
+        public interface ITestStepForAddingHydroAreaFeatureForExport
+        {
+            void AddExportableHydroAreaFeature(WaterFlowFMModel model);
         }
 
         private class ModelDefinitionSetValueDirectlyTestSteps : ITestStepsForModelOutputOutOfSync
@@ -506,12 +580,163 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             public void Act(WaterFlowFMModel model) => ((GeneralStructureFormula)structure.Formula).PositiveFreeGateFlow = 3.5;
         }
 
+        private class ChangingTheNameOfAnObservationPointTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            private readonly GroupableFeature2DPoint observationPoint = new GroupableFeature2DPoint();
+
+            public void Arrange(WaterFlowFMModel model) => model.Area.ObservationPoints.Add(observationPoint);
+            public void Act(WaterFlowFMModel model) => observationPoint.Name = "test";
+        }
+
         private class ChangingTheGridTestSteps : ITestStepsForModelOutputOutOfSync
         {
-            public void Arrange(WaterFlowFMModel model) { }
-            
+            public void Arrange(WaterFlowFMModel model) {}
+
             public void Act(WaterFlowFMModel model) => model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-    }
+        }
+
+        private class ChangingTheGroupNameOfHydroAreaFeatureTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            private readonly GroupableFeature2DPoint observationPoint = new GroupableFeature2DPoint();
+            
+            public void Arrange(WaterFlowFMModel model) => model.Area.ObservationPoints.Add(observationPoint);
+            public void Act(WaterFlowFMModel model) => observationPoint.GroupName = "onzin";
+        }
+
+        private class ChangingIsDefaultGroupOfHydroAreaFeatureTestSteps : ITestStepsForModelOutputOutOfSync
+        {
+            private readonly GroupableFeature2DPoint observationPoint = new GroupableFeature2DPoint();
+
+            public void Arrange(WaterFlowFMModel model) => model.Area.ObservationPoints.Add(observationPoint);
+            public void Act(WaterFlowFMModel model) => observationPoint.IsDefaultGroup = true;
+        }
+
+        private class AddingObservationPointForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.ObservationPoints.Add(new GroupableFeature2DPoint
+            {
+                Geometry = new Point(5, 5)
+            });
+        }
+
+        private class AddingLandBoundaryForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.LandBoundaries.Add(new LandBoundary2D
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+
+        private class AddingDryPointForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.DryPoints.Add(new GroupablePointFeature
+            {
+                Geometry = new Point(new Coordinate(0, 100))
+            });
+        }
+
+        private class AddingDryAreaForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.DryAreas.Add(new GroupableFeature2DPolygon
+            {
+                Geometry = new Polygon(new LinearRing(polygon))
+            });
+        }
+
+        private class AddingThinDamForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.ThinDams.Add(new ThinDam2D
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+
+        private class AddingFixedWeirForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.FixedWeirs.Add(new FixedWeir
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+
+        private class AddingObservationCrossSectionForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.ObservationCrossSections.Add(new ObservationCrossSection2D
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+
+        private class AddingDumpingLocationForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.DumpingLocations.Add(new GroupableFeature2D
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+
+
+        private class AddingDredgingLocationForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.DredgingLocations.Add(new GroupableFeature2D
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+
+        private class AddingEmbankmentForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.Embankments.Add(new Embankment
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+
+        private class AddingEnclosureForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.Enclosures.Add(new GroupableFeature2DPolygon
+            {
+                Geometry = new Polygon(new LinearRing(polygon))
+            });
+        }
+
+        private class AddingBridgePillarForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.BridgePillars.Add(new BridgePillar
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+
+        private class AddingPumpForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.Pumps.Add(new Pump
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+
+        private class AddingStructureForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
+        {
+            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.Structures.Add(new Structure
+            {
+                Geometry = new LineString(lineString)
+            });
+        }
+        
+        private static readonly Coordinate[] lineString =
+        {
+            new Coordinate(3, 3),
+            new Coordinate(4, 4)
+        };
+
+        private static readonly Coordinate[] polygon =
+        {
+            new Coordinate(1, 1),
+            new Coordinate(1, 2),
+            new Coordinate(2, 2),
+            new Coordinate(1, 1)
+        };
 
         private static void CreateRestartOutputFile(string tempDirectoryPath)
         {

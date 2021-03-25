@@ -8,7 +8,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
@@ -24,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         /// <summary>
         /// Initializes a new instance of the <see cref="FMRestartFileImporter"/> class.
         /// </summary>
-        /// <param name="getModels">Func to retrieve the available collection of <seealso cref="WaterFlowFMModel"/>.</param>
+        /// <param name="getModels">Func to retrieve the available collection of <seealso cref="IRestartModel"/>.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="getModels"/> is <c>null</c>.
         /// </exception>
