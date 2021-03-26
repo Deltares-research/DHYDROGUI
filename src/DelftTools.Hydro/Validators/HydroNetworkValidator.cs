@@ -59,7 +59,7 @@ namespace DelftTools.Hydro.Validators
                 }
 
                 IFunction retentionTableData = retention.Data;
-                if (retention.UseTable && retentionTableData?.Components?[0] == null || retentionTableData.Components[0].Values.Count == 0)
+                if (retention.UseTable && (retentionTableData?.Components?[0] == null || retentionTableData.Components[0].Values.Count == 0))
                 {
                     issues.Add(new ValidationIssue(retention,
                                                    ValidationSeverity.Error,
@@ -67,18 +67,21 @@ namespace DelftTools.Hydro.Validators
                     continue;
                 }
 
-                var levelStorageValues = retentionTableData.Components[0].GetValues<double>().ToArray();
-                var levelStorageHeigth = retentionTableData.Arguments[0].GetValues<double>().ToArray();
-                if (levelStorageValues.Length != levelStorageHeigth.Length) continue;
-                for (var index = 0; index < levelStorageValues.Length; index++)
+                if (retention.UseTable)
                 {
-                    double value = levelStorageValues[index];
-                    double height = levelStorageHeigth[index];
-                    if (Math.Abs(value) < double.Epsilon)
+                    var levelStorageValues = retentionTableData.Components[0].GetValues<double>().ToArray();
+                    var levelStorageHeigth = retentionTableData.Arguments[0].GetValues<double>().ToArray();
+                    if (levelStorageValues.Length != levelStorageHeigth.Length) continue;
+                    for (var index = 0; index < levelStorageValues.Length; index++)
                     {
-                        issues.Add(new ValidationIssue(retention,
-                                                       ValidationSeverity.Error,
-                                                       $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", retentionTableData));
+                        double value = levelStorageValues[index];
+                        double height = levelStorageHeigth[index];
+                        if (Math.Abs(value) < double.Epsilon)
+                        {
+                            issues.Add(new ValidationIssue(retention,
+                                                           ValidationSeverity.Error,
+                                                           $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", retentionTableData));
+                        }
                     }
                 }
             }
