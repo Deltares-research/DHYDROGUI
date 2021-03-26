@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
         [InvokeRequired]
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
-            if (sender is FileImportActivity fileImportActivity && e.NewStatus == ActivityStatus.Done)
+            if (sender is FileImportActivity fileImportActivity && e.NewStatus == ActivityStatus.Cleaning)
             {
                 // remove memory leaks
                 fileImportActivity.FileImporter.ProgressChanged = null;
