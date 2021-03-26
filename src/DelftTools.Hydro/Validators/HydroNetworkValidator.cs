@@ -55,29 +55,30 @@ namespace DelftTools.Hydro.Validators
                                                    ValidationSeverity.Error,
                                                    $"The values in the storage graph of retention {retention.Name} should be greater than zero."));
 
-                    IFunction retentionTableData = retention.Data;
-                    
-                    if (retention.UseTable && retentionTableData?.Components?[0] == null || retentionTableData.Components[0].Values.Count == 0)
+
+                }
+
+                IFunction retentionTableData = retention.Data;
+                if (retention.UseTable && retentionTableData?.Components?[0] == null || retentionTableData.Components[0].Values.Count == 0)
+                {
+                    issues.Add(new ValidationIssue(retention,
+                                                   ValidationSeverity.Error,
+                                                   $"Table should be used for {retention.Name}, but no values are set.", retentionTableData));
+                    continue;
+                }
+
+                var levelStorageValues = retentionTableData.Components[0].GetValues<double>().ToArray();
+                var levelStorageHeigth = retentionTableData.Arguments[0].GetValues<double>().ToArray();
+                if (levelStorageValues.Length != levelStorageHeigth.Length) continue;
+                for (var index = 0; index < levelStorageValues.Length; index++)
+                {
+                    double value = levelStorageValues[index];
+                    double height = levelStorageHeigth[index];
+                    if (Math.Abs(value) < double.Epsilon)
                     {
                         issues.Add(new ValidationIssue(retention,
                                                        ValidationSeverity.Error,
-                                                       $"Table should be used for {retention.Name}, but no values are set.", retentionTableData));
-                        continue;
-                    }
-
-                    var levelStorageValues = retentionTableData.Components[0].GetValues<double>().ToArray();
-                    var levelStorageHeigth = retentionTableData.Arguments[0].GetValues<double>().ToArray();
-                    if (levelStorageValues.Length != levelStorageHeigth.Length) continue;
-                    for (var index = 0; index < levelStorageValues.Length; index++)
-                    {
-                        double value = levelStorageValues[index];
-                        double height = levelStorageHeigth[index];
-                        if (Math.Abs(value) < double.Epsilon)
-                        {
-                            issues.Add(new ValidationIssue(retention,
-                                                           ValidationSeverity.Error,
-                                                           $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", retentionTableData));
-                        }
+                                                       $"Table should be used for {retention.Name}, but at height {height} storage value is {value} which is not allowed (should be higher than 0).", retentionTableData));
                     }
                 }
             }
