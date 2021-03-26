@@ -17,6 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
         protected override void OnAddArea(IRainfallRunoffModel model, NwrwData data, IList<ModelLink> links)
         {
             //Nwrw is written differently
+            data.UpdateCatchmentAreaSize();
         }
     }
 }

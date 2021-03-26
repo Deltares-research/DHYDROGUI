@@ -160,7 +160,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                             };
                             if (source is Catchment catchment && Equals(catchment.CatchmentType, CatchmentType.NWRW))
                             {
+                                var area = catchment.AreaSize;
                                 source.Geometry = target.Geometry;
+                                catchment.SetAreaSize(area);
                                 hydroLink.Geometry = new LineString(new []{source.Geometry?.Coordinate, target.Geometry?.Coordinate});
                             }
                             else
