@@ -65,15 +65,16 @@ namespace DelftTools.Hydro
             }
             set
             {
-                if (value is ILineString && value.Coordinates.Length >= 3)
+                if (Equals(CatchmentType, CatchmentType.NWRW) && value is IPoint point)
                 {
-                    base.Geometry = new Polygon(new LinearRing(value.Coordinates));
+                    UpdateDerivedGeometry(AreaSize, point);
                 }
                 else
                 {
-                    base.Geometry = value;
+                    base.Geometry = value is ILineString && value.Coordinates.Length >= 3 
+                                        ? new Polygon(new LinearRing(value.Coordinates)) 
+                                        : value;
                 }
-
                 interiorPointCache = null;
             }
         }
@@ -200,10 +201,14 @@ namespace DelftTools.Hydro
 
         private void UpdateDerivedGeometry(double newAreaSize)
         {
+            IPoint center = GetCenter();
+            UpdateDerivedGeometry(newAreaSize, center);
+        }
+        private void UpdateDerivedGeometry(double newAreaSize, IPoint center)
+        {
             const double factorToAdjustForCircleApproximation = 1.0006582768034465388390272364538;
             newAreaSize *= factorToAdjustForCircleApproximation;
 
-            IPoint center = GetCenter();
             double diameter = Math.Sqrt(4.0*newAreaSize/Math.PI);
             var factory = new GeometricShapeFactory {Centre = center.Coordinate, Size = diameter};
             Geometry = factory.CreateCircle();
