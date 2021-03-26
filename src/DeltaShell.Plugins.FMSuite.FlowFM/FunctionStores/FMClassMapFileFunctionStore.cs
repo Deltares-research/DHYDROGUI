@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             LocationsByNetworkDataType = new Dictionary<string, IList<INetworkLocation>>();
-            grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true);
+            grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true, false);
             links = UGridFileHelper.Read1D2DLinks(netCdfFile.Path);
             UpdateNetworkAndDiscretisation();
             GenerateGeometriesForLinks();
