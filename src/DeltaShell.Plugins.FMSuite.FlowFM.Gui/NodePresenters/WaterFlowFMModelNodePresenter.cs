@@ -104,6 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
                 new[]
                 {
                     new FmModelTreeShortcut("Time Frame", TimeFrameIcon, model, "Time Frame"),
+                    new FmModelTreeShortcut("Geometry Parameters", NumParamIcon, model, "Geometry Parameters"),
                     new FmModelTreeShortcut("Initial Conditions", InitialConditionsIcon, model, "Initial Conditions"),
                     new FmModelTreeShortcut("Physical Parameters", PhysParamIcon, model, "Physical Parameters"),
                     new FmModelTreeShortcut("Numerical Parameters", NumParamIcon, model, "Numerical Parameters"),
