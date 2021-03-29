@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
 
                 // [Then]
-                CompareResultDataWithReferenceData(Path.Combine(firstSaveProjectPath + "_data"), acceptanceModelFileName);
+                CompareResultDataWithReferenceData(Path.Combine(firstSaveProjectPath + "_data", "input"), acceptanceModelFileName);
             }
         }
 
@@ -121,8 +121,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
         private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory, string acceptanceModelFileName)
         {
-            var flowFmResultFiles = Directory.GetFiles(Path.Combine(secondSaveProjectPath + "_data", acceptanceModelFileName));
-            var flowFmReferenceFiles = Directory.GetFiles(Path.Combine(flowFmReferenceFileDirectory, acceptanceModelFileName));
+            var flowFmReferenceFiles = Directory.GetFiles(flowFmReferenceFileDirectory);
+            if (!flowFmReferenceFiles.Any())
+            {
+                Assert.Fail($"No saved files (first save) could be found at {flowFmReferenceFiles}.");
+            }
+            
+            var secondSaveDirectory = Path.Combine(secondSaveProjectPath + "_data", "FlowFM", "input");
+            var flowFmResultFiles = Directory.GetFiles(secondSaveDirectory);
+            if (!flowFmResultFiles.Any())
+            {
+                Assert.Fail($"No saved files (second save) could be found at {secondSaveDirectory}.");
+            }
 
             FlowFmFileComparer.Compare(flowFmReferenceFiles, flowFmResultFiles, tempDirectory);
         }
