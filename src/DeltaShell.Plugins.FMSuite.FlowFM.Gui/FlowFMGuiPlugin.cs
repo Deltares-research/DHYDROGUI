@@ -325,16 +325,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
-            var channelInitialConditionDefinitionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<ChannelInitialConditionDefinition, WaterFlowFMModel>("1D Initial Conditions", m => m.ChannelInitialConditionDefinitions, () => Gui);
-            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(channelInitialConditionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
-
-            var channelFrictionDefinitionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<ChannelFrictionDefinition, WaterFlowFMModel>("Channel Friction Definitions", m => m.ChannelFrictionDefinitions, () => Gui);
-            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(channelFrictionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
-
-            var pipeFrictionDefinitionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<PipeFrictionDefinition, WaterFlowFMModel>("Pipe Friction Definitions", m => m.PipeFrictionDefinitions, () => Gui);
-            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipeFrictionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
-
-
             var model1DBoundaryConditionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>("1D Boundary Conditions", m => m.BoundaryConditions1D, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(model1DBoundaryConditionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
@@ -483,8 +473,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
 
-            
-            yield return new ViewInfo<IEventedList<ChannelFrictionDefinition>, ILayer, ChannelFrictionDefinitionsView>
+            var channelFrictionDefinitionsViewInfo = new ViewInfo<IEventedList<ChannelFrictionDefinition>, ILayer, ChannelFrictionDefinitionsView>
             {
                 Description = "1D Roughness - Channels",
                 GetViewName = (view, layer) => layer?.Name,
@@ -522,8 +511,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     view.SetZoomToFeatureMethod(feature => centralMap2.MapView.EnsureVisible(feature));
                 }
             };
+            yield return channelFrictionDefinitionsViewInfo;
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(channelFrictionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
 
-            yield return new ViewInfo<IEventedList<PipeFrictionDefinition>, ILayer, VectorLayerAttributeTableView>
+            var pipeFrictionDefinitionsViewInfo = new ViewInfo<IEventedList<PipeFrictionDefinition>, ILayer, VectorLayerAttributeTableView>
             {
                 Description = "1D Roughness - Sewer",
                 GetViewName = (view, layer) => layer?.Name,
@@ -545,8 +536,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     view.ZoomToFeature = feature => centralMap4.EnsureVisible(feature);
                 }
             };
+            yield return pipeFrictionDefinitionsViewInfo;
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipeFrictionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
 
-            yield return new ViewInfo<IEventedList<ChannelInitialConditionDefinition>, ILayer, ChannelInitialConditionDefinitionsView>
+            var channelInitialConditionDefinitionsViewInfo = new ViewInfo<IEventedList<ChannelInitialConditionDefinition>, ILayer, ChannelInitialConditionDefinitionsView>
             {
                 Description = "1D Initial Conditions - Channels",
                 GetViewName = (view, layer) => layer?.Name,
@@ -583,6 +576,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     view.SetZoomToFeatureMethod(feature => centralMap3.EnsureVisible(feature));
                 }
             };
+            yield return channelInitialConditionDefinitionsViewInfo;
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(channelInitialConditionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
         }
 
         private static void SetLateralSourceCompartmentComboBoxTypeEditor(VectorLayerAttributeTableView view)
