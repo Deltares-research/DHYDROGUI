@@ -121,6 +121,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
         private static bool IsCrossSectionDefinitionFile(string filePath)
         {
+            string extension = Path.GetExtension(filePath);
+            if (!string.Equals(extension, "ini"))
+            {
+                return false;
+            }
+            
             IList<DelftIniCategory> categories = new DelftIniReader().ReadDelftIniFile(filePath);
             return categories.Any(c => c.ValidGeneralRegion(GeneralRegion.CrossSectionDefinitionsMajorVersion,
                                                             GeneralRegion.CrossSectionDefinitionsMinorVersion,
@@ -138,7 +144,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             if (fileNameWithoutExtension.Equals("crsdef", StringComparison.InvariantCultureIgnoreCase))
             {
-                //linesToIgnore = new[] { "    xCoordinates", "    yCoordinates", "    zCoordinates" };
                 SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, DefinitionPropertySettings.Header, DefinitionPropertySettings.Id.Key);
             }
 
