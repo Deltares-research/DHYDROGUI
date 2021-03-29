@@ -139,12 +139,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             if (fileNameWithoutExtension.Equals("crsloc", StringComparison.InvariantCultureIgnoreCase))
             {
-                SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, CrossSectionRegion.IniHeader, LocationRegion.Id.Key);
+                SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, LocationRegion.Id.Key);
             }
 
             if (fileNameWithoutExtension.Equals("crsdef", StringComparison.InvariantCultureIgnoreCase))
             {
-                SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, DefinitionPropertySettings.Header, DefinitionPropertySettings.Id.Key);
+                SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, DefinitionPropertySettings.Id.Key);
             }
 
             string fileExtension = Path.GetExtension(expectedFlowFmFile);
@@ -171,13 +171,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             new DelftIniWriter().WriteDelftIniFile(expectedBoundaryCategories.Concat(expectedLateralCategories), fileName);
         }
 
-        private static void SortFmIniFile(string expectedFlowFmFile, string actualFlowFmFile, string iniHeader, string idKey)
+        private static void SortFmIniFile(string expectedFlowFmFile, string actualFlowFmFile, string idKey)
         {
             var readCategories = new DelftIniReader().ReadDelftIniFile(expectedFlowFmFile);
-            new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(iniHeader)).OrderBy(c => c.ReadProperty<string>(idKey)), expectedFlowFmFile);
+            new DelftIniWriter().WriteDelftIniFile(readCategories.OrderBy(c => c.ReadProperty<string>(idKey)), expectedFlowFmFile);
 
             readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
-            new DelftIniWriter().WriteDelftIniFile(readCategories.Where(c => c.Name.Equals(iniHeader)).OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
+            new DelftIniWriter().WriteDelftIniFile(readCategories.OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
         }
     }
 }

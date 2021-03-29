@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             for (var i = 0; i < text.Length; i++)
             {
                 var lineNumber = i + 1;
-                var lineWithoutTabs = RemoveTabs(text[i]);
+                var lineWithoutTabs = RemoveLeadingWhitespace(text[i]);
 
                 if (linesToIgnore.Any(ignore => lineWithoutTabs.StartsWith(ignore)))
                 {
@@ -329,9 +329,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             return new Tuple<int, string>(-1, "<end of file>");
         }
 
-        private static string RemoveTabs(string originalText)
+        private static string RemoveLeadingWhitespace(string originalText)
         {
-            return Regex.Replace(originalText, "[\t]", string.Empty);
+            return Regex.Replace(originalText, "^[ \t]+", string.Empty);
         }
         
         private static string ReadFile(string filePath)
