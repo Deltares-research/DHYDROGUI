@@ -54,10 +54,20 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, $"{defaultFrictionId};{defaultFrictionId};{defaultFrictionId}");
                     return;
                 }
-
+                
                 IniCategory.AddProperty(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.MainSectionTypeName));
-                IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain1, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain1SectionTypeName));
-                IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain2, crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain2SectionTypeName));
+
+                if (crossSectionDefinitionZw.Sections.Count > 1)
+                {
+                    double fp1 = crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain1SectionTypeName);
+                    IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain1, fp1);
+                }
+
+                if (crossSectionDefinitionZw.Sections.Count > 2)
+                {
+                    double fp2 = crossSectionDefinitionZw.GetSectionWidth(RoughnessDataSet.Floodplain2SectionTypeName);
+                    IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain2, fp2);
+                }
             }
             else // crossSectionDefinition came from a Culvert or Bridge
             {
