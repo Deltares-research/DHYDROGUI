@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private static bool IsCrossSectionDefinitionFile(string filePath)
         {
             string extension = Path.GetExtension(filePath);
-            if (!string.Equals(extension, "ini"))
+            if (!string.Equals(extension, ".ini"))
             {
                 return false;
             }
