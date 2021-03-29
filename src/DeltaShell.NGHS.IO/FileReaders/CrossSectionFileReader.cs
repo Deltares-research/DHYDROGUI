@@ -113,18 +113,15 @@ namespace DeltaShell.NGHS.IO.FileReaders
             {
                 case IPipe pipe:
                 {
-                    pipe.CrossSection = crossSection;
-
-                    if (Math.Abs(pipe.CrossSection.Chainage) < 0.001) // chainage = 0, so set source
+                    if (Math.Abs(crossSection.Chainage) < 0.001) // chainage = 0, so set source
                     {
-                        pipe.CrossSection.Chainage = 0;
                         pipe.LevelSource = shift;
                     }
                     else
                     {
-                        pipe.CrossSection.Chainage = pipe.Length;
                         pipe.LevelTarget = shift;
                     }
+                    pipe.CrossSection = crossSection;
                     break;
                 }
 
