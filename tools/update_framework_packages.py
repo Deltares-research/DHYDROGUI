@@ -31,7 +31,7 @@ def get_args():
 def get_framework_version_regex_string() -> str:
     integer_regex = r'(0|([1-9]\d*))'
 
-    known_prefixes = ['beta']
+    known_prefixes = ['beta', 'development']
     prefix_regex = ''.join(f'(?:-{prefix})?' for prefix in known_prefixes)
 
     return f'{integer_regex}\\.{integer_regex}\\.{integer_regex}\\.{integer_regex}{prefix_regex}'
