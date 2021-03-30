@@ -1022,9 +1022,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
             // Now Load connections.
             var connectionsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
-            gwswImporter.ImportItem(connectionsPath, model);
-
-
+            var nodesPath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
+            gwswImporter.FilesToImport = new List<string>(new []{nodesPath, connectionsPath});
+            
+            gwswImporter.ImportItem(null, model);
+            
             var pipes = network.Branches.OfType<Pipe>().ToList();
             Assert.IsTrue(pipes.Any());
             pipes.ForEach(p => Assert.NotNull(p.CrossSectionDefinition));
@@ -1061,12 +1063,17 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var model = new WaterFlowFMModel();
             var network = model.Network;
 
-            //Load connections
-            var gwswImporter = new GwswFileImporter(new DefinitionsProvider()) {CsvDelimeter = ';'};
+            //Load connections and nodes
+            var nodesFilePath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
             var connectionsFilePath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
+            
+            var gwswImporter = new GwswFileImporter(new DefinitionsProvider()) {CsvDelimeter = ';'};
+            gwswImporter.FilesToImport.Add(nodesFilePath);
+            gwswImporter.FilesToImport.Add(connectionsFilePath);
+            
             var folderPath = Path.GetDirectoryName(connectionsFilePath);
             gwswImporter.LoadFeatureFiles(folderPath);
-            gwswImporter.ImportItem(connectionsFilePath, model);
+            gwswImporter.ImportItem(null, model);
 
             // Check the sewer profiles in the network
             var sewerProfileShapeBefore = network.Pipes.FirstOrDefault(p => p.CrossSectionDefinitionName == csdName);
@@ -1095,10 +1102,18 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var gwswImporter = new GwswFileImporter(new DefinitionsProvider());
 
             //Load structures.
+            var nodesPath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
+            var connectionPath = GetFileAndCreateLocalCopy(@"gwswFiles\Verbinding.csv");
             var structuresPath = GetFileAndCreateLocalCopy(@"gwswFiles\Kunstwerk.csv");
+            
             var folderPath = Path.GetDirectoryName(structuresPath);
             gwswImporter.LoadFeatureFiles(folderPath);
-            gwswImporter.ImportItem(structuresPath, model);
+            
+            gwswImporter.FilesToImport.Add(nodesPath);
+            gwswImporter.FilesToImport.Add(connectionPath);
+            gwswImporter.FilesToImport.Add(structuresPath);
+            
+            gwswImporter.ImportItem(null, model);
 
             //Check placeholders have been created.
             Assert.IsTrue(network.Branches.Any());

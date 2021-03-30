@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using NUnit.Framework;
@@ -39,10 +40,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
-        public void SetBaseCompartmentProperties_WhenSettingClosedCompartmentStorageType_FloodableAreaIsZero()
+        public void SetBaseCompartmentProperties_WhenSettingClosedCompartmentStorageTypeWithoutSpecifyingFloodableArea_FloodableAreaIsZero()
         {
             // Setup
-            var random = new Random(80085);
+            var random = new Random(707);
+            
+            
 
             var generator = new TestSewerCompartmentGenerator();
             var compartment = new Compartment("randomName");
@@ -51,6 +54,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                                                          random.NextDouble(), random.NextDouble(), random.NextDouble(),
                                                          random.NextDouble(), "randomString", random.NextDouble(),
                                                          random.NextDouble(), random.NextDouble());
+            GwswAttribute floodableAreaAttribute = gwswElement.GwswAttributeList.SingleOrDefault(attribute => string.Equals(attribute.GwswAttributeType.Key, ManholeMapping.PropertyKeys.FloodableArea));
+            Assert.That(floodableAreaAttribute, Is.Not.Null);
+
+            // Simulate missing value
+            floodableAreaAttribute.ValueAsString = string.Empty;
 
             const string closedCompartmentStorageType = "KNV";
             GwswAttribute compartmentStorageAttribute = GetDefaultGwswAttribute("SURFACE_SCHEMATISATION", closedCompartmentStorageType, "RES");
@@ -62,6 +70,34 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             // Assert
             Assert.That(compartment.CompartmentStorageType, Is.EqualTo(CompartmentStorageType.Closed));
             Assert.That(compartment.FloodableArea, Is.Zero);
+        }
+        
+        [Test]
+        public void SetBaseCompartmentProperties_WhenSettingClosedCompartmentStorageTypeWithExplicitlySpecifiedFloodableArea_CorrectlySetsFloodableArea()
+        {
+            // Setup
+            var random = new Random(707);
+
+            double floodableArea = random.NextDouble();
+
+            var generator = new TestSewerCompartmentGenerator();
+            var compartment = new Compartment("randomName");
+
+            GwswElement gwswElement = GetNodeGwswElement("randomString", "randomString", "randomString",
+                                                         random.NextDouble(), random.NextDouble(), random.NextDouble(),
+                                                         random.NextDouble(), "randomString", floodableArea,
+                                                         random.NextDouble(), random.NextDouble());
+
+            const string closedCompartmentStorageType = "KNV";
+            GwswAttribute compartmentStorageAttribute = GetDefaultGwswAttribute("SURFACE_SCHEMATISATION", closedCompartmentStorageType, "RES");
+            gwswElement.GwswAttributeList.Add(compartmentStorageAttribute);
+
+            // Call
+            generator.TestSetBaseCompartmentProperties(compartment, gwswElement);
+
+            // Assert
+            Assert.That(compartment.CompartmentStorageType, Is.EqualTo(CompartmentStorageType.Closed));
+            Assert.That(compartment.FloodableArea, Is.EqualTo(floodableArea).Within(0.00001));
         }
 
         private class TestSewerCompartmentGenerator : ASewerCompartmentGenerator
