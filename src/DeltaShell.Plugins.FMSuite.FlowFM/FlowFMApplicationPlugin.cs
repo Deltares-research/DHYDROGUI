@@ -37,9 +37,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         public const string FlowFlexibleMeshModelModelInfoName = "Flow Flexible Mesh Model";
         public const string FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID = "FMModel";
+
         private static ILog Log = LogManager.GetLogger(typeof(FlowFMApplicationPlugin));
-        public static string PluginVersion; // 1.2
-        public static string PluginName; // D-Flow Flexible Mesh Plugin
+        internal static string PluginVersion { get; } = typeof(FlowFMApplicationPlugin).Assembly.GetName().Version.ToString();
+        internal static string PluginName { get; } = "D-Flow Flexible Mesh Plugin";
+
         private IApplication application;
 
         public override string Name
@@ -49,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override string DisplayName
         {
-            get { return "D-Flow Flexible Mesh Plugin"; }
+            get { return PluginName; }
         }
 
         public override string Description
@@ -59,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override string Version
         {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
+            get { return PluginVersion; }
         }
 
         public override string FileFormatVersion
@@ -81,13 +83,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             project?.RootFolder.GetAllModelsRecursive().OfType<WaterFlowFMModel>().ForEach(
                 m => m.WorkingDirectoryPathFunc = () => application.WorkDirectory);
-        }
-
-        public override void Activate()
-        {
-            base.Activate();
-            PluginVersion = Version;
-            PluginName = DisplayName;
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()

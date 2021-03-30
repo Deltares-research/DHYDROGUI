@@ -87,8 +87,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
             var depthlayers = new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, isEnabledFunc, isVisibleFunc)
             {
                 Category = "General",
-                ToolTip = EditDepthLayersHelper.ToolTip,
-                Label = EditDepthLayersHelper.Label,
+                ToolTip = "Adjust layers",
+                Label = "Layer",
                 ValueType = typeof(string),
                 IsReadOnly = false,
                 HasMaxValue = false,

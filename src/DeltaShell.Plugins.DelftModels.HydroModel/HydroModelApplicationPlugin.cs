@@ -23,13 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
         public const string RHUINTEGRATEDMODEL_TEMPLATE_ID = "RHUIntegratedModel";
-        public static int MainThreadId;
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelApplicationPlugin));
-
-        public HydroModelApplicationPlugin()
-        {
-            MainThreadId = Thread.CurrentThread.ManagedThreadId;
-        }
 
         public override string Name
         {

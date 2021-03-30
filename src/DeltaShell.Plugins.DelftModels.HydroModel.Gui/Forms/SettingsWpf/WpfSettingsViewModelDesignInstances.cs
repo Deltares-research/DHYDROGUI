@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// </summary>
     public static class WpfSettingsViewModelDesignInstances
     {
-        public static WpfSettingsViewModel AllTypes = MakeDesignInstance();
+        internal static WpfSettingsViewModel AllTypes { get; } = MakeDesignInstance();
 
         private static WpfSettingsViewModel MakeDesignInstance()
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Shell.Core.Workflow;
@@ -57,8 +58,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     Category = "General",
                     SubCategory = "Layers",
-                    ToolTip = EditDepthLayersHelper.ToolTip,
-                    Label = EditDepthLayersHelper.Label,
+                    ToolTip = "Adjust layers",
+                    Label = "Layer",
                     ValueType = typeof(string),
                     HasMaxValue = false,
                     HasMinValue = false,
@@ -93,14 +94,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 {
                     Category = "Initial Conditions",
                     SubCategory = "Salinity",
-                    ToolTip = EditCoverageLayersHelper.ToolTip,
-                    Label = EditCoverageLayersHelper.Label,
+                    ToolTip = "Edit number of depth layers.",
+                    Label = "Depth layers",
                     ValueType = typeof(string),
                     HasMaxValue = false,
                     HasMinValue = false,
                 });
-                coverageLayers.CustomCommand.ButtonFunction = (o) => EditCoverageLayersHelper.ButtonAction(o);
-                coverageLayers.CustomCommand.ButtonImage = EditCoverageLayersHelper.ButtonImage;
+                coverageLayers.CustomCommand.ButtonFunction = EditCoverageLayersHelper.ButtonAction;
+                coverageLayers.CustomCommand.ButtonImage = Properties.Resources.waterLayers;
 
                 icCategory.AddWpfGuiProperty(coverageLayers);
             }

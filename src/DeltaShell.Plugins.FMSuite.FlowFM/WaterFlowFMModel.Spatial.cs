@@ -171,7 +171,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 BeginEdit(new DefaultEditAction("Replacing unstructured grid"));
                 if (writeNetFile)
                 {
-                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation, BedLevelZValues);
+                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation, BedLevelZValues);
                 }
                 
                 var newGrid = UGridFileHelper.ReadUnstructuredGrid(NetFilePath); //may throw...
@@ -224,7 +224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Grid = new UnstructuredGrid();
                 if (NetFilePath != null)
                 {
-                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation, BedLevelZValues);
+                    WriteNetFile(NetFilePath, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation, BedLevelZValues);
                 }
             }
             finally
@@ -262,14 +262,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
         public void WriteNetFile(string path)
         {
-            WriteNetFile(path, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation, BedLevelZValues);
+            WriteNetFile(path, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation, BedLevelZValues);
         }
 
         private static void WriteNetFile(string path, UnstructuredGrid grid, IHydroNetwork network, IDiscretization networkDiscretization
-            , IEnumerable<ILink1D2D> links, string name, string pluginName, string pluginVersion, UGridFileHelper.BedLevelLocation location, double[] zValues)
+            , IEnumerable<ILink1D2D> links, string name, UGridFileHelper.BedLevelLocation location, double[] zValues)
         {
             if (path == null) return;
-            UGridFileHelper.WriteGridToFile(path, grid, network, networkDiscretization, links, name, pluginName, pluginVersion, location, zValues);
+            UGridFileHelper.WriteGridToFile(path, grid, network, networkDiscretization, links, name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, location, zValues);
             // if needed, adjust coordinate system in netfile
             if (File.Exists(path) && grid?.CoordinateSystem != null && !grid.CoordinateSystem.IsNetfileCoordinateSystemUpToDate(path))
                 UGridFileHelper.WriteCoordinateSystem(path, grid.CoordinateSystem);

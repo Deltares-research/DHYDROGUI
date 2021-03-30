@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
     public class HarmonicComponent
     {
         // frequency in rad/h
-        public static readonly IDictionary<string, double> DefaultAstroComponentsRadPerHour = new Dictionary<string, double>
+        public static IDictionary<string, double> DefaultAstroComponentsRadPerHour { get; } = new Dictionary<string, double>
             {
                 {"A0", 0},
                 {"Q1", 0.233850747771757},

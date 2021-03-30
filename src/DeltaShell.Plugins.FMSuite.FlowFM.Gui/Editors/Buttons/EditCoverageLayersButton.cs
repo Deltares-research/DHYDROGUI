@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -8,10 +7,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons
 {
     public static class EditCoverageLayersHelper
     {
-        public static string ToolTip = "Edit number of depth layers.";
-        public static string Label = "Depth layers";
-        public static Bitmap ButtonImage = Properties.Resources.waterLayers;
-
         public static void ButtonAction(object inputObject)
         {
             var model = inputObject as WaterFlowFMModel;

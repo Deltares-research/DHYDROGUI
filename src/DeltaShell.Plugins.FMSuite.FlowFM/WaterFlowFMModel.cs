@@ -2423,7 +2423,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             else
             {
                 var workNetFile = MduFileHelper.GetSubfilePath(mduPath, ModelDefinition.GetModelProperty(KnownProperties.NetFile));
-                WriteNetFile(workNetFile, Grid, Network, NetworkDiscretization, Links, Name, FlowFMApplicationPlugin.PluginName, FlowFMApplicationPlugin.PluginVersion, BedLevelLocation,
+                WriteNetFile(workNetFile, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation,
                     BedLevelZValues);
                 var newGrid = UGridFileHelper.ReadUnstructuredGrid(workNetFile); //may throw...
                 if (newGrid != null)
