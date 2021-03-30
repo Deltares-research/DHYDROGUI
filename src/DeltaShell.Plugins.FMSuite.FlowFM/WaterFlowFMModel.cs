@@ -1598,21 +1598,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 foreach (var engineParameter in GetEngineParametersForLocation(location))
                 {
                     // search it first in existing data items
-                    var existingDataItem =
-                        networkDataItem.Children.FirstOrDefault(
-                            delegate (IDataItem di)
-                            {
-                                var valueConverter = di.ValueConverter as Model1DBranchFeatureValueConverter;
-                                return di.ValueType == typeof(double)
-                                       && (
-                                           valueConverter != null &&
-                                           valueConverter.ParameterName == engineParameter.Name &&
-                                           valueConverter.Role == engineParameter.Role
-                                           && valueConverter.ElementSet == engineParameter.ElementSet &&
-                                           valueConverter.QuantityType == engineParameter.QuantityType
-                                           && Equals(valueConverter.Location, location
-                                           ));
-                            });
+                    var existingDataItem = networkDataItem.Children
+                                                          .FirstOrDefault(di => di.ValueType == typeof(double)
+                                                                                && di.ValueConverter is Model1DBranchFeatureValueConverter valueConverter
+                                                                                && IsValueConverterForEngineParameter(location, valueConverter, engineParameter));
 
                     if (existingDataItem != null)
                     {
@@ -1640,6 +1629,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     }
                 }
             }
+        }
+
+        private static bool IsValueConverterForEngineParameter(IFeature location, Model1DBranchFeatureValueConverter valueConverter, EngineParameter engineParameter)
+        {
+            return valueConverter.ParameterName == engineParameter.Name
+                   && valueConverter.Role == engineParameter.Role
+                   && valueConverter.ElementSet == engineParameter.ElementSet 
+                   && valueConverter.QuantityType == engineParameter.QuantityType
+                   && Equals(valueConverter.Location, location);
         }
 
         private IEnumerable<EngineParameter> GetEngineParametersForLocation(IFeature location)
