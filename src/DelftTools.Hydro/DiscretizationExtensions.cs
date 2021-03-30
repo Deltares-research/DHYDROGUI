@@ -187,7 +187,7 @@ namespace DelftTools.Hydro
             {
                 var locationsMerged = networkLocations
                                       .Union(currentLocations)
-                                      .GroupBy(lv => lv.Geometry.Coordinate)
+                                      .GroupBy(lv => lv.Geometry?.Coordinate)
                                       .Select(crdGroup =>
                                                   crdGroup.Select(nl => fixedOffsetNetworkLocations.Contains(nl) ? nl : null).FirstOrDefault() ??
                                                   crdGroup.Min())
@@ -199,7 +199,7 @@ namespace DelftTools.Hydro
             else
             {
                 var locationsMerged = networkLocations
-                                      .GroupBy(lv => lv.Geometry.Coordinate)
+                                      .GroupBy(lv => lv.Geometry?.Coordinate)
                                       .Select(crdGroup =>
                                                   crdGroup.Select(nl => fixedOffsetNetworkLocations.Contains(nl) ? nl : null).FirstOrDefault() ??
                                                   crdGroup.Min())
