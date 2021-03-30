@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Data;
 using DelftTools.Hydro;
-using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -12,7 +9,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Geometries;
 

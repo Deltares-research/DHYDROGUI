@@ -14,7 +14,6 @@ using DeltaShell.NGHS.IO.FileWriters.SpatialData;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

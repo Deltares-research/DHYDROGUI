@@ -2,11 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
-using NetTopologySuite.Operation.Valid;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 {
