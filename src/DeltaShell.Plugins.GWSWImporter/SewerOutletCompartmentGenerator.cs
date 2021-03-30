@@ -1,10 +1,13 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
+using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class SewerOutletCompartmentGenerator : ASewerCompartmentGenerator
     {
+        private static ILog Log = LogManager.GetLogger(typeof(SewerOutletCompartmentGenerator));
+        
         public override ISewerFeature Generate(GwswElement gwswElement)
         {
             bool validGwswStructure = gwswElement.IsValidGwswStructure();
@@ -28,6 +31,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 var surfaceWaterLevelAttribute = gwswElement.GetAttributeFromList(SewerStructureMapping.PropertyKeys.SurfaceWaterLevel);
                 if (surfaceWaterLevelAttribute.TryGetValueAsDouble(out auxDouble))
                     outletCompartment.SurfaceWaterLevel = auxDouble;
+            }
+            else
+            {
+                Log.WarnFormat($"Missing surface water level value for '{compartment.Name}', using default value: {compartment.SurfaceLevel}");
             }
             
             if (compartment is GwswStructureOutletCompartment)

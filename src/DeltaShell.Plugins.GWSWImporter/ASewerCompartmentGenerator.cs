@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
@@ -41,46 +42,31 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         {
             if (!gwswElement.IsValidGwswCompartment()) return;
 
-            var manholeIdAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
+            GwswAttribute manholeIdAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
             compartment.ParentManholeName = manholeIdAttribute.GetValidStringValue();
 
-            double xCoordinate;
-            double yCoordinate;
-            var xCoordinateAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.XCoordinate);
-            var yCoordinateAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.YCoordinate);
-            if (xCoordinateAttribute.TryGetValueAsDouble(out xCoordinate) && yCoordinateAttribute.TryGetValueAsDouble(out yCoordinate))
-                compartment.Geometry = new Point(xCoordinate, yCoordinate);
+            SetGeometry(compartment, gwswElement);
+            SetNodeShape(compartment, gwswElement);
+            SetNodeWidth(compartment, gwswElement);
+            SetNodeLength(compartment, gwswElement); // required if NodeShape is 'Rectangular'
+            SetBottomLevel(compartment, gwswElement);
+            SetSurfaceLevel(compartment, gwswElement);
+            SetCompartmentStorageType(compartment, gwswElement);
+            SetFloodableArea(compartment, gwswElement); // required if CompartmentStorageType is 'RES'
+        }
 
-            // Set the rest of compartment values
-            double auxDouble;
-            var nodeLengthAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeLength);
-            if (nodeLengthAttribute.TryGetValueAsDouble(out auxDouble))
-                compartment.ManholeLength = auxDouble / 1000.0; // Conversion from mm to m
-            else
-                compartment.ManholeLength = 0.8d;
+        private static void SetNodeShape(ICompartment compartment, GwswElement gwswElement)
+        {
+            GwswAttribute nodeShapeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);
+            if (nodeShapeAttribute.IsValidAttribute())
+            {
+                compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeAttribute.GetValidStringValue());
+            }
+        }
 
-            var nodeWidthAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeWidth);
-            if (nodeWidthAttribute.TryGetValueAsDouble(out auxDouble))
-                compartment.ManholeWidth = auxDouble / 1000.0; // Conversion from mm to m
-            else
-                compartment.ManholeWidth = 0.8d;
-
-            var floodableAreaAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.FloodableArea);
-            if (floodableAreaAttribute.TryGetValueAsDouble(out auxDouble))
-                compartment.FloodableArea = auxDouble;
-            else
-                compartment.FloodableArea = 100;
-
-            var bottomLevelAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.BottomLevel);
-            if (bottomLevelAttribute.TryGetValueAsDouble(out auxDouble))
-                compartment.BottomLevel = auxDouble;
-
-            var surfaceLevelAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.SurfaceLevel);
-            if (surfaceLevelAttribute.TryGetValueAsDouble(out auxDouble))
-                compartment.SurfaceLevel = auxDouble;
-
-            var compartmentStorageTypeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.CompartmentStorageType);
-
+        private static void SetCompartmentStorageType(ICompartment compartment, GwswElement gwswElement)
+        {
+            GwswAttribute compartmentStorageTypeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.CompartmentStorageType);
             var compartmentStorageType = compartmentStorageTypeAttribute?.GetValueFromDescription<ManholeMapping.GwswCompartmentStorageType>();
             switch (compartmentStorageType)
             {
@@ -101,13 +87,101 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
                     break;
             }
-            
-            // Set shape value of the compartment
-            var nodeShapeAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeShape);
-            if (nodeShapeAttribute.IsValidAttribute())
+        }
+
+        private static void SetSurfaceLevel(ICompartment compartment, GwswElement gwswElement)
+        {
+            GwswAttribute surfaceLevelAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.SurfaceLevel);
+            if (surfaceLevelAttribute.TryGetValueAsDouble(out double auxDouble))
             {
-                compartment.Shape = CompartmentShapeConverter.ConvertStringToCompartmentShape(nodeShapeAttribute.GetValidStringValue());
+                compartment.SurfaceLevel = auxDouble;
             }
+            else
+            {
+                Log.WarnFormat($"Missing surface level value for '{compartment.Name}', using default value: {compartment.SurfaceLevel}");
+            }
+        }
+
+        private static void SetBottomLevel(ICompartment compartment, GwswElement gwswElement)
+        {
+            GwswAttribute bottomLevelAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.BottomLevel);
+            if (bottomLevelAttribute.TryGetValueAsDouble(out double auxDouble))
+            {
+                compartment.BottomLevel = auxDouble;
+            }
+            else
+            {
+                Log.WarnFormat($"Missing bottom level value for '{compartment.Name}', using default value: {compartment.BottomLevel}");
+            }
+        }
+
+        private static void SetFloodableArea(ICompartment compartment, GwswElement gwswElement)
+        {
+            GwswAttribute floodableAreaAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.FloodableArea);
+            if (floodableAreaAttribute.TryGetValueAsDouble(out double auxDouble))
+            {
+                compartment.FloodableArea = auxDouble;
+            }
+            else
+            {
+                if (compartment.CompartmentStorageType == CompartmentStorageType.Reservoir)
+                {
+                    compartment.FloodableArea = 100;
+                    Log.WarnFormat($"Missing floodable area value for '{compartment.Name}', using default value: {compartment.FloodableArea}");
+                }
+            }
+        }
+
+        private static void SetNodeWidth(ICompartment compartment, GwswElement gwswElement)
+        {
+            GwswAttribute nodeWidthAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeWidth);
+            if (nodeWidthAttribute.TryGetValueAsDouble(out double auxDouble))
+            {
+                compartment.ManholeWidth = auxDouble / 1000.0; // Conversion from mm to m
+            }
+            else
+            {
+                compartment.ManholeWidth = 0.8d;
+                Log.WarnFormat($"Missing width value for '{compartment.Name}', using default value: {compartment.ManholeWidth}");
+            }
+        }
+
+        private static void SetNodeLength(ICompartment compartment, GwswElement gwswElement)
+        {
+            GwswAttribute nodeLengthAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeLength);
+            if (nodeLengthAttribute.TryGetValueAsDouble(out double auxDouble))
+            {
+                compartment.ManholeLength = auxDouble / 1000.0; // Conversion from mm to m
+            }
+            else
+            {
+                compartment.ManholeLength = 0.8d;
+                if (compartment.Shape == CompartmentShape.Rectangular)
+                {
+                    Log.WarnFormat($"Missing length value for '{compartment.Name}', using default value: {compartment.ManholeLength}");
+                }
+            }
+        }
+
+        private static void SetGeometry(ICompartment compartment, GwswElement gwswElement)
+        {
+            double xCoordinate;
+            double yCoordinate;
+            
+            var xCoordinateAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.XCoordinate);
+            var yCoordinateAttribute = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.YCoordinate);
+            
+            if (!xCoordinateAttribute.TryGetValueAsDouble(out xCoordinate))
+            {
+                Log.WarnFormat($"Missing xCoordinate value for compartment '{compartment.Name}', using default value: 0");
+            }
+
+            if (!yCoordinateAttribute.TryGetValueAsDouble(out yCoordinate))
+            {
+                Log.WarnFormat($"Missing yCoordinate value for compartment '{compartment.Name}', using default value: 0");
+            }
+
+            compartment.Geometry = new Point(xCoordinate, yCoordinate);
         }
     }
 }
