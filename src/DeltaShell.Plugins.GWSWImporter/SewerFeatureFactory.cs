@@ -135,8 +135,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     return new CircleCrossSectionShapeGenerator();
                 case SewerProfileMapping.SewerProfileType.Trapezoid:
                     return new TrapezoidCrossSectionShapeGenerator();
-                // case SewerProfileMapping.SewerProfileType.YZ_Profile:
-                //     return new YZCrossSectionShapeGenerator();
                 default:
                     return new DefaultCrossSectionShapeGenerator();
             }
