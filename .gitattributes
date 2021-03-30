@@ -37008,4 +37008,5 @@ test/RainfallRunoffModelEngineTest/Properties/AssemblyInfo.cs -text
 test/RainfallRunoffModelEngineTest/RRModelHybridEngineTest.cs -text
 test/RainfallRunoffModelEngineTest/RainfallRunoffModelEngineTests.csproj -text
 test/RainfallRunoffModelEngineTest/packages.config -text
+tools/gather_to_sign_dll.py -text
 tools/xsd/xsd.exe -text
