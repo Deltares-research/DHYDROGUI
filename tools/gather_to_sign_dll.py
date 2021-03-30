@@ -33,7 +33,7 @@ def determine_to_sign_dll_names(svn_root: Path) -> Generator[str, None, None]:
         Generator[str, None, None]: Generator containing the dll names to sign.
     """
     src_csprojs = ((svn_root / Path("src")).glob("**/*.csproj"))
-    return (x.with_suffix(".dll").name for x in src_csprojs)
+    return (x.with_suffix(".dll").name for x in src_csprojs if (not str(x).endswith("wpftmp.csproj") and not str(x).endswith("RainfallRunoffModelEngine.csproj")))
 
 
 def get_corresponding_path(svn_root: Path, dll_name: str) -> Path:
@@ -44,6 +44,7 @@ def get_corresponding_path(svn_root: Path, dll_name: str) -> Path:
         svn_root (Path): Path to the svn root
         dll_name (str): Name of the dll
     """
+    #print(str(dll_name))
     # this hack is required to keep the capitalisation
     return next((svn_root / Path("bin/Release")).glob("**/{}".format(dll_name))).parent / Path(dll_name)
 
