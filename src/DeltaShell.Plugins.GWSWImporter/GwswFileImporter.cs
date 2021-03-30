@@ -672,6 +672,24 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 }
             }, "Update orifices width and level");
             
+            ParallelHelper.RunActionInParallel(this, network.SewerConnections.ToArray(), connection =>
+            {
+                if (connection.Source == null)
+                {
+                    lock (network.SewerConnections)
+                    {
+                        Log.Error($"Could not find source node for connection '{connection.Name}'. Removing it from the model.");
+                        network.Branches.Remove(connection);
+                    }
+                }
+            
+                if (connection.Target == null)
+                {
+                    Log.Error($"Could not find target node for connection '{connection.Name}'. Removing it from the model.");
+                    network.Branches.Remove(connection);
+                }
+            }, "Remove unconnected sewer connections.");
+            
             NamingHelper.MakeNamesUnique(helper.PipeCrossSections);
             NamingHelper.MakeNamesUnique(helper.CompositeBranchStructures);
         }
