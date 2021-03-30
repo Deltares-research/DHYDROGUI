@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -142,7 +143,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("ToCheck")]
         public void ReadXyzFile_WithKnownSpatiallyVaryingProperties_ShouldNotGiveAWarningMessage()
         {
             var def = new WaterFlowFMModelDefinition();
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     String.Format(
                         Resources
                             .ExtForceFile_ReadSpatialData_The_model_may_not_run__Spatial_varying_quantity__0__could_not_be_imported_because_the_prefix_does_not_match__1__for_Tracers_or__2__for_Spatial_Varying_Sediments_,
-                        ExtForceQuantNames.InitialWaterLevel, 
+                        ExtForceQuantNames.FrictCoef, 
                         ExtForceFile.InitialTracerPrefix,ExtForceFile.InitialSpatialVaryingSedimentPrefix)),
                 "The warn message was logged, but we were not expecting it to appear");
             
@@ -568,15 +568,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [Category("ToCheck")]
         public void ReadWriteSampleForcingsWaterLevel()
         {
+            //is not done via external forcing file
             var def = new WaterFlowFMModelDefinition();
-            var extPath = TestHelper.GetTestFilePath(@"chezy_samples\waterlevel.ext");
-
-            var extForceFile = new ExtForceFile();
-            extForceFile.Read(extPath, def);
-
+            var validInitial2DWaterLevelCategoriesFile = TestHelper.GetTestFilePath(@"IO\Initial2DWaterLevel_expected.ini");
+            InitialConditionInitialFieldsFileReader.ReadFile(validInitial2DWaterLevelCategoriesFile, def);
+            
             Assert.AreEqual(1, def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
 
             // add polygon
@@ -615,12 +613,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             
             def.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Add(samples);
 
-            const string newExtPath = "test.ext";
-            extForceFile.Write(newExtPath, def);
+            const string newExtPath = "test.ini";
+            InitialConditionInitialFieldsFileWriter.WriteFile(newExtPath, def, true);
 
             var newDef = new WaterFlowFMModelDefinition();
-            var newExtFile = new ExtForceFile();
-            newExtFile.Read(newExtPath, newDef);
+            InitialConditionInitialFieldsFileReader.ReadFile(newExtPath, newDef);
 
             Assert.AreEqual(3, newDef.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName).Count);
             Assert.AreEqual(3,

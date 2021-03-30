@@ -25,7 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         [Test, Apartment(ApartmentState.MTA), Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
-        [Category("ToCheck")]
         public void ShowWithData()
         {
             var mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
@@ -39,7 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         [Test, Apartment(ApartmentState.MTA), Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
-        [Category("ToCheck")]
         public void ShowWithEmptyGrid()
         {
             var model = new WaterFlowFMModel();
@@ -54,7 +52,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.RgfGrid
         [Test, Apartment(ApartmentState.MTA), Timeout(MaxTimeOut)]
         [Category(TestCategory.VerySlow)]
         [Ignore("Times-out on Build Server, needs to be run manually :(")]
-        [Category("ToCheck")]
         public void ShowWithDataAndLandBoundary()
         {
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");

@@ -55,22 +55,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
-        [Category("ToCheck")] //do we need this test?
-        public void GivenFileWithOnlyInvalidCategories_WhenCallingReadFile_ThenThrowsException()
-        {
-            var noCategoriesFile = TestHelper.GetTestFilePath(@"IO\invalidCategoriesOnly.ini");
-            using (var fmModel = new WaterFlowFMModel())
-            {
-                var modelDefinition = fmModel.ModelDefinition;
-
-                TestDelegate action = () =>
-                    InitialConditionInitialFieldsFileReader.ReadFile(noCategoriesFile, modelDefinition);
-
-                Assert.Throws<FileReadingException>(action);
-            }
-        }
-
-        [Test]
         public void GivenInitialFieldsFile_WhenCallingReadFile_ThenReturnsExpectedTuple()
         {
             var multipleValidCategoriesFile = TestHelper.GetTestFilePath(@"IO\initialFieldsWaterLevel_expected.ini");

@@ -54,7 +54,7 @@
 *
 **************************************************************************************************************
 
-QUANTITY=initialwaterlevel
+QUANTITY=frictioncoefficient
 FILENAME=waterlevel_sv.xyz
 FILETYPE=7
 METHOD=6

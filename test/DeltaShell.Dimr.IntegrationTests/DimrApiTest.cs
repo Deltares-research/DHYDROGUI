@@ -49,7 +49,6 @@ namespace DeltaShell.Dimr.IntegrationTests
 
         [Ignore("Needs to be checked")]
         [Test]
-        [Category("ToCheck")]
         public void GivenDimrApiWhenUpdateThenNoExceptionThrown()
         {
             using (var dimrApi = new DimrApiFactory().CreateNew())
@@ -69,7 +68,6 @@ namespace DeltaShell.Dimr.IntegrationTests
 
         [Ignore("Needs to be checked")]
         [Test]
-        [Category("ToCheck")]
         public void GivenDimrApiWhenFinalizeThenNoExceptionThrown()
         {
             using (var dimrApi = new DimrApiFactory().CreateNew())

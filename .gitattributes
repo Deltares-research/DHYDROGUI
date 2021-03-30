@@ -6526,8 +6526,10 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/HydroAreaCollection/repea
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/HydroAreaCollection/slashSeparated.mdu -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/HydroAreaCollection/spaceSeparated.mdu -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/ChannelFrictionDefinitions_expected.ini -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/Initial2DWaterLevel_expected.ini -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/InitialWaterDepth_expected.ini -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/InitialWaterLevel_expected.ini -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/chezy.xyz -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/initialFieldsWaterDepth_expected.ini -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/initialFieldsWaterLevel_expected.ini -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/IO/invalidCategoriesOnly.ini -text

@@ -59,7 +59,6 @@ namespace DelftTools.Hydro.Tests
 
         [Test]
         [Ignore("TODO: not working anymore due to refactoring; re-enable later")]
-        [Category("ToCheck")]
         public void AddCrossSectionToBranchUsingCollections()
         {
             var crossSection = new CrossSection(null);
@@ -326,71 +325,6 @@ namespace DelftTools.Hydro.Tests
             Assert.AreNotEqual(clonedType, crossSectionSectionType);
             //the crosssection reference should be updated to use the cloned type
             Assert.AreEqual(clonedType, cloneCrossSection.Definition.Sections[0].SectionType);
-        }
-
-        [Test]
-        [Category("ToCheck")]
-        public void ClonedNetworkIsCollected()
-        {
-            GC.Collect();
-
-            //issue 5410 openda memory problems
-            var weakReference = new WeakReference(null);
-            HydroNetwork network = GetNetwork();
-            for (int i = 0; i < 10; i++)
-            {
-                weakReference.Target = network.Clone();//create clones that get out of scope
-            }
-
-            GC.Collect();
-
-            //test it was collected
-            Assert.IsNull(weakReference.Target);
-        }
-        
-        private HydroNetwork GetNetwork()
-        {
-            var network = new HydroNetwork();
-            var crossSectionSectionType = new CrossSectionSectionType { Name = "Jan" };
-            network.CrossSectionSectionTypes.Add(crossSectionSectionType);
-            crossSectionSectionType.Id = 666;//debug easy by idd
-            var from = new HydroNode();
-            var to = new HydroNode();
-            network.Nodes.Add(from);
-            network.Nodes.Add(to);
-            var channel = new Channel { Source = from, Target = to };
-            network.Branches.Add(channel);
-            var crossSectionXYZ = new CrossSectionDefinitionXYZ
-                                      {
-                                          Geometry = new LineString(new[] { new Coordinate(0, 0, 0), new Coordinate(10, 0, 0) })
-                                      };
-
-            crossSectionXYZ.Sections.Add(new CrossSectionSection { SectionType = crossSectionSectionType });
-
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
-            return network;
-        }
-        
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void CloneHydroNetworkWithCrossSection()
-        {
-            var network = new HydroNetwork();
-            var from = new HydroNode();
-            var to = new HydroNode();
-            network.Nodes.Add(from);
-            network.Nodes.Add(to);
-            var channel = new Channel {Source = from, Target = to};
-            network.Branches.Add(channel);
-            var crossSectionXYZ = new CrossSectionDefinitionXYZ
-                                      {
-                                          Geometry = new LineString(new[] {new Coordinate(0, 0, 0), new Coordinate(10, 0, 0)})
-                                      };
-            
-            HydroNetworkHelper.AddCrossSectionDefinitionToBranch(channel, crossSectionXYZ, 0);
-
-            var clonedHydroNetwork = (IHydroNetwork) network.Clone();
-            clonedHydroNetwork.CrossSections.Should().Have.Count.EqualTo(1);
         }
 
         [Test]

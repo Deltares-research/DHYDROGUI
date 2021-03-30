@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string line;
                 while ((line = file.ReadLine()) != null)
                 {
-                    if (line.Contains("[boundary]")) boundaryCounter++;
+                    if (line.Contains(BndExtForceFile.BoundaryBlockKey)) boundaryCounter++;
                     if (line.Contains("OpenBoundaryTolerance")) openBoundaryToleranceCounter++;
                 }
                 file.Close();
