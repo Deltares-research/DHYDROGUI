@@ -10,9 +10,11 @@ using System.Linq;
 using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
@@ -655,15 +657,44 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 try
                 {
-                    var definition = network.GetNetworkCrossSectionDefinitions().SingleOrDefault(csd => string.Equals(csd.Name, orifice.CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase)) 
-                                     ?? network.SharedCrossSectionDefinitions.SingleOrDefault(scsd => string.Equals(scsd.Name, orifice.CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase));
+                    ICrossSectionDefinition definition = network.GetNetworkCrossSectionDefinitions().SingleOrDefault(csd => string.Equals(csd.Name, orifice.CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase)) 
+                                                         ?? network.SharedCrossSectionDefinitions.SingleOrDefault(scsd => string.Equals(scsd.Name, orifice.CrossSectionDefinitionName, StringComparison.InvariantCultureIgnoreCase));
                     if (definition == null)
                     {
                         return;
                     }
-
-                    orifice.CrestWidth = definition.Width;
-                    orifice.CrestLevel = definition.HighestPoint;
+                    
+                    var formula = (GatedWeirFormula) orifice.WeirFormula;
+                    
+                    if (definition.CrossSectionType == CrossSectionType.Standard && definition is CrossSectionDefinitionStandard csdefStandard)
+                    {
+                        switch (csdefStandard.Shape)
+                        {
+                            case CrossSectionStandardShapeWidthHeightBase rectangle:
+                                formula.GateOpening = rectangle.Height;
+                                orifice.CrestWidth = rectangle.Width;
+                                break;
+                            case CrossSectionStandardShapeCircle circle:
+                            {
+                                double diameter = circle.Diameter;
+                                double crestWidth = Math.Sqrt(diameter * diameter / 4 * Math.PI);
+                                orifice.CrestWidth = crestWidth;
+                                formula.GateOpening = crestWidth;
+                                break;
+                            }
+                            default:
+                                Log.WarnFormat($"Shape '{csdefStandard.Shape}' is not fully supported for orifice '{orifice.Name}'. Setting the gate opening to the highest point of the profile definition and the crest width to the width of the profile definition.");
+                                formula.GateOpening = definition.HighestPoint;
+                                orifice.CrestWidth = definition.Width;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        Log.WarnFormat($"Orifice '{orifice.Name}' has a non-standard cross section type. Setting the gate opening to the highest point of the profile definition and the crest width to the width of the profile definition.");
+                        formula.GateOpening = definition.HighestPoint;
+                        orifice.CrestWidth = definition.Width;
+                    }
                 }
                 catch
                 {
