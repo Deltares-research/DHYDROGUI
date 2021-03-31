@@ -33,5 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         public Action UpdateAction { get; set; }
 
         public Action<object> ButtonFunction { get; set; }
+
+        public string Tooltip { get; set; }
     }
 }

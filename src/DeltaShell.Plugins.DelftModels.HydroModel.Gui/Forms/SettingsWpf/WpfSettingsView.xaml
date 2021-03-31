@@ -117,6 +117,7 @@
                         Height="{StaticResource UnitWidth}"
                         VerticalAlignment="Center"
                         Command="{Binding CustomCommand.CustomCommand}"
+                        ToolTip="{Binding ToolTip}"
                         Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource BoolToVisibility}}">
                     <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}" />
                 </Button>
@@ -176,7 +177,17 @@
                 <TextBlock Style="{StaticResource LabelTextBlockStyle}"
                            Text="{Binding Label}" />
                 <controls:TimeSpanView Grid.Column="1"
-                                       CurrentTimeSpan="{Binding Value}" />
+                                       CurrentTimeSpan="{Binding Value}"
+                                       Style="{StaticResource ControlStyle}" />
+                <Button Grid.Column="2"
+                        Width="{StaticResource UnitWidth}"
+                        Height="{StaticResource UnitWidth}"
+                        VerticalAlignment="Center"
+                        Command="{Binding CustomCommand.CustomCommand}"
+                        ToolTip="{Binding ToolTip}"
+                        Visibility="{Binding CustomCommand.ButtonIsVisible, Converter={StaticResource BoolToVisibility}}">
+                    <Image Source="{Binding CustomCommand.ButtonImage, Converter={StaticResource ImageToBitmapSourceConverter}}" />
+                </Button>
             </Grid>
         </DataTemplate>
 

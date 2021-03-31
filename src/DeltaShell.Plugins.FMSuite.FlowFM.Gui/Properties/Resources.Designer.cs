@@ -621,6 +621,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap Synchronize_grey_16x {
+            get {
+                object obj = ResourceManager.GetObject("Synchronize_grey_16x", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap thermometer {
             get {
                 object obj = ResourceManager.GetObject("thermometer", resourceCulture);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Shell.Core.Workflow;
@@ -10,6 +11,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 {
@@ -85,6 +87,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                     (o) => SetCoordinateSystemButton.ButtonAction(o, gui, WaterFlowFMModel.IsValidCoordinateSystem);
                 coordSys.CustomCommand.ButtonImage = SetCoordinateSystemButton.ButtonImage;
                 generalCategory.AddWpfGuiProperty(coordSys);
+            }
+
+            var tsCategory = wpfCategories.FirstOrDefault(c => string.Equals(c.CategoryName, "Time Frame", StringComparison.InvariantCultureIgnoreCase));
+            var property = tsCategory?.Properties.FirstOrDefault(p => string.Equals(p.Name, KnownProperties.DtUser, StringComparison.InvariantCultureIgnoreCase));
+            if (property != null)
+            {
+                property.CustomCommand.ButtonFunction = o =>
+                {
+                    if (!(o is WaterFlowFMModel fmmodel))
+                        return;
+
+                    var timeStep = fmmodel.TimeStep.TotalSeconds.ToString(CultureInfo.InvariantCulture);
+                    fmmodel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, timeStep);
+                    fmmodel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, timeStep);
+                    fmmodel.ModelDefinition.SetModelProperty(GuiProperties.ClassMapOutputDeltaT, timeStep);
+                    fmmodel.ModelDefinition.SetModelProperty(GuiProperties.RstOutputDeltaT, timeStep);
+                };
+                property.CustomCommand.ButtonImage = Properties.Resources.Synchronize_grey_16x;
+                property.CustomCommand.Tooltip = "Synchronize with output time step";
             }
 
             var icCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("initial conditions"));
