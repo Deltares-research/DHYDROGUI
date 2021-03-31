@@ -227,11 +227,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     CompositeViewType = typeof(CompositeStructureView),
                     GetCompositeViewData = o => o.ParentStructure,
                 };
+            yield return new ViewInfo<ISewerConnection, PumpView>
+            {
+                AdditionalDataCheck = o => o != null && o.BranchFeatures.OfType<IPump>().Any() && o.BranchFeatures.OfType<IPump>().FirstOrDefault()?.ParentStructure != null,
+                CompositeViewType = typeof(CompositeStructureView),
+                GetCompositeViewData = o => o.BranchFeatures.OfType<IPump>().FirstOrDefault()?.ParentStructure,
+            };
             yield return new ViewInfo<IWeir, WeirView>
             {
                 AdditionalDataCheck = o => o != null && o.Branch != null,
                 CompositeViewType = typeof(CompositeStructureView),
                 GetCompositeViewData = o => o.ParentStructure,
+            };
+            yield return new ViewInfo<ISewerConnection, WeirView>
+            {
+                AdditionalDataCheck = o => o != null && o.BranchFeatures.OfType<IWeir>().Any() && o.BranchFeatures.OfType<IWeir>().FirstOrDefault()?.ParentStructure != null,
+                CompositeViewType = typeof(CompositeStructureView),
+                GetCompositeViewData = o => o.BranchFeatures.OfType<IWeir>().FirstOrDefault()?.ParentStructure,
             };
             yield return new ViewInfo<IBridge, BridgeView>
             {
@@ -460,6 +472,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
                 view.TableView.FocusedRowChanged += (sender, args) => { SetCompartmentComboBoxTypeEditor(view, networkModel); };
             };
+            
             yield return attributeTableSewerConnectionsData;
 
             var attributeTableCompartments = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<ICompartment, IModelWithNetwork>(m => m.Network.Compartments, () => Gui);
