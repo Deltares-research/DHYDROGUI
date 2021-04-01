@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -10,7 +9,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
@@ -25,20 +23,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private bool startTimeSynchronisationEnabled = true;
         private bool stopTimeSynchronisationEnabled = true;
         private bool timeStepSynchronisationEnabled = true;
+
         private ICommand deleteModelCommand;
         private ICommand addModelCommand;
+        private ICommand runModelCommand;
+
         private HydroModel hydroModel;
         private bool isUpdatingModel;
 
         private readonly string parameterValueName = nameof(Parameter.Value);
-        public IList<IActivity> CurrentWorkflow
-        {
-            get
-            {
-                return new IActivity[]{ HydroModel?.CurrentWorkflow };
-            }
-        }
-
+        
         #region Properties
 
         public HydroModel HydroModel
@@ -72,6 +66,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         public Func<HydroModel, IActivity> AddNewActivityCallback { get; set; }
 
+        public Action<HydroModel> RunActivityCallback { get; set; }
+
+
         public ICommand RemoveSubmodel
         {
             get { return deleteModelCommand ?? (deleteModelCommand = new RelayCommand(RemoveModelFromHydroModel, CanRemoveModel)); }
@@ -80,6 +77,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         public ICommand AddSubmodel
         {
             get { return addModelCommand ?? (addModelCommand = new RelayCommand(m => AddModelToHydroModel(), m => CanAddSubmodel())); }
+        }
+
+        public ICommand RunModelCommand
+        {
+            get { return runModelCommand ?? (runModelCommand = new RelayCommand(m => RunActivityCallback(HydroModel), m => HydroModel != null)); }
         }
 
         public string DurationText { get; set; }

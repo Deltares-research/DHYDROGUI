@@ -44,7 +44,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             set { view.ViewModel.AddNewActivityCallback = value; }
         }
 
-        public Action<HydroModel> RunCallback { get; set; }
+        public Action<HydroModel> RunCallback
+        {
+            get { return view.ViewModel.RunActivityCallback; }
+            set { view.ViewModel.RunActivityCallback = value; }
+        }
 
         public Action<IActivity> WorkflowSelectedCallback { get; set; }
 

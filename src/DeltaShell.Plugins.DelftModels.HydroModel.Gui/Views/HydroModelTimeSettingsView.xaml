@@ -410,6 +410,7 @@
                     <Button Grid.Row="1"
                             Grid.Column="0"
                             Margin="5"
+                            Command="{Binding RunModelCommand}"
                             Content="Run"
                             Style="{StaticResource ButtonStyle}" />
                 </Grid>
