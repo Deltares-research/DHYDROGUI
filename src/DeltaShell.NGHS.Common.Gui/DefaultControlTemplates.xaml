@@ -3,7 +3,10 @@
 
     <Color x:Key="TextColor">Black</Color>
     <Color x:Key="TextDisabledColor">LightGray</Color>
-    <Color x:Key="GroupboxBorderColor">#FFCBE5F1</Color>
+    <Color x:Key="DefaultBorderColor">#FFCBE5F1</Color>
+    <Color x:Key="DefaultLightColor">#FFCBE5F1</Color>
+    <Color x:Key="DefaultDarkColor">SteelBlue</Color>
+    <Color x:Key="DefaultDisabledColor">LightGray</Color>
 
     <SolidColorBrush x:Key="TextBrush"
                      Color="{StaticResource TextColor}" />
@@ -11,195 +14,350 @@
     <SolidColorBrush x:Key="TextDisabledBrush"
                      Color="{StaticResource TextDisabledColor}" />
 
-    <SolidColorBrush x:Key="GroupboxBorderBrush"
-                     Color="{StaticResource GroupboxBorderColor}" />
+    <SolidColorBrush x:Key="DefaultBorderBrush"
+                     Color="{StaticResource DefaultBorderColor}" />
 
-    <Style x:Key="ButtonStyle"
-           TargetType="{x:Type Button}">
-        <Setter Property="Margin" Value="5" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid x:Name="grid">
-                        <Border x:Name="border"
-                                Padding="{TemplateBinding Padding}"
-                                BorderBrush="Black"
-                                BorderThickness="0"
-                                CornerRadius="8">
-                            <Border.Background>
-                                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                    <GradientStop Offset="0" Color="#FFDADADA" />
-                                    <GradientStop Offset="1" Color="#FFEAEAEA" />
-                                </LinearGradientBrush>
-                            </Border.Background>
-                            <ContentPresenter Margin="{TemplateBinding Margin}"
-                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                        </Border>
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="LightGray" />
-                            <Setter TargetName="border" Property="BorderBrush" Value="Transparent" />
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="LightBlue" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter TargetName="grid" Property="Opacity" Value="0.5" />
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
+    <SolidColorBrush x:Key="DefaultLightColorBrush"
+                     Color="{StaticResource DefaultLightColor}" />
+
+    <SolidColorBrush x:Key="DefaultDarkColorBrush"
+                     Color="{StaticResource DefaultDarkColor}" />
+
+    <SolidColorBrush x:Key="DefaultDisabledColorBrush"
+                     Color="{StaticResource DefaultDisabledColor}" />
+
+    <ControlTemplate x:Key="SimpleExpanderButtonTemp"
+                     TargetType="{x:Type ToggleButton}">
+        <Border x:Name="ExpanderButtonBorder"
+                Padding="{TemplateBinding Padding}"
+                Background="{StaticResource DefaultLightColorBrush}"
+                BorderBrush="{StaticResource DefaultLightColorBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                CornerRadius="4,4, 0, 0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.ColumnSpan="2"
+                           Fill="Transparent" />
+                <Ellipse Name="Circle"
+                         Grid.Column="0"
+                         Width="15"
+                         Height="15"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center"
+                         Stroke="DarkGray" />
+                <Path x:Name="Sign"
+                      Grid.Column="0"
+                      Width="10"
+                      Height="10"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Data="M 0,5 H 10 M 5,0 V 10 Z"
+                      RenderTransformOrigin="0.5,0.5"
+                      Stroke="#FF666666"
+                      StrokeThickness="2">
+                    <Path.RenderTransform>
+                        <RotateTransform Angle="0" />
+                    </Path.RenderTransform>
+                </Path>
+                <ContentPresenter x:Name="HeaderContent"
+                                  Grid.Column="1"
+                                  Margin="4,0,0,0"
+                                  ContentSource="Content" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <!--  Change the sign to minus when toggled  -->
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="Sign" Property="Data" Value="M 0,5 H 10 Z" />
+            </Trigger>
+
+            <!--  MouseOver, Pressed behaviours  -->
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter TargetName="Circle" Property="Stroke" Value="#FF3C7FB1" />
+                <Setter TargetName="Sign" Property="Stroke" Value="#222" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter TargetName="Circle" Property="Stroke" Value="#FF526C7B" />
+                <Setter TargetName="Circle" Property="StrokeThickness" Value="1.5" />
+                <Setter TargetName="Sign" Property="Stroke" Value="#FF003366" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="SimpleExpanderControlTemplate"
+                     TargetType="{x:Type Expander}">
+        <DockPanel>
+            <ToggleButton x:Name="ExpanderButton"
+                          Padding="3"
+                          Content="{TemplateBinding Header}"
+                          DockPanel.Dock="Top"
+                          IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"
+                          OverridesDefaultStyle="True"
+                          Template="{StaticResource SimpleExpanderButtonTemp}" />
+            <Border x:Name="ContentBorder"
+                    BorderBrush="Transparent"
+                    BorderThickness="2,0,2,2"
+                    CornerRadius="0,0,4,4"
+                    DockPanel.Dock="Bottom">
+                <ContentPresenter x:Name="ExpanderContent"
+                                  Visibility="Collapsed" />
+            </Border>
+        </DockPanel>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsExpanded" Value="True">
+                <Setter TargetName="ExpanderContent" Property="Visibility" Value="Visible" />
+                <Setter TargetName="ContentBorder" Property="BorderBrush" Value="{StaticResource DefaultLightColorBrush}" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ButtonControlTemplate"
+                     TargetType="{x:Type Button}">
+        <Grid x:Name="grid">
+            <Border x:Name="border"
+                    Padding="{TemplateBinding Padding}"
+                    BorderBrush="Black"
+                    BorderThickness="0"
+                    CornerRadius="4">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Offset="0" Color="#FFDADADA" />
+                        <GradientStop Offset="1" Color="#FFEAEAEA" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Border>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="border" Property="Background" Value="LightGray" />
+                <Setter TargetName="border" Property="BorderBrush" Value="Transparent" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="border" Property="Background" Value="LightBlue" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter TargetName="grid" Property="Opacity" Value="0.5" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <!--<ControlTemplate x:Key="GroupBoxControlTemplate"
+                     TargetType="{x:Type GroupBox}">
+        <Grid SnapsToDevicePixels="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="6" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="6" />
+            </Grid.RowDefinitions>
+
+            <Border x:Name="HeaderBorder"
+                    Grid.Row="1"
+                    Grid.RowSpan="3"
+                    Grid.ColumnSpan="4"
+                    BorderBrush="{StaticResource DefaultBorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="4" />
+            <Border x:Name="Header"
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="4"
+                    Margin="0,0,0,0"
+                    Padding="3,3,3,3"
+                    HorizontalAlignment="Stretch"
+                    Background="{StaticResource DefaultBorderBrush}"
+                    CornerRadius="3">
+                <ContentPresenter Content="{TemplateBinding Header}"
+                                  ContentSource="Header"
+                                  ContentStringFormat="{TemplateBinding HeaderStringFormat}"
+                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                  RecognizesAccessKey="True"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+            </Border>
+
+            <ContentPresenter Grid.Row="2"
+                              Grid.Column="1"
+                              Grid.ColumnSpan="2"
+                              Margin="{TemplateBinding Padding}"
+                              Content="{TemplateBinding Content}"
+                              ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+        </Grid>
+    </ControlTemplate>-->
+
+    <ControlTemplate x:Key="GroupBoxControlTemplate"
+                     TargetType="{x:Type GroupBox}">
+        <Grid SnapsToDevicePixels="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border x:Name="HeaderBorder"
+                    Grid.Row="0"
+                    Padding="3"
+                    Background="{StaticResource DefaultLightColorBrush}"
+                    BorderBrush="{StaticResource DefaultLightColorBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="4,4,0, 0">
+                <ContentPresenter Content="{TemplateBinding Header}"
+                                  ContentSource="Header"
+                                  ContentStringFormat="{TemplateBinding HeaderStringFormat}"
+                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                  RecognizesAccessKey="True"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+            </Border>
+            <Border Grid.Row="1"
+                    BorderBrush="{StaticResource DefaultLightColorBrush}"
+                    BorderThickness="2,0,2,2"
+                    CornerRadius="0,0,4, 4">
+                <ContentPresenter Margin="{TemplateBinding Padding}"
+                                  Content="{TemplateBinding Content}"
+                                  ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
+            </Border>
+        </Grid>
+    </ControlTemplate>
+    <ControlTemplate x:Key="CheckBoxControlTemplate"
+                     TargetType="{x:Type CheckBox}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="45" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border x:Name="Border"
+                    Width="45"
+                    Height="18"
+                    VerticalAlignment="Center"
+                    Background="White"
+                    BorderBrush="LightBlue"
+                    BorderThickness="1"
+                    CornerRadius="6">
+                <Grid>
+                    <Ellipse x:Name="outerEllipse"
+                             Grid.Column="0"
+                             Width="12"
+                             Height="12"
+                             Margin="2"
+                             HorizontalAlignment="Left"
+                             Fill="White" />
+                </Grid>
+            </Border>
+            <ContentPresenter x:Name="content"
+                              Grid.Column="1"
+                              Margin="5,0,0,0"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Center" />
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="outerEllipse" Property="Height" Value="10" />
+                <Setter TargetName="outerEllipse" Property="Width" Value="10" />
+            </Trigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsChecked" Value="True" />
+                    <Condition Property="IsEnabled" Value="True" />
+                </MultiTrigger.Conditions>
+                <Setter TargetName="Border" Property="Border.Background" Value="LightBlue" />
+                <Setter TargetName="outerEllipse" Property="HorizontalAlignment" Value="Right" />
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsChecked" Value="True" />
+                    <Condition Property="IsEnabled" Value="False" />
+                </MultiTrigger.Conditions>
+                <Setter TargetName="Border" Property="Border.Background" Value="LightGray" />
+                <Setter TargetName="Border" Property="Border.BorderBrush" Value="LightGray" />
+                <Setter TargetName="outerEllipse" Property="HorizontalAlignment" Value="Right" />
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsChecked" Value="False" />
+                    <Condition Property="IsEnabled" Value="True" />
+                </MultiTrigger.Conditions>
+                <Setter TargetName="Border" Property="Border.Background" Value="White" />
+                <Setter TargetName="outerEllipse" Property="Fill" Value="LightBlue" />
+            </MultiTrigger>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsChecked" Value="False" />
+                    <Condition Property="IsEnabled" Value="False" />
+                </MultiTrigger.Conditions>
+                <Setter TargetName="Border" Property="Border.BorderBrush" Value="LightGray" />
+                <Setter TargetName="outerEllipse" Property="Fill" Value="LightGray" />
+            </MultiTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <ControlTemplate x:Key="ToggleButtonControlTemplate"
+                     TargetType="{x:Type ToggleButton}">
+        <Border x:Name="border"
+                Padding="{TemplateBinding Padding}"
+                BorderBrush="Black"
+                BorderThickness="0"
+                CornerRadius="4">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Offset="0" Color="#FFDADADA" />
+                    <GradientStop Offset="1" Color="#FFEAEAEA" />
+                </LinearGradientBrush>
+            </Border.Background>
+            <ContentPresenter x:Name="contentPresenter"
+                              Margin="{TemplateBinding Padding}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Focusable="False"
+                              RecognizesAccessKey="True"
+                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="Button.IsDefaulted" Value="true">
+                <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter TargetName="border" Property="Background" Value="LightBlue" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="true">
+                <Setter TargetName="border" Property="Background" Value="LightGray" />
+                <Setter TargetName="border" Property="BorderBrush" Value="Transparent" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="LightGray" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
 
     <Style x:Key="GroupBoxStyle"
            TargetType="{x:Type GroupBox}">
         <Setter Property="Margin" Value="5" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type GroupBox}">
-                    <Grid SnapsToDevicePixels="True">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="6" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="6" />
-                        </Grid.ColumnDefinitions>
-
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="6" />
-                        </Grid.RowDefinitions>
-
-                        <Border x:Name="HeaderBorder"
-                                Grid.Row="1"
-                                Grid.RowSpan="3"
-                                Grid.ColumnSpan="4"
-                                BorderBrush="{StaticResource GroupboxBorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="4" />
-                        <Border x:Name="Header"
-                                Grid.Row="0"
-                                Grid.RowSpan="2"
-                                Grid.Column="0"
-                                Grid.ColumnSpan="4"
-                                Margin="0,0,0,0"
-                                Padding="3,3,3,3"
-                                HorizontalAlignment="Stretch"
-                                Background="{StaticResource GroupboxBorderBrush}"
-                                CornerRadius="3">
-                            <ContentPresenter Content="{TemplateBinding Header}"
-                                              ContentSource="Header"
-                                              ContentStringFormat="{TemplateBinding HeaderStringFormat}"
-                                              ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                              RecognizesAccessKey="True"
-                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                        </Border>
-
-                        <ContentPresenter Grid.Row="2"
-                                          Grid.Column="1"
-                                          Grid.ColumnSpan="2"
-                                          Margin="{TemplateBinding Padding}"
-                                          Content="{TemplateBinding Content}"
-                                          ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                          ContentTemplate="{TemplateBinding ContentTemplate}"
-                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Template" Value="{StaticResource GroupBoxControlTemplate}" />
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{StaticResource TextDisabledBrush}" />
             </Trigger>
         </Style.Triggers>
-    </Style>
-
-    <Style x:Key="CheckBoxStyle"
-           TargetType="CheckBox">
-        <Setter Property="Margin" Value="5" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type CheckBox}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="45" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Border x:Name="Border"
-                                Width="45"
-                                Height="18"
-                                VerticalAlignment="Center"
-                                Background="White"
-                                BorderBrush="LightBlue"
-                                BorderThickness="1"
-                                CornerRadius="6">
-                            <Grid>
-                                <Ellipse x:Name="outerEllipse"
-                                         Grid.Column="0"
-                                         Width="12"
-                                         Height="12"
-                                         Margin="2"
-                                         HorizontalAlignment="Left"
-                                         Fill="White" />
-                            </Grid>
-                        </Border>
-                        <ContentPresenter x:Name="content"
-                                          Grid.Column="1"
-                                          Margin="5,0,0,0"
-                                          HorizontalAlignment="Left"
-                                          VerticalAlignment="Center" />
-                    </Grid>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="outerEllipse" Property="Height" Value="10" />
-                            <Setter TargetName="outerEllipse" Property="Width" Value="10" />
-                        </Trigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsChecked" Value="True" />
-                                <Condition Property="IsEnabled" Value="True" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="Border" Property="Border.Background" Value="LightBlue" />
-                            <Setter TargetName="outerEllipse" Property="HorizontalAlignment" Value="Right" />
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsChecked" Value="True" />
-                                <Condition Property="IsEnabled" Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="Border" Property="Border.Background" Value="LightGray" />
-                            <Setter TargetName="Border" Property="Border.BorderBrush" Value="LightGray" />
-                            <Setter TargetName="outerEllipse" Property="HorizontalAlignment" Value="Right" />
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsChecked" Value="False" />
-                                <Condition Property="IsEnabled" Value="True" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="Border" Property="Border.Background" Value="White" />
-                            <Setter TargetName="outerEllipse" Property="Fill" Value="LightBlue" />
-                        </MultiTrigger>
-                        <MultiTrigger>
-                            <MultiTrigger.Conditions>
-                                <Condition Property="IsChecked" Value="False" />
-                                <Condition Property="IsEnabled" Value="False" />
-                            </MultiTrigger.Conditions>
-                            <Setter TargetName="Border" Property="Border.BorderBrush" Value="LightGray" />
-                            <Setter TargetName="outerEllipse" Property="Fill" Value="LightGray" />
-                        </MultiTrigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 </ResourceDictionary>
