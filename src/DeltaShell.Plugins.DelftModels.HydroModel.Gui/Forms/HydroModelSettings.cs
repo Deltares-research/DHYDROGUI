@@ -12,8 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 {
     public partial class HydroModelSettings : UserControl, ILayerEditorView
     {
-        private HydroModel model;
-
         public HydroModelSettings()
         {
             InitializeComponent();
@@ -25,7 +23,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             set
             {
                 view.Model = (HydroModel) value;
-                Text = $"{model?.Name} Settings";
+                if (view.Model != null)
+                {
+                    Text = $"{view.Model.Name} Settings";
+                }
             }
         }
         
