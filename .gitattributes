@@ -896,12 +896,6 @@ src/DeltaShell.NGHS.Utils/StringExtensions.cs -text
 src/DeltaShell.NGHS.Utils/ToDictionaryExtensions.cs -text
 src/DeltaShell.NGHS.Utils/packages.config -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/ActivityShapeBase.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/CompositeActivityShape.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/ParallelActivityShape.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/SequentialActivityShape.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/ShapeFactory.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/SimpleActivityShape.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/CreateHydroModelSettingView.xaml -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/CreateHydroModelSettingView.xaml.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/CreateHydroModelSettingViewViewModel.cs -text
@@ -928,9 +922,6 @@ src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/SettingsWpf/WpfSettingsV
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/SettingsWpf/WpfSettingsView.xaml.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/SettingsWpf/WpfSettingsViewModel.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/SettingsWpf/WpfSettingsViewModelDesignInstances.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/WorkflowEditorControl.Designer.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/WorkflowEditorControl.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/WorkflowEditorControl.resx -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/GraphicsProviders/HydroModelGuiGraphics.xaml -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/GraphicsProviders/HydroModelGuiGraphicsProvider.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/HydroModelGuiPlugin.cs -text
@@ -3686,12 +3677,6 @@ test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/DeltaShell.Plugins.DelftMod
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/DimrApiWrapperIntegrationTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/DimrConfigModelCouplerFactoryTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Export/DHydroConfigXmlExporterTest.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/ActivityShapeTestHelper.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/CompositeActivityShapeTest.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/ParallelActivityShapeTest.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/SequentialActivityShapeTest.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/ShapeFactoryTest.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/SimpleActivityShapeTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/HydroModelSettingsTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/SettingsTemplateSelectorTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/WpfEnumConverterTest.cs -text
@@ -3699,7 +3684,6 @@ test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/WpfGuiCat
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/WpfGuiPropertyTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/WpfGuiSubCategoryTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/WpfSettingsViewModelTest.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/WorkflowEditorControlTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/HydroModelApplicationPluginTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/HydroModelExtensionsTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/HydroModelGuiIntegrationTest.cs -text

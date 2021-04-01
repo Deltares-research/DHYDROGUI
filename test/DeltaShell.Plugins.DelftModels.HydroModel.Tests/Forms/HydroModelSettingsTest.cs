@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
             
             var model = new HydroModel { Activities = { rr, flow, rtc, waq }, Workflows = { w1, w2, w3 }, CurrentWorkflow = w1 };
             
-            var form = new HydroModelSettings { HydroModel = model };
+            var form = new HydroModelSettings { Data = model };
             
             WindowsFormsTestHelper.ShowModal(form);
         }

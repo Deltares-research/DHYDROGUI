@@ -250,12 +250,6 @@
     <Compile Include="DHydroConfigModelCouplerTest.cs" />
     <Compile Include="DHydroConfigWriterTest.cs" />
     <Compile Include="DimrConfigModelCouplerFactoryTest.cs" />
-    <Compile Include="Forms\ActivityShapes\ActivityShapeTestHelper.cs" />
-    <Compile Include="Forms\ActivityShapes\CompositeActivityShapeTest.cs" />
-    <Compile Include="Forms\ActivityShapes\ParallelActivityShapeTest.cs" />
-    <Compile Include="Forms\ActivityShapes\SequentialActivityShapeTest.cs" />
-    <Compile Include="Forms\ActivityShapes\ShapeFactoryTest.cs" />
-    <Compile Include="Forms\ActivityShapes\SimpleActivityShapeTest.cs" />
     <Compile Include="Forms\HydroModelSettingsTest.cs" />
     <Compile Include="Forms\SettingsWpf\SettingsTemplateSelectorTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfEnumConverterTest.cs" />
@@ -263,7 +257,6 @@
     <Compile Include="Forms\SettingsWpf\WpfGuiPropertyTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiSubCategoryTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfSettingsViewModelTest.cs" />
-    <Compile Include="Forms\WorkflowEditorControlTest.cs" />
     <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />

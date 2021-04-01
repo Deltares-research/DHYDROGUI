@@ -1,10 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionairy.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
     <Color x:Key="TextColor">Black</Color>
     <Color x:Key="TextDisabledColor">LightGray</Color>
-    <Color x:Key="DefaultBorderColor">#FFCBE5F1</Color>
-    <Color x:Key="DefaultLightColor">#FFCBE5F1</Color>
     <Color x:Key="DefaultDarkColor">SteelBlue</Color>
     <Color x:Key="DefaultDisabledColor">LightGray</Color>
 
@@ -15,10 +17,10 @@
                      Color="{StaticResource TextDisabledColor}" />
 
     <SolidColorBrush x:Key="DefaultBorderBrush"
-                     Color="{StaticResource DefaultBorderColor}" />
+                     Color="{StaticResource DeltaresBlueColor}" />
 
     <SolidColorBrush x:Key="DefaultLightColorBrush"
-                     Color="{StaticResource DefaultLightColor}" />
+                     Color="#008fc5" />
 
     <SolidColorBrush x:Key="DefaultDarkColorBrush"
                      Color="{StaticResource DefaultDarkColor}" />
@@ -39,50 +41,52 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Rectangle Grid.ColumnSpan="2"
-                           Fill="Transparent" />
                 <Ellipse Name="Circle"
                          Grid.Column="0"
-                         Width="15"
-                         Height="15"
+                         Width="16"
+                         Height="16"
                          HorizontalAlignment="Center"
                          VerticalAlignment="Center"
-                         Stroke="DarkGray" />
-                <Path x:Name="Sign"
-                      Grid.Column="0"
-                      Width="10"
-                      Height="10"
+                         Stroke="White"
+                         StrokeThickness="2" />
+                <Path Grid.Column="0"
+                      Width="16"
+                      Height="16"
                       HorizontalAlignment="Center"
                       VerticalAlignment="Center"
-                      Data="M 0,5 H 10 M 5,0 V 10 Z"
-                      RenderTransformOrigin="0.5,0.5"
-                      Stroke="#FF666666"
-                      StrokeThickness="2">
-                    <Path.RenderTransform>
-                        <RotateTransform Angle="0" />
-                    </Path.RenderTransform>
-                </Path>
+                      Data="M 3,8 H 13"
+                      Stroke="White"
+                      StrokeThickness="2" />
+                <Path x:Name="Sign"
+                      Grid.Column="0"
+                      Width="16"
+                      Height="16"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      Data="M 8,3 V 13"
+                      Stroke="White"
+                      StrokeThickness="2" />
                 <ContentPresenter x:Name="HeaderContent"
                                   Grid.Column="1"
                                   Margin="4,0,0,0"
-                                  ContentSource="Content" />
+                                  ContentSource="Content"
+                                  TextBlock.Foreground="White" />
             </Grid>
         </Border>
         <ControlTemplate.Triggers>
             <!--  Change the sign to minus when toggled  -->
             <Trigger Property="IsChecked" Value="True">
-                <Setter TargetName="Sign" Property="Data" Value="M 0,5 H 10 Z" />
+                <Setter TargetName="Sign" Property="Visibility" Value="Hidden" />
             </Trigger>
 
             <!--  MouseOver, Pressed behaviours  -->
             <Trigger Property="IsMouseOver" Value="true">
-                <Setter TargetName="Circle" Property="Stroke" Value="#FF3C7FB1" />
-                <Setter TargetName="Sign" Property="Stroke" Value="#222" />
+                <Setter TargetName="Sign" Property="Stroke" Value="White" />
             </Trigger>
             <Trigger Property="IsPressed" Value="true">
-                <Setter TargetName="Circle" Property="Stroke" Value="#FF526C7B" />
-                <Setter TargetName="Circle" Property="StrokeThickness" Value="1.5" />
-                <Setter TargetName="Sign" Property="Stroke" Value="#FF003366" />
+                <Setter TargetName="Circle" Property="Stroke" Value="White" />
+                <Setter TargetName="Circle" Property="StrokeThickness" Value="1" />
+                <Setter TargetName="Sign" Property="Stroke" Value="White" />
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -220,7 +224,8 @@
                                   ContentStringFormat="{TemplateBinding HeaderStringFormat}"
                                   ContentTemplate="{TemplateBinding HeaderTemplate}"
                                   RecognizesAccessKey="True"
-                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                  TextBlock.Foreground="White" />
             </Border>
             <Border Grid.Row="1"
                     BorderBrush="{StaticResource DefaultLightColorBrush}"
@@ -235,6 +240,7 @@
             </Border>
         </Grid>
     </ControlTemplate>
+
     <ControlTemplate x:Key="CheckBoxControlTemplate"
                      TargetType="{x:Type CheckBox}">
         <Grid>
@@ -250,7 +256,7 @@
                     Height="18"
                     VerticalAlignment="Center"
                     Background="White"
-                    BorderBrush="LightBlue"
+                    BorderBrush="{StaticResource DefaultLightColorBrush}"
                     BorderThickness="1"
                     CornerRadius="6">
                 <Grid>
@@ -279,7 +285,7 @@
                     <Condition Property="IsChecked" Value="True" />
                     <Condition Property="IsEnabled" Value="True" />
                 </MultiTrigger.Conditions>
-                <Setter TargetName="Border" Property="Border.Background" Value="LightBlue" />
+                <Setter TargetName="Border" Property="Border.Background" Value="{StaticResource DefaultLightColorBrush}" />
                 <Setter TargetName="outerEllipse" Property="HorizontalAlignment" Value="Right" />
             </MultiTrigger>
             <MultiTrigger>
@@ -287,8 +293,8 @@
                     <Condition Property="IsChecked" Value="True" />
                     <Condition Property="IsEnabled" Value="False" />
                 </MultiTrigger.Conditions>
-                <Setter TargetName="Border" Property="Border.Background" Value="LightGray" />
-                <Setter TargetName="Border" Property="Border.BorderBrush" Value="LightGray" />
+                <Setter TargetName="Border" Property="Border.Background" Value="{StaticResource DefaultDisabledColorBrush}" />
+                <Setter TargetName="Border" Property="Border.BorderBrush" Value="{StaticResource DefaultDisabledColorBrush}" />
                 <Setter TargetName="outerEllipse" Property="HorizontalAlignment" Value="Right" />
             </MultiTrigger>
             <MultiTrigger>
@@ -297,15 +303,15 @@
                     <Condition Property="IsEnabled" Value="True" />
                 </MultiTrigger.Conditions>
                 <Setter TargetName="Border" Property="Border.Background" Value="White" />
-                <Setter TargetName="outerEllipse" Property="Fill" Value="LightBlue" />
+                <Setter TargetName="outerEllipse" Property="Fill" Value="{StaticResource DefaultLightColorBrush}" />
             </MultiTrigger>
             <MultiTrigger>
                 <MultiTrigger.Conditions>
                     <Condition Property="IsChecked" Value="False" />
                     <Condition Property="IsEnabled" Value="False" />
                 </MultiTrigger.Conditions>
-                <Setter TargetName="Border" Property="Border.BorderBrush" Value="LightGray" />
-                <Setter TargetName="outerEllipse" Property="Fill" Value="LightGray" />
+                <Setter TargetName="Border" Property="Border.BorderBrush" Value="{StaticResource DefaultDisabledColorBrush}" />
+                <Setter TargetName="outerEllipse" Property="Fill" Value="{StaticResource DefaultDisabledColorBrush}" />
             </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>

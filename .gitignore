@@ -469,11 +469,6 @@ src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/*.suo
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/*.user
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/*.suo
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/*.user
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/*.suo
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/*.user
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/bin
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/obj
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ActivityShapes/packages
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ProjectExplorer/*.suo
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ProjectExplorer/*.user
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/ProjectExplorer/bin
@@ -1474,11 +1469,6 @@ test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/*.suo
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/*.user
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/*.suo
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/*.user
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/*.suo
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/*.user
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/bin
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/obj
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/ActivityShapes/packages
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/bin
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/obj
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/packages

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
@@ -29,18 +31,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private bool isUpdatingModel;
 
         private readonly string parameterValueName = nameof(Parameter.Value);
+        public IList<IActivity> CurrentWorkflow
+        {
+            get
+            {
+                return new IActivity[]{ HydroModel?.CurrentWorkflow };
+            }
+        }
 
         #region Properties
-
-        public HydroModelTimeSettingsViewModel()
-        {
-            
-        }
-
-        public HydroModelTimeSettingsViewModel(HydroModel hydroModel)
-        {
-            HydroModel = hydroModel;
-        }
 
         public HydroModel HydroModel
         {

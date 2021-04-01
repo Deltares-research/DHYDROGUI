@@ -193,7 +193,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                                     Gui.Selection = m;
                                     return Gui.CommandHandler.AddNewModel();
                                 };
-                            v.RemoveActivityCallback = (a) => Gui.CommandHandler.DeleteProjectItem(a);
                         }
                 };
 

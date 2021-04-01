@@ -1,196 +1,419 @@
 ﻿<UserControl x:Class="DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views.HydroModelTimeSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:controls="clr-namespace:DelftTools.Controls.Wpf.Controls;assembly=DelftTools.Controls.Wpf"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vm="clr-namespace:DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:gui="clr-namespace:DeltaShell.NGHS.Common.Gui;assembly=DeltaShell.NGHS.Common.Gui"
-             mc:Ignorable="d"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels"
+             xmlns:workflow="clr-namespace:DelftTools.Shell.Core.Workflow;assembly=DelftTools.Shell.Core"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              d:DesignHeight="300"
-             d:DesignWidth="580" Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}">
+             mc:Ignorable="d">
     <UserControl.DataContext>
-        <vm:HydroModelTimeSettingsViewModel x:Name="ViewModel"/>
+        <vm:HydroModelTimeSettingsViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <Style TargetType="xctk:DateTimePicker" x:Key="DateTimePickerStyle">
-            <Setter Property="FormatString" Value="yyyy-MM-dd HH:mm:ss"/>
-            <Setter Property="Format" Value="Custom"/>
-            <Setter Property="TimeFormat" Value="Custom"/>
-            <Setter Property="TimeFormatString" Value="yyyy-MM-dd HH:mm:ss"/>
-            <Setter Property="AutoCloseCalendar" Value="True"/>
-            <Setter Property="UpdateValueOnEnterKey" Value="True"/>
-            <Setter Property="ShowButtonSpinner" Value="False"/>
-            <Setter Property="TimePickerAllowSpin" Value="False"/>
-            <Setter Property="TimePickerShowButtonSpinner" Value="False"/>
-            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-            <Setter Property="AllowSpin" Value="False"/>
-            <Setter Property="MouseWheelActiveTrigger" Value="Disabled"/>
-        </Style>
-        <Style TargetType="Button" x:Key="ButtonStyle">
-            <Setter Property="Width" Value="60"></Setter>
-            <Setter Property="Height" Value="25"></Setter>
-            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/DefaultControlTemplates.xaml" />
+                <ResourceDictionary Source="../GraphicsProviders/HydroModelGuiGraphics.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="DateTimePickerStyle"
+                   TargetType="xctk:DateTimePicker">
+                <Setter Property="FormatString" Value="yyyy-MM-dd HH:mm:ss" />
+                <Setter Property="Format" Value="Custom" />
+                <Setter Property="TimeFormat" Value="Custom" />
+                <Setter Property="TimeFormatString" Value="yyyy-MM-dd HH:mm:ss" />
+                <Setter Property="AutoCloseCalendar" Value="True" />
+                <Setter Property="UpdateValueOnEnterKey" Value="True" />
+                <Setter Property="ShowButtonSpinner" Value="False" />
+                <Setter Property="TimePickerAllowSpin" Value="False" />
+                <Setter Property="TimePickerShowButtonSpinner" Value="False" />
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="AllowSpin" Value="False" />
+                <Setter Property="MouseWheelActiveTrigger" Value="Disabled" />
+            </Style>
+
+            <Style x:Key="ButtonStyle"
+                   TargetType="Button">
+                <Setter Property="Template" Value="{StaticResource ButtonControlTemplate}" />
+                <Setter Property="Width" Value="60" />
+                <Setter Property="Height" Value="25" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+            </Style>
+
+            <Style TargetType="CheckBox">
+                <Setter Property="Template" Value="{StaticResource CheckBoxControlTemplate}" />
+            </Style>
+
+            <Style TargetType="GroupBox">
+                <Setter Property="Template" Value="{StaticResource GroupBoxControlTemplate}" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="5" />
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="255"/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        
-        <GroupBox Grid.Column="0">
-            <GroupBox.Header>
-                <TextBlock FontWeight="Bold" Text="Run parameters"/>
-            </GroupBox.Header>
-            <Grid Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="80"/>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Label Grid.Column="0" Grid.Row="0" Content="Start time:"/>
-                <Label Grid.Column="0" Grid.Row="1" Content="Stop time:"/>
-                <Label Grid.Column="0" Grid.Row="2" Content="Time step:"/>
-                <Label Grid.Column="0" Grid.Row="3" Content="Duration:"/>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                  VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-                <Label Content="{Binding DurationText}" FontSize="9" Padding="0" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="3" >
-                    <Label.Style>
-                        <Style TargetType="Label">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding DurationIsValid}" Value="False">
-                                    <Setter Property="Foreground" Value="Red"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Label.Style>
-                </Label>
-                <ListView ItemsSource="{Binding ErrorTexts}" Focusable="False" FontWeight="Normal" BorderBrush="Transparent" Background="Transparent" Foreground="Red" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="4"/>
-
-                <CheckBox IsChecked="{Binding StartTimeSynchronisationEnabled}"
-                          Grid.Column="1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"
-                          Margin="2"/>
-                <CheckBox IsChecked="{Binding StopTimeSynchronisationEnabled}"
-                          Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <CheckBox IsChecked="{Binding TimeStepSynchronisationEnabled}"
-                          Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
-                <xctk:DateTimePicker Text="{Binding StartTime}"
-                                     Value="{Binding StartTime}"
-                                     IsEnabled="{Binding StartTimeSynchronisationEnabled}"
-                                     Style="{StaticResource DateTimePickerStyle}"
-                                     Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="0"
-                                     Margin="0,2,0,2"/>
-                <xctk:DateTimePicker Text="{Binding StopTime}"
-                                     Value="{Binding StopTime}"
-                                     IsEnabled="{Binding StopTimeSynchronisationEnabled}"
-                                     Style="{StaticResource DateTimePickerStyle}"
-                                     Grid.Column="2" Grid.ColumnSpan="2" Grid.Row="1"
-                                     Margin="0,2,0,2"/>
-                <xctk:MaskedTextBox Mask="00:00:00"
-                                    Margin="0,2,0,2"
-                                    VerticalContentAlignment="Center"
-                                    HorizontalContentAlignment="Right"
-                                    Text="{Binding TimeStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    IsEnabled="{Binding TimeStepSynchronisationEnabled}"
-                                    Grid.Column="2" Grid.Row="2"/>
-            </Grid>
-        </GroupBox>
-
-        <GroupBox Grid.Column="0" Grid.Row="1">
-            <GroupBox.Header>
-                <TextBlock FontWeight="Bold" Text="Spatial parameters"/> 
-            </GroupBox.Header>
-            <Grid Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" Text="Coordinatesystem:" TextWrapping="Wrap" Width="100" VerticalAlignment="Center"/>
-                <gui:CoordinateSystemPicker Grid.Column="1" 
-                                            CoordinateSystem="{Binding HydroModel.CoordinateSystem}"/>
-            </Grid>
-        </GroupBox>
-
-        <GroupBox Header="Models" FontWeight="Bold" Grid.Column="1" Grid.RowSpan="3">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <ListBox x:Name="ModelListBox" ItemsSource="{Binding Models, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0">
-                    <ListBox.InputBindings>
-                        <KeyBinding Key="Delete" Command="{Binding Path=RemoveSubmodel}" CommandParameter="{Binding ElementName=ModelListBox, Path=SelectedItem}"/>
-                        <KeyBinding Modifiers="Alt" Key="Insert" Command="{Binding Path=AddSubmodel}"/>
-                    </ListBox.InputBindings>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel x:Name="Models" Margin="5">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding DurationText, StringFormat=(\{0\})}" FontSize="8" VerticalAlignment="Center" Margin="5,0">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding DurationIsValid}" Value="False">
-                                                        <Setter Property="Foreground" Value="Red"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="2">
-                                    <TextBlock Text="Start" VerticalAlignment="Center" Margin="5,0" FontWeight="Normal"/>
-                                    <xctk:DateTimePicker Value="{Binding StartTime}" Text="{Binding StartTime}" Style="{StaticResource DateTimePickerStyle}" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="2">
-                                    <TextBlock Text="Stop" VerticalAlignment="Center" Margin="5,0" FontWeight="Normal"/>
-                                    <xctk:DateTimePicker Value="{Binding StopTime}" Text="{Binding StopTime}" Style="{StaticResource DateTimePickerStyle}"/>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="2">
-                                    <TextBlock Text="Time step" Margin="5,0" FontWeight="Normal"/>
-                                    <xctk:MaskedTextBox Mask="00:00:00" Text="{Binding TimeStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-
-                <Grid Grid.Row="1" Margin="10">
+            <GroupBox Grid.Column="0"
+                      MaxWidth="350"
+                      Header="Run parameters">
+                <Grid Margin="5">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0"
-                            Style="{StaticResource ButtonStyle}"
-                            Command="{Binding Path=AddSubmodel}">Add ...</Button>
-                    <Button Grid.Column="1"
-                            Style="{StaticResource ButtonStyle}"
-                            Command="{Binding Path=RemoveSubmodel}"
-                            CommandParameter="{Binding ElementName=ModelListBox, Path=SelectedItem}">Delete</Button>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Content="Start time:" />
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Content="Stop time:" />
+                    <Label Grid.Row="2"
+                           Grid.Column="0"
+                           Content="Time step:" />
+                    <Label Grid.Row="3"
+                           Grid.Column="0"
+                           Content="Duration:" />
+
+                    <Label Grid.Row="3"
+                           Grid.Column="1"
+                           Grid.ColumnSpan="3"
+                           Padding="0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Content="{Binding DurationText}"
+                           FontSize="9">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Setter Property="Foreground" Value="Black" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DurationIsValid}"
+                                                 Value="False">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+                    <ListView Grid.Row="4"
+                              Grid.Column="0"
+                              Grid.ColumnSpan="4"
+                              Background="Transparent"
+                              BorderBrush="Transparent"
+                              Focusable="False"
+                              FontWeight="Normal"
+                              Foreground="Red"
+                              ItemsSource="{Binding ErrorTexts}" />
+
+                    <CheckBox Grid.Row="0"
+                              Grid.Column="1"
+                              Margin="2"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              IsChecked="{Binding StartTimeSynchronisationEnabled}" />
+                    <CheckBox Grid.Row="1"
+                              Grid.Column="1"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              IsChecked="{Binding StopTimeSynchronisationEnabled}" />
+                    <CheckBox Grid.Row="2"
+                              Grid.Column="1"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              IsChecked="{Binding TimeStepSynchronisationEnabled}" />
+
+                    <xctk:DateTimePicker Grid.Row="0"
+                                         Grid.Column="2"
+                                         Grid.ColumnSpan="2"
+                                         Margin="0,2,0,2"
+                                         IsEnabled="{Binding StartTimeSynchronisationEnabled}"
+                                         Style="{StaticResource DateTimePickerStyle}"
+                                         Text="{Binding StartTime}"
+                                         Value="{Binding StartTime}" />
+                    <xctk:DateTimePicker Grid.Row="1"
+                                         Grid.Column="2"
+                                         Grid.ColumnSpan="2"
+                                         Margin="0,2,0,2"
+                                         IsEnabled="{Binding StopTimeSynchronisationEnabled}"
+                                         Style="{StaticResource DateTimePickerStyle}"
+                                         Text="{Binding StopTime}"
+                                         Value="{Binding StopTime}" />
+
+                    <controls:TimeSpanView Grid.Row="2"
+                                           Grid.Column="2"
+                                           Grid.ColumnSpan="2"
+                                           VerticalContentAlignment="Center"
+                                           CurrentTimeSpan="{Binding TimeStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                           IsEnabled="{Binding TimeStepSynchronisationEnabled}" />
                 </Grid>
+            </GroupBox>
 
-            </Grid>
-        </GroupBox>
-    </Grid>
+            <GroupBox Grid.Row="1"
+                      Grid.Column="0"
+                      MaxWidth="350"
+                      Header="Spatial parameters">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0"
+                               Width="100"
+                               Margin="0,3,0,0"
+                               VerticalAlignment="Center"
+                               Text="Coordinatesystem:"
+                               TextWrapping="Wrap" />
+
+                    <gui:CoordinateSystemPicker Grid.Column="1"
+                                                CoordinateSystem="{Binding HydroModel.CoordinateSystem}" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Row="0"
+                      Grid.RowSpan="3"
+                      Grid.Column="1"
+                      MaxWidth="350">
+                <GroupBox.Header>
+                    <TextBlock Foreground="White"
+                               Text="Models" />
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <ListBox x:Name="ModelListBox"
+                             Grid.Row="0"
+                             MaxHeight="190"
+                             BorderThickness="0"
+                             ItemsSource="{Binding Models, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ListBox.InputBindings>
+                            <KeyBinding Key="Delete"
+                                        Command="{Binding Path=RemoveSubmodel}"
+                                        CommandParameter="{Binding ElementName=ModelListBox, Path=SelectedItem}" />
+                            <KeyBinding Key="Insert"
+                                        Command="{Binding Path=AddSubmodel}"
+                                        Modifiers="Alt" />
+                        </ListBox.InputBindings>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel x:Name="Models"
+                                            Margin="5">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock FontWeight="Bold"
+                                                   Text="{Binding Name}" />
+                                        <TextBlock Margin="5,0"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="8"
+                                                   Text="{Binding DurationText, StringFormat=(\{0\})}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="Black" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding DurationIsValid}"
+                                                                     Value="False">
+                                                            <Setter Property="Foreground" Value="Red" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <Grid Margin="2">
+                                        <Grid.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="HorizontalAlignment" Value="Left" />
+                                                <Setter Property="VerticalAlignment" Value="Center" />
+                                                <Setter Property="Margin" Value="5,2" />
+                                            </Style>
+                                        </Grid.Resources>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Row="0"
+                                                   Grid.Column="0"
+                                                   Text="Start" />
+                                        <xctk:DateTimePicker Grid.Row="0"
+                                                             Grid.Column="1"
+                                                             Margin="2"
+                                                             Style="{StaticResource DateTimePickerStyle}"
+                                                             Text="{Binding StartTime}"
+                                                             Value="{Binding StartTime}" />
+
+                                        <TextBlock Grid.Row="1"
+                                                   Grid.Column="0"
+                                                   Text="Stop" />
+                                        <xctk:DateTimePicker Grid.Row="1"
+                                                             Grid.Column="1"
+                                                             Margin="2"
+                                                             Style="{StaticResource DateTimePickerStyle}"
+                                                             Text="{Binding StopTime}"
+                                                             Value="{Binding StopTime}" />
+                                        <TextBlock Grid.Row="2"
+                                                   Grid.Column="0"
+                                                   Text="Time step" />
+                                        <controls:TimeSpanView Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Margin="2"
+                                                               CurrentTimeSpan="{Binding TimeStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <Grid Grid.Row="1"
+                          Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="70" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0"
+                                Command="{Binding Path=AddSubmodel}"
+                                Style="{StaticResource ButtonStyle}">
+                            Add ...
+                        </Button>
+                        <Button Grid.Column="1"
+                                Command="{Binding Path=RemoveSubmodel}"
+                                CommandParameter="{Binding ElementName=ModelListBox, Path=SelectedItem}"
+                                Style="{StaticResource ButtonStyle}">
+                            Delete
+                        </Button>
+                    </Grid>
+
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Row="0"
+                      Grid.RowSpan="3"
+                      Grid.Column="2"
+                      MinWidth="350"
+                      Header="Workflows">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox Grid.Row="0"
+                             Grid.Column="0"
+                             Margin="5"
+                             BorderThickness="0"
+                             ItemsSource="{Binding HydroModel.Workflows}"
+                             SelectedItem="{Binding HydroModel.CurrentWorkflow}" />
+
+                    <ContentPresenter Grid.Row="0"
+                                      Grid.Column="1"
+                                      VerticalAlignment="Top"
+                                      Content="{Binding HydroModel.CurrentWorkflow}">
+                        <ContentPresenter.Resources>
+                            <DataTemplate DataType="{x:Type workflow:Activity}">
+                                <Border Margin="5"
+                                        Padding="5"
+                                        CornerRadius="3">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                            <GradientStop Offset="0" Color="LightGray" />
+                                            <GradientStop Offset="1" Color="WhiteSmoke" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <TextBlock Text="{Binding Name}"
+                                               TextWrapping="Wrap" />
+                                </Border>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type workflow:SequentialActivity}">
+                                <Border CornerRadius="5">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                            <GradientStop Offset="0" Color="LightSkyBlue" />
+                                            <GradientStop Offset="1" Color="LightBlue" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel Margin="5">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Rectangle Width="16"
+                                                       Height="16"
+                                                       Margin="0,0,5,0"
+                                                       Fill="{StaticResource SequentialActivityBrush}" />
+                                            <TextBlock Text="Sequential activity" />
+                                        </StackPanel>
+                                        <ItemsControl Padding="6"
+                                                      ItemsSource="{Binding Activities}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type workflow:ParallelActivity}">
+                                <Border CornerRadius="5">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                            <GradientStop Offset="0" Color="SandyBrown" />
+                                            <GradientStop Offset="1" Color="LightSalmon" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <StackPanel Margin="5">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Rectangle Width="16"
+                                                       Height="16"
+                                                       Margin="0,0,5,0"
+                                                       Fill="{StaticResource ParallelActivityBrush}" />
+                                            <TextBlock Text="Parallel activity" />
+                                        </StackPanel>
+                                        <ItemsControl Padding="6"
+                                                      ItemsSource="{Binding Activities}" />
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ContentPresenter.Resources>
+                    </ContentPresenter>
+
+                    <Button Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="5"
+                            Content="Run"
+                            Style="{StaticResource ButtonStyle}" />
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </ScrollViewer>
 </UserControl>
-

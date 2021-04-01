@@ -149,12 +149,6 @@
     <None Include="Uml\HydroModelGui.cd" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\ActivityShapes\ActivityShapeBase.cs" />
-    <Compile Include="Forms\ActivityShapes\CompositeActivityShape.cs" />
-    <Compile Include="Forms\ActivityShapes\ParallelActivityShape.cs" />
-    <Compile Include="Forms\ActivityShapes\SequentialActivityShape.cs" />
-    <Compile Include="Forms\ActivityShapes\ShapeFactory.cs" />
-    <Compile Include="Forms\ActivityShapes\SimpleActivityShape.cs" />
     <Compile Include="Forms\CreateHydroModelSettingView.xaml.cs">
       <DependentUpon>CreateHydroModelSettingView.xaml</DependentUpon>
     </Compile>
@@ -197,12 +191,6 @@
     <Compile Include="Views\HydroModelTimeSettingsView.xaml.cs">
       <DependentUpon>HydroModelTimeSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WorkflowEditorControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\WorkflowEditorControl.Designer.cs">
-      <DependentUpon>WorkflowEditorControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="HydroModelGuiPlugin.cs" />
     <Compile Include="HydroModelMapLayerProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -223,9 +211,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MergeModelValidationView.resx">
       <DependentUpon>MergeModelValidationView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WorkflowEditorControl.resx">
-      <DependentUpon>WorkflowEditorControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.nl-NL.resx">
       <SubType>Designer</SubType>

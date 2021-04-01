@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         public void TestHydroModelInit()
         {
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};
 
             Assert.AreEqual(hydroModel.StartTime, viewModel.StartTime);
             Assert.AreEqual(hydroModel.StopTime, viewModel.StopTime);
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         public void TestViewModelDefaultTimes()
         {
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel { HydroModel = hydroModel };
 
             var defaultStartDateTime = DateTime.Today;
             var defaultStopDateTime = defaultStartDateTime.AddDays(1);
@@ -65,7 +65,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             var newStartTime = initialStartTime.AddDays(1);
 
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel) { StartTime = initialStartTime };
+            var viewModel = new HydroModelTimeSettingsViewModel
+            {
+                HydroModel = hydroModel,
+                StartTime = initialStartTime
+            };
 
             Assert.AreEqual(initialStartTime, viewModel.StartTime);
             Assert.AreEqual(initialStartTime, hydroModel.StartTime);
@@ -83,7 +87,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             var newStopTime = initialStopTime.AddDays(1);
 
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel) {StopTime = initialStopTime};
+            var viewModel = new HydroModelTimeSettingsViewModel
+            {
+                HydroModel = hydroModel,
+                StopTime = initialStopTime
+            };
 
             Assert.AreEqual(initialStopTime, viewModel.StopTime);
             Assert.AreEqual(initialStopTime, hydroModel.StopTime);
@@ -102,7 +110,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             var newTimeStep = new TimeSpan(30, 2, 0, 0);
 
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel) {TimeStep = initialTimeStep};
+            var viewModel = new HydroModelTimeSettingsViewModel
+            {
+                HydroModel = hydroModel,
+                TimeStep = initialTimeStep
+            };
             Assert.AreEqual(initialTimeStep, viewModel.TimeStep);
             Assert.AreEqual(initialTimeStep, hydroModel.TimeStep);
 
@@ -117,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         public void TestDurationTextChange()
         {
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
             var newStartTime = DateTime.Now;
             var newStopTime = newStartTime.AddDays(1);
             var intervalLength = newStopTime - newStartTime;
@@ -134,8 +146,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         public void TestOverrideStartTimeChange()
         {
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel)
+            var viewModel = new HydroModelTimeSettingsViewModel
             {
+                HydroModel = hydroModel,
                 StartTimeSynchronisationEnabled = true
             };
 
@@ -152,8 +165,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         public void TestOverrideStopTimeChange()
         {
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel)
+            var viewModel = new HydroModelTimeSettingsViewModel
             {
+                HydroModel = hydroModel,
                 StopTimeSynchronisationEnabled = true
             };
 
@@ -170,8 +184,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         public void TestOverrideTimeStepChange()
         {
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel)
+            var viewModel = new HydroModelTimeSettingsViewModel
             {
+                HydroModel = hydroModel,
                 TimeStepSynchronisationEnabled = true
             };
 
@@ -207,7 +222,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.That(rtcModel.StartTime, Is.EqualTo(initialStartTime));
 
             // Check initial Integrated model View Model
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
             Assert.That(viewModel.StartTime, Is.EqualTo(initialStartTime));
             Assert.That(viewModel.Models.Count, Is.EqualTo(2));
 
@@ -253,7 +268,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.That(rtcModel.StopTime, Is.EqualTo(initialStopTime));
 
             // Check initial Integrated model View Model
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
             Assert.That(viewModel.StopTime, Is.EqualTo(initialStopTime));
             Assert.That(viewModel.Models.Count, Is.EqualTo(2));
 
@@ -299,7 +314,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
             Assert.That(rtcModel.TimeStep, Is.EqualTo(initialTimeStep));
 
             // Check initial Integrated model View Model
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
             Assert.That(viewModel.TimeStep, Is.EqualTo(initialTimeStep));
             Assert.That(viewModel.Models.Count, Is.EqualTo(2));
 
@@ -356,7 +371,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
 
             // Initialization
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
             var mocks = new MockRepository();
             var timeDependentModel = mocks.StrictMultiMock<ITimeDependentModel>(new[] { typeof(INotifyPropertyChanged) });
             timeDependentModel.Expect(a => a.Name).Return("My Test Activity Name").Repeat.Times(1);
@@ -386,7 +401,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
 
             // Initialization
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
             var mocks = new MockRepository();
             var timeDependentModel = mocks.StrictMultiMock<ITimeDependentModel>(new[] { typeof(INotifyPropertyChanged) });
             timeDependentModel.Expect(a => a.Name).Return("My Test Activity Name").Repeat.Times(1);
@@ -417,7 +432,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         {
             // Initialization
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
             var mocks = new MockRepository();
             var timeDependentModel = mocks.StrictMultiMock<ITimeDependentModel>(new[] { typeof(INotifyPropertyChanged) });
 
@@ -451,7 +466,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
 
             // Initialization
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
             var mocks = new MockRepository();
             var timeDependentModel = mocks.StrictMultiMock<ITimeDependentModel>(new[] { typeof(INotifyPropertyChanged) });
 
@@ -485,7 +500,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
         {
             // Initialization
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
             var mocks = new MockRepository();
             var timeDependentModel = mocks.StrictMultiMock<ITimeDependentModel>(new [] {typeof(INotifyPropertyChanged)});
 
@@ -538,7 +553,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
 
             // Initialization
             var hydroModel = new HydroModel();
-            var viewModel = new HydroModelTimeSettingsViewModel(hydroModel);
+            var viewModel = new HydroModelTimeSettingsViewModel{HydroModel = hydroModel};;
 
             var mocks = new MockRepository();
             var timeDependentModel1 = mocks.StrictMultiMock<ITimeDependentModel>(typeof(INotifyPropertyChanged));
