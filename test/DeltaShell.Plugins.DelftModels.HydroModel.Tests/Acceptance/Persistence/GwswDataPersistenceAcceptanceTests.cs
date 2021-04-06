@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using NUnit.Framework;
