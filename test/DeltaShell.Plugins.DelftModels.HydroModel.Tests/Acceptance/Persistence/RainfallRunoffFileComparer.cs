@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence.CustomComparers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
@@ -32,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
                 string expectedRainfallRunoffFile = expectedRainfallRunoffFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
                 string actualRainfallRunoffFile = actualRainfallRunoffFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
-
+                
                 if (!FileComparerHelper.FileNameIsEqual(fileName, expectedRainfallRunoffFile, actualRainfallRunoffFile, ref overallErrorMessage))
                 {
                     identical = false;
@@ -40,8 +41,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 }
                 
                 string errorMessage = string.Empty;
-
-                identical = FileComparerHelper.CompareFiles(expectedRainfallRunoffFile, actualRainfallRunoffFile, linesToIgnore, out errorMessage) && identical;
+                
+                if (string.Equals(fileName, "3brunoff.tp", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    identical = RunoffTpFileComparer.Compare(expectedRainfallRunoffFile, actualRainfallRunoffFile, out errorMessage) && identical;
+                }
+                else
+                {
+                    identical = FileComparerHelper.CompareFiles(expectedRainfallRunoffFile, actualRainfallRunoffFile, linesToIgnore, out errorMessage) && identical;                    
+                }
                 
                 if (!string.IsNullOrEmpty(errorMessage))
                 {

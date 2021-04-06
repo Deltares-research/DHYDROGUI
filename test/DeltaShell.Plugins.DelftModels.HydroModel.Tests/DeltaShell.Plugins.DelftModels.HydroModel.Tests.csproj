@@ -237,6 +237,7 @@
     <Compile Include="AcceptanceModelsTest.cs" />
     <Compile Include="Acceptance\FileComparerHelper.cs" />
     <Compile Include="Acceptance\GwswAcceptanceModelTestHelper.cs" />
+    <Compile Include="Acceptance\Persistence\CustomComparers\RunoffTpFileComparer.cs" />
     <Compile Include="Acceptance\Persistence\CustomComparers\CrossSectionDefinitionFileComparer.cs" />
     <Compile Include="Acceptance\Persistence\FlowFmDataPersistenceAcceptanceTests.cs" />
     <Compile Include="Acceptance\Persistence\RainfallRunoffFileComparer.cs" />
