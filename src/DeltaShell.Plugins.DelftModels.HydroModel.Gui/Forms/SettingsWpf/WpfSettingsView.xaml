@@ -24,7 +24,8 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid d:UserControl.DataContext="{x:Static settingsWpf:WpfSettingsViewModelDesignInstances.AllTypes}">
+    <Grid x:Name="MainGrid"
+          d:UserControl.DataContext="{x:Static settingsWpf:WpfSettingsViewModelDesignInstances.AllTypes}">
         <Grid.Resources>
             <settingsWpf:WpfEnumConverter x:Key="GuiEnumConverter" />
             <valueConverters:ImageToBitmapSourceConverter x:Key="ImageToBitmapSourceConverter" />
@@ -329,6 +330,7 @@
                 </ScrollViewer>
             </DataTemplate>
         </Grid.Resources>
+
         <TabControl x:Name="MainTabControl"
                     ContentTemplateSelector="{StaticResource TemplateSelector}"
                     ItemsSource="{Binding Path=SettingsCategories}"

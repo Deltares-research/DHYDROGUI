@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using DelftTools.Controls.Wpf.Extensions;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
@@ -17,27 +18,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </returns>
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
-            var fe = (FrameworkElement)container;
-            /*CHECK FIRST FOR CUSTOM CONTROLS*/
-            if (item is WpfGuiCategory)
+            if (!(container is WpfSettingsView wpfSettingsView))
             {
-                var category = item as WpfGuiCategory;
+                wpfSettingsView = container.TryFindParent<WpfSettingsView>();
+            }
+
+            var fe = wpfSettingsView?.MainGrid ?? container as FrameworkElement;
+            if (fe == null) 
+                return base.SelectTemplate(item, container);
+
+            /*CHECK FIRST FOR CUSTOM CONTROLS*/
+            if (item is WpfGuiCategory category)
+            {
                 if(!category.HasCustomControl)
                     return fe.FindResource("tabContentTemplate") as DataTemplate;
                 return fe.FindResource("tabCustomContentTemplate") as DataTemplate;
             }
             
-            if (item is WpfGuiSubCategory)
+            if (item is WpfGuiSubCategory subCategory)
             {
-                var subCategory = item as WpfGuiSubCategory;
                 if (!subCategory.HasCustomControl)
                     return fe.FindResource("subCategoryTemplate") as DataTemplate;
                 return fe.FindResource("subCategoryCustomTemplate") as DataTemplate;
             }
 
-            if (!(item is WpfGuiProperty)) return base.SelectTemplate(item, container);
+            if (!(item is WpfGuiProperty property)) 
+                return base.SelectTemplate(item, container);
             
-            var property = item as WpfGuiProperty;
             if (property.HasCustomControl)
                 return fe.FindResource("propertyCustomTemplate") as DataTemplate;
 
