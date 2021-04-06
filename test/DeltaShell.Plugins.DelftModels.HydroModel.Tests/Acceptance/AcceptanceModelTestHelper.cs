@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
@@ -110,37 +111,41 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         }
 
         /// <summary>
-        /// Compares the files of two project folders.
+        /// Compares the files of two project directories.
         /// </summary>
-        /// <param name="firstSaveProjectPath">Path to directory containig first project files to compare.</param>
-        /// <param name="secondSaveProjectPath">Path to directory containing second project files to compare.</param>
+        /// <param name="firstSaveProjectDirectory">Path to directory containing first project files to compare.</param>
+        /// <param name="secondSaveProjectDirectory">Path to directory containing second project files to compare.</param>
+        /// <param name="mduFileName">Name of the mdu file that corresponds with the folder name where the FlowFM data is located.</param>
         /// <param name="tempDirectory">Path to temporary directory.</param>
         /// <param name="hasRrData">Whether or not Rainfall Runoff data should be compared.</param>
-        public static void CompareInitialSaveToSecondSave(string firstSaveProjectPath, 
-                                                          string secondSaveProjectPath, 
-                                                          string tempDirectory, 
-                                                          bool hasRrData)
+        public static void CompareProjectDirectories(string firstSaveProjectDirectory,
+                                                     string secondSaveProjectDirectory,
+                                                     string mduFileName,
+                                                     string tempDirectory,
+                                                     bool hasRrData)
         {
             Console.WriteLine("Comparing FlowFM saved data");
-            CompareFlowFMFiles(firstSaveProjectPath, secondSaveProjectPath, tempDirectory);
-            
+            string flowFmInitialSaveDirectory = Path.Combine(firstSaveProjectDirectory, mduFileName, "input");
+            string flowFmSecondSaveDirectory = Path.Combine(secondSaveProjectDirectory, mduFileName, "input");
+            CompareFlowFMFiles(flowFmInitialSaveDirectory, flowFmSecondSaveDirectory, tempDirectory);
+
             if (hasRrData)
             {
                 Console.WriteLine("Comparing Rainfall Runoff saved data");
-                CompareRainfallRunoffFiles(firstSaveProjectPath, secondSaveProjectPath);
+                string rrInitialSaveDirectory = Path.Combine(firstSaveProjectDirectory, "Rainfall Runoff");
+                string rrSecondSaveDirectory = Path.Combine(secondSaveProjectDirectory, "Rainfall Runoff");
+                CompareRainfallRunoffFiles(rrInitialSaveDirectory, rrSecondSaveDirectory);
             }
         }
         
-        private static void CompareFlowFMFiles(string firstSaveProjectPath, string secondSaveProjectPath, string tempDirectory)
+        private static void CompareFlowFMFiles(string flowFmInitialSaveDirectory, string flowFmSecondSaveDirectory, string tempDirectory)
         {
-            string flowFmInitialSaveDirectory = Path.Combine(firstSaveProjectPath + "_data", "FlowFM", "input");
             string[] flowFmInitialSaveFiles = Directory.GetFiles(flowFmInitialSaveDirectory);
             if (!flowFmInitialSaveFiles.Any())
             {
-                Assert.Fail($"No saved files (first save) could be found at {flowFmInitialSaveFiles}.");
+                Assert.Fail($"No saved files (first save) could be found at {flowFmInitialSaveDirectory}.");
             }
             
-            string flowFmSecondSaveDirectory = Path.Combine(secondSaveProjectPath + "_data", "FlowFM", "input");
             string[] flowFmSecondSaveFiles = Directory.GetFiles(flowFmSecondSaveDirectory);
             if (!flowFmSecondSaveFiles.Any())
             {
@@ -150,23 +155,37 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             FlowFmFileComparer.Compare(flowFmInitialSaveFiles, flowFmSecondSaveFiles, tempDirectory);
         }
 
-        private static void CompareRainfallRunoffFiles(string firstSaveProjectPath, string secondSaveProjectPath)
+        private static void CompareRainfallRunoffFiles(string rrInitialSaveDirectory, string rrSecondSaveDirectory)
         {
-            string rrInitialSaveDirectory = Path.Combine(firstSaveProjectPath + "_data", "Rainfall Runoff");
+            Dictionary<string, IEnumerable<string>> linesToIgnore = GetLinesToIgnore();
+            
             string[] rrInitialSaveFiles = Directory.GetFiles(rrInitialSaveDirectory);
             if (!rrInitialSaveFiles.Any())
             {
-                Assert.Fail($"No saved files (first save) could be found at {rrInitialSaveFiles}.");
+                Assert.Fail($"No saved files (first save) could be found at {rrInitialSaveDirectory}.");
             }
             
-            string rrSecondSaveDirectory = Path.Combine(secondSaveProjectPath + "_data", "Rainfall Runoff");
             string[] rrSecondSaveFiles = Directory.GetFiles(rrSecondSaveDirectory);
             if (!rrSecondSaveFiles.Any())
             {
                 Assert.Fail($"No saved files (second save) could be found at {rrSecondSaveDirectory}.");
             }
             
-            RainfallRunoffFileComparer.Compare(rrInitialSaveFiles, rrSecondSaveFiles);
+            RainfallRunoffFileComparer.Compare(rrInitialSaveFiles, rrSecondSaveFiles, linesToIgnore);
+        }
+
+        private static Dictionary<string, IEnumerable<string>> GetLinesToIgnore()
+        {
+            var linesToIgnore = new Dictionary<string, IEnumerable<string>>(StringComparer.InvariantCultureIgnoreCase);
+            
+            linesToIgnore["default.evp"] = new[]
+            {
+                string.Empty // Ignore entire file as this can contain today's date, which keeps changing.
+            };
+            
+            linesToIgnore["delft_3b.ini"] = new []{ "StartTime", "EndTime" }; // Based on today's datetime, which keeps changing.
+
+            return linesToIgnore;
         }
     }
 }

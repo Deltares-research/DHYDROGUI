@@ -16,6 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private string firstSaveProjectPath;
         private string secondSaveProjectPath;
         private string acceptanceModelsDirectory;
+        private string referenceSaveData;
 
         public static IEnumerable<TestCaseData> AcceptanceTests
         {
@@ -31,11 +32,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            string acceptanceModelPath = GuiTestHelper.IsBuildServer
-                ? @"..\..\AcceptanceModels\GWSW"
-                : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModels\GWSW";
+            string basePath = GuiTestHelper.IsBuildServer
+                ? @"..\..\"
+                : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\";
 
-            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModels\GWSW");
+            referenceSaveData = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModelsReferenceSaveData\GWSW");
+            
         }
 
         [SetUp]
@@ -83,7 +86,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 // [Then]
                 Console.WriteLine("Comparing saved data");
                 bool hasRrData = preconditionExpectedCatchmentsCount > 0;
-                AcceptanceModelTestHelper.CompareInitialSaveToSecondSave(firstSaveProjectPath, secondSaveProjectPath, tempDirectory, hasRrData);
+                string firstSaveProjectDirectory = firstSaveProjectPath + "_data";
+                string secondSaveProjectDirectory = secondSaveProjectPath + "_data";
+                string mduFileName = "FlowFM";
+                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory, secondSaveProjectDirectory, mduFileName, tempDirectory, hasRrData);
+
+                Console.WriteLine("Comparing saved data with reference data");
+                string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
+                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory, referenceSaveDataDirectory, mduFileName, tempDirectory, hasRrData);
             }
         }
     }

@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private string firstSaveProjectPath;
         private string secondSaveProjectPath;
         private string acceptanceModelsDirectory;
+        private string referenceSaveData;
 
         public delegate int ActualCountFuncDelegate(IHydroNetwork network);
         public static IEnumerable<TestCaseData> AcceptanceTests
@@ -37,11 +38,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            string acceptanceModelPath = GuiTestHelper.IsBuildServer
-                ? @"..\..\AcceptanceModels\FlowFM"
-                : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModels\FlowFM";
+            string basePath = GuiTestHelper.IsBuildServer
+                                  ? @"..\..\"
+                                  : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\";
 
-            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
+            acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModels\FlowFM");
+            referenceSaveData = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModelsReferenceSaveData\FlowFM");
         }
 
         [SetUp]
@@ -76,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             // [Given]
             using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
-
+                Console.WriteLine("Importing model");
                 ImportFlowFmModelAndAssertPreconditions(
                     acceptanceModelName,
                     acceptanceModelFileName,
@@ -88,7 +90,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
 
                 // [Then]
-                CompareResultDataWithReferenceData(Path.Combine(firstSaveProjectPath + "_data"), acceptanceModelFileName);
+                Console.WriteLine("Comparing saved data");
+                string firstSaveProjectDirectory = Path.Combine(firstSaveProjectPath + "_data");
+                string secondSaveProjectDirectory = Path.Combine(secondSaveProjectPath + "_data");
+                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory, secondSaveProjectDirectory, acceptanceModelFileName, tempDirectory, false);
+
+                Console.WriteLine("Comparing saved data with reference data");
+                string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
+                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory, referenceSaveDataDirectory, acceptanceModelFileName , tempDirectory, false);
             }
         }
 
@@ -117,24 +126,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             // [Precondition]
             var hydroNetwork = model.Network;
             Assert.AreEqual(expectedBranchFeaturesCount, actualCountFunc(hydroNetwork), "[Precondition failure] Unexpected number of branch features");
-        }
-
-        private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory, string acceptanceModelFileName)
-        {
-            var flowFmReferenceFiles = Directory.GetFiles(Path.Combine(flowFmReferenceFileDirectory, acceptanceModelFileName, "input"));
-            if (!flowFmReferenceFiles.Any())
-            {
-                Assert.Fail($"No saved files (first save) could be found at {flowFmReferenceFiles}.");
-            }
-            
-            var secondSaveDirectory = Path.Combine(secondSaveProjectPath + "_data", acceptanceModelFileName, "input");
-            var flowFmResultFiles = Directory.GetFiles(secondSaveDirectory);
-            if (!flowFmResultFiles.Any())
-            {
-                Assert.Fail($"No saved files (second save) could be found at {secondSaveDirectory}.");
-            }
-
-            FlowFmFileComparer.Compare(flowFmReferenceFiles, flowFmResultFiles, tempDirectory);
         }
     }
 }
