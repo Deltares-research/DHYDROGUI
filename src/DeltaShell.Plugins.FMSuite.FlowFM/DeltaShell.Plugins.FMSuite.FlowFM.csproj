@@ -159,7 +159,6 @@
     <Compile Include="WaterFlowFMModelSyncExtensions.cs" />
     <Compile Include="Grid\UnstructuredGridExtensions.cs" />
     <Compile Include="FunctionStores\FMClassMapFileFunctionStore.cs" />
-    <Compile Include="FunctionStores\IFMClassMapFileFunctionStore.cs" />
     <Compile Include="IO\BathymetryFileWriter.cs" />
     <Compile Include="IO\BcMeteoFileDataBuilder.cs" />
     <Compile Include="IO\CacheFile.cs" />

@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
     /// Presents the nodes for the Class Map file function store.
     /// </summary>
     /// <seealso cref="DelftTools.Shell.Gui.Swf.TreeViewNodePresenterBaseForPluginGui{FMClassMapFileFunctionStore}"/>
-    public class FMClassMapFileFunctionStoreNodePresenter : TreeViewNodePresenterBaseForPluginGui<IFMClassMapFileFunctionStore>
+    public class FMClassMapFileFunctionStoreNodePresenter : TreeViewNodePresenterBaseForPluginGui<FMClassMapFileFunctionStore>
     {
         private static readonly IList<DataItem> DataItems = new List<DataItem>();
 
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         /// <param name="parentNode">The parent node.</param>
         /// <param name="node">The node.</param>
         /// <param name="nodeData">The node data.</param>
-        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, IFMClassMapFileFunctionStore nodeData)
+        public override void UpdateNode(ITreeNode parentNode, ITreeNode node, FMClassMapFileFunctionStore nodeData)
         {
             node.Text = Path.GetFileName(nodeData.Path);
             node.Image = Resources.unstrucWater;
@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         /// <param name="parentNodeData">The parent.</param>
         /// <param name="node">The node.</param>
         /// <returns></returns>
-        public override IEnumerable GetChildNodeObjects(IFMClassMapFileFunctionStore parentNodeData, ITreeNode node)
+        public override IEnumerable GetChildNodeObjects(FMClassMapFileFunctionStore parentNodeData, ITreeNode node)
         {
             WaterFlowFMModel model = GetModelByFunctionStore(parentNodeData);
 
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             }
         }
 
-        private IDataItem WrapIntoOutputItem(object o, IFMClassMapFileFunctionStore store, string tag)
+        private IDataItem WrapIntoOutputItem(object o, FMClassMapFileFunctionStore store, string tag)
         {
             WaterFlowFMModel model = GetModelByFunctionStore(store);
 
@@ -76,7 +76,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             return existingItem;
         }
 
-        private WaterFlowFMModel GetModelByFunctionStore(IFMClassMapFileFunctionStore store)
+        private WaterFlowFMModel GetModelByFunctionStore(FMClassMapFileFunctionStore store)
         {
             return Gui?.Application?.Project?.RootFolder?.Models?.OfType<WaterFlowFMModel>()
                       .FirstOrDefault(m => Equals(m.OutputClassMapFileStore, store));

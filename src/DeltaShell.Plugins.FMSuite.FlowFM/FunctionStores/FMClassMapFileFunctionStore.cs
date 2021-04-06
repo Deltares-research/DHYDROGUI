@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
     /// Function store for Class Map Files.
     /// </summary>
     /// <seealso cref="FMClassMapFileFunctionStore"/>
-    public class FMClassMapFileFunctionStore : FMNetCdfFileFunctionStore, IFMClassMapFileFunctionStore
+    public class FMClassMapFileFunctionStore : FMNetCdfFileFunctionStore
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(FMClassMapFileFunctionStore));
         
@@ -42,8 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private const string LongNameAttributeName = "long_name";
         private const string UnitsAttributeName = "units";
         private const string FillValueAttribute = "_FillValue";
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(FMClassMapFileFunctionStore));
-        public IDictionary<string, IList<INetworkLocation>> LocationsByNetworkDataType { get; set; }
+
+        private IDictionary<string, IList<INetworkLocation>> locationsByNetworkDataType;
+
         private readonly Dictionary<IVariable, IMultiDimensionalArray> networkLocationsForThisFunctionCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         private readonly Dictionary<IVariable, IMultiDimensionalArray> argumentVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         private readonly Dictionary<IVariable, IMultiDimensionalArray> fullVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
@@ -68,8 +71,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// The grid.
         /// </value>
         public UnstructuredGrid Grid => grid;
+
         public IDiscretization Discretization => discretization;
+
         public IHydroNetwork Network => network;
+
         public IList<ILink1D2D> Links => links;
 
         /// <summary>
@@ -79,16 +85,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <returns> </returns>
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
-            LocationsByNetworkDataType = new Dictionary<string, IList<INetworkLocation>>();
+            locationsByNetworkDataType = new Dictionary<string, IList<INetworkLocation>>();
             grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true, false);
             links = UGridFileHelper.Read1D2DLinks(netCdfFile.Path);
             UpdateNetworkAndDiscretisation();
             GenerateGeometriesForLinks();
 
-            IEnumerable<NetCdfVariableInfo> timeDepVariables =
-                dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 1);
-            IEnumerable<ICoverage> functions =
-                timeDepVariables.Select(CreateCoverageForTimeDependentVariable).Where(c => c != null);
+            IEnumerable<NetCdfVariableInfo> timeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 1);
+            IEnumerable<ICoverage> functions = timeDepVariables.Select(CreateCoverageForTimeDependentVariable).Where(c => c != null);
 
             return functions;
         }
@@ -128,13 +132,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
                 foreach (var hydroObject in network.AllHydroObjects)
                 {
-                    hydroObject.Name = hydroObject.Name + "_class_output";
+                    hydroObject.Name += "_class_output";
                 }
+                
                 foreach (var outputNetworkLocation in discretization.Locations.AllValues)
                 {
-                    outputNetworkLocation.Name = outputNetworkLocation.Name + "_class_output";
+                    outputNetworkLocation.Name += "_class_output";
                 }
-
             }
         }
         /// <summary>
@@ -144,48 +148,52 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <param name="function"> The function. </param>
         /// <param name="filters"> The variable filters. </param>
         /// <returns> </returns>
-        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(
-            IVariable function, IVariableFilter[] filters)
+        protected override IMultiDimensionalArray<T> GetVariableValuesCore<T>(IVariable function, IVariableFilter[] filters)
         {
-            if (function.Attributes[NcUseVariableSizeAttribute] == "false") // has no explicit variable
+            if (function.Attributes[NcUseVariableSizeAttribute] != "false")
             {
-                if (function.IsIndependent && typeof(T) == typeof(INetworkLocation))
-                {
-                    var featureFilter = filters.FirstOrDefault(f => f.Variable.ValueType == typeof(INetworkLocation));
-                    if (function.Attributes != null && function.Attributes.ContainsKey(NcNameAttribute))
-                    {
-                        var location = function.Attributes[NcNameAttribute];
-                        var networkLocations = LocationsByNetworkDataType[location];
-                        if (filters.Length == 0 || featureFilter == null)
-                        {
-                            if (!networkLocationsForThisFunctionCache.TryGetValue(function, out var networkLocationsForThisFunction))
-                            {
-                                networkLocationsForThisFunction = new MultiDimensionalArray<T>((IList<T>)networkLocations);
-                                networkLocationsForThisFunctionCache[function] = networkLocationsForThisFunction;
-                            }
-                            return (MultiDimensionalArray<T>)networkLocationsForThisFunction;
-                        }
+                return base.GetVariableValuesCore<T>(function, filters);
+            }
 
-                        if (featureFilter is VariableIndexFilter indexFilter)
-                        {
-                            if (!networkLocationsForThisFunctionCache.TryGetValue(function, out var networkLocationsForThisFunction))
-                            {
-                                networkLocationsForThisFunction = new MultiDimensionalArray<T>((IList<T>)networkLocations);
-                                networkLocationsForThisFunctionCache[function] = networkLocationsForThisFunction;
-                            }
-                            // ik weet niet helemaal zeker of dit nou moet... maar hier zit volgens mij de conversie naar de output
-                            var indexesOfLocationsInOutput = indexFilter.Indices.Select(i => LocationsByNetworkDataType[location].IndexOf(networkLocations[i])).ToArray();
-                            return new MultiDimensionalArray<T>((IList<T>)((MultiDimensionalArray<T>)networkLocationsForThisFunction).Select(1, indexesOfLocationsInOutput), new[] { MetaData?.Times.Count ?? 1, indexesOfLocationsInOutput.Length });
-                        }
-                    }
-                    return new MultiDimensionalArray<T>();
-                }
+            if (!function.IsIndependent || typeof(T) != typeof(INetworkLocation))
+            {
                 int size = GetSize(function);
                 return new MultiDimensionalArray<T>(Enumerable.Range(0, size).Cast<T>().ToList(), size);
             }
 
-            return base.GetVariableValuesCore<T>(function, filters);
+            var featureFilter = filters.FirstOrDefault(f => f.Variable.ValueType == typeof(INetworkLocation));
+            if (function.Attributes == null || !function.Attributes.ContainsKey(NcNameAttribute))
+            {
+                return base.GetVariableValuesCore<T>(function, filters);
+            }
+
+            var location = function.Attributes[NcNameAttribute];
+            var networkLocations = locationsByNetworkDataType[location];
+            if (filters.Length == 0 || featureFilter == null)
+            {
+                if (!networkLocationsForThisFunctionCache.TryGetValue(function, out var networkLocationsForThisFunction))
+                {
+                    networkLocationsForThisFunction = new MultiDimensionalArray<T>((IList<T>)networkLocations);
+                    networkLocationsForThisFunctionCache[function] = networkLocationsForThisFunction;
+                }
+                return (MultiDimensionalArray<T>)networkLocationsForThisFunction;
+            }
+
+            if (featureFilter is VariableIndexFilter indexFilter)
+            {
+                if (!networkLocationsForThisFunctionCache.TryGetValue(function, out var networkLocationsForThisFunction))
+                {
+                    networkLocationsForThisFunction = new MultiDimensionalArray<T>((IList<T>)networkLocations);
+                    networkLocationsForThisFunctionCache[function] = networkLocationsForThisFunction;
+                }
+                // ik weet niet helemaal zeker of dit nou moet... maar hier zit volgens mij de conversie naar de output
+                var indexesOfLocationsInOutput = indexFilter.Indices.Select(i => locationsByNetworkDataType[location].IndexOf(networkLocations[i])).ToArray();
+                return new MultiDimensionalArray<T>((IList<T>)((MultiDimensionalArray<T>)networkLocationsForThisFunction).Select(1, indexesOfLocationsInOutput), new[] { MetaData?.Times.Count ?? 1, indexesOfLocationsInOutput.Length });
+            }
+
+            return new MultiDimensionalArray<T>();
         }
+
         private OutputFile1DMetaData MetaData
         {
             get
@@ -207,8 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
-        private ICoverage CreateCoverageForTimeDependentVariable(
-            NetCdfVariableInfo timeDependentVariable)
+        private ICoverage CreateCoverageForTimeDependentVariable(NetCdfVariableInfo timeDependentVariable)
         {
             NetCdfVariable netCdfVariable = timeDependentVariable.NetCdfDataVariable;
             string netCdfVariableName = netCdfFile.GetVariableName(netCdfVariable);
@@ -229,84 +236,82 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             string unit = netCdfFile.GetAttributeValue(netCdfVariable, UnitsAttributeName);
             string coverageLongName = longName != null ? $"{longName} ({netCdfVariableName})" : netCdfVariableName;
 
+            if (!double.TryParse(netCdfFile.GetAttributeValue(netCdfVariable, FillValueAttribute), out double noDataValue))
+                noDataValue = MissingValue;
+
             Type dotNetType = NetCdfConstants.GetClrDataType(netCdfVariableType);
             if (string.Equals(location, UGridConstants.Naming.FaceLocationAttributeName))
             {
                 UnstructuredGridCoverage coverage = CreateUnstructuredGridCoverage(location, coverageLongName, dotNetType);
                 if (coverage != null)
                 {
-                    InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unit,
-                                       timeDependentVariable.ReferenceDate);
+                    InitializeCoverage(coverage, secondDimensionName, netCdfVariableName, unit, timeDependentVariable.ReferenceDate, noDataValue);
                 }
                 return coverage;
             }
 
-            if (!double.TryParse(netCdfFile.GetAttributeValue(netCdfVariable, FillValueAttribute), out double noDataValue))
-                noDataValue = -999.0;
             var dimensionNameLocation = netCdfFile.GetDimensionName(netCdfFile.GetDimensions(netCdfVariable).ToArray()[1]);
             var timeDependentVariableMetaDataBaseKeyForThisLocation = MetaData.Locations.Keys.FirstOrDefault(tdv => tdv.Name.Equals(netCdfVariableName));
-            if (!LocationsByNetworkDataType.ContainsKey(dimensionNameLocation) &&
-                timeDependentVariableMetaDataBaseKeyForThisLocation != null)
+            
+            if (timeDependentVariableMetaDataBaseKeyForThisLocation != null &&
+                !locationsByNetworkDataType.ContainsKey(dimensionNameLocation))
             {
-                LocationsByNetworkDataType[dimensionNameLocation] = MetaData
+                locationsByNetworkDataType[dimensionNameLocation] = MetaData
                                                        .Locations[timeDependentVariableMetaDataBaseKeyForThisLocation]
                                                        .Select(l => new NetworkLocation(network.Branches[l.BranchId - sobekStartIndex], l.Chainage)
                                                                    { Geometry = new Point(l.XCoordinate, l.YCoordinate), Name = l.Id, Attributes = new DictionaryFeatureAttributeCollection() { { LocationAttributeName, dimensionNameLocation } } }).Cast<INetworkLocation>().ToList();
             }
 
-            NetworkCoverage networkCoverage = CreateNetworkCoverage(coverageLongName, unit, netCdfVariableName, dimensionNameLocation, timeDependentVariable.ReferenceDate, noDataValue: noDataValue, outputType: dotNetType);
-
-            return networkCoverage;
-
-
+            return CreateNetworkCoverage(coverageLongName, unit, netCdfVariableName, dimensionNameLocation, timeDependentVariable.ReferenceDate, noDataValue: noDataValue);
         }
 
         public override IMultiDimensionalArray<T> GetVariableValues<T>(IVariable variable, params IVariableFilter[] filters)
         {
-
-            if (variable.ValueType == typeof(double) && !variable.IsIndependent)
+            if (variable.ValueType != typeof(double) || variable.IsIndependent)
             {
-                var coverage = GetCoverage(variable);
-                if (coverage == null) return new MultiDimensionalArray<T>(new List<T>(), new[] { 0, 0 });
-                var coverageComponent = coverage.Components[0];
-                var ncVariableName = coverageComponent.Attributes.ContainsKey(NcNameAttribute)
-                    ? coverageComponent.Attributes[NcNameAttribute]
-                    : null;
-
-                if (ncVariableName == null)
-                {
-                    return new MultiDimensionalArray<T>(new List<T>(), new[] { 0, 0 });
-                }
-
-                if (filters == null || filters.Length == 0)
-                {
-                    return GetValuesForTimeSeriesAtAllLocations<T>(variable, ncVariableName);
-                }
-
-                if (variable.Attributes["OriginalType"] == "Byte")
-                {
-                    // create 'fake' objects which we 
-                    IVariable clone = (IVariable) variable.Clone(false, false, false);
-                    clone.Components.RemoveAt(0);
-                    clone.Components.Add((IVariable) TypeUtils.CreateGeneric(typeof(Variable<>), typeof(byte)));
-                    clone.Components[0].Name = "value";
-
-                    (IList<byte> timeSeriesData, int[] shape) = GetValuesUsingFilters<byte>(filters, coverage, clone, ncVariableName);
-                    
-                    IEnumerable<double> returnValueInDoubles = timeSeriesData.Select(Convert.ToDouble).ToList();
-                    var returnValue = new MultiDimensionalArray<T>(returnValueInDoubles.Cast<T>().ToList(), shape);
-                    UpdateMinMaxCache(returnValueInDoubles, variable);
-                    return returnValue;
-                }
-                else
-                {
-                    (IList<T> timeSeriesData, int[] shape) = GetValuesUsingFilters<T>(filters, coverage, variable, ncVariableName);
-                    UpdateMinMaxCache(timeSeriesData.Cast<double>(), variable);
-                    return new MultiDimensionalArray<T>(timeSeriesData, shape);
-                }
+                return base.GetVariableValues<T>(variable, filters);
             }
-            
-            return base.GetVariableValues<T>(variable, filters);
+
+            var coverage = GetCoverage(variable);
+            if (coverage == null)
+                return new MultiDimensionalArray<T>(new List<T>(), new[] { 0, 0 });
+
+            var coverageComponent = coverage.Components[0];
+            var ncVariableName = coverageComponent.Attributes.ContainsKey(NcNameAttribute)
+                                     ? coverageComponent.Attributes[NcNameAttribute]
+                                     : null;
+
+            if (ncVariableName == null)
+            {
+                return new MultiDimensionalArray<T>(new List<T>(), new[] { 0, 0 });
+            }
+
+            if (filters == null || filters.Length == 0)
+            {
+                return GetValuesForTimeSeriesAtAllLocations<T>(variable, ncVariableName);
+            }
+
+            if (variable.Attributes["OriginalType"] == "Byte")
+            {
+                // create 'fake' objects which we 
+                IVariable clone = (IVariable) variable.Clone(false, false, false);
+                clone.Components.RemoveAt(0);
+                clone.Components.Add((IVariable) TypeUtils.CreateGeneric(typeof(Variable<>), typeof(byte)));
+                clone.Components[0].Name = "value";
+
+                (IList<byte> timeSeriesData, int[] shape) = GetValuesUsingFilters<byte>(filters, coverage, clone, ncVariableName);
+                    
+                IEnumerable<double> returnValueInDoubles = timeSeriesData.Select(Convert.ToDouble).ToList();
+                var returnValue = new MultiDimensionalArray<T>(returnValueInDoubles.Cast<T>().ToList(), shape);
+                UpdateMinMaxCache(returnValueInDoubles, variable);
+                return returnValue;
+            }
+            else
+            {
+                (IList<T> timeSeriesData, int[] shape) = GetValuesUsingFilters<T>(filters, coverage, variable, ncVariableName);
+                UpdateMinMaxCache(timeSeriesData.Cast<double>(), variable);
+                return new MultiDimensionalArray<T>(timeSeriesData, shape);
+            }
         }
 
         private (IList<T> timeSeriesData, int[] shape) GetValuesUsingFilters<T>(IVariableFilter[] filters, ICoverage coverage, IVariable variable, string ncVariableName)
@@ -545,57 +550,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         }
         public ICoordinateSystem CoordinateSystem { get; set; }
         private NetworkCoverage CreateNetworkCoverage(string coverageLongName, string unitSymbol,
-                                                      string netCdfVariableName, string location, string refDate,  Type outputType, int number = -1, double noDataValue = -999.0d)
+                                                      string netCdfVariableName, string location, string refDate, int number = -1, double noDataValue = -999.0d)
         {
-            var suffix = number < 0 ? string.Empty : string.Format(" ({0})", number);
+            var suffix = number < 0 ? string.Empty : $" ({number})";
             var coverageName = coverageLongName + suffix;
-            var networkCoverage = new NetworkCoverage(coverageName, true, coverageName, unitSymbol) { Network = network, CoordinateSystem = CoordinateSystem };
-            //networkCoverage.Components.RemoveAt(0);
-            //networkCoverage.Components.Add((IVariable)TypeUtils.CreateGeneric(typeof(Variable<>), outputType));
-            //networkCoverage.Components[0].Name = "value";
-            networkCoverage.Store = this;
 
-            if (networkCoverage.Components[0].ValueType == typeof(double))
+            var networkCoverage = new NetworkCoverage(coverageName, true, coverageName, unitSymbol)
             {
-                networkCoverage.Components[0].NoDataValue = noDataValue;
-            }
+                Network = network, 
+                CoordinateSystem = CoordinateSystem
+            };
+
+            InitializeCoverage(networkCoverage, location, netCdfVariableName, unitSymbol, refDate, noDataValue);
 
             networkCoverage.Locations.FixedSize = 0;
             networkCoverage.Locations.InterpolationType = InterpolationType.Constant;
             networkCoverage.Locations.ExtrapolationType = ExtrapolationType.Constant;
 
-            networkCoverage.IsEditable = false;
-
-            var timeDimension = networkCoverage.Arguments[0];
-            timeDimension.Name = "Time";
-            timeDimension.Attributes[NcNameAttribute] = TimeVariableNames[0];
-            timeDimension.Attributes[NcUseVariableSizeAttribute] = "true";
-            timeDimension.Attributes[NcRefDateAttribute] = refDate;
-            timeDimension.IsEditable = false;
-
-            networkCoverage.Arguments[1].Name = location;
-            networkCoverage.Arguments[1].Attributes[NcUseVariableSizeAttribute] = "false";
-            networkCoverage.Arguments[1].Attributes[NcNameAttribute] = location;
-            networkCoverage.Arguments[1].IsEditable = false;
-
             var coverageComponent = networkCoverage.Components[0];
-            coverageComponent.Name = netCdfVariableName;
-            coverageComponent.Attributes[NcNameAttribute] = netCdfVariableName;
-            coverageComponent.Attributes[NcUseVariableSizeAttribute] = "true";
             coverageComponent.Attributes["OriginalType"] = "Byte";
 
             if (coverageComponent.ValueType == typeof(double))
             {
-                coverageComponent.NoDataValue = MissingValue;
+                coverageComponent.NoDataValue = noDataValue;
             }
-            coverageComponent.IsEditable = false;
-            coverageComponent.Unit = new Unit(unitSymbol, unitSymbol);
             
-
             networkCoverage.Attributes.Add("NetCdfVariableName", netCdfVariableName);
             networkCoverage.Attributes.Add(LocationAttributeName, GetNetworkLocation(location).ToString());
-
-            networkCoverage.IsEditable = false;
 
             return networkCoverage;
         }
@@ -631,7 +612,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         }
 
         private void InitializeCoverage(IFunction coverage, string secondDimensionName, string variableName,
-                                        string unitSymbol, string refDate)
+                                        string unitSymbol, string refDate, double noDataValue)
         {
             coverage.Store = this;
 
@@ -655,7 +636,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             if (coverageComponent.ValueType == typeof(double))
             {
-                coverageComponent.NoDataValue = MissingValue;
+                coverageComponent.NoDataValue = noDataValue;
             }
 
             coverageComponent.IsEditable = false;

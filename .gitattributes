@@ -1788,7 +1788,6 @@ src/DeltaShell.Plugins.FMSuite.Common/FeatureData/VerticalProfileDefinition.cs -
 src/DeltaShell.Plugins.FMSuite.Common/FeatureDataSyncer.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/FileBasedWindDefinition.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/FunctionStores/FunctionExtensions.cs -text
-src/DeltaShell.Plugins.FMSuite.Common/FunctionStores/IFMNetCdfFileFunctionStore.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/ApwxwyFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/Delft3DDepthFileExporter.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/Delft3DDepthFileImporter.cs -text
@@ -1803,7 +1802,6 @@ src/DeltaShell.Plugins.FMSuite.Common/IO/DiaFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/FMNetCdfFileFunctionStore.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/Feature2DImportExportBase.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/FunctionExtensions.cs -text
-src/DeltaShell.Plugins.FMSuite.Common/IO/IFMNetCdfFileFunctionStore.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/ModelSchemaCsvFile.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/ObsFile.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/PlizFile.cs -text
@@ -2110,7 +2108,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/FileConstants.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FixedWeirSchemes.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FlowFMApplicationPlugin.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FunctionStores/FMClassMapFileFunctionStore.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/FunctionStores/IFMClassMapFileFunctionStore.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Grid/UnstructuredGridExtensions.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BathymetryFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcFile.cs -text

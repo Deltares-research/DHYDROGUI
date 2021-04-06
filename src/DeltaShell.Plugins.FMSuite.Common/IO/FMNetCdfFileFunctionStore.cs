@@ -7,7 +7,7 @@ using DeltaShell.Plugins.FMSuite.Common.Properties;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
-    public abstract class FMNetCdfFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase, IFMNetCdfFileFunctionStore
+    public abstract class FMNetCdfFileFunctionStore : ReadOnlyNetCdfFunctionStoreBase
     {
         private const string timeDimensionName = "time";
 

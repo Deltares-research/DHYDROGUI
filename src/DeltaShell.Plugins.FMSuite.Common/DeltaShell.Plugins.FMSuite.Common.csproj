@@ -149,7 +149,6 @@
     <Compile Include="FeatureData\UniformWindField.cs" />
     <Compile Include="FileBasedWindDefinition.cs" />
     <Compile Include="FunctionStores\FunctionExtensions.cs" />
-    <Compile Include="FunctionStores\IFMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\ApwxwyFileReader.cs" />
     <Compile Include="IO\Delft3DDepthFileExporter.cs" />
     <Compile Include="IO\Delft3DDepthFileImporter.cs" />
@@ -164,7 +163,6 @@
     <Compile Include="IO\Feature2DImportExportBase.cs" />
     <Compile Include="IO\FMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\FunctionExtensions.cs" />
-    <Compile Include="IO\IFMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\ObsFile.cs" />
     <Compile Include="IO\PlizFile.cs" />
     <Compile Include="IO\PolFile.cs" />
