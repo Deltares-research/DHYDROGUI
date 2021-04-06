@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using DelftTools.Shell.Core;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
@@ -6,6 +8,7 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
+using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -23,6 +26,7 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.Toolbox;
 using DeltaShell.Plugins.Toolbox.Gui;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 {
@@ -103,6 +107,66 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
             Console.WriteLine("Saving (second time: " + tempProjectPath2);
             application.SaveProjectAs(tempProjectPath2);
+        }
+
+        /// <summary>
+        /// Compares the files of two project folders.
+        /// </summary>
+        /// <param name="firstSaveProjectPath">Path to directory containig first project files to compare.</param>
+        /// <param name="secondSaveProjectPath">Path to directory containing second project files to compare.</param>
+        /// <param name="tempDirectory">Path to temporary directory.</param>
+        /// <param name="hasRrData">Whether or not Rainfall Runoff data should be compared.</param>
+        public static void CompareInitialSaveToSecondSave(string firstSaveProjectPath, 
+                                                          string secondSaveProjectPath, 
+                                                          string tempDirectory, 
+                                                          bool hasRrData)
+        {
+            Console.WriteLine("Comparing FlowFM saved data");
+            CompareFlowFMFiles(firstSaveProjectPath, secondSaveProjectPath, tempDirectory);
+            
+            if (hasRrData)
+            {
+                Console.WriteLine("Comparing Rainfall Runoff saved data");
+                CompareRainfallRunoffFiles(firstSaveProjectPath, secondSaveProjectPath);
+            }
+        }
+        
+        private static void CompareFlowFMFiles(string firstSaveProjectPath, string secondSaveProjectPath, string tempDirectory)
+        {
+            string flowFmInitialSaveDirectory = Path.Combine(firstSaveProjectPath + "_data", "FlowFM", "input");
+            string[] flowFmInitialSaveFiles = Directory.GetFiles(flowFmInitialSaveDirectory);
+            if (!flowFmInitialSaveFiles.Any())
+            {
+                Assert.Fail($"No saved files (first save) could be found at {flowFmInitialSaveFiles}.");
+            }
+            
+            string flowFmSecondSaveDirectory = Path.Combine(secondSaveProjectPath + "_data", "FlowFM", "input");
+            string[] flowFmSecondSaveFiles = Directory.GetFiles(flowFmSecondSaveDirectory);
+            if (!flowFmSecondSaveFiles.Any())
+            {
+                Assert.Fail($"No saved files (second save) could be found at {flowFmSecondSaveDirectory}.");
+            }
+            
+            FlowFmFileComparer.Compare(flowFmInitialSaveFiles, flowFmSecondSaveFiles, tempDirectory);
+        }
+
+        private static void CompareRainfallRunoffFiles(string firstSaveProjectPath, string secondSaveProjectPath)
+        {
+            string rrInitialSaveDirectory = Path.Combine(firstSaveProjectPath + "_data", "Rainfall Runoff");
+            string[] rrInitialSaveFiles = Directory.GetFiles(rrInitialSaveDirectory);
+            if (!rrInitialSaveFiles.Any())
+            {
+                Assert.Fail($"No saved files (first save) could be found at {rrInitialSaveFiles}.");
+            }
+            
+            string rrSecondSaveDirectory = Path.Combine(secondSaveProjectPath + "_data", "Rainfall Runoff");
+            string[] rrSecondSaveFiles = Directory.GetFiles(rrSecondSaveDirectory);
+            if (!rrSecondSaveFiles.Any())
+            {
+                Assert.Fail($"No saved files (second save) could be found at {rrSecondSaveDirectory}.");
+            }
+            
+            RainfallRunoffFileComparer.Compare(rrInitialSaveFiles, rrSecondSaveFiles);
         }
     }
 }

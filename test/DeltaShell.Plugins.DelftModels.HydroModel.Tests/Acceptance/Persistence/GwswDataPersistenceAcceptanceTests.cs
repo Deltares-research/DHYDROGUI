@@ -68,10 +68,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             // [Given]
             using (var gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
-                var hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
+                HydroModel hydroModel = AcceptanceModelTestHelper.AddRhuHydroModel(gui.Application.Project.RootFolder);
 
                 Console.WriteLine("Importing model");
-
                 GwswAcceptanceModelTestHelper.ImportGwswModelAndAssertPreconditions(
                     acceptanceModelName,
                     acceptanceModelsDirectory,
@@ -83,26 +82,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
 
                 // [Then]
-                CompareResultDataWithReferenceData(Path.Combine(firstSaveProjectPath + "_data", "FlowFM", "input"));
+                Console.WriteLine("Comparing saved data");
+                bool hasRrData = preconditionExpectedCatchmentsCount > 0;
+                AcceptanceModelTestHelper.CompareInitialSaveToSecondSave(firstSaveProjectPath, secondSaveProjectPath, tempDirectory, hasRrData);
             }
-        }
-        
-        private void CompareResultDataWithReferenceData(string flowFmReferenceFileDirectory)
-        {
-            var flowFmReferenceFiles = Directory.GetFiles(flowFmReferenceFileDirectory);
-            if (!flowFmReferenceFiles.Any())
-            {
-                Assert.Fail($"No saved files (first save) could be found at {flowFmReferenceFiles}.");
-            }
-            
-            var secondSaveDirectory = Path.Combine(secondSaveProjectPath + "_data", "FlowFM", "input");
-            var flowFmResultFiles = Directory.GetFiles(secondSaveDirectory);
-            if (!flowFmResultFiles.Any())
-            {
-                Assert.Fail($"No saved files (second save) could be found at {secondSaveDirectory}.");
-            }
-            
-            FlowFmFileComparer.Compare(flowFmReferenceFiles, flowFmResultFiles, tempDirectory);
         }
     }
 }
