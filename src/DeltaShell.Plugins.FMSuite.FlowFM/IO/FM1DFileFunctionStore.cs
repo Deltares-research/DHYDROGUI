@@ -30,8 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private IHydroNetwork outputNetwork = new HydroNetwork();
         private IHydroNetwork inputNetwork;
         private readonly IDiscretization outputDiscretization;
-        public IDictionary<string, IList<INetworkLocation>> LocationsByNetworkDataType { get; set; }
-        
+
+        private readonly IDictionary<string, IList<INetworkLocation>> locationsByNetworkDataType = new Dictionary<string, IList<INetworkLocation>>();
         private readonly Dictionary<IVariable, IMultiDimensionalArray> argumentVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         private readonly Dictionary<IVariable, IMultiDimensionalArray> networkLocationsForThisFunctionCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         
@@ -128,7 +128,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (variable.Attributes != null && variable.Attributes.ContainsKey(NcNameAttribute))
                 {
                     var location = variable.Attributes[NcNameAttribute];
-                    var networkLocations = LocationsByNetworkDataType[location];
+                    var networkLocations = locationsByNetworkDataType[location];
                     if (filters.Length == 0 || featureFilter == null)
                     {
                         if (!networkLocationsForThisFunctionCache.TryGetValue(variable, out var networkLocationsForThisFunction))
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             networkLocationsForThisFunctionCache[variable] = networkLocationsForThisFunction;
                         }
                         // ik weet niet helemaal zeker of dit nou moet... maar hier zit volgens mij de conversie naar de output
-                        var indexesOfLocationsInOutput = indexFilter.Indices.Select(i => LocationsByNetworkDataType[location].IndexOf(networkLocations[i])).ToArray();
+                        var indexesOfLocationsInOutput = indexFilter.Indices.Select(i => locationsByNetworkDataType[location].IndexOf(networkLocations[i])).ToArray();
                         return new MultiDimensionalArray<T>((IList<T>)((MultiDimensionalArray<T>)networkLocationsForThisFunction).Select(1, indexesOfLocationsInOutput), new[] { MetaData?.Times.Count ?? 1, indexesOfLocationsInOutput.Length } );
                     }
                 }
@@ -401,11 +401,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
         protected override void UpdateFunctionsAfterPathSet()
         {
+            ClearCaches();
             UpdateNetworkAndDiscretisationAfterPathSet();
             if (CoordinateSystem == null) CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(Path);
             // clear caches for argument variables and networkLocations
-            argumentVariableCache.Clear();
-            networkLocationsForThisFunctionCache.Clear();
             Functions.Clear();
             if (File.Exists(Path))
             {
@@ -416,11 +415,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
         }
+        private void ClearCaches()
+        {
+            locationsByNetworkDataType.Clear();
+            networkLocationsForThisFunctionCache.Clear();
+            argumentVariableCache.Clear();
+            metaData?.Locations?.Clear();
+            metaData?.TimeDependentVariables?.Clear();
+            metaData?.Times?.Clear();
+            metaData = null;
+        }
 
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
-            LocationsByNetworkDataType = new Dictionary<string, IList<INetworkLocation>>();
             var netCdfVariables = netCdfFile.GetVariables().ToList();
             var mesh1DNameNetCdfVariable = netCdfVariables.FirstOrDefault(dv =>
             {
@@ -490,10 +498,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var location = netCdfFile.GetDimensionName(netCdfFile.GetDimensions(netcdfVariable).ToArray()[1]);
             var timeDependentVariableMetaDataBaseKeyForThisLocation = MetaData.Locations.Keys.FirstOrDefault(tdv => tdv.Name.Equals(netCdfVariableName) );
-            if (!LocationsByNetworkDataType.ContainsKey(location) &&
+            if (!locationsByNetworkDataType.ContainsKey(location) &&
                 timeDependentVariableMetaDataBaseKeyForThisLocation != null)
             {
-                LocationsByNetworkDataType[location] = MetaData
+                locationsByNetworkDataType[location] = MetaData
                     .Locations[timeDependentVariableMetaDataBaseKeyForThisLocation]
                     .Select(l => new NetworkLocation(inputNetwork.Branches[l.BranchId - sobekStartIndex], l.Chainage)
                         {Geometry = new Point(l.XCoordinate, l.YCoordinate), Name = l.Id, Attributes = new DictionaryFeatureAttributeCollection(){{LocationAttributeName, location}}}).Cast<INetworkLocation>().ToList();

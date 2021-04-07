@@ -4,6 +4,7 @@
     {
         Node,
         Edge,
+        Face,
         UnKnown
     }
 }

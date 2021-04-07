@@ -45,8 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(FMClassMapFileFunctionStore));
 
-        private IDictionary<string, IList<INetworkLocation>> locationsByNetworkDataType;
-
+        private readonly IDictionary<string, IList<INetworkLocation>> locationsByNetworkDataType = new Dictionary<string, IList<INetworkLocation>>();
         private readonly Dictionary<IVariable, IMultiDimensionalArray> networkLocationsForThisFunctionCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         private readonly Dictionary<IVariable, IMultiDimensionalArray> argumentVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
         private readonly Dictionary<IVariable, IMultiDimensionalArray> fullVariableCache = new Dictionary<IVariable, IMultiDimensionalArray>();
@@ -68,14 +67,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// Gets the grid.
         /// </summary>
         /// <value>
-        /// The grid.
+        /// The output grid.
         /// </value>
         public UnstructuredGrid Grid => grid;
 
+        /// <summary>
+        /// Gets the discretization used by the kernel
+        /// </summary>
+        /// <value>
+        /// The output discretization.
+        /// </value>
         public IDiscretization Discretization => discretization;
 
+        /// <summary>
+        /// Gets the network geometry used by the kernel
+        /// </summary>
+        /// <value>
+        /// The output network.
+        /// </value>
         public IHydroNetwork Network => network;
 
+        /// <summary>
+        /// Gets the 1d2d links used by the kernel
+        /// </summary>
+        /// <value>
+        /// The output 1d2d links.
+        /// </value>
         public IList<ILink1D2D> Links => links;
 
         /// <summary>
@@ -85,7 +102,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <returns> </returns>
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
-            locationsByNetworkDataType = new Dictionary<string, IList<INetworkLocation>>();
             grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true, false);
             links = UGridFileHelper.Read1D2DLinks(netCdfFile.Path);
             UpdateNetworkAndDiscretisation();
@@ -93,7 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             IEnumerable<NetCdfVariableInfo> timeDepVariables = dataVariables.Where(v => v.IsTimeDependent && v.NumDimensions > 1);
             IEnumerable<ICoverage> functions = timeDepVariables.Select(CreateCoverageForTimeDependentVariable).Where(c => c != null);
-
             return functions;
         }
         private void GenerateGeometriesForLinks()
@@ -585,10 +600,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         {
             switch (locationName)
             {
-                case UGridConstants.Naming.EdgeLocationAttributeName:
+                case var _ when string.Equals(locationName,UGridConstants.Naming.EdgeLocationAttributeName, StringComparison.InvariantCultureIgnoreCase):
                     return NetworkDataLocation.Edge;
-                case UGridConstants.Naming.NodeLocationAttributeName:
+                case var _ when string.Equals(locationName, UGridConstants.Naming.NodeLocationAttributeName, StringComparison.InvariantCultureIgnoreCase):
                     return NetworkDataLocation.Node;
+                case var _ when string.Equals(locationName, UGridConstants.Naming.FaceLocationAttributeName, StringComparison.InvariantCultureIgnoreCase):
+                    return NetworkDataLocation.Face;
                 default:
                     return NetworkDataLocation.UnKnown;
             }
@@ -643,5 +660,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             coverageComponent.Unit = new Unit(unitSymbol, unitSymbol);
             coverage.IsEditable = false;
         }
+
+        protected override void UpdateFunctionsAfterPathSet()
+        {
+            ClearCaches();
+            base.UpdateFunctionsAfterPathSet();
+        }
+
+        private void ClearCaches()
+        {
+            locationsByNetworkDataType.Clear();
+            networkLocationsForThisFunctionCache.Clear();
+            argumentVariableCache.Clear();
+            fullVariableCache.Clear();
+            metaData?.Locations?.Clear();
+            metaData?.TimeDependentVariables?.Clear();
+            metaData?.Times?.Clear();
+            metaData = null;
+        }
     }
+
 }
