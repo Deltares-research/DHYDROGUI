@@ -121,7 +121,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RainfallRunoffCatchmentModelDataFactory.cs" />
+    <Compile Include="RainfallRunoffDataCatchmentExtensions.cs" />
     <Compile Include="Domain\RunoffBoundaryData.cs" />
     <Compile Include="Importers\PolderFromGisImporter.cs" />
     <Compile Include="Importers\LandUseMapping.cs" />

@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Providers
 
         public override ICoordinateSystem CoordinateSystem
         {
-            get { return ComplexFeature != null ? ComplexFeature.CoordinateSystem : null; }
+            get { return ComplexFeature?.CoordinateSystem; }
             set { }
         }
         private IComplexFeature ComplexFeature

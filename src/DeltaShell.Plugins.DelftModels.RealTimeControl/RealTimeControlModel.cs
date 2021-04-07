@@ -930,7 +930,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
         public virtual IHydroObject GetLinkHydroObjectByItemString(string itemString)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         /// <summary>

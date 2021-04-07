@@ -48,9 +48,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers
                 return;
 
             layersInitialized = true; // set it here since it is accessed locally
-            if (!string.Equals(base.Name,hydroArea.Name, StringComparison.InvariantCultureIgnoreCase)
-                && !ReadOnly)
-                base.Name = hydroArea.Name;
+            
+            base.Name = hydroArea.Name;
 
             LayersReadOnly = true;
         }

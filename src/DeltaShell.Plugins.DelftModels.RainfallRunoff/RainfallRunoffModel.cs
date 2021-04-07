@@ -1257,7 +1257,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         
         public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString)
         {
-            throw new NotImplementedException();
+            yield break;
         }
 
         /// <summary>

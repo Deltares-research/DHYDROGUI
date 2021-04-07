@@ -54,7 +54,6 @@
     <Compile Include="Import\DHydroConfigXmlImporter.cs" />
     <Compile Include="Import\HydroModelConverter.cs" />
     <Compile Include="Import\HydroModelReader.cs" />
-    <Compile Include="Import\ImportingFullModelAction.cs" />
     <Compile Include="Import\RtcXmlDirectoryLookup.cs" />
     <Compile Include="ModelExchanges\IHydroModelExchangeInfo.cs" />
     <Compile Include="ModelExchanges\ModelExchange.cs" />

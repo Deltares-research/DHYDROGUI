@@ -5,7 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils.Reflection;
+using DelftTools.Utils.Editing;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common;
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             string rootFolder = Path.GetDirectoryName(path);
             var hydroModel = new HydroModel();
 
-            hydroModel.BeginEdit(new ImportingFullModelAction("Importing full Dimr model"));
+            hydroModel.BeginEdit(new DefaultEditAction("Importing full Dimr model"));
             try
             {
                 AddModels(hydroModel, fileImporters, dimrObject, rootFolder);
@@ -216,51 +216,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         private void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel)
         {
-            if (subModel is IHydroModel sourceModel && sourceModel.Region != null)
+            hydroModel.Activities.Add(subModel);
+            if (!(subModel is IHydroModel sourceModel) || sourceModel.Region == null)
             {
-                // Replace the region of the integrated model by the one in the source model. 
-                var hydroRegions = hydroModel.Region.SubRegions;
-                var integratedModelHydroRegion =
-                    hydroRegions.FirstOrDefault(region => region.GetType().Implements(sourceModel.Region.GetType()));
-
-                if (integratedModelHydroRegion != null)
-                {
-                    hydroRegions.Remove(integratedModelHydroRegion);
-                }
-
-                if (sourceModel.Region.SubRegions.Any())
-                {
-                    foreach (var subRegion in sourceModel.Region.SubRegions)
-                    {
-                        hydroRegions.Add(subRegion);
-                    }
-                }
-                else
-                {
-                    hydroRegions.Add(sourceModel.Region);
-                }
-
-
-
-                // Move (overwrite) model itself to target HydroModel. 
-                var targetFlowModel = hydroModel.Activities.FirstOrDefault(a => a.GetType().Implements(sourceModel.GetType()));
-                if (targetFlowModel != null)
-                {
-                    hydroModel.Activities.Remove(targetFlowModel);
-                }
-
-                hydroModel.Migrating = true;
-                hydroModel.Activities.Add(sourceModel);
-                hydroModel.Migrating = false;
+                return;
             }
+
+            sourceModel.ReplaceHydroModelRegion(hydroModel);
         }
 
         private void CoupleSubModels(HydroModel hydroModel, dimrXML dimrObject, IList<IDimrModel> subModels)
         {
             foreach (dimrCouplerXML dimrCouplerXml in dimrObject.coupler)
             {
-                IDimrModel sourceModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.sourceComponent);
-                IDimrModel targetModel = subModels.FirstOrDefault(m => m.Name == dimrCouplerXml.targetComponent);
+                IDimrModel sourceModel = subModels.FirstOrDefault(m => string.Equals(m.Name, dimrCouplerXml.sourceComponent, StringComparison.InvariantCultureIgnoreCase));
+                IDimrModel targetModel = subModels.FirstOrDefault(m => string.Equals(m.Name, dimrCouplerXml.targetComponent, StringComparison.InvariantCultureIgnoreCase));
 
                 if (sourceModel == null || targetModel == null)
                 {
@@ -269,8 +239,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     continue;
                 }
 
-                CoupleModelsByDataItemsUsingDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item);
-                CoupleModelsByHydroLinksByUsingDimrCouplerXml(hydroModel, sourceModel, targetModel, dimrCouplerXml.item);
+                CoupleModelsUsingDimrCouplerXml(sourceModel, targetModel, dimrCouplerXml.item, hydroModel.Region.Links);
             }
 
             foreach (IControllingModel controllingModel in subModels.OfType<IControllingModel>())
@@ -279,100 +248,69 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
         }
 
-        private void CoupleModelsByDataItemsUsingDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, IEnumerable<dimrCoupledItemXML> dimrCouplerXml)
+        private void CoupleModelsUsingDimrCouplerXml(IDimrModel sourceModel, IDimrModel targetModel, IEnumerable<dimrCoupledItemXML> dimrCouplerXml, IEnumerable<HydroLink> regionLinks)
         {
+            var linkBySourceIemLookup = regionLinks
+                                                  .GroupBy(l => l.Source)
+                                                  .ToDictionary(l => l.Key, l => l.ToArray());
+
             foreach (dimrCoupledItemXML couplerXml in dimrCouplerXml)
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(couplerXml.sourceName) || string.IsNullOrEmpty(couplerXml.targetName))
+                    if (string.IsNullOrEmpty(couplerXml.sourceName) || 
+                        string.IsNullOrEmpty(couplerXml.targetName))
                     {
-                        logHandler.ReportErrorFormat("Could not link an item from {0} to {1}",
-                                                     sourceModel.Name, targetModel.Name);
+                        logHandler.ReportErrorFormat("Could not link an item from {0} to {1}", sourceModel.Name, targetModel.Name);
                         continue;
                     }
 
+                    // DataItem linking
                     IDataItem sourceDataItem = sourceModel.GetDataItemsByItemString(couplerXml.sourceName).FirstOrDefault();
-                    IEnumerable<IDataItem> targetDataItems = targetModel.GetDataItemsByItemString(couplerXml.targetName);
-
-                    if (sourceDataItem == null || targetDataItems == null)
+                    if (sourceDataItem != null)
                     {
-                        logHandler.ReportErrorFormat("Could not link {0} to {1}",
-                                                     couplerXml.sourceName, couplerXml.targetName);
+                        foreach (IDataItem targetDataItem in targetModel.GetDataItemsByItemString(couplerXml.targetName))
+                        {
+                            targetDataItem.LinkTo(sourceDataItem);
+                        }
                         continue;
                     }
 
-                    foreach (IDataItem targetDataItem in targetDataItems)
-                    {
-                        targetDataItem.LinkTo(sourceDataItem);
-                    }
-                }
-                catch (Exception e) when (e is NotImplementedException)
-                {
-                    //gulp
-                }
-                catch (Exception e) when (e is NotSupportedException ||
-                                          e is ArgumentException)
-                {
-                    string mainMessage = string.Format(
-                        "Could not link {0} to {1}",
-                        couplerXml.sourceName, couplerXml.targetName);
-
-                    logHandler.ReportError(string.Concat(mainMessage, $": {e.Message}"));
-                }
-            }
-        }
-        private void CoupleModelsByHydroLinksByUsingDimrCouplerXml(HydroModel hydroModel, IDimrModel sourceModel, IDimrModel targetModel, IEnumerable<dimrCoupledItemXML> dimrCouplerXml)
-        {
-            foreach (dimrCoupledItemXML couplerXml in dimrCouplerXml)
-            {
-                try
-                {
-                    if (string.IsNullOrEmpty(couplerXml.sourceName) || string.IsNullOrEmpty(couplerXml.targetName))
-                    {
-                        logHandler.ReportErrorFormat("Could not hydrolink from {0} to {1}",
-                                                     sourceModel.Name, targetModel.Name);
-                        continue;
-                    }
-
+                    // HydroObject linking
                     IHydroObject sourceItem = sourceModel.GetLinkHydroObjectByItemString(couplerXml.sourceName);
+                    if (sourceItem == null)
+                    {
+                        logHandler.ReportErrorFormat("Could not link {0} to {1}", couplerXml.sourceName, couplerXml.targetName);
+                        continue;
+                    }
+
                     IHydroObject targetItem = targetModel.GetLinkHydroObjectByItemString(couplerXml.targetName);
 
-                    if (sourceItem == null || targetItem == null)
+                    if (!sourceItem.CanLinkTo(targetItem) ||
+                        linkBySourceIemLookup.TryGetValue(sourceItem, out var links) &&
+                        links.Any(l => l.Target == targetItem))
                     {
-                        logHandler.ReportErrorFormat("Could not hydrolink {0} to {1}",
-                                                     couplerXml.sourceName, couplerXml.targetName);
                         continue;
                     }
 
-                    if (sourceItem.CanLinkTo(targetItem) && !hydroModel.Region.Links.Any(l => l.Source.Equals(sourceItem) && l.Target.Equals(targetItem)))
+                    var link = sourceItem.LinkTo(targetItem);
+                    if (link.Geometry == null)
                     {
-                        var link = sourceItem.LinkTo(targetItem);
-                        if (link.Geometry == null)
+                        link.Geometry = new LineString(new[]
                         {
-                            link.Geometry = new LineString(new[]
-                            {
-                                GetCoordinateForHydroObject(sourceItem),
-                                GetCoordinateForHydroObject(targetItem)
-                            });
-                        }
+                            GetCoordinateForHydroObject(sourceItem),
+                            GetCoordinateForHydroObject(targetItem)
+                        });
                     }
-                }
-                catch (Exception e) when (e is NotImplementedException)
-                {
-                    //gulp
                 }
                 catch (Exception e) when (e is NotSupportedException ||
                                           e is ArgumentException)
                 {
-                    string mainMessage = string.Format(
-                        "Could not hydrolink {0} to {1}",
-                        couplerXml.sourceName, couplerXml.targetName);
-
-                    logHandler.ReportError(string.Concat(mainMessage, $": {e.Message}"));
+                    logHandler.ReportError($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}: {e.Message}");
                 }
             }
         }
+
         private static Coordinate GetCoordinateForHydroObject(IHydroObject obj)
         {
             var catchment = obj as Catchment;

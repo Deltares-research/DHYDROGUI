@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
     public class RainfallRunoffBasinSynchronizer
     {
-        private readonly RainfallRunoffCatchmentModelDataFactory modelDataFactory = new RainfallRunoffCatchmentModelDataFactory();
         private IDrainageBasin subscribedBasin;
         private IDataItem subscribedBasinDataItem;
         private bool linking;
@@ -49,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private void OnCatchmentAdded(Catchment catchment, bool catchmentInBasin)
         {
-            AddDefaultModelDataForCatchment(catchment, catchmentInBasin);
+            catchment.AddDefaultModelDataForCatchment(Model, catchmentInBasin);
             foreach(var subcatchment in catchment.SubCatchments)
             {
                 OnCatchmentAdded(subcatchment, false);
@@ -176,10 +175,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             if (catchment != null && e.PropertyName == nameof(catchment.CatchmentType))
             {
                 var currentData = Model.GetCatchmentModelData(catchment);
-                if (!modelDataFactory.IsModelDataCompatible(catchment, currentData))
+                if (!catchment.IsModelDataCompatible(currentData))
                 {
                     RemoveModelDataForCatchment(catchment);
-                    AddDefaultModelDataForCatchment(catchment);
+                    catchment.AddDefaultModelDataForCatchment(Model);
                 }
             }
 
@@ -256,27 +255,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
                 Model.OutputCoverages.ForEach(c => c.CoordinateSystem = Basin?.CoordinateSystem);
             }
-        }
-
-        private void AddDefaultModelDataForCatchment(Catchment catchment, bool catchmentInBasin = false)
-        {
-            var catchmentModelData = modelDataFactory.CreateDefaultModelData(catchment);
-
-            if (catchmentModelData == null)
-                return;
-
-            if (catchmentInBasin || Model.Basin.Catchments.Contains(catchment))
-            {
-                Model.ModelData.Add(catchmentModelData);
-            }
-            else
-            {
-                var parentCatchment = Model.Basin.AllCatchments.First(c => c.SubCatchments.Contains(catchment));
-                var parentModelData = Model.GetCatchmentModelData(parentCatchment);
-                parentModelData.SubCatchmentModelData.Add(catchmentModelData);
-            }
-
-            Model.FireModelDataAdded(catchmentModelData);
         }
 
         private void RemoveModelDataForCatchment(Catchment catchment)

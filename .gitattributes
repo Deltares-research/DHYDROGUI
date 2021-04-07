@@ -970,7 +970,6 @@ src/DeltaShell.Plugins.DelftModels.HydroModel/IHydroModelWorkFlowData.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/Import/DHydroConfigXmlImporter.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/Import/HydroModelConverter.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/Import/HydroModelReader.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel/Import/ImportingFullModelAction.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/Import/RtcXmlDirectoryLookup.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/Iterative1D2DCouplerLink.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel/ModelExchanges/HydroModelExchangeJsonFileExtensions.cs -text
@@ -1318,9 +1317,9 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffApplicationPlugi
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffBasinSynchronizer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffBoundaryData.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffBoundaryData.hbm.xml -text
-src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffCatchmentModelDataFactory.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffChildDataItemProvider.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffDataAccessListener.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffDataCatchmentExtensions.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffModel.FileBased.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffModel.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffModel.hbm.xml -text

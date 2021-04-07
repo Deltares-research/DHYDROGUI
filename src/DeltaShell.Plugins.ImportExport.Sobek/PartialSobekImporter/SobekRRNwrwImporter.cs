@@ -323,28 +323,22 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void FilterNwrwDefinitions(Dictionary<string, SobekRRNwrw> readNwrwDefinitions, Dictionary<string, ILateralSource> lateralSourceDictionary, Dictionary<string, SobekRRNode> readSobekRrNodeDictionary)
         {
             Dictionary<string, SobekRRNode> filteredReadSobekRRNodeDictionary = FilterSobekRRNodes(readSobekRrNodeDictionary);
-            var toRemove = new List<string>();
-            foreach (SobekRRNwrw readNwrwDefinition in readNwrwDefinitions.Values)
+            
+            foreach (SobekRRNwrw readNwrwDefinition in readNwrwDefinitions.Values.ToArray())
             {
                 if (!filteredReadSobekRRNodeDictionary.ContainsKey(readNwrwDefinition.Id))
                 {
                     listOfWarnings.Add($"Could not import nwrw catchment, target node or branch '{readNwrwDefinition.Id}' was not found in the network.");
-                    toRemove.Add(readNwrwDefinition.Id);
+                    readNwrwDefinitions.Remove(readNwrwDefinition.Id);
                     continue;
                 }
 
                 if (!lateralSourceDictionary.ContainsKey(readNwrwDefinition.Id))
                 {
                     listOfWarnings.Add($"Could not import nwrw catchment, no lateral was found for the nwrw catchment '{readNwrwDefinition.Id}.");
-                    toRemove.Add(readNwrwDefinition.Id);
+                    readNwrwDefinitions.Remove(readNwrwDefinition.Id);
                 }
             }
-
-            foreach (string nwrwDefinitionId in toRemove)
-            {
-                readNwrwDefinitions.Remove(nwrwDefinitionId);
-            }
-            
         }
 
         private void AddNwrwDefinitionsToModel(IEnumerable<SobekRRNwrw> readNwrwDefinitions, Dictionary<string, ILateralSource> lateralSourceDictionary, Dictionary<string, SobekRRNode> readSobekRrNodeDictionary)

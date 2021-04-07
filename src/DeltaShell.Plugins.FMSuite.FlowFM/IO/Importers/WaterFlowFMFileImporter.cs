@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
     public class WaterFlowFMFileImporter : ModelFileImporterBase, IDimrModelFileImporter
     {
         private readonly ILog log = LogManager.GetLogger(typeof (WaterFlowFMFileImporter));
-        private readonly Func<string> StoreWorkingDirectoryPathFunc;
+        private readonly Func<string> storeWorkingDirectoryPathFunc;
 
         /// <summary>
         /// Constructor needed for connecting the Application.WorkingDirectory to the WaterFlowFMModel Working Directory.
@@ -24,14 +24,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         /// <param name="getWorkingDirectoryPathFunc"> </param>
         public WaterFlowFMFileImporter(Func<string> getWorkingDirectoryPathFunc)
         {
-            StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
+            storeWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
         }
 
         public override string Name
         {
             get { return "Flow Flexible Mesh Model"; }
         }
-        public override string Description { get { return Name; } }
+
+        public override string Description
+        {
+            get { return Name; }
+        }
+        
         public override string Category
         {
             get { return "1D / 2D"; }
@@ -52,11 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return true; }
         }
 
-        public override bool CanImportOn(object targetObject)
-        {
-           return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
-        }
-
         public override bool CanImportOnRootLevel
         {
             get { return true; }
@@ -73,73 +73,54 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public override ImportProgressChangedDelegate ProgressChanged { get; set; }
 
+        public string MasterFileExtension => "mdu";
+
+        public override bool CanImportOn(object targetObject)
+        {
+            return targetObject is ICompositeActivity || targetObject is WaterFlowFMModel;
+        }
+
         protected override object OnImportItem(string path, object target = null)
         {
-            try
+            var importedFmModel = new WaterFlowFMModel(path, ProgressChanged)
             {
-                var importedFmModel = new WaterFlowFMModel(path, ProgressChanged)
-                {
-                    WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc,
-                    ImportProgressChanged = null
-                };
+                WorkingDirectoryPathFunc = storeWorkingDirectoryPathFunc,
+                ImportProgressChanged = null
+            };
 
+            switch (target)
+            {
                 //replace the FM Model
-                var targetFmModel = target as WaterFlowFMModel;
-                if (targetFmModel != null)
+                case WaterFlowFMModel targetFmModel:
                 {
                     var parent = targetFmModel.Owner();
-                    
-                    //add / replace the FM Model in the project
-                    var folder = parent as Folder;
-                    if (folder != null)
+                    switch (parent)
                     {
-                        folder.Items.Remove(targetFmModel);
-                        folder.Items.Add(importedFmModel);
+                        //add / replace the FM Model in the project
+                        case Folder folder:
+                            folder.Items.Remove(targetFmModel);
+                            folder.Items.Add(importedFmModel);
+                            break;
+                        //add / replace the FM Model in the integrated model
+                        case ICompositeActivity compositeActivity:
+                            importedFmModel.MoveModelIntoIntegratedModel(null, compositeActivity);
+                            break;
                     }
 
-                    //add / replace the FM Model in the integrated model
-                    var compositeActivity = parent as ICompositeActivity;
-                    if (compositeActivity != null)
-                    {
-                        importedFmModel.MoveModelIntoIntegratedModel(null, compositeActivity);
-                    }
-                    FireProgressChanged("Import finished", 10, 10);
+                    ProgressChanged?.Invoke("Import finished", 10, 10);
                     return ShouldCancel ? null : importedFmModel;
                 }
                 
                 //add / replace the FM Model in the integrated model
-                var hydroModel = target as ICompositeActivity;
-                if (hydroModel != null)
-                {
+                case ICompositeActivity hydroModel:
                     importedFmModel.MoveModelIntoIntegratedModel(null, hydroModel);
-                    FireProgressChanged("Import finished", 10, 10);
+                    ProgressChanged?.Invoke("Import finished", 10, 10);
                     return hydroModel;
-                }
-                FireProgressChanged("Import finished", 10, 10);
-                return ShouldCancel ? null : importedFmModel;
-            }
-            catch (Exception e)
-            {
-                if (e is ArgumentException || e is PathTooLongException || e is FormatException ||
-                    e is OutOfMemoryException || e is IOException || e is InvalidOperationException)
-                {
-                    log.Error(String.Format("An error occurred while trying to import a {0}; Cause: ",
-                        Name), e);
-                    return null;
-                }
-
-                // !!Unexpected type of exception (like NotSupportedException or NotImplementedException), so fail fast!!
-                throw;
+    
+                default:
+                    ProgressChanged?.Invoke("Import finished", 10, 10);
+                    return ShouldCancel ? null : importedFmModel;
             }
         }
-
-        private void FireProgressChanged(string currentStepName, int currentStep, int totalSteps)
-        {
-            if (ProgressChanged == null) return;
-            
-            ProgressChanged(currentStepName, currentStep, totalSteps);
-        }
-
-        public string MasterFileExtension => "mdu";
     }
 }

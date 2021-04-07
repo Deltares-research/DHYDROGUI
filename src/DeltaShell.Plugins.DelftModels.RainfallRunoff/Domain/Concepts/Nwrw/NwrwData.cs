@@ -10,13 +10,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     /// <summary>
     /// NwrwData contains nwrw catchment data from oppervlak.csv and/or debiet.csv.
     /// </summary>
-    /// <seealso cref="DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.CatchmentModelData" />
+    /// <seealso cref="CatchmentModelData" />
     /// <seealso cref="INwrwFeature" />
     [Entity(FireOnCollectionChange = false)]
     public class NwrwData : CatchmentModelData
     {
         public const string DEFAULT_DWA_ID = "Default_DWA";
-        private static readonly RainfallRunoffCatchmentModelDataFactory modelDataFactory = new RainfallRunoffCatchmentModelDataFactory();
+        
         //nhib
         public NwrwData(): base(null) { }
 
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 }
 
                 // add missing data
-                var catchmentModelData = modelDataFactory.CreateDefaultModelData(catchment);
+                var catchmentModelData = catchment.CreateDefaultModelData();
                 if (catchmentModelData == null)
                     continue;
 
@@ -115,31 +115,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             rrModel.Basin.Catchments.Add(catchment);
             rrModel.ModelDataAdded -= RrModelOnModelDataAdded;
             
-            var nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));
+            var nwrwData = rrModel.GetAllModelData()
+                                  .OfType<NwrwData>()
+                                  .SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));
 
             if (nwrwData == null)
             {
-                var catchmentModelData = modelDataFactory.CreateDefaultModelData(catchment);
-
-                if (catchmentModelData == null)
-                    return;
-
-                if (rrModel.Basin.Catchments.Contains(catchment))
-                {
-                    rrModel.ModelData.Add(catchmentModelData);
-                }
-                else
-                {
-                    var parentCatchment = rrModel.Basin.AllCatchments.First(c => c.SubCatchments.Contains(catchment));
-                    var parentModelData = rrModel.GetCatchmentModelData(parentCatchment);
-                    parentModelData.SubCatchmentModelData.Add(catchmentModelData);
-                }
-
-                rrModel.FireModelDataAdded(catchmentModelData);
-                nwrwData = rrModel.GetAllModelData().OfType<NwrwData>().SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));
+                catchment.AddDefaultModelDataForCatchment(rrModel, true);
+                nwrwData = rrModel.GetAllModelData()
+                                  .OfType<NwrwData>()
+                                  .SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));
                 if (nwrwData != null)
                     CurrentNwrwCatchmentModelDataByNodeOrBranchId?.TryAdd(nwrwData.Name, nwrwData);
             }
+
             CurrentNwrwCatchmentModelDataByNodeOrBranchId = null;
         }
 

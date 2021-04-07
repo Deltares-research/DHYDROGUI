@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         private readonly Func<IList<IDimrModelFileImporter>> getDimrModelFileImporters;
 
-        private readonly Func<string> StoreWorkingDirectoryPathFunc;
+        private readonly Func<string> storeWorkingDirectoryPathFunc;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DHydroConfigXmlImporter"/> class
@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                                        Func<IList<IDimrModelFileImporter>> dimrFileImporters, Func<string> getWorkingDirectoryPathFunc)
         {
             Ensure.NotNull(getWorkingDirectoryPathFunc, nameof(getWorkingDirectoryPathFunc));
-            StoreWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
+            storeWorkingDirectoryPathFunc = getWorkingDirectoryPathFunc;
 
             this.readFunc = readFunc;
             getDimrModelFileImporters = dimrFileImporters;
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             try
             {
                 HydroModel importedModel = Read(path);
-                importedModel.WorkingDirectoryPathFunc = StoreWorkingDirectoryPathFunc;
+                importedModel.WorkingDirectoryPathFunc = storeWorkingDirectoryPathFunc;
 
                 var targetModel = target as HydroModel;
                 if (targetModel != null)

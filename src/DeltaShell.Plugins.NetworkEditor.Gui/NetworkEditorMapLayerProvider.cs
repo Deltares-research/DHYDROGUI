@@ -637,13 +637,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         Style = NetworkLayerStyleFactory.CreateStyle(wasteWaterTreatmentPlants),
                         NameIsReadOnly = true,
-                        DataSource =
-                            new ComplexFeatureCollection(drainageBasin,
-                                (IList) wasteWaterTreatmentPlants,
-                                typeof(WasteWaterTreatmentPlant))
-                            {
-                                CoordinateSystem = drainageBasin.CoordinateSystem
-                            },
+                        DataSource = new ComplexFeatureCollection(drainageBasin, (IList) wasteWaterTreatmentPlants, typeof(WasteWaterTreatmentPlant)),
                         FeatureEditor = new WasteWaterTreatmentPlantFeatureEditor {DrainageBasin = drainageBasin}
                     };
                 case IEventedList<RunoffBoundary> runoffBoundaries when drainageBasin != null:
@@ -651,12 +645,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     {
                         Style = NetworkLayerStyleFactory.CreateStyle(runoffBoundaries),
                         NameIsReadOnly = true,
-                        DataSource =
-                            new ComplexFeatureCollection(drainageBasin,
-                                (IList) runoffBoundaries, typeof(RunoffBoundary))
-                            {
-                                CoordinateSystem = drainageBasin.CoordinateSystem
-                            },
+                        DataSource = new ComplexFeatureCollection(drainageBasin, (IList) runoffBoundaries, typeof(RunoffBoundary)),
                         FeatureEditor = new RunoffBoundaryFeatureEditor {DrainageBasin = drainageBasin}
                     };
                 case IEventedList<Catchment> catchments when drainageBasin != null:
@@ -669,10 +658,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                         DataSource =
                             new ComplexFeatureCollection(drainageBasin,
                                 new WrappedEnumerableList<Catchment>(flattenedCatchments, catchments),
-                                typeof(Catchment))
-                            {
-                                CoordinateSystem = drainageBasin.CoordinateSystem
-                            },
+                                typeof(Catchment)),
                         FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
                         CustomRenderers = {new CatchmentAnchorPointRenderer()},
                         NameIsReadOnly = true,
