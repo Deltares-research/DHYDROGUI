@@ -20,7 +20,7 @@ from itertools import chain
 
 def determine_analysis_dlls(src_directories: List[Path]) -> Generator[str, None, None]:
     relevant_csprojs = chain.from_iterable(p.glob("**/*.csproj") for p in src_directories)
-    return (x.with_suffix(".dll").name for x in relevant_csprojs if (not str(x).endswith("wpftmp.csproj") and not str(x).endswith("RainfallRunoffModelEngine.csproj")))
+    return (x.with_suffix(".dll").name for x in relevant_csprojs if (not str(x).endswith("wpftmp.csproj") and not str(x).endswith("RainfallRunoffModelEngine.csproj") and not str(x).endswith("RainfallRunoffModelEngineTests.csproj")))
 
 
 def get_dll_path(bin_directory: Path, dll_name: str) -> Path:
@@ -31,6 +31,7 @@ def get_dll_path(bin_directory: Path, dll_name: str) -> Path:
     
     exe_name = Path(dll_name).with_suffix('.exe')
     elems = (bin_directory.glob(f"**/{exe_name}"))
+    #print(str(dll_name))
 
     return next(elems).parent / Path(exe_name)
 
