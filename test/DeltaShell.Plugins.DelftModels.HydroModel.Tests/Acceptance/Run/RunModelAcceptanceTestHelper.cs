@@ -16,9 +16,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         /// <param name="referenceOutputDirectory">The output directory of the reference data.</param>
         /// <param name="tempDirectory">A temporary work directory.</param>
         /// <param name="keepOutput">Whether or not to keep the actual output files.</param>
+        /// <param name="actualModelOutputDirectory">Name of the directory containing the output files.</param>
         /// <exception cref="ArgumentNullException">When any argument is <c>null</c>.</exception>
         public static void CompareFlowFmOutput(string acceptanceModelName, string referenceOutputDirectory, 
-                                        string tempDirectory, bool keepOutput, string actualModelOutputDirectory = "FlowFm")
+                                               string tempDirectory, bool keepOutput, string actualModelOutputDirectory = "FlowFm")
         {
             if (acceptanceModelName == null)
             {

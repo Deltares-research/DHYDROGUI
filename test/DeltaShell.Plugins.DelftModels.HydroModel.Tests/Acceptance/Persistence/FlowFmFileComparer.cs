@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
@@ -40,17 +37,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             ":history = \"Created on",
             ":source = \"D-Flow Flexible Mesh Plugin"
         };
-        
+
         /// <summary>
         /// Compares the contents of two FlowFM file directories.
         /// </summary>
         /// <param name="expectedFlowFmFiles">The file paths of the expected FlowFM files.</param>
         /// <param name="actualFlowFmFiles">The file paths of the actual FlowFM files.</param>
         /// <param name="tempDirectory">A temporary working directory to use during the comparison.</param>
+        /// <param name="linesToIgnoreLookup">Lookup for which lines to ignore for a specific file. Key: filename, Value: lines to ignore for that file.</param>
         /// <remarks>
         /// Files are also considered to be equal when the relevant file contents are equivalent (i.o.w. same file contents but in different order).
         /// </remarks>
-        public static void Compare(string[] expectedFlowFmFiles, string[] actualFlowFmFiles, string tempDirectory)
+        public static void Compare(string[] expectedFlowFmFiles, string[] actualFlowFmFiles, string tempDirectory, IReadOnlyDictionary<string, IEnumerable<string>> linesToIgnoreLookup)
         {
             var identical = true;
             var actualFlowFmFileNames = actualFlowFmFiles.Select(Path.GetFileName);
@@ -60,7 +58,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             foreach (var fileName in allFileNames)
             {
-                var linesToIgnore = new string[] { };
+                if (string.Equals(Path.GetExtension(fileName), ".cache", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    continue; // ignore the cache file
+                }
+                
+                var linesToIgnore = new List<string>();
+                
+                if (linesToIgnoreLookup.TryGetValue(fileName, out IEnumerable<string> linesInFileToIgnore))
+                {
+                    linesToIgnore.AddRange(linesInFileToIgnore);
+                }
 
                 string expectedFlowFmFile = expectedFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
                 string actualFlowFmFile = actualFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
@@ -75,13 +83,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 {
                     case ".mdu":
                     {
-                        linesToIgnore = MduLinesToIgnore;
+                        linesToIgnore.AddRange(MduLinesToIgnore);
                         break;
                     }
 
                     case ".nc":
                     {
-                        linesToIgnore = NetCdfLinesToIgnore;
+                        linesToIgnore.AddRange(NetCdfLinesToIgnore);
 
                         expectedFlowFmFile = Path.Combine(tempDirectory, "ncdump", "expected", fileName);
                         actualFlowFmFile = Path.Combine(tempDirectory, "ncdump", "actual", fileName);
@@ -104,7 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 }
                 else
                 {
-                    identical = FileComparerHelper.CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore, out errorMessage) && identical;
+                    identical = FileComparerHelper.CompareFiles(expectedFlowFmFile, actualFlowFmFile, linesToIgnore.ToArray(), out errorMessage) && identical;
                 }
                 
                 if (!string.IsNullOrEmpty(errorMessage))

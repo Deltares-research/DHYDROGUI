@@ -18,7 +18,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         /// <param name="expectedRainfallRunoffFiles">The file paths of the expected Rainfall Runoff files.</param>
         /// <param name="actualRainfallRunoffFiles">The file paths of the actual Rainfall Runoff files.</param>
         /// <param name="linesToIgnoreLookup">Lookup for which lines to ignore for a specific file. Key: filename, Value: lines to ignore for that file.</param>
-        public static void Compare(string[] expectedRainfallRunoffFiles, string[] actualRainfallRunoffFiles, Dictionary<string, IEnumerable<string>> linesToIgnoreLookup)
+        public static void Compare(string[] expectedRainfallRunoffFiles, 
+                                   string[] actualRainfallRunoffFiles, 
+                                   IReadOnlyDictionary<string, IEnumerable<string>> linesToIgnoreLookup)
         {
             var identical = true;
             var overallErrorMessage = $"{Environment.NewLine}{FileComparerHelper.VerticalLine}";

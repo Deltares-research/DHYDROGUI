@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private string secondSaveProjectPath;
         private string acceptanceModelsDirectory;
         private string referenceSaveData;
-
+        
         public static IEnumerable<TestCaseData> AcceptanceTests
         {
             get
@@ -89,11 +89,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 string firstSaveProjectDirectory = firstSaveProjectPath + "_data";
                 string secondSaveProjectDirectory = secondSaveProjectPath + "_data";
                 string mduFileName = "FlowFM";
-                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory, secondSaveProjectDirectory, mduFileName, tempDirectory, hasRrData);
+                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory, 
+                                                                    secondSaveProjectDirectory, 
+                                                                    mduFileName, 
+                                                                    tempDirectory, 
+                                                                    hasRrData);
 
                 Console.WriteLine("Comparing saved data with reference data");
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
-                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory, referenceSaveDataDirectory, mduFileName, tempDirectory, hasRrData);
+                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory,
+                                                                    referenceSaveDataDirectory,
+                                                                    mduFileName,
+                                                                    tempDirectory,
+                                                                    hasRrData,
+                                                                    new Dictionary<string, IEnumerable<string>>(),
+                                                                    AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
             }
         }
     }

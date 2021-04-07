@@ -113,6 +113,41 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         /// <summary>
         /// Compares the files of two project directories.
         /// </summary>
+        /// <remarks>
+        /// For specific files, you can ignore lines starting with a specific string by providing a lookup of files mapping to a collection of strings.
+        /// </remarks>
+        /// <param name="firstSaveProjectDirectory">Path to directory containing first project files to compare.</param>
+        /// <param name="secondSaveProjectDirectory">Path to directory containing second project files to compare.</param>
+        /// <param name="mduFileName">Name of the mdu file that corresponds with the folder name where the FlowFM data is located.</param>
+        /// <param name="tempDirectory">Path to temporary directory.</param>
+        /// <param name="hasRrData">Whether or not Rainfall Runoff data should be compared.</param>
+        /// <param name="flowFmLinesToIgnorePerFile">Lookup for which lines should be ignored per FlowFM file.</param>
+        /// <param name="rainfallRunoffLinesToIgnorePerFile">Lookup for which lines should be ignored per Rainfall Runoff file.</param>
+        public static void CompareProjectDirectories(string firstSaveProjectDirectory,
+                                                     string secondSaveProjectDirectory,
+                                                     string mduFileName,
+                                                     string tempDirectory,
+                                                     bool hasRrData,
+                                                     IReadOnlyDictionary<string, IEnumerable<string>> flowFmLinesToIgnorePerFile,
+                                                     IReadOnlyDictionary<string, IEnumerable<string>> rainfallRunoffLinesToIgnorePerFile)
+        {
+            Console.WriteLine("Comparing FlowFM saved data");
+            string flowFmInitialSaveDirectory = Path.Combine(firstSaveProjectDirectory, mduFileName, "input");
+            string flowFmSecondSaveDirectory = Path.Combine(secondSaveProjectDirectory, mduFileName, "input");
+            CompareFlowFMFiles(flowFmInitialSaveDirectory, flowFmSecondSaveDirectory, tempDirectory, flowFmLinesToIgnorePerFile);
+
+            if (hasRrData)
+            {
+                Console.WriteLine("Comparing Rainfall Runoff saved data");
+                string rrInitialSaveDirectory = Path.Combine(firstSaveProjectDirectory, "Rainfall Runoff");
+                string rrSecondSaveDirectory = Path.Combine(secondSaveProjectDirectory, "Rainfall Runoff");
+                CompareRainfallRunoffFiles(rrInitialSaveDirectory, rrSecondSaveDirectory, rainfallRunoffLinesToIgnorePerFile);
+            }
+        }
+        
+        /// <summary>
+        /// Compares the files of two project directories.
+        /// </summary>
         /// <param name="firstSaveProjectDirectory">Path to directory containing first project files to compare.</param>
         /// <param name="secondSaveProjectDirectory">Path to directory containing second project files to compare.</param>
         /// <param name="mduFileName">Name of the mdu file that corresponds with the folder name where the FlowFM data is located.</param>
@@ -124,21 +159,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                                                      string tempDirectory,
                                                      bool hasRrData)
         {
-            Console.WriteLine("Comparing FlowFM saved data");
-            string flowFmInitialSaveDirectory = Path.Combine(firstSaveProjectDirectory, mduFileName, "input");
-            string flowFmSecondSaveDirectory = Path.Combine(secondSaveProjectDirectory, mduFileName, "input");
-            CompareFlowFMFiles(flowFmInitialSaveDirectory, flowFmSecondSaveDirectory, tempDirectory);
-
-            if (hasRrData)
-            {
-                Console.WriteLine("Comparing Rainfall Runoff saved data");
-                string rrInitialSaveDirectory = Path.Combine(firstSaveProjectDirectory, "Rainfall Runoff");
-                string rrSecondSaveDirectory = Path.Combine(secondSaveProjectDirectory, "Rainfall Runoff");
-                CompareRainfallRunoffFiles(rrInitialSaveDirectory, rrSecondSaveDirectory);
-            }
+            var linesToIgnore = new Dictionary<string, IEnumerable<string>>(); // don't ignore anything
+            CompareProjectDirectories(firstSaveProjectDirectory, 
+                                      secondSaveProjectDirectory, 
+                                      mduFileName, 
+                                      tempDirectory, 
+                                      hasRrData, 
+                                      linesToIgnore, 
+                                      linesToIgnore);
         }
         
-        private static void CompareFlowFMFiles(string flowFmInitialSaveDirectory, string flowFmSecondSaveDirectory, string tempDirectory)
+        private static void CompareFlowFMFiles(string flowFmInitialSaveDirectory, 
+                                               string flowFmSecondSaveDirectory, 
+                                               string tempDirectory, 
+                                               IReadOnlyDictionary<string, IEnumerable<string>> flowFmLinesToIgnorePerFile)
         {
             string[] flowFmInitialSaveFiles = Directory.GetFiles(flowFmInitialSaveDirectory);
             if (!flowFmInitialSaveFiles.Any())
@@ -152,13 +186,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 Assert.Fail($"No saved files (second save) could be found at {flowFmSecondSaveDirectory}.");
             }
             
-            FlowFmFileComparer.Compare(flowFmInitialSaveFiles, flowFmSecondSaveFiles, tempDirectory);
+            FlowFmFileComparer.Compare(flowFmInitialSaveFiles, flowFmSecondSaveFiles, tempDirectory, flowFmLinesToIgnorePerFile);
         }
 
-        private static void CompareRainfallRunoffFiles(string rrInitialSaveDirectory, string rrSecondSaveDirectory)
+        private static void CompareRainfallRunoffFiles(string rrInitialSaveDirectory,
+                                                       string rrSecondSaveDirectory,
+                                                       IReadOnlyDictionary<string, IEnumerable<string>> rainfallRunoffLinesToIgnorePerFile)
         {
-            Dictionary<string, IEnumerable<string>> linesToIgnore = GetLinesToIgnore();
-            
             string[] rrInitialSaveFiles = Directory.GetFiles(rrInitialSaveDirectory);
             if (!rrInitialSaveFiles.Any())
             {
@@ -171,21 +205,51 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
                 Assert.Fail($"No saved files (second save) could be found at {rrSecondSaveDirectory}.");
             }
             
-            RainfallRunoffFileComparer.Compare(rrInitialSaveFiles, rrSecondSaveFiles, linesToIgnore);
+            RainfallRunoffFileComparer.Compare(rrInitialSaveFiles, rrSecondSaveFiles, rainfallRunoffLinesToIgnorePerFile);
         }
-
-        private static Dictionary<string, IEnumerable<string>> GetLinesToIgnore()
+        
+        /// <summary>
+        /// Mapping of Rainfall Runoff filenames to a collection of strings indicating lines to be ignored if they start with this string.
+        /// </summary>
+        public static IReadOnlyDictionary<string, IEnumerable<string>> RainfallRunoffLinesToIgnore { get; } = new Dictionary<string, IEnumerable<string>>(StringComparer.InvariantCultureIgnoreCase)
         {
-            var linesToIgnore = new Dictionary<string, IEnumerable<string>>(StringComparer.InvariantCultureIgnoreCase);
-            
-            linesToIgnore["default.evp"] = new[]
             {
-                string.Empty // Ignore entire file as this can contain today's date, which keeps changing.
-            };
-            
-            linesToIgnore["delft_3b.ini"] = new []{ "StartTime", "EndTime" }; // Based on today's datetime, which keeps changing.
+                "default.evp", new []
+                {
+                    string.Empty // Ignore entire file as this can contain today's date, which keeps changing.
+                } 
+            },
+            {
+                "delft_3b.ini", new []
+                {
+                    "StartTime", "EndTime" // Based on today's datetime, which keeps changing.
+                }
+            },
+            {
+                "default.bui", new []
+                {
+                    string.Empty // Ignore entire file as this is only set when running a model
+                }
+            }
+        };
 
-            return linesToIgnore;
+        /// <summary>
+        /// Mapping of FlowFM filenames to a collection of strings indicating lines to be ignored if they start with this string.
+        /// </summary>
+        /// <param name="mduFileName">The name of the mdu file.</param>
+        /// <returns>The mapping of filenames to a collection of lines to ignore.</returns>
+        public static IReadOnlyDictionary<string, IEnumerable<string>> GetFlowFmLinesToIgnore(string mduFileName)
+        {
+            return new Dictionary<string, IEnumerable<string>>(StringComparer.InvariantCultureIgnoreCase)
+            {
+                {
+                    $"{mduFileName}", new[]
+                    {
+                        "HisInterval", "MapInterval", "DtUser"
+                    }
+                }
+            };
         }
+        
     }
 }

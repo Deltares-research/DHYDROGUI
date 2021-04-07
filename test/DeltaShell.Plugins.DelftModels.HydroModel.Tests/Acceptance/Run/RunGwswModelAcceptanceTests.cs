@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         private string tempDirectory;
         private string acceptanceModelsDirectory;
         private string acceptanceModelsReferenceOutputDirectory;
+        private string referenceSaveData;
 
         public static IEnumerable<TestCaseData> AcceptanceTests
         {
@@ -40,15 +41,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            string acceptanceModelPath = GuiTestHelper.IsBuildServer
-                ? @"..\..\AcceptanceModels\GWSW"
-                : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModels\GWSW";
+            string basePath = GuiTestHelper.IsBuildServer
+                                  ? @"..\..\"
+                                  : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\";
+            
+            string acceptanceModelPath = Path.Combine(basePath, @"AcceptanceModels\GWSW");
             acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
 
-            string acceptanceModelReferenceOutputPath = GuiTestHelper.IsBuildServer
-                                                            ? @"..\..\AcceptanceModelsReferenceOutput\GWSW"
-                                                            : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModelsReferenceOutput\GWSW";
+            string acceptanceModelReferenceOutputPath = Path.Combine(basePath, @"AcceptanceModelsReferenceOutput\GWSW");
             acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
+            
+            referenceSaveData = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModelsReferenceSaveData\GWSW");
+            
+            
         }
 
         [SetUp]
@@ -94,18 +99,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
 
                 Console.WriteLine("Saving model");
-                gui.Application.SaveProjectAs(Path.Combine(tempDirectory, "SavedModel"));
-
+                string savePath = Path.Combine(tempDirectory, "SavedModel");
+                gui.Application.SaveProjectAs(savePath);
+                
                 // [Then]
+                Console.WriteLine("Comparing saved input data with reference input data");
+                bool hasRrData = preconditionExpectedCatchmentsCount > 0;
+                string saveDirectory = savePath + "_data";
+                string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
+                string mduFileName = "FlowFM";
+                AcceptanceModelTestHelper.CompareProjectDirectories(saveDirectory,
+                                                                    referenceSaveDataDirectory,
+                                                                    mduFileName,
+                                                                    tempDirectory,
+                                                                    hasRrData,
+                                                                    AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(mduFileName + ".mdu"),
+                                                                    AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
+                
                 Console.WriteLine("Comparing output");
-                CompareResultDataWithReferenceData(acceptanceModelName);
+                CompareOutputWithReferenceData(acceptanceModelName);
             }
         }
 
-        private void CompareResultDataWithReferenceData(string acceptanceModelName)
+        private void CompareOutputWithReferenceData(string acceptanceModelName)
         {
-            RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, acceptanceModelsReferenceOutputDirectory,
-                                                             tempDirectory, keepOutput);
+            RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, 
+                                                             acceptanceModelsReferenceOutputDirectory,
+                                                             tempDirectory, 
+                                                             keepOutput);
         }
         
         private static void SetModelSettings(HydroModel hydroModel)

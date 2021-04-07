@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         private string tempDirectory;
         private string acceptanceModelsDirectory;
         private string acceptanceModelsReferenceOutputDirectory;
+        private string referenceSaveData;
 
         public delegate int ActualCountFuncDelegate(IHydroNetwork network);
         public static IEnumerable<TestCaseData> AcceptanceTests 
@@ -39,15 +40,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            string acceptanceModelPath = GuiTestHelper.IsBuildServer
-                ? @"..\..\AcceptanceModels\FlowFM"
-                : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModels\FlowFM";
+            string basePath = GuiTestHelper.IsBuildServer
+                                  ? @"..\..\"
+                                  : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\";
+            
+            string acceptanceModelPath = Path.Combine(basePath, @"AcceptanceModels\FlowFM");
             acceptanceModelsDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelPath);
 
-            string acceptanceModelReferenceOutputPath = GuiTestHelper.IsBuildServer
-                                                            ? @"..\..\AcceptanceModelsReferenceOutput\FlowFM"
-                                                            : @"..\..\..\nghs-1d2dflooding_AcceptanceModelData\AcceptanceModelsReferenceOutput\FlowFM";
+            string acceptanceModelReferenceOutputPath = Path.Combine(basePath, @"AcceptanceModelsReferenceOutput\FlowFM");
             acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
+            
+            referenceSaveData = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModelsReferenceSaveData\FlowFM");
         }
 
         [SetUp]
@@ -91,9 +94,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 Assert.That(fmModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
                 
                 Console.WriteLine("Saving model");
-                gui.Application.SaveProjectAs(Path.Combine(tempDirectory, "SavedModel"));
-                
+                string savePath = Path.Combine(tempDirectory, "SavedModel");
+                gui.Application.SaveProjectAs(savePath);
+
                 // [Then]
+                Console.WriteLine("Comparing saved input data with reference input data");
+                string saveDirectory = savePath + "_data";
+                string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
+                AcceptanceModelTestHelper.CompareProjectDirectories(saveDirectory,
+                                                                    referenceSaveDataDirectory,
+                                                                    acceptanceModelFileName,
+                                                                    tempDirectory,
+                                                                    false,
+                                                                    AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(acceptanceModelFileName + ".mdu"),
+                                                                    AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
                 CompareResultDataWithReferenceData(acceptanceModelName, acceptanceModelFileName);
             }
         }
