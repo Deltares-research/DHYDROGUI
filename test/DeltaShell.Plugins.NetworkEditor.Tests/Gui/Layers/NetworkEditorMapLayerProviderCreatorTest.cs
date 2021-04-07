@@ -8,7 +8,6 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using NUnit.Framework;
 using SharpMap.Api.Layers;
 
@@ -37,7 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
                 typeof(ObservationPointsLayerProvider),
                 typeof(ObservationCrossSectionsLayerProvider),
                 typeof(PumpsLayerProvider),
-                typeof(WeirsLayerProvider),
+                typeof(StructuresLayerProvider),
                 typeof(LandBoundariesLayerProvider),
                 typeof(DryPointsLayerProvider),
                 typeof(DryAreasLayerProvider),

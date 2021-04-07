@@ -164,17 +164,8 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Import\GroupablePointCloudImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentHeightImporter.cs" />
     <Compile Include="Import\HydroAreaEmbankmentImporter.cs" />
-    <Compile Include="MapLayers\HydroAreaLayer.cs" />
-    <Compile Include="MapLayers\HydroAreaLayerStyles.cs" />
-    <Compile Include="MapLayers\CustomRenderers\EmbankmentRenderer.cs" />
-    <Compile Include="MapLayers\CustomRenderers\EnclosureRenderer.cs" />
-    <Compile Include="MapLayers\Editors\HydroAreaFeatureEditor.cs" />
-    <Compile Include="MapLayers\Editors\Interactors\EmbankmentInteractor.cs" />
-    <Compile Include="MapLayers\HydroRegionMapLayer.cs" />
-    <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -293,15 +284,11 @@
     <None Include="Resources\ExtraResistanceSmall.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MapLayers\HydroRegionMapLayer.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <CodeAnalysisDictionary Include="Resources\dry_point.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\guide.png" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>

@@ -3,7 +3,7 @@ using System.Linq;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
 using GeoAPI.CoordinateSystems;
 using NUnit.Framework;

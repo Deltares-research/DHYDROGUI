@@ -1,8 +1,7 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Renderers;
 using SharpMap.Api.Layers;
 using SharpMap.Styles;
 
@@ -25,27 +24,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         }
 
         /// <inheritdoc/>
-        protected override string GetLayerName()
-        {
-            return HydroAreaLayerNames.EnclosureName;
-        }
+        protected override string GetLayerName() =>
+            HydroAreaLayerNames.EnclosureName;
 
         /// <inheritdoc/>
-        protected override VectorStyle GetVectorStyle()
-        {
-            return HydroAreaLayerStyles.EnclosureStyle;
-        }
+        protected override VectorStyle GetVectorStyle() =>
+            HydroAreaLayerStyles.EnclosureStyle;
 
         /// <inheritdoc/>
-        protected override string GetFeatureTypeName()
-        {
-            return "Enclosure";
-        }
+        protected override string GetFeatureTypeName() =>
+            "Enclosure";
 
         /// <inheritdoc/>
-        protected override IEventedList<GroupableFeature2DPolygon> GetLayerFeatures(HydroArea hydroArea)
-        {
-            return hydroArea.Enclosures;
-        }
+        protected override IEventedList<GroupableFeature2DPolygon> GetLayerFeatures(HydroArea hydroArea) =>
+            hydroArea.Enclosures;
     }
 }

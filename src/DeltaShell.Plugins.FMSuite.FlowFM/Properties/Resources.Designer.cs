@@ -409,6 +409,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Setting group names {0} / {1}.
+        /// </summary>
+        public static string GroupablePointCloudImporter_Setting_group_names__0_____1_ {
+            get {
+                return ResourceManager.GetString("GroupablePointCloudImporter_Setting_group_names__0_____1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The type value {0} on line {1} file {2}, could not be parsed. Please check it is correctly written..
         /// </summary>
         public static string GwswAttributeType_TryGetParsedValueType_The_type_value__0__on_line__1__file__2___could_not_be_parsed__Please_check_it_is_correctly_written_ {

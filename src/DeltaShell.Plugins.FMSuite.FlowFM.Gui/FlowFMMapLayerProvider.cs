@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using DelftTools.Functions;
-using DelftTools.Hydro;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -14,18 +13,18 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.FunctionStores;
-using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
-using DeltaShell.Plugins.FMSuite.FlowFM.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
@@ -103,7 +102,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         DataSource =
                             new Feature2DCollection().Init(feature2Ds, "Boundary", modelName, parentWaterFlowFmModel1.CoordinateSystem),
                         FeatureEditor =
-                            new Boundary2DEditor(parentWaterFlowFmModel1) {AllowRemovePoint = new RemoveBoundaryPointDialog(parentWaterFlowFmModel1).ShowDialogForFeature},
+                            new Boundary2DEditor(parentWaterFlowFmModel1) { AllowRemovePoint = new RemoveBoundaryPointDialog(parentWaterFlowFmModel1).ShowDialogForFeature },
                         Style = HydroAreaLayerStyles.BoundariesStyle,
                         NameIsReadOnly = true,
                         ShowInLegend = false
@@ -144,7 +143,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         new Feature2DCollection().Init(allBoundaryConditionSets, "BoundaryCondition", modelName,
                                                        parentWaterFlowModel2.CoordinateSystem),
                     Theme = theme,
-                    Style = (VectorStyle) theme.DefaultStyle,
+                    Style = (VectorStyle)theme.DefaultStyle,
                     NameIsReadOnly = true,
                     ShowInTreeView = true,
                     ShowInLegend = false,
@@ -482,7 +481,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 AttributeName = nameof(BoundaryConditionSet.VariableDescription),
                 DefaultStyle = null,
-                NoDataValues = new List<string> {""}
+                NoDataValues = new List<string> { "" }
             };
 
             foreach (BoundaryConditionDataType dataType in new FlowBoundaryConditionEditorController()

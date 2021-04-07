@@ -125,13 +125,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
     <Reference Include="Xceed.Wpf.Toolkit">
@@ -253,11 +250,6 @@
     <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
       <Name>DeltaShell.Dimr</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
-      <Project>{90ded9a6-dd9a-4694-adec-5918c12435c8}</Project>
-      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">

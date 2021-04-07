@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers

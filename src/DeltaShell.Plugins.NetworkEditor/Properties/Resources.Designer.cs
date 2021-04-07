@@ -131,30 +131,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Setting group names {0} / {1}.
-        /// </summary>
-        public static string GroupablePointCloudImporter_Setting_group_names__0_____1_ {
-            get {
-                return ResourceManager.GetString("GroupablePointCloudImporter_Setting_group_names__0_____1_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap guide {
             get {
                 object obj = ResourceManager.GetObject("guide", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap LateralSourceMap {
-            get {
-                object obj = ResourceManager.GetObject("LateralSourceMap", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -213,16 +194,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Properties {
         public static System.Drawing.Bitmap NodeOnSingleBranch {
             get {
                 object obj = ResourceManager.GetObject("NodeOnSingleBranch", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap Observation {
-            get {
-                object obj = ResourceManager.GetObject("Observation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

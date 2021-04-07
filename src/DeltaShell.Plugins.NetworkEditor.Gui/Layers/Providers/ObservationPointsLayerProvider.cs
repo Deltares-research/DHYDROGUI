@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
@@ -13,27 +12,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     internal sealed class ObservationPointsLayerProvider : FeaturesLayerProvider<GroupableFeature2DPoint>
     {
         /// <inheritdoc/>
-        protected override string GetLayerName()
-        {
-            return HydroAreaLayerNames.ObservationPointsPluralName;
-        }
+        protected override string GetLayerName() =>
+            HydroAreaLayerNames.ObservationPointsPluralName;
 
         /// <inheritdoc/>
-        protected override VectorStyle GetVectorStyle()
-        {
-            return HydroAreaLayerStyles.ObservationPointStyle;
-        }
+        protected override VectorStyle GetVectorStyle() =>
+            HydroAreaLayerStyles.ObservationPointStyle;
 
         /// <inheritdoc/>
-        protected override string GetFeatureTypeName()
-        {
-            return "ObservationPoint";
-        }
+        protected override string GetFeatureTypeName() =>
+            "ObservationPoint";
 
         /// <inheritdoc/>
-        protected override IEventedList<GroupableFeature2DPoint> GetLayerFeatures(HydroArea hydroArea)
-        {
-            return hydroArea.ObservationPoints;
-        }
+        protected override IEventedList<GroupableFeature2DPoint> GetLayerFeatures(HydroArea hydroArea) =>
+            hydroArea.ObservationPoints;
     }
 }

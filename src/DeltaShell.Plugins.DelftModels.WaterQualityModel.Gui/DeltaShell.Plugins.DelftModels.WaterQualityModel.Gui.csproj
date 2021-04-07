@@ -129,7 +129,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -328,11 +327,6 @@
     <None Include="Resources\clipboard-task.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
-      <Project>{9f94f7fe-c79c-4e32-b3dc-a11c01b79349}</Project>
-      <Name>DelftTools.Hydro</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
       <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
       <Name>DeltaShell.NGHS.Common</Name>

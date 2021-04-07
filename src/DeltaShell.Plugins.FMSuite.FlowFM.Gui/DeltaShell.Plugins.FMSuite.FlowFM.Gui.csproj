@@ -314,6 +314,8 @@
     <Compile Include="Forms\WindSelectionDialog.Designer.cs">
       <DependentUpon>WindSelectionDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
+    <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="MapTools\MergeEmbankmentsMapTool.cs" />
     <Compile Include="NodePresenters\BoundaryConditionSetNodePresenter.cs" />
     <Compile Include="NodePresenters\Feature2DPolygonTreeViewNodePresenter.cs" />

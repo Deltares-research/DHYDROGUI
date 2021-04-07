@@ -2,7 +2,6 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Layers;
 

@@ -2,8 +2,8 @@
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using GeoAPI.Extensions.Feature;
 using NSubstitute;
 using NUnit.Framework;

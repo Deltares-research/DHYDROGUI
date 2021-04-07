@@ -149,8 +149,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -247,6 +245,12 @@
       <DependentUpon>PumpView.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
+    <Compile Include="Layers\Editors\HydroAreaFeatureEditor.cs" />
+    <Compile Include="Layers\Editors\Interactors\EmbankmentInteractor.cs" />
+    <Compile Include="Layers\HydroAreaFeature2DCollection.cs" />
+    <Compile Include="Layers\HydroAreaLayer.cs" />
+    <Compile Include="Layers\HydroAreaLayerStyles.cs" />
+    <Compile Include="Layers\HydroRegionMapLayer.cs" />
     <Compile Include="Layers\NetworkEditorMapLayerProviderCreator.cs" />
     <Compile Include="Layers\Providers\BridgePillarsLayerProvider.cs" />
     <Compile Include="Layers\Providers\DryAreasLayerProvider.cs" />
@@ -263,7 +267,9 @@
     <Compile Include="Layers\Providers\ObservationPointsLayerProvider.cs" />
     <Compile Include="Layers\Providers\PumpsLayerProvider.cs" />
     <Compile Include="Layers\Providers\ThinDamsLayerProvider.cs" />
-    <Compile Include="Layers\Providers\WeirsLayerProvider.cs" />
+    <Compile Include="Layers\Providers\StructuresLayerProvider.cs" />
+    <Compile Include="Layers\Renderers\EmbankmentRenderer.cs" />
+    <Compile Include="Layers\Renderers\EnclosureRenderer.cs" />
     <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />
     <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
     <Compile Include="NetworkEditorGuiPlugin.cs" />
@@ -305,11 +311,6 @@
     <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
       <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
       <Name>DeltaShell.NGHS.Common.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
-      <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
-      <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
@@ -437,7 +438,12 @@
   <ItemGroup>
     <Resource Include="Resources\enclosure.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Layers\HydroRegionMapLayer.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LateralSourceMap.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

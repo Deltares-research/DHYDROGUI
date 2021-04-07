@@ -2,7 +2,6 @@
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;

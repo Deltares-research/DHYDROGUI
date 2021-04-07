@@ -1,7 +1,7 @@
 using System.Linq;
 using DelftTools.Hydro;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.MapTools;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using SharpMap.UI.Forms;
 
@@ -16,12 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
         /// <param name="mapControl">The map control from which the tools are obtained.</param>
         public static HydroRegionEditorMapTool AddHydroRegionEditorMapTool(IMapControl mapControl)
         {
-            if (mapControl == null)
-            {
-                return null;
-            }
-
-            if (mapControl.Map == null)
+            if (mapControl?.Map == null)
             {
                 return null;
             }

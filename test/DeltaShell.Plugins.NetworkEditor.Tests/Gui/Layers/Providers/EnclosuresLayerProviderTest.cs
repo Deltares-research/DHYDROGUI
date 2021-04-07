@@ -6,7 +6,7 @@ using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Renderers;
 using GeoAPI.Geometries;
 using NUnit.Framework;
 using SharpMap.Layers;

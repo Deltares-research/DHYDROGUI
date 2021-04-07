@@ -1,6 +1,6 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.GroupableFeatures;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
 using SharpMap.Extensions.CoordinateSystems;

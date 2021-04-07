@@ -1,8 +1,7 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Editors;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Renderers;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Styles;
@@ -10,7 +9,7 @@ using SharpMap.Styles;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
 {
     /// <summary>
-    /// Provides logic for creating <see cref="SharpMap.Api.Layers.ILayer"/> objects for collections
+    /// Provides logic for creating <see cref="ILayer"/> objects for collections
     /// of <see cref="Embankment"/> objects.
     /// </summary>
     internal sealed class EmbankmentsLayerProvider : FeaturesLayerProvider<Embankment>
@@ -25,33 +24,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         }
 
         /// <inheritdoc/>
-        protected override IFeatureEditor GetLayerFeatureEditor(HydroArea hydroArea)
-        {
-            return new HydroAreaFeatureEditor(hydroArea) {CreateNewFeature = l => new Embankment {Region = hydroArea}};
-        }
+        protected override IFeatureEditor GetLayerFeatureEditor(HydroArea hydroArea) =>
+            new HydroAreaFeatureEditor(hydroArea) { CreateNewFeature = l => new Embankment { Region = hydroArea } };
 
         /// <inheritdoc/>
-        protected override string GetLayerName()
-        {
-            return HydroAreaLayerNames.EmbankmentsPluralName;
-        }
+        protected override string GetLayerName() =>
+            HydroAreaLayerNames.EmbankmentsPluralName;
 
         /// <inheritdoc/>
-        protected override VectorStyle GetVectorStyle()
-        {
-            return HydroAreaLayerStyles.EmbankmentStyle;
-        }
+        protected override VectorStyle GetVectorStyle() =>
+            HydroAreaLayerStyles.EmbankmentStyle;
 
         /// <inheritdoc/>
-        protected override string GetFeatureTypeName()
-        {
-            return "Embankment";
-        }
+        protected override string GetFeatureTypeName() => nameof(Embankment);
 
         /// <inheritdoc/>
-        protected override IEventedList<Embankment> GetLayerFeatures(HydroArea hydroArea)
-        {
-            return hydroArea.Embankments;
-        }
+        protected override IEventedList<Embankment> GetLayerFeatures(HydroArea hydroArea) =>
+            hydroArea.Embankments;
     }
 }

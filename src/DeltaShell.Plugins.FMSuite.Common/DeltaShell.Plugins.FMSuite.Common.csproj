@@ -193,10 +193,6 @@
     <Compile Include="IO\Files\TimFile.cs" />
     <Compile Include="FMParser.cs" />
     <Compile Include="IO\Files\WindFile.cs" />
-    <Compile Include="Layers\Boundary2DEditor.cs" />
-    <Compile Include="Layers\Boundary2DInteractor.cs" />
-    <Compile Include="Layers\ModelGroupLayer.cs" />
-    <Compile Include="Layers\SnappedFeatureCollection.cs" />
     <Compile Include="ModelSchema\FileBasedModelItem.cs" />
     <Compile Include="ModelSchema\ModelProperty.cs" />
     <Compile Include="ModelSchema\ModelPropertyDefinition.cs" />

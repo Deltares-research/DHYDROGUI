@@ -14,7 +14,7 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
-using DeltaShell.Plugins.FMSuite.FlowFM.Layers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.NetworkEditor;

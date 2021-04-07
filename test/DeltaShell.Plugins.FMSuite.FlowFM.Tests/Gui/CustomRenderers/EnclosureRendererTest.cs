@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Drawing;
-using DelftTools.Hydro;
 using DelftTools.Hydro.GroupableFeatures;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers.Renderers;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;

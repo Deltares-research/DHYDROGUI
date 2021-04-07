@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
@@ -13,27 +12,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     internal sealed class FixedWeirsLayerProvider : FeaturesLayerProvider<FixedWeir>
     {
         /// <inheritdoc/>
-        protected override string GetLayerName()
-        {
-            return HydroAreaLayerNames.FixedWeirsPluralName;
-        }
+        protected override string GetLayerName() =>
+            HydroAreaLayerNames.FixedWeirsPluralName;
 
         /// <inheritdoc/>
-        protected override VectorStyle GetVectorStyle()
-        {
-            return HydroAreaLayerStyles.FixedWeirStyle;
-        }
+        protected override VectorStyle GetVectorStyle() =>
+            HydroAreaLayerStyles.FixedWeirStyle;
 
         /// <inheritdoc/>
-        protected override string GetFeatureTypeName()
-        {
-            return "FixedWeir";
-        }
+        protected override string GetFeatureTypeName() => nameof(FixedWeir);
 
         /// <inheritdoc/>
-        protected override IEventedList<FixedWeir> GetLayerFeatures(HydroArea hydroArea)
-        {
-            return hydroArea.FixedWeirs;
-        }
+        protected override IEventedList<FixedWeir> GetLayerFeatures(HydroArea hydroArea) =>
+            hydroArea.FixedWeirs;
     }
 }

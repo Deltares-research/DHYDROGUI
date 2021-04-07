@@ -29,7 +29,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;

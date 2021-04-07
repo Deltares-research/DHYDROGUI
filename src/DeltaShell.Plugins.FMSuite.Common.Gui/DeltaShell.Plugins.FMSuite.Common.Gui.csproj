@@ -230,6 +230,10 @@
     <Compile Include="Forms\VerticalProfileDialog.Designer.cs">
       <DependentUpon>VerticalProfileDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Layers\Boundary2DEditor.cs" />
+    <Compile Include="Layers\Boundary2DInteractor.cs" />
+    <Compile Include="Layers\ModelGroupLayer.cs" />
+    <Compile Include="Layers\SnappedFeatureCollection.cs" />
     <Compile Include="MapView\MapView.xaml.cs">
       <DependentUpon>MapView.xaml</DependentUpon>
     </Compile>

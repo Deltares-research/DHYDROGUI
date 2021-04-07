@@ -24,7 +24,6 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;

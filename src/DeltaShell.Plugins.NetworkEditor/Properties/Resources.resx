@@ -142,17 +142,11 @@
   <data name="ExtraResistanceSmall" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\ExtraResistanceSmall.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="LateralSourceMap" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\LateralSourceMap.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="NodeOnMultipleBranches" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NodeOnMultipleBranches.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NodeOnSingleBranch" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\NodeOnSingleBranch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Observation" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Observation.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="PumpSmallNegative" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\PumpSmallNegative.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -183,8 +177,5 @@
   </data>
   <data name="NetworkEditorApplicationPlugin_HandleSubRegionCollectionChanged__0__is_not_supported_on_the_hydro_region_collection" xml:space="preserve">
     <value>{0} is not supported on the hydro region collection</value>
-  </data>
-  <data name="GroupablePointCloudImporter_Setting_group_names__0_____1_" xml:space="preserve">
-    <value>Setting group names {0} / {1}</value>
   </data>
 </root>

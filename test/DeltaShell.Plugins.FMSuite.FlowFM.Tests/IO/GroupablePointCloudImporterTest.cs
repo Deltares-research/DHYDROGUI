@@ -11,10 +11,10 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.NetworkEditor.Gui;
-using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
@@ -79,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                         Assert.AreEqual(1048576, targetModel.Area.DryPoints.Count);
                     };
-                    WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
+                    WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
                 }
             }
             finally

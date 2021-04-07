@@ -205,6 +205,7 @@
     <Compile Include="IO\Files\Helpers\MduFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityConfigurationValues.cs" />
     <Compile Include="IO\Files\MduFileReader.cs" />
+    <Compile Include="IO\ImportExport\Importers\GroupablePointCloudImporter.cs" />
     <Compile Include="IO\WaterFlowFMModel120LegacyLoader.cs" />
     <Compile Include="IO\IMduFileWriteConfig.cs" />
     <Compile Include="IO\ImportExport\Exporters\BcmFileExporter.cs" />
@@ -288,8 +289,6 @@
     <Compile Include="Sediment\ISedimentModelData.cs" />
     <Compile Include="Model\IWaterFlowFMModel.cs" />
     <Compile Include="FeatureData\KnownFeatureCategories.cs" />
-    <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
-    <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="ModelDefinition\HeatFluxModel.cs" />
     <Compile Include="Sediment\ISediment.cs" />
     <Compile Include="Sediment\ISedimentFormulaType.cs" />
@@ -363,11 +362,6 @@
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
-      <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
-      <Name>DeltaShell.Plugins.NetworkEditor</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">

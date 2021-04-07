@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Api.Layers;
 using SharpMap.Rendering;
 using SharpMap.Styles;
@@ -24,27 +23,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
         }
 
         /// <inheritdoc/>
-        protected override string GetLayerName()
-        {
-            return HydroAreaLayerNames.ObservationCrossSectionsPluralName;
-        }
+        protected override string GetLayerName() =>
+            HydroAreaLayerNames.ObservationCrossSectionsPluralName;
 
         /// <inheritdoc/>
-        protected override VectorStyle GetVectorStyle()
-        {
-            return HydroAreaLayerStyles.ObsCrossSectionStyle;
-        }
+        protected override VectorStyle GetVectorStyle() =>
+            HydroAreaLayerStyles.ObsCrossSectionStyle;
 
         /// <inheritdoc/>
-        protected override string GetFeatureTypeName()
-        {
-            return "ObservationCrossSection";
-        }
+        protected override string GetFeatureTypeName() =>
+            "ObservationCrossSection";
 
         /// <inheritdoc/>
-        protected override IEventedList<ObservationCrossSection2D> GetLayerFeatures(HydroArea hydroArea)
-        {
-            return hydroArea.ObservationCrossSections;
-        }
+        protected override IEventedList<ObservationCrossSection2D> GetLayerFeatures(HydroArea hydroArea) =>
+            hydroArea.ObservationCrossSections;
     }
 }

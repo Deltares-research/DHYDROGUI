@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Forms;
-using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Layers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Commands;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Fluent;

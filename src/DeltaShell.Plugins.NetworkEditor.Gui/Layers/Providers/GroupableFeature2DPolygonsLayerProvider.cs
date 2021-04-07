@@ -14,10 +14,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     internal abstract class GroupableFeature2DPolygonsLayerProvider : FeaturesLayerProvider<GroupableFeature2DPolygon>
     {
         /// <inheritdoc/>
-        public override bool CanCreateLayerFor(object sourceData, object parentData)
-        {
-            return sourceData is IEventedList<GroupableFeature2DPolygon> features && parentData is HydroArea hydroArea && Equals(features, GetLayerFeatures(hydroArea));
-        }
+        public override bool CanCreateLayerFor(object sourceData, object parentData) =>
+            sourceData is IEventedList<GroupableFeature2DPolygon> features &&
+            parentData is HydroArea hydroArea &&
+            Equals(features, GetLayerFeatures(hydroArea));
 
         /// <inheritdoc/>
         protected override ILayer CreateLayer(HydroArea hydroArea)
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
                     geometry = new Polygon(new LinearRing(geometry.Coordinates));
                 }
 
-                var newFeature = new GroupableFeature2DPolygon {Geometry = geometry};
+                var newFeature = new GroupableFeature2DPolygon { Geometry = geometry };
                 provider.Features.Add(newFeature);
 
                 return newFeature;

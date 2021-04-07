@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
@@ -13,27 +12,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     internal sealed class BridgePillarsLayerProvider : FeaturesLayerProvider<BridgePillar>
     {
         /// <inheritdoc/>
-        protected override string GetLayerName()
-        {
-            return HydroAreaLayerNames.BridgePillarsPluralName;
-        }
+        protected override string GetLayerName() =>
+            HydroAreaLayerNames.BridgePillarsPluralName;
 
         /// <inheritdoc/>
-        protected override VectorStyle GetVectorStyle()
-        {
-            return HydroAreaLayerStyles.BridgePillarStyle;
-        }
+        protected override VectorStyle GetVectorStyle() =>
+            HydroAreaLayerStyles.BridgePillarStyle;
 
         /// <inheritdoc/>
-        protected override string GetFeatureTypeName()
-        {
-            return "BridgePillar";
-        }
+        protected override string GetFeatureTypeName() => nameof(BridgePillar);
 
         /// <inheritdoc/>
-        protected override IEventedList<BridgePillar> GetLayerFeatures(HydroArea hydroArea)
-        {
-            return hydroArea.BridgePillars;
-        }
+        protected override IEventedList<BridgePillar> GetLayerFeatures(HydroArea hydroArea) =>
+            hydroArea.BridgePillars;
     }
 }

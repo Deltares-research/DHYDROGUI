@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
@@ -13,27 +12,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     internal sealed class ThinDamsLayerProvider : FeaturesLayerProvider<ThinDam2D>
     {
         /// <inheritdoc/>
-        protected override string GetLayerName()
-        {
-            return HydroAreaLayerNames.ThinDamsPluralName;
-        }
+        protected override string GetLayerName() =>
+            HydroAreaLayerNames.ThinDamsPluralName;
 
         /// <inheritdoc/>
-        protected override VectorStyle GetVectorStyle()
-        {
-            return HydroAreaLayerStyles.ThinDamStyle;
-        }
+        protected override VectorStyle GetVectorStyle() =>
+            HydroAreaLayerStyles.ThinDamStyle;
 
         /// <inheritdoc/>
-        protected override string GetFeatureTypeName()
-        {
-            return "ThinDam";
-        }
+        protected override string GetFeatureTypeName() => "ThinDam";
 
         /// <inheritdoc/>
-        protected override IEventedList<ThinDam2D> GetLayerFeatures(HydroArea hydroArea)
-        {
-            return hydroArea.ThinDams;
-        }
+        protected override IEventedList<ThinDam2D> GetLayerFeatures(HydroArea hydroArea) =>
+            hydroArea.ThinDams;
     }
 }

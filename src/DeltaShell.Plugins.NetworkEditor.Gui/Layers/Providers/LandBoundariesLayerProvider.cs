@@ -1,7 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
@@ -13,27 +12,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
     internal sealed class LandBoundariesLayerProvider : FeaturesLayerProvider<LandBoundary2D>
     {
         /// <inheritdoc/>
-        protected override string GetLayerName()
-        {
-            return HydroAreaLayerNames.LandBoundariesPluralName;
-        }
+        protected override string GetLayerName() =>
+            HydroAreaLayerNames.LandBoundariesPluralName;
 
         /// <inheritdoc/>
-        protected override VectorStyle GetVectorStyle()
-        {
-            return HydroAreaLayerStyles.LandBoundaryStyle;
-        }
+        protected override VectorStyle GetVectorStyle() =>
+            HydroAreaLayerStyles.LandBoundaryStyle;
 
         /// <inheritdoc/>
-        protected override string GetFeatureTypeName()
-        {
-            return "LandBoundary";
-        }
+        protected override string GetFeatureTypeName() => "LandBoundary";
 
         /// <inheritdoc/>
-        protected override IEventedList<LandBoundary2D> GetLayerFeatures(HydroArea hydroArea)
-        {
-            return hydroArea.LandBoundaries;
-        }
+        protected override IEventedList<LandBoundary2D> GetLayerFeatures(HydroArea hydroArea) =>
+            hydroArea.LandBoundaries;
     }
 }

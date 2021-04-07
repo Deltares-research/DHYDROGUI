@@ -4,7 +4,7 @@ using System.Drawing;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Gui.Layers;
-using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using GeoAPI.Extensions.Feature;
 using NSubstitute;
 using NUnit.Framework;

@@ -1,5 +1,5 @@
 ﻿using DelftTools.Hydro;
-using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using DeltaShell.Plugins.NetworkEditor.Gui.Layers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
