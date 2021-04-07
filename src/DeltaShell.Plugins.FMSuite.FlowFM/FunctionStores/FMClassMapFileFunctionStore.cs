@@ -673,9 +673,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             networkLocationsForThisFunctionCache.Clear();
             argumentVariableCache.Clear();
             fullVariableCache.Clear();
-            metaData?.Locations?.Clear();
-            metaData?.TimeDependentVariables?.Clear();
-            metaData?.Times?.Clear();
             metaData = null;
         }
     }
