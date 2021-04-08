@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
@@ -1023,9 +1024,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 var lateralSource = new LateralSource()
                     {Branch = branch, Chainage = chainage, Name = id, LongName = name};
-                var lengthIndexedLine = new LengthIndexedLine(lateralSource.Branch.Geometry);
-                var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
-                lateralSource.Geometry = new Point((Coordinate) lengthIndexedLine.ExtractPoint(mapOffset).Clone());
+                if (branch is IPipe apipe && apipe.Target is IManhole manhole && manhole.Name.Equals(lateralSource.Name, StringComparison.InvariantCultureIgnoreCase))
+                    lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
+                else
+                    lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, 0); 
+                
+                //var lengthIndexedLine = new LengthIndexedLine(lateralSource.Branch.Geometry);
+                //var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
+                //lateralSource.Geometry = new Point((Coordinate) lengthIndexedLine.ExtractPoint(mapOffset).Clone());
                 branch.BranchFeatures.Add(lateralSource);
                 var model1DLateralSourceData =
                     lateralSourcesData.FirstOrDefault(lsd => lsd.Feature == lateralSource);
