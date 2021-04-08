@@ -4486,7 +4486,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// - feature in <paramref name="itemString"/> is unknown
         /// - parameter name in <paramref name="itemString"/> is unknown.
         /// </exception>
-        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString)
+        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString, string itemString2)
         {
             string[] stringParts = itemString.Split('/');
 
@@ -4516,8 +4516,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (dataItem == null)
             {
-                throw new ArgumentException(string.Format("parameter name {0} in {1} cannot be found in the FM model.",
-                                                          parameterName, itemString));
+                string[] stringParts2 = itemString2.Split('/');
+                string parameterName2 = stringParts2.LastOrDefault()?? string.Empty;
+                dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
+                {
+                    var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
+                    return parameterValueConverter?.ParameterName == parameterName2;
+                });
+                if (dataItem == null)
+                {
+                    throw new ArgumentException(string.Format("parameter name {0} in {1} cannot be found in the FM model.",
+                                                              parameterName, itemString));
+                }
             }
 
             return new[]
@@ -4578,7 +4588,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private IFeature GetAreaFeature(string featureCategory, string featureName)
         {
-            IEnumerable<INameable> featuresFromCategory = Area.GetFeaturesFromCategory(featureCategory).OfType<INameable>();
+
+            IEnumerable<INameable> featuresFromCategory = Area.GetFeaturesFromCategory(featureCategory)
+                                                              .Concat(Network.GetFeaturesFromCategory(featureCategory))
+                                                              .Concat(featureCategory == Model1DParametersCategories.SourceSinks ? SourcesAndSinks.Select(sas => sas.Feature) : Enumerable.Empty<IFeature>())
+                                                              .Concat(featureCategory == Model1DParametersCategories.BoundaryConditions ? BoundaryConditions1D : Enumerable.Empty<IFeature>())
+                                                              .OfType<INameable>();
 
             return (IFeature)featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
         }

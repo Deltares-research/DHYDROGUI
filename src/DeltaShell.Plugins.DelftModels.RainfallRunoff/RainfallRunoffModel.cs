@@ -1255,7 +1255,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             Dispose(false);
         }
         
-        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString)
+        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString, string itemString2)
         {
             yield break;
         }

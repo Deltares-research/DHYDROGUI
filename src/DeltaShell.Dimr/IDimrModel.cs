@@ -148,8 +148,9 @@ namespace DeltaShell.Dimr
         /// Gets the data items that match the given item string.
         /// </summary>
         /// <param name="itemString">The item string.</param>
+        /// <param name="otherItemString">Because we are idiots and not saving the connected item in the itemString it is actually stored in the target or source items string (depending on in- or output) we can use this string to get the correct (1D) data item</param>
         /// <returns>A collection of matching data items.</returns>
-        IEnumerable<IDataItem> GetDataItemsByItemString(string itemString);
+        IEnumerable<IDataItem> GetDataItemsByItemString(string itemString, string otherItemString);
 
         /// <summary>
         /// Gets the hydro object that match the given item string.

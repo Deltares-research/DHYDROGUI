@@ -7,6 +7,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Feature;
@@ -23,10 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// </summary>
         /// <param name="area"> The hydro area of a model. </param>
         /// <param name="category"> The category. </param>
-        /// <returns> Features of the hydro area of a model from a specific category. </returns>
-        /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="category"/> is unknown.
-        /// </exception>
+        /// <returns> Features of the hydro area of a model from a specific category or empty when <paramref name="category"/> is unknown. </returns>
         public static IEnumerable<IFeature> GetFeaturesFromCategory(this HydroArea area, string category)
         {
             switch (category)
@@ -43,8 +41,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return area.ObservationPoints;
                 case KnownFeatureCategories.ObservationCrossSections:
                     return area.ObservationCrossSections;
+                case Model1DParametersCategories.LeveeBreaches:
+                    return area.LeveeBreaches;
                 default:
-                    throw new ArgumentException(string.Format("unknown category {0} used.", category));
+                    return Enumerable.Empty<IFeature>();
+                    //throw new ArgumentException(string.Format("unknown category {0} used.", category));
+            }
+        }
+        /// <summary>
+        /// Gets the features from a category mentioned in the dimr xml.
+        /// </summary>
+        /// <param name="network"> The hydro network a of a model. </param>
+        /// <param name="category"> The category. </param>
+        /// <returns> Features of the hydro area of a model from a specific category. </returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="category"/> is unknown.
+        /// </exception>
+        public static IEnumerable<IFeature> GetFeaturesFromCategory(this IHydroNetwork network, string category)
+        {
+            switch (category)
+            {
+                case Model1DParametersCategories.Weirs:
+                    return network.Weirs;
+                case Model1DParametersCategories.ObservationPoints:
+                    return network.ObservationPoints;
+                case Model1DParametersCategories.Culverts:
+                    return network.Culverts;
+                case Model1DParametersCategories.Pumps:
+                    return network.Pumps;
+                case Model1DParametersCategories.Laterals:
+                    return network.LateralSources;
+                case Model1DParametersCategories.Gates:
+                    return network.Gates;
+                case Model1DParametersCategories.CrossSections:
+                    return network.CrossSections;
+                case Model1DParametersCategories.Orifices:
+                    return network.Orifices;
+                case Model1DParametersCategories.GeneralStructures:
+                    return network.Weirs.Where(w => w.WeirFormula is GeneralStructureWeirFormula);
+                case Model1DParametersCategories.Retentions:
+                    return network.Retentions;
+                default:
+                    return Enumerable.Empty<IFeature>();
+                    //throw new ArgumentException(string.Format("unknown category {0} used.", category));
             }
         }
 

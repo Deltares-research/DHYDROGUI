@@ -216,13 +216,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         private void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel)
         {
-            hydroModel.Activities.Add(subModel);
             if (!(subModel is IHydroModel sourceModel) || sourceModel.Region == null)
             {
+                hydroModel.Activities.Add(subModel);
                 return;
             }
 
+            if (!(hydroModel is IEditableObject editableObject)) return;
+            editableObject.BeginEdit(new DefaultEditAction("importing"));
             sourceModel.ReplaceHydroModelRegion(hydroModel);
+            editableObject.EndEdit();
         }
 
         private void CoupleSubModels(HydroModel hydroModel, dimrXML dimrObject, IList<IDimrModel> subModels)
@@ -266,10 +269,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     }
 
                     // DataItem linking
-                    IDataItem sourceDataItem = sourceModel.GetDataItemsByItemString(couplerXml.sourceName).FirstOrDefault();
+                    IDataItem sourceDataItem = sourceModel.GetDataItemsByItemString(couplerXml.sourceName, couplerXml.targetName).FirstOrDefault();
                     if (sourceDataItem != null)
                     {
-                        foreach (IDataItem targetDataItem in targetModel.GetDataItemsByItemString(couplerXml.targetName))
+                        foreach (IDataItem targetDataItem in targetModel.GetDataItemsByItemString(couplerXml.targetName, couplerXml.sourceName))
                         {
                             targetDataItem.LinkTo(sourceDataItem);
                         }
