@@ -143,24 +143,30 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
         private static void SortScrambledFiles(string expectedFlowFmFile, string actualFlowFmFile)
         {
+            string fileExtension = Path.GetExtension(expectedFlowFmFile);
             string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(expectedFlowFmFile);
 
-            if (fileNameWithoutExtension.Equals("crsloc", StringComparison.InvariantCultureIgnoreCase))
+            switch (fileExtension.ToLower())
             {
-                SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, LocationRegion.Id.Key);
-            }
-
-            if (fileNameWithoutExtension.Equals("crsdef", StringComparison.InvariantCultureIgnoreCase))
-            {
-                SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, DefinitionPropertySettings.Id.Key);
-            }
-
-            string fileExtension = Path.GetExtension(expectedFlowFmFile);
-            if (fileNameWithoutExtension.EndsWith("_bnd", StringComparison.InvariantCultureIgnoreCase) 
-                && fileExtension.Equals(".ext", StringComparison.InvariantCultureIgnoreCase))
-            {
-                SortBoundaryAndLateralCategories(expectedFlowFmFile);
-                SortBoundaryAndLateralCategories(actualFlowFmFile);
+                case ".ini":
+                    SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, "id");
+                    break;
+                case ".bc":
+                    SortFmBcFile(expectedFlowFmFile, actualFlowFmFile, "name");
+                    break;
+                case ".ext":
+                    if (fileNameWithoutExtension.EndsWith("_bnd", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        SortBoundaryAndLateralCategories(expectedFlowFmFile);
+                        SortBoundaryAndLateralCategories(actualFlowFmFile);
+                    }
+                    break;
+                case ".gui":
+                    if (string.Equals(fileNameWithoutExtension, "branches", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        SortFmIniFile(expectedFlowFmFile, actualFlowFmFile, "name");
+                    }
+                    break;
             }
         }
 
@@ -186,6 +192,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
 
             readCategories = new DelftIniReader().ReadDelftIniFile(actualFlowFmFile);
             new DelftIniWriter().WriteDelftIniFile(readCategories.OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
+        }
+        
+        private static void SortFmBcFile(string expectedFlowFmFile, string actualFlowFmFile, string idKey)
+        {
+            var readCategories = new DelftBcReader().ReadDelftBcFile(expectedFlowFmFile);
+            new DelftBcWriter().WriteDelftIniFile(readCategories.OrderBy(c => c.ReadProperty<string>(idKey)), expectedFlowFmFile);
+
+            readCategories = new DelftBcReader().ReadDelftBcFile(actualFlowFmFile);
+            new DelftBcWriter().WriteDelftIniFile(readCategories.OrderBy(c => c.ReadProperty<string>(idKey)), actualFlowFmFile);
         }
     }
 }
