@@ -221,11 +221,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                 hydroModel.Activities.Add(subModel);
                 return;
             }
-
-            if (!(hydroModel is IEditableObject editableObject)) return;
-            editableObject.BeginEdit(new DefaultEditAction("importing"));
             sourceModel.ReplaceHydroModelRegion(hydroModel);
-            editableObject.EndEdit();
         }
 
         private void CoupleSubModels(HydroModel hydroModel, dimrXML dimrObject, IList<IDimrModel> subModels)
