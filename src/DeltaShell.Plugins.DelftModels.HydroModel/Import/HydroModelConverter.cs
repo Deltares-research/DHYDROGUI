@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -113,19 +112,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     }
 
                     RenameSubModelWhenNeeded(subModel, component.name);
-                    SetHydroModelProperties(hydroModel, subModel);
-
-                    if (!(subModel is IDimrModel dimrModel))
-                    {
-                        logHandler.ReportErrorFormat(Resources.HydroModelConverter_The_imported_model_is_not_a_dimr_model, subModel.Name);
-                    }
-                    else if (dimrModel.IsMasterTimeStep && TryGetTimeValue(dimrObject, out string timeStr) && 
-                             DimrXmlTimeParser.TryParse(dimrModel.StartTime, timeStr, logHandler, out ModelTimers timers)) 
-                    {
-                        hydroModel.StartTime = timers.StartTime;
-                        hydroModel.TimeStep = timers.TimeStep;
-                        hydroModel.StopTime = timers.StopTime;
-                    }
+                    SetHydroModelProperties(hydroModel, subModel, dimrObject);
                 }
             }
         }
@@ -247,7 +234,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             subModel.Name = componentName;
         }
 
-        private void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel)
+        private void SetHydroModelProperties(HydroModel hydroModel, IActivity subModel, dimrXML dimrObject)
         {
             if (subModel is IHydroModel hydroModelSubModel && hydroModelSubModel.Region != null)
             {
@@ -255,6 +242,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             }
 
             hydroModel.Activities.Add(subModel);
+            
+            if (!(subModel is IDimrModel dimrModel))
+            {
+                logHandler.ReportErrorFormat(Resources.HydroModelConverter_The_imported_model_is_not_a_dimr_model, subModel.Name);
+            }
+            else if (dimrModel.IsMasterTimeStep && TryGetTimeValue(dimrObject, out string timeStr) && 
+                     DimrXmlTimeParser.TryParse(dimrModel.StartTime, timeStr, logHandler, out ModelTimers timers)) 
+            {
+                hydroModel.StartTime = timers.StartTime;
+                hydroModel.TimeStep = timers.TimeStep;
+                hydroModel.StopTime = timers.StopTime;
+            }
         }
 
         private void CoupleSubModels(dimrXML dimrObject, IList<IDimrModel> subModels)
