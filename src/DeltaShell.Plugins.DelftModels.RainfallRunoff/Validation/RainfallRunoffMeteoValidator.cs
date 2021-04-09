@@ -71,10 +71,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             DateTime stopTime,
             bool addtimestep = false)
         {
-            var timeArgument = meteoData.Data.Arguments.OfType<Variable<DateTime>>().FirstOrDefault();
             var issues = new List<ValidationIssue>();
-
-            if (timeArgument.Values.Count < 2)
+            var timeArgument = meteoData.Data.Arguments.OfType<Variable<DateTime>>().FirstOrDefault();
+            if (timeArgument == null) return issues;
+            
+            int startEndDateDaysDifference = startTime.Date.CompareTo(stopTime.Date);
+            if (timeArgument.Values.Count < 2 && startEndDateDaysDifference != 0)
             {
                 issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error,
                                                "Not enough values defined"));
@@ -95,16 +97,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
                                                              meteoStart, startTime)));
             }
 
-            DateTime timeSeriesEnd = timeArgument.Values[timeArgument.Values.Count - 1];
-            TimeSpan timestep = timeArgument.Values[1] - timeArgument.Values[0];
-            DateTime meteoEnd = addtimestep ? timeSeriesEnd.Add(timestep) : timeSeriesEnd;
-
-            if (meteoEnd < stopTime)
+            if (timeArgument.Values.Count > 1)
             {
-                issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error,
-                                               String.Format("Time series stops ({0}) before end of model ({1})",
-                                                             meteoEnd, stopTime)));
+                DateTime timeSeriesEnd = timeArgument.Values[timeArgument.Values.Count - 1];
+                TimeSpan timestep = timeArgument.Values[1] - timeArgument.Values[0];
+                DateTime meteoEnd = addtimestep ? timeSeriesEnd.Add(timestep) : timeSeriesEnd;
+
+                if (meteoEnd < stopTime)
+                {
+                    issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error,
+                                                   String.Format("Time series stops ({0}) before end of model ({1})",
+                                                                 meteoEnd, stopTime)));
+                }
             }
+
             return issues;
         }
     }
