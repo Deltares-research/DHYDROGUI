@@ -291,7 +291,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private void RebuildImporter()
         {
             if (!targetObjectWasSetExternal)
+            {
                 targetObject = CreateHydroModel();
+                targetObjectWasSetExternal = targetObject != null;
+            }
 
             // Build using the selected models
             var previousImporter = importer;
