@@ -48,65 +48,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Exporters
         }
 
         [Test]
-        public void GivenAWaterFlowFMFileExporterAndAWaterFlowFMModelItemAndAValidPathWhenExportIsCalledWithThisItemAndPathThenTheModelIsExportedToTheSpecifiedPath()
-        {
-            var path = Path.Combine(Path.GetTempPath(), "FlowFM.mdu");
-
-            var mocks = new MockRepository();
-
-            //delegate bool mockFunc(string p, bool b0, bool b1, bool b2) = (p, b0, b1, b2) => { return true; };
-            Func<string, bool, bool, bool, bool> emptyFunc = (p, b0, b1, b2) => true;
-
-            var model = mocks.PartialMock<WaterFlowFMModel>();
-            model
-                .Expect(n => n.ExportTo(Arg<string>.Is.Equal(path),
-                                        Arg<bool>.Is.Equal(false), 
-                                        Arg<bool>.Is.Equal(true), 
-                                        Arg<bool>.Is.Equal(true)))
-                .Do(emptyFunc)
-                .Return(true)
-                .Repeat.Once();
-            model.Expect(n => n.ToString()).Return("").Repeat.Any();
-
-            mocks.ReplayAll();
-
-            Assert.That(exporter.Export(model, path), Is.True);
-
-            mocks.VerifyAll();
-        }
-
-        [Test]
-        public void GivenANWaterFlowFMFileExporterAndAWaterFlowFMModelItemAndAPathPointingToADirectoryWhenExportIsCalledWithThisItemAndPathThenTheModelIsExportedToAPathWithTheModelNameAndMDUExtension()
-        {
-            var path = Path.GetTempPath();
-            var expectedPath = Path.Combine(path, "FlowFM.mdu");
-
-            var mocks = new MockRepository();
-
-            //delegate bool mockFunc(string p, bool b0, bool b1, bool b2) = (p, b0, b1, b2) => { return true; };
-            Func<string, bool, bool, bool, bool> emptyFunc = (p, b0, b1, b2) => true;
-
-            var model = mocks.PartialMock<WaterFlowFMModel>();
-            model
-                .Expect(n => n.ExportTo(Arg<string>.Is.Equal(expectedPath),
-                                        Arg<bool>.Is.Equal(false), 
-                                        Arg<bool>.Is.Equal(true), 
-                                        Arg<bool>.Is.Equal(true)))
-                .Do(emptyFunc)
-                .Return(true)
-                .Repeat.Once();
-            model.Expect(n => n.ToString()).Return("").Repeat.Any();
-
-            mocks.ReplayAll();
-
-            Assert.That(exporter.Export(model, path), Is.True);
-
-            mocks.VerifyAll();
-            
-
-        }
-
-        [Test]
         public void GivenAnWaterFlowFMFileExporterWhenSourceTypesIsCalledThenWaterFlowFMModelIsReturned()
         {
             Assert.That(exporter.SourceTypes().Count(), Is.EqualTo(1));
