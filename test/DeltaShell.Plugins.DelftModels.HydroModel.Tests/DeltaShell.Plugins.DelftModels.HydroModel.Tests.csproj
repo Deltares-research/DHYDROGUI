@@ -291,6 +291,8 @@
     <Compile Include="HydroModelIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />
     <Compile Include="HydroModelWaveIntegrationTest.cs" />
+    <Compile Include="Import\DimrXmlTimeParserTest.cs" />
+    <Compile Include="Import\ModelTimersTest.cs" />
     <Compile Include="Import\RtcXmlDirectoryLookupTest.cs" />
     <Compile Include="ModelExchangeInfoTest.cs" />
     <Compile Include="NHibernateHydroModelIntegrationTest.cs" />

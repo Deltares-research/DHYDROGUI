@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -113,10 +114,44 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                     RenameSubModelWhenNeeded(subModel, component.name);
                     SetHydroModelProperties(hydroModel, subModel);
+
+                    if (!(subModel is IDimrModel dimrModel))
+                    {
+                        logHandler.ReportErrorFormat(Resources.HydroModelConverter_The_imported_model_is_not_a_dimr_model, subModel.Name);
+                    }
+                    else if (dimrModel.IsMasterTimeStep && TryGetTimeValue(dimrObject, out string timeStr) && 
+                             DimrXmlTimeParser.TryParse(dimrModel.StartTime, timeStr, logHandler, out ModelTimers timers)) 
+                    {
+                        hydroModel.StartTime = timers.StartTime;
+                        hydroModel.TimeStep = timers.TimeStep;
+                        hydroModel.StopTime = timers.StopTime;
+                    }
                 }
             }
         }
+        
+        private bool TryGetTimeValue(dimrXML dimrObject, out string time)
+        {
+            time = null;
+            
+            dimrParallelXML dimrParallel = dimrObject.control.OfType<dimrParallelXML>().FirstOrDefault();
+            if (dimrParallel == null)
+            {
+                logHandler.ReportError(Resources.HydroModelConverter_The_parallel_element_is_missing);
+                return false;
+            } 
+            
+            dimrStartGroupXML startGroupObject = dimrParallel.Items.OfType<dimrStartGroupXML>().FirstOrDefault();
+            if (startGroupObject == null)
+            {
+                logHandler.ReportError(Resources.HydroModelConverter_The_startGroup_element_is_missing);
+                return false;
+            }
 
+            time = startGroupObject.time;
+            return true;
+        }
+        
         private static void ValidateComponent(dimrComponentXML component)
         {
             if (string.IsNullOrEmpty(component.workingDir))

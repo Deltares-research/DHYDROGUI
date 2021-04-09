@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -105,6 +105,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
             get {
                 return ResourceManager.GetString("DHydroExporterDialog_WarnForModelsWhichCannotBeExportedByDimr_Activity_of_type__0" +
                         "__cannot_be_exported_to_DIMR_file_tree_and_shall_be_ignored_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid number of seconds..
+        /// </summary>
+        public static string DimrXmlTimeParser_not_a_valid_number_of_seconds {
+            get {
+                return ResourceManager.GetString("DimrXmlTimeParser_not_a_valid_number_of_seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time element should contain three timers: the start time, the time step, and the stop time..
+        /// </summary>
+        public static string DimrXmlTimeParser_The_time_element_should_contain_three_timers {
+            get {
+                return ResourceManager.GetString("DimrXmlTimeParser_The_time_element_should_contain_three_timers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The time element should not be empty..
+        /// </summary>
+        public static string DimrXmlTimeParser_The_time_element_should_not_be_empty {
+            get {
+                return ResourceManager.GetString("DimrXmlTimeParser_The_time_element_should_not_be_empty", resourceCulture);
             }
         }
         
@@ -220,6 +247,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         public static string HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___ {
             get {
                 return ResourceManager.GetString("HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The imported model &apos;{0}&apos; is not a dimr model..
+        /// </summary>
+        public static string HydroModelConverter_The_imported_model_is_not_a_dimr_model {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_The_imported_model_is_not_a_dimr_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &lt;parallel&gt; element is missing from the dimr config..
+        /// </summary>
+        public static string HydroModelConverter_The_parallel_element_is_missing {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_The_parallel_element_is_missing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &lt;startGroup&gt; element is missing from the dimr config..
+        /// </summary>
+        public static string HydroModelConverter_The_startGroup_element_is_missing {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_The_startGroup_element_is_missing", resourceCulture);
             }
         }
         

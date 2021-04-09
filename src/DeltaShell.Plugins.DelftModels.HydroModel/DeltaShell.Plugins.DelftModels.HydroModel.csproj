@@ -53,6 +53,8 @@
     <Compile Include="Export\IDimrConfigModelCouplerProvider.cs" />
     <Compile Include="HydroModel111LegacyLoader.cs" />
     <Compile Include="Import\DHydroConfigXmlImporter.cs" />
+    <Compile Include="Import\ModelTimers.cs" />
+    <Compile Include="Import\DimrXmlTimeParser.cs" />
     <Compile Include="Import\HydroModelConverter.cs" />
     <Compile Include="Import\HydroModelReader.cs" />
     <Compile Include="Import\ImportingFullModelAction.cs" />

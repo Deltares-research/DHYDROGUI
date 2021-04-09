@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Castle.Core.Internal;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
@@ -403,6 +404,146 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             // Then
             Assert.IsTrue(hydroModel.Models.Contains(modelWithNullRegion));
             Assert.IsTrue(hydroModel.Region.SubRegions.IsNullOrEmpty());
+        }
+
+        [Test]
+        public void Convert_SetsTheCorrectTimesOnTheHydroModel()
+        {
+            // Setup
+            const string masterFileExtension = "some_extension";
+            const string timeElementValue = "86400 1200 172800";
+
+            IDimrModel model = CreateDimrModel(DateTime.Today);
+
+            IDimrModelFileImporter dimrImporter = CreateDimrImporter(masterFileExtension, model);
+
+            dimrXML dimrXml = CreateDimrXml(masterFileExtension, timeElementValue);
+
+            var loggingHandler = Substitute.For<ILogHandler>();
+            var converter = new HydroModelConverter(loggingHandler);
+
+            // Call
+            HydroModel hydroModel = converter.Convert(dimrXml, "path/to/the/dimr/config.xml", new List<IDimrModelFileImporter> {dimrImporter});
+
+            // Assert
+            Assert.That(hydroModel.StartTime, Is.EqualTo(DateTime.Today.AddSeconds(86400)));
+            Assert.That(hydroModel.TimeStep, Is.EqualTo(TimeSpan.FromSeconds(1200)));
+            Assert.That(hydroModel.StopTime, Is.EqualTo(DateTime.Today.AddSeconds(172800)));
+
+            Assert.That(loggingHandler.ReceivedCalls(), Is.Empty);
+        }
+
+        [Test]
+        public void Convert_ImportedModelNotADimrModel_LogsError()
+        {
+            // Setup
+            const string masterFileExtension = "some_extension";
+            const string timeElementValue = "86400 1200 172800";
+
+            var model = Substitute.For<IActivity>();
+            model.Name = "some_name";
+
+            IDimrModelFileImporter dimrImporter = CreateDimrImporter(masterFileExtension, model);
+
+            dimrXML dimrXml = CreateDimrXml(masterFileExtension, timeElementValue);
+
+            var loggingHandler = Substitute.For<ILogHandler>();
+            var converter = new HydroModelConverter(loggingHandler);
+
+            // Call
+            converter.Convert(dimrXml, "path/to/the/dimr/config.xml", new List<IDimrModelFileImporter> {dimrImporter});
+
+            // Assert
+            Assert.That(loggingHandler.ReceivedCalls(), Has.Length.EqualTo(1));
+            loggingHandler.Received(1).ReportErrorFormat("The imported model '{0}' is not a dimr model.", model.Name);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(Convert_MissingElement_Cases))]
+        public void Convert_MissingElement_LogsError(object[] controlElement, string expError)
+        {
+            // Setup
+            const string masterFileExtension = "some_extension";
+
+            IDimrModel model = CreateDimrModel(DateTime.Today);
+
+            IDimrModelFileImporter dimrImporter = CreateDimrImporter(masterFileExtension, model);
+
+            var dimrXml = new dimrXML
+            {
+                component = new[]
+                {
+                    new dimrComponentXML
+                    {
+                        workingDir = "some_dir",
+                        inputFile = $"model_file.{masterFileExtension}"
+                    }
+                },
+                control = controlElement
+            };
+
+            var loggingHandler = Substitute.For<ILogHandler>();
+            var converter = new HydroModelConverter(loggingHandler);
+
+            // Call
+            converter.Convert(dimrXml, "path/to/the/dimr/config.xml", new List<IDimrModelFileImporter> {dimrImporter});
+
+            // Assert
+            Assert.That(loggingHandler.ReceivedCalls(), Has.Length.EqualTo(1));
+            loggingHandler.Received(1).ReportError(expError);
+        }
+
+        private static IEnumerable<TestCaseData> Convert_MissingElement_Cases()
+        {
+            yield return new TestCaseData(new object[]
+                                          {
+                                              new dimrParallelXML {Items = new object[0]}
+                                          },
+                                          "The <startGroup> element is missing from the dimr config.");
+
+            yield return new TestCaseData(new object[0],
+                                          "The <parallel> element is missing from the dimr config.");
+        }
+
+        private static IDimrModel CreateDimrModel(DateTime startTime)
+        {
+            IDimrModel model = Substitute.For<IDimrModel, IActivity>();
+            model.IsMasterTimeStep.Returns(true);
+            model.StartTime.Returns(startTime);
+            return model;
+        }
+
+        private static IDimrModelFileImporter CreateDimrImporter(string masterFileExtension, IActivity model)
+        {
+            var dimrImporter = Substitute.For<IDimrModelFileImporter>();
+            dimrImporter.MasterFileExtension.Returns(masterFileExtension);
+            dimrImporter.ImportItem("").ReturnsForAnyArgs(model);
+            return dimrImporter;
+        }
+
+        private static dimrXML CreateDimrXml(string extension, string time)
+        {
+            return new dimrXML
+            {
+                component = new[]
+                {
+                    new dimrComponentXML
+                    {
+                        workingDir = "some_dir",
+                        inputFile = $"model_file.{extension}"
+                    }
+                },
+                control = new object[]
+                {
+                    new dimrParallelXML
+                    {
+                        Items = new object[]
+                        {
+                            new dimrStartGroupXML {time = time}
+                        }
+                    }
+                },
+            };
         }
 
         private IDimrModelFileImporter GetDimrModelFileImporter(string subModelName)
