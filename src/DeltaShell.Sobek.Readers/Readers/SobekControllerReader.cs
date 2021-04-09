@@ -293,7 +293,7 @@ namespace DeltaShell.Sobek.Readers.Readers
 
             const string propertiesPatternUSminimum = @"ui\s(?<usminimum>" + RegularExpression.Scientific + @")\s";
             const string propertiesPatternUSmaximum = @"ua\s(?<usmaximum>" + RegularExpression.Scientific + @")\s";
-            const string propertiesPatternIntervalType = @"cn\s(?<intervaltype>" + RegularExpression.Integer + @")\s";
+            const string propertiesPatternIntervalType = @"sp tc\s(?<intervaltype>" + RegularExpression.Integer + @")\s";
             const string propertiesPatternFixedInterval = @"du\s(?<fixedinterval>" + RegularExpression.Scientific + @")\s";
             const string propertiesPatternControlVelocity = @"cv\s(?<controlvelocity>" + RegularExpression.Scientific + @")\s";
             const string propertiesPatternDeadBandType = @"dt\s(?<deadbandtype>" + RegularExpression.Integer + @")\s";
