@@ -45,14 +45,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
                 {
                     var model = await Task.Run(() =>
                     {
-                        sobekImporter.ImportItem(sobekImporter.PathSobek);
+                        var importedModel = sobekImporter.ImportItem(sobekImporter.PathSobek);
 
-                        if (sobekImporter.TargetObject is HydroModel hydroModel)
+                        if (importedModel is HydroModel hydroModel)
                         {
                             hydroModel.CoordinateSystem = coordinateSystem;
                         }
 
-                        return sobekImporter.TargetObject;
+                        return importedModel;
                     });
                     ExecuteProjectTemplate?.Invoke(model);
                 }
