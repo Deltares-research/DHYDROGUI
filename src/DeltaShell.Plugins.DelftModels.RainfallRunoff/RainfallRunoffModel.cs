@@ -1285,7 +1285,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
 
             string category = stringParts[0];
-            string featureName = stringParts[1];
+            string featureName = stringParts[1].Replace("_boundary",String.Empty);
             
 
             IHydroObject hydroObject = GetBasinHydroObject(category, featureName);
