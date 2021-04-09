@@ -512,6 +512,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             };
             yield return attributeTableCompartments;
 
+            var attributeTableRetentions = SharpMapGisGuiPlugin.CreateAttributeTableViewInfo<IRetention, IModelWithNetwork>(m => m.Network.Retentions, () => Gui);
+            var baseAfterCreateRetentions = attributeTableRetentions.AfterCreate;
+            attributeTableRetentions.AfterCreate = (v, o) =>
+            {
+                baseAfterCreateRetentions(v, o);
+                var storageName = typeof(Retention).GetProperty(nameof(Retention.Data))?.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+                var column = v.TableView.Columns.FirstOrDefault(c => string.Equals(c.Caption,storageName, StringComparison.InvariantCultureIgnoreCase));
+                if (column == null)
+                {
+                    return;
+                }
+
+                column.Editor = new ButtonTypeEditor
+                {
+                    Name = "ViewStorageTable",
+                    Caption = "...",
+                    HideOnReadOnly = true,
+                    Tooltip = storageName,
+                    ButtonClickAction = () =>
+                    {
+                        if (v.TableView.CurrentFocusedRowObject is IRetention retention)
+                            Gui.CommandHandler.OpenView(retention.Data);
+                    }
+                };
+            };
+            yield return attributeTableRetentions;
+
             yield return new ViewInfo<LeveeBreach, LeveeBreachView>();
         }
 
