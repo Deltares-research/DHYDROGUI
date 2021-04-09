@@ -156,6 +156,7 @@
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="FileConstants.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="WaterFlowFMModel.Synchronize.cs" />
     <Compile Include="WaterFlowFMModelSyncExtensions.cs" />
     <Compile Include="Grid\UnstructuredGridExtensions.cs" />
     <Compile Include="FunctionStores\FMClassMapFileFunctionStore.cs" />
@@ -389,6 +390,7 @@
     <Compile Include="WaterFlowFMModelCoordinateConversion.cs" />
     <None Include="Uml\FlowFMOverview.cd" />
     <None Include="Uml\SewerFeatureFactoryAndGeneratorUML.cd" />
+    <Compile Include="WaterFlowFMModel.FileBased.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />

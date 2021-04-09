@@ -52,7 +52,6 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Helpers.CopyHandlers;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
@@ -69,7 +68,6 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
-using SharpMap;
 using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
@@ -78,12 +76,12 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, IFileBased, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData, ICoupledModel
+    public partial class WaterFlowFMModel : TimeDependentModelBase, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData, ICoupledModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
         private readonly DimrRunner runner;
         public const string CellsToFeaturesName = "CellsToFeatures";
-
+        
         public const string DisableFlowNodeRenumberingPropertyName = "DisableFlowNodeRenumbering";
         public const string GridPropertyName = "Grid";
         private DepthLayerDefinition depthLayerDefinition;
@@ -102,6 +100,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
         private double previousProgress;
         private string progressText;
+        private bool useLocalApi;
+
         private CacheFile cacheFile = null;
 
         public WaterFlowFMModel() : this(null)
@@ -111,8 +111,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public WaterFlowFMModel(string mduFilePath, ImportProgressChangedDelegate progressChanged = null) : base("FlowFM")
         {
             runner = new DimrRunner(this, new DimrApiFactory());
-            ImportProgressChanged = progressChanged;
-
+            
             InitializeModelProperties();
             
             AddNetworkToModel();
@@ -128,33 +127,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (!string.IsNullOrEmpty(mduFilePath))
             {
-                LoadStateFromMdu(mduFilePath);
-                
-                FeatureFile1D2DReader.Read1D2DFeatures(mduFilePath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions);
-
-                LoadLinks();
-
-                FireImportProgressChanged(this, "Reading spatial operations", 9, TotalImportSteps);
-                var modelDataItems = AddSpatialDataItems();
-                ImportSpatialOperationsAfterCreating(modelDataItems);
-
-                AddSewerRoughnessIfNecessary();
-                LoadOutputStateFromMdu(mduFilePath);
+                ReadFromMdu(mduFilePath, progressChanged);
+                return;
             }
-            else
-            {
-                ModelDefinition = new WaterFlowFMModelDefinition();
-                ModelDefinition.SetModelProperty(KnownProperties.NetFile, Name + NetFile.FullExtension);
-                SynchronizeModelDefinitions();
 
-                Grid = new UnstructuredGrid();
-                InitializeUnstructuredGridCoverages();
+            ModelDefinition = new WaterFlowFMModelDefinition();
+            ModelDefinition.SetModelProperty(KnownProperties.NetFile, Name + NetFile.FullExtension);
+            SynchronizeModelDefinitions();
 
-                AddSpatialDataItems();
-                RenameSubFilesIfApplicable();
+            Grid = new UnstructuredGrid();
+            InitializeUnstructuredGridCoverages();
 
-                UpdateRoughnessSections();
-            }
+            AddSpatialDataItems();
+            RenameSubFilesIfApplicable();
+
+            UpdateRoughnessSections();
         }
 
         private void CreateDataItemsNotAvailableInPreviousVersion()
@@ -191,21 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
             ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
-            ((INotifyPropertyChange) this).PropertyChanged += OnFMModelPropertyChanged;
-        }
-
-        private void OnFMModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if(!(sender is WaterFlowFMModel )) return;
-            MarkDirty();
-            if (e.PropertyName == nameof(Name) && fmRegion.Name != Name)
-            {
-                fmRegion.Name = Name;
-                if (!OutputIsEmpty)
-                {
-                    OnClearOutput();
-                }
-            }
+            ((INotifyPropertyChanged) this).PropertyChanged += OnFMModelPropertyChanged;
         }
 
         private void InitializeModelProperties()
@@ -253,7 +226,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
         
-
         public IList<ModelFeatureCoordinateData<BridgePillar>> BridgePillarsDataModel { get; private set; }
 
         public IEventedList<ILink1D2D> Links
@@ -370,6 +342,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             BoundaryConditions1D.ForEach(bc => bc.UseTemperature = useTemperature);
             LateralSourcesData.ForEach(lat => lat.UseTemperature = useTemperature);
         }
+
         public bool UseMorSed
         {
             get { return ModelDefinition.UseMorphologySediment; }
@@ -396,8 +369,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [Category("Run mode")]
         public bool UseRPC
         {
-            get { return !UseLocalApi; }
-            set { UseLocalApi = !value; }
+            get { return !useLocalApi; }
+            set { useLocalApi = !value; }
         }
 
         protected override void OnAfterDataItemsSet()
@@ -434,105 +407,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        protected override void OnDataItemLinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
-        {
-            // subscribe to newly linked hydro area:
-            var areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
-            if (Equals(e.Target, areaDataItem) && !e.Relinking)
-            {
-                ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged += HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged += HydroAreaPropertyChanged;
-            }
-
-            var networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
-            if (Equals(e.Target, networkDataItem) && !e.Relinking)
-            {
-                SubscribeToNetwork(networkDataItem.Value as IHydroNetwork);
-            }
-
-            base.OnDataItemLinked(sender, e);
-        }
-
-        protected override void OnDataItemUnlinking(object sender, LinkingUnlinkingEventArgs<IDataItem> e)
-        {
-            // unsubscribe from area before unlink
-            areaDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.HydroAreaTag);
-            if (Equals(e.Target, areaDataItem))
-            {
-                ((INotifyCollectionChange)areaDataItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                ((INotifyPropertyChanged)areaDataItem.Value).PropertyChanged -= HydroAreaPropertyChanged;
-            }
-
-            var networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
-            if (Equals(e.Target, networkDataItem))
-            {
-                UnSubscribeFromNetwork(networkDataItem.Value as IHydroNetwork);
-            }
-
-            base.OnDataItemUnlinking(sender, e);
-        }
-
-        private void LoadStateFromMdu(string mduFilePath)
-        {
-            // in case we're reloading into an existing flow model instance..cleanup first
-            syncers.ForEach(s => s.Dispose());
-            syncers.Clear();
-
-            TracerDefinitions.Clear();
-            
-            LoadModelFromMdu(mduFilePath);
-
-            SynchronizeModelDefinitions();
-
-            // import SedimentFractions (these are not part of the model definition, however they are needed for SourcesAndSinks and TracerDefinitions)
-            var mduFileDir = Path.GetDirectoryName(mduFilePath);
-            var sedimentFileProperty = ModelDefinition.Properties.FirstOrDefault(p => p.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SedFile));
-            if (mduFileDir != null && sedimentFileProperty != null && UseMorSed && File.Exists(Path.Combine(mduFileDir, sedimentFileProperty.Value.ToString())))
-            {
-                SedimentFile.LoadSediments(SedFilePath, this);
-            }
-
-            FireImportProgressChanged(this, "Reading grid", 4, TotalImportSteps);
-            Grid = UGridFileHelper.ReadUnstructuredGrid(NetFilePath) ?? new UnstructuredGrid();
-
-            bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(NetFilePath, BedLevelLocation);
-
-            FireImportProgressChanged(this, "Renaming sub files", 5, TotalImportSteps);
-            RenameSubFilesIfApplicable();
-
-            FireImportProgressChanged(this, "Initialize input spatial data", 6, TotalImportSteps);
-            InitializeUnstructuredGridCoverages();
-
-            CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(NetFilePath);
-
-            // read depth layer definition
-            DepthLayerDefinition = ModelDefinition.Kmx == 0
-                ? new DepthLayerDefinition(DepthLayerType.Single)
-                : new DepthLayerDefinition(ModelDefinition.Kmx);
-
-            // find all names for tracer definitions
-            AssembleTracerDefinitions();
-
-            AssembleSpatiallyVaryingSedimentProperties();
-
-            // now that tracers and sediment fractions are imported we can complete the source and sink function
-            SourcesAndSinks.ForEach(sourceAndSink =>
-            {
-                var componentSettings = new Dictionary<string, bool>()
-                {
-                    {SourceAndSink.SalinityVariableName, UseSalinity},
-                    {SourceAndSink.TemperatureVariableName, UseTemperature},
-                    {SourceAndSink.SecondaryFlowVariableName, UseSecondaryFlow }
-                };
-
-                sourceAndSink.SedimentFractionNames.ForEach(sfn => componentSettings.Add(sfn, UseMorSed));
-                sourceAndSink.TracerNames.ForEach(tn => componentSettings.Add(tn, true));
-                sourceAndSink.PopulateFunctionValuesFromAttributes(componentSettings);
-            });
-
-            FireImportProgressChanged(this, "Reading model output", 8, TotalImportSteps);
-        }
-
         private void SynchronizeModelDefinitions()
         {
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type; // sync the heat flux model
@@ -554,50 +428,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             syncers.Add(new FeatureDataSyncer<Feature2D, SourceAndSink>(Pipes, SourcesAndSinks, CreateSourceAndSink));
         }
 
-        private void SourcesAndSinksCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var sourceAndSink = e.GetRemovedOrAddedItem() as SourceAndSink;
-
-            if (sourceAndSink == null)
-                return;
-
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                SyncFractionsAndTracers(sourceAndSink);
-            }
-            var inputSender = InputFeatureCollectionsContains(sourceAndSink.Feature);
-            var outputSender = OutputFeatureCollectionsContains(sourceAndSink.Feature);
-
-            if (inputSender || outputSender)
-            {
-                var feature = (IFeature)sourceAndSink.Feature;
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        AddAreaItem(feature, inputSender);
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        RemoveAreaFeature(feature);
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        foreach (var areaDataItem in areaDataItems)
-                        {
-                            RemoveAreaFeature(areaDataItem.Key);
-                        }
-                        areaDataItems.Clear();
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
-                        RemoveAreaFeature(oldFeature);
-                        AddAreaItem(feature, inputSender);
-                        break;
-                    default:
-                        throw new NotImplementedException(
-                            String.Format("Action {0} on feature collection not supported", e.Action));
-                }
-            }
-        }
-
         private void SyncFractionsAndTracers(SourceAndSink sourceAndSink)
         {
             SedimentFractions.ForEach(sf => sourceAndSink.SedimentFractionNames.Add(sf.Name));
@@ -617,49 +447,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             });
         }
 
-        private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var tracerBoundaryConditions = Enumerable.Empty<FlowBoundaryCondition>(); ;
-
-            var boundaryConditionSet = e.GetRemovedOrAddedItem() as BoundaryConditionSet;
-            if (boundaryConditionSet == null)
-            {
-                var flowBoundaryCondition = e.GetRemovedOrAddedItem() as FlowBoundaryCondition;
-                if (flowBoundaryCondition != null && flowBoundaryCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer)
-                {
-                    tracerBoundaryConditions = new List<FlowBoundaryCondition>() { flowBoundaryCondition };
-                }
-            }
-            else
-            {
-                tracerBoundaryConditions = boundaryConditionSet.BoundaryConditions
-                    .OfType<FlowBoundaryCondition>()
-                    .Where(fbc => fbc.FlowQuantity == FlowBoundaryQuantityType.Tracer);
-            }
-
-            foreach (var tracerBoundaryCondition in tracerBoundaryConditions)
-            {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        AddTracerToSourcesAndSink(tracerBoundaryCondition.TracerName);
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        RemoveTracerFromSourcesAndSink(tracerBoundaryCondition.TracerName);
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        throw new NotImplementedException("Renaming of Tracers is not yet supported");
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        SourcesAndSinks.ForEach(ss => ss.TracerNames.Clear());
-                        return;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            
-        }
-
         private void RemoveTracerFromSourcesAndSink(string name)
         {
             if(BoundaryConditions.OfType<FlowBoundaryCondition>().All(bc => bc.TracerName != name))
@@ -673,58 +460,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 if(!ss.TracerNames.Contains(name))
                     ss.TracerNames.Add(name);
             });
-        }
-
-        private void TracerDefinitionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var name = (string) e.GetRemovedOrAddedItem();
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    // sync the initial tracers
-                    InitialTracers.Add(CreateUnstructuredGridCellCoverage(name, Grid));
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    // sync the initial tracers
-                    InitialTracers.RemoveAllWhere(tr => tr.Name == name);
-
-                    // remove all boundary conditions with that tracer name
-                    foreach (var set in BoundaryConditionSets)
-                    {
-                        set.BoundaryConditions.RemoveAllWhere(bc =>
-                        {
-                            var flowCondition = bc as FlowBoundaryCondition;
-
-                            if (flowCondition != null && 
-                                flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer &&
-                                Equals(flowCondition.TracerName, e.GetRemovedOrAddedItem()))
-                            {
-                                return true;
-                            }
-                            return false;
-                        });
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                    // can't rename yet
-                    throw new NotImplementedException("Renaming of tracer definitions is not yet supported");
-                case NotifyCollectionChangedAction.Reset:
-                    // sync the initial tracers
-                    InitialTracers.Clear();
-
-                    // remove all tracer boundary conditions
-                    foreach (var set in BoundaryConditionSets)
-                    {
-                        set.BoundaryConditions.RemoveAllWhere(bc =>
-                        {
-                            var flowCondition = bc as FlowBoundaryCondition;
-                            return flowCondition != null && flowCondition.FlowQuantity == FlowBoundaryQuantityType.Tracer;
-                        });
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         private void AssembleTracerDefinitions()
@@ -761,62 +496,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private void SedimentFractionPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "Name":
-                {
-                    if (sender is ISedimentFraction sedimentFraction)
-                    {
-                        sedimentFraction.UpdateSpatiallyVaryingNames();
-                    }
-
-                    break;
-                }
-                case "CurrentFormulaType":
-                case "CurrentSedimentType":
-                {
-                    if (!(sender is ISedimentFraction sedimentFraction)) 
-                        return;
-
-                    sedimentFraction.UpdateSpatiallyVaryingNames();
-                    var activeSpatiallyVarying = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
-                    var spatiallyVarying = sedimentFraction.GetAllSpatiallyVaryingPropertyNames();
-                    InitialFractions.RemoveAllWhere( 
-                        fr => spatiallyVarying.Contains(fr.Name) && !activeSpatiallyVarying.Contains(fr.Name));
-
-                    foreach (var layerName in activeSpatiallyVarying)
-                    {
-                        AddToIntialFractions(layerName);
-                    }
-                    
-                    sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
-
-                    if (e.PropertyName == "CurrentFormulaType")
-                    {
-                        sedimentFraction.SetTransportFormulaInCurrentSedimentType();
-                    }
-                    return;
-                }
-                case "IsSpatiallyVarying":
-                {
-                    if (!(sender is ISpatiallyVaryingSedimentProperty prop)) return;
-
-                    if (prop.IsSpatiallyVarying)
-                    {
-                        AddToIntialFractions(prop.SpatiallyVaryingName);
-                    }
-                    else
-                    {
-                        InitialFractions.RemoveAllWhere(tr => tr.Name.Equals(prop.SpatiallyVaryingName));
-                    }
-
-                    break;
-                }
-            }
-        }
-
         private void AddToIntialFractions(string spatiallyVaryingName)
         {
             if ( InitialFractions == null ) return;
@@ -849,51 +528,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
-
-        private void SedimentFractionsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            var sedimentFraction = e.GetRemovedOrAddedItem() as ISedimentFraction;
-            if( sedimentFraction == null )
-                return;
-            var name = sedimentFraction.Name;
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    sedimentFraction.UpdateSpatiallyVaryingNames();
-                    sedimentFraction.CompileAndSetVisibilityAndIfEnabled();
-                    sedimentFraction.SetTransportFormulaInCurrentSedimentType();
-                    SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Add(sedimentFraction.Name));
-
-                    if (InitialFractions == null || BoundaryConditionSets == null) break;
-                    
-                    // sync the initial fractions
-                    SyncInitialFractions(sedimentFraction);                
-                    AddSedimentFractionToFlowBoundaryConditionFunction(name);            
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    // sync the initial fractions
-                    var layersToRemove = sedimentFraction.GetAllActiveSpatiallyVaryingPropertyNames();
-                    InitialFractions.RemoveAllWhere( ifs => layersToRemove.Contains(ifs.Name) );
-
-                    // Remove dataItems for coverages related to Removed Fraction
-                    DataItems.RemoveAllWhere(di => di.Value is UnstructuredGridCoverage && layersToRemove.Contains(di.Name));                               
-                    RemoveSedimentFractionFromBoundaryConditionSets(name);
-
-                    SourcesAndSinks.ForEach(ss => ss.SedimentFractionNames.Remove(sedimentFraction.Name));
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                    throw new NotImplementedException("Renaming of sediment fraction is not yet supported");
-                case NotifyCollectionChangedAction.Reset:
-                    // sync the initial fractions
-                    InitialFractions.Clear();
-
-                    RemoveAllSedimentFractionsFromBoundaryConditionSets();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
+        
         private void RemoveAllSedimentFractionsFromBoundaryConditionSets()
         {
             foreach (var set in BoundaryConditionSets)
@@ -986,53 +621,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public void ImportSpatialOperationsAfterLoading()
-        {
-            foreach (var spatialOperation in ModelDefinition.SpatialOperations)
-            {
-                var dataItemName = spatialOperation.Key;
-                var spatialOperationList = spatialOperation.Value;
-                var dataItem = DataItems.FirstOrDefault(di => di.Name == dataItemName);
-
-                // when only one operation is found and it has the same name as when you would generate it from saving,
-                // it will not override the operations found in the database. Assuming that we are loading a dsproj file.
-                // Goes wrong when you change the file name of the quantity and you only have one quantity.
-                if (spatialOperationList.Count != 1 || !(spatialOperationList[0] is ImportSamplesOperation) ||
-                    dataItem == null || dataItem.ValueConverter != null || !(dataItem.Value is UnstructuredGridCoverage))
-                    continue;
-                IEnumerable<double> valuesToSet;
-                var coverage = (UnstructuredGridCoverage)dataItem.Value;
-                if (spatialOperationList[0] is ImportRasterSamplesSpatialOperationExtension)
-                {
-                    var samplesOperation = (ImportRasterSamplesSpatialOperationExtension)spatialOperationList[0];
-                    
-                    var rasterFile = RasterFile.ReadPointValues(samplesOperation.FilePath).ToList();
-
-                    var componentValueCount = coverage.Arguments.Aggregate(0,
-                        (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
-
-                    valuesToSet = rasterFile.Count != componentValueCount
-                        ? new InterpolateOperation().InterpolateToGrid(rasterFile, coverage, coverage.Grid)
-                        : rasterFile.Select(p => p.Value);
-                }
-                else
-                {
-                    var samplesOperation = (ImportSamplesOperation) spatialOperationList[0];
-                    var xyzFile = XyzFile.Read(samplesOperation.FilePath).ToList();
-
-                    var componentValueCount = coverage.Arguments.Aggregate(0,
-                        (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);
-
-                    valuesToSet = xyzFile.Count != componentValueCount
-                        ? new InterpolateOperation().InterpolateToGrid(xyzFile, coverage, coverage.Grid)
-                        : xyzFile.Select(p => p.Value);
-                }
-
-                if(valuesToSet.Any())
-                    coverage.SetValues(valuesToSet);
-            }
-        }
-
         private void ImportSpatialOperationsAfterCreating(IEventedList<IDataItem> modelDataItems)
         {
             foreach (var spatialOperation in ModelDefinition.SpatialOperations)
@@ -1108,6 +696,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AddOrRenameDataItem(initialTracer, initialTracer.Name);
             }
         }
+
         private void AddOrRenameFractionDataItems()
         {
             foreach (var initialFraction in InitialFractions)
@@ -1139,210 +728,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var lateralDataItems = LateralSourcesData.Select(d => d.SeriesDataItem);
 
                 return base.AllDataItems.Concat(areaDataItems.Values.SelectMany(v => v)).Concat(lateralDataItems);
-            }
-        }
-
-        private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender is WaterFlowFMProperty prop && e.PropertyName == nameof(prop.Value))
-            {
-                if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity1D) ||
-                    prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity2D))
-                {
-                    if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity2D))
-                    {
-                        var type = (InitialConditionQuantity)(int) prop.Value;
-                        InitialWaterLevel.Name = type == InitialConditionQuantity.WaterLevel 
-                            ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName 
-                            : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
-                    }
-
-                    var propertyChangedEventArgs = new PropertyChangedEventArgs(nameof(InitialCoverageSetChanged));
-                    OnPropertyChanged(this, propertyChangedEventArgs);
-                }
-                if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
-                        StringComparison.InvariantCultureIgnoreCase))
-                {
-                    allFixedWeirsAndCorrespondingProperties?.ForEach(p => p.UpdateDataColumns(prop.GetValueAsString()));                    
-                }
-                if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BedlevType,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var bedLevelType = (UGridFileHelper.BedLevelLocation)prop.Value;
-                    BeginEdit(new DefaultEditAction("Updating Bathymetry coverage"));
-                    UpdateBathymetryCoverage(bedLevelType);
-                    EndEdit();
-                }
-
-                if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.UseSalinity,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching salinity process"));
-                    OnPropertyChanged(nameof(UseSalinity));
-                    BoundaryConditions1D?.ForEach(bc => bc.UseSalt = UseSalinity);
-                    LateralSourcesData?.ForEach(lat => lat.UseSalt = UseSalinity);
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.UseMorSed,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching morphology process"));
-                    OnPropertyChanged(nameof(UseMorSed));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteSnappedFeatures,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching write snapped features options"));
-                    OnPropertyChanged(nameof(WriteSnappedFeatures));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ISlope,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Bed slope formulation"));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.IHidExp,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Hiding and exposure formulation"));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Kmx,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching 3D dynamics"));
-                    OnPropertyChanged(nameof(UseDepthLayers));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ICdtyp,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching wind formulation type"));
-                    OnPropertyChanged(nameof(CdType)); 
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Temperature,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching heat flux model"));
-                    HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SecondaryFlow,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching secondary flow process"));
-                    OnPropertyChanged(nameof(UseSecondaryFlow));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteHisFile,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching WriteHisFile"));
-                    OnPropertyChanged(nameof(WriteHisFile));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStart,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyHisStart"));
-                    OnPropertyChanged(nameof(SpecifyHisStart));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStop,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyHisStop"));
-                    OnPropertyChanged(nameof(SpecifyHisStop));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteMapFile,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching WriteMapFile"));
-                    OnPropertyChanged(nameof(WriteMapFile));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStart,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyMapStart"));
-                    OnPropertyChanged(nameof(SpecifyMapStart));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStop,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyMapStop"));
-                    OnPropertyChanged(nameof(SpecifyMapStop));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteRstFile,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching WriteRstFile"));
-                    OnPropertyChanged(nameof(WriteRstFile));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStart,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyRstStart"));
-                    OnPropertyChanged(nameof(SpecifyRstStart));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStop,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyRstStop"));
-                    OnPropertyChanged(nameof(SpecifyRstStop));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaveModelNr,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Waves Model Nr"));
-                    OnPropertyChanged(nameof(WaveModel));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Irov,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Wall behavior type"));
-                    OnPropertyChanged(nameof(WaveModel));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputInterval,
-                StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Waq output interval time"));
-                    OnPropertyChanged(nameof(SpecifyWaqOutputInterval));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStartTime,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Waq output start time"));
-                    OnPropertyChanged(nameof(SpecifyWaqOutputStartTime));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStopTime,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Waq output end time"));
-                    OnPropertyChanged(nameof(SpecifyWaqOutputStopTime));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteClassMapFile,
-                                                                        StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching WriteClassMapFile"));
-                    OnPropertyChanged(nameof(WriteClassMapFile));
-                    EndEdit();
-                }
-
             }
         }
 
@@ -1566,6 +951,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 };
             }
         }
+
         public override IEnumerable<IDataItem> GetChildDataItems(IFeature location)
         {
             if (location == null) yield break;
@@ -1716,23 +1102,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public bool UseLocalApi { get; set; }
-        
-        // Do not remove...used in HydroModelBuilder.py
-        public void SetWaveForcing()
-        {
-            ModelDefinition.GetModelProperty(KnownProperties.WaveModelNr).SetValueAsString("3");
-        }
-        
-        protected override void OnInputCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-        }
-
-        protected override void OnInputPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // [TOOLS-22813] Override OnInputPropertyChanged to stop base class (ModelBase) from clearing the output
-        }
-
         protected override void OnClearOutput()
         {
             if (OutputMapFileStore != null)
@@ -1760,6 +1129,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OutputClassMapFileStore = null;
             }
         }
+
         private static void ClearFunctionStore(IReadOnlyNetCdfFunctionStoreBase functionStore)
         {
             functionStore.Functions.Clear();
@@ -1775,8 +1145,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return new WaterFlowFMModel(tempFilePath);
         }
-
-        public event EventHandler AfterExecute;
 
         #endregion
 
@@ -1979,45 +1347,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         #region Spatial data
 
-        private void SpatialDataLayersChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (Equals(sender, InitialSalinity.Coverages))
-            {
-                AddOrRenameDataItems(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
-            }
-            else
-            {
-                throw new ArgumentException("Unexpected layered spatial data: " + e.GetRemovedOrAddedItem());
-            }
-        }
-
-        private void SpatialDataTracersChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (Equals(sender, InitialTracers))
-            {
-                AddOrRenameTracerDataItems();
-            }
-            else
-            {
-                throw new ArgumentException("Unexpected layered spatial data: " + e.GetRemovedOrAddedItem());
-            }
-        }
-
-        private void SpatialDataFractionsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (Equals(sender, InitialFractions))
-            {
-                AddOrRenameFractionDataItems();
-
-                // Invoke property changed, so Gui can update
-                InitialCoverageSetChanged = true;
-            }
-            else
-            {
-                throw new ArgumentException("Unexpected layered spatial data: " + e.GetRemovedOrAddedItem());
-            }
-        }
-
         public bool InitialCoverageSetChanged { get; set; }
 
         #endregion
@@ -2030,6 +1359,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get { return GetMduPathFromDeltaShellPath(RecursivelyGetModelDirectoryPathFromMduFile()); }
         }
+
         private string RecursivelyGetModelDirectoryPathFromMduFile()
         {
             if (string.IsNullOrEmpty(MduFilePath))
@@ -2194,17 +1524,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        //Do not remove, is used by python code
-        public string ComFilePath
-        {
-            get
-            {
-                return !String.IsNullOrEmpty(MduFilePath)
-                    ? Path.Combine(WorkingDirectory, ModelDefinition.RelativeComFilePath)
-                    : null;
-            }
-        }
-
         private string HisFilePath
         {
             get
@@ -2269,51 +1588,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStartTime).Value; }
         }
+
         public bool SpecifyWaqOutputStopTime
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStopTime).Value; }
         }
-
+        
         public object WaveModel
         {
             // cannot actually return anything, because it's a dynamic enum
             get { return null; }
         }
+
         public bool WriteClassMapFile
         {
             get { return (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value; }
-        }
-
-        public ImportProgressChangedDelegate ImportProgressChanged { get; set; }
-        
-        private void LoadModelFromMdu(string mduFilePath)
-        {
-            MduFilePath = mduFilePath;
-            var mduFileDir = Path.GetDirectoryName(mduFilePath);
-            Name = Path.GetFileNameWithoutExtension(mduFilePath);
-            ModelDefinition = new WaterFlowFMModelDefinition(mduFileDir, Name);
-            
-            // initialize model definition from mdu file if it exists
-            if (File.Exists(mduFilePath))
-            {
-                isLoading = true;
-                mduFile.Read(mduFilePath, ModelDefinition, Area, Network, NetworkDiscretization, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, (name, current, total) => FireImportProgressChanged(this, "Reading mdu - " + name, current, total), BridgePillarsDataModel);
-
-                isLoading = false;
-                SyncModelTimesWithBase();
-                CacheFile.UpdatePathToMduLocation(mduFilePath);
-            }
-
-            var netFileProperty = ModelDefinition.GetModelProperty(KnownProperties.NetFile);
-            if (String.IsNullOrEmpty(netFileProperty.GetValueAsString()))
-            {
-                netFileProperty.Value = Name + NetFile.FullExtension;
-            }
-
-            FireImportProgressChanged(this, "Loading restart", 2, TotalImportSteps);
-            
-            // sync the heat flux model, because events are off during reading
-            HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
         }
 
         private void LoadOutputStateFromMdu(string mduFilePath)
@@ -2322,7 +1611,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             string existingOutputDirectory = RetrieveOutputDirectory(mduFilePath);
             ReconnectOutputFiles(existingOutputDirectory);
         }
+
         public string ModelDirectoryPath => Path.GetDirectoryName(Path.GetDirectoryName(MduFilePath));
+
         public string PersistentOutputDirectoryPath => Path.Combine(ModelDirectoryPath, DirectoryNameConstants.OutputDirectoryName);
 
         private string RetrieveOutputDirectory(string mduFilePath)
@@ -2374,183 +1665,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             base.TimeStep = TimeStep;
         }
 
-        private static void FireImportProgressChanged(WaterFlowFMModel model, string currentStepName, int currentStep, int totalSteps)
-        {
-            if (model.ImportProgressChanged == null) return;
-            model.ImportProgressChanged(currentStepName, currentStep, totalSteps);
-        }
-
-        public virtual bool ExportTo(string mduPath, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures=true)
-        {
-            var dirName = Path.GetDirectoryName(mduPath);
-            if (!Directory.Exists(dirName))
-                Directory.CreateDirectory(dirName);
-
-            CopyRestartFile(dirName);
-
-            if (switchTo)
-            {
-                RenameSubFilesIfApplicable();
-            }
-            
-            if (writeExtForcings)
-            {
-                var spatVarSedPropNames =
-                    SedimentFractions.Where(sf => sf.CurrentSedimentType != null).SelectMany(
-                        sf =>
-                            sf.CurrentSedimentType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
-                                .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList();
-                spatVarSedPropNames.AddRange(SedimentFractions.Where(sf => sf.CurrentFormulaType != null).SelectMany(
-                        sf =>
-                            sf.CurrentFormulaType.Properties.OfType<ISpatiallyVaryingSedimentProperty>()
-                                .Where(p => p.IsSpatiallyVarying)).Select(p => p.SpatiallyVaryingName).ToList());
-                ModelDefinition.SelectSpatialOperations(DataItems, TracerDefinitions, spatVarSedPropNames) ;
-                ModelDefinition.Bathymetry = Bathymetry;
-            }
-
-            if (!IsEditing)
-                InitializeAreaDataColumns();
-            SetOutputDirProperty();
-            CacheFile.Export(mduPath);
-
-            if (switchTo)
-            {
-                ReloadGrid();
-                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions ,BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null);
-            }
-            else
-            {
-                var workNetFile = MduFileHelper.GetSubfilePath(mduPath, ModelDefinition.GetModelProperty(KnownProperties.NetFile));
-                WriteNetFile(workNetFile, Grid, Network, NetworkDiscretization, Links, Name, BedLevelLocation,
-                    BedLevelZValues);
-                var newGrid = UGridFileHelper.ReadUnstructuredGrid(workNetFile); //may throw...
-                if (newGrid != null)
-                {
-                    bathymetryNoDataValue = UGridFileHelper.GetZCoordinateNoDataValue(workNetFile, BedLevelLocation);
-                }
-                mduFile.Write(mduPath, ModelDefinition, Area, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions, BoundaryConditions1D, LateralSourcesData, allFixedWeirsAndCorrespondingProperties, switchTo: switchTo, writeExtForcings: writeExtForcings, writeFeatures: writeFeatures, disableFlowNodeRenumbering: DisableFlowNodeRenumbering, sedimentModelData: UseMorSed ? this : null, workNetFilePath: workNetFile);
-            }
-
-
-
-            if (!IsEditing)
-                RestoreAreaDataColumns();
-
-            if (switchTo)
-            {
-                MduFilePath = mduPath;
-                CacheFile.UpdatePathToMduLocation(mduPath);
-                SaveOutput();
-            }
-            return true;
-        }
-
         private void InitializeAreaDataColumns()
         {
             MduFile.SetBridgePillarAttributes(Area.BridgePillars, BridgePillarsDataModel);
-        }
-
-        private void RestoreAreaDataColumns()
-        {
-            MduFile.CleanBridgePillarAttributes(Area.BridgePillars);
-        }
-
-        private void OnSwitchTo(string mduPath)
-        {
-            if (MduFilePath == null) // switch from nothing: load
-            {
-                OnLoad(mduPath);
-            }
-            else // else: switch from existing: only change path
-            {
-                MduFilePath = mduPath;
-                
-                if (MduFile == null) return;
-                mduFile.Path = mduPath;
-                SwitchFileBasedItems();
-            }
-        }
-
-        private void SwitchFileBasedItems()
-        {
-            foreach (var windField in WindFields.OfType<IFileBased>())
-            {
-                var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(windField.Path));
-                windField.SwitchTo(newPath);
-            }
-
-            foreach (var notUsedExtForceFileItem in UnsupportedFileBasedExtForceFileItems)
-            {
-                var newPath = Path.Combine(Path.GetDirectoryName(ExtFilePath), Path.GetFileName(notUsedExtForceFileItem.Path));
-                notUsedExtForceFileItem.SwitchTo(newPath);
-            }
-        }
-
-        private void OnLoad(string mduPath)
-        {
-            CreateDataItemsNotAvailableInPreviousVersion();
-            LoadStateFromMdu(mduPath);
-            
-            FeatureFile1D2DReader.Read1D2DFeatures(mduPath, ModelDefinition, Network, RoughnessSections, ChannelFrictionDefinitions, ChannelInitialConditionDefinitions);
-            UpdateDataItemsNotCreatedInPreviousVersion();
-            LoadLinks();
-
-            UpdateSpatialDataAfterGridSet(grid, false, false, false);
-            ImportSpatialOperationsAfterLoading();
-            LoadOutputStateFromMdu(mduPath);
-        }
-
-        private void UpdateDataItemsNotCreatedInPreviousVersion()
-        {
-            var initialWaterQuantityNameType = (InitialConditionQuantity)(int)ModelDefinition
-                .GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
-            var waterQuantityName =
-                initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel
-                    ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
-                    : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
-
-            if (!AllDataItems.Any(di => di.Name.Equals(waterQuantityName, StringComparison.CurrentCultureIgnoreCase)))
-            {
-                AddOrRenameDataItem(InitialWaterLevel,
-                    initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel
-                        ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
-                        : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName);
-                UpdateSpatialDataAfterGridSet(grid, false, false, false);
-                ImportSpatialOperationsAfterCreating(new EventedList<IDataItem>(){GetDataItemByValue(InitialWaterLevel)});
-            }
-
-        }
-
-        private void OnAddedToProject(string mduPath)
-        {
-            MduFilePath = mduPath;
-            ExportTo(MduFilePath);
-        }
-
-        private void OnSave()
-        {
-            const string postfixExplicitWorkingDirectory = "_output";
-
-            string previousModelDir = null;
-            string previousExplicitWorkingDirectory = null;
-            if (MduFilePath != MduSavePath)
-            {
-                previousModelDir = RecursivelyGetModelDirectoryPathFromMduFile();
-                previousExplicitWorkingDirectory = previousModelDir + postfixExplicitWorkingDirectory;
-            }
-            if (ExportTo(MduSavePath))
-            {
-                /*Make sure the ModelDirectory gets updated when saving*/
-                ModelDefinition.ModelDirectory = RecursivelyGetModelDirectoryPathFromMduFile();
-            }
-
-            if (previousModelDir == null)
-            {
-                return;
-            }
-
-            FileUtils.DeleteIfExists(previousModelDir);
-            FileUtils.DeleteIfExists(previousExplicitWorkingDirectory);
         }
 
         private string GetMduPathFromDeltaShellPath(string path, string subFoldersFromModelFolder = DirectoryNameConstants.InputDirectoryName)
@@ -2563,84 +1680,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return Path.Combine(directoryName, Name, subFoldersFromModelFolder, Name + ".mdu");
         }
 
-        private void RenameSubFilesIfApplicable()
-        {
-            foreach (var subFile in SubFiles) 
-            {
-                var waterFlowFMProperty = subFile.Key;
-                
-                if (waterFlowFMProperty.GetValueAsString().Equals(subFile.Value)) continue;
-                
-                if (waterFlowFMProperty.Equals(ModelDefinition.GetModelProperty(KnownProperties.NetFile)))
-                {
-                    var oldPath = NetFilePath;
-                    waterFlowFMProperty.SetValueAsString(subFile.Value);
-                    var newPath = NetFilePath;
-
-                    if (!File.Exists(oldPath) ||
-                        String.Equals(Path.GetFullPath(oldPath), Path.GetFullPath(newPath),
-                            StringComparison.CurrentCultureIgnoreCase)) continue;
-                    
-                    File.Copy(oldPath, newPath, true);
-                    File.Delete(oldPath);
-                }
-                else
-                {
-                    waterFlowFMProperty.SetValueAsString(subFile.Value);
-                }
-            }
-
-            ModelDefinition.ModelName = Name;
-        }
-
         #endregion
-
-        #region IFileBased
-
-        // todo: transactional?
-        private string filePath;
-        private bool isOpen;
-
-        string IFileBased.Path
-        {
-            get { return filePath; }
-            set
-            {
-                if (filePath == value)
-                    return;
-
-                filePath = value;
-
-                if (filePath == null)
-                    return;
-
-                if (filePath.StartsWith("$") && MduFilePath != null)
-                {
-                    OnSave();
-                }
-            }
-        }
-
-        IEnumerable<string> IFileBased.Paths
-        {
-            get { yield return ((IFileBased) this).Path; }
-        }
-
-        public bool IsFileCritical { get { return true; } }
-
-        bool IFileBased.IsOpen
-        {
-            get { return isOpen; }
-        }
-
-        public bool CopyFromWorkingDirectory { get; } = false;
-
-        void IFileBased.CreateNew(string path)
-        {
-            OnAddedToProject(GetMduPathFromDeltaShellPath(path));
-            filePath = path;
-            isOpen = true;
-        }
 
         private void AddOrRenameDataItems(CoverageDepthLayersList coverageDepthLayersList, string name)
         {
@@ -2652,56 +1692,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 var numberedName = uniform ? name : (name + "_" + (i++));
                 AddOrRenameDataItem(coverage, numberedName);
             }
-        }
-
-        void IFileBased.Close()
-        {
-            isOpen = false;
-        }
-
-        void IFileBased.Open(string path)
-        {
-            isOpen = true;
-        }
-
-        void IFileBased.CopyTo(string destinationPath)
-        {
-            var mduPath = GetMduPathFromDeltaShellPath(destinationPath);
-
-            var dirName = Path.GetDirectoryName(mduPath);
-            if (!Directory.Exists(dirName))
-                Directory.CreateDirectory(dirName);
-            RenameSubFilesIfApplicable();
-            ExportTo(mduPath, false);
-        }
-
-        /// <summary>
-        /// Relocate to reconnects the item to the given path. Does NOT perform copyTo.
-        /// </summary>
-        void IFileBased.SwitchTo(string newPath)
-        {
-            filePath = newPath;
-
-            string expectedMduPath = GetMduPathFromDeltaShellPath(newPath);
-            var mduFileInfo = new FileInfo(expectedMduPath);
-            if (!mduFileInfo.Exists && mduFileInfo.Directory?.Parent != null)
-            {
-                // [D3DFMIQ-450] Backwards compatibility: Older Models may not have 'input' folder
-                string legacyMduPath = Path.Combine(mduFileInfo.Directory.Parent.FullName, mduFileInfo.Name);
-
-                if (File.Exists(legacyMduPath))
-                {
-                    OnSwitchTo(legacyMduPath);
-                    return;
-                }
-            }
-
-            OnSwitchTo(expectedMduPath);
-        }
-
-        void IFileBased.Delete()
-        {
-            // todo: delete mdu & stuff
         }
 
         private void MarkDirty()
@@ -2720,8 +1710,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private const int TotalImportSteps = 10;
 
-        #endregion
-
         #region Output
         private string outputSnappedFeaturesPath;
         public string OutputSnappedFeaturesPath
@@ -2739,7 +1727,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OnOutputSnappedFeaturesPathPropertyChanged(nameof(OutputSnappedFeaturesPath));
             }
         }
+
         public event PropertyChangedEventHandler OutputSnappedFeaturesPathPropertyChanged;
+
         protected void OnOutputSnappedFeaturesPathPropertyChanged(string name)
         {
             OutputSnappedFeaturesPathPropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -2772,6 +1762,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 outputMapFileStore = value;
             }
         }
+
         public virtual FM1DFileFunctionStore Output1DFileStore
         {
             get { return output1DFileStore; }
@@ -2781,11 +1772,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        
         public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
         public virtual FMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
+        
         private string WaqHydFilePath { get; set; }
+
         public const string DiaFileDataItemTag = "DiaFile";
+
         private string currentOutputDirectoryPath;
         public string WorkingOutputDirectoryPath =>
             Path.Combine(WorkingDirectory, DirectoryName, DirectoryNameConstants.OutputDirectoryName);
@@ -2874,7 +1867,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             foreach (FileInfo file in sourceDirectory.EnumerateFiles())
             {
-                MoveFile(file, targetDirectoryPath);
+                string targetPath = Path.Combine(targetDirectoryPath, file.Name);
+                file.MoveTo(targetPath);
             }
 
             bool onSameVolume = Directory.GetDirectoryRoot(sourceDirectory.FullName)
@@ -2911,17 +1905,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static void MoveFile(FileInfo file, string targetDirectoryPath)
-        {
-            string targetPath = Path.Combine(targetDirectoryPath, file.Name);
-            file.MoveTo(targetPath);
-        }
-
         private void MoveDirectory(DirectoryInfo sourceDirectoryInfo, string targetParentDirectoryPath,
-                                          bool onSameVolume)
+                                   bool onSameVolume)
         {
-            var targetDirectoryInfo =
-                new DirectoryInfo(Path.Combine(targetParentDirectoryPath, sourceDirectoryInfo.Name));
+            var targetDirectoryInfo = new DirectoryInfo(Path.Combine(targetParentDirectoryPath, sourceDirectoryInfo.Name));
 
             if (onSameVolume && sourceDirectoryInfo.Name != SnappedFeaturesDirectoryName)
             {
@@ -3086,6 +2073,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             EndEdit();
         }
+
         private void ReconnectMapFile(string mapFilePath, bool switchTo)
         {
             // deal with issue that kernel doesn't understand any coordinate systems other than RD & WGS84 :
@@ -3189,7 +2177,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </value>
         public CacheFile CacheFile =>
             cacheFile ?? (cacheFile = new CacheFile(this, new OverwriteCopyHandler()));
+        
         public string DelwaqOutputDirectoryName => FileConstants.PrefixDelwaqDirectoryName + Name;
+        
         public string DelwaqOutputDirectoryPath { get; set; }
 
         private void ReconnectWaterQualityOutputDirectory(string waqOutputDirectoryPath)
@@ -3199,10 +2189,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 DelwaqOutputDirectoryPath = waqOutputDirectoryPath;
             }
         }
+        
         private void ClearWaqOutputDirProperty()
         {
             ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir).SetValueAsString(string.Empty);
         }
+        
         private void SetWaqOutputDirProperty()
         {
             if (!SpecifyWaqOutputInterval)
@@ -3214,6 +2206,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             WaterFlowFMProperty waqOutputDirProperty = ModelDefinition.GetModelProperty(KnownProperties.WaqOutputDir);
             waqOutputDirProperty.SetValueAsString(relativeDWaqOutputDirectory);
         }
+        
         private void ReconnectSnappedOutputDirectory(string snappedOutputDirectoryPath)
         {
             if (snappedOutputDirectoryPath != null)
@@ -3221,7 +2214,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OutputSnappedFeaturesPath = snappedOutputDirectoryPath;
             }
         }
+
         public IEnumerable<RestartFile> RestartOutput { get; private set; } = Enumerable.Empty<RestartFile>();
+
         private void ReconnectRestartFiles(IEnumerable<string> restartFilePaths)
         {
             RestartOutput = restartFilePaths.Select(p => new RestartFile(p)).ToList();
@@ -3251,6 +2246,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 
             }
         }
+
         private bool OutputFeatureCollectionsContains(object item)
         {
             if (item is GroupableFeature2DPoint)
@@ -3282,7 +2278,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return Area.Gates.Contains(item);
             }
 
-            
             if (item is LeveeBreach)
             {
                 return Area.LeveeBreaches.Contains(item);
@@ -3296,226 +2291,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return false;
         }
 
-        private void HydroAreaCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (!isLoading)
-            {
-                var fixedWeir = e.GetRemovedOrAddedItem() as FixedWeir;
-                if (fixedWeir != null)
-                {
-                    switch (e.Action)
-                    {
-                        case NotifyCollectionChangedAction.Add:
-                            if (allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir) == null)
-                            {
-                                allFixedWeirsAndCorrespondingProperties.Add(
-                                    CreateModelFeatureCoordinateDataFor(fixedWeir));
-                            }
-
-                            break;
-                        case NotifyCollectionChangedAction.Remove:
-                            var dataToRemove =
-                                allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-                            if (dataToRemove == null) break;
-
-                            allFixedWeirsAndCorrespondingProperties.Remove(dataToRemove);
-                            dataToRemove.Dispose();
-                            break;
-                        case NotifyCollectionChangedAction.Replace:
-                            var dataToUpdate =
-                                allFixedWeirsAndCorrespondingProperties.FirstOrDefault(d => d.Feature == fixedWeir);
-                            if (dataToUpdate == null)
-                            {
-                                allFixedWeirsAndCorrespondingProperties.Add(
-                                    CreateModelFeatureCoordinateDataFor(fixedWeir));
-                                break;
-                            }
-
-                            dataToUpdate.Feature = fixedWeir;
-                            break;
-
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-
-                var bridgePillar = e.GetRemovedOrAddedItem() as BridgePillar;
-                if (bridgePillar != null)
-                {
-                    switch (e.Action)
-                    {
-                        case NotifyCollectionChangedAction.Add:
-                            BridgePillarsDataModel.Add(
-                                CreateModelFeatureCoordinateDataFor(bridgePillar));
-                            break;
-                        case NotifyCollectionChangedAction.Remove:
-                            var dataToRemove =
-                                BridgePillarsDataModel.FirstOrDefault(
-                                    d => d.Feature == bridgePillar);
-                            if (dataToRemove == null) break;
-
-                            BridgePillarsDataModel.Remove(dataToRemove);
-                            dataToRemove.Dispose();
-                            break;
-                        case NotifyCollectionChangedAction.Replace:
-                            var dataToUpdate =
-                                BridgePillarsDataModel.FirstOrDefault(
-                                    d => d.Feature == bridgePillar);
-                            if (dataToUpdate == null)
-                            {
-                                BridgePillarsDataModel.Add(
-                                    CreateModelFeatureCoordinateDataFor(bridgePillar));
-                                break;
-                            }
-
-                            dataToUpdate.Feature = bridgePillar;
-                            break;
-
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-            }
-
-
-            if (e.GetRemovedOrAddedItem() is ILeveeBreach leveeBreach)
-            {
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                    CreatePointFeatureOfThisLeveeBreach(
-                        leveeBreach,
-                        LeveeBreachPointLocationType.BreachLocation,
-                        leveeBreach.BreachLocation);
-                    if (leveeBreach.WaterLevelFlowLocationsActive)
-                    {
-                        CreatePointFeatureOfThisLeveeBreach(
-                            leveeBreach,
-                            LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
-                            leveeBreach.WaterLevelUpstreamLocation);
-                        CreatePointFeatureOfThisLeveeBreach(
-                            leveeBreach,
-                            LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
-                            leveeBreach.WaterLevelDownstreamLocation);
-                    }
-
-                    break;
-                    case NotifyCollectionChangedAction.Remove:
-                    var supportPoint2DFeatures = ((IEventedList<Feature2D>) Area.LeveeBreaches)
-                        .Where(f2d => f2d.Attributes != null &&
-                                      f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
-                                      ((ILeveeBreach) f2d.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE])
-                                      .Equals(leveeBreach)).ToList();
-                    foreach (var supportPoint2DFeature in supportPoint2DFeatures)
-                    {
-                        supportPoint2DFeature.PropertyChanged -= Feature2DPointOnPropertyChanged;
-                        Area.LeveeBreaches.Remove(supportPoint2DFeature);
-                    }
-                    break;
-                    case NotifyCollectionChangedAction.Replace:
-                    
-                    if (e.OldItems is IEventedList<Feature2D> oldFeature2Ds)
-                    {
-                        foreach (var f2d in oldFeature2Ds)
-                        {
-                            if (f2d.Attributes != null &&
-                                f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE))
-                            {
-                                f2d.PropertyChanged -= Feature2DPointOnPropertyChanged;
-                            }
-                        }
-                    }
-
-
-                    if (e.NewItems is IEventedList<Feature2D> newFeature2Ds)
-                    {
-                        foreach (var f2d in newFeature2Ds)
-                        {
-                            if (f2d.Attributes != null &&
-                                f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE))
-                            {
-                                f2d.PropertyChanged += Feature2DPointOnPropertyChanged;
-                            }
-                        }
-
-                        foreach (var leveeFeature in newFeature2Ds.OfType<ILeveeBreach>())
-                        {
-                            CreatePointFeatureOfThisLeveeBreach(
-                                leveeFeature,
-                                LeveeBreachPointLocationType.BreachLocation,
-                                leveeFeature.BreachLocation);
-                            if (leveeFeature.WaterLevelFlowLocationsActive)
-                            {
-                                CreatePointFeatureOfThisLeveeBreach(
-                                    leveeFeature,
-                                    LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
-                                    leveeFeature.WaterLevelUpstreamLocation);
-                                CreatePointFeatureOfThisLeveeBreach(
-                                    leveeFeature,
-                                    LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
-                                    leveeFeature.WaterLevelDownstreamLocation);
-                            }
-                        }
-                    }
-                    break;
-                    case NotifyCollectionChangedAction.Move:
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                    if (e.OldItems is IEventedList<Feature2D> oldLeveeFeature2Ds)
-                    {
-                        foreach (var f2d in oldLeveeFeature2Ds)
-                        {
-                            if (f2d.Attributes != null &&
-                                f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE))
-                            {
-                                f2d.PropertyChanged -= Feature2DPointOnPropertyChanged;
-                            }
-                        }
-                    }
-                    break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-
-            var groupableFeature = e.GetRemovedOrAddedItem() as IGroupableFeature;
-            if (groupableFeature != null && e.Action != NotifyCollectionChangedAction.Remove && !Area.IsEditing)
-            {
-                groupableFeature.UpdateGroupName(this);
-            }
-            
-            var inputSender = InputFeatureCollectionsContains(e.GetRemovedOrAddedItem());
-            var outputSender = OutputFeatureCollectionsContains(e.GetRemovedOrAddedItem());
-            
-            if (inputSender || outputSender)
-            {
-                var feature = (IFeature) e.GetRemovedOrAddedItem();
-                switch (e.Action)
-                {
-                    case NotifyCollectionChangedAction.Add:
-                        AddAreaItem(feature, inputSender);
-                        break;
-                    case NotifyCollectionChangedAction.Remove:
-                        RemoveAreaFeature(feature);
-                        break;
-                    case NotifyCollectionChangedAction.Reset:
-                        foreach (var areaDataItem in areaDataItems)
-                        {
-                            RemoveAreaFeature(areaDataItem.Key);
-                        }
-                        areaDataItems.Clear();
-                        break;
-                    case NotifyCollectionChangedAction.Replace:
-                        var oldFeature = e.OldItems?.OfType<IFeature>().FirstOrDefault();
-                        RemoveAreaFeature(oldFeature);
-                        AddAreaItem(feature, inputSender);
-                        break;
-                    default:
-                        throw new NotImplementedException(
-                            String.Format("Action {0} on feature collection not supported", e.Action));
-                }
-            }
-        }
         private void CreatePointFeatureOfThisLeveeBreach(ILeveeBreach leveeFeature, LeveeBreachPointLocationType leveeBreachPointLocationType, IGeometry leveeFeatureBreachLocation)
         {
             if (((IEventedList<Feature2D>)Area.LeveeBreaches).SingleOrDefault(lpf =>
@@ -3540,43 +2315,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 Area.LeveeBreaches.Add(feature2DPoint);
             }
         }
-        private void Feature2DPointOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender is Feature2DPoint feature2DPoint &&
-                feature2DPoint.Attributes != null &&
-                feature2DPoint.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
-                feature2DPoint.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE] is LeveeBreach leveeBreach &&
-                feature2DPoint.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE))
-            {
-                var type = (LeveeBreachPointLocationType)feature2DPoint.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE];
-                const double tolerance = 1e-5d;
-                var locationX = feature2DPoint.X;
-                var locationY = feature2DPoint.Y;
-                switch (type)
-                {
-                    case LeveeBreachPointLocationType.BreachLocation:
-                        if (Math.Abs(leveeBreach.BreachLocationX - locationX) > tolerance)
-                            leveeBreach.BreachLocationX = locationX;
-                        if (Math.Abs(leveeBreach.BreachLocationY - locationY) > tolerance)
-                            leveeBreach.BreachLocationY = locationY;
-                        break;
-                    case LeveeBreachPointLocationType.WaterLevelUpstreamLocation:
-                        if (Math.Abs(leveeBreach.WaterLevelUpstreamLocationX - locationX) > tolerance)
-                            leveeBreach.WaterLevelUpstreamLocationX = locationX;
-                        if (Math.Abs(leveeBreach.WaterLevelUpstreamLocationY - locationY) > tolerance)
-                            leveeBreach.WaterLevelUpstreamLocationY = locationY;
-                        break;
-                    case LeveeBreachPointLocationType.WaterLevelDownstreamLocation:
-
-                        if (Math.Abs(leveeBreach.WaterLevelDownstreamLocationX - locationX) > tolerance)
-                            leveeBreach.WaterLevelDownstreamLocationX = locationX;
-                        if (Math.Abs(leveeBreach.WaterLevelDownstreamLocationY - locationY) > tolerance)
-                            leveeBreach.WaterLevelDownstreamLocationY = locationY;
-                        break;
-                }
-            }
-        }
-
+        
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)
         {
             var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
@@ -3593,67 +2332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return modelFeatureCoordinateData;
         }
-
-        private void HydroAreaPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (sender)
-            {
-                case IWeir weir when e.PropertyName == nameof(weir.WeirFormula):
-                {
-                    var isInputSender = Area.Weirs.Any(w => w.Name == weir.Name);
-                    UpdateAreaDataItems(weir, isInputSender);
-                    break;
-                }
-                case ILeveeBreach leveeBreach when e.PropertyName == nameof(leveeBreach.WaterLevelFlowLocationsActive):
-                {
-                    if (leveeBreach.WaterLevelFlowLocationsActive)
-                    {
-                        CreatePointFeatureOfThisLeveeBreach(
-                            leveeBreach,
-                            LeveeBreachPointLocationType.WaterLevelUpstreamLocation,
-                            leveeBreach.WaterLevelUpstreamLocation);
-                        CreatePointFeatureOfThisLeveeBreach(
-                            leveeBreach,
-                            LeveeBreachPointLocationType.WaterLevelDownstreamLocation,
-                            leveeBreach.WaterLevelDownstreamLocation);
-                    }
-                    else
-                    {
-                        var supportPoint2DFeatures = Area.LeveeBreaches
-                            .Where(f2d => f2d.Attributes != null &&
-                                          f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE) &&
-                                          ((ILeveeBreach)f2d.Attributes[LeveeBreach.LEVEE_BREACH_FEATURE])
-                                          .Equals(leveeBreach)).ToList();
-                        foreach (var supportPoint2DFeature in supportPoint2DFeatures)
-                        {
-                            if (supportPoint2DFeature.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE) &&
-                                (LeveeBreachPointLocationType)supportPoint2DFeature.Attributes[LeveeBreach.LEVEE_BREACH_POINT_LOCATION_TYPE] == LeveeBreachPointLocationType.BreachLocation)
-                                continue;
-
-                            supportPoint2DFeature.PropertyChanged -= Feature2DPointOnPropertyChanged;
-                            Area.LeveeBreaches.Remove(supportPoint2DFeature);
-                        }
-                    }
-
-                    break;
-                }
-            }
-
-            if (updatingGroupName || Area.IsEditing || !(sender is IGroupableFeature groupableFeature) ||
-                e.PropertyName != nameof(groupableFeature.GroupName)) return;
-
-            updatingGroupName = true;// prevent recursive calls
-
-            groupableFeature.UpdateGroupName(this);
-
-            if (groupableFeature.IsDefaultGroup)
-            {
-                groupableFeature.IsDefaultGroup = false;
-            }
-
-            updatingGroupName = false;
-        }
-
+        
         private void RemoveAreaFeature(IFeature feature)
         {
             if (areaDataItems.TryGetValue(feature, out var dataItemsToBeRemoved))
@@ -3927,15 +2606,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 CacheFile.UpdatePathToMduLocation(runMduPath);
             }
         }
+
         public ISet<string> IgnoredFilePathsWhenCleaningWorkingDirectory =>
             CacheFile.UseCaching && CacheFile.Path.StartsWith(WorkingDirectory)
                 ? new HashSet<string> { CacheFile.Path }
                 : new HashSet<string>();
-        public Type SupportedRegionType
-        {
-            get { return typeof (HydroArea); }
-        }
-
+        
         public IEventedList<string> TracerDefinitions
         {
             get { return tracerDefinitions; }
@@ -3954,7 +2630,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
-
 
         public IEventedList<ISedimentProperty> SedimentOverallProperties { get; set; }
         
@@ -4101,6 +2776,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             return string.Join("/", concatNames);
         }
+
         private static string GetConvertedParameterName(string parameterName, string category, bool lookForValue = false)
         {
             var namesLookup = WaterFlowFMModelDataSet.GetDictionaryForCategory(category);
@@ -4407,18 +3083,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             base.OnProgressChanged();
         }
 
-        private void OnWaterFlowFm1D2DLinkPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (!(sender is Link1D2D) || !e.PropertyName.Equals("Geometry")) 
-                return;
-
-            //update indexes
-            var link = (Link1D2D) sender;
-            var firstCoordinate = link.Geometry?.Coordinates.First();
-            var lastCoordinate = link.Geometry?.Coordinates.Last();
-            link.DiscretisationPointIndex = Links1D2DHelper.FindCalculationPointIndex(firstCoordinate, NetworkDiscretization, link.SnapToleranceUsed);
-            link.FaceIndex = Links1D2DHelper.FindCellIndex(lastCoordinate, Grid);
-        }
         private void CopyRestartFile(string targetDir)
         {
             string sourceDirectory = ModelDefinition.ModelDirectory;
@@ -4445,17 +3109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             return GetChildDataItemLocations(role).SelectMany(GetChildDataItems);
         }
-        
-        private static readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
-        {
-            {"levelcenter", KnownStructureProperties.CrestLevel},
-            {"sill_level", KnownStructureProperties.CrestLevel},
-            {"crest_level", KnownStructureProperties.CrestLevel},
-            {"gateheight", KnownStructureProperties.GateLowerEdgeLevel},
-            {"lower_edge_level", KnownStructureProperties.GateLowerEdgeLevel},
-            {"door_opening_width", KnownStructureProperties.GateOpeningWidth},
-            {"opening_width", KnownStructureProperties.GateOpeningWidth}
-        };
 
         public string GetUpToDateDataItemName(string oldDataItemName)
         {
@@ -4470,6 +3123,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             partsTargetName[partsTargetName.Length - 1] = newName;
             return string.Join(".", partsTargetName);
         }
+
+        private static readonly Dictionary<string, string> backwardsCompatibilityMapping = new Dictionary<string, string>
+        {
+            {"levelcenter", KnownStructureProperties.CrestLevel},
+            {"sill_level", KnownStructureProperties.CrestLevel},
+            {"crest_level", KnownStructureProperties.CrestLevel},
+            {"gateheight", KnownStructureProperties.GateLowerEdgeLevel},
+            {"lower_edge_level", KnownStructureProperties.GateLowerEdgeLevel},
+            {"door_opening_width", KnownStructureProperties.GateOpeningWidth},
+            {"opening_width", KnownStructureProperties.GateOpeningWidth}
+        };
 
         /// <summary>
         /// Gets the data item by item string.
