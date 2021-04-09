@@ -125,7 +125,7 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 10)]
         [DynamicReadOnly]
 
-        public InterpolationType InterpolationType
+        public virtual InterpolationType InterpolationType
         {
             get { return Storage.Arguments[0].InterpolationType; }
             set { Storage.Arguments[0].InterpolationType = value; }

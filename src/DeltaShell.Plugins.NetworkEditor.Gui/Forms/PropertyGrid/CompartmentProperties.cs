@@ -123,6 +123,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [PropertyOrder(12)]
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [DynamicReadOnly]
+        [DynamicVisible]
         public Function Storage
         {
             get { return (Function)data.Storage; }
@@ -133,6 +134,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Type")]
         [PropertyOrder(13)]
         [DynamicReadOnly]
+        [DynamicVisible]
         public InterpolationType InterpolationType
         {
             get { return data.InterpolationType; }
@@ -143,6 +145,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Description("Use storage as function of level.")]
         [DisplayName("Use table")]
         [PropertyOrder(14)]
+        [DynamicVisible]
         public bool UseTable
         {
             get { return data.UseTable; }
@@ -176,7 +179,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 propertyName == nameof(Width) ||
                 propertyName == nameof(FloodableArea) ||
                 propertyName == nameof(BottomLevel) ||
-                propertyName == nameof(SurfaceLevel))
+                propertyName == nameof(SurfaceLevel) ||
+                propertyName == nameof(UseTable) ||
+                propertyName == nameof(Storage) ||
+                propertyName == nameof(InterpolationType) 
+                )
             {
                 return !(data is OutletCompartment);
             }

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
 using GeoAPI.Extensions.Feature;
@@ -40,6 +42,9 @@ namespace DelftTools.Hydro.SewerFeatures
         public override double ManholeLength { get => base.ManholeLength; set => base.ManholeLength = value; }
         public override double SurfaceLevel { get => base.SurfaceLevel; set => base.SurfaceLevel = value; }
         public override double BottomLevel { get => base.BottomLevel; set => base.BottomLevel = value; }
+        public override bool UseTable { get => base.UseTable; set => base.UseTable = value; }
+        public override IFunction Storage { get => base.Storage; set => base.Storage = value; }
+        public override InterpolationType InterpolationType { get => base.InterpolationType; set => base.InterpolationType = value; }
         #endregion
 
     }

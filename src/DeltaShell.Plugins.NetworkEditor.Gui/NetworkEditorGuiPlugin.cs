@@ -425,6 +425,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Enclosures);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.BridgePillars);
             yield return new ViewInfo<IManhole, ManholeView>();
+            yield return new ViewInfo<ICompartment, IManhole, ManholeView>
+            {
+                AdditionalDataCheck = o => o?.ParentManhole != null,
+                GetViewData = (v) => v.ParentManhole,
+                OnActivateView = (v, o) =>
+                {
+                    if (!(o is ICompartment compartment)) return;
+                    v.EnsureVisible(compartment);
+                },
+            };
             yield return new ViewInfo<IPipe, PipeView>
             {
                 AdditionalDataCheck = pipe =>

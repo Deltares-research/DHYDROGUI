@@ -210,20 +210,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     readNodeTypes.ContainsKey(retention.Name) && 
                     (SobekNetworkNetterReader.IsConnectionNode(readNodeTypes[retention.Name]) || 
                      SobekNetworkNetterReader.IsLateralSourceNode(readNodeTypes[retention.Name]) || 
-                     SobekNetworkNetterReader.IsFlowConnectionNode(readNodeTypes[retention.Name])))
+                     SobekNetworkNetterReader.IsFlowConnectionNode(readNodeTypes[retention.Name])) ||
+                    node is IManhole)
                 {
                     //verification if node is declared in netter file as lateral source or connection node
                     continue;   
                 }
-
-                if (node is IManhole manhole)
-                {
-                    manhole.Compartments?
-                        .Where(c => string.Equals(retention.Name, c.Name, StringComparison.InvariantCultureIgnoreCase))
-                        .ForEach(compartment => SetRetentionDataOnCompartmentInManhole(compartment, retention));
-                    continue;
-                }
-
+                
                 retention.Geometry = (IGeometry)node.Geometry.Clone();
 
                 if (node.OutgoingBranches.Count > 0)

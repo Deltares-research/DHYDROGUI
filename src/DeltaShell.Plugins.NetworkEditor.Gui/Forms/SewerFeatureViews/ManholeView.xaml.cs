@@ -9,6 +9,7 @@ using DelftTools.Controls;
 using DelftTools.Controls.Wpf.Extensions;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Aop;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
@@ -39,8 +40,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
         }
 
+        [InvokeRequired]
         public void EnsureVisible(object item)
         {
+            ViewModel.SelectedItem = item;
         }
 
         public string Text { get; set; }

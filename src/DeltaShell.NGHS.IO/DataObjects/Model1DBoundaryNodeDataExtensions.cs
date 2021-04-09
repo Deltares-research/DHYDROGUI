@@ -32,6 +32,8 @@ namespace DeltaShell.NGHS.IO.DataObjects
                 {
                     var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
                     outlet.SurfaceWaterLevel = flowBoundaryConditionData.WaterLevel;
+                    outlet.SurfaceLevel = flowBoundaryConditionData.WaterLevel + 0.25; //FM1D2D-1308 : empirical determination by Didrik
+                    outlet.BottomLevel = flowBoundaryConditionData.WaterLevel - 1.0; //FM1D2D-1308 : empirical determination by Didrik
                 }
             }
         }
