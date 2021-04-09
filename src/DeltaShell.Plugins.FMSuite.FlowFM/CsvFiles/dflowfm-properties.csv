@@ -32,7 +32,7 @@ General,Version,,,,String,,,,TRUE,,,,,,FM kernel Version
 General,FileVersion,,,,String,1.02,,,TRUE,,,,,,File format version (do not edit this)
 General,GuiVersion,,,,String,,,,TRUE,,,,,,DeltaShell FM suite version
 General,AutoStart,,,AutoStart:0|1|2,0|1|2,0,0,2,TRUE,,,,,,"Autostart simulation after loading MDU (0: no, 1: autostart, 2: autostartstop)"
-General,PathsRelativeToParent,,,,0|1,0,,,TRUE,,,,,,"Default: 0. Whether or not (1/0) to resolve file names (e.g. inside the *.ext file) relative to their direct parent, instead of to the toplevel MDU working dir."
+General,PathsRelativeToParent,,,,0|1,0,,,TRUE,,,,,,"Default: 0. Whether or not (1/0) to resolve file names (e.g. inside the *.ext file) relative to their direct parent, instead of to the toplevel MDU working dir"
 geometry,NetFile,,,,FileName,,,,TRUE,,,,,,Unstructured grid file *_net.nc
 geometry,BathymetryFile,,,,FileName,,,,TRUE,,,,,,Bathymetry points file *.xyb
 geometry,DryPointsFile,,,,MultipleEntriesFileName,,,,TRUE,,,,,,"Dry points file *.xyz (third column dummy z values), or dry areas polygon file *.pol (third column 1/-1: inside/outside)"
@@ -110,7 +110,7 @@ physics,Elder,advanced,Advanced,Elder factor,Double,0,0,,FALSE,,,,,,Elder factor
 physics,Irov,physics,Roughness,Wall behaviour:Free-slip|Partial-slip|No-slip,0|1|2,0,0,2,FALSE,,,,,,"Wall roughness type (0: free-slip, 1: partial-slip using wall_ks, 2: no-slip)"
 physics,wall_ks,physics,Roughness,Wall ks for partial slip,Double,0,0,,FALSE,Irov=1,,,,,"Nikuradse roughness for side walls",m
 physics,Rhomean,physics,Density,Default water density,Double,1000,,,FALSE,,,,,,"Average water density ", kg/m3
-physics,Idensform,physics,Density,Equation of state:Uniform|Eckart|UNESCO|Baroclinic,0|1|2|3,2,,,FALSE,,,,,,"Density calulation (0: uniform, 1: Eckart, 2: UNESCO, 3: baroclinic case)"
+physics,Idensform,physics,Density,Equation of state:Uniform|Eckart|UNESCO|Baroclinic,0|1|2|3,2,,,FALSE,,,,,,"Density calculation (0: uniform, 1: Eckart, 2: UNESCO, 3: baroclinic case)"
 physics,Ag,physics,Others,Gravity,Double,9.813,,,FALSE,,,,,,"Gravitational acceleration",m/s2
 physics,TidalForcing,processes,Processes,Tide generating forces,0|1,0,0,1,FALSE,,,,,,"Tidal forcing, if jsferic = 1 (0: no, 1: yes)"
 physics,Doodsonstart,,,Doodson start,Double,55.565,,,TRUE,,,,,,"TRIWAQ: 55.565, D3D: 57.555"
@@ -158,12 +158,12 @@ trachytopes,TrtL,,,,FileName,,,,TRUE,,,,,,File (*.arl) containing distribution o
 trachytopes,DtTrt,,,,Double,60,,,TRUE,,,,,,Trachytope roughness update time interval, s
 ****,,,,,,,,,,,,,,,
 *,,,,,,,,,,,,,,,
-GUIOnly,StartTime,timeframe,Time Frame,Start Time,DateTime,,,,FALSE,,,,,,Begin of simulation period [YYYY-MM-DD HH:MM:SS]
-GUIOnly,StopTime,timeframe,Time Frame,Stop Time,DateTime,,,,FALSE,,,,,,End of simulation period [YYYY-MM-DD HH:MM:SS]
+GUIOnly,StartTime,timeframe,Time Frame,Start time,DateTime,,,,FALSE,,,,,,Begin of simulation period [YYYY-MM-DD HH:MM:SS]
+GUIOnly,StopTime,timeframe,Time Frame,Stop time,DateTime,,,,FALSE,,,,,,End of simulation period [YYYY-MM-DD HH:MM:SS]
 physics,Temperature,processes,Processes,Temperature:None|Transport only|Excess temperature|Composite model,0|1|3|5,0,0,5,FALSE,,,,,,"Include temperature (0: no, 1: only transport, 3: excess model of D3D, 5: composite (ocean) model)"
 GUIOnly,UseMorSed,processes,Processes,Sediment/Morphology,0|1,0,0,1,FALSE,,,,,,Include Sediment/Morphology
 *,,,,,,,,,,,,,,,
-GUIOnly,WriteHisFile,output,History,Write His File,0|1,1,,,FALSE,,,,,,Write a history file
+GUIOnly,WriteHisFile,output,History,Write His file,0|1,1,,,FALSE,,,,,,Write a history file
 GUIOnly,HisOutputDeltaT,output,History,His output Interval,Interval,,,,FALSE,,WriteHisFile,,,,Interval for writing His Output [Dd HH:MM:SS.ZZZ]
 GUIOnly,SpecifyHisStart,output,History,Specify His output start time,0|1,0,,,FALSE,,WriteHisFile,,,,Start writing his output later then start of simulation
 GUIOnly,HisOutputStartTime,output,History,His output start time,DateTime,,,,FALSE,WriteHisFile && SpecifyHisStart,WriteHisFile,,,,No his output will be written before this time stamp [YYYY-MM-DD HH:MM:SS]
@@ -242,9 +242,9 @@ output,Wrihis_velocity_vector,output,History,Write velocity vectors,0|1,1,,,FALS
 output,Wrihis_upward_velocity_component,output,History,Write upward velocity,0|1,0,,,FALSE,,WriteHisFile,,,,"Write upward velocity to his file (1: yes, 0: no)"
 output,Wrihis_sediment,output,History,Write sediment transport,0|1,1,,,FALSE,,WriteHisFile,,,,"Write sediment transport to his file (1: yes, 0: no)"
 output,Wrihis_constituents,output,History,Write tracers,0|1,1,,,FALSE,,WriteHisFile,,,,"Write tracers to his file (1: yes, 0: no)"
-output,Wrimap_waterlevel_s0,output,Map,Write water levels of previous time step,0|1,1,,,FALSE,,WriteMapFile,,,,"Write water levels for previous time step to map file (1: yes, 0: no)"
+output,Wrimap_waterlevel_s0,output,Map,Write water levels of previous time step,0|1,1,,,FALSE,,WriteMapFile,,,,"Write water levels of previous time step to map file (1: yes, 0: no)"
 output,Wrimap_waterlevel_s1,output,Map,Write water levels,0|1,1,,,FALSE,,WriteMapFile,,,,"Write water levels to map file (1: yes, 0: no)"
-output,Wrimap_velocity_component_u0,output,Map,Write velocity component for previous time step,0|1,1,,,FALSE,,WriteMapFile,,,,"Write velocity component for previous time step to map file (1: yes, 0: no)"
+output,Wrimap_velocity_component_u0,output,Map,Write velocity component of previous time step,0|1,1,,,FALSE,,WriteMapFile,,,,"Write velocity component of previous time step to map file (1: yes, 0: no)"
 output,Wrimap_velocity_component_u1,output,Map,Write velocity component,0|1,1,,,FALSE,,WriteMapFile,,,,"Write velocity component to map file (1: yes, 0: no)"
 output,Wrimap_velocity_vector,output,Map,Write cell-center velocity vectors,0|1,1,,,FALSE,,WriteMapFile,,,,"Write cell-center velocity vectors to map file (1: yes, 0: no)"
 output,Wrimap_upward_velocity_component,output,Map,Write upward velocity component,0|1,0,,,FALSE,,WriteMapFile,,,,"Write upward velocity component on cell interfaces (1: yes, 0: no)"
