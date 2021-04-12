@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <?define explicitX86desktopshortcut="false"?>
+
   <?define Description="D-FM Delta Shell" ?>
   
   <?define checkForRegistration="true"?>

@@ -246,10 +246,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             // Gather all the objects that can be connected to a condition in the true and false outputs
             // Then set the input, as a mathematical expression can have a mathematical expression as an input.
             // Failing to comply will result in a KeyNotFoundException.
-            foreach (KeyValuePair<MathematicalExpression, MathematicalExpression> kvp in expressionMapping)
+            foreach ((MathematicalExpression source, MathematicalExpression target) in expressionMapping)
             {
-                MathematicalExpression source = kvp.Key;
-                MathematicalExpression target = kvp.Value;
                 SetInputs(target.Inputs, source.Inputs, inputMapping, expressionMapping);
             }
 

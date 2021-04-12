@@ -60,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -382,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -402,7 +402,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -568,7 +568,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -597,7 +597,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -626,7 +626,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -655,7 +655,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -684,7 +684,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -713,7 +713,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -743,7 +743,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -772,7 +772,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -796,7 +796,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -820,7 +820,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -844,7 +844,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);
@@ -868,7 +868,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
             var model = new WaterFlowFMModel();
             model.ImportFromMdu(localCopy);
 
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
+            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true);
             using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
             {
                 remoteApi.Initialize(model.MduFilePath);

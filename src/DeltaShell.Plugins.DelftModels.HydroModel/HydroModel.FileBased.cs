@@ -133,8 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private static void UnsuspendModelOutputEvents(IModel model, System.Tuple<bool, bool> targetStatus)
         {
-            bool originalSuspendClearOutput = targetStatus.Item1;
-            bool originalSuspendOutOfSync = targetStatus.Item2;
+            (bool originalSuspendClearOutput, bool originalSuspendOutOfSync) = targetStatus;
             model.SuspendClearOutputOnInputChange = originalSuspendClearOutput;
             model.SuspendMarkOutputOutOfSyncOnInputChange = originalSuspendOutOfSync;
         }

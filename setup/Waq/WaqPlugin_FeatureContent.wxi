@@ -24,7 +24,8 @@
   <Feature Id="DuflowProcesses" Title="!(loc.DuFlowProcessFeatureName)" Description="!(loc.DuFlowProcessFeatureDescription)" Level="1" Absent="allow" AllowAdvertise="no">
     <ComponentRef Id="WaterQualityDuflowLibrary"/>
 
-    <Feature Id="DuflowProcesses_x64" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <Feature Id="DuflowProcesses_x64" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+      <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
       <ComponentRef Id="DuflowProcessLibraryPlugin_x64"/>
     </Feature>
   </Feature>

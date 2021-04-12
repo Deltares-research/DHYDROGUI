@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using DelftTools.Utils.Remoting;
 using DeltaShell.Dimr;
@@ -11,7 +12,7 @@ namespace DeltaShell.NGHS.IO.Grid
             // We need to pass the Dimr Assembly here, in order to get the SharedDllPath
             Assembly dimrDllAssembly = typeof(DimrRunner).Assembly;
 
-            api = RemoteInstanceContainer.CreateInstance<IUGridApi, UGridApi>(null, false, dimrDllAssembly);
+            api = RemoteInstanceContainer.CreateInstance<IUGridApi, UGridApi>(Environment.Is64BitOperatingSystem, null, false, dimrDllAssembly);
         }
 
         public double zCoordinateFillValue

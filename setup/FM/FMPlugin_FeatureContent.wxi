@@ -18,7 +18,8 @@
   <ComponentRef Id="FM_CsvFiles"/> 
   <ComponentRef Id="FM_toolboxes"/> 
 
-  <Feature Id="FM_x64_Feature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
+  <Feature Id="FM_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+    <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
     <ComponentGroupRef Id="RGFGridLibs"/>
     <ComponentRef Id="FM_rgfgrid_manuals_x64"/>
   </Feature>
