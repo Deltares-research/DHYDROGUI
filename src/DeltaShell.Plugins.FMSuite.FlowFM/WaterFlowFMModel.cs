@@ -2935,11 +2935,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (runner.CanCommunicateWithDimrApi)
             {
-                return string.IsNullOrEmpty(itemName)
-                           ? runner.GetVar($"{Name}/{category}")
-                           : string.IsNullOrEmpty(parameter)
-                               ? runner.GetVar($"{Name}/{category}/{itemName}")
-                               : runner.GetVar($"{Name}/{category}/{itemName}/{parameter}");
+                var itemText = string.IsNullOrEmpty(itemName) ? "" : $"/{itemName}";
+                var parameterText = string.IsNullOrEmpty(itemName) || string.IsNullOrEmpty(parameter) ? "" : $"/{parameter}";
+                
+                return runner.GetVar($"{Name}/{category}{itemText}{parameterText}");
             }
 
             IFeature feature = null;

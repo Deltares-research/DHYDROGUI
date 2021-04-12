@@ -6,7 +6,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -71,8 +70,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 ImportSobekRERetentions(sobekRetentionsReader, sobekRetsobekRetentions, retentions, lateralSources);
             }
         }
-
-
+        
         private void ImportSobekRERetentions(SobekRetentionsReader sobekRetentionsReader, IEnumerable<Retention> sobekRetsobekRetentions, Dictionary<string, IRetention> retentions, Dictionary<string, ILateralSource> lateralSources)
         {
 
@@ -232,30 +230,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private static void SetRetentionDataOnCompartmentInManhole(ICompartment compartment, IRetention retention)
-        {
-            compartment.BottomLevel = retention.BedLevel;
-            compartment.SurfaceLevel = retention.StreetLevel; 
-            compartment.FloodableArea = retention.StreetStorageArea;
-            compartment.CompartmentStorageType = GetCompartmentStorageType(retention.Type);
-        }
-
-        private static CompartmentStorageType GetCompartmentStorageType(RetentionType retentionType)
-        {
-            switch (retentionType)
-            {
-                case RetentionType.Closed:
-                    return CompartmentStorageType.Closed;
-
-                case RetentionType.Loss:
-                case RetentionType.Reservoir: 
-                    return CompartmentStorageType.Reservoir;
-
-                default:
-                    log.Warn($"Can not resolve RetentionType {retentionType} to CompartmentStorageType. Using default Reservoir type");
-                    return CompartmentStorageType.Reservoir;
-            }
-        }
 
         private IList<SobekValveData> GetSobekValveData()
         {

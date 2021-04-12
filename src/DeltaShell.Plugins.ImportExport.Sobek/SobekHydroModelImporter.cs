@@ -27,17 +27,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private const string RRWorkflowName = "RR"; 
 
         public bool enableWaqOutput;
-
-        public bool UseRR { get; set; }
-
-        public bool UseRTC { get; set; }
-
-        public bool UseFm { get; set; } = true;
-
         private bool shouldCancel;
         private IPartialSobekImporter importer;
 
         // Used by reflection / importer, do not remove
+        private int currentStep;
+        private object targetObject;
+        private bool targetObjectWasSetExternal;
+
         public SobekHydroModelImporter(): this(true)
         {
 
@@ -49,6 +46,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             UseRR = useRR;
             UseRTC = useRTC;
         }
+
+        public bool UseRR { get; set; }
+
+        public bool UseRTC { get; set; }
+
+        public bool UseFm { get; set; }
 
         # region IFileImporter
 
@@ -375,10 +378,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 };
             }
         }
-
-        private int currentStep;
-        private object targetObject;
-        private bool targetObjectWasSetExternal;
 
         private IEnumerable<IPartialSobekImporter> GetImporters(IPartialSobekImporter partialImporter)
         {

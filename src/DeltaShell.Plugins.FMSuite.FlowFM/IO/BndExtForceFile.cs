@@ -22,12 +22,8 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
-using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.LinearReferencing;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

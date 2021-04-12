@@ -26,205 +26,183 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private void OnModelDefinitionPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is WaterFlowFMProperty prop && e.PropertyName == nameof(prop.Value))
+            if (!(sender is WaterFlowFMProperty prop) || e.PropertyName != nameof(prop.Value))
             {
-                if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity1D) ||
-                    prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity2D))
-                {
-                    if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.InitialConditionGlobalQuantity2D))
-                    {
-                        var type = (InitialConditionQuantity)(int)prop.Value;
-                        InitialWaterLevel.Name = type == InitialConditionQuantity.WaterLevel
-                            ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
-                            : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
-                    }
+                return;
+            }
 
-                    var propertyChangedEventArgs = new PropertyChangedEventArgs(nameof(InitialCoverageSetChanged));
-                    OnPropertyChanged(this, propertyChangedEventArgs);
-                }
-                if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.FixedWeirScheme,
-                        StringComparison.InvariantCultureIgnoreCase))
+            string mduPropertyName = prop.PropertyDefinition.MduPropertyName;
+
+            bool IsParameter(string s) => string.Equals(mduPropertyName, s, StringComparison.InvariantCultureIgnoreCase);
+
+            if (IsParameter(GuiProperties.InitialConditionGlobalQuantity1D) ||
+                IsParameter(GuiProperties.InitialConditionGlobalQuantity2D))
+            {
+                if (IsParameter(GuiProperties.InitialConditionGlobalQuantity2D))
                 {
-                    allFixedWeirsAndCorrespondingProperties?.ForEach(p => p.UpdateDataColumns(prop.GetValueAsString()));
-                }
-                if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.BedlevType,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var bedLevelType = (UGridFileHelper.BedLevelLocation)prop.Value;
-                    BeginEdit(new DefaultEditAction("Updating Bathymetry coverage"));
-                    UpdateBathymetryCoverage(bedLevelType);
-                    EndEdit();
+                    var type = (InitialConditionQuantity)(int)prop.Value;
+                    InitialWaterLevel.Name = type == InitialConditionQuantity.WaterLevel
+                                                 ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
+                                                 : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
                 }
 
-                if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.UseSalinity,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching salinity process"));
-                    OnPropertyChanged(nameof(UseSalinity));
-                    BoundaryConditions1D?.ForEach(bc => bc.UseSalt = UseSalinity);
-                    LateralSourcesData?.ForEach(lat => lat.UseSalt = UseSalinity);
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.UseMorSed,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching morphology process"));
-                    OnPropertyChanged(nameof(UseMorSed));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteSnappedFeatures,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching write snapped features options"));
-                    OnPropertyChanged(nameof(WriteSnappedFeatures));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ISlope,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Bed slope formulation"));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.IHidExp,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Hiding and exposure formulation"));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Kmx,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching 3D dynamics"));
-                    OnPropertyChanged(nameof(UseDepthLayers));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.ICdtyp,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching wind formulation type"));
-                    OnPropertyChanged(nameof(CdType));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Temperature,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching heat flux model"));
-                    HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.SecondaryFlow,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching secondary flow process"));
-                    OnPropertyChanged(nameof(UseSecondaryFlow));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteHisFile,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching WriteHisFile"));
-                    OnPropertyChanged(nameof(WriteHisFile));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStart,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyHisStart"));
-                    OnPropertyChanged(nameof(SpecifyHisStart));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyHisStop,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyHisStop"));
-                    OnPropertyChanged(nameof(SpecifyHisStop));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteMapFile,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching WriteMapFile"));
-                    OnPropertyChanged(nameof(WriteMapFile));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStart,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyMapStart"));
-                    OnPropertyChanged(nameof(SpecifyMapStart));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyMapStop,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyMapStop"));
-                    OnPropertyChanged(nameof(SpecifyMapStop));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteRstFile,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching WriteRstFile"));
-                    OnPropertyChanged(nameof(WriteRstFile));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStart,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyRstStart"));
-                    OnPropertyChanged(nameof(SpecifyRstStart));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyRstStop,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching SpecifyRstStop"));
-                    OnPropertyChanged(nameof(SpecifyRstStop));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.WaveModelNr,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Waves Model Nr"));
-                    OnPropertyChanged(nameof(WaveModel));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(KnownProperties.Irov,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Wall behavior type"));
-                    OnPropertyChanged(nameof(WaveModel));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputInterval,
-                StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Waq output interval time"));
-                    OnPropertyChanged(nameof(SpecifyWaqOutputInterval));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStartTime,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Waq output start time"));
-                    OnPropertyChanged(nameof(SpecifyWaqOutputStartTime));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.SpecifyWaqOutputStopTime,
-                    StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching Waq output end time"));
-                    OnPropertyChanged(nameof(SpecifyWaqOutputStopTime));
-                    EndEdit();
-                }
-                else if (prop.PropertyDefinition.MduPropertyName.Equals(GuiProperties.WriteClassMapFile,
-                                                                        StringComparison.InvariantCultureIgnoreCase))
-                {
-                    BeginEdit(new DefaultEditAction("Switching WriteClassMapFile"));
-                    OnPropertyChanged(nameof(WriteClassMapFile));
-                    EndEdit();
-                }
+                OnPropertyChanged(this, new PropertyChangedEventArgs(nameof(InitialCoverageSetChanged)));
+            }
+            if (IsParameter(KnownProperties.FixedWeirScheme))
+            {
+                allFixedWeirsAndCorrespondingProperties?.ForEach(p => p.UpdateDataColumns(prop.GetValueAsString()));
+            }
 
+            
+            if (IsParameter(KnownProperties.BedlevType))
+            {
+                BeginEdit(new DefaultEditAction("Updating Bathymetry coverage"));
+                UpdateBathymetryCoverage((UGridFileHelper.BedLevelLocation)prop.Value);
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.UseSalinity))
+            {
+                BeginEdit(new DefaultEditAction("Switching salinity process"));
+                OnPropertyChanged(nameof(UseSalinity));
+                BoundaryConditions1D?.ForEach(bc => bc.UseSalt = UseSalinity);
+                LateralSourcesData?.ForEach(lat => lat.UseSalt = UseSalinity);
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.UseMorSed))
+            {
+                BeginEdit(new DefaultEditAction("Switching morphology process"));
+                OnPropertyChanged(nameof(UseMorSed));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.WriteSnappedFeatures))
+            {
+                BeginEdit(new DefaultEditAction("Switching write snapped features options"));
+                OnPropertyChanged(nameof(WriteSnappedFeatures));
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.ISlope))
+            {
+                BeginEdit(new DefaultEditAction("Switching Bed slope formulation"));
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.IHidExp))
+            {
+                BeginEdit(new DefaultEditAction("Switching Hiding and exposure formulation"));
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.Kmx))
+            {
+                BeginEdit(new DefaultEditAction("Switching 3D dynamics"));
+                OnPropertyChanged(nameof(UseDepthLayers));
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.ICdtyp))
+            {
+                BeginEdit(new DefaultEditAction("Switching wind formulation type"));
+                OnPropertyChanged(nameof(CdType));
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.Temperature))
+            {
+                BeginEdit(new DefaultEditAction("Switching heat flux model"));
+                HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.SecondaryFlow))
+            {
+                BeginEdit(new DefaultEditAction("Switching secondary flow process"));
+                OnPropertyChanged(nameof(UseSecondaryFlow));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.WriteHisFile))
+            {
+                BeginEdit(new DefaultEditAction("Switching WriteHisFile"));
+                OnPropertyChanged(nameof(WriteHisFile));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.SpecifyHisStart))
+            {
+                BeginEdit(new DefaultEditAction("Switching SpecifyHisStart"));
+                OnPropertyChanged(nameof(SpecifyHisStart));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.SpecifyHisStop))
+            {
+                BeginEdit(new DefaultEditAction("Switching SpecifyHisStop"));
+                OnPropertyChanged(nameof(SpecifyHisStop));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.WriteMapFile))
+            {
+                BeginEdit(new DefaultEditAction("Switching WriteMapFile"));
+                OnPropertyChanged(nameof(WriteMapFile));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.SpecifyMapStart))
+            {
+                BeginEdit(new DefaultEditAction("Switching SpecifyMapStart"));
+                OnPropertyChanged(nameof(SpecifyMapStart));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.SpecifyMapStop))
+            {
+                BeginEdit(new DefaultEditAction("Switching SpecifyMapStop"));
+                OnPropertyChanged(nameof(SpecifyMapStop));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.WriteRstFile))
+            {
+                BeginEdit(new DefaultEditAction("Switching WriteRstFile"));
+                OnPropertyChanged(nameof(WriteRstFile));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.SpecifyRstStart))
+            {
+                BeginEdit(new DefaultEditAction("Switching SpecifyRstStart"));
+                OnPropertyChanged(nameof(SpecifyRstStart));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.SpecifyRstStop))
+            {
+                BeginEdit(new DefaultEditAction("Switching SpecifyRstStop"));
+                OnPropertyChanged(nameof(SpecifyRstStop));
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.WaveModelNr))
+            {
+                BeginEdit(new DefaultEditAction("Switching Waves Model Nr"));
+                OnPropertyChanged(nameof(WaveModel));
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.Irov))
+            {
+                BeginEdit(new DefaultEditAction("Switching Wall behavior type"));
+                OnPropertyChanged(nameof(WaveModel));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.SpecifyWaqOutputInterval))
+            {
+                BeginEdit(new DefaultEditAction("Switching Waq output interval time"));
+                OnPropertyChanged(nameof(SpecifyWaqOutputInterval));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.SpecifyWaqOutputStartTime))
+            {
+                BeginEdit(new DefaultEditAction("Switching Waq output start time"));
+                OnPropertyChanged(nameof(SpecifyWaqOutputStartTime));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.SpecifyWaqOutputStopTime))
+            {
+                BeginEdit(new DefaultEditAction("Switching Waq output end time"));
+                OnPropertyChanged(nameof(SpecifyWaqOutputStopTime));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.WriteClassMapFile))
+            {
+                BeginEdit(new DefaultEditAction("Switching WriteClassMapFile"));
+                OnPropertyChanged(nameof(WriteClassMapFile));
+                EndEdit();
             }
         }
 

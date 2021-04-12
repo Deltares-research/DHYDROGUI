@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
         private IEnumerable<IPartialSobekImporter> importersWaterFlow1d;
         private IEnumerable<IPartialSobekImporter> importersRainfallRunoff;
         private ICoordinateSystem coordinateSystem;
-        private SobekHydroModelImporter sobekImporter;
+        private readonly SobekHydroModelImporter sobekImporter;
 
 
         public SobekImportWizardControlViewModel()

@@ -365,20 +365,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     continue;
                 }
 
-                if (hasNetwork)
+                if (hasNetwork && lateralSourceDictionary.TryGetValue(readNwrwDefinition.Id, out var targetLateralSource) && flowFmModel?.LateralSourcesData != null)
                 {
-                    if (lateralSourceDictionary.TryGetValue(readNwrwDefinition.Id, out var targetLateralSource) && 
-                        flowFmModel?.LateralSourcesData != null)
+                    if (lateralDataLookup.TryGetValue(targetLateralSource, out var lateralData) && 
+                        lateralData.DataType != Model1DLateralDataType.FlowRealTime)
                     {
-                        if (lateralDataLookup.TryGetValue(targetLateralSource, out var lateralData) && 
-                            lateralData.DataType != Model1DLateralDataType.FlowRealTime)
-                        {
-                            lateralData.DataType = Model1DLateralDataType.FlowRealTime;
-                        }
-
-                        objectDefinitionList.Add(new Tuple<SobekRRNwrw, object>(readNwrwDefinition, targetLateralSource));
-                        continue;
+                        lateralData.DataType = Model1DLateralDataType.FlowRealTime;
                     }
+
+                    objectDefinitionList.Add(new Tuple<SobekRRNwrw, object>(readNwrwDefinition, targetLateralSource));
+                    continue;
                 }
 
                 if (!readSobekRrNodeDictionary.TryGetValue(readNwrwDefinition.Id, out var rrNode))
