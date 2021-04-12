@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                         }
                         return trapeziumTabulatedDefinition.Width;
                     }
-                    catch (Exception e)
+                    catch
                     {
                         log.WarnFormat($"Could not get the width for the cross section {Pipe?.Profile?.Name} of type trapezium.");
                         return 0;
@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                         }
                         return trapeziumTabulatedDefinition.HighestPoint;
                     }
-                    catch (Exception e)
+                    catch
                     {
                         log.WarnFormat($"Could not get the highest point for the cross section {Pipe?.Profile?.Name} of type trapezium.");
                         return 0;

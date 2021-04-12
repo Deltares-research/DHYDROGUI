@@ -408,7 +408,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
         public void Delete()
         {
-            
+            // read-only store, editing not supported
         }
 
         public event EventHandler<FunctionValuesChangingEventArgs> FunctionValuesChanged;
