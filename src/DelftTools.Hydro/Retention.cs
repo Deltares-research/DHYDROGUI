@@ -53,7 +53,6 @@ namespace DelftTools.Hydro
 
         [DisplayName("Street storage area")]
         [DynamicReadOnly]
-        //[FeatureAttribute(ExportName = "StreetStore", Order = 7)]
         public virtual double StreetStorageArea { get; set; }
 
         public virtual double LevelBL { get; set; }
@@ -61,7 +60,6 @@ namespace DelftTools.Hydro
         
         [DisplayName("Street level")]
         [DynamicReadOnly]
-        //[FeatureAttribute(ExportName = "StreetLvl, Order = 8")]
         public virtual double StreetLevel { get; set; }
     
         public override void CopyFrom(object source)
@@ -77,7 +75,7 @@ namespace DelftTools.Hydro
         }
 
         /// <summary>
-        /// 
+        /// Whether or not to use a storage table.
         /// </summary>
         [FeatureAttribute(Order = 9)]
         [DisplayName("Use a storage table")]
