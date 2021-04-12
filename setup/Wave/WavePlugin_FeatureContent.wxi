@@ -3,8 +3,7 @@
   <ComponentRef Id="FMSuiteCommon"/>
   <ComponentRef Id="WavePlugin"/>
 
-  <Feature Id="WAVE_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
-    <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+  <Feature Id="WAVE_x64_Feature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
     <?ifndef var.NOKERNELS?>
     <?endif?>
   </Feature>

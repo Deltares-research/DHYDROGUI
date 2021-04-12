@@ -1,25 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <Directory Id="dir_netcdf_x86" Name="x86">
-    <Component Id="comp_netcdf_x86" Guid="12F7B3A9-2D45-4263-906C-3B83941927BE">
-      <File Id="file_netcdf_x86_hdf" Source="$(var.deltashell_gui_bin)x86\hdf.dll" />
-      <File Id="file_netcdf_x86_hdf5" Source="$(var.deltashell_gui_bin)x86\hdf5.dll" />
-      <File Id="file_netcdf_x86_hdf5_cpp" Source="$(var.deltashell_gui_bin)x86\hdf5_cpp.dll" />
-      <File Id="file_netcdf_x86_hdf5_hl" Source="$(var.deltashell_gui_bin)x86\hdf5_hl.dll" />
-      <File Id="file_netcdf_x86_hdf5_hl_cpp" Source="$(var.deltashell_gui_bin)x86\hdf5_hl_cpp.dll" />
-      <File Id="file_netcdf_x86_hdf5_tools" Source="$(var.deltashell_gui_bin)x86\hdf5_tools.dll" />
-      <File Id="file_netcdf_x86_jpeg" Source="$(var.deltashell_gui_bin)x86\jpeg.dll" />
-      <File Id="file_netcdf_x86_libcurl" Source="$(var.deltashell_gui_bin)x86\libcurl.dll" />
-      <File Id="file_netcdf_x86_mfhdf" Source="$(var.deltashell_gui_bin)x86\mfhdf.dll" />
-      <File Id="file_netcdf_x86_msvcp140" Source="$(var.deltashell_gui_bin)x86\msvcp140.dll" />
-      <File Id="file_netcdf_x86_netcdf4" Source="$(var.deltashell_gui_bin)x86\netcdf4.dll" />
-      <File Id="file_netcdf_x86_vcruntime140" Source="$(var.deltashell_gui_bin)x86\vcruntime140.dll" />
-      <File Id="file_netcdf_x86_xdr" Source="$(var.deltashell_gui_bin)x86\xdr.dll" />
-      <File Id="file_netcdf_x86_zlib1" Source="$(var.deltashell_gui_bin)x86\zlib1.dll" />	  
-      <File Id="file_netcdf_x86_license" Source="$(var.deltashell_gui_bin)x86\license_netcdf_dll.txt" />
-    </Component>
-  </Directory>
-
   <Directory Id="dir_netcdf_x64" Name="x64">
     <Component Id="comp_netcdf_x64" Guid="22F7B3A9-2D45-4263-906C-3B83941927BA">
       <File Id="file_netcdf_x64_hdf" Source="$(var.deltashell_gui_bin)x64\hdf.dll" />
