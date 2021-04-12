@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             bool addtimestep = false)
         {
             var issues = new List<ValidationIssue>();
-            var timeArgument = meteoData.Data.Arguments.OfType<Variable<DateTime>>().FirstOrDefault();
+            var timeArgument = meteoData.Data?.Arguments?.OfType<Variable<DateTime>>().FirstOrDefault();
             if (timeArgument == null) return issues;
             
             int startEndDateDaysDifference = startTime.Date.CompareTo(stopTime.Date);
