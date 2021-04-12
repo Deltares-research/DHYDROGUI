@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
                 };
             sobekModelImporter.Import();
 
-            Assert.AreEqual("RR + (RTC + FlowFM)", hydroModel.CurrentWorkflow.ToString());
+            Assert.AreEqual("(RR + RTC + FlowFM)", hydroModel.CurrentWorkflow.ToString());
         }
 
         [Test]
