@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.ImportExport.Sobek;
-using log4net.Core;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
@@ -27,9 +24,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         {
             get
             {
-                yield return new TestCaseData("DarEsSalaam", "14", 177, 0, true).SetName("DarEsSalaam");
-                yield return new TestCaseData("Raam1D", "8", 11885, 0, true).SetName("Raam1D");
-                //yield return new TestCaseData("Eindhoven", "10", 0, 0, true).SetName("Eindhoven"); // #todo: fill in expected data
+                yield return new TestCaseData("DarEsSalaam", "14", "DarEs1D.lit", 177, 0, true).SetName("DarEsSalaam");
+                yield return new TestCaseData("Raam1D", "8", "Raam1D.lit", 11885, 0, true).SetName("Raam1D");
+                yield return new TestCaseData("HEAs1DFM", "19", "HEAs1DFM.lit", 37, 0, true).SetName("Small Hunze&Aas 1D");
+                yield return new TestCaseData("HEA_FM_RR", "15", "HEA.lit", 35, 2, false).SetName("Small Hunze&Aas 1D + RR");
+                //yield return new TestCaseData("Eindhoven", "10", "Eindho.lit", 0, 0, true).SetName("Eindhoven"); // #todo: fill in expected data
             }
         }
 
@@ -69,6 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         public void GivenRunningDeltaShellGuiWithImportedSobekTwoModel_WhenSavingLoadingAndResavingRhuHydroModel_ThenResavedModelIsSameAsInitiallySavedModel(
             string acceptanceModelName,
             string caseName,
+            string litDirectoryName,
             int preconditionExpectedBranchFeaturesCount,
             int preconditionExpectedCatchmentsCount,
             bool isFmOnly)
@@ -88,13 +88,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 }
 
                 Console.WriteLine("Importing model");
-                ImportSobekTwoModelAndAssertPreconditions(
-                    acceptanceModelName,
-                    caseName,
-                    hydroModel,
-                    preconditionExpectedBranchFeaturesCount,
-                    preconditionExpectedCatchmentsCount,
-                    isFmOnly);
+                SobekAcceptanceModelTestHelper.ImportSobekTwoModelAndAssertPreconditions(acceptanceModelName,
+                                                                                         caseName,
+                                                                                         litDirectoryName,
+                                                                                         acceptanceModelsDirectory,
+                                                                                         tempDirectory,
+                                                                                         hydroModel,
+                                                                                         preconditionExpectedBranchFeaturesCount,
+                                                                                         preconditionExpectedCatchmentsCount,
+                                                                                         isFmOnly);
 
                 // [When]
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
@@ -109,7 +111,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                                                                     secondSaveProjectDirectory, 
                                                                     mduFileName, 
                                                                     tempDirectory, 
-                                                                    hasRrData);
+                                                                    hasRrData,
+                                                                    new Dictionary<string, IEnumerable<string>>(),
+                                                                    AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
 
                 Console.WriteLine("Comparing saved data with reference data");
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
@@ -120,46 +124,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                                                                     hasRrData,
                                                                     new Dictionary<string, IEnumerable<string>>(),
                                                                     AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
-            }
-        }
-
-        private void ImportSobekTwoModelAndAssertPreconditions(
-            string acceptanceModelName,
-            string caseFolder,
-            IHydroModel hydroModel,
-            int expectedBranchFeaturesCount,
-            int expectedCatchmentsCount,
-            bool isFmOnly)
-        {
-            var zipFilePath = Path.Combine(acceptanceModelsDirectory, acceptanceModelName + ".zip");
-            var extractedModelDirectory = Path.Combine(tempDirectory, "Extracted model");
-
-            ZipFileUtils.Extract(zipFilePath, extractedModelDirectory);
-
-            var caseDirectory = Path.Combine(extractedModelDirectory, caseFolder);
-            var pathToNetworkFile = Path.Combine(caseDirectory, "NETWORK.TP");
-            
-            var sobekHydroModelImporter = new SobekHydroModelImporter(false)
-            {
-                TargetObject = hydroModel,
-                PartialSobekImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToNetworkFile, hydroModel),
-                PathSobek = pathToNetworkFile
-            };
-
-            var errorMessages = TestHelper.GetAllRenderedMessages(() => sobekHydroModelImporter.Import(), Level.Error);
-
-            // [Precondition]
-            Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the SOBEK2 model:{Environment.NewLine}{errorMessages}");
-
-            // [Precondition]
-            var hydroNetwork = hydroModel.Region.SubRegions.OfType<IHydroNetwork>().Single();
-            Assert.AreEqual(expectedBranchFeaturesCount, hydroNetwork.BranchFeatures.Count(), "[Precondition failure] Unexpected number of branch features");
-
-            // [Precondition]
-            if (!isFmOnly)
-            {
-                var basin = hydroModel.Region.SubRegions.OfType<IDrainageBasin>().Single();
-                Assert.AreEqual(expectedCatchmentsCount, basin.AllCatchments.Count(), "[Precondition failure] Unexpected number of catchments");
             }
         }
     }

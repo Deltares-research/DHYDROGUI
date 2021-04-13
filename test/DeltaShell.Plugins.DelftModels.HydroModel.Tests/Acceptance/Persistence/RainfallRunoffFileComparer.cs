@@ -49,7 +49,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 
                 string errorMessage = string.Empty;
                 
-                if (string.Equals(fileName, "3brunoff.tp", StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(fileName, "3brunoff.tp", StringComparison.InvariantCultureIgnoreCase)
+                || string.Equals(fileName, "3b_nod.tp", StringComparison.InvariantCultureIgnoreCase))
                 {
                     identical = RunoffTpFileComparer.Compare(expectedRainfallRunoffFile, actualRainfallRunoffFile, out errorMessage) && identical;
                 }

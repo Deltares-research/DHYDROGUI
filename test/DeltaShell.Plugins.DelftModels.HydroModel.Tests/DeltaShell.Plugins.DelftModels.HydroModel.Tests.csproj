@@ -246,6 +246,7 @@
     <Compile Include="Acceptance\Run\RunGwswModelAcceptanceTests.cs" />
     <Compile Include="Acceptance\Run\RunModelAcceptanceTestHelper.cs" />
     <Compile Include="Acceptance\Run\RunSobekTwoModelAcceptanceTests.cs" />
+    <Compile Include="Acceptance\SobekAcceptanceModelTestHelper.cs" />
     <Compile Include="Acceptance\TestCategories.cs" />
     <Compile Include="DimrApiWrapperIntegrationTest.cs" />
     <Compile Include="Export\DHydroConfigXmlExporterTest.cs" />
