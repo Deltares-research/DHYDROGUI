@@ -140,6 +140,16 @@
     <Compile Include="CircleCrossSectionDefinitionGenerator.cs" />
     <Compile Include="CompartmentShapeConverter.cs" />
     <Compile Include="CunetteCrossSectionShapeGenerator.cs" />
+    <Compile Include="Decorators\SewerCompartmentBottomLevelDecorator.cs" />
+    <Compile Include="Decorators\SewerCompartmentFloodableAreaDecorator.cs" />
+    <Compile Include="Decorators\SewerCompartmentGeometryDecorator.cs" />
+    <Compile Include="Decorators\SewerCompartmentLengthDecorator.cs" />
+    <Compile Include="Decorators\SewerCompartmentNodeShapeDecorator.cs" />
+    <Compile Include="Decorators\SewerCompartmentParentManholeDecorator.cs" />
+    <Compile Include="Decorators\SewerCompartmentDecorator.cs" />
+    <Compile Include="Decorators\SewerCompartmentStorageTypeDecorator.cs" />
+    <Compile Include="Decorators\SewerCompartmentSurfaceLevelDecorator.cs" />
+    <Compile Include="Decorators\SewerCompartmentWidthDecorator.cs" />
     <Compile Include="DefaultCrossSectionDefinitionGenerator.cs" />
     <Compile Include="DefinitionsProvider.cs" />
     <Compile Include="DefinitionsVersionProvider.cs" />
@@ -160,6 +170,7 @@
     <Compile Include="NwrwSurfaceData.cs" />
     <Compile Include="ParallelHelper.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="SewerCompartmentDecoratorFactory.cs" />
     <Compile Include="SewerFeatures\GwswConnectionOrifice.cs" />
     <Compile Include="SewerFeatures\GwswConnectionPump.cs" />
     <Compile Include="SewerFeatures\GwswConnectionWeir.cs" />
@@ -272,7 +283,6 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

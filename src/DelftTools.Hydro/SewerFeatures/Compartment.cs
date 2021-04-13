@@ -16,7 +16,7 @@ using GeoAPI.Geometries;
 namespace DelftTools.Hydro.SewerFeatures
 {
     [Entity]
-    public class Compartment : IPointFeature, ICompartment, ICopyFrom, IItemContainer
+    public class Compartment : ACompartment, IPointFeature, ICompartment, ICopyFrom, IItemContainer
     {
         private IManhole parentManhole;
 
@@ -163,6 +163,11 @@ namespace DelftTools.Hydro.SewerFeatures
         public override string ToString()
         {
             return Name;
+        }
+
+        public override ACompartment ProcessInput(object gwswElement)
+        {
+            return this;
         }
 
         public object Clone()

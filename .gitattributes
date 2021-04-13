@@ -466,6 +466,7 @@ src/DelftTools.Hydro/RunoffBoundary.hbm.xml -text
 src/DelftTools.Hydro/SewerConnectionExtensionMethods.cs -text
 src/DelftTools.Hydro/SewerConnectionSpecialConnectionType.cs -text
 src/DelftTools.Hydro/SewerConnectionWaterType.cs -text
+src/DelftTools.Hydro/SewerFeatures/ACompartment.cs -text
 src/DelftTools.Hydro/SewerFeatures/Compartment.cs -text
 src/DelftTools.Hydro/SewerFeatures/IOrifice.cs -text
 src/DelftTools.Hydro/SewerFeatures/IPipe.cs -text
@@ -2324,6 +2325,16 @@ src/DeltaShell.Plugins.GWSWImporter/ArchCrossSectionDefinitionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/CircleCrossSectionDefinitionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/CompartmentShapeConverter.cs -text
 src/DeltaShell.Plugins.GWSWImporter/CunetteCrossSectionShapeGenerator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentBottomLevelDecorator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentDecorator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentFloodableAreaDecorator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentGeometryDecorator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentLengthDecorator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentNodeShapeDecorator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentParentManholeDecorator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentStorageTypeDecorator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentSurfaceLevelDecorator.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Decorators/SewerCompartmentWidthDecorator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/DefaultCrossSectionDefinitionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/DefinitionsProvider.cs -text
 src/DeltaShell.Plugins.GWSWImporter/DefinitionsVersionProvider.cs -text
@@ -2357,6 +2368,7 @@ src/DeltaShell.Plugins.GWSWImporter/RectangleCrossSectionDefinitionGenerator.cs 
 src/DeltaShell.Plugins.GWSWImporter/Resources/GWSWDefinition.csv -text
 src/DeltaShell.Plugins.GWSWImporter/Resources/GWSWDefinition1_5.csv -text
 src/DeltaShell.Plugins.GWSWImporter/Resources/StructureFeatureSmall.png -text
+src/DeltaShell.Plugins.GWSWImporter/SewerCompartmentDecoratorFactory.cs -text
 src/DeltaShell.Plugins.GWSWImporter/SewerCompartmentGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/SewerConnectionGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/SewerConnectionMapping.cs -text

@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Reflection;
@@ -98,6 +99,46 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var uniqueIdAttribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(UniqueId));
             Log.WarnFormat(Resources.GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__, attributeName, uniqueIdAttribute?.ValueAsString, element?.ElementTypeName);
             return null;
+        }
+        
+        /// <summary>
+        /// Gets the attribute value from list.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="attributeName">Name of the attribute.</param>
+        /// <param name="defaultValue">Optional default value for the attribute.</param>
+        /// <param name="logMessage">Optional log message to display when a default value is used.</param>
+        /// <typeparam name="T">The type of the attribute value.</typeparam>
+        /// <returns>The value of the attribute.</returns>
+        public static T GetAttributeValueFromList<T>(this GwswElement element, string attributeName, T defaultValue = default(T), string logMessage = null)
+        {
+           var attribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(attributeName));
+           if (attribute != null)
+           {
+               if (!attribute.IsValidAttribute() || string.IsNullOrWhiteSpace(attribute.ValueAsString))
+               {
+                   if (!string.IsNullOrWhiteSpace(logMessage))
+                   {
+                       Log.Warn(logMessage);
+                   }
+                   
+                   return defaultValue;
+               }
+
+               var typeConverter = TypeDescriptor.GetConverter(typeof(T));
+               if (typeConverter.CanConvertFrom(typeof(string)) && typeConverter.IsValid(attribute.ValueAsString))
+               {
+                   return (T)typeConverter.ConvertFromInvariantString(attribute.ValueAsString);
+               }
+           }
+           
+           var uniqueIdAttribute = element?.GwswAttributeList?.FirstOrDefault(attr => attr.GwswAttributeType.Key.Equals(UniqueId));
+           Log.WarnFormat(Resources.GwswElementExtensions_GetAttributeFromList_Attribute__0__was_not_found_for_element__1__of_type__2__, attributeName, uniqueIdAttribute?.ValueAsString, element?.ElementTypeName);
+           if (!string.IsNullOrWhiteSpace(logMessage))
+           {
+               Log.Warn(logMessage);
+           }
+           return defaultValue;
         }
 
         /// <summary>
