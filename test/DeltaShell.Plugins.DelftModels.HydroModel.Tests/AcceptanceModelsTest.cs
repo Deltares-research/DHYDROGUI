@@ -318,9 +318,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
         private static void CheckUpToDateFiles(IDictionary<string, DateTime> timeStampsFirstSet, IDictionary<string, DateTime> timeStampsSecondSet, int testStepNr)
         {
-            foreach ((string key, DateTime value) in timeStampsFirstSet)
+            foreach (KeyValuePair<string, DateTime> kvp in timeStampsFirstSet)
             {
-                Assert.AreNotEqual(timeStampsSecondSet[key], value, $"After saving in step {testStepNr} file {key} was not updated");
+                string key = kvp.Key;
+                Assert.AreNotEqual(timeStampsSecondSet[key], kvp.Value, $"After saving in step {testStepNr} file {key} was not updated");
             }
         }
 

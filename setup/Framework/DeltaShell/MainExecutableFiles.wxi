@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include >
-  <File Id="RemoteInstanceServer.x86.exe" Source="$(var.deltashell_gui_bin)DelftTools.Utils.RemoteInstanceServer.x86.exe" />
   <File Id="ProtoBufRemote.dll" Source="$(var.deltashell_gui_bin)ProtoBufRemote.dll" />
   <File Id="protobuf_net.dll" Source="$(var.deltashell_gui_bin)protobuf-net.dll" />
   
@@ -94,10 +93,7 @@
   <File Id="CheckRegistration.dll" Source="$(var.deltashell_gui_bin)CheckRegistration.dll"/>
   <File Id="Deltares.Authorization.dll" Source="$(var.deltashell_gui_bin)Deltares.Authorization.dll"/>
   <File Id="dauth.dll" Source="$(var.deltashell_gui_bin)dauth.dll"/>
-  <File Id="dauth.exp" Source="$(var.deltashell_gui_bin)dauth.exp"/>
-  <File Id="dauth.lib" Source="$(var.deltashell_gui_bin)dauth.lib"/>
-  <File Id="msvcp110.dll" Source="$(var.deltashell_gui_bin)msvcp110.dll"/>
-  <File Id="msvcr110.dll" Source="$(var.deltashell_gui_bin)msvcr110.dll"/>
+  <File Id="dac2.dll" Source="$(var.deltashell_gui_bin)dac2.dll"/>
   
   <RemoveFile Id="LogFile" On="uninstall" Name="DeltaShell.Gui.log" />
 </Include>

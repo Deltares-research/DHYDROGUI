@@ -116,6 +116,28 @@
                             <File Id="fil5B5DF5DDA0EAFB26CC558110396DD4BF" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dimr\bin\dimr_dll.dll" />
                         </Component>
                     </Directory>
+                    <Directory Id="dirB6025B037A17848225995403635E5155" Name="schema">
+                        <Directory Id="dir9B6468BEC461835E999798D7D2FB07DD" Name="1_0">
+                            <Component Id="cmp0269D42F2D49D5C20CB8B34738C16E1D" Guid="*">
+                                <File Id="fil0EE4F7531F9E2ABA5ABB04DEA245668E" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dimr\schema\1_0\dimr.xsd" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dirFE5462E926C9327B6003C38A7B8042B0" Name="1_1">
+                            <Component Id="cmpE498DDE747CFCD8375B8F2C3648C2F8E" Guid="*">
+                                <File Id="fil0998CE5BFF701F5864E7BD33A4AE7335" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dimr\schema\1_1\dimr.xsd" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir8AA4492D34D6BF6E5EAB836567CBD8EF" Name="1_2">
+                            <Component Id="cmp27CADD85ABE0D83F99DA3910EBF28D42" Guid="*">
+                                <File Id="fil6C13C1E8CF227507527D0953647D83D8" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dimr\schema\1_2\dimr.xsd" />
+                            </Component>
+                        </Directory>
+                        <Directory Id="dir91209D0F1A941025D98AB73856763D59" Name="latest">
+                            <Component Id="cmp3D893DAA14BB3EF76C98E21FC924877F" Guid="*">
+                                <File Id="filA29FD2BE932371A1D7636BD763AA6AA9" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dimr\schema\latest\dimr.xsd" />
+                            </Component>
+                        </Directory>
+                    </Directory>
                     <Directory Id="dirCD4E1B5FFC3DAD00BE04913F65B2C3EE" Name="scripts">
                         <Component Id="cmpDE0E66256E37C266BE95D51E1B6DE9B7" Guid="*">
                             <File Id="filDC4E6FAB834C1034315FAC894A614EE2" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dimr\scripts\dimr_config_example.xml" />
@@ -125,6 +147,21 @@
                         </Component>
                         <Component Id="cmp8E8CD8889A979F8C9811E1BBFAD5EB72" Guid="*">
                             <File Id="filDEF239BD662D0A52B503BEB0063AE762" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dimr\scripts\run_dimr_parallel.bat" />
+                        </Component>
+                    </Directory>
+                </Directory>
+                <Directory Id="dir3E5DECBAD2D27CB8A0B00DBDA43B9D79" Name="dmor">
+                    <Directory Id="dir7B59ABFE2C115BFFA749D5B76FE44D76" Name="bin">
+                        <Component Id="cmp69FF1CDAB174BD0CC649D00850518985" Guid="*">
+                            <File Id="fil73D4E8DD5958D26B66DFF1C5F7191E90" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dmor\bin\mormerge.exe" />
+                        </Component>
+                    </Directory>
+                    <Directory Id="dirD1303515916B1343B998279B1E384B5E" Name="scripts">
+                        <Component Id="cmpCA9C87CA06D2C2F11C7A84BC465CAF50" Guid="*">
+                            <File Id="fil06BDCF88D0739CB4310D5F252C03B775" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dmor\scripts\mormerge.tcl" />
+                        </Component>
+                        <Component Id="cmp9900BCB7B2E42FC099817E90D664B388" Guid="*">
+                            <File Id="fil7BE79E29A154FE20BE41D343888E59A0" KeyPath="yes" Source="$(var.dimr_kernels_lib_dir)\x64\dmor\scripts\run_mormerge.bat" />
                         </Component>
                     </Directory>
                 </Directory>
@@ -643,9 +680,16 @@
             <ComponentRef Id="cmpEAAEBFECAFD8790C846AE23FDE579250" />
             <ComponentRef Id="cmp4CB0F6CA43AEDF25DA6B674C24C9EC2B" />
             <ComponentRef Id="cmp416FB7C35E58F50A93297A5F0751132D" />
+            <ComponentRef Id="cmp0269D42F2D49D5C20CB8B34738C16E1D" />
+            <ComponentRef Id="cmpE498DDE747CFCD8375B8F2C3648C2F8E" />
+            <ComponentRef Id="cmp27CADD85ABE0D83F99DA3910EBF28D42" />
+            <ComponentRef Id="cmp3D893DAA14BB3EF76C98E21FC924877F" />
             <ComponentRef Id="cmpDE0E66256E37C266BE95D51E1B6DE9B7" />
             <ComponentRef Id="cmp27C3C6E70B77545D1E68B4015352AF67" />
             <ComponentRef Id="cmp8E8CD8889A979F8C9811E1BBFAD5EB72" />
+            <ComponentRef Id="cmp69FF1CDAB174BD0CC649D00850518985" />
+            <ComponentRef Id="cmpCA9C87CA06D2C2F11C7A84BC465CAF50" />
+            <ComponentRef Id="cmp9900BCB7B2E42FC099817E90D664B388" />
             
             
             

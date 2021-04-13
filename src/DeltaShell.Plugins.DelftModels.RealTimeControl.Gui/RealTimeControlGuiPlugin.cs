@@ -259,7 +259,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         }
 
         private void CloseOutputFileViews(RealTimeControlModel model) => 
-            model.OutputDocuments.ForEach(Gui.CommandHandler.RemoveAllViewsForItem);
+            model.OutputDocuments.ForEach(v => Gui.CommandHandler.RemoveAllViewsForItem(v));
 
         private void InitializeComponent()
         {
