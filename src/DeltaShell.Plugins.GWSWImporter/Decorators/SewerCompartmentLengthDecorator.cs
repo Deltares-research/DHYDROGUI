@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
         
         private static void SetNodeLength(ICompartment compartment, GwswElement gwswElement)
         {
-            double defaultLength = 0.8d;
+            double defaultLength = 0.8d * 1000;
             
             string logMessage = null;
             if (compartment.Shape == CompartmentShape.Rectangular)

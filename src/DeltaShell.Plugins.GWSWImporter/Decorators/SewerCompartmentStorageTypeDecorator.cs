@@ -45,12 +45,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Decorators
                     compartment.CompartmentStorageType = CompartmentStorageType.Closed;
                     break;
                 case ManholeMapping.GwswCompartmentStorageType.Loss:
-                    Log.WarnFormat($"Compartment {compartment.Name} has an unsupported compartment storage type 'VRL'. " +
-                                   $"Setting the default compartment storage type 'RES' instead.");
+                    Log.Warn($"Compartment {compartment.Name} has an unsupported compartment storage type 'VRL'. " +
+                             $"Setting the default compartment storage type 'RES' instead.");
                     compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
                     break;
                 default:
-                    Log.WarnFormat($"Compartment {compartment.Name} has an unsupported compartment storage type. Setting default 'Reservoir'.");
+                    Log.Warn($"Compartment {compartment.Name} has an unsupported compartment storage type. Setting default 'Reservoir'.");
                     compartment.CompartmentStorageType = CompartmentStorageType.Reservoir;
                     break;
             }

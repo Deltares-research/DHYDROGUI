@@ -9,6 +9,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
     {
 
         [Test]
+        [TestCase(null, CompartmentShape.Unknown)]
         [TestCase("unkNoWn", CompartmentShape.Unknown)]
         [TestCase("rnd", CompartmentShape.Round)]
         [TestCase("rOund", CompartmentShape.Round)]

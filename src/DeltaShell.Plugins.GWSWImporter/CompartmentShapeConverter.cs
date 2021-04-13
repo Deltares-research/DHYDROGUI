@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// <returns>The corresponding <see cref="CompartmentShape"/></returns>
         public static CompartmentShape ConvertStringToCompartmentShape(string compartmentShapeString)
         {
-            switch (compartmentShapeString.ToLower())
+            switch (compartmentShapeString?.ToLower())
             {
                 case "rnd":
                 case "round":

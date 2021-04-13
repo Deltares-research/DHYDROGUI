@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(keyValue, badlyFormattedEntry, string.Empty)
                 }
             };
-            var expectedPartOfMessage = "It was not possible to parse attribute";
+            var expectedPartOfMessage = "using default value:";
             TryCreateCompartmentAndCheckForLogMessageAndCheckCompartmentValidity(manholeId, badGwswElement, compartmentId, expectedPartOfMessage);
         }
 
