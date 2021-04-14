@@ -11,6 +11,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Properties;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -24,6 +25,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using SharpMap.Api;
+using SharpMap.Api.GridGeom;
 using SharpMap.Data.Providers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -770,7 +772,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (grid != null)
             {
                 BeginEdit(new DefaultEditAction("Updating grid and interpolating values on coverages"));
-                
+
+                TypeUtils.CallPrivateMethod(Grid, "ClearCaches");
+                using (var api = new RemoteGridGeomApi())
+                using (var mesh = new DisposableMeshGeometry(grid))
+                {
+                    DisposableMeshGeometry resultMesh = api.CreateCells(mesh);
+                    grid.Cells = resultMesh.CreateCells();
+                }
+
                 // add flowlinks to input grid for adding data on input FlowLink coverages (Roughness, Viscosity etc.)
                 grid.FlowLinks.Clear();
                 grid.FlowLinks.AddRange(GenerateFlowLinksForEdges(grid));
