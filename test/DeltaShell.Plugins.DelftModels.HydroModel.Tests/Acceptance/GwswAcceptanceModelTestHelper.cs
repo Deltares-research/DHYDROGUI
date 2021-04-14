@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -20,9 +21,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             string acceptanceModelsDirectory,
             IHydroModel hydroModel,
             int expectedBranchFeaturesCount,
-            int expectedCatchmentsCount, IApplication app)
+            int expectedCatchmentsCount, 
+            IApplication app)
         {
-            var inputDataDirectory = Path.Combine(acceptanceModelsDirectory, acceptanceModelName);
+            string inputDataDirectory = Path.Combine(acceptanceModelsDirectory, acceptanceModelName);
 
             var fileImporter = new GwswFileImporter(new DefinitionsProvider())
             {
@@ -32,7 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             var fileImportActivity = new FileImportActivity(fileImporter, hydroModel);
             fileImporter.LoadFeatureFiles(inputDataDirectory);
 
-            var errorMessages = TestHelper.GetAllRenderedMessages(() =>
+            IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(() =>
             {
                 app.ActivityRunner.Enqueue(fileImportActivity);
 
