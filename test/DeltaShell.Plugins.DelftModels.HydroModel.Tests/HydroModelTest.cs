@@ -20,7 +20,6 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMapTestUtils;
@@ -38,19 +37,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Arrange
             var provider = new RealTimeControlDimrConfigModelCouplerProvider();
 
-            var rtcModel = new RealTimeControlModel();
-            var fmModel = Substitute.For<IDimrModel>();
-            fmModel.ShortName.Returns("fm");
-            fmModel.Name.Returns("FlowFM");
+            using (var rtcModel = new RealTimeControlModel())
+            {
+                var fmModel = Substitute.For<IDimrModel>();
+                fmModel.ShortName.Returns("fm");
+                fmModel.Name.Returns("FlowFM");
 
-            // Act
-            IDimrConfigModelCoupler coupler = provider.CreateCoupler(rtcModel, fmModel, null, null);
+                // Act
+                IDimrConfigModelCoupler coupler = provider.CreateCoupler(rtcModel, fmModel, null, null);
 
-            //Assert
-            Assert.AreEqual(rtcModel.ShortName + "_to_" + fmModel.ShortName + ".nc", rtcModel.CommunicationRtcToFmFileName);
-            Assert.AreEqual("rtc_to_fm", coupler.Name);
-            Assert.AreEqual("RTC Model", coupler.Source);
-            Assert.AreEqual("FlowFM", coupler.Target);
+                //Assert
+                Assert.AreEqual(rtcModel.ShortName + "_to_" + fmModel.ShortName + ".nc", rtcModel.CommunicationRtcToFmFileName);
+                Assert.AreEqual("rtc_to_fm", coupler.Name);
+                Assert.AreEqual("RTC Model", coupler.Source);
+                Assert.AreEqual("FlowFM", coupler.Target);
+            }
         }
 
         [Test]
@@ -59,19 +60,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             // Arrange
             var provider = new RealTimeControlDimrConfigModelCouplerProvider();
 
-            var rtcModel = new RealTimeControlModel();
-            var fmModel = Substitute.For<IDimrModel>();
-            fmModel.ShortName.Returns("fm");
-            fmModel.Name.Returns("FlowFM");
+            using (var rtcModel = new RealTimeControlModel())
+            {
+                var fmModel = Substitute.For<IDimrModel>();
+                fmModel.ShortName.Returns("fm");
+                fmModel.Name.Returns("FlowFM");
 
-            // Act
-            IDimrConfigModelCoupler coupler = provider.CreateCoupler(fmModel, rtcModel, null, null);
+                // Act
+                IDimrConfigModelCoupler coupler = provider.CreateCoupler(fmModel, rtcModel, null, null);
 
-            //Assert
-            Assert.AreEqual(fmModel.ShortName + "_to_" + rtcModel.ShortName + ".nc", rtcModel.CommunicationFmToRtcFileName);
-            Assert.AreEqual("fm_to_rtc", coupler.Name);
-            Assert.AreEqual("FlowFM", coupler.Source);
-            Assert.AreEqual("RTC Model", coupler.Target);
+                //Assert
+                Assert.AreEqual(fmModel.ShortName + "_to_" + rtcModel.ShortName + ".nc", rtcModel.CommunicationFmToRtcFileName);
+                Assert.AreEqual("fm_to_rtc", coupler.Name);
+                Assert.AreEqual("FlowFM", coupler.Source);
+                Assert.AreEqual("RTC Model", coupler.Target);
+            }
         }
 
         [Test]
@@ -79,32 +82,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Slow)]
         public void HydroModelValidatesCurrentWorkflow()
         {
-            var hydroModel = new HydroModel();
-            hydroModel.CurrentWorkflow = null;
+            using (var hydroModel = new HydroModel())
+            {
+                hydroModel.CurrentWorkflow = null;
 
-            ValidationReport result = hydroModel.Validate();
-            Assert.AreEqual(1, result.ErrorCount);
+                ValidationReport result = hydroModel.Validate();
+                Assert.AreEqual(1, result.ErrorCount);
+            }
         }
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
         public void HydroModelAddsItsSelfToIHydroModelWorkFlow()
         {
-            var mocks = new MockRepository();
-            var hydroModelWorkFlow = mocks.Stub<IHydroModelWorkFlow>();
+            var hydroModelWorkFlow = Substitute.For<IHydroModelWorkFlow>();
+            hydroModelWorkFlow.Activities.Returns(new EventedList<IActivity>());
 
-            Expect.Call(hydroModelWorkFlow.Activities).Return(new EventedList<IActivity>()).Repeat.Any();
+            using (var hydroModel = new HydroModel())
+            {
+                hydroModel.Workflows.Add(hydroModelWorkFlow);
 
-            mocks.ReplayAll();
+                Assert.NotNull(hydroModelWorkFlow.HydroModel);
 
-            var hydroModel = new HydroModel();
-            hydroModel.Workflows.Add(hydroModelWorkFlow);
-
-            Assert.NotNull(hydroModelWorkFlow.HydroModel);
-
-            hydroModel.Workflows.Remove(hydroModelWorkFlow);
-            Assert.IsNull(hydroModelWorkFlow.HydroModel);
+                hydroModel.Workflows.Remove(hydroModelWorkFlow);
+                Assert.IsNull(hydroModelWorkFlow.HydroModel);
+            }
         }
 
         [Test]
@@ -112,17 +114,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Slow)]
         public void AddingRegionsCreatesChildDataItems()
         {
-            var hydroModel = new HydroModel();
+            using (var hydroModel = new HydroModel())
+            {
 
-            var subRegion = new HydroRegion();
-            hydroModel.Region.SubRegions.Add(subRegion);
+                var subRegion = new HydroRegion();
+                hydroModel.Region.SubRegions.Add(subRegion);
 
-            // asserts
-            hydroModel.GetDataItemByValue(hydroModel.Region).Children.Count
-                      .Should().Be.EqualTo(1);
+                // asserts
+                hydroModel.GetDataItemByValue(hydroModel.Region).Children.Count
+                          .Should().Be.EqualTo(1);
 
-            hydroModel.GetDataItemByValue(hydroModel.Region).Children.First().Value
-                      .Should().Be.EqualTo(subRegion);
+                hydroModel.GetDataItemByValue(hydroModel.Region).Children.First().Value
+                          .Should().Be.EqualTo(subRegion);
+            }
         }
 
         [Test]
@@ -133,49 +137,96 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             var childModel = new SimpleHydroModel();
 
             var subRegion = new HydroArea();
-            var region = new HydroRegion {SubRegions = {subRegion}};
-            var hydroModel = new HydroModel
+            var region = new HydroRegion { SubRegions = { subRegion } };
+            using (var hydroModel = new HydroModel { Region = region, Activities = { childModel } })
             {
-                Region = region,
-                Activities = {childModel}
-            };
 
-            IDataItem target = childModel.GetDataItemByValue(childModel.Region);
-            IDataItem source = hydroModel.GetDataItemByValue(subRegion);
-            target.LinkTo(source);
+                IDataItem target = childModel.GetDataItemByValue(childModel.Region);
+                IDataItem source = hydroModel.GetDataItemByValue(subRegion);
+                target.LinkTo(source);
 
-            hydroModel.Activities.Clear();
+                hydroModel.Activities.Clear();
 
-            source.LinkedBy.Count.Should().Be.EqualTo(0);
+                source.LinkedBy.Count.Should().Be.EqualTo(0);
+            }
+
         }
 
         [Test]
-        public void TestOutputIsEmpty()
+        public void Output_NewModel_IsEmptyAndNotOutOfSync()
         {
-            var hydroModel = new HydroModel();
-            Assert.IsTrue(hydroModel.OutputIsEmpty, "No models, so no output");
+            using (var hydroModel = new HydroModel())
+            {
+                Assert.That(hydroModel.OutputIsEmpty, Is.True);
+                Assert.That(hydroModel.OutputOutOfSync, Is.False);
+            }
+        }
 
-            // Add child model without output:
-            var simpleModel = new SimpleModel();
-            hydroModel.Activities.Add(simpleModel);
-            Assert.IsTrue(hydroModel.OutputIsEmpty, "1 empty model, so no output");
+        [Test]
+        public void Output_WithModelOutput_IsNotOutOfSyncAndNotEmpty()
+        {
+            using (var hydroModel = new HydroModel())
+            {
+                var simpleModel = new SimpleModel();
+                hydroModel.Activities.Add(simpleModel);
 
-            // Run child model:
-            simpleModel.Initialize();
-            simpleModel.Execute();
-            simpleModel.Finish();
-            Assert.IsFalse(hydroModel.OutputIsEmpty, "1 model with output");
-            //Submodel should also have output.
-            Assert.IsFalse(simpleModel.OutputIsEmpty, "1 model with output");
+                var workflow = new ParallelActivity { Activities = { simpleModel, } };
 
-            // Add child model without output:
-            hydroModel.Activities.Add(new SimpleModel());
-            Assert.IsFalse(hydroModel.OutputIsEmpty, "1 empty model and 1 model with output, so Integrated model has output");
+                hydroModel.Workflows.Add(workflow);
+                hydroModel.CurrentWorkflow = workflow;
 
-            //Clear output from the parent
-            hydroModel.ClearOutput();
-            Assert.IsTrue(hydroModel.OutputIsEmpty);
-            Assert.IsTrue(simpleModel.OutputIsEmpty);
+                ActivityRunner.RunActivity(hydroModel);
+
+                Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
+                Assert.That(hydroModel.OutputIsEmpty, Is.False);
+                Assert.That(hydroModel.OutputOutOfSync, Is.False);
+            }
+        }
+
+        [Test]
+        public void Output_WithCleanOutput_IsEmptyAndNotOutOfSync()
+        {
+            using (var hydroModel = new HydroModel())
+            {
+                var simpleModel = new SimpleModel();
+                hydroModel.Activities.Add(simpleModel);
+
+                var workflow = new ParallelActivity { Activities = { simpleModel } };
+
+                hydroModel.Workflows.Add(workflow);
+                hydroModel.CurrentWorkflow = workflow;
+
+                ActivityRunner.RunActivity(hydroModel);
+                Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
+
+                hydroModel.ClearOutput();
+
+                Assert.That(hydroModel.OutputIsEmpty, Is.True);
+                Assert.That(hydroModel.OutputOutOfSync, Is.False);
+            }
+        }
+
+        [Test]
+        public void Output_WithMarkOutputOutOfSync_IsOutOfSyncAndNotEmpty()
+        {
+            using (var hydroModel = new HydroModel())
+            {
+                var simpleModel = new SimpleModel();
+                hydroModel.Activities.Add(simpleModel);
+
+                var workflow = new ParallelActivity { Activities = { simpleModel } };
+
+                hydroModel.Workflows.Add(workflow);
+                hydroModel.CurrentWorkflow = workflow;
+
+                ActivityRunner.RunActivity(hydroModel);
+                Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
+
+                hydroModel.MarkOutputOutOfSync();
+
+                Assert.That(hydroModel.OutputIsEmpty, Is.False);
+                Assert.That(hydroModel.OutputOutOfSync, Is.True);
+            }
         }
 
         [Test]
@@ -188,9 +239,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var hydroModel = new HydroModel())
             {
                 hydroModel.Activities.Add(simpleModel);
-                simpleModel.Initialize();
-                simpleModel.Execute();
-                simpleModel.Finish();
+
+                var workflow = new ParallelActivity { Activities = { simpleModel } };
+
+                hydroModel.Workflows.Add(workflow);
+                hydroModel.CurrentWorkflow = workflow;
+
+                ActivityRunner.RunActivity(hydroModel);
+                Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
 
                 hydroModel.DataItems.Add(new DataItem(new TextDocument(), DataItemRole.Output, textDocumentTag));
 
@@ -207,23 +263,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         }
 
         [Test]
-        public void TestOutputIsNotEmptyForCompositeModelAfterRunActivity()
-        {
-            /*Sobek3-848*/
-            var hydroModel = new CompositeModel();
-            var simpleModel = new SimpleModel();
-            hydroModel.Activities.Add(simpleModel);
-            Assert.IsTrue(hydroModel.OutputIsEmpty);
-
-            ActivityRunner.RunActivity(hydroModel);
-            Assert.AreEqual(hydroModel.Status, ActivityStatus.Cleaned);
-            Assert.IsFalse(hydroModel.OutputIsEmpty);
-        }
-
-        [Test]
         public void TestRunUsingSimpleModel2_FailsValidation()
         {
-            var sharedNameOfModels = "SimpleModel";
+            const string sharedNameOfModels = "SimpleModel";
 
             var m1 = new SimpleModel
             {
@@ -236,29 +278,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Name = sharedNameOfModels
             };
 
-            var workflow = new ParallelActivity
+            using (var m1Activity = new ActivityWrapper(m1))
+            using (var m2Activity = new ActivityWrapper(m2))
             {
-                Activities =
+
+                var workflow = new ParallelActivity { Activities = { m1Activity, m2Activity } };
+
+                using (var hydroModel = new HydroModel
                 {
-                    new ActivityWrapper {Activity = m1},
-                    new ActivityWrapper {Activity = m2}
+                    Activities =
+                    {
+                        m1,
+                        m2
+                    },
+                    Workflows = { workflow },
+                    CurrentWorkflow = workflow
+                })
+                {
+                    // run
+                    hydroModel.Initialize();
+                    Assert.AreEqual(ActivityStatus.Failed, hydroModel.Status);
                 }
-            };
-
-            var hydroModel = new HydroModel
-            {
-                Activities =
-                {
-                    m1,
-                    m2
-                },
-                Workflows = {workflow},
-                CurrentWorkflow = workflow
-            };
-
-            // run
-            hydroModel.Initialize();
-            Assert.AreEqual(ActivityStatus.Failed, hydroModel.Status);
+            }
         }
 
         [Test]
@@ -277,36 +318,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Name = "SimpleModel2"
             };
 
-            var workflow = new ParallelActivity
+            using (var m1Activity = new ActivityWrapper(m1))
+            using (var m2Activity = new ActivityWrapper(m2))
             {
-                Activities =
+                var workflow = new ParallelActivity { Activities = { m1Activity, m2Activity } };
+
+                using (var hydroModel = new HydroModel
                 {
-                    new ActivityWrapper {Activity = m1},
-                    new ActivityWrapper {Activity = m2}
+                    Activities =
+                    {
+                        m1,
+                        m2
+                    },
+                    Workflows = { workflow },
+                    CurrentWorkflow = workflow
+                })
+                {
+                    // run
+                    hydroModel.Initialize();
+                    Assert.AreEqual(ActivityStatus.Initialized, hydroModel.Status);
+                    hydroModel.Execute();
+                    hydroModel.Finish();
+                    hydroModel.Cleanup();
+
+                    // asserts
+                    m1.Output.Should().Be.EqualTo(1);
+                    m2.Output.Should().Be.EqualTo(2);
                 }
-            };
-
-            var hydroModel = new HydroModel
-            {
-                Activities =
-                {
-                    m1,
-                    m2
-                },
-                Workflows = {workflow},
-                CurrentWorkflow = workflow
-            };
-
-            // run
-            hydroModel.Initialize();
-            Assert.AreEqual(ActivityStatus.Initialized, hydroModel.Status);
-            hydroModel.Execute();
-            hydroModel.Finish();
-            hydroModel.Cleanup();
-
-            // asserts
-            m1.Output.Should().Be.EqualTo(1);
-            m2.Output.Should().Be.EqualTo(2);
+            }
         }
 
         [Test]
@@ -336,50 +375,52 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             mocks.ReplayAll();
 
-            var hydroModel = new HydroModel();
-            var workFlow = new SequentialActivity
+            using (var hydroModel = new HydroModel())
             {
-                Activities =
+                var workFlow = new SequentialActivity
                 {
-                    hydroModelWorkFlow1,
-                    new ParallelActivity
+                    Activities =
                     {
-                        Activities =
+                        hydroModelWorkFlow1,
+                        new ParallelActivity
                         {
-                            hydroModelWorkFlow2,
-                            hydroModelWorkFlow3,
-                            new SequentialActivity {Activities = {hydroModelWorkFlow4}}
+                            Activities =
+                            {
+                                hydroModelWorkFlow2,
+                                hydroModelWorkFlow3,
+                                new SequentialActivity {Activities = {hydroModelWorkFlow4}}
+                            }
                         }
                     }
-                }
-            };
+                };
 
-            hydroModel.Workflows.Add(workFlow);
-            hydroModel.CurrentWorkflow = workFlow;
+                hydroModel.Workflows.Add(workFlow);
+                hydroModel.CurrentWorkflow = workFlow;
 
-            IDictionary<IHydroModelWorkFlowData, IList<int>> lookUp = hydroModel.CurrentWorkFlowData.HydroModelWorkFlowDataLookUp;
+                IDictionary<IHydroModelWorkFlowData, IList<int>> lookUp = hydroModel.CurrentWorkFlowData.HydroModelWorkFlowDataLookUp;
 
-            Assert.AreEqual(4, lookUp.Count);
-            Assert.AreEqual(new[]
-            {
-                0
-            }, lookUp[hydroModelWorkFlowData1]);
-            Assert.AreEqual(new[]
-            {
-                1,
-                0
-            }, lookUp[hydroModelWorkFlowData2]);
-            Assert.AreEqual(new[]
-            {
-                1,
-                1
-            }, lookUp[hydroModelWorkFlowData3]);
-            Assert.AreEqual(new[]
-            {
-                1,
-                2,
-                0
-            }, lookUp[hydroModelWorkFlowData4]);
+                Assert.AreEqual(4, lookUp.Count);
+                Assert.AreEqual(new[]
+                {
+                    0
+                }, lookUp[hydroModelWorkFlowData1]);
+                Assert.AreEqual(new[]
+                {
+                    1,
+                    0
+                }, lookUp[hydroModelWorkFlowData2]);
+                Assert.AreEqual(new[]
+                {
+                    1,
+                    1
+                }, lookUp[hydroModelWorkFlowData3]);
+                Assert.AreEqual(new[]
+                {
+                    1,
+                    2,
+                    0
+                }, lookUp[hydroModelWorkFlowData4]);
+            }
         }
 
         [Test]
@@ -405,73 +446,75 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
             mocks.ReplayAll();
 
-            var hydroModel = new HydroModel();
-            var workFlow = new SequentialActivity
+            using (var hydroModel = new HydroModel())
             {
-                Activities =
+                var workFlow = new SequentialActivity
                 {
-                    hydroModelWorkFlow1,
-                    new ParallelActivity
+                    Activities =
                     {
-                        Activities =
+                        hydroModelWorkFlow1,
+                        new ParallelActivity
                         {
-                            hydroModelWorkFlow2,
-                            hydroModelWorkFlow3,
-                            new SequentialActivity {Activities = {hydroModelWorkFlow4}}
+                            Activities =
+                            {
+                                hydroModelWorkFlow2,
+                                hydroModelWorkFlow3,
+                                new SequentialActivity {Activities = {hydroModelWorkFlow4}}
+                            }
                         }
                     }
-                }
-            };
+                };
 
-            hydroModel.Workflows.Add(workFlow);
-            hydroModel.CurrentWorkflow = workFlow;
+                hydroModel.Workflows.Add(workFlow);
+                hydroModel.CurrentWorkflow = workFlow;
 
-            Assert.IsNull(hydroModelWorkFlow1.Data);
-            Assert.IsNull(hydroModelWorkFlow2.Data);
-            Assert.IsNull(hydroModelWorkFlow3.Data);
-            Assert.IsNull(hydroModelWorkFlow4.Data);
+                Assert.IsNull(hydroModelWorkFlow1.Data);
+                Assert.IsNull(hydroModelWorkFlow2.Data);
+                Assert.IsNull(hydroModelWorkFlow3.Data);
+                Assert.IsNull(hydroModelWorkFlow4.Data);
 
-            var compositeHydroModelWorkFlowData = new CompositeHydroModelWorkFlowData
-            {
-                HydroModelWorkFlowDataLookUp = new Dictionary<IHydroModelWorkFlowData, IList<int>>
+                var compositeHydroModelWorkFlowData = new CompositeHydroModelWorkFlowData
                 {
+                    HydroModelWorkFlowDataLookUp = new Dictionary<IHydroModelWorkFlowData, IList<int>>
                     {
-                        hydroModelWorkFlowData1, new List<int>(new[]
                         {
-                            0
-                        })
-                    },
-                    {
-                        hydroModelWorkFlowData2, new List<int>(new[]
+                            hydroModelWorkFlowData1, new List<int>(new[]
+                            {
+                                0
+                            })
+                        },
                         {
-                            1,
-                            0
-                        })
-                    },
-                    {
-                        hydroModelWorkFlowData3, new List<int>(new[]
+                            hydroModelWorkFlowData2, new List<int>(new[]
+                            {
+                                1,
+                                0
+                            })
+                        },
                         {
-                            1,
-                            1
-                        })
-                    },
-                    {
-                        hydroModelWorkFlowData4, new List<int>(new[]
+                            hydroModelWorkFlowData3, new List<int>(new[]
+                            {
+                                1,
+                                1
+                            })
+                        },
                         {
-                            1,
-                            2,
-                            0
-                        })
+                            hydroModelWorkFlowData4, new List<int>(new[]
+                            {
+                                1,
+                                2,
+                                0
+                            })
+                        }
                     }
-                }
-            };
+                };
 
-            hydroModel.CurrentWorkFlowData = compositeHydroModelWorkFlowData;
+                hydroModel.CurrentWorkFlowData = compositeHydroModelWorkFlowData;
 
-            Assert.AreEqual(hydroModelWorkFlow1.Data, hydroModelWorkFlowData1);
-            Assert.AreEqual(hydroModelWorkFlow2.Data, hydroModelWorkFlowData2);
-            Assert.AreEqual(hydroModelWorkFlow3.Data, hydroModelWorkFlowData3);
-            Assert.AreEqual(hydroModelWorkFlow4.Data, hydroModelWorkFlowData4);
+                Assert.AreEqual(hydroModelWorkFlow1.Data, hydroModelWorkFlowData1);
+                Assert.AreEqual(hydroModelWorkFlow2.Data, hydroModelWorkFlowData2);
+                Assert.AreEqual(hydroModelWorkFlow3.Data, hydroModelWorkFlowData3);
+                Assert.AreEqual(hydroModelWorkFlow4.Data, hydroModelWorkFlowData4);
+            }
         }
 
         [Test]
@@ -481,7 +524,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             using (var hydroModel = new HydroModel())
             {
                 var activity = Substitute.For<IDimrModel>();
-                var workflow = new SequentialActivity {Activities = {activity}};
+                var workflow = new SequentialActivity { Activities = { activity } };
                 hydroModel.CurrentWorkflow = workflow;
 
                 // When 
@@ -514,10 +557,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     fs.Write(info, 0, info.Length);
                 }
 
-                var activity = new WaterFlowFMModel {Grid = UnstructuredGridTestHelper.GenerateRegularGrid(20, 20, 20, 20)};
+                var activity = new WaterFlowFMModel { Grid = UnstructuredGridTestHelper.GenerateRegularGrid(20, 20, 20, 20) };
                 activity.CacheFile.UpdatePathToMduLocation(mduFilePath);
 
-                var workflow = new SequentialActivity {Activities = {activity}};
+                var workflow = new SequentialActivity { Activities = { activity } };
                 hydroModel.CurrentWorkflow = workflow;
 
                 // When 
@@ -543,7 +586,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 
                 hydroModel.WorkingDirectoryPathFunc = () => testTempDirectory;
 
-                var workflow = new SequentialActivity {Activities = {activity}};
+                var workflow = new SequentialActivity { Activities = { activity } };
                 hydroModel.CurrentWorkflow = workflow;
 
                 // When 
@@ -560,16 +603,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenEmptyWorkflowHydroModel_WhenInitialize_ThenValidationFailsAndDoesNotCrash()
         {
             // Given
-            var hydroModel = new HydroModel();
-            Assert.That(hydroModel.CurrentWorkflow, Is.Null);
-            Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.None));
+            using (var hydroModel = new HydroModel())
+            {
+                Assert.That(hydroModel.CurrentWorkflow, Is.Null);
+                Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.None));
 
-            // When
-            TestDelegate testAction = () => hydroModel.Initialize();
+                // When
+                TestDelegate testAction = () => hydroModel.Initialize();
 
-            // Then
-            Assert.That(testAction, Throws.Nothing);
-            Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Failed));
+                // Then
+                Assert.That(testAction, Throws.Nothing);
+                Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Failed));
+            }
         }
 
         [Test]
@@ -583,8 +628,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 hydroModel.WorkingDirectoryPathFunc = () => tempDirectory.Path;
                 const string hydroModelName = "TestModel";
                 hydroModel.Name = hydroModelName;
-                SetUpHydroModelWithActivity(hydroModel, 
-                                            out string modelDirectoryName, 
+                SetUpHydroModelWithActivity(hydroModel,
+                                            out string modelDirectoryName,
                                             out string modelMduFileName);
 
                 string oldFilePath = Path.Combine(hydroModel.WorkingDirectoryPath, "test.txt");
@@ -613,40 +658,38 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void GivenAHydroModel_WhenOnCleanupIsCalled_ThenTheOutputShouldBeConnected()
         {
             using (var tempDirectory = new TemporaryDirectory())
+            using (var hydroModel = new HydroModel())
             {
-                using (var hydroModel = new HydroModel())
+                // Arrange
+                const string hydroModelName = "TestModel";
+                hydroModel.Name = hydroModelName;
+                hydroModel.WorkingDirectoryPathFunc = () => tempDirectory.Path;
+
+                FileUtils.CreateDirectoryIfNotExists(hydroModel.WorkingDirectoryPath);
+
+                string path = Path.Combine(hydroModel.WorkingDirectoryPath, "dimr_redirected.log");
+                const string text = "This is some text in the file.";
+
+                using (FileStream fs = File.Create(path))
                 {
-                    // Arrange
-                    const string hydroModelName = "TestModel";
-                    hydroModel.Name = hydroModelName;
-                    hydroModel.WorkingDirectoryPathFunc = () => tempDirectory.Path;
-
-                    FileUtils.CreateDirectoryIfNotExists(hydroModel.WorkingDirectoryPath);
-
-                    string path = Path.Combine(hydroModel.WorkingDirectoryPath, "dimr_redirected.log");
-                    const string text = "This is some text in the file.";
-
-                    using (FileStream fs = File.Create(path))
-                    {
-                        byte[] info = new UTF8Encoding(true).GetBytes(text);
-                        fs.Write(info, 0, info.Length);
-                    }
-
-                    var activity = Substitute.For<IDimrModel>();
-                    activity.DimrModelRelativeOutputDirectory.Returns("");
-
-                    var workflow = new SequentialActivity {Activities = {activity}};
-
-                    hydroModel.Activities.Add(activity);
-                    hydroModel.CurrentWorkflow = workflow;
-
-                    // Act
-                    hydroModel.Cleanup();
-
-                    // Assert
-                    activity.Received(1).ConnectOutput(hydroModel.WorkingDirectoryPath);
-                    Assert.AreEqual(text, ((TextDocument) hydroModel.DataItems.First(di => di.Tag == "DimrRunLog").Value).Content);
+                    byte[] info = new UTF8Encoding(true).GetBytes(text);
+                    fs.Write(info, 0, info.Length);
                 }
+
+                var activity = Substitute.For<IDimrModel>();
+                activity.DimrModelRelativeOutputDirectory.Returns("");
+
+                var workflow = new SequentialActivity { Activities = { activity } };
+
+                hydroModel.Activities.Add(activity);
+                hydroModel.CurrentWorkflow = workflow;
+
+                // Act
+                hydroModel.Cleanup();
+
+                // Assert
+                activity.Received(1).ConnectOutput(hydroModel.WorkingDirectoryPath);
+                Assert.AreEqual(text, ((TextDocument)hydroModel.DataItems.First(di => di.Tag == "DimrRunLog").Value).Content);
             }
         }
 
@@ -654,43 +697,46 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void WorkingDirectoryPath_ShouldReturnCombinationOfInvokedWorkingDirectoryPathFuncAndModelName()
         {
             // Arrange
-            var hydroModel = new HydroModel
+            using (var hydroModel = new HydroModel
             {
                 Name = "Model",
                 WorkingDirectoryPathFunc = () => "TestWorkingDirectory"
-            };
-
-            // Act, Assert
-            Assert.AreEqual(Path.Combine(hydroModel.WorkingDirectoryPathFunc(),
-                                         hydroModel.Name), hydroModel.WorkingDirectoryPath);
+            })
+            {
+                // Act, Assert
+                Assert.AreEqual(Path.Combine(hydroModel.WorkingDirectoryPathFunc(),
+                                             hydroModel.Name), hydroModel.WorkingDirectoryPath);
+            }
         }
 
         [Test]
         public void WorkingDirectoryPathFunc_ShouldReturnDefaultDeltaShellWorkingDirectory()
         {
             // Arrange
-            var hydroModel = new HydroModel();
-
-            // Act, Assert
-            Assert.AreEqual(DefaultModelSettings.DefaultDeltaShellWorkingDirectory,
-                            hydroModel.WorkingDirectoryPathFunc());
+            using (var hydroModel = new HydroModel())
+            {
+                // Act, Assert
+                Assert.AreEqual(DefaultModelSettings.DefaultDeltaShellWorkingDirectory,
+                                hydroModel.WorkingDirectoryPathFunc());
+            }
         }
 
         [Test]
         public void WorkingDirectoryPathFunc_WhenValueForSetterIsNull_ShouldReturnArgumentNullException()
         {
             // Arrange
-            var hydroModel = new HydroModel();
-
-            // Act
-            void Call()
+            using (var hydroModel = new HydroModel())
             {
-                hydroModel.WorkingDirectoryPathFunc = null;
-            }
+                // Act
+                void Call()
+                {
+                    hydroModel.WorkingDirectoryPathFunc = null;
+                }
 
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(exception.ParamName, Is.EqualTo("value"));
+                // Assert
+                var exception = Assert.Throws<ArgumentNullException>(Call);
+                Assert.That(exception.ParamName, Is.EqualTo("value"));
+            }
         }
 
         [Test]
@@ -713,7 +759,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         {
             IModel model = Substitute.For<IModel, ICoupledModel>();
             var expectedDataItems = new List<IDataItem>();
-            ((ICoupledModel) model).GetDataItemsUsedForCouplingModel(role).Returns(expectedDataItems);
+            ((ICoupledModel)model).GetDataItemsUsedForCouplingModel(role).Returns(expectedDataItems);
             IEnumerable<IDataItem> dataItems = HydroModel.GetDataItemsUsedForCouplingModel(model, role);
 
             Assert.AreSame(dataItems, expectedDataItems);
@@ -738,11 +784,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 string shouldBeRemovedFilePath = Path.Combine(hydroModel.WorkingDirectoryPath, "test2.txt");
                 File.WriteAllText(shouldBeRemovedFilePath, "test");
 
-                SetUpHydroModelWithActivity(hydroModel, 
-                                            out string _, 
-                                            out string _, 
+                SetUpHydroModelWithActivity(hydroModel,
+                                            out string _,
+                                            out string _,
                                             exceptionFilePath);
-                
+
                 // Act
                 hydroModel.Initialize();
 
@@ -755,50 +801,56 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Test]
         public void GivenHydroModelWithoutModels_ThenCanRunIsFalse()
         {
-            var hydroModel = new HydroModel();
-
-            Assert.That(hydroModel.CanRun, Is.False);
+            using (var hydroModel = new HydroModel())
+            {
+                Assert.That(hydroModel.CanRun, Is.False);
+            }
         }
 
         [Test]
         public void GivenHydroModelWithModelWhereCanRunIsFalse_ThenCanRunIsFalse()
         {
-            var hydroModel = new HydroModel();
+            using (var hydroModel = new HydroModel())
+            {
 
-            var model = Substitute.For<IModel>();
-            model.CanRun.Returns(false);
-            hydroModel.Activities.Add(model);
+                var model = Substitute.For<IModel>();
+                model.CanRun.Returns(false);
+                hydroModel.Activities.Add(model);
 
-            Assert.That(hydroModel.CanRun, Is.False);
+                Assert.That(hydroModel.CanRun, Is.False);
+            }
         }
 
         [Test]
         public void GivenHydroModelWithModelWhereCanRunIsTrue_ThenCanRunIsTrue()
         {
-            var hydroModel = new HydroModel();
+            using (var hydroModel = new HydroModel())
+            {
+                var model = Substitute.For<IModel>();
+                model.CanRun.Returns(true);
+                hydroModel.Activities.Add(model);
 
-            var model = Substitute.For<IModel>();
-            model.CanRun.Returns(true);
-            hydroModel.Activities.Add(model);
-
-            Assert.That(hydroModel.CanRun, Is.True);
+                Assert.That(hydroModel.CanRun, Is.True);
+            }
         }
 
         [Test]
         public void GivenHydroModelWithModelWhereCanRunIsFalseAndTrue_ThenCanRunIsTrue()
         {
-            var hydroModel = new HydroModel();
+            using (var hydroModel = new HydroModel())
+            {
 
-            var model1 = Substitute.For<IModel>();
-            model1.CanRun.Returns(false);
+                var model1 = Substitute.For<IModel>();
+                model1.CanRun.Returns(false);
 
-            var model2 = Substitute.For<IModel>();
-            model2.CanRun.Returns(true);
+                var model2 = Substitute.For<IModel>();
+                model2.CanRun.Returns(true);
 
-            hydroModel.Activities.Add(model1);
-            hydroModel.Activities.Add(model2);
+                hydroModel.Activities.Add(model1);
+                hydroModel.Activities.Add(model2);
 
-            Assert.That(hydroModel.CanRun, Is.True);
+                Assert.That(hydroModel.CanRun, Is.True);
+            }
         }
 
         [Test]
@@ -811,11 +863,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 workFlowActivity
             });
-            
-            using (var model = new HydroModel
-            {
-                CurrentWorkflow = workflow
-            })
+
+            using (var model = new HydroModel { CurrentWorkflow = workflow })
             {
                 // Call
                 model.ResetActivity();
@@ -825,8 +874,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 workFlowActivity.DidNotReceive().ResetActivity();
             }
         }
-        
-        
+
+
         [Test]
         public void ResetActivity_CurrentWorkFlowEligibleForDIMRRun_CallsResetActivityOfWorkFlowActivities()
         {
@@ -839,11 +888,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 workFlowActivityOne,
                 workFlowActivityTwo
             });
-            
-            using (var model = new HydroModel
-            {
-                CurrentWorkflow = workflow
-            })
+
+            using (var model = new HydroModel { CurrentWorkflow = workflow })
             {
                 // Call
                 model.ResetActivity();
@@ -855,9 +901,39 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static void SetUpHydroModelWithActivity(HydroModel hydroModel, 
-                                                        out string modelDirectoryName, 
-                                                        out string modelMduFileName, 
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void InputPropertyChanged_CallsMarkOutputOutOfSyncOnSelfAndSubModels()
+        {
+            // Setup
+            using (var hydroModel = new HydroModel())
+            {
+                var simpleModel = Substitute.For<IModel>();
+                hydroModel.Activities.Add(simpleModel);
+
+                var workflow = new ParallelActivity { Activities = { simpleModel } };
+                simpleModel.Status.Returns(ActivityStatus.Done);
+
+                hydroModel.Workflows.Add(workflow);
+                hydroModel.CurrentWorkflow = workflow;
+
+                ActivityRunner.RunActivity(hydroModel);
+                Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
+
+                // Call: TimeStep is considered an input property, and thus
+                //       will trigger the appropriate behaviour.
+                hydroModel.TimeStep = TimeSpan.FromHours(10.0);
+
+                // Assert
+                Assert.That(hydroModel.OutputIsEmpty, Is.False);
+                Assert.That(hydroModel.OutputOutOfSync, Is.True);
+                simpleModel.Received(1).MarkOutputOutOfSync();
+            }
+        }
+
+        private static void SetUpHydroModelWithActivity(HydroModel hydroModel,
+                                                        out string modelDirectoryName,
+                                                        out string modelMduFileName,
                                                         string fileException = null)
         {
             var activity = Substitute.For<IDimrModel>();
@@ -876,11 +952,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             activity.DirectoryName.Returns(modelDirectoryName);
 
             activity.IgnoredFilePathsWhenCleaningWorkingDirectory
-                    .Returns(fileException != null 
-                                 ? new HashSet<string> {fileException} 
+                    .Returns(fileException != null
+                                 ? new HashSet<string> { fileException }
                                  : new HashSet<string>());
 
-            var workflow = new SequentialActivity {Activities = {activity}};
+            var workflow = new SequentialActivity { Activities = { activity } };
 
             hydroModel.Activities.Add(activity);
             hydroModel.CurrentWorkflow = workflow;
@@ -920,20 +996,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private class TimeDepModel : TimeDependentModelBase
-        {
-            protected override void OnInitialize() {}
-
-            protected override void OnExecute()
-            {
-                CurrentTime += TimeStep;
-                if (CurrentTime >= StopTime)
-                {
-                    Status = ActivityStatus.Done;
-                }
-            }
-        }
-
         public class SimpleHydroModel : ModelBase, IHydroModel
         {
             public SimpleHydroModel()
@@ -947,11 +1009,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             {
                 get
                 {
-                    return (IHydroRegion) DataItems.First(di => di.ValueType == SupportedRegionType).Value;
+                    return (IHydroRegion)DataItems.First(di => di.ValueType == SupportedRegionType).Value;
                 }
             }
 
-            protected override void OnInitialize() {}
+            protected override void OnInitialize() { }
 
             protected override void OnExecute()
             {

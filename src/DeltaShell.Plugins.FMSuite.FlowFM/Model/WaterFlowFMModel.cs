@@ -45,16 +45,16 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, 
+    public partial class WaterFlowFMModel : TimeDependentModelBase,
                                             IFileBased,
                                             IRestartModel,
-                                            IGridOperationApi, 
-                                            IDisposable, 
+                                            IGridOperationApi,
+                                            IDisposable,
                                             IHydroModel,
-                                            IHydFileModel, 
-                                            IDimrModel, 
-                                            IWaterFlowFMModel, 
-                                            ISedimentModelData, 
+                                            IHydFileModel,
+                                            IDimrModel,
+                                            IWaterFlowFMModel,
+                                            ISedimentModelData,
                                             ICoupledModel
     {
         private const string HydroAreaTag = "hydro_area_tag";
@@ -87,10 +87,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             AddDataItem(area, DataItemRole.Input, HydroAreaTag);
             areaDataItem = GetDataItemByTag(HydroAreaTag);
 
-            ((INotifyCollectionChanged) area).CollectionChanged += HydroAreaCollectionChanged;
-            ((INotifyPropertyChanged) area).PropertyChanged += HydroAreaPropertyChanged;
-            ((INotifyPropertyChange) this).PropertyChanged += (s, e) => { MarkDirty(); };
-            ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => { MarkDirty(); };
+            ((INotifyCollectionChanged)area).CollectionChanged += HydroAreaCollectionChanged;
+            ((INotifyPropertyChanged)area).PropertyChanged += HydroAreaPropertyChanged;
+            ((INotifyPropertyChange)this).PropertyChanged += (s, e) => { MarkDirty(); };
+            ((INotifyCollectionChanged)this).CollectionChanged += (s, e) => { MarkDirty(); };
 
             ModelDefinition = new WaterFlowFMModelDefinition();
             ModelDefinition.GetModelProperty(KnownProperties.NetFile).Value = Name + NetFile.FullExtension;
@@ -106,6 +106,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             RenameSubFilesIfApplicable();
 
             InitializeSyncers();
+
+            SuspendClearOutputOnInputChange = true;
         }
 
         public Type SupportedRegionType => typeof(HydroArea);
@@ -122,7 +124,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (modelDefinition != null)
                 {
-                    ((INotifyPropertyChange) modelDefinition.Properties).PropertyChanged -=
+                    ((INotifyPropertyChange)modelDefinition.Properties).PropertyChanged -=
                         OnModelDefinitionPropertyChanged;
                 }
 
@@ -132,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 if (modelDefinition != null)
                 {
-                    ((INotifyPropertyChange) modelDefinition.Properties).PropertyChanged +=
+                    ((INotifyPropertyChange)modelDefinition.Properties).PropertyChanged +=
                         OnModelDefinitionPropertyChanged;
                 }
             }
@@ -220,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private ModelFeatureCoordinateData<FixedWeir> CreateModelFeatureCoordinateDataFor(FixedWeir fixedWeir)
         {
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir};
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<FixedWeir> { Feature = fixedWeir };
             string scheme = ModelDefinition.GetModelProperty(KnownProperties.FixedWeirScheme).GetValueAsString();
 
             modelFeatureCoordinateData.UpdateDataColumns(scheme);
@@ -229,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         private ModelFeatureCoordinateData<BridgePillar> CreateModelFeatureCoordinateDataFor(BridgePillar bridgePillar)
         {
-            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar> {Feature = bridgePillar};
+            var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar> { Feature = bridgePillar };
             modelFeatureCoordinateData.UpdateDataColumns();
 
             return modelFeatureCoordinateData;
@@ -260,7 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             {
                 if (sedimentFractions != null)
                 {
-                    ((INotifyPropertyChanged) SedimentFractions).PropertyChanged -= SedimentFractionPropertyChanged;
+                    ((INotifyPropertyChanged)SedimentFractions).PropertyChanged -= SedimentFractionPropertyChanged;
                     SedimentFractions.CollectionChanged -= SedimentFractionsCollectionChanged;
                 }
 
@@ -268,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 if (sedimentFractions != null)
                 {
-                    ((INotifyPropertyChanged) SedimentFractions).PropertyChanged += SedimentFractionPropertyChanged;
+                    ((INotifyPropertyChanged)SedimentFractions).PropertyChanged += SedimentFractionPropertyChanged;
                     SedimentFractions.CollectionChanged += SedimentFractionsCollectionChanged;
                 }
             }
@@ -307,7 +309,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public DateTime ReferenceTime
         {
-            get => (DateTime) ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+            get => (DateTime)ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             set => ModelDefinition.GetModelProperty(KnownProperties.RefDate).Value = value;
         }
 
@@ -328,7 +330,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool UseSalinity
         {
-            get => (bool) ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value;
+            get => (bool)ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -337,7 +339,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool UseSecondaryFlow
         {
-            get => (bool) ModelDefinition.GetModelProperty(KnownProperties.SecondaryFlow).Value;
+            get => (bool)ModelDefinition.GetModelProperty(KnownProperties.SecondaryFlow).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -345,7 +347,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         }
 
         public bool UseTemperature =>
-            (HeatFluxModelType) ModelDefinition.GetModelProperty(KnownProperties.Temperature).Value !=
+            (HeatFluxModelType)ModelDefinition.GetModelProperty(KnownProperties.Temperature).Value !=
             HeatFluxModelType.None;
 
         public bool UseMorSed
@@ -378,7 +380,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool WriteHisFile
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -387,7 +389,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool SpecifyHisStart
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStart).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStart).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -396,7 +398,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool SpecifyHisStop
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStop).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyHisStop).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -405,7 +407,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool WriteMapFile
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteMapFile).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -414,7 +416,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool SpecifyMapStart
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStart).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStart).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -423,7 +425,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool SpecifyMapStop
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStop).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyMapStop).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -432,7 +434,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool WriteClassMapFile
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteClassMapFile).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -441,7 +443,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool WriteRstFile
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -450,7 +452,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool SpecifyRstStart
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStart).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -459,7 +461,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool SpecifyRstStop
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyRstStop).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -468,7 +470,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool SpecifyWaqOutputInterval
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -477,7 +479,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool SpecifyWaqOutputStartTime
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStartTime).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStartTime).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -486,7 +488,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
         public bool SpecifyWaqOutputStopTime
         {
-            get => (bool) ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStopTime).Value;
+            get => (bool)ModelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputStopTime).Value;
             private set
             {
                 // empty, but just used for event bubbling
@@ -559,7 +561,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                     areaDataItem = GetDataItemByTag(HydroAreaTag);
                 }
 
-                return (HydroArea) GetDataItemValueByTag(HydroAreaTag);
+                return (HydroArea)GetDataItemValueByTag(HydroAreaTag);
             }
             set
             {
@@ -567,8 +569,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
 
                 if (areaItem.Value != null)
                 {
-                    ((INotifyCollectionChanged) areaItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
-                    ((INotifyPropertyChanged) value).PropertyChanged -= HydroAreaPropertyChanged;
+                    ((INotifyCollectionChanged)areaItem.Value).CollectionChanged -= HydroAreaCollectionChanged;
+                    ((INotifyPropertyChanged)value).PropertyChanged -= HydroAreaPropertyChanged;
                 }
 
                 fixedWeirProperties.Clear();
@@ -580,17 +582,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                 if (value != null)
                 {
                     value.FixedWeirs.ForEach(
-                        fw => fixedWeirProperties.Add(fw, CreateModelFeatureCoordinateDataFor((FixedWeir) fw)));
+                        fw => fixedWeirProperties.Add(fw, CreateModelFeatureCoordinateDataFor((FixedWeir)fw)));
                     value.BridgePillars.ForEach(
                         bp => BridgePillarsDataModel.Add(CreateModelFeatureCoordinateDataFor(bp)));
 
-                    ((INotifyCollectionChanged) value).CollectionChanged += HydroAreaCollectionChanged;
-                    ((INotifyPropertyChanged) value).PropertyChanged += HydroAreaPropertyChanged;
+                    ((INotifyCollectionChanged)value).CollectionChanged += HydroAreaCollectionChanged;
+                    ((INotifyPropertyChanged)value).PropertyChanged += HydroAreaPropertyChanged;
                 }
             }
         }
 
-        public IEventedList<Feature2D> Boundaries 
+        public IEventedList<Feature2D> Boundaries
         {
             get => boundaries;
             private set
@@ -726,7 +728,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             var spatialOperationsLookupTable = new Dictionary<string, IList<ISpatialOperation>>();
             foreach (IDataItem dataItem in dataItemsWithConverter)
             {
-                var spatialOperationValueConverter = (SpatialOperationSetValueConverter) dataItem.ValueConverter;
+                var spatialOperationValueConverter = (SpatialOperationSetValueConverter)dataItem.ValueConverter;
                 if (
                     spatialOperationValueConverter.SpatialOperationSet.Operations.All(
                         WaterFlowFMModelDefinition.SupportedByExtForceFile))
@@ -760,9 +762,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
                         continue;
                     }
 
-                    var newOperation = new AddSamplesOperation(false) {Name = spatialOperationValueConverter.SpatialOperationSet.Name};
+                    var newOperation = new AddSamplesOperation(false) { Name = spatialOperationValueConverter.SpatialOperationSet.Name };
                     newOperation.SetInputData(AddSamplesOperation.SamplesInputName,
-                                              new PointCloudFeatureProvider {PointCloud = coverage.ToPointCloud(0, true)});
+                                              new PointCloudFeatureProvider { PointCloud = coverage.ToPointCloud(0, true) });
 
                     spatialOperationsLookupTable.Add(dataItem.Name, new[]
                     {
@@ -826,7 +828,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         {
             string[] partsTargetName = oldDataItemName.Split('.');
 
-            if (partsTargetName.Length <= 1 || 
+            if (partsTargetName.Length <= 1 ||
                 !backwardsCompatibilityMapping.TryGetValue(partsTargetName.Last(), out string newName))
             {
                 return oldDataItemName;
