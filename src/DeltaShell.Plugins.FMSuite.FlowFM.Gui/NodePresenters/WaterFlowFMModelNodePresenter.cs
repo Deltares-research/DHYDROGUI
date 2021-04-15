@@ -43,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private static readonly Bitmap NumParamIcon = new Bitmap(Common.Gui.Properties.Resources.settings, 16, 16);
         private static readonly Bitmap OutParamIcon = new Bitmap(Common.Gui.Properties.Resources.output_param, 16, 16);
 
-        private static readonly IList<DataItem> DataItems = new List<DataItem>();
+        private readonly IList<DataItem> DataItems = new List<DataItem>();
 
         // boolean is used only the first time to expand the node after creation.
         private bool firstTimeCreate = true;
@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             }
         }
 
-        private static IDataItem WrapIntoOutputItem(object o, string tag, IDataItemOwner model)
+        private IDataItem WrapIntoOutputItem(object o, string tag, IDataItemOwner model)
         {
             List<DataItem> existingItems = DataItems.Where(di => Equals(di.Tag, tag) && Equals(di.Owner, model)).ToList();
             DataItem existingItem = existingItems.FirstOrDefault(di => di.ValueType == o.GetType());

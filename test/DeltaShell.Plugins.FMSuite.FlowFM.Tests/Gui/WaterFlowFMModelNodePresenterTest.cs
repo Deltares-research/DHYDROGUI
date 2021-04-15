@@ -302,7 +302,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             IApplication app = gui.Application;
 
-            CreateModelWithOutputCollapsed(Path.Combine(tempDirectory.Path, modelFolder), gui, out int nrOfDataItems);
+            CreateModelWithOutputCollapsed(modelFolder, gui, out int nrOfDataItems);
 
             string savePath = Path.Combine(tempDirectory.Path, "SaveLocation", "TestProject.dsproj");
             app.SaveProjectAs(savePath);
@@ -318,7 +318,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             gui.MainWindow.ProjectExplorer.TreeView.CollapseAll();
 
-            var dataItemsAfterOpening = (IList<DataItem>) TypeUtils.GetField(gui.Plugins[1].GetProjectTreeViewNodePresenters().First(), "DataItems");
+            var dataItemsAfterOpening = (IList<DataItem>)TypeUtils.GetField(gui.MainWindow.ProjectExplorer.TreeView.NodePresenters.OfType<WaterFlowFMModelNodePresenter>().First(), "DataItems");
             Assert.AreEqual(nrOfDataItems, dataItemsAfterOpening.Count);
 
             foreach (DataItem dataItem in dataItemsAfterOpening)
@@ -338,7 +338,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.AreEqual(model.Status, ActivityStatus.Cleaned);
 
             gui.MainWindow.ProjectExplorer.TreeView.CollapseAll();
-            var dataItemsBeforeOpening = (IList<DataItem>) TypeUtils.GetField(gui.Plugins[1].GetProjectTreeViewNodePresenters().First(), "DataItems");
+            var dataItemsBeforeOpening = (IList<DataItem>) TypeUtils.GetField(gui.MainWindow.ProjectExplorer.TreeView.NodePresenters.OfType<WaterFlowFMModelNodePresenter>().First(), "DataItems");
 
             foreach (DataItem dataItem in dataItemsBeforeOpening)
             {
