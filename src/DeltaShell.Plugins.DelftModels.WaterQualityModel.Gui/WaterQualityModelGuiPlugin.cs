@@ -521,17 +521,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
             }
             else
             {
-                FileDialog dialog = new OpenFileDialog
-                {
-                    InitialDirectory = Path.GetDirectoryName(processDefinitionPath),
-                    Filter =
-                        Properties.Resources
-                                  .WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_file____def____def,
-                    Title = Properties.Resources
-                                      .WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_files_could_not_be_found__Please_refer_to_the___def_file_
-                };
+                string selectedFilePath = new FileDialogService().SelectFile(Properties.Resources.WaterQualityModelGuiPlugin_OnProcessDefinitionFilesNotFound_Process_definition_file____def____def,
+                                                                             Path.GetDirectoryName(processDefinitionPath));
 
-                if (dialog.ShowDialog() != DialogResult.OK)
+                if (selectedFilePath == null)
                 {
                     Log.ErrorFormat(
                         Properties.Resources
@@ -540,8 +533,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
                     return;
                 }
 
-                string processDefinitionFilePath = Path.GetDirectoryName(dialog.FileName);
-                string processDefinitionFileName = Path.GetFileNameWithoutExtension(dialog.FileName);
+                string processDefinitionFilePath = Path.GetDirectoryName(selectedFilePath);
+                string processDefinitionFileName = Path.GetFileNameWithoutExtension(selectedFilePath);
 
                 if (string.IsNullOrEmpty(processDefinitionFilePath) ||
                     string.IsNullOrEmpty(processDefinitionFileName))
@@ -568,14 +561,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui
         {
             Log.ErrorFormat("Could not find hyd file {0}", hydPath);
 
-            FileDialog dialog = new OpenFileDialog();
-            dialog.InitialDirectory = Path.GetDirectoryName(hydPath);
-            dialog.Filter = "Hydrodynamics file (*.hyd)|*.hyd";
-            dialog.Title = "Hydrodynamics file could not be found. Please refer to the *.hyd file.";
+            string selectedFilePath = new FileDialogService().SelectFile("Hydrodynamics file (*.hyd)|*.hyd", Path.GetDirectoryName(hydPath));
 
-            if (dialog.ShowDialog() == DialogResult.OK)
+            if (selectedFilePath != null)
             {
-                new HydFileImporter().ImportItem(dialog.FileName, model);
+                new HydFileImporter().ImportItem(selectedFilePath, model);
             }
         }
 

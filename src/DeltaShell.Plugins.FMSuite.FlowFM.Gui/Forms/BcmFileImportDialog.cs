@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
@@ -10,15 +9,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
     {
         public override DelftDialogResult ShowModal()
         {
-            openFileDialog.FileName = string.Empty;
-            openFileDialog.DefaultExt = BcmFile.Extension;
-            openFileDialog.Filter = new BcmFileImporter().FileFilter;
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
+            string[] filePaths = new FileDialogService().SelectFiles(new BcmFileImporter().FileFilter, "", true);
+            if (filePaths == null)
             {
                 return DelftDialogResult.Cancel;
             }
 
-            FilePaths = openFileDialog.FileNames;
+            FilePaths = filePaths;
+
             DelftDialogResult result = ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
             if (result == DelftDialogResult.OK && deleteDataCheckBox.Checked &&
                 quantitiesListBox.CheckedItems.Count * dataTypesListBox.CheckedItems.Count == 0)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using MessageBox = System.Windows.MessageBox;
 
@@ -38,18 +39,19 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         private void OpenCsvButton_Click(object sender, EventArgs e)
         {
-            if (openCsvFileDialog.ShowDialog() != DialogResult.OK)
+            string filePath = new FileDialogService().SelectFile("CSV files (*.csv)|*.csv|All files (*.*)|*.*");
+            if (filePath == null)
             {
                 return;
             }
-
+            
             try
             {
-                using (var reader = new StreamReader(openCsvFileDialog.FileName))
+                using (var reader = new StreamReader(filePath))
                 {
                     SetText(reader.ReadToEnd());
 
-                    CsvFilePath = openCsvFileDialog.FileName;
+                    CsvFilePath = filePath;
                 }
             }
             catch (IOException ex)

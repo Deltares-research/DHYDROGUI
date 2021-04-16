@@ -1,4 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
+using DelftTools.Controls;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
@@ -30,15 +32,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            importFileNames = new string[0];
+            
             this.SuspendLayout();
-            // 
-            // openFileDialog
-            // 
-            this.openFileDialog.FileName = "openFileDialog1";
-            this.openFileDialog.Multiselect = true;
-            this.openFileDialog.Title = "Open file";
             // 
             // saveFileDialog
             // 
@@ -57,8 +54,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         }
 
         #endregion
-
-        private System.Windows.Forms.OpenFileDialog openFileDialog;
+        
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private string[] importFileNames;
     }
 }

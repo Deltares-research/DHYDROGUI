@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -21,12 +23,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(BoundaryConditionDialogLauncher));
 
-        public static void LaunchImporterDialog(OpenFileDialog fileDialog, FlowBoundaryCondition boundaryCondition, int selectedPointIndex, DateTime? modelRefDate)
+        public static void LaunchImporterDialog(IFileDialogService fileDialogService, FlowBoundaryCondition boundaryCondition, int selectedPointIndex, DateTime? modelRefDate)
         {
-            if (fileDialog == null)
-            {
-                throw new ArgumentException("File dialog is not set");
-            }
+            Ensure.NotNull(fileDialogService, nameof(fileDialogService));
 
             if (boundaryCondition == null)
             {
@@ -40,15 +39,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 return;
             }
 
-            InitializeFileDialog(fileDialog, boundaryCondition);
+            string fileFilter = GetFileFilter(boundaryCondition);
 
-            if (fileDialog.ShowDialog() != DialogResult.OK)
+            string selectedFilePath = fileDialogService.SelectFile(fileFilter);
+            if (selectedFilePath == null)
             {
                 return;
             }
 
-            string selectedFileExtension = Path.GetExtension(fileDialog.SafeFileName)?.Replace(".", "");
-            ImportFileDataIntoBoundaryCondition(boundaryCondition, fileDialog, selectedPointIndex, modelRefDate, selectedFileExtension);
+            string selectedFileExtension = Path.GetExtension(selectedFilePath)?.Replace(".", "");
+            ImportFileDataIntoBoundaryCondition(boundaryCondition, selectedFilePath, selectedPointIndex, modelRefDate, selectedFileExtension);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         public static void LaunchExporterDialog(SaveFileDialog saveFileDialog, FlowBoundaryCondition boundaryCondition, int selectedPointIndex,
                                                 DateTime modelRefDate)
         {
-            var bcFileExporter = new BcFileExporter {GetRefDateForBoundaryCondition = bc => modelRefDate};
+            var bcFileExporter = new BcFileExporter { GetRefDateForBoundaryCondition = bc => modelRefDate };
             var pliFileExporter = new PliFileImporterExporter<BoundaryCondition, Feature2D>
             {
                 Mode = Feature2DImportExportMode.Export,
@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 return;
             }
 
-            var chosenFilter = (FileType) saveFileDialog.FilterIndex;
+            var chosenFilter = (FileType)saveFileDialog.FilterIndex;
 
             switch (chosenFilter)
             {
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                         dataExporter.SelectedIndex = selectedPointIndex;
                         dataExporter.ModelReferenceDate = modelRefDate;
 
-                        ((IFileExporter) dataExporter).Export(boundaryCondition, saveFileDialog.FileName);
+                        ((IFileExporter)dataExporter).Export(boundaryCondition, saveFileDialog.FileName);
                     }
 
                     break;
@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             get
             {
                 yield return new BcFileImporter();
-                yield return new TimFileImporter() {WindFileImporter = false};
+                yield return new TimFileImporter() { WindFileImporter = false };
                 yield return new CmpFileImporter();
                 yield return new QhFileImporter();
                 yield return new BcmFileImporter();
@@ -137,10 +137,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
-        private static void InitializeFileDialog(OpenFileDialog fileDialog, FlowBoundaryCondition boundaryCondition)
+        private static string GetFileFilter(FlowBoundaryCondition boundaryCondition)
         {
             var fileFilters = new List<string>();
-            fileDialog.FileName = string.Empty;
+            var filter = string.Empty;
 
             foreach (BoundaryDataImporterBase dataImporter in DataImporters)
             {
@@ -149,11 +149,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                     fileFilters.Add(dataImporter.FileFilter);
                 }
 
-                fileDialog.Filter = string.Join("|", fileFilters);
+                filter = string.Join("|", fileFilters);
             }
+
+            return filter;
         }
 
-        private static void ImportFileDataIntoBoundaryCondition(FlowBoundaryCondition boundaryCondition, OpenFileDialog fileDialog, int selectedPointIndex,
+        private static void ImportFileDataIntoBoundaryCondition(FlowBoundaryCondition boundaryCondition, string filePath, int selectedPointIndex,
                                                                 DateTime? modelRefDate, string selectedFileExtension)
         {
             if (boundaryCondition == null)
@@ -206,7 +208,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
                 }
 
                 dataImporter.ModelReferenceDate = modelRefDate;
-                dataImporter.Import(fileDialog.FileName, boundaryCondition);
+                dataImporter.Import(filePath, boundaryCondition);
             }
         }
     }

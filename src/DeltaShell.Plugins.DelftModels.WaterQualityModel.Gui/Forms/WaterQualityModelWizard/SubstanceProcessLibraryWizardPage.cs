@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Security;
 using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.Controls.Swf;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects.SubstanceProcessLibrary;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Properties;
@@ -249,25 +250,26 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
 
         private void ButtonSelectProcessFilePathClick(object sender, EventArgs e)
         {
-            if (openFileDialogProcessFilePath.ShowDialog(this) != DialogResult.OK)
+            string filePath = new FileDialogService().SelectFile("Process file|*.dll");
+            if (filePath == null)
             {
                 return;
             }
 
-            textBoxProcessFile.Text = openFileDialogProcessFilePath.FileName;
+            textBoxProcessFile.Text = filePath;
         }
 
         private void ButtonSelectProcessDefinitionsFilePathClick(object sender, EventArgs e)
         {
-            if (openFileDialogProcessDefinitionsFilePath.ShowDialog(this) != DialogResult.OK)
+            string filePath = new FileDialogService().SelectFile("Process definition files|*.def;*.dat");
+            if (filePath == null)
             {
                 return;
             }
 
             textBoxProcessDefinitionsFile.Text =
-                Path.GetDirectoryName(openFileDialogProcessDefinitionsFilePath.FileName) + Path.DirectorySeparatorChar +
-                Path.GetFileNameWithoutExtension(openFileDialogProcessDefinitionsFilePath
-                                                     .FileName); // Note: strip off the extension
+                Path.GetDirectoryName(filePath) + Path.DirectorySeparatorChar +
+                Path.GetFileNameWithoutExtension(filePath); // Note: strip off the extension
         }
 
         private void StandardSubFileListViewResize(object sender, EventArgs e)

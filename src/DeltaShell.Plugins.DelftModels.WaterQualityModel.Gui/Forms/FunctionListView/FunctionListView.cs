@@ -320,13 +320,11 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             if (functionWrapper.Function.IsSegmentFile())
             {
                 //Create dialog asking for the file location.
-                var openFileDialog = new OpenFileDialog();
-                if (openFileDialog.ShowDialog() != DialogResult.OK)
+                string filePath = new FileDialogService().SelectFile("");
+                if (filePath == null)
                 {
                     return;
                 }
-
-                string filePath = openFileDialog.FileName;
 
                 var fileFunction = functionWrapper.Function as SegmentFileFunction;
                 if (fileFunction != null)

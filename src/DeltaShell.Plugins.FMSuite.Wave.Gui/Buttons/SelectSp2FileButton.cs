@@ -1,6 +1,6 @@
-﻿using DeltaShell.Plugins.FMSuite.Common.IO;
+﻿using DelftTools.Controls;
+using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
-using Microsoft.Win32;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
 {
@@ -27,16 +27,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
                 return;
             }
 
-            var openFileDialog = new OpenFileDialog
+            string selectedFilePath = new FileDialogService().SelectFile(string.Format(Resources.SelectSp2FileButton_ButtonAction_Spectrum_Files___0_, FileConstants.SpectrumFileExtension));
+            if (selectedFilePath != null)
             {
-                Filter = string.Format(Resources.SelectSp2FileButton_ButtonAction_Spectrum_Files___0_, FileConstants.SpectrumFileExtension),
-                Title = Resources.Select_spectrum_file
-            };
-
-            bool? result = openFileDialog.ShowDialog();
-            if (result == true)
-            {
-                string fileLocation = openFileDialog.FileName.Replace('\\', '/');
+                string fileLocation = selectedFilePath.Replace('\\', '/');
                 waveModel.ModelDefinition
                          .BoundaryContainer.FilePathForBoundariesPerFile = fileLocation;
             }

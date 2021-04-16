@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Windows.Forms;
+using DelftTools.Controls;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
@@ -15,8 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
     [Category(TestCategory.WindowsForms)]
     public class BoundaryConditionDialogLauncherTest
     {
-        private MockRepository mocks;
-        private OpenFileDialog fileDialogMock;
         private string timExtension;
         private string morphologyExtension;
         private string boundaryConditionExtension;
@@ -26,12 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [SetUp]
         public void Initialize()
         {
-            mocks = new MockRepository();
-            fileDialogMock = mocks.DynamicMock<OpenFileDialog>();
-            fileDialogMock.Filter = string.Empty;
-            fileDialogMock.Expect(f => f.ShowDialog()).Return(DialogResult.OK);
-            fileDialogMock.Replay();
-
             var timImporter = new TimFileImporter();
             timExtension = timImporter.FileFilter;
             var morphologyFileImporter = new BcmFileImporter();
@@ -44,28 +36,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             qhExtension = qhFileImporter.FileFilter;
         }
 
-        [TestCase()]
+        [Test]
         public void GivenFlowBoundaryConditionWhenImportedWithoutOpenFileDialogThenThrowException()
         {
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries);
             var wfmodel = new WaterFlowFMModel();
 
             Assert.That(() => BoundaryConditionDialogLauncher.LaunchImporterDialog(null, flowBoundaryCondition, 1, wfmodel.ReferenceTime),
-                Throws.ArgumentException);
+                        Throws.ArgumentNullException);
         }
 
-        [TestCase()]
+        [Test]
         public void GivenNoBoundaryConditionWhenImportedThenThrowException()
         {
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => BoundaryConditionDialogLauncher.LaunchImporterDialog(new OpenFileDialog(), null, 1, new DateTime()), "Boundary condition is not set");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => BoundaryConditionDialogLauncher.LaunchImporterDialog(new FileDialogService(), null, 1, new DateTime()), "Boundary condition is not set");
         }
 
-        [TestCase()]
+        [Test]
         public void GivenEmptyDateTimeWhenImportThenThrowException()
         {
             var flowBoundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.MorphologyBedLevelChangePrescribed, BoundaryConditionDataType.TimeSeries);
 
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => BoundaryConditionDialogLauncher.LaunchImporterDialog(new OpenFileDialog(), flowBoundaryCondition, 1, null), "Datetime is not set");
+            TestHelper.AssertAtLeastOneLogMessagesContains(() => BoundaryConditionDialogLauncher.LaunchImporterDialog(new FileDialogService(), flowBoundaryCondition, 1, null), "Datetime is not set");
         }
 
         [TestCase(FlowBoundaryQuantityType.MorphologyBedLevelPrescribed)]
@@ -75,9 +67,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, BoundaryConditionDataType.TimeSeries);
             var wfmodel = new WaterFlowFMModel();
 
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
+            var fileDialogService = Substitute.For<IFileDialogService>();
 
-            fileDialogMock.AssertWasCalled(f => f.Filter = $@"{timExtension}|{morphologyExtension}");
+            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogService, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
+
+            fileDialogService.Received().SelectFile($@"{timExtension}|{morphologyExtension}");
         }
 
         [TestCaseSource(typeof(FlowBoundaryTestData), "TimeSeries")]
@@ -86,9 +80,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, timeSeries);
             var wfmodel = new WaterFlowFMModel();
 
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
+            var fileDialogService = Substitute.For<IFileDialogService>();
 
-            fileDialogMock.AssertWasCalled(f => f.Filter = $@"{boundaryConditionExtension}|{timExtension}");
+            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogService, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
+
+            fileDialogService.Received().SelectFile($@"{boundaryConditionExtension}|{timExtension}");
         }
 
         [TestCaseSource(typeof(FlowBoundaryTestData), "Harmonics")]
@@ -100,9 +96,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, harmonicsCorrection);
             var wfmodel = new WaterFlowFMModel();
 
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
+            var fileDialogService = Substitute.For<IFileDialogService>();
 
-            fileDialogMock.AssertWasCalled(f => f.Filter = $@"{boundaryConditionExtension}|{cmpExtension}");
+            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogService, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
+
+            fileDialogService.Received().SelectFile($@"{boundaryConditionExtension}|{cmpExtension}");
         }
 
         [TestCaseSource(typeof(FlowBoundaryTestData), "Qh")]
@@ -111,9 +109,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var flowBoundaryCondition = new FlowBoundaryCondition(flowBoundaryQuantityType, Qh);
             var wfmodel = new WaterFlowFMModel();
 
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogMock, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
+            var fileDialogService = Substitute.For<IFileDialogService>();
 
-            fileDialogMock.AssertWasCalled(f => f.Filter = $@"{boundaryConditionExtension}|{qhExtension}");
+            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogService, flowBoundaryCondition, 1, wfmodel.ReferenceTime);
+
+            fileDialogService.Received().SelectFile($@"{boundaryConditionExtension}|{qhExtension}");
         }
     }
 

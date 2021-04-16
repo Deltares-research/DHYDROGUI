@@ -43,9 +43,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
             hydroComboBox.SelectedValueChanged += HydroComboBoxOnSelectedValueChanged;
             windComboBox.SelectedValueChanged += WindComboBoxOnSelectedValueChanged;
-
-            openFileDialog1.Filter = "Meteo files (*.wnd)|*.wnd";
-            openFileDialog1.Title = "Select meteo file ...";
         }
 
         public Func<string, string> ImportFileIntoModelDirectory { private get; set; }

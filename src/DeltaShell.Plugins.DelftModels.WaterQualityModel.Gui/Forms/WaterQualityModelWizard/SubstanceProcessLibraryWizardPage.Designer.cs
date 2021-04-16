@@ -47,8 +47,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             this.panel1 = new System.Windows.Forms.Panel();
             this.toolTipProcessFilePath = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipProcessDefinitionsFilePath = new System.Windows.Forms.ToolTip(this.components);
-            this.openFileDialogProcessFilePath = new System.Windows.Forms.OpenFileDialog();
-            this.openFileDialogProcessDefinitionsFilePath = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1.SuspendLayout();
             this.standardProcessTypeTab.SuspendLayout();
             this.customProcessTypeTab.SuspendLayout();
@@ -331,16 +329,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             this.panel1.Size = new System.Drawing.Size(755, 603);
             this.panel1.TabIndex = 11;
             // 
-            // openFileDialogProcessFilePath
-            // 
-            this.openFileDialogProcessFilePath.Filter = "Process file|*.dll";
-            this.openFileDialogProcessFilePath.Title = "Select a process dll file";
-            // 
-            // openFileDialogProcessDefinitionsFilePath
-            // 
-            this.openFileDialogProcessDefinitionsFilePath.Filter = "Process definition files|*.def;*.dat";
-            this.openFileDialogProcessDefinitionsFilePath.Title = "Select a process definitions file (*.def or *.dat)";
-            // 
             // SubstanceProcessLibraryWizardPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -390,8 +378,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
         private PictureBox pictureBoxProcessFilePath;
         private ToolTip toolTipProcessFilePath;
         private ToolTip toolTipProcessDefinitionsFilePath;
-        private OpenFileDialog openFileDialogProcessFilePath;
-        private OpenFileDialog openFileDialogProcessDefinitionsFilePath;
         private GroupBox groupBoxSubFile;
         private Panel panel1;
         private ImageList imageList1;

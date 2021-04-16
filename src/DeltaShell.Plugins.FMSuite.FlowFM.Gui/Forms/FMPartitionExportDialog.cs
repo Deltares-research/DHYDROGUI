@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Exporters;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
@@ -75,14 +76,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         private void PolFileSelectButtonOnClick(object sender, EventArgs eventArgs)
         {
-            var selectFileDialog = new OpenFileDialog
+            string selectedFilePath = new FileDialogService().SelectFile("Polygon files (*.pol)|*.pol");
+            if (selectedFilePath != null)
             {
-                Filter = "Polygon files (*.pol)|*.pol",
-                Multiselect = false
-            };
-            if (selectFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                polFileTextBox.Text = selectFileDialog.FileName;
+                polFileTextBox.Text = selectedFilePath;
                 okButton.Enabled = ValidateInput();
             }
         }

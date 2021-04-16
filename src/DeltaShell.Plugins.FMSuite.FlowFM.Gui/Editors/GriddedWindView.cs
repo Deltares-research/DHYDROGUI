@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 
@@ -60,26 +61,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void FileOpenButtonClick(object sender, EventArgs e)
         {
-            var dialog = new OpenFileDialog
-            {
-                Title = "Open file",
-                Filter = WindSelectionDialog.MakeFileFilter(windField)
-            };
-            if (dialog.ShowDialog() == DialogResult.OK)
+            string selectedFilePath = new FileDialogService().SelectFile(WindSelectionDialog.MakeFileFilter(windField));
+
+            if (selectedFilePath != null)
             {
                 var spiderWebWindField = windField as SpiderWebWindField;
                 if (spiderWebWindField != null)
                 {
-                    spiderWebWindField.WindFilePath = dialog.FileName;
+                    spiderWebWindField.WindFilePath = selectedFilePath;
                 }
 
                 var griddedWindField = windField as GriddedWindField;
                 if (griddedWindField != null)
                 {
-                    string filePath = dialog.FileName;
                     if (griddedWindField.SeparateGridFile)
                     {
-                        string gridFile = WindSelectionDialog.GetCorrespondingGridFile(filePath);
+                        string gridFile = WindSelectionDialog.GetCorrespondingGridFile(selectedFilePath);
                         if (gridFile == null)
                         {
                             return;
@@ -88,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                         griddedWindField.GridFilePath = gridFile;
                     }
 
-                    griddedWindField.WindFilePath = filePath;
+                    griddedWindField.WindFilePath = selectedFilePath;
                 }
             }
         }

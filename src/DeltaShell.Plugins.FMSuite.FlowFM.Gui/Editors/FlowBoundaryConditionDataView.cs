@@ -18,6 +18,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private const string NoBcText = "No boundary condition defined; to create one, click the '+' button.";
         private static readonly ILog log = LogManager.GetLogger(typeof(FlowBoundaryConditionDataView));
 
-        private readonly OpenFileDialog FileDialog = new OpenFileDialog() {AddExtension = true};
+        private readonly IFileDialogService fileDialogService = new FileDialogService();
 
         private readonly SaveFileDialog SaveFileDialog = new SaveFileDialog()
         {
@@ -955,7 +956,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         private void FileImportButtonClick(object sender, EventArgs e)
         {
-            BoundaryConditionDialogLauncher.LaunchImporterDialog(FileDialog, BoundaryCondition as FlowBoundaryCondition,
+            BoundaryConditionDialogLauncher.LaunchImporterDialog(fileDialogService, BoundaryCondition as FlowBoundaryCondition,
                                                                  SupportPointIndex, Model.ReferenceTime);
             FillFunctionView();
         }

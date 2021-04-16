@@ -50,7 +50,6 @@
             this.waveMeteoDataEditor1 = new DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.WaveMeteoDataEditor();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tablePanel = new System.Windows.Forms.Panel();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.configPanel.SuspendLayout();
             this.windGroupBox.SuspendLayout();
             this.hydroGroupBox.SuspendLayout();
@@ -349,7 +348,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Panel tablePanel;
         private System.Windows.Forms.GroupBox meteoBox;
         private WaveMeteoDataEditor waveMeteoDataEditor1;

@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using DelftTools.Controls;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Properties;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
@@ -32,18 +32,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Buttons
                 return;
             }
 
-            using (var fileDialog = new OpenFileDialog {Filter = string.Format(Resources.SelectComFileButton_ButtonAction_Communication_files___0_, FileConstants.ComFileExtension)})
+            string selectedFilePath = new FileDialogService().SelectFile(string.Format(Resources.SelectComFileButton_ButtonAction_Communication_files___0_, FileConstants.ComFileExtension));
+            if (selectedFilePath == null)
             {
-                if (fileDialog.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                string fileLocation = fileDialog.FileName.Replace('\\', '/');
-                waveModel.ModelDefinition
-                         .GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile)
-                         .SetValueAsString(fileLocation);
+                return;
             }
+
+            string fileLocation = selectedFilePath.Replace('\\', '/');
+            waveModel.ModelDefinition
+                     .GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.COMFile)
+                     .SetValueAsString(fileLocation);
         }
     }
 }

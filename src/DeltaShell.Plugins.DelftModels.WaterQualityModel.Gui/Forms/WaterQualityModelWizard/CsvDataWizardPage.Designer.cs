@@ -28,7 +28,6 @@
         /// </summary>
         protected void InitializeComponent(string labelText)
         {
-            this.openCsvFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.importBoundaryDataFile = new System.Windows.Forms.Button();
             this.dataTypeLabel = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -38,12 +37,6 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // openCsvFileDialog
-            // 
-            this.openCsvFileDialog.AutoUpgradeEnabled = false;
-            this.openCsvFileDialog.FileName = "";
-            this.openCsvFileDialog.Filter = "CSV files (*.csv)|*.csv|All files (*.*)|*.*";
             // 
             // importBoundaryDataFile
             // 
@@ -109,8 +102,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.OpenFileDialog openCsvFileDialog;
+        
         private System.Windows.Forms.Button importBoundaryDataFile;
         private System.Windows.Forms.Label dataTypeLabel;
         private System.Windows.Forms.SplitContainer splitContainer1;

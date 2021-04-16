@@ -265,7 +265,6 @@
     <Compile Include="Editors\TracerDefinitionsEditorWpfViewModelTest.cs" />
     <Compile Include="EmbankmentMergerTest.cs" />
     <Compile Include="CoverageDepthLayersListTest.cs" />
-    <Compile Include="Editors\BoundaryConditionBcFileImportDialogTest.cs" />
     <Compile Include="Editors\FlowBoundaryConditionEditorControllerTest.cs" />
     <Compile Include="Editors\FlowBoundaryConditionsListViewTest.cs" />
     <Compile Include="FeatureData\BoundaryConditionIntegrationTest.cs" />

@@ -267,12 +267,6 @@
       <DependentUpon>BcFileImportDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\BoundaryConditionDialogLauncher.cs" />
-    <Compile Include="Forms\BoundaryConditionBcFileImportDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\BoundaryConditionBcFileImportDialog.Designer.cs">
-      <DependentUpon>BoundaryConditionBcFileImportDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\BoundaryDataImportDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -435,10 +429,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BcFileImportDialog.resx">
       <DependentUpon>BcFileImportDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\BoundaryConditionBcFileImportDialog.resx">
-      <DependentUpon>BoundaryConditionBcFileImportDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\BoundaryDataImportDialog.resx">
       <DependentUpon>BoundaryDataImportDialog.cs</DependentUpon>

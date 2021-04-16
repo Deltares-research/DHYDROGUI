@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.buttonOk = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.overwriteCheckBox = new System.Windows.Forms.CheckBox();
@@ -46,13 +45,6 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // openFileDialog
-            // 
-            this.openFileDialog.FileName = "openFileDialog1";
-            this.openFileDialog.Multiselect = true;
-            this.openFileDialog.RestoreDirectory = true;
-            this.openFileDialog.Title = "Open file";
             // 
             // buttonOk
             // 
@@ -190,8 +182,7 @@
         }
 
         #endregion
-
-        protected System.Windows.Forms.OpenFileDialog openFileDialog;
+        
         private System.Windows.Forms.Button buttonOk;
         private System.Windows.Forms.Button buttonCancel;
         protected System.Windows.Forms.CheckBox overwriteCheckBox;

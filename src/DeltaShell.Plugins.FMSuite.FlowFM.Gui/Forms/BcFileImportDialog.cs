@@ -51,14 +51,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public virtual DelftDialogResult ShowModal()
         {
-            openFileDialog.FileName = string.Empty;
-            openFileDialog.Filter = new BcFileImporter().FileFilter;
-            if (openFileDialog.ShowDialog() != DialogResult.OK)
+            string[] filePaths = new FileDialogService().SelectFiles(new BcFileImporter().FileFilter, "", true);
+            if (filePaths == null)
             {
                 return DelftDialogResult.Cancel;
             }
 
-            FilePaths = openFileDialog.FileNames;
+            FilePaths = filePaths;
             DelftDialogResult result = ShowDialog() == DialogResult.OK ? DelftDialogResult.OK : DelftDialogResult.Cancel;
             if (result == DelftDialogResult.OK && deleteDataCheckBox.Checked &&
                 quantitiesListBox.CheckedItems.Count * dataTypesListBox.CheckedItems.Count == 0)

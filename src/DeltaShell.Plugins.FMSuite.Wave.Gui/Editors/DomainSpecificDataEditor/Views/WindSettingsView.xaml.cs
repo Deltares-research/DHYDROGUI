@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using DelftTools.Controls;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
-using Microsoft.Win32;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.Views
 {
@@ -15,62 +15,48 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.V
             InitializeComponent();
         }
 
-        private WindSettingsViewModel ViewModel => (WindSettingsViewModel) DataContext;
+        private WindSettingsViewModel ViewModel => (WindSettingsViewModel)DataContext;
 
         private void OnClick_OpenXComponentFileButton(object sender, RoutedEventArgs e)
         {
-            var fileDialog = new OpenFileDialog
+            if (TryGetFileSelection("uniform x series (*.wnd;*.amu)|*.wnd;*.amu",
+                                    out string filePath))
             {
-                Filter = "uniform x series (*.wnd;*.amu)|*.wnd;*.amu",
-                Title = "Select X component file"
-            };
-
-            if (fileDialog.ShowDialog() == true)
-            {
-                ViewModel.XComponentFilePath = fileDialog.FileName;
+                ViewModel.XComponentFilePath = filePath;
             }
         }
 
         private void OnClick_OpenYComponentFileButton(object sender, RoutedEventArgs e)
         {
-            var fileDialog = new OpenFileDialog
+            if (TryGetFileSelection("uniform y series (*.wnd;*.amv)|*.wnd;*.amv",
+                                    out string filePath))
             {
-                Filter = "uniform y series (*.wnd;*.amv)|*.wnd;*.amv",
-                Title = "Select Y component file"
-            };
-
-            if (fileDialog.ShowDialog() == true)
-            {
-                ViewModel.YComponentFilePath = fileDialog.FileName;
+                ViewModel.YComponentFilePath = filePath;
             }
         }
 
         private void OnClick_OpenSpiderWebFileButton(object sender, RoutedEventArgs e)
         {
-            var fileDialog = new OpenFileDialog
+            if (TryGetFileSelection("spider web (*.spw)|*.spw",
+                                    out string filePath))
             {
-                Filter = "spider web (*.spw)|*.spw",
-                Title = "Select spider web file"
-            };
-
-            if (fileDialog.ShowDialog() == true)
-            {
-                ViewModel.SpiderWebFilePath = fileDialog.FileName;
+                ViewModel.SpiderWebFilePath = filePath;
             }
         }
 
         private void OnClick_OpenWindVelocityFileButton(object sender, RoutedEventArgs e)
         {
-            var fileDialog = new OpenFileDialog
+            if (TryGetFileSelection("uniform xy series (*.wnd)|*.wnd",
+                                    out string filePath))
             {
-                Filter = "uniform xy series (*.wnd)|*.wnd",
-                Title = "Select wind velocity file"
-            };
-
-            if (fileDialog.ShowDialog() == true)
-            {
-                ViewModel.WindVelocityFilePath = fileDialog.FileName;
+                ViewModel.WindVelocityFilePath = filePath;
             }
+        }
+
+        private static bool TryGetFileSelection(string fileFilter, out string selectedFilePath)
+        {
+            selectedFilePath = new FileDialogService().SelectFile(fileFilter);
+            return selectedFilePath != null;
         }
     }
 }

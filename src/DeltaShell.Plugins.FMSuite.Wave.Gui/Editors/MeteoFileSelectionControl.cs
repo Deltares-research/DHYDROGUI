@@ -2,11 +2,14 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using DelftTools.Controls;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 {
     public partial class MeteoFileSelectionControl : UserControl, INotifyPropertyChanged
     {
+        private string fileFilter;
+        
         public event PropertyChangedEventHandler PropertyChanged;
 
         public MeteoFileSelectionControl()
@@ -23,7 +26,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         public string FileFilter
         {
-            set => openFileDialog1.Filter = value;
+            set => fileFilter = value;
         }
 
         public string FileName
@@ -48,11 +51,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
 
         private void selMeteoBtn_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            string filePath = new FileDialogService().SelectFile(fileFilter);
+            if (filePath != null)
             {
                 FileName = ImportIntoDirectory != null
-                               ? ImportIntoDirectory(openFileDialog1.FileName)
-                               : openFileDialog1.FileName;
+                               ? ImportIntoDirectory(filePath)
+                               : filePath;
             }
         }
     }

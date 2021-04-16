@@ -31,7 +31,6 @@
             this.selMeteoBtn = new System.Windows.Forms.Button();
             this.meteoFileBox = new System.Windows.Forms.TextBox();
             this.fileLabel = new System.Windows.Forms.Label();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // selMeteoBtn
@@ -81,6 +80,5 @@
         private System.Windows.Forms.Button selMeteoBtn;
         private System.Windows.Forms.TextBox meteoFileBox;
         private System.Windows.Forms.Label fileLabel;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

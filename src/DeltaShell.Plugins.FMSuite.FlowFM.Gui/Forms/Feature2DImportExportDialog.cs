@@ -35,10 +35,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         {
             if (ImportMode)
             {
-                openFileDialog.Filter = FileFilter;
-                openFileDialog.FileName = null;
-                if (openFileDialog.ShowDialog() != DialogResult.OK)
+                importFileNames = new FileDialogService().SelectFiles(FileFilter);
+                if (importFileNames == null)
                 {
+                    importFileNames = new string[0];
                     return DelftDialogResult.Cancel;
                 }
 
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             if (feature2DImporterExporter != null)
             {
                 feature2DImporterExporter.Files = ImportMode
-                                                      ? openFileDialog.FileNames
+                                                      ? importFileNames
                                                       : new[]
                                                       {
                                                           saveFileDialog.FileName

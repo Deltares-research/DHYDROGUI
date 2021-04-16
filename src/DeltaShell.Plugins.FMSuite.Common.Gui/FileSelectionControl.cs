@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Gui
 {
@@ -50,17 +51,15 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             {
                 AddExtension = true,
                 Filter = FileFilter,
-                Multiselect = false
+                Multiselect = false,
+                Title = "Select file"
             };
-            if (dialog.ShowDialog(this) == DialogResult.OK)
+            if (dialog.ShowDialog() == true)
             {
                 FilePath = dialog.FileName;
             }
 
-            if (AfterFileSelected != null)
-            {
-                AfterFileSelected(FilePath, dialog.FilterIndex - 1);
-            }
+            AfterFileSelected?.Invoke(FilePath, dialog.FilterIndex - 1);
         }
     }
 }
