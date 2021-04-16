@@ -9,17 +9,11 @@ namespace DelftTools.Hydro.Structures
     {
         public static IEnumerable<ISewerConnection> InternalConnections(this IManhole manhole)
         {
-            if (!(manhole?.Network is IHydroNetwork network)) yield break;
-
-            foreach (var connection in network.SewerConnections)
-            {
-                if (connection is IPipe) continue;
-
-                if (connection.Source == manhole && connection.Target == manhole)
-                {
-                    yield return connection;
-                }
-            }
+            return manhole.IncomingBranches
+                          .Concat(manhole.OutgoingBranches)
+                          .OfType<ISewerConnection>()
+                          .Where(b => b.Source == b.Target)
+                          .Distinct();
         }
 
         public static IEnumerable<IStructure1D> InternalStructures(this IManhole manhole)
@@ -29,28 +23,22 @@ namespace DelftTools.Hydro.Structures
         
         public static IEnumerable<IPipe> Pipes(this IManhole manhole)
         {
-            var network = manhole?.Network as IHydroNetwork;
-            if(network == null) return new List<IPipe>();
-            var pipes = network.Pipes.ToList();
-            return pipes.Where(p => p.Source == manhole || p.Target == manhole);
+            return manhole.IncomingBranches.Concat(manhole.OutgoingBranches).OfType<IPipe>();
         }
 
         public static IEnumerable<OutletCompartment> OutletCompartments(this IManhole manhole)
         {
-            var outletCompartments = manhole?.Compartments?.OfType<OutletCompartment>();
-            return outletCompartments;
+            return manhole?.Compartments?.OfType<OutletCompartment>();
         }
 
         public static IEnumerable<IPipe> IncomingPipes(this IManhole manhole)
         {
-            var pipes = manhole.Pipes();
-            return pipes.Where(p => p.Target == manhole);
+            return manhole.Pipes().Where(p => p.Target == manhole);
         }
 
         public static IEnumerable<IPipe> OutgoingPipes(this IManhole manhole)
         {
-            var pipes = manhole.Pipes();
-            return pipes.Where(p => p.Source == manhole);
+            return manhole.Pipes().Where(p => p.Source == manhole);
         }
 
         // TODO: Move to a good location
