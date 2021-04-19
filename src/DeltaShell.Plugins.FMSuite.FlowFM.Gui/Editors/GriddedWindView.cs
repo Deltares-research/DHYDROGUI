@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 
