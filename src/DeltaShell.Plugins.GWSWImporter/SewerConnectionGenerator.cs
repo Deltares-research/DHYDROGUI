@@ -39,11 +39,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         {
             if(!gwswElement.IsValidGwswSewerConnection()) return;
             
-            var nodeIdStartAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
-            sewerConnection.SourceCompartmentName = nodeIdStartAttribute.GetValidStringValue();
-
-            var nodeIdEndAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
-            sewerConnection.TargetCompartmentName = nodeIdEndAttribute.GetValidStringValue();
+            sewerConnection.SourceCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
+            sewerConnection.TargetCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
 
             double auxDouble;
 
@@ -62,10 +59,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 sewerConnection.Length = auxDouble;
             }
 
-            var waterType = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.WaterType);
-            if (waterType.IsValidAttribute())
+            var waterTypeString = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.WaterType);
+            if (waterTypeString != null)
             {
-                sewerConnection.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterType.GetValidStringValue());
+                sewerConnection.WaterType = WaterTypeConverter.ConvertStringToSewerConnectionWaterType(waterTypeString);
             }
         }
 

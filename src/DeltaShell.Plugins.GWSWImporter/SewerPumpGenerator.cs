@@ -38,11 +38,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         private static void AddSewerConnectionAttributesToPump(GwswConnectionPump pump, GwswElement gwswElement)
         {
-            var sourceCompartmentAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
-            pump.SourceCompartmentName = sourceCompartmentAttribute.GetValidStringValue();
-
-            var targetCompartmentAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
-            pump.TargetCompartmentName= targetCompartmentAttribute.GetValidStringValue();
+            pump.SourceCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
+            pump.TargetCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
 
             double auxDouble;
             var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length);

@@ -19,9 +19,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var uniqueIdKey = gwswElement.IsValidGwswSewerConnection()
                 ? SewerConnectionMapping.PropertyKeys.UniqueId
                 : SewerStructureMapping.PropertyKeys.UniqueId;
-
-            var weirIdAttribute = gwswElement.GetAttributeFromList(uniqueIdKey);
-            var weirId = weirIdAttribute.GetValidStringValue();
+            
+            var weirId = gwswElement.GetAttributeValueFromList<string>(uniqueIdKey);
 
             if (gwswElement.IsValidGwswSewerConnection())
             {
@@ -57,11 +56,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         
         private static void AddConnectionAttributesToWeir(GwswConnectionWeir weir, GwswElement gwswElement)
         {
-            var nodeIdStartAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
-            weir.SourceCompartmentName = nodeIdStartAttribute.GetValidStringValue();
-
-            var nodeIdEndAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
-            weir.TargetCompartmentName = nodeIdEndAttribute.GetValidStringValue();
+            weir.SourceCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.SourceCompartmentId);
+            weir.TargetCompartmentName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.TargetCompartmentId);
 
             double auxDouble;
             var length = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.Length);

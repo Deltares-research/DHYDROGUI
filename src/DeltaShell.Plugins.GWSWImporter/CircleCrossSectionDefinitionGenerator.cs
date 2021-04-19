@@ -19,8 +19,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
             double width;
             var widthAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileWidth);
-            var materialAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
-            var materialValue = materialAttribute.GetValidStringValue();
+            var materialValue = gwswElement.GetAttributeValueFromList<string>(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
             if (widthAttribute.TryGetValueAsDouble(out width))
             {
                 var multiplier = CalculateDiameterMultiplier(materialValue);

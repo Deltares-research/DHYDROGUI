@@ -15,8 +15,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         protected string GetCrossSectionShapeName(GwswElement gwswElement)
         {
-            var nameAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileId);
-            return nameAttribute.GetValidStringValue();
+            string name = gwswElement.GetAttributeValueFromList<string>(SewerProfileMapping.PropertyKeys.SewerProfileId);
+            
+            return name;
         }
         
         protected void MessageForMissingValues(GwswElement gwswElement, string missingValuesText)
@@ -50,11 +51,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         protected static string GetMaterialValue(GwswElement gwswElement)
         {
-            var materialAttribute = gwswElement.GetAttributeFromList(SewerProfileMapping.PropertyKeys.SewerProfileMaterial);
-            var materialValue = materialAttribute == null
-                ? SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription()
-                : materialAttribute.GetValidStringValue();
-            return materialValue;
+            string unknownMaterial = SewerProfileMapping.SewerProfileMaterial.Unknown.GetDescription();
+            string material = gwswElement.GetAttributeValueFromList<string>(SewerProfileMapping.PropertyKeys.SewerProfileMaterial, unknownMaterial);
+
+            return material;
         }
     }
 }

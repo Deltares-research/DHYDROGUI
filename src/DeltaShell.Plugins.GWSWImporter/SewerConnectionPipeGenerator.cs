@@ -16,12 +16,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             if (newPipe == null) return;
 
             base.SetSewerConnectionAttributes(newPipe, gwswElement);
-
-            var pipeIdAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.PipeId);
-            newPipe.PipeId = pipeIdAttribute.GetValidStringValue();
-
-            var profileDefinitionIdAttribute = gwswElement.GetAttributeFromList(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId);
-            newPipe.CrossSectionDefinitionName = profileDefinitionIdAttribute.GetValidStringValue();
+            
+            newPipe.PipeId = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.PipeId);
+            newPipe.CrossSectionDefinitionName = gwswElement.GetAttributeValueFromList<string>(SewerConnectionMapping.PropertyKeys.CrossSectionDefinitionId);
         }
     }
 }
