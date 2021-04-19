@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Input;
 using DelftTools.Controls;
 using DelftTools.Hydro;
+using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
@@ -85,6 +87,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             if (string.IsNullOrEmpty(propertyName)) return;
 
             ViewModel.UpdatePropertyValue(propertyName);
+        }
+        
+        // Commit the value when losing keyboard focus. 
+        // This is required for situations where the textbox is not losing full focus, for example when saving your model.
+        private void WpfSettingsView_Textbox_OnLostKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            var textbox = e.OldFocus as TextBox;
+            textbox?.GetBindingExpression(TextBox.TextProperty)?.UpdateSource();
         }
     }
 }

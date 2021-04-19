@@ -116,7 +116,8 @@
                              BorderBrush="{StaticResource DefaultLightColorBrush}"
                              IsEnabled="{Binding Path=IsEditable}"
                              Style="{StaticResource ControlWithErrorStyle}"
-                             Text="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, Converter={StaticResource DoubleToStringConverter}}" />
+                             Text="{Binding Value, Mode=TwoWay, ValidatesOnDataErrors=True, ValidatesOnExceptions=True, Converter={StaticResource DoubleToStringConverter}}" 
+                             LostKeyboardFocus="WpfSettingsView_Textbox_OnLostKeyboardFocus"/>
 
                     <TextBlock Grid.Column="2"
                                Width="{StaticResource UnitWidth}"
