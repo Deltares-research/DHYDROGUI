@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         {
             get
             {
-                yield return new TestCaseData("FolderName", "dimr file name (without .xml)", 0, 0).SetName("ModelName"); // todo
+                yield return new TestCaseData("small_HEA_FMRR", "small_HEA_FMRR", 35, 2).SetName("HEA small FM RR");
             }
         }
 

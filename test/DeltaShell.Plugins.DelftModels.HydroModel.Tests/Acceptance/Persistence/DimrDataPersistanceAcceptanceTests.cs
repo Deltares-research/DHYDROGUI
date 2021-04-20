@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         {
             get
             {
-                yield return new TestCaseData("FolderName", "dimr file name (without .xml)", 0, 0).SetName("ModelName"); // todo
+                yield return new TestCaseData("small_HEA_FMRR", "small_HEA_FMRR", 35, 2).SetName("HEA small FM RR");
             }
         }
 
@@ -90,7 +90,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                                                                     secondSaveProjectDirectory, 
                                                                     mduFileName, 
                                                                     tempDirectory, 
-                                                                    hasRrData);
+                                                                    hasRrData,
+                                                                    new Dictionary<string, IEnumerable<string>>(),
+                                                                    AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
                 
                 Console.WriteLine("Comparing saved data with reference data");
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);

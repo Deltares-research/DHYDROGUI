@@ -30,7 +30,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
             IHydroModel hydroModel = null;
             IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(() => hydroModel = (IHydroModel)dimrImporter.ImportItem(xmlFilePath), Level.Error);
+            
             Assert.That(hydroModel, Is.Not.Null);
+            app.Project.RootFolder.Add(hydroModel);
 
             // [Precondition]
             // Disabled until issues FM1D2D-1183, FM1D2D-1184 and FM1D2D-1325 are fixed.
