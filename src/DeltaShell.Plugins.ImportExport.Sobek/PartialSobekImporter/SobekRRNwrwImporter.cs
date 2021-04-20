@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -86,6 +87,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void ImportNwrwDryweatherFlowDefinitions(ICollection<NwrwDryWeatherFlowDefinition> existingDefinitions)
         {
+            const string defaultDwa = "Default_DWA";
+            
             Dictionary<string, SobekRRDryWeatherFlow> readDefinitions = ReadDryweatherFlowDefinitions(GetFilePath(SobekFileNames.SobekRRNwrwDwaFileName));
 
             var existingDefinitionsSet = new HashSet<string>(existingDefinitions.Select(def => def.Name.ToLowerInvariant()));
@@ -93,7 +96,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 if (existingDefinitionsSet.Contains(readDefinition.Key.ToLowerInvariant()))
                 {
-                    listOfWarnings.Add($"A dryweather flow definition with the name '{readDefinition.Key}' already exists, skipping import.");
+                    if (!string.Equals(readDefinition.Key, defaultDwa, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        listOfWarnings.Add($"A dryweather flow definition with the name '{readDefinition.Key}' already exists, skipping import.");
+                        continue;
+                    }
+                    
+                    existingDefinitions.RemoveAllWhere(definition => string.Equals(definition.Name, defaultDwa, StringComparison.InvariantCultureIgnoreCase));
+                    existingDefinitions.Add(CreateNewNwrwDryWeatherFlowDefinition(readDefinition.Value));
                     continue;
                 }
 

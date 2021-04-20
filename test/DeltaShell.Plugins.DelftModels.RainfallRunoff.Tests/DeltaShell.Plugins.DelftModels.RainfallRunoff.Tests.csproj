@@ -42,6 +42,7 @@
     <Compile Include="CatchmentCoverageMaintainerImplTest.cs" />
     <Compile Include="Domain\Concepts\Hbv\HbvDataTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\DryweatherFlowDistributionTypeConverterTest.cs" />
+    <Compile Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinitionTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwFileWriterIntegrationTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwFileWriterIntegrationTestHelper.cs" />
     <Compile Include="Domain\Concepts\Sacramento\SacramentoDataTest.cs" />

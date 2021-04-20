@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using GeoAPI.Geometries;
 
@@ -29,11 +32,32 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
         {
             var rrModel = model as RainfallRunoffModel;
             if (rrModel == null) throw new ArgumentException();
-            if (rrModel.NwrwDryWeatherFlowDefinitions.Any(definition => definition.Name.Equals(this.Name, StringComparison.InvariantCultureIgnoreCase))) return;
+            
             if (NotSupportedByKernel()) return;
+            
+            IEventedList<NwrwDryWeatherFlowDefinition> definitions = rrModel.NwrwDryWeatherFlowDefinitions;
+            
+            if (string.Equals(Name, NwrwData.DEFAULT_DWA_ID, StringComparison.InvariantCultureIgnoreCase))
+            {
+                ReplaceDefaultDefinition(definitions);
+                return;
+            }
+            
+            if (rrModel.NwrwDryWeatherFlowDefinitions.Any(definition => string.Equals(definition.Name,this.Name, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                return;
+            }
+            
+            ConvertGwswUnitsToKernelUnits();
+            definitions.Add(this);
+        }
+
+        private void ReplaceDefaultDefinition(ICollection<NwrwDryWeatherFlowDefinition> definitions)
+        {
+            definitions.RemoveAllWhere(definition => string.Equals(definition.Name, NwrwData.DEFAULT_DWA_ID, StringComparison.InvariantCultureIgnoreCase));
 
             ConvertGwswUnitsToKernelUnits();
-            rrModel?.NwrwDryWeatherFlowDefinitions.Add(this);
+            definitions.Add(this);
         }
 
         public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
