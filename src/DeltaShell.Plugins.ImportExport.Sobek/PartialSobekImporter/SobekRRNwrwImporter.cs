@@ -36,15 +36,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             Log.DebugFormat("Importing nwrw data ...");
 
             rrModel = GetModel<RainfallRunoffModel>();
-
-            ImportNwrwDryweatherFlowDefinitions(rrModel.NwrwDryWeatherFlowDefinitions);
-            ImportNwrwDefinitions(rrModel.NwrwDefinitions);
-
+            
             var lateralSourceFeatureDictionary = new Dictionary<string, ILateralSource>(StringComparer.InvariantCultureIgnoreCase);
 
             // Read all NWRW definitions
             Dictionary<string, SobekRRNwrw> readNwrwDefinitions = ReadNwrwDefinitions(GetFilePath(SobekFileNames.SobekRRNwrwFileName));
             Dictionary<string, SobekRRNode> readSobekRrNodeDictionary = ReadNwrwNodes(GetFilePath(SobekFileNames.SobekRRRunoffNodesFileName));
+
+            if (readSobekRrNodeDictionary.Any())
+            {
+                ImportNwrwDryweatherFlowDefinitions(rrModel.NwrwDryWeatherFlowDefinitions);
+                ImportNwrwDefinitions(rrModel.NwrwDefinitions);
+            }
 
             if (HydroNetwork != null) // importing RR and FLOW
             {
