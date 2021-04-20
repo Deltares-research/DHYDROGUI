@@ -204,6 +204,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OnPropertyChanged(nameof(WriteClassMapFile));
                 EndEdit();
             }
+            else
+            {
+                BeginEdit(new DefaultEditAction(""));
+                EndEdit();
+            }
         }
 
         private void OnFMModelPropertyChanged(object sender, PropertyChangedEventArgs e)

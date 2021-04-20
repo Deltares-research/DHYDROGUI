@@ -2406,6 +2406,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(model.BoundaryConditions1D.Count, Is.EqualTo(4));
             Assert.That(model.BoundaryConditions1D[1].DataType, Is.EqualTo(Model1DBoundaryNodeDataType.None));
         }
+
+        [Test]
+        public void GivenWaterFlowFMModel_WhenChangingRandomModelProperty_ThenAlwaysTriggersWaterFlowFMModelOnPropertyChanged()
+        {
+            // Setup
+            var random = new Random(707);
+            
+            using (var model = new WaterFlowFMModel())
+            {
+                WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
+
+                int propertyCount = modelDefinition.Properties.Count;
+                int randomPropertyIndex = random.Next(propertyCount - 1);
+                WaterFlowFMProperty randomProperty = modelDefinition.Properties[randomPropertyIndex];
+                object randomPropertyValue = randomProperty.Value;
+
+                int propertyChangedCounter = 0;
+                model.PropertyChanged += (sender, args) =>
+                {
+                    propertyChangedCounter++;
+                };
+
+                // Call
+                modelDefinition.SetModelProperty(randomProperty.PropertyDefinition.MduPropertyName, randomPropertyValue.ToString());
+                
+                // Assert
+                Assert.That(propertyChangedCounter, Is.GreaterThan(0)); // Apparently, the event can be fired multiple times
+            }
+        }
     }
 
 }
