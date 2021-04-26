@@ -29,6 +29,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;
 using GeoAPI.Extensions.Coverages;
@@ -121,12 +122,22 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 SetCurrentWorkflow(fmModel, rrModel, hydroModel);
                 hydroModel.CoordinateSystem = fmModel?.CoordinateSystem;
+                SetDefaultModelSettings(fmModel, hydroModel);
             }
             EventSettings.BubblingEnabled = true;
             watch.Stop();
             Log.Info($"Done importing and generating model in {watch.ElapsedMilliseconds / 1000} sec");
             ProgressChanged?.Invoke($"Done importing and generating model in {watch.ElapsedMilliseconds/1000} sec from gwsw files, loading into DeltaShell", 10, 10);
             return (target is Project || target == null) && !ShouldCancel ? hydroModel : fmModel != null ? (object) fmModel : rrModel != null ? rrModel : null;
+        }
+
+        private void SetDefaultModelSettings(IWaterFlowFMModel fmModel, HydroModel hydroModel)
+        {
+            TimeSpan timeStep = hydroModel.TimeStep;
+            double timeStepInSeconds = timeStep.TotalSeconds;
+            
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, timeStepInSeconds.ToString(CultureInfo.InvariantCulture));
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, timeStepInSeconds.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>

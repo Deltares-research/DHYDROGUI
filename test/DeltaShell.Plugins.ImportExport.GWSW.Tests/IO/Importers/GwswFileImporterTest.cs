@@ -21,6 +21,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using DeltaShell.Plugins.ImportExport.GWSW.ViewModels;
 using GeoAPI.Geometries;
@@ -1457,6 +1458,45 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 var returnedModel = gwswImporter.ImportItem(null, null);
 
                 Assert.That(returnedModel is HydroModel);
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+        
+        [Test]
+        public void GivenTargetIsNull_WhenImportingGwswModel_ThenHisAndMapOutputIntervalAreSetEqualToIntegratedModelTimeStep()
+        {
+            // Setup
+            string originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            string testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            try
+            {
+                var filesToImport = new List<string>()
+                {
+                    Path.Combine(testDir, "Knooppunt.csv")
+                };
+                GwswFileImporter gwswImporter = SetupGwswFileImporter(filesToImport, testDir);
+
+                // Call
+                object returnedModel = gwswImporter.ImportItem(null, null);
+
+                // Assert
+                Assert.That(returnedModel is HydroModel);
+                var hydroModel = (HydroModel) returnedModel;
+
+                IEnumerable<WaterFlowFMModel> flowFmModels = hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>();
+                Assert.That(flowFmModels.Count(), Is.EqualTo(1));
+                WaterFlowFMModel flowFmModel = flowFmModels.Single();
+
+                TimeSpan hydroModelTimeStep = hydroModel.TimeStep;
+                TimeSpan flowFmModelHisOutputTimeStep = (TimeSpan) flowFmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value;
+                TimeSpan flowFmModelMapOutputTimeStep = (TimeSpan) flowFmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value;
+                Assert.That(flowFmModelHisOutputTimeStep, Is.EqualTo(hydroModelTimeStep));
+                Assert.That(flowFmModelMapOutputTimeStep, Is.EqualTo(hydroModelTimeStep));
             }
             finally
             {
