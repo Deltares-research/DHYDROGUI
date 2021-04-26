@@ -34,6 +34,10 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(Order = 1)]
         [DisplayName("Name")]
         public string Name { get; set; }
+        
+        [FeatureAttribute(Order = 0)]
+        [DisplayName("Manhole name")]
+        public string ManholeName => ParentManhole?.Name;
 
         /// <summary>
         /// The manhole that contains this compartment.
