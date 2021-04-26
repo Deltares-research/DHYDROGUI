@@ -39,11 +39,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             
             if (string.Equals(Name, NwrwData.DEFAULT_DWA_ID, StringComparison.InvariantCultureIgnoreCase))
             {
-                ReplaceDefaultDefinition(definitions);
-                return;
-            }
-            
-            if (rrModel.NwrwDryWeatherFlowDefinitions.Any(definition => string.Equals(definition.Name,this.Name, StringComparison.InvariantCultureIgnoreCase)))
+                definitions.RemoveAllWhere(definition => string.Equals(definition.Name, NwrwData.DEFAULT_DWA_ID, StringComparison.InvariantCultureIgnoreCase));
+            } 
+            else if (definitions.Any(definition => string.Equals(definition.Name,this.Name, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return;
             }
@@ -51,15 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             ConvertGwswUnitsToKernelUnits();
             definitions.Add(this);
         }
-
-        private void ReplaceDefaultDefinition(ICollection<NwrwDryWeatherFlowDefinition> definitions)
-        {
-            definitions.RemoveAllWhere(definition => string.Equals(definition.Name, NwrwData.DEFAULT_DWA_ID, StringComparison.InvariantCultureIgnoreCase));
-
-            ConvertGwswUnitsToKernelUnits();
-            definitions.Add(this);
-        }
-
+        
         public void InitializeNwrwCatchmentModelData(NwrwData nwrwData)
         {
             //Nothing to initialize

@@ -24,15 +24,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             
             using (var model = new RainfallRunoffModel())
             {
+                // Precondition
+                Assert.That(model.NwrwDryWeatherFlowDefinitions.Count(), Is.EqualTo(1));
+                NwrwDryWeatherFlowDefinition defaultDefinition = model.NwrwDryWeatherFlowDefinitions.Single();
+                Assert.That(defaultDefinition.Name, Is.EqualTo(NwrwData.DEFAULT_DWA_ID));
+                
                 // Call
                 dryWeatherFlowDefinition.AddNwrwCatchmentModelDataToModel(model, new NwrwImporterHelper());
                 
                 // Assert
                 IEventedList<NwrwDryWeatherFlowDefinition> definitions = model.NwrwDryWeatherFlowDefinitions;
                 Assert.That(definitions.Count, Is.EqualTo(1));
-                Assert.That(definitions.Single(), Is.EqualTo(dryWeatherFlowDefinition));
+
+                NwrwDryWeatherFlowDefinition newDefaultDefinition = definitions.Single();
+                Assert.That(newDefaultDefinition, Is.EqualTo(dryWeatherFlowDefinition));
+
+                Assert.That(newDefaultDefinition, Is.Not.SameAs(defaultDefinition)); // Check if old default definition has really been removed and not just updated.
             }
-            
         }
     }
 }
