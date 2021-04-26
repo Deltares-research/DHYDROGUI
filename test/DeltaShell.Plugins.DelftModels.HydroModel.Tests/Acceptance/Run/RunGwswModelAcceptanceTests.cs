@@ -146,34 +146,34 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         {
             hydroModel.StartTime = new DateTime(2020, 01, 01, 0, 0, 0);
             hydroModel.StopTime = new DateTime(2020, 01, 01, 1, 0, 0);
-            hydroModel.TimeStep = new TimeSpan(1, 0, 0);
+            hydroModel.TimeStep = new TimeSpan(0, 1, 0);
         }
 
         private static void SetFlowFmModelSettings(WaterFlowFMModel fmModel)
         {
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.RefDate, "20200101000000");
-            fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, "3600");
-            fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, "3600");
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.DtUser, "60");
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, "60");
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, "60");
         }
         
         private static void SetRrModelSettings(RainfallRunoffModel rrModel)
         {
-            rrModel.Precipitation.Data.SetValues(
-                new[] { 0.0 },
-                new VariableValueFilter<DateTime>(rrModel.Precipitation.Data.Arguments[0],
-                                                  new DateTime(2020, 01, 01, 0, 0, 0)));
-            rrModel.Precipitation.Data.SetValues(
-                new[] { 0.0 },
-                new VariableValueFilter<DateTime>(rrModel.Precipitation.Data.Arguments[0],
-                                                  new DateTime(2020, 01, 01, 1, 0, 0)));
-            rrModel.Evaporation.Data.SetValues(
-                new[] { 0.0 },
-                new VariableValueFilter<DateTime>(rrModel.Evaporation.Data.Arguments[0],
-                                                  new DateTime(2020, 01, 01, 0, 0, 0)));
-            rrModel.Evaporation.Data.SetValues(
-                new[] { 0.0 },
-                new VariableValueFilter<DateTime>(rrModel.Evaporation.Data.Arguments[0],
-                                                  new DateTime(2020, 01, 01, 1, 0, 0)));
+            DateTime startDateTime = new DateTime(2020, 01, 01, 0, 0, 0);
+            int offsetInMinutes = 0;
+            
+            var precipitationValues = new [] {5.0, 7.5, 10.0, 5.0, 0.0, 0.0};
+
+            foreach (double precipitationValue in precipitationValues)
+            {
+                var dateTime = startDateTime.AddMinutes(offsetInMinutes);
+                
+                rrModel.Precipitation.Data.SetValues(
+                    new[] { precipitationValue},
+                    new VariableValueFilter<DateTime>(rrModel.Precipitation.Data.Arguments[0], dateTime));
+
+                offsetInMinutes += 10; // Add 10 minutes.
+            }
         }
     }
 }
