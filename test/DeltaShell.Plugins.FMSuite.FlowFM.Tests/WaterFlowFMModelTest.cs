@@ -2411,28 +2411,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         public void GivenWaterFlowFMModel_WhenChangingRandomModelProperty_ThenAlwaysTriggersWaterFlowFMModelOnPropertyChanged()
         {
             // Setup
-            var random = new Random(707);
-            
             using (var model = new WaterFlowFMModel())
             {
                 WaterFlowFMModelDefinition modelDefinition = model.ModelDefinition;
-
-                int propertyCount = modelDefinition.Properties.Count;
-                int randomPropertyIndex = random.Next(propertyCount - 1);
-                WaterFlowFMProperty randomProperty = modelDefinition.Properties[randomPropertyIndex];
-                object randomPropertyValue = randomProperty.Value;
-
+                
                 int propertyChangedCounter = 0;
                 model.PropertyChanged += (sender, args) =>
                 {
                     propertyChangedCounter++;
                 };
 
-                // Call
-                modelDefinition.SetModelProperty(randomProperty.PropertyDefinition.MduPropertyName, randomPropertyValue.ToString());
-                
-                // Assert
-                Assert.That(propertyChangedCounter, Is.GreaterThan(0)); // Apparently, the event can be fired multiple times
+                foreach (WaterFlowFMProperty property in modelDefinition.Properties)
+                {
+                    string propertyName = property.PropertyDefinition.MduPropertyName;
+                    string defaultValue = property.PropertyDefinition.DefaultValueAsString;
+                    
+                    // Call
+                    modelDefinition.SetModelProperty(propertyName, defaultValue);
+                    
+                    // Assert
+                    Assert.That(propertyChangedCounter, Is.GreaterThan(0)); // Apparently, the event can be fired multiple times
+                    propertyChangedCounter = 0; // Reset counter
+                }
             }
         }
     }
