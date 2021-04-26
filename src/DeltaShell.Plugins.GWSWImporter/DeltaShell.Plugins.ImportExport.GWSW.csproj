@@ -207,15 +207,16 @@
     <Compile Include="SewerWeirGenerator.cs" />
     <Compile Include="TrapezoidCrossSectionDefinitionGenerator.cs" />
     <Compile Include="UShapeCrossSectionShapeGenerator.cs" />
-    <Compile Include="ViewModels\DelimeterSelectorViewModel.cs" />
     <Compile Include="ViewModels\GwswFeatureViewItem.cs" />
-    <Compile Include="ViewModels\GwswImportDialogViewModel.cs" />
-    <Compile Include="Views\DelimeterSelector.xaml.cs">
-      <DependentUpon>DelimeterSelector.xaml</DependentUpon>
+    <Compile Include="ViewModels\GwswImportControlViewModel.cs" />
+    <Compile Include="Views\GwswImportControl.xaml.cs">
+      <DependentUpon>GwswImportControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GwswImportDialog.xaml.cs">
       <DependentUpon>GwswImportDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SeparatorType.cs" />
+    <Compile Include="Views\SeparatorTypeCharacterExtensions.cs" />
     <Compile Include="WaterTypeConverter.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +242,11 @@
     <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
       <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
       <Name>DeltaShell.Dimr</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{6fad9209-03ea-439c-8b41-80d1fd6ab4e2}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
@@ -274,13 +280,13 @@
     <None Include="Resources\StructureFeatureSmall.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\DelimeterSelector.xaml">
+    <Page Include="Views\GwswImportControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\GwswImportDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

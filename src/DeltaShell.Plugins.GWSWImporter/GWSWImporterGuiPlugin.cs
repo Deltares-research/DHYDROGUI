@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 AfterCreate = (v, i) =>
                 {
-                    v.ViewModel.Model = Gui.SelectedModel as IWaterFlowFMModel;
+                    v.GwswImportControl.Model = Gui.SelectedModel as IWaterFlowFMModel;
                 }
             };
         }

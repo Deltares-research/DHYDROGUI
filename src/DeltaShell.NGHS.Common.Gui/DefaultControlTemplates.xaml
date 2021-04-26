@@ -348,6 +348,9 @@
                 <Setter TargetName="border" Property="Background" Value="LightGray" />
                 <Setter TargetName="border" Property="BorderBrush" Value="Transparent" />
             </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="border" Property="Background" Value="LightBlue" />
+            </Trigger>
             <Trigger Property="IsEnabled" Value="false">
                 <Setter TargetName="contentPresenter" Property="TextElement.Foreground" Value="LightGray" />
             </Trigger>

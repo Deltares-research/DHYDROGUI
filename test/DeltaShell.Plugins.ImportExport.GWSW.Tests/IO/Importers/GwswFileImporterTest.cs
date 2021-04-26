@@ -1183,7 +1183,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             FileUtils.DeleteIfExists(deltaresDirectory);
 
             var gwswFileImporter = new GwswFileImporter(new DefinitionsProvider());
-            var viewModel = new GwswImportDialogViewModel {Importer = gwswFileImporter};
+            var viewModel = new GwswImportControlViewModel {Importer = gwswFileImporter};
             Assert.IsNotNull(viewModel);
             Assert.IsFalse(viewModel.GwswFeatureFiles.Any());
 

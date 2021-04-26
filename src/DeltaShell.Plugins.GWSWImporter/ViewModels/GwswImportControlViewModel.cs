@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using System.Windows.Input;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.ImportExport.GWSW.Views;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.ViewModels
@@ -18,44 +18,54 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.ViewModels
     /// GwswImportDialogViewModel is a view model for the GwswImport dialog
     /// </summary>
     [Entity]
-    public class GwswImportDialogViewModel
+    public class GwswImportControlViewModel
     {
-        private static ILog Log = LogManager.GetLogger(typeof(GwswImportDialogViewModel));
+        private static ILog Log = LogManager.GetLogger(typeof(GwswImportControlViewModel));
         private static string selectedDirectoryPath;
+        private char otherChar = '-';
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GwswImportDialogViewModel"/> class.
+        /// Initializes a new instance of the <see cref="GwswImportControlViewModel"/> class.
         /// </summary>
-        public GwswImportDialogViewModel()
+        public GwswImportControlViewModel()
         {
             GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
             SelectedDirectoryPath = GetPreviousDirectoryPath();
-            FeatureDelimeter = ';';
+            SelectedSeparatorType = SeparatorType.Semicolon;
         }
         
         /// <summary>
         /// Gets or sets the importer.
         /// </summary>
-        /// <value>
-        /// The importer.
-        /// </value>
         public GwswFileImporter Importer { get; set; }
 
         /// <summary>
         /// Gets or sets the model.
         /// </summary>
-        /// <value>
-        /// The model.
-        /// </value>
         public IWaterFlowFMModel Model { get; set; }
 
         /// <summary>
         /// Gets or sets the delimeter for the feature csv files.
         /// </summary>
-        /// <value>
-        /// The feature delimeter.
-        /// </value>
-        public char FeatureDelimeter { get; set; }
+        public SeparatorType SelectedSeparatorType { get; set; }
+
+        public string OtherChar
+        {
+            get
+            {
+                return new string(new []{otherChar});
+            }
+            set
+            {
+                if (value.Length == 1)
+                {
+                    otherChar = value[0];
+                    return;
+                }
+
+                throw new InvalidCastException("Could not convert to valid character");
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is directory selected, a state of the viewand the user process.
@@ -114,20 +124,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.ViewModels
         public Action<bool> CloseAction { get; set; }
 
         /// <summary>
-        /// Gets or sets the get delimeter.
-        /// </summary>
-        /// <value>
-        /// The get delimeter.
-        /// </value>
-        public Func<char, char> GetDelimeter { get; set; }
-
-        /// <summary>
         /// Gets or sets the message action.
         /// </summary>
         /// <value>
         /// The message action.
         /// </value>
-        public Func<string, string, MessageBoxButtons, MessageBoxIcon, bool> MessageAction { get; set; }
+        public Action<string, string> ShowInformationMessage { get; set; }
 
         #region Commands
 
@@ -187,25 +189,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.ViewModels
             get { return new RelayCommand(param => CloseAction(false)); }
         }
 
-
-        /// <summary>
-        /// Gets the on set feature delimeted command.
-        /// </summary>
-        /// <value>
-        /// The on set feature delimeter.
-        /// </value>
-        public ICommand OnSetFeatureDelimeter
-        {
-            get { return new RelayCommand(param => SetFeatureDelimeter()); }
-        }
-
-
         #endregion
 
         #region Commands Private methods
 
         private void LoadFeatureFiles()
         {
+            if (Importer == null) return;
+
             Importer.LoadFeatureFiles(SelectedDirectoryPath);
 
             GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem>();
@@ -224,12 +215,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.ViewModels
 
             TriggerSelectedFilesCheckbox();
         }
-
-        private void SetFeatureDelimeter()
-        {
-            FeatureDelimeter = GetDelimeter?.Invoke(FeatureDelimeter) ?? FeatureDelimeter;
-        }
-
+        
         private void SelectAll()
         {
             var currentValue = GwswFeatureFiles.All(ff => ff.Selected);
@@ -255,8 +241,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.ViewModels
 
             if (GwswFeatureFiles.Any(ff => ff.FullPath.Equals(SelectedFeatureFilePath)))
             {
-                var message = string.Format("The file {0} with path {1}, already exists in the Feature List.", fileName, SelectedFeatureFilePath);
-                MessageAction?.Invoke("Feature File already exists.", message, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                var message = $"The file {fileName} with path {SelectedFeatureFilePath}, already exists in the Feature List.";
+                ShowInformationMessage?.Invoke("Feature File already exists.", message);
                 return;
             }
 
@@ -287,8 +273,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.ViewModels
             
             //Add the files to import to the importer property, close the window and then launch the importer.
             Importer.FilesToImport = new EventedList<string>(pathList);
+            
             //Set delimeter.
-            Importer.CsvDelimeter = FeatureDelimeter;
+            Importer.CsvDelimeter = SelectedSeparatorType.GetChar(otherChar);
             CloseAction?.Invoke(true);
         }
 
