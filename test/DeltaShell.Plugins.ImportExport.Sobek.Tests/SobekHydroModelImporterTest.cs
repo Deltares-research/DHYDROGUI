@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
@@ -130,6 +134,37 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.IsTrue(compositeStructures.Count > 1);
             Assert.IsTrue(compositeStructures.Select(cbs => cbs.Name).HasUniqueValues());
         }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void GivenAHydroModel_WhenImportingSobekModelInWaterFlowFmModel_ThenWriteRestartFileModelSettingIsFalse()
+        {
+            // Setup
+            string pathToSobekModel = TestHelper.GetTestDataDirectory() + @"\demo_01.lit\1\NETWORK.TP";
+            
+            HydroModel hydroModel = CreateHydroModel();
+            
+            IPartialSobekImporter importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
+            var sobekModelImporter = new SobekHydroModelImporter(false)
+            {
+                TargetObject = hydroModel,
+                PartialSobekImporter = importer,
+                PathSobek = pathToSobekModel
+            };
+            
+            // Call
+            sobekModelImporter.ImportItem(pathToSobekModel, hydroModel);
+            
+            // Assert
+            IEnumerable<WaterFlowFMModel> waterFlowFmModels = hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>();
+            Assert.That(waterFlowFmModels.Count(), Is.EqualTo(1));
+
+            WaterFlowFMModel waterFlowFmModel = waterFlowFmModels.Single();
+            bool writeRestartFile = (bool)waterFlowFmModel.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
+            Assert.That(writeRestartFile, Is.False);
+        }
+        
 
         private static HydroModel CreateHydroModel()
         {

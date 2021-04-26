@@ -4,6 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
@@ -13,6 +14,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using log4net;
 
@@ -154,6 +156,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 SetImportedSobekFileObjectModelToDHydroDomainObjectModel(targetObjectInternal);
 
                 SyncModelTimes();
+                SetDefaultModelSettings();
 
                 if (ShouldCancel)
                 {
@@ -172,6 +175,20 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
 
+        private void SetDefaultModelSettings()
+        {
+            var hydroModel = TargetObject as HydroModel;
+            if (hydroModel == null) return;
+
+            if (UseFm)
+            {
+                var waterFlowFmModels = hydroModel.GetActivitiesOfType<WaterFlowFMModel>();
+                foreach (WaterFlowFMModel waterFlowFmModel in waterFlowFmModels)
+                { 
+                    waterFlowFmModel.ModelDefinition.SetModelProperty(GuiProperties.WriteRstFile, "0");
+                }
+            }
+        }
 
         # endregion
 
@@ -252,7 +269,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             if (waterFlowFMModel == null) return;
 
             waterFlowFMModel.HydFileOutput = enableWaqOutput;
-
             if (enableWaqOutput)
             {
                 log.Warn("Skipped import of waterquality model and enabled hyd file output on waterflow model.");
