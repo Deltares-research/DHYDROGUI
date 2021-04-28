@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             yield return new ProjectTemplate
             {
                 Id = RHUINTEGRATEDMODEL_TEMPLATE_ID,
-                Category = "RHU Templates",
+                Category = "New model",
                 Name = "RHU model",
                 Description = "Creates a new Integrated Hydro model with RHU D-HYDRO models",
                 ExecuteTemplate = (p, settings) =>

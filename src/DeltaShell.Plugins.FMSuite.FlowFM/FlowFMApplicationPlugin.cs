@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new ProjectTemplate
             {
                 Id = FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID,
-                Category = "RHU Templates",
+                Category = "New model",
                 Name = "FM model",
                 Description = "Creates a new standalone flexible mesh model",
                 ExecuteTemplate = (p, settings) =>
