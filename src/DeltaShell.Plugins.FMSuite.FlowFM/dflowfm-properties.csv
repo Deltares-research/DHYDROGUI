@@ -245,7 +245,7 @@ output,HisInterval,,,His output interval,DoubleArray,600,0,,TRUE,,,,,,"History o
 output,XLSInterval,,,XLS output interval,Interval,0,0,,FALSE,,,,,,Interval (s) between XLS history,
 output,MapFile,,,,FileName,,,,TRUE,,,,,,Map file output file *_map.nc in NetCDF format,
 output,MapInterval,,,Map output interval,DoubleArray,3600,0,,TRUE,,WriteMapFile,,,,"Map file output times, given as 'interval' 'start period' 'end period' (s)",
-output,RstInterval,,,Restart output interval,DoubleArray,86400,0,,TRUE,,,,,,"Restart file output times, given as 'interval' 'start period' 'end period' (s)",
+output,RstInterval,,,Restart output interval,DoubleArray,0,0,,TRUE,,,,,,"Restart file output times, given as 'interval' 'start period' 'end period' (s)",
 output,S1incinterval,,,,Interval,0,,,TRUE,,,,,,Interval (m) in incremental file for water levels s1,
 *output,TimeSplitInterval,,Output,Time splitting interval,Interval,0X,,,TRUE,,,,,,"Time splitting interval, after which a new output file is started. value+unit, e.g. '1 M', valid units: Y,M,D,h,m,s.",
 output,MapFormat,output,Others,Map file output format:NetCDF|Tecplot|Both|UGRID(beta),1|2|3|4,4,1,4,TRUE,,,,,,"Map file format (1: NetCDF, 2: Tecplot, 3: NetCFD and Tecplot)",

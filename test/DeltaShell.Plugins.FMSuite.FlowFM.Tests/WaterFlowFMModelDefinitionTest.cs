@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteHisFile).Value);
             Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
 
-            Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value);
+            Assert.IsFalse((bool)modelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value);
             Assert.NotNull(modelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value);
 
             Assert.IsTrue((bool)modelDefinition.GetModelProperty(GuiProperties.SpecifyWaqOutputInterval).Value);

@@ -598,7 +598,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 if (intervalPropName == KnownProperties.RstInterval)
                 {
                     GetModelProperty(deltaTPropName).Value = new TimeSpan(0, 24, 0, 0);
-                    GetModelProperty(doWritePropName).Value = true;
+                    GetModelProperty(doWritePropName).Value = false;
                 }
                 if (intervalPropName == KnownProperties.WaqInterval)
                 {
