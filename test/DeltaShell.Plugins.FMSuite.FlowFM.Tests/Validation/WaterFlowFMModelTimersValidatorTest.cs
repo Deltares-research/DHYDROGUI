@@ -137,8 +137,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             using (var model = CreateWaterFlowFMModelWithValidTimers())
             {
                 var validator = new WaterFlowFMModelTimersValidator();
-                Assert.AreEqual(new TimeSpan(0, 0, 5, 0), model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
-                Assert.AreEqual(new TimeSpan(0, 0, 20, 0), model.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value);
+                model.ModelDefinition.SetModelProperty(GuiProperties.RstOutputDeltaT, "86400"); // Default is 0
+                
+                Assert.AreEqual(new TimeSpan(0, 0, 10, 0), model.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value);
+                Assert.AreEqual(new TimeSpan(0, 1, 0, 0), model.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value);
                 Assert.AreEqual(new TimeSpan(1, 0, 0, 0), model.ModelDefinition.GetModelProperty(GuiProperties.RstOutputDeltaT).Value);
 
                 // set invalid user output timestep
