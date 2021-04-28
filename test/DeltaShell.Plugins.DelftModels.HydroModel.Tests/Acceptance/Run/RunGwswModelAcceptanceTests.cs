@@ -146,15 +146,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         {
             hydroModel.StartTime = new DateTime(2020, 01, 01, 0, 0, 0);
             hydroModel.StopTime = new DateTime(2020, 01, 01, 1, 0, 0);
-            hydroModel.TimeStep = new TimeSpan(0, 1, 0);
         }
 
         private static void SetFlowFmModelSettings(WaterFlowFMModel fmModel)
         {
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.RefDate, "20200101000000");
-            fmModel.ModelDefinition.SetModelProperty(KnownProperties.DtUser, "60");
-            fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, "60");
-            fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, "60");
         }
         
         private static void SetRrModelSettings(RainfallRunoffModel rrModel)
