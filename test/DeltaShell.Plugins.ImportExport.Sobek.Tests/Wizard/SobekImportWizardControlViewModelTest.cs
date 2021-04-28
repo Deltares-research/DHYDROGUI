@@ -170,7 +170,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
         }
 
         [Test]
-        public void GivenSobekImportWizardControlViewModel_EnableDisableFlowRtcRRImport_ShouldBeReflectedInImporters()
+        public void GivenSobekImportWizardControlViewModel_EnableDisableFlow1DImport_ShouldBeReflectedInImporters()
         {
             //Arrange
             var path = TestHelper.GetTestFilePath(@"groesbeek.lit\network.tp");
@@ -178,11 +178,30 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
 
             // Act & Assert
             Assert.IsTrue(viewmodel.CanImportFlowRtc);
-            Assert.IsTrue(viewmodel.CanImportRr);
             Assert.IsTrue(viewmodel.ImportFlow);
-            Assert.IsTrue(viewmodel.ImportRtc);
-            Assert.IsTrue(viewmodel.ImportRr);
+            
+            Assert.AreEqual(12, viewmodel.ImportersWaterFlow1d.Count());
+            Assert.AreEqual(9, viewmodel.ImportersRainfallRunoff.Count());
+            Assert.AreEqual(1, viewmodel.ImportersRtc.Count());
 
+            viewmodel.ImportFlow = false;
+
+            Assert.AreEqual(0, viewmodel.ImportersWaterFlow1d.Count());
+            Assert.AreEqual(9, viewmodel.ImportersRainfallRunoff.Count());
+            Assert.AreEqual(1, viewmodel.ImportersRtc.Count());
+        }
+        
+        [Test]
+        public void GivenSobekImportWizardControlViewModel_EnableDisableRtcImport_ShouldBeReflectedInImporters()
+        {
+            //Arrange
+            var path = TestHelper.GetTestFilePath(@"groesbeek.lit\network.tp");
+            var viewmodel = new SobekImportWizardControlViewModel {FilePath = path};
+
+            // Act & Assert
+            Assert.IsTrue(viewmodel.CanImportFlowRtc);
+            Assert.IsTrue(viewmodel.ImportRtc);
+        
             Assert.AreEqual(12, viewmodel.ImportersWaterFlow1d.Count());
             Assert.AreEqual(9, viewmodel.ImportersRainfallRunoff.Count());
             Assert.AreEqual(1, viewmodel.ImportersRtc.Count());
@@ -192,18 +211,28 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.Wizard
             Assert.AreEqual(12, viewmodel.ImportersWaterFlow1d.Count());
             Assert.AreEqual(9, viewmodel.ImportersRainfallRunoff.Count());
             Assert.AreEqual(0, viewmodel.ImportersRtc.Count());
+        }
+        
+        [Test]
+        public void GivenSobekImportWizardControlViewModel_EnableDisableRRImport_ShouldBeReflectedInImporters()
+        {
+            //Arrange
+            var path = TestHelper.GetTestFilePath(@"groesbeek.lit\network.tp");
+            var viewmodel = new SobekImportWizardControlViewModel {FilePath = path};
+
+            // Act & Assert
+            Assert.IsTrue(viewmodel.CanImportRr);
+            Assert.IsTrue(viewmodel.ImportRr);
+
+            Assert.AreEqual(12, viewmodel.ImportersWaterFlow1d.Count());
+            Assert.AreEqual(9, viewmodel.ImportersRainfallRunoff.Count());
+            Assert.AreEqual(1, viewmodel.ImportersRtc.Count());
 
             viewmodel.ImportRr = false;
 
             Assert.AreEqual(12, viewmodel.ImportersWaterFlow1d.Count());
             Assert.AreEqual(0, viewmodel.ImportersRainfallRunoff.Count());
-            Assert.AreEqual(0, viewmodel.ImportersRtc.Count());
-
-            viewmodel.ImportFlow = false;
-
-            Assert.AreEqual(0, viewmodel.ImportersWaterFlow1d.Count());
-            Assert.AreEqual(0, viewmodel.ImportersRainfallRunoff.Count());
-            Assert.AreEqual(0, viewmodel.ImportersRtc.Count());
+            Assert.AreEqual(1, viewmodel.ImportersRtc.Count());
         }
 
         [Test]

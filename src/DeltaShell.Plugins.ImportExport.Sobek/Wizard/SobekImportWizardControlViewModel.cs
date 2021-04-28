@@ -221,6 +221,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             set
             {
                 sobekImporter.UseRR = value;
+                foreach (IPartialSobekImporter partialSobekImporter in ImportersRainfallRunoff)
+                {
+                    partialSobekImporter.IsActive = value;
+                }
+
                 OnPropertyChanged();
                 RefreshImporters();
             }
@@ -232,6 +237,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             set
             {
                 sobekImporter.UseRTC = value;
+                foreach (IPartialSobekImporter partialSobekImporter in ImportersRtc)
+                {
+                    partialSobekImporter.IsActive = value;
+                }
                 OnPropertyChanged();
                 RefreshImporters();
             }
@@ -242,6 +251,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             set
             {
                 sobekImporter.UseFm = value;
+                foreach (IPartialSobekImporter partialSobekImporter in ImportersWaterFlow1d)
+                {
+                    partialSobekImporter.IsActive = value;
+                }
                 OnPropertyChanged();
                 RefreshImporters();
             }
@@ -309,9 +322,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
         private void RefreshImporters()
         {
             var importers = GetImporters(sobekImporter).Reverse().ToList();
-            ImportersWaterFlow1d = importers.Where(i => i.Category == SobekImporterCategories.WaterFlow1D);
-            ImportersRainfallRunoff = importers.Where(i => i.Category == SobekImporterCategories.RainfallRunoff);
-            ImportersRtc = importers.Where(i => i.Category == SobekImporterCategories.Rtc);
+            ImportersWaterFlow1d = importers.Where(i => i.Category == SobekImporterCategories.WaterFlow1D && i.IsActive);
+            ImportersRainfallRunoff = importers.Where(i => i.Category == SobekImporterCategories.RainfallRunoff && i.IsActive);
+            ImportersRtc = importers.Where(i => i.Category == SobekImporterCategories.Rtc && i.IsActive);
         }
 
         private void SetSelectedPath(string path)
