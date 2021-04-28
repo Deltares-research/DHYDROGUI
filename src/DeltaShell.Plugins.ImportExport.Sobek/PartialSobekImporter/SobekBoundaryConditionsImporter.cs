@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
@@ -7,6 +8,7 @@ using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
@@ -24,6 +26,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         protected override void PartialImport()
         {
+            var sobekPreFix = "tmp";
             var initialPath = GetFilePath(SobekFileNames.SobekBoundaryFileName);
             if (!File.Exists(initialPath))
             {
@@ -31,7 +34,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            var nodes = HydroNetwork.Nodes.ToDictionary(n => n.Name, n => n);
+            var nodes = HydroNetwork.Nodes.ToDictionary(n => n.Name, n => n, StringComparer.InvariantCultureIgnoreCase);
             var boundaryConditionToFeatureLookup = CreateLookUpDictionary();
             var waterFlowFMModel = GetModel<WaterFlowFMModel>();
             var useSalt = waterFlowFMModel.UseSalinity;
@@ -51,13 +54,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     continue;
                 }
 
-                if (!nodes.ContainsKey(nodeId))
+                INode node;
+                if (!nodes.TryGetValue(nodeId, out node) && nodeId.StartsWith(sobekPreFix) && !nodes.TryGetValue(nodeId.Substring(3), out node))
                 {
                     log.WarnFormat("Can't find node {0} for boundary condition, node: {1}, skipping node ...", nodeId, condition.ID);
                     continue;
                 }
 
-                var node = nodes[nodeId];
+                //var node = nodes[nodeId];
                 flowBoundaryConditionData.Feature = node;
                 flowBoundaryConditionData.UseSalt = useSalt;
                 flowBoundaryConditionData.UseTemperature = useTemperature;

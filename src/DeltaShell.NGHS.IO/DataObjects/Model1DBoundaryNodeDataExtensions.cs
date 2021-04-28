@@ -1,5 +1,6 @@
 using System.Linq;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.DataObjects
@@ -27,13 +28,21 @@ namespace DeltaShell.NGHS.IO.DataObjects
             if (manhole != null && flowBoundaryConditionData.DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
             {
                 //var outletCandidate = manhole.GetOutletCandidate(); // is not working. incomming branches are not set, but should be the method
-                var outletCandidate = manhole.Compartments.LastOrDefault();
+                ICompartment outletCandidate = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault(o => o.Name.StartsWith("tmp"));
                 if (outletCandidate != null)
                 {
-                    var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
-                    outlet.SurfaceWaterLevel = flowBoundaryConditionData.WaterLevel;
-                    outlet.SurfaceLevel = flowBoundaryConditionData.WaterLevel + 0.25; //FM1D2D-1308 : empirical determination by Didrik
-                    outlet.BottomLevel = flowBoundaryConditionData.WaterLevel - 1.0; //FM1D2D-1308 : empirical determination by Didrik
+                    ((OutletCompartment) outletCandidate).SurfaceWaterLevel = flowBoundaryConditionData.WaterLevel;
+                }
+                else
+                {
+                    outletCandidate = manhole.Compartments.LastOrDefault();
+                    if (outletCandidate != null)
+                    {
+                        var outlet = manhole.UpdateCompartmentToOutletCompartment(outletCandidate);
+                        outlet.SurfaceWaterLevel = flowBoundaryConditionData.WaterLevel;
+                        outlet.SurfaceLevel = flowBoundaryConditionData.WaterLevel + 0.25; //FM1D2D-1308 : empirical determination by Didrik
+                        outlet.BottomLevel = flowBoundaryConditionData.WaterLevel - 1.0;   //FM1D2D-1308 : empirical determination by Didrik
+                    }
                 }
             }
         }
