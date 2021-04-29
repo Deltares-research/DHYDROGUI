@@ -641,6 +641,7 @@ src/DeltaShell.Dimr/drtc_xsd/rtcToolsConfig.xsd -text
 src/DeltaShell.Dimr/drtc_xsd/treeVector.xsd -text
 src/DeltaShell.Dimr/packages.config -text
 src/DeltaShell.NGHS.Common.Gui/BitmapConversionExtensions.cs -text
+src/DeltaShell.NGHS.Common.Gui/Brushes.xaml -text
 src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPicker.xaml -text
 src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPicker.xaml.cs -text
 src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPickerViewModel.cs -text
@@ -652,6 +653,7 @@ src/DeltaShell.NGHS.Common.Gui/Properties/AssemblyInfo.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/Resources.Designer.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/Resources.resx -text
 src/DeltaShell.NGHS.Common.Gui/Resources/DeleteHS.png -text
+src/DeltaShell.NGHS.Common.Gui/Resources/image0.png -text
 src/DeltaShell.NGHS.Common.Gui/Resources/import.png -text
 src/DeltaShell.NGHS.Common.Gui/Resources/properties.png -text
 src/DeltaShell.NGHS.Common.Gui/Resources/restart.png -text
@@ -672,6 +674,7 @@ src/DeltaShell.NGHS.Common/IO/ModelFileImporterBase.cs -text
 src/DeltaShell.NGHS.Common/IO/RestartFiles/RestartFile.cs -text
 src/DeltaShell.NGHS.Common/Logging/ILogHandler.cs -text
 src/DeltaShell.NGHS.Common/Logging/LogHandler.cs -text
+src/DeltaShell.NGHS.Common/ProductCategories.cs -text
 src/DeltaShell.NGHS.Common/Properties/AssemblyInfo.cs.svn -text
 src/DeltaShell.NGHS.Common/Properties/Resources.Designer.cs -text
 src/DeltaShell.NGHS.Common/Properties/Resources.resx -text
@@ -923,7 +926,6 @@ src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/SettingsWpf/WpfSettingsV
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/SettingsWpf/WpfSettingsView.xaml.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/SettingsWpf/WpfSettingsViewModel.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Forms/SettingsWpf/WpfSettingsViewModelDesignInstances.cs -text
-src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/GraphicsProviders/HydroModelGuiGraphics.xaml -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/GraphicsProviders/HydroModelGuiGraphicsProvider.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/HydroModelGuiPlugin.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/HydroModelMapLayerProvider.cs -text
@@ -2350,7 +2352,7 @@ src/DeltaShell.Plugins.GWSWImporter/GwswElementGenerationActivity.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswFeatureFactory.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswFileImportActivity.cs -text
 src/DeltaShell.Plugins.GWSWImporter/GwswFileImporter.cs -text
-src/DeltaShell.Plugins.GWSWImporter/GwswFileImporterkanweg.cs -text
+src/DeltaShell.Plugins.GWSWImporter/GwswGraphicsProvider.cs -text
 src/DeltaShell.Plugins.GWSWImporter/IDefinitionsProvider.cs -text
 src/DeltaShell.Plugins.GWSWImporter/ISewerFeatureGenerator.cs -text
 src/DeltaShell.Plugins.GWSWImporter/InvertedEggCrossSectionShapeGenerator.cs -text
@@ -2396,6 +2398,8 @@ src/DeltaShell.Plugins.GWSWImporter/Views/GwswImportControl.xaml -text
 src/DeltaShell.Plugins.GWSWImporter/Views/GwswImportControl.xaml.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Views/GwswImportDialog.xaml -text
 src/DeltaShell.Plugins.GWSWImporter/Views/GwswImportDialog.xaml.cs -text
+src/DeltaShell.Plugins.GWSWImporter/Views/GwswImportTemplateView.xaml -text
+src/DeltaShell.Plugins.GWSWImporter/Views/GwswImportTemplateView.xaml.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Views/SeparatorType.cs -text
 src/DeltaShell.Plugins.GWSWImporter/Views/SeparatorTypeCharacterExtensions.cs -text
 src/DeltaShell.Plugins.GWSWImporter/WaterTypeConverter.cs -text
@@ -2460,13 +2464,11 @@ src/DeltaShell.Plugins.ImportExport.Sobek/Properties/Resources.Designer.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Properties/Resources.resx -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PumpBuilder.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Resources/STARTUP.BMP -text
-src/DeltaShell.Plugins.ImportExport.Sobek/Resources/image0.png -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Resources/sobek.png -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Scripts/Libraries/Sobek2Functions.py -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekCaseDataReader.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekHydroModelImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekImportApplicationPlugin.cs -text
-src/DeltaShell.Plugins.ImportExport.Sobek/SobekImportGraphics.xaml -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekImportGraphicsProvider.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekImportGuiPlugin.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/SobekLocationType.cs -text
@@ -2917,7 +2919,6 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/StructureFeatureView/WeirViewVali
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/StructureFeatureView/WeirViewWpf.xaml -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/StructureFeatureView/WeirViewWpf.xaml.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/WeirPropertiesRow.cs -text
-src/DeltaShell.Plugins.NetworkEditor.Gui/GraphicsProviders/NetworkEditorGraphics.xaml -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/GraphicsProviders/NetworkEditorGraphicsProvider.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/CoordinateScalingHelper.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/FeatureCollectionViewInfoHelper.cs -text
@@ -3058,7 +3059,6 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Resources/warning.png -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Resources/wwtp.png -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Ribbon.xaml -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Ribbon.xaml.cs -text
-src/DeltaShell.Plugins.NetworkEditor.Gui/RibbonBrushes.xaml -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/ShapeEditViewModel.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Wizard/CrossSectionCsvImportWizard.Designer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Wizard/CrossSectionCsvImportWizard.cs -text

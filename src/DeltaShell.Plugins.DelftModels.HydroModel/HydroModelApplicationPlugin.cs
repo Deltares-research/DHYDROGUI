@@ -11,6 +11,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
@@ -131,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             yield return new ProjectTemplate
             {
                 Id = RHUINTEGRATEDMODEL_TEMPLATE_ID,
-                Category = "New model",
+                Category = ProductCategories.NewTemplateCategory,
                 Name = "RHU model",
                 Description = "Creates a new Integrated Hydro model with RHU D-HYDRO models",
                 ExecuteTemplate = (p, settings) =>

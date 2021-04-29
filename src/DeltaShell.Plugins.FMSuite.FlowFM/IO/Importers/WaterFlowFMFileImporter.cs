@@ -6,6 +6,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
@@ -33,12 +34,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         public override string Description
         {
-            get { return Name; }
+            get { return "Imports a Flow Flexible Mesh Model using the .mdu file"; }
         }
         
         public override string Category
         {
-            get { return "1D / 2D"; }
+            get { return ProductCategories.OneDTwoDModelImportCategory; }
         }
         
         public override Bitmap Image

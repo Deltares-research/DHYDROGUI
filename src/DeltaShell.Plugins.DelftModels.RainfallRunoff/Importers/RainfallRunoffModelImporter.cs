@@ -7,6 +7,7 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -23,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
         [ExcludeFromCodeCoverage]
         public override string Category
         {
-            get { return "1D / 2D"; }
+            get { return ProductCategories.OneDTwoDModelImportCategory; }
         }
 
         public override string Description

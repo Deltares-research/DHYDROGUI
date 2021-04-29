@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
@@ -29,7 +30,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         public string Description { get { return Name; } }
         public string Category
         {
-            get { return "SOBEK"; }
+            get { return ProductCategories.OneDTwoDDataImportCategory; }
         }
 
         public Bitmap Image
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public virtual bool CanImportOnRootLevel
         {
-            get { return true; }
+            get { return false; }
         }
 
         public string FileFilter

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Shell.Core;
+using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
@@ -12,9 +13,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return "Flexible Mesh His File"; }
         }
         public string Description { get { return Name; } }
+
         public string Category
         {
-            get { return "2D / 3D"; }
+            get { return ProductCategories.OneDTwoDDataImportCategory; }
         }
 
         public Bitmap Image

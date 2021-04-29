@@ -1,20 +1,20 @@
 ﻿<UserControl x:Class="DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.CreateFmModelSettingView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:gui="clr-namespace:DeltaShell.NGHS.Common.Gui;assembly=DeltaShell.NGHS.Common.Gui"
-             mc:Ignorable="d" 
+             xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              Background="White"
-             Foreground="Black">
+             Foreground="Black"
+             mc:Ignorable="d">
     <UserControl.DataContext>
-        <local:CreateFmModelSettingViewViewModel x:Name="ViewModel"/>
+        <local:CreateFmModelSettingViewViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="../GraphicsProviders/FMGuiGraphics.xaml"/>
+                <ResourceDictionary Source="../GraphicsProviders/FMGuiGraphics.xaml" />
                 <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DrawingBrushesDictionary.xaml" />
                 <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/DeltaresStyleDictionairy.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -23,108 +23,106 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition MinHeight="200"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition MinHeight="200" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="150"/>
+            <ColumnDefinition Width="Auto"
+                              MinWidth="150" />
             <ColumnDefinition Width="300" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <Border Grid.Row="0"
-                Grid.RowSpan="2" 
+                Grid.RowSpan="2"
                 Grid.Column="0"
                 Margin="20"
-                BorderThickness="0"
-                BorderBrush="Gray">
-            <Rectangle 
-                Stretch="Uniform" 
-                Margin="5" 
-                MinWidth="100"
-                MinHeight="100"
-                Fill="{StaticResource ResourceKey=FMModelBrush}"/>
+                BorderBrush="Gray"
+                BorderThickness="0">
+            <Rectangle MinWidth="100"
+                       MinHeight="100"
+                       Margin="5"
+                       Fill="{StaticResource ResourceKey=FMModelBrush}"
+                       Stretch="Uniform" />
         </Border>
 
-        <Button Grid.Row="0" 
+        <Button Grid.Row="0"
                 Grid.Column="2"
-                Width="20" 
+                Width="20"
                 Height="20"
+                Margin="3"
+                VerticalAlignment="Top"
                 Background="Transparent"
                 BorderThickness="0"
-                Margin="3"
-                Content="X"
-                VerticalAlignment="Top"
-                Command="{Binding CancelTemplateCommand}"/>
+                Command="{Binding CancelTemplateCommand}"
+                Content="X" />
 
-        <TextBlock Grid.Row="0" 
-                   Grid.Column="1" 
-                   FontSize="20" 
+        <TextBlock Grid.Row="0"
+                   Grid.Column="1"
                    Margin="5,20,0,0"
-                   Text="{Binding ProjectTemplate.Name}" 
-                   Foreground="{StaticResource DeltaresBlueBrush}"/>
+                   FontSize="20"
+                   Foreground="{StaticResource DeltaresBlueBrush}"
+                   Text="{Binding ProjectTemplate.Name}" />
 
-        <StackPanel Grid.Row="1" 
-                    Grid.Column="1" 
-                    Grid.ColumnSpan="2" 
-                    Margin="5,5,20,5"
-                    >
-            <TextBlock 
+        <StackPanel Grid.Row="1"
+                    Grid.Column="1"
+                    Grid.ColumnSpan="2"
+                    Margin="5,5,20,5">
+            <TextBlock HorizontalAlignment="Left"
                        Text="{Binding ProjectTemplate.Description}"
-                       HorizontalAlignment="Left"
-                       TextWrapping="WrapWithOverflow"/>
+                       TextWrapping="WrapWithOverflow" />
 
             <Grid Margin="0,15,0,0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition />   
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" 
-                           Grid.Column="0" 
-                           Text="Model name"
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Margin="0,2,0,2"
                            VerticalAlignment="Center"
-                           Margin="0,2,0,2"/>
+                           Text="Model name" />
 
-                <TextBox Grid.Row="0" 
-                         Grid.Column="1" 
-                         Focusable ="True"
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
                          Margin="0,2,5,2"
                          VerticalAlignment="Center"
-                         Text="{Binding ModelSettings.ModelName}"/>
+                         Focusable="True"
+                         Text="{Binding ModelSettings.ModelName}" />
 
-                <TextBlock Grid.Row="1" 
-                         Grid.Column="0" 
-                         VerticalAlignment="Center"
-                         Text="Coordinate system"
-                         Margin="0,2,5,2"/>
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Margin="0,2,5,2"
+                           VerticalAlignment="Center"
+                           Text="Coordinate system" />
 
-                <gui:CoordinateSystemPicker Grid.Row="1" 
-                                            Grid.Column="1" 
+                <gui:CoordinateSystemPicker Grid.Row="1"
+                                            Grid.Column="1"
                                             Margin="0,2,5,2"
-                                            CoordinateSystem = "{Binding ModelSettings.CoordinateSystem}"/>
+                                            CoordinateSystem="{Binding ModelSettings.CoordinateSystem}" />
             </Grid>
 
-            <Button HorizontalAlignment="Left"
-                    Margin="0,25,5,5" 
-                    BorderBrush="LightGray"
-                    Width="80"
+            <Button Width="80"
                     Height="80"
-                    IsDefault="True"
+                    Margin="0,25,5,5"
+                    HorizontalAlignment="Left"
                     Background="White"
-                    Command="{Binding ApplyTemplateCommand}">
+                    BorderBrush="LightGray"
+                    Command="{Binding ApplyTemplateCommand}"
+                    IsDefault="True">
                 <Button.Content>
                     <StackPanel>
-                        <Rectangle Width="32" 
-                                   Height="32" 
+                        <Rectangle Width="32"
+                                   Height="32"
                                    Margin="-5,0,0,0"
-                                   Fill="{StaticResource NewFileBrush}">
-                        </Rectangle>
-                        <TextBlock Text="Create" HorizontalAlignment="Center"/>
+                                   Fill="{StaticResource NewFileBrush}" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   Text="Create" />
                     </StackPanel>
                 </Button.Content>
             </Button>

@@ -6,9 +6,9 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:viewModels="clr-namespace:DeltaShell.Plugins.ImportExport.GWSW.ViewModels"
              xmlns:views="clr-namespace:DeltaShell.Plugins.ImportExport.GWSW.Views"
+             Loaded="GwswImportControl_OnLoaded"
              ScrollViewer.CanContentScroll="True"
-             mc:Ignorable="d"
-             Loaded="GwswImportControl_OnLoaded">
+             mc:Ignorable="d">
     <UserControl.DataContext>
         <viewModels:GwswImportControlViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
@@ -89,7 +89,7 @@
 
             <GroupBox Grid.Row="1"
                       Header="Feature files"
-                      IsEnabled="{Binding SelectedDirectoryPath, UpdateSourceTrigger=PropertyChanged}">
+                      IsEnabled="{Binding IsDirectorySelected, UpdateSourceTrigger=PropertyChanged}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -206,18 +206,21 @@
                                       MinWidth="100" />
                 </Grid.ColumnDefinitions>
                 <Button Grid.Column="0"
+                        Width="100"
                         Margin="5"
                         Padding="3"
                         VerticalAlignment="Center"
                         Command="{Binding Path=OnConfigureImporter}"
-                        Content="Import Selection"
+                        Content="Import"
                         IsEnabled="{Binding IsDirectorySelected, UpdateSourceTrigger=PropertyChanged}" />
                 <Button Grid.Column="1"
+                        Width="100"
                         Margin="5"
                         Padding="3"
                         VerticalAlignment="Center"
                         Command="{Binding OnCancelImportFeatures}"
-                        Content="Cancel" />
+                        Content="Cancel"
+                        IsCancel="True" />
             </Grid>
         </Grid>
     </ScrollViewer>

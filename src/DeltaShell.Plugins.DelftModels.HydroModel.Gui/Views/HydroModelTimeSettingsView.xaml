@@ -17,7 +17,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/DefaultControlTemplates.xaml" />
-                <ResourceDictionary Source="../GraphicsProviders/HydroModelGuiGraphics.xaml" />
+                <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/Brushes.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="DateTimePickerStyle"

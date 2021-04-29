@@ -383,10 +383,6 @@
     <None Include="Resources\sobek.png" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="SobekImportGraphics.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Wizard\SobekImportWizardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -394,9 +390,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\STARTUP.BMP" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\image0.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

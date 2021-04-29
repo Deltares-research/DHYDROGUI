@@ -24,6 +24,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -915,17 +916,17 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         public string Name
         {
-            get { return "GWSW Feature File importer"; }
+            get { return "GWSW Feature Files"; }
         }
 
         public string Description
         {
-            get { return Name; }
+            get { return "Import model data from GWSW feature files"; }
         }
 
         public string Category
         {
-            get { return "1D / 2D"; }
+            get { return ProductCategories.OneDTwoDModelImportCategory; }
         }
 
         public Bitmap Image

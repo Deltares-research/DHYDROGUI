@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
@@ -66,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
         /// <inheritdoc/>
         [ExcludeFromCodeCoverage]
-        public string Category => "Integrated Model";
+        public string Category => ProductCategories.OneDTwoDModelImportCategory;
 
         public string Description
         {

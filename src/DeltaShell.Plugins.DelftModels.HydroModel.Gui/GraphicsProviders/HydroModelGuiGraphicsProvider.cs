@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
     {
         private readonly ResourceDictionary resources = new ResourceDictionary
         {
-            Source = new Uri("pack://application:,,,/DeltaShell.Plugins.DelftModels.HydroModel.Gui;component/GraphicsProviders/HydroModelGuiGraphics.xaml")
+            Source = new Uri("pack://application:,,,/DeltaShell.NGHS.Common.Gui;component/Brushes.xaml")
         };
 
         public bool CanProvideDrawingGroupFor(object item)

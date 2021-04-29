@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             yield return new ViewInfo<ProjectTemplate, SobekImportWizardControl>
             {
-                AdditionalDataCheck = t => string.Equals(t.Id, "Sobek2ImportTemplate"),
+                AdditionalDataCheck = t => t.Id == SobekImportApplicationPlugin.Sobek2ImportTemplateId,
                 AfterCreate = (v, t) =>
                 {
                     v.Application = Gui?.Application;

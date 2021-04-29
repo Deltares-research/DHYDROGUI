@@ -134,6 +134,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Resource Include="DefaultControlTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -141,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\DeleteHS.png" />
+    <Resource Include="Resources\image0.png" />
     <Content Include="Resources\import.png" />
     <Content Include="Resources\properties.png" />
     <Content Include="Resources\restart.png" />

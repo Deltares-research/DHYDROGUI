@@ -4,9 +4,9 @@ using System.Windows.Media;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 
-namespace DeltaShell.Plugins.ImportExport.Sobek
+namespace DeltaShell.Plugins.ImportExport.GWSW
 {
-    public class SobekImportGraphicsProvider : IGraphicsProvider
+    public class GwswGraphicsProvider : IGraphicsProvider
     {
         private readonly ResourceDictionary resources = new ResourceDictionary
         {
@@ -17,24 +17,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             if (item is ProjectTemplate projectTemplate)
             {
-                return projectTemplate.Id == SobekImportApplicationPlugin.Sobek2ImportTemplateId;
+                return projectTemplate.Id == GWSWImporterApplicationPlugin.GWSWImportTemplateId;
             }
 
-            if (item is SobekHydroModelImporter)
-            {
-                return true;
-            }
-
-            return false;
+            return item is GwswFileImporter;
         }
 
         public DrawingGroup CreateDrawingGroupFor(object item)
         {
-            if (item is ProjectTemplate || item is SobekHydroModelImporter)
+            if (item is GwswFileImporter || item is ProjectTemplate)
             {
-                return (DrawingGroup)resources["SobekImporterDrawing"];
+                return (DrawingGroup) resources["ManholeDrawingGroup"];
             }
-            
+
             return null;
         }
     }

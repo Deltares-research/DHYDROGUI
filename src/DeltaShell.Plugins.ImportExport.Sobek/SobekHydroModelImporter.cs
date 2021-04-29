@@ -10,6 +10,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -61,10 +62,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         {
             get { return "Sobek 2 Model"; }
         }
-        public string Description { get { return Name; } }
+
+        public string Description
+        {
+            get { return "Imports a Sobek 2 model"; }
+        }
+
         public string Category
         {
-            get { return "1D / 2D"; }
+            get { return ProductCategories.OneDTwoDModelImportCategory; }
         }
 
         public Bitmap Image

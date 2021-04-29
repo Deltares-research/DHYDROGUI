@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
 using NetTopologySuite.Extensions.Grids;
@@ -25,7 +26,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         public string Description { get { return Name; } }
 
         [ExcludeFromCodeCoverage]
-        public string Category { get { return "2D / 3D"; } }
+        public string Category
+        {
+            get { return ProductCategories.GridImportCategory; }
+        }
 
         [ExcludeFromCodeCoverage]
         public Bitmap Image { get { return Properties.Resources.unstruc; } }

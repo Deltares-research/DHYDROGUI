@@ -204,7 +204,7 @@
             <StackPanel IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}"
                         Orientation="Horizontal">
                 <Button Command="{Binding ExecuteCommand}"
-                        Content="Create" />
+                        Content="Import" />
                 <Button Command="{Binding CancelCommand}"
                         Content="Cancel" />
             </StackPanel>

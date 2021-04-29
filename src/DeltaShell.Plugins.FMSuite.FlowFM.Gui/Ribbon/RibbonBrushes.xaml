@@ -1,8 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:grid="clr-namespace:DeltaShell.NGHS.IO.Grid;assembly=DeltaShell.NGHS.IO"
-                    xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
-                    xmlns:local="clr-namespace:DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon">
+                    xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro">
     <Style x:Key="LinkTypeStyle"
            TargetType="Rectangle">
         <Style.Triggers>
@@ -490,76 +488,4 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-
-    <DrawingBrush x:Key="AddLinkBrush">
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <DrawingGroup.Children>
-                    <GeometryDrawing Brush="#FF00C800"
-                                     Geometry="F1 M 7.77083,0.0208254L 7.77083,15.6042">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="#FF00C800"
-                                 LineJoin="Round"
-                                 Thickness="2" />
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-                    <GeometryDrawing Geometry="F1 M 4.89255e-006,7.8125L 15.4092,7.8125">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="#FF00C800"
-                                 LineJoin="Round"
-                                 Thickness="2" />
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-                </DrawingGroup.Children>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-    <DrawingBrush x:Key="GenerateLinksBrush">
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <DrawingGroup.Children>
-                    <GeometryDrawing Brush="#FF00C800"
-                                     Geometry="F1 M 7.9375,-1.90735e-006L 7.97916,7.4375">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="#FF00C800"
-                                 LineJoin="Round"
-                                 Thickness="2" />
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-                    <GeometryDrawing Brush="#FF00C800"
-                                     Geometry="F1 M 7.95834,7.375L 15.4687,4.77728">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="#FF00C800"
-                                 LineJoin="Round"
-                                 Thickness="2" />
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-                    <GeometryDrawing Brush="#FF00C800"
-                                     Geometry="F1 M 14.4895,14.2564L 7.91668,7.37499">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="#FF00C800"
-                                 LineJoin="Round"
-                                 Thickness="2" />
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-                    <GeometryDrawing Brush="#FF00C800"
-                                     Geometry="F1 M 2.71866,15.0898L 7.79167,7.27083">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="#FF00C800"
-                                 LineJoin="Round"
-                                 Thickness="2" />
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-                    <GeometryDrawing Brush="#FF00C800"
-                                     Geometry="F1 M 0.406164,4.9856L 7.72917,7.66666">
-                        <GeometryDrawing.Pen>
-                            <Pen Brush="#FF00C800"
-                                 LineJoin="Round"
-                                 Thickness="2" />
-                        </GeometryDrawing.Pen>
-                    </GeometryDrawing>
-                </DrawingGroup.Children>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
 </ResourceDictionary>

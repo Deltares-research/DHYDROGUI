@@ -33,6 +33,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             get { return FileVersionInfo.GetVersionInfo(GetType().Assembly.Location).FileVersion; }
         }
 
+        public override IGraphicsProvider GraphicsProvider { get; } = new GwswGraphicsProvider();
+
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
             yield return new ViewInfo<GwswFileImporter, GwswImportDialog>
@@ -41,6 +43,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 {
                     v.GwswImportControl.Model = Gui.SelectedModel as IWaterFlowFMModel;
                 }
+            };
+
+            yield return new ViewInfo<ProjectTemplate, GwswImportTemplateView>
+            {
+                AdditionalDataCheck = t => t.Id == GWSWImporterApplicationPlugin.GWSWImportTemplateId
             };
         }
     }

@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
 
         public bool CanImportOnRootLevel
         {
-            get { return true; }
+            get { return false; }
         }
 
         public string FileFilter

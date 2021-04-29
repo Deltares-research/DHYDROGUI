@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 
@@ -147,7 +148,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         public string Category
         {
-            get { return "1D / 2D"; }
+            get { return ProductCategories.OneDTwoDModelImportCategory; }
         }
 
         public string Description

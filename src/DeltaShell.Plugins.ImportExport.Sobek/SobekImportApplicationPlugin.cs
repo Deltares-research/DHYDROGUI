@@ -3,6 +3,7 @@ using System.Reflection;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using Mono.Addins;
@@ -15,6 +16,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     [Extension(typeof(IPlugin))]
     public class SobekImportApplicationPlugin : ApplicationPlugin
     {
+        internal const string Sobek2ImportTemplateId = "Sobek2ImportTemplate";
         private IApplication application;
 
         static SobekImportApplicationPlugin()
@@ -51,9 +53,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             yield return new ProjectTemplate
             {
                 Name = "Sobek 2 import",
-                Category = "New model from import",
+                Category = ProductCategories.ImportTemplateCategory,
                 Description = "Generate a model from an existing Sobek 2 model",
-                Id = "Sobek2ImportTemplate",
+                Id = Sobek2ImportTemplateId,
                 ExecuteTemplate = (p, m) =>
                 {
                     p.RootFolder.Add(m);

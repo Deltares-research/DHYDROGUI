@@ -151,59 +151,6 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
-    <!--<ControlTemplate x:Key="GroupBoxControlTemplate"
-                     TargetType="{x:Type GroupBox}">
-        <Grid SnapsToDevicePixels="True">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="6" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="6" />
-            </Grid.ColumnDefinitions>
-
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="6" />
-            </Grid.RowDefinitions>
-
-            <Border x:Name="HeaderBorder"
-                    Grid.Row="1"
-                    Grid.RowSpan="3"
-                    Grid.ColumnSpan="4"
-                    BorderBrush="{StaticResource DefaultBorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}"
-                    CornerRadius="4" />
-            <Border x:Name="Header"
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="4"
-                    Margin="0,0,0,0"
-                    Padding="3,3,3,3"
-                    HorizontalAlignment="Stretch"
-                    Background="{StaticResource DefaultBorderBrush}"
-                    CornerRadius="3">
-                <ContentPresenter Content="{TemplateBinding Header}"
-                                  ContentSource="Header"
-                                  ContentStringFormat="{TemplateBinding HeaderStringFormat}"
-                                  ContentTemplate="{TemplateBinding HeaderTemplate}"
-                                  RecognizesAccessKey="True"
-                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-            </Border>
-
-            <ContentPresenter Grid.Row="2"
-                              Grid.Column="1"
-                              Grid.ColumnSpan="2"
-                              Margin="{TemplateBinding Padding}"
-                              Content="{TemplateBinding Content}"
-                              ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-        </Grid>
-    </ControlTemplate>-->
-
     <ControlTemplate x:Key="GroupBoxControlTemplate"
                      TargetType="{x:Type GroupBox}">
         <Grid SnapsToDevicePixels="True">

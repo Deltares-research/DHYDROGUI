@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.GraphicsProviders
     {
         private readonly ResourceDictionary resources = new ResourceDictionary
         {
-            Source = new Uri("pack://application:,,,/DeltaShell.Plugins.NetworkEditor.Gui;component/GraphicsProviders/NetworkEditorGraphics.xaml")
+            Source = new Uri("pack://application:,,,/DeltaShell.NGHS.Common.Gui;component/Brushes.xaml")
         };
 
         public bool CanProvideDrawingGroupFor(object item)

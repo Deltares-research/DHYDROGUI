@@ -162,7 +162,7 @@
     <Compile Include="GwswFeatureFactory.cs" />
     <Compile Include="GwswFileImportActivity.cs" />
     <Compile Include="GwswFileImporter.cs" />
-    <Compile Include="GwswFileImporterkanweg.cs" />
+    <Compile Include="GwswGraphicsProvider.cs" />
     <Compile Include="GWSWImporterApplicationPlugin.cs" />
     <Compile Include="GWSWImporterGuiPlugin.cs" />
     <Compile Include="IDefinitionsProvider.cs" />
@@ -211,6 +211,9 @@
     <Compile Include="ViewModels\GwswImportControlViewModel.cs" />
     <Compile Include="Views\GwswImportControl.xaml.cs">
       <DependentUpon>GwswImportControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GwswImportTemplateView.xaml.cs">
+      <DependentUpon>GwswImportTemplateView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\GwswImportDialog.xaml.cs">
       <DependentUpon>GwswImportDialog.xaml</DependentUpon>
@@ -281,6 +284,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\GwswImportControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\GwswImportTemplateView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

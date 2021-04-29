@@ -10,6 +10,7 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
@@ -103,7 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new ProjectTemplate
             {
                 Id = FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID,
-                Category = "New model",
+                Category = ProductCategories.NewTemplateCategory,
                 Name = "FM model",
                 Description = "Creates a new standalone flexible mesh model",
                 ExecuteTemplate = (p, settings) =>
