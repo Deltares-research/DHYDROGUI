@@ -25,7 +25,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             Assert.That(importer, Is.InstanceOf<ModelFileImporterBase>());
             Assert.That(importer, Is.InstanceOf<IDimrModelFileImporter>());
             Assert.That(importer.Name, Is.EqualTo("Flow Flexible Mesh Model"));
-            Assert.That(importer.Category, Is.EqualTo("1D / 2D"));
+            Assert.That(importer.Category, Is.EqualTo("1D / 2D Model"));
             Assert.That(importer.Description, Is.EqualTo(importer.Name));
             Assert.That(importer.Image, Is.Not.Null);
 
