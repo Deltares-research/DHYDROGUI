@@ -10,6 +10,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     public class GWSWImporterApplicationPlugin : ApplicationPlugin
     {
         internal const string GWSWImportTemplateId = "GWSWImportTemplate";
+        private IList<ProjectTemplate> templates = new List<ProjectTemplate>();
 
         public override string Name
         {
@@ -34,23 +35,34 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         public override IEnumerable<ProjectTemplate> ProjectTemplates()
         {
-            yield return new ProjectTemplate
+            if (templates.Count == 0)
             {
-                Id = GWSWImportTemplateId,
-                Name = "GWSW import",
-                Category = ProductCategories.ImportTemplateCategory,
-                Description = "Generate a model from GWSW files",
-                ExecuteTemplate = (p, s) =>
+                templates.Add(
+                new ProjectTemplate
                 {
-                    if (!(s is GwswFileImporter importer))
+                    Id = GWSWImportTemplateId,
+                    Name = "GWSW import",
+                    Category = ProductCategories.ImportTemplateCategory,
+                    Description = "Generate a model from GWSW files",
+                    ExecuteTemplate = (p, s) =>
                     {
-                        return;
-                    }
+                        if (!(s is GwswFileImporter importer))
+                        {
+                            return;
+                        }
 
-                    var model = (IModel) importer.ImportItem(null, p);
-                    p.RootFolder.Items.Add(model);
-                }
-            };
+                        var fileImportActivity = new FileImportActivity(importer, p);
+                        fileImportActivity.OnImportFinished += (activity, importedObject, fileImporter) =>
+                        {
+                            p.RootFolder.Add(importedObject);
+                        };
+
+                        Application.ActivityRunner.Enqueue(fileImportActivity);
+                    }
+                }  );
+            }
+
+            return templates;
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
