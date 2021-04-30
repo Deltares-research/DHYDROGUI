@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -24,6 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     public class HydroModelApplicationPlugin : ApplicationPlugin, IDataAccessListenersProvider
     {
         public const string RHUINTEGRATEDMODEL_TEMPLATE_ID = "RHUIntegratedModel";
+        public const string DimrProjectTemplateId = "DimrProjectTemplateId";
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelApplicationPlugin));
 
         public override string Name
@@ -162,6 +165,38 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                     p.RootFolder.Items.Add(model);
 
+                }
+            };
+            yield return new ProjectTemplate
+            {
+                Id = DimrProjectTemplateId,
+                Category = ProductCategories.ImportTemplateCategory,
+                Description = "Import DIMR .xml as model",
+                Name = "Dimr import",
+                ExecuteTemplate = (p, o) =>
+                {
+                    if (!(o is string path) || !File.Exists(path))
+                    {
+                        return;
+                    }
+
+                    var importer = new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList(),
+                                                               () => Application.WorkDirectory);
+
+                    var fileImportActivity = new FileImportActivity(importer, p)
+                    {
+                        Files = new[]
+                        {
+                            path
+                        }
+                    };
+
+                    fileImportActivity.OnImportFinished += (activity, importedObject, fileImporter) =>
+                    {
+                        p.RootFolder.Add(importedObject);
+                    };
+
+                    Application.ActivityRunner.Enqueue(fileImportActivity);
                 }
             };
         }

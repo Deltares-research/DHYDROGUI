@@ -942,8 +942,11 @@ src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Resources/folder_brick.png -te
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Resources/validation.png -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Uml/HydroModelGui.cd -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/ValidateMergeModelObjects.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/ViewModels/DimrTemplateViewViewModel.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/ViewModels/HydroModelTimeSettingsViewModel.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/ViewModels/TimeDependentModelBaseViewModel.cs -text
+src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Views/DimrTemplateView.xaml -text
+src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Views/DimrTemplateView.xaml.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Views/HydroModelTimeSettingsView.xaml -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/Views/HydroModelTimeSettingsView.xaml.cs -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/packages.config -text

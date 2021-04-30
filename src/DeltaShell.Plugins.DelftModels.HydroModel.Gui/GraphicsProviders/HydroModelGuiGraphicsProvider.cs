@@ -33,7 +33,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
 
             if (item is ProjectTemplate projectTemplate)
             {
-                return projectTemplate.Id == HydroModelApplicationPlugin.RHUINTEGRATEDMODEL_TEMPLATE_ID;
+                return projectTemplate.Id == HydroModelApplicationPlugin.RHUINTEGRATEDMODEL_TEMPLATE_ID ||
+                       projectTemplate.Id == HydroModelApplicationPlugin.DimrProjectTemplateId;
             }
 
             if (item is DHydroConfigXmlImporter)
@@ -46,10 +47,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
 
         public DrawingGroup CreateDrawingGroupFor(object item)
         {
-            if ((item is ModelInfo modelInfo && modelInfo.Name == DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_2D_Integrated_Model + " (RHU)") ||
-                (item is ProjectTemplate projectTemplate && projectTemplate.Id == HydroModelApplicationPlugin.RHUINTEGRATEDMODEL_TEMPLATE_ID))
+            if (item is ModelInfo modelInfo && modelInfo.Name == DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_2D_Integrated_Model + " (RHU)")
             {
                 return (DrawingGroup) resources["HydroModelDrawingGroup"];
+            }
+
+            if (item is ProjectTemplate projectTemplate)
+            {
+                if (projectTemplate.Id == HydroModelApplicationPlugin.RHUINTEGRATEDMODEL_TEMPLATE_ID)
+                {
+                    return (DrawingGroup)resources["HydroModelDrawingGroup"];
+                }
+
+                if (projectTemplate.Id == HydroModelApplicationPlugin.DimrProjectTemplateId)
+                {
+                    return (DrawingGroup)resources["DeltaresLogoDrawing"];
+                }
             }
 
             if (item is DHydroConfigXmlImporter)

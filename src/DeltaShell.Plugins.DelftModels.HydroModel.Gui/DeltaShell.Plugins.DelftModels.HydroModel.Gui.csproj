@@ -6,6 +6,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</ProjectGuid>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DeltaShell.Plugins.DelftModels.HydroModel.Gui</RootNamespace>
@@ -149,6 +150,7 @@
     <None Include="Uml\HydroModelGui.cd" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ViewModels\DimrTemplateViewViewModel.cs" />
     <Compile Include="Forms\CreateHydroModelSettingView.xaml.cs">
       <DependentUpon>CreateHydroModelSettingView.xaml</DependentUpon>
     </Compile>
@@ -188,6 +190,9 @@
     <Compile Include="GraphicsProviders\HydroModelGuiGraphicsProvider.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="ViewModels\TimeDependentModelBaseViewModel.cs" />
+    <Compile Include="Views\DimrTemplateView.xaml.cs">
+      <DependentUpon>DimrTemplateView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\HydroModelTimeSettingsView.xaml.cs">
       <DependentUpon>HydroModelTimeSettingsView.xaml</DependentUpon>
     </Compile>
@@ -269,6 +274,10 @@
     <Page Include="Forms\SettingsWpf\WpfSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DimrTemplateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\HydroModelTimeSettingsView.xaml">
       <SubType>Designer</SubType>

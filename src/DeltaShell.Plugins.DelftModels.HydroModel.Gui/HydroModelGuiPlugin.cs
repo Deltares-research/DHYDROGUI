@@ -20,6 +20,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders;
+using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Mono.Addins;
 using NetTopologySuite.Extensions.Coverages;
@@ -171,6 +172,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             {
                 AdditionalDataCheck = t => t.Id?.Equals(HydroModelApplicationPlugin.RHUINTEGRATEDMODEL_TEMPLATE_ID, StringComparison.CurrentCultureIgnoreCase) ?? false
             };
+            yield return new ViewInfo<ProjectTemplate, DimrTemplateView>
+            {
+                AdditionalDataCheck = t => t.Id == HydroModelApplicationPlugin.DimrProjectTemplateId
+            };
+            
             yield return new ViewInfo<HydroModel, HydroModelSettings>
                 {
                     Description = "Hydro Model Settings",
