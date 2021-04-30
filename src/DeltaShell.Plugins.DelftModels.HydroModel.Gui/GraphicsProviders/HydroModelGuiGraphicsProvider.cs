@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Media;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
+using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
 {
@@ -10,7 +11,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
     {
         private readonly ResourceDictionary resources = new ResourceDictionary
         {
-            Source = new Uri("pack://application:,,,/DeltaShell.NGHS.Common.Gui;component/Brushes.xaml")
+            MergedDictionaries =
+            {
+                new ResourceDictionary
+                {
+                    Source = new Uri("pack://application:,,,/DeltaShell.NGHS.Common.Gui;component/Brushes.xaml")
+                },
+                new ResourceDictionary
+                {
+                    Source = new Uri("pack://application:,,,/DelftTools.Controls.Wpf;component/DeltaresStyleDictionairy.xaml")
+                }
+            }
         };
 
         public bool CanProvideDrawingGroupFor(object item)
@@ -25,6 +36,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
                 return projectTemplate.Id == HydroModelApplicationPlugin.RHUINTEGRATEDMODEL_TEMPLATE_ID;
             }
 
+            if (item is DHydroConfigXmlImporter)
+            {
+                return true;
+            }
+
             return false;
         }
 
@@ -36,6 +52,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
                 return (DrawingGroup) resources["HydroModelDrawingGroup"];
             }
 
+            if (item is DHydroConfigXmlImporter)
+            {
+                return (DrawingGroup)resources["DeltaresLogoDrawing"];
+            }
 
             return null;
         }

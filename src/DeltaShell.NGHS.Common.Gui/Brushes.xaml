@@ -560,4 +560,34 @@
             </DrawingGroup>
         </DrawingGroup.Children>
     </DrawingGroup>
+
+    <Pen x:Key="GWSWLinePen"
+         Brush="#FF13B982"
+         LineJoin="Round"
+         Thickness="10.0014" />
+
+    <LinearGradientBrush x:Key="GWSWSphereBrush" StartPoint="0.146447,0.146447" EndPoint="0.853553,0.853553">
+        <LinearGradientBrush.GradientStops>
+            <GradientStop Offset="0" Color="#FFB5F1DD" />
+            <GradientStop Offset="1" Color="#FF039665" />
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
+
+    <DrawingGroup x:Key="GWSWDrawingGroup">
+        <DrawingGroup.Children>
+            <GeometryDrawing Geometry="F1 M 179.025,54.0075L 83.0116,110.015"
+                             Pen="{StaticResource GWSWLinePen}" />
+            <GeometryDrawing Geometry="F1 M 167.023,199.028L 80.0112,143.02"
+                             Pen="{StaticResource GWSWLinePen}" />
+            <GeometryDrawing Geometry="F1 M 207.029,68.0095L 206.029,185.026"
+                             Pen="{StaticResource GWSWLinePen}" />
+            <GeometryDrawing Brush="{StaticResource GWSWSphereBrush}"
+                             Geometry="F1 M 51.5072,89.0124C 71.116,89.0124 87.0121,104.909 87.0121,124.517C 87.0121,144.126 71.116,160.022 51.5072,160.022C 31.8983,160.022 16.0022,144.126 16.0022,124.517C 16.0022,104.909 31.8983,89.0124 51.5072,89.0124 Z " />
+            <GeometryDrawing Brush="{StaticResource GWSWSphereBrush}"
+                             Geometry="F1 M 206.529,0C 226.138,0 242.034,15.8961 242.034,35.5049C 242.034,55.1138 226.138,71.0099 206.529,71.0099C 186.92,71.0099 171.024,55.1138 171.024,35.5049C 171.024,15.8961 186.92,0 206.529,0 Z " />
+            <GeometryDrawing Brush="{StaticResource GWSWSphereBrush}"
+                             Geometry="F1 M 197.527,181.025C 217.136,181.025 233.032,196.921 233.032,216.53C 233.032,236.139 217.136,252.035 197.527,252.035C 177.918,252.035 162.022,236.139 162.022,216.53C 162.022,196.921 177.918,181.025 197.527,181.025 Z " />
+        </DrawingGroup.Children>
+    </DrawingGroup>
+
 </ResourceDictionary>

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Drawing;
 using DelftTools.Controls;
-using DelftTools.Shell.Core;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.Views
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for GwswImportTemplateView.xaml
     /// </summary>
     public partial class GwswImportTemplateView : IProjectTemplateSettingsView
     {

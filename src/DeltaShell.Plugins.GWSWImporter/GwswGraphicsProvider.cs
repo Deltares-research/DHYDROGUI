@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         {
             if (item is GwswFileImporter || item is ProjectTemplate)
             {
-                return (DrawingGroup) resources["ManholeDrawingGroup"];
+                return (DrawingGroup) resources["GWSWDrawingGroup"];
             }
 
             return null;
