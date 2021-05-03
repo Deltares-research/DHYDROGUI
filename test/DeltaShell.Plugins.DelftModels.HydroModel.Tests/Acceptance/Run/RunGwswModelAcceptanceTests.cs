@@ -145,12 +145,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         private static void SetHydroModelSettings(HydroModel hydroModel)
         {
             hydroModel.StartTime = new DateTime(2020, 01, 01, 0, 0, 0);
-            hydroModel.StopTime = new DateTime(2020, 01, 01, 1, 0, 0);
+            hydroModel.StopTime = new DateTime(2020, 01, 01, 1, 0, 0); // 1 hour simulation
         }
 
         private static void SetFlowFmModelSettings(WaterFlowFMModel fmModel)
         {
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.RefDate, "20200101000000");
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.HisInterval, "1200"); // 20 minutes output step
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.MapInterval, "1200"); // 20 minutes output step
         }
         
         private static void SetRrModelSettings(RainfallRunoffModel rrModel)
