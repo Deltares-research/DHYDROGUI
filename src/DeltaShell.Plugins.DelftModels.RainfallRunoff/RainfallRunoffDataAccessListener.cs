@@ -1,3 +1,4 @@
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
@@ -25,6 +26,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
             importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
+            // todo: restore output settings FM1D2D-1579
+            rainfallRunoffModel.ConnectOutput(Path.GetDirectoryName(rainfallRunoffModel.Path));
         }
 
         public override void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)

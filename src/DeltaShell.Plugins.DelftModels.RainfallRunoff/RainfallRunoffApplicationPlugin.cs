@@ -7,6 +7,7 @@ using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
@@ -95,10 +96,38 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             foreach (var rainfallRunoffModel in rrModels)
             {
-                var path = Path.Combine(projectDataFolderDirectory, rainfallRunoffModel.Name);
-
-                exporter.Export(rainfallRunoffModel, path);
+                var savePath = Path.Combine(projectDataFolderDirectory, rainfallRunoffModel.Name);
+                
+                exporter.Export(rainfallRunoffModel, savePath);
+                MoveOutputFromWorkingDirectory(rainfallRunoffModel, savePath);
             }
+        }
+
+        private static void MoveOutputFromWorkingDirectory(RainfallRunoffModel rainfallRunoffModel, string savePath)
+        {
+            var paths = rainfallRunoffModel.OutputFunctions
+                                           .Select(f => f.Store)
+                                           .OfType<IFileBased>()
+                                           .Select(f => f.Path)
+                                           .Where(p => p != null)
+                                           .Distinct()
+                                           .ToArray();
+
+            if (paths.Length == 0)
+            {
+                return;
+            }
+
+            rainfallRunoffModel.DisconnectOutput();
+            foreach (string path in paths)
+            {
+                if (!path.StartsWith(savePath))
+                {
+                    File.Copy(path, Path.Combine(savePath, Path.GetFileName(path)));
+                }
+            }
+
+            rainfallRunoffModel.ConnectOutput(savePath);
         }
 
         private void ActivityRunnerOnActivityStatusChanged(object sender, ActivityStatusChangedEventArgs activityStatusChangedEventArgs)

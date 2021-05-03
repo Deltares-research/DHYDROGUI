@@ -465,7 +465,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                     RRModelEngineHelper.TimeToInt(model.StopTime),
                     (int)model.TimeStep.TotalSeconds,
                     (int)model.OutputTimeStep.TotalSeconds);
-
                 
                 Writer.WriteFiles(); 
                 return true;
