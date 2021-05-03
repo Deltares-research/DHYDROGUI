@@ -138,10 +138,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             hydroModel.TimeStep = timeStep;
             
             double timeStepInSeconds = timeStep.TotalSeconds;
-            
-            fmModel.ModelDefinition.SetModelProperty(KnownProperties.DtUser, timeStepInSeconds.ToString(CultureInfo.InvariantCulture));
-            fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, timeStepInSeconds.ToString(CultureInfo.InvariantCulture));
-            fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, timeStepInSeconds.ToString(CultureInfo.InvariantCulture));
+
+            string timeStepValue = timeStepInSeconds.ToString(CultureInfo.InvariantCulture);
+            fmModel.ModelDefinition.SetModelProperty(KnownProperties.DtUser, timeStepValue);
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, timeStepValue);
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, timeStepValue);
         }
 
         /// <summary>
