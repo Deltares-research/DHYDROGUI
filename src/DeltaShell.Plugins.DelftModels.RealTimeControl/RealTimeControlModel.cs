@@ -909,7 +909,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         /// If the string does not start with <see cref="RtcXmlTag.Input"/> or
         /// <see cref="RtcXmlTag.Output"/>
         /// </exception>
-        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString, string itemString2)
+        public virtual IEnumerable<IDataItem> GetDataItemsByItemString(string itemString, string otherItemString)
         {
             bool isOutput = itemString.StartsWith(RtcXmlTag.Output);
             bool isInput = itemString.StartsWith(RtcXmlTag.Input);

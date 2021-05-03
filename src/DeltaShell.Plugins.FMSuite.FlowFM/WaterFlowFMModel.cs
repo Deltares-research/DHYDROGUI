@@ -144,6 +144,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UpdateRoughnessSections();
         }
 
+        ~WaterFlowFMModel()
+        {
+            Dispose(false);
+        }
+
         private void CreateDataItemsNotAvailableInPreviousVersion()
         {
             if (GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag) == null)
@@ -740,29 +745,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             HeatFluxModelType = ModelDefinition.HeatFluxModel.Type;
             WindFields = ModelDefinition.WindFields;
             UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
-        }
-
-        public void Dispose()
-        {
-            var points2DFeatures = Area?.LeveeBreaches?.OfType<Feature2D>().Where(f2d =>
-                f2d.Attributes != null &&
-                f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE));
-            if (points2DFeatures != null)
-                foreach (var points2DFeature in points2DFeatures)
-                {
-                    points2DFeature.PropertyChanged -= Feature2DPointOnPropertyChanged;
-                }
-
-            disposing = true;
-            // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
-            Grid = null;
-            DisposeSnapApi();
-            runner?.Dispose();
-            syncers.ForEach(s => s.Dispose());
-            syncers.Clear();
-
-            allFixedWeirsAndCorrespondingProperties.ForEach(d => d.Dispose());
-            BridgePillarsDataModel.ForEach( d => d.Dispose());
         }
 
         private void InitializeRunTimeGridOperationApi()
@@ -3259,6 +3241,39 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                                               .OfType<INameable>();
 
             return (IFeature)featuresFromCategory.FirstOrDefault(f => f.Name.Equals(featureName));
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            this.disposing = disposing;
+
+            if (disposing)
+            {
+                var points2DFeatures = Area?.LeveeBreaches?.Where(f2d =>
+                                                                      f2d.Attributes != null &&
+                                                                      f2d.Attributes.ContainsKey(LeveeBreach.LEVEE_BREACH_FEATURE));
+                if (points2DFeatures != null)
+                    foreach (var points2DFeature in points2DFeatures)
+                    {
+                        points2DFeature.PropertyChanged -= Feature2DPointOnPropertyChanged;
+                    }
+
+                // also disposes grid snap api, so if you remove this, at least make sure you dispose that one (holds remote instance in the air):
+                Grid = null;
+                DisposeSnapApi();
+                runner?.Dispose();
+                syncers.ForEach(s => s.Dispose());
+                syncers.Clear();
+
+                allFixedWeirsAndCorrespondingProperties.ForEach(d => d.Dispose());
+                BridgePillarsDataModel.ForEach(d => d.Dispose());
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

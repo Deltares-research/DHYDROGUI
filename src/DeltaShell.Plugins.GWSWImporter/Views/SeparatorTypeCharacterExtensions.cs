@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Views
                 case SeparatorType.Other:
                     return otherChar;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(separatorType));
             }
         }
     }

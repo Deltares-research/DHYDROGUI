@@ -45,7 +45,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return area.LeveeBreaches;
                 default:
                     return Enumerable.Empty<IFeature>();
-                    //throw new ArgumentException(string.Format("unknown category {0} used.", category));
             }
         }
         /// <summary>
@@ -83,7 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return network.Retentions;
                 default:
                     return Enumerable.Empty<IFeature>();
-                    //throw new ArgumentException(string.Format("unknown category {0} used.", category));
             }
         }
 

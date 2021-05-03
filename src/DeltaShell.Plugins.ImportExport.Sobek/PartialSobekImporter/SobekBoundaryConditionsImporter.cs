@@ -61,7 +61,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     continue;
                 }
 
-                //var node = nodes[nodeId];
                 flowBoundaryConditionData.Feature = node;
                 flowBoundaryConditionData.UseSalt = useSalt;
                 flowBoundaryConditionData.UseTemperature = useTemperature;

@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
     public class WaterFlowFMFileImporter : ModelFileImporterBase, IDimrModelFileImporter
     {
-        private readonly ILog log = LogManager.GetLogger(typeof (WaterFlowFMFileImporter));
         private readonly Func<string> storeWorkingDirectoryPathFunc;
 
         /// <summary>

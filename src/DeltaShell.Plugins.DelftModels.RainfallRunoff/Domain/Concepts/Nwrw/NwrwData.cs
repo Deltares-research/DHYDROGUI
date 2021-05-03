@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             var rrModel = model as RainfallRunoffModel;
             if (rrModel == null)
             {
-                throw new ArgumentNullException("Can not add Nwrw catchment without a model.");
+                throw new ArgumentNullException(nameof(model), "Can not add Nwrw catchment without a model.");
             }
 
             var catchments = names.Select(n =>

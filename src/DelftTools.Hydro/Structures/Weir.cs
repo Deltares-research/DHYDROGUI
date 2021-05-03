@@ -15,7 +15,6 @@ namespace DelftTools.Hydro.Structures
     {
         private double crestLevel;
         private double crestWidth;
-        private double dischargeCoefficient;
         private bool canBeTimedependent;
         private bool useCrestLevelTimeSeries;
         

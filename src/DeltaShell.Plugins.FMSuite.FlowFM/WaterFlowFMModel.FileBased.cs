@@ -24,7 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     public partial class WaterFlowFMModel : IFileBased
     {
-        // todo: transactional?
         private string filePath;
         private bool isOpen;
 
