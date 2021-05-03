@@ -161,8 +161,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.That(waterFlowFmModels.Count(), Is.EqualTo(1));
 
             WaterFlowFMModel waterFlowFmModel = waterFlowFmModels.Single();
-            bool writeRestartFile = (bool)waterFlowFmModel.ModelDefinition.GetModelProperty(GuiProperties.WriteRstFile).Value;
-            Assert.That(writeRestartFile, Is.False);
+            List<double> writeRestartFile = (List<double>)waterFlowFmModel.ModelDefinition.GetModelProperty(KnownProperties.RstInterval).Value;
+            Assert.That(writeRestartFile.Count, Is.EqualTo(1));
+            Assert.That(writeRestartFile.First(), Is.Zero);
         }
         
 

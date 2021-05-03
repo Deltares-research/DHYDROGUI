@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 var waterFlowFmModels = hydroModel.GetActivitiesOfType<WaterFlowFMModel>();
                 foreach (WaterFlowFMModel waterFlowFmModel in waterFlowFmModels)
                 { 
-                    waterFlowFmModel.ModelDefinition.SetModelProperty(GuiProperties.WriteRstFile, "0");
+                    waterFlowFmModel.ModelDefinition.SetModelProperty(KnownProperties.RstInterval, "0");
                 }
             }
         }
