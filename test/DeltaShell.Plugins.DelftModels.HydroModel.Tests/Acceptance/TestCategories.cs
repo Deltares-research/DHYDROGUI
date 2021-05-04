@@ -3,6 +3,5 @@
     public static class TestCategories
     {
         public const string AcceptanceCategory = "Build.Acceptance";
-
     }
 }

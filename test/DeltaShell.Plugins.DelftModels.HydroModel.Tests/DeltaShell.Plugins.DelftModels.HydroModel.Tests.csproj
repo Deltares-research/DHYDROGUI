@@ -238,12 +238,16 @@
     <Compile Include="Acceptance\DimrAcceptanceModelTestHelper.cs" />
     <Compile Include="Acceptance\FileComparerHelper.cs" />
     <Compile Include="Acceptance\GwswAcceptanceModelTestHelper.cs" />
+    <Compile Include="Acceptance\HisMapFileComparer.cs" />
+    <Compile Include="Acceptance\InputFileComparer.cs" />
+    <Compile Include="Acceptance\NetcdfFileComparer.cs" />
     <Compile Include="Acceptance\Persistence\CustomComparers\RunoffTpFileComparer.cs" />
     <Compile Include="Acceptance\Persistence\CustomComparers\CrossSectionDefinitionFileComparer.cs" />
     <Compile Include="Acceptance\Persistence\DimrDataPersistanceAcceptanceTests.cs" />
     <Compile Include="Acceptance\Persistence\FlowFmDataPersistenceAcceptanceTests.cs" />
     <Compile Include="Acceptance\Persistence\RainfallRunoffFileComparer.cs" />
     <Compile Include="Acceptance\Run\FlowFmOutputFileComparer.cs" />
+    <Compile Include="Acceptance\Run\RainfallRunoffOutputFileComparer.cs" />
     <Compile Include="Acceptance\Run\RunDimrModelAcceptanceTest.cs" />
     <Compile Include="Acceptance\Run\RunFlowFmModelAcceptanceTest.cs" />
     <Compile Include="Acceptance\Run\RunGwswModelAcceptanceTests.cs" />

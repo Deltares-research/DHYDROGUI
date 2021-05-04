@@ -99,13 +99,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 Console.WriteLine("Comparing saved input data with reference input data");
                 string saveDirectory = savePath + "_data";
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
-                AcceptanceModelTestHelper.CompareProjectDirectories(saveDirectory,
-                                                                    referenceSaveDataDirectory,
-                                                                    acceptanceModelFileName,
-                                                                    tempDirectory,
-                                                                    false,
-                                                                    AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(acceptanceModelFileName + ".mdu"),
-                                                                    AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
+                InputFileComparer.CompareInputDirectories(saveDirectory,
+                                                          referenceSaveDataDirectory,
+                                                          acceptanceModelFileName,
+                                                          tempDirectory,
+                                                          false,
+                                                          AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(acceptanceModelFileName + ".mdu"),
+                                                          AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
                 CompareResultDataWithReferenceData(acceptanceModelName, acceptanceModelFileName);
             }
         }

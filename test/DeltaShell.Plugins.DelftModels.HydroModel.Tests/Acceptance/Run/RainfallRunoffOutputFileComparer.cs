@@ -6,10 +6,10 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 {
-    public class FlowFmOutputFileComparer
+    public static class RainfallRunoffOutputFileComparer
     {
         /// <summary>
-        /// Compares the contents of two output file directories.
+        /// Compares the contents of two collections of Rainfall Runoff output files.
         /// </summary>
         /// <param name="expectedOutputFiles">The file paths of the expected output files.</param>
         /// <param name="actualOutputFiles">The file paths of the actual output files.</param>
@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 
             foreach (string fileName in allFileNames)
             {
-                if (!AcceptanceModelTestHelper.IsNetcdfFile(fileName))
+                if (!AcceptanceModelTestHelper.IsSupportedRainfallRunoffOutputFile(fileName))
                 {
                     continue;
                 }
@@ -44,10 +44,24 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 
                 string actualOutputFile = actualOutputFiles.Single(f => Path.GetFileName(f).Equals(fileName));
                 string expectedOutputFile = expectedOutputFiles.Single(f => Path.GetFileName(f).Equals(fileName));
-                
-                bool netCdfIsEqual = NetcdfFileComparer.Compare(actualOutputFile, expectedOutputFile, ref overallErrorMessage);
-                
-                if (!netCdfIsEqual)
+
+                string extension = Path.GetExtension(fileName);
+                bool filesAreEqual = false;
+
+                switch (extension.ToLowerInvariant())
+                {
+                    case ".nc":
+                        filesAreEqual = NetcdfFileComparer.Compare(actualOutputFile, expectedOutputFile, ref overallErrorMessage);
+                        break;
+                    case ".his":
+                    case ".map":
+                        filesAreEqual = HisMapFileComparer.Compare(actualOutputFile, expectedOutputFile, ref overallErrorMessage);
+                        break;
+                    default:
+                        throw new NotSupportedException($"Comparing output file of type {extension} is not yet supported.");
+                }
+
+                if (!filesAreEqual)
                 {
                     identical = false;
                 }

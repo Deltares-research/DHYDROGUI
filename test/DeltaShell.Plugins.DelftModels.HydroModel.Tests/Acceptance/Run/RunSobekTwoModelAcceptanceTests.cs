@@ -112,22 +112,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 string saveDirectory = savePath + "_data";
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
                 string mduFileName = "FlowFM";
-                AcceptanceModelTestHelper.CompareProjectDirectories(saveDirectory,
-                                                                    referenceSaveDataDirectory,
-                                                                    mduFileName,
-                                                                    tempDirectory,
-                                                                    hasRrData,
-                                                                    AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(mduFileName + ".mdu"),
-                                                                    AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
+                InputFileComparer.CompareInputDirectories(saveDirectory,
+                                                          referenceSaveDataDirectory,
+                                                          mduFileName,
+                                                          tempDirectory,
+                                                          hasRrData,
+                                                          AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(mduFileName + ".mdu"),
+                                                          AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
                 
-                CompareResultDataWithReferenceData(acceptanceModelName);
+                CompareResultDataWithReferenceData(acceptanceModelName, hasRrData);
             }
         }
         
-        private void CompareResultDataWithReferenceData(string acceptanceModelName)
+        private void CompareResultDataWithReferenceData(string acceptanceModelName, bool hasRrData)
         {
-            RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, acceptanceModelsReferenceOutputDirectory,
-                                                             tempDirectory, keepOutput);
+            RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, 
+                                                             acceptanceModelsReferenceOutputDirectory,
+                                                             tempDirectory, 
+                                                             keepOutput);
+            
+            if (hasRrData)
+            {
+                Console.WriteLine("Comparing Rainfall Runoff output");
+                RunModelAcceptanceTestHelper.CompareRainfallRunoffOutput(acceptanceModelName,
+                                                                         acceptanceModelsReferenceOutputDirectory,
+                                                                         tempDirectory,
+                                                                         keepOutput);
+            }
         }
     }
 }

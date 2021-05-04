@@ -92,21 +92,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 Console.WriteLine("Comparing saved data");
                 string firstSaveProjectDirectory = Path.Combine(firstSaveProjectPath + "_data");
                 string secondSaveProjectDirectory = Path.Combine(secondSaveProjectPath + "_data");
-                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory, 
-                                                                    secondSaveProjectDirectory, 
-                                                                    acceptanceModelFileName, 
-                                                                    tempDirectory, 
-                                                                    false);
+                InputFileComparer.CompareInputDirectories(firstSaveProjectDirectory, 
+                                                          secondSaveProjectDirectory, 
+                                                          acceptanceModelFileName, 
+                                                          tempDirectory, 
+                                                          false);
 
                 Console.WriteLine("Comparing saved data with reference data");
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
-                AcceptanceModelTestHelper.CompareProjectDirectories(firstSaveProjectDirectory,
-                                                                    referenceSaveDataDirectory,
-                                                                    acceptanceModelFileName,
-                                                                    tempDirectory,
-                                                                    false,
-                                                                    new Dictionary<string, IEnumerable<string>>(),
-                                                                    AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
+                InputFileComparer.CompareInputDirectories(firstSaveProjectDirectory,
+                                                          referenceSaveDataDirectory,
+                                                          acceptanceModelFileName,
+                                                          tempDirectory,
+                                                          false,
+                                                          new Dictionary<string, IEnumerable<string>>(),
+                                                          AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
             }
         }
 

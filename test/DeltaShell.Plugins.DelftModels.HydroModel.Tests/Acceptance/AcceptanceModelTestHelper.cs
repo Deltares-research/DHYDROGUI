@@ -9,7 +9,6 @@ using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
-using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -27,7 +26,6 @@ using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.Toolbox;
 using DeltaShell.Plugins.Toolbox.Gui;
-using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 {
@@ -36,6 +34,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
     /// </summary>
     public static class AcceptanceModelTestHelper
     {
+        private static string ncExtension = ".nc";
+        private static string hisExtension = ".his";
+        private static string mapExtension = ".map";
+        private static string hiaExtension = ".hia";
+        
         /// <summary>
         /// Creates a running <see cref="DeltaShellGui"/> instance with all relevant plugins.
         /// </summary>
@@ -109,104 +112,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             Console.WriteLine("Saving (second time: " + tempProjectPath2);
             application.SaveProjectAs(tempProjectPath2);
         }
-
-        /// <summary>
-        /// Compares the files of two project directories.
-        /// </summary>
-        /// <remarks>
-        /// For specific files, you can ignore lines starting with a specific string by providing a lookup of files mapping to a collection of strings.
-        /// </remarks>
-        /// <param name="firstSaveProjectDirectory">Path to directory containing first project files to compare.</param>
-        /// <param name="secondSaveProjectDirectory">Path to directory containing second project files to compare.</param>
-        /// <param name="mduFileName">Name of the mdu file that corresponds with the folder name where the FlowFM data is located.</param>
-        /// <param name="tempDirectory">Path to temporary directory.</param>
-        /// <param name="hasRrData">Whether or not Rainfall Runoff data should be compared.</param>
-        /// <param name="flowFmLinesToIgnorePerFile">Lookup for which lines should be ignored per FlowFM file.</param>
-        /// <param name="rainfallRunoffLinesToIgnorePerFile">Lookup for which lines should be ignored per Rainfall Runoff file.</param>
-        public static void CompareProjectDirectories(string firstSaveProjectDirectory,
-                                                     string secondSaveProjectDirectory,
-                                                     string mduFileName,
-                                                     string tempDirectory,
-                                                     bool hasRrData,
-                                                     IReadOnlyDictionary<string, IEnumerable<string>> flowFmLinesToIgnorePerFile,
-                                                     IReadOnlyDictionary<string, IEnumerable<string>> rainfallRunoffLinesToIgnorePerFile)
-        {
-            Console.WriteLine("Comparing FlowFM saved data");
-            string flowFmInitialSaveDirectory = Path.Combine(firstSaveProjectDirectory, mduFileName, "input");
-            string flowFmSecondSaveDirectory = Path.Combine(secondSaveProjectDirectory, mduFileName, "input");
-            CompareFlowFMFiles(flowFmInitialSaveDirectory, flowFmSecondSaveDirectory, tempDirectory, flowFmLinesToIgnorePerFile);
-
-            if (hasRrData)
-            {
-                Console.WriteLine("Comparing Rainfall Runoff saved data");
-                string rrInitialSaveDirectory = Path.Combine(firstSaveProjectDirectory, "Rainfall Runoff");
-                string rrSecondSaveDirectory = Path.Combine(secondSaveProjectDirectory, "Rainfall Runoff");
-                CompareRainfallRunoffFiles(rrInitialSaveDirectory, rrSecondSaveDirectory, rainfallRunoffLinesToIgnorePerFile);
-            }
-        }
-        
-        /// <summary>
-        /// Compares the files of two project directories.
-        /// </summary>
-        /// <param name="firstSaveProjectDirectory">Path to directory containing first project files to compare.</param>
-        /// <param name="secondSaveProjectDirectory">Path to directory containing second project files to compare.</param>
-        /// <param name="mduFileName">Name of the mdu file that corresponds with the folder name where the FlowFM data is located.</param>
-        /// <param name="tempDirectory">Path to temporary directory.</param>
-        /// <param name="hasRrData">Whether or not Rainfall Runoff data should be compared.</param>
-        public static void CompareProjectDirectories(string firstSaveProjectDirectory,
-                                                     string secondSaveProjectDirectory,
-                                                     string mduFileName,
-                                                     string tempDirectory,
-                                                     bool hasRrData)
-        {
-            var linesToIgnore = new Dictionary<string, IEnumerable<string>>(); // don't ignore anything
-            CompareProjectDirectories(firstSaveProjectDirectory, 
-                                      secondSaveProjectDirectory, 
-                                      mduFileName, 
-                                      tempDirectory, 
-                                      hasRrData, 
-                                      linesToIgnore, 
-                                      linesToIgnore);
-        }
-        
-        private static void CompareFlowFMFiles(string flowFmInitialSaveDirectory, 
-                                               string flowFmSecondSaveDirectory, 
-                                               string tempDirectory, 
-                                               IReadOnlyDictionary<string, IEnumerable<string>> flowFmLinesToIgnorePerFile)
-        {
-            string[] flowFmInitialSaveFiles = Directory.GetFiles(flowFmInitialSaveDirectory);
-            if (!flowFmInitialSaveFiles.Any())
-            {
-                Assert.Fail($"No saved files (first save) could be found at {flowFmInitialSaveDirectory}.");
-            }
-            
-            string[] flowFmSecondSaveFiles = Directory.GetFiles(flowFmSecondSaveDirectory);
-            if (!flowFmSecondSaveFiles.Any())
-            {
-                Assert.Fail($"No saved files (second save) could be found at {flowFmSecondSaveDirectory}.");
-            }
-            
-            FlowFmFileComparer.Compare(flowFmInitialSaveFiles, flowFmSecondSaveFiles, tempDirectory, flowFmLinesToIgnorePerFile);
-        }
-
-        private static void CompareRainfallRunoffFiles(string rrInitialSaveDirectory,
-                                                       string rrSecondSaveDirectory,
-                                                       IReadOnlyDictionary<string, IEnumerable<string>> rainfallRunoffLinesToIgnorePerFile)
-        {
-            string[] rrInitialSaveFiles = Directory.GetFiles(rrInitialSaveDirectory);
-            if (!rrInitialSaveFiles.Any())
-            {
-                Assert.Fail($"No saved files (first save) could be found at {rrInitialSaveDirectory}.");
-            }
-            
-            string[] rrSecondSaveFiles = Directory.GetFiles(rrSecondSaveDirectory);
-            if (!rrSecondSaveFiles.Any())
-            {
-                Assert.Fail($"No saved files (second save) could be found at {rrSecondSaveDirectory}.");
-            }
-            
-            RainfallRunoffFileComparer.Compare(rrInitialSaveFiles, rrSecondSaveFiles, rainfallRunoffLinesToIgnorePerFile);
-        }
         
         /// <summary>
         /// Mapping of Rainfall Runoff filenames to a collection of strings indicating lines to be ignored if they start with this string.
@@ -251,5 +156,61 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             };
         }
         
+        /// <summary>
+        /// Given a collection of filepaths, returns only input files.
+        /// </summary>
+        /// <param name="filepaths">The filepaths to filter.</param>
+        /// <returns>An collection of input files.</returns>
+        public static IEnumerable<string> FilterInputFiles(IEnumerable<string> filepaths)
+        {
+            return filepaths.Where(fp =>
+            {
+                string fileExtension = Path.GetExtension(fp);
+
+                return !string.Equals(fileExtension, ncExtension, StringComparison.InvariantCultureIgnoreCase)
+                       && !string.Equals(fileExtension, hisExtension, StringComparison.InvariantCultureIgnoreCase)
+                       && !string.Equals(fileExtension, mapExtension, StringComparison.InvariantCultureIgnoreCase)
+                       && !string.Equals(fileExtension, hiaExtension, StringComparison.InvariantCultureIgnoreCase);
+            });
+        }
+        
+        /// <summary>
+        /// Given a collection of filepaths, returns only output files.
+        /// </summary>
+        /// <param name="filepaths">The filepaths to filter.</param>
+        /// <returns>A collection of output files.</returns>
+        public static IEnumerable<string> FilterOutputFiles(IEnumerable<string> filepaths)
+        {
+            return filepaths.Where(fp =>
+            {
+                string fileExtension = Path.GetExtension(fp);
+                return string.Equals(fileExtension, ncExtension, StringComparison.InvariantCultureIgnoreCase)
+                       || string.Equals(fileExtension, hisExtension, StringComparison.InvariantCultureIgnoreCase)
+                       || string.Equals(fileExtension, mapExtension, StringComparison.InvariantCultureIgnoreCase)
+                       || string.Equals(fileExtension, hiaExtension, StringComparison.InvariantCultureIgnoreCase);
+            });
+        }
+        
+        /// <summary>
+        /// Given a filepath, returns true if the file is a .nc file.
+        /// </summary>
+        /// <param name="filePath">The filepath to check.</param>
+        /// <returns><c>True</c> if the file is a netcdf file.</returns>
+        public static bool IsNetcdfFile(string filePath)
+        {
+            return filePath.EndsWith(ncExtension, StringComparison.InvariantCultureIgnoreCase);
+        }
+        
+        /// <summary>
+        /// Given a filepath, returns true if the file is a valid Rainfall Runoff output file.
+        /// </summary>
+        /// <param name="filePath">The filepath to check.</param>
+        /// <returns><c>True</c> if the file is a valid Rainfall Runoff file.</returns>
+        public static bool IsSupportedRainfallRunoffOutputFile(string filePath)
+        {
+            return filePath.EndsWith(ncExtension, StringComparison.InvariantCultureIgnoreCase)
+                   || filePath.EndsWith(hisExtension, StringComparison.InvariantCultureIgnoreCase)
+                   || filePath.EndsWith(mapExtension, StringComparison.InvariantCultureIgnoreCase);
+        }
     }
 }

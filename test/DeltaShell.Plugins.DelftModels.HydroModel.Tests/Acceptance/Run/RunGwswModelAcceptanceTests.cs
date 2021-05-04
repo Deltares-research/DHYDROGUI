@@ -6,6 +6,8 @@ using DelftTools.Functions.Filters;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -22,6 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
     public class RunGwswModelAcceptanceTests
     {
         private bool keepOutput = true;
+        
         private string tempDirectory;
         private string acceptanceModelsDirectory;
         private string acceptanceModelsReferenceOutputDirectory;
@@ -108,25 +111,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 string saveDirectory = savePath + "_data";
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
                 string mduFileName = "FlowFM";
-                AcceptanceModelTestHelper.CompareProjectDirectories(saveDirectory,
-                                                                    referenceSaveDataDirectory,
-                                                                    mduFileName,
-                                                                    tempDirectory,
-                                                                    hasRrData,
-                                                                    AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(mduFileName + ".mdu"),
-                                                                    AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
+                InputFileComparer.CompareInputDirectories(saveDirectory,
+                                                          referenceSaveDataDirectory,
+                                                          mduFileName,
+                                                          tempDirectory,
+                                                          hasRrData,
+                                                          AcceptanceModelTestHelper.GetFlowFmLinesToIgnore(mduFileName + ".mdu"),
+                                                          AcceptanceModelTestHelper.RainfallRunoffLinesToIgnore);
                 
                 Console.WriteLine("Comparing output");
-                CompareOutputWithReferenceData(acceptanceModelName);
+                CompareOutputWithReferenceData(acceptanceModelName, hasRrData);
             }
         }
-
-        private void CompareOutputWithReferenceData(string acceptanceModelName)
+        
+        private void CompareOutputWithReferenceData(string acceptanceModelName, bool hasRrData)
         {
+            Console.WriteLine("Comparing FlowFM output");
             RunModelAcceptanceTestHelper.CompareFlowFmOutput(acceptanceModelName, 
                                                              acceptanceModelsReferenceOutputDirectory,
                                                              tempDirectory, 
                                                              keepOutput);
+
+            if (hasRrData)
+            {
+                Console.WriteLine("Comparing Rainfall Runoff output");
+                RunModelAcceptanceTestHelper.CompareRainfallRunoffOutput(acceptanceModelName,
+                                                                         acceptanceModelsReferenceOutputDirectory,
+                                                                         tempDirectory,
+                                                                         keepOutput);
+            }
         }
         
         private static void SetModelSettings(HydroModel hydroModel)
@@ -140,8 +153,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             SetHydroModelSettings(hydroModel);
             SetFlowFmModelSettings(fmModel);
             SetRrModelSettings(rrModel);
+            EnableRainfallRunoffOutput(rrModel);
         }
-        
+
+        private static void EnableRainfallRunoffOutput(RainfallRunoffModel rrModel)
+        {
+            IEventedList<EngineParameter> engineParameters = rrModel.OutputSettings.EngineParameters;
+            engineParameters.ForEach(ep => ep.AggregationOptions = AggregationOptions.Current);
+        }
+
         private static void SetHydroModelSettings(HydroModel hydroModel)
         {
             hydroModel.StartTime = new DateTime(2020, 01, 01, 0, 0, 0);
@@ -152,7 +172,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
         {
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.RefDate, "20200101000000");
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.HisInterval, "1200"); // 20 minutes output step
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, "1200"); // 20 minutes output step
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.MapInterval, "1200"); // 20 minutes output step
+            fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, "1200"); // 20 minutes output step
         }
         
         private static void SetRrModelSettings(RainfallRunoffModel rrModel)
