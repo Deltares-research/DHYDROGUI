@@ -10,7 +10,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     public class GWSWImporterApplicationPlugin : ApplicationPlugin
     {
         internal const string GWSWImportTemplateId = "GWSWImportTemplate";
-        private IList<ProjectTemplate> templates = new List<ProjectTemplate>();
+        private readonly IList<ProjectTemplate> templates = new List<ProjectTemplate>();
 
         public override string Name
         {

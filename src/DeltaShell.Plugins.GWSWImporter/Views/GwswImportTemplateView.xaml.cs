@@ -38,14 +38,24 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Views
 
         public Action Cancel { get; set; }
 
-        public void Dispose()
-        {
-            // nothing to dispose
-        }
 
         public void EnsureVisible(object item)
         {
             // no element to focus
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Image?.Dispose();
+            }
         }
     }
 }

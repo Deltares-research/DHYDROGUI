@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Windows;
 using DelftTools.Controls;
@@ -47,15 +48,24 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Views
                        ? DelftDialogResult.OK
                        : DelftDialogResult.Cancel;
         }
-
-        public void Dispose()
-        {
-            
-        }
-
+        
         public void EnsureVisible(object item)
         {
             // no element to focus
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Image?.Dispose();
+            }
         }
     }
 }

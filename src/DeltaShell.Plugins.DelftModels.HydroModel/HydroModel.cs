@@ -164,13 +164,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             ((INotifyPropertyChanged) this).PropertyChanged += (s, e) => MarkDirty();
             ((INotifyCollectionChanged) this).CollectionChanged += (s, e) => MarkDirty();
         }
+        ~HydroModel()
+        {
+            Dispose(false);
+        }
 
         public void Dispose()
         {
-            foreach (IDisposable activity in Activities.GetActivitiesOfType<IDisposable>())
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            ReleaseUnmanagedResources();
+
+            if (disposing)
             {
-                activity.Dispose();
+                foreach (IDisposable activity in Activities.GetActivitiesOfType<IDisposable>())
+                {
+                    activity.Dispose();
+                }
             }
+        }
+
+        private void ReleaseUnmanagedResources()
+        {
+            dimrApi?.Dispose();
         }
 
         #endregion

@@ -56,14 +56,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views
             set { ViewModel.Cancel = value; }
         }
 
-        public void Dispose()
-        {
-            // nothing to dispose
-        }
-
         public void EnsureVisible(object item)
         {
             // nothing to focus
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                Image?.Dispose();
+            }
         }
     }
 }
