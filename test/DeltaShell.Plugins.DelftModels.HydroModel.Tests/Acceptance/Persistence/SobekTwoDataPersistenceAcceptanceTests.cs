@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 yield return new TestCaseData("DarEsSalaam", "14", "DarEs1D.lit", 177, 0, true).SetName("DarEsSalaam");
                 yield return new TestCaseData("Raam1D", "8", "Raam1D.lit", 11885, 0, true).SetName("Raam1D");
                 yield return new TestCaseData("HEAs1DFM", "19", "HEAs1DFM.lit", 37, 0, true).SetName("Small Hunze&Aas 1D");
-                yield return new TestCaseData("HEA_FM_RR", "15", "HEA.lit", 35, 2, false).SetName("Small Hunze&Aas 1D + RR");
+                yield return new TestCaseData("HEA_FM_RR", "15", "HEAs1DRR.lit", 35, 2, false).SetName("Small Hunze&Aas 1D + RR");
                 //yield return new TestCaseData("Eindhoven", "10", "Eindho.lit", 0, 0, true).SetName("Eindhoven"); // #todo: fill in expected data
             }
         }
