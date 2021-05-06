@@ -185,33 +185,48 @@
             </StackPanel>
         </GroupBox>
 
-        <StackPanel Grid.Row="4"
-                    Grid.Column="1"
-                    HorizontalAlignment="Right"
-                    Orientation="Horizontal"
-                    Visibility="{Binding HasFileSet, Converter={StaticResource BooleanToVisibilityConverter}}">
-            <StackPanel Orientation="Horizontal"
-                        Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <TextBlock VerticalAlignment="Center"
-                           Text="{Binding ProgressText}" />
-                <ProgressBar Width="200"
+        <Grid Grid.Row="4"
+              Grid.Column="1"
+              Visibility="{Binding HasFileSet, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0"
+                  HorizontalAlignment="Right"
+                  Visibility="{Binding IsRunning, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           VerticalAlignment="Center"
+                           Text="{Binding ProgressText}"
+                           TextWrapping="Wrap" />
+                <ProgressBar Grid.Column="1"
+                             Width="200"
                              Height="25"
                              Margin="5"
                              Maximum="{Binding ProgressTotalTotalSteps}"
                              Value="{Binding ProgressCurrentStep}" />
-            </StackPanel>
+            </Grid>
 
-            <StackPanel IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}"
+            <StackPanel Grid.Column="1"
+                        IsEnabled="{Binding IsRunning, Converter={StaticResource InverseBooleanConverter}}"
                         Orientation="Horizontal">
                 <Button Width="100"
+                        VerticalAlignment="Center"
                         Command="{Binding ExecuteCommand}"
                         Content="Import" />
                 <Button Width="100"
+                        VerticalAlignment="Center"
                         Command="{Binding CancelCommand}"
                         Content="Cancel" />
             </StackPanel>
 
-        </StackPanel>
+        </Grid>
 
     </Grid>
 </UserControl>
