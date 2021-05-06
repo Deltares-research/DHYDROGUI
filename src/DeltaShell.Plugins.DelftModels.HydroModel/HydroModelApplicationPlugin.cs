@@ -136,11 +136,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 Id = RHUINTEGRATEDMODEL_TEMPLATE_ID,
                 Category = ProductCategories.NewTemplateCategory,
-                Name = "RHU model",
+                Name = "Integrated model",
                 Description = "Creates a new Integrated Hydro model with RHU D-HYDRO models",
                 ExecuteTemplate = (p, settings) =>
                 {
-
                     var model = new HydroModelBuilder().BuildModel(ModelGroup.RHUModels);
                     if (settings is HydroModelProjectTemplateSettings modelSettings)
                     {
