@@ -680,6 +680,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             return boundaryCondition;
         }
 
+        private static DateTime ConvertToTime(string offsetValue, long offsetFactor, DateTime startDate)
+        {
+            // 1 Tick is 100 nanoseconds, as such there are 10 million ticks in a second.
+            const long nTicksPerSecond = 10000000;
+            long nTicks = nTicksPerSecond * offsetFactor * Convert.ToInt64(double.Parse(offsetValue));
+            return startDate + new TimeSpan(nTicks);
+        }
+
         protected virtual IEnumerable<object> ParseValues(BcQuantityData quantityData, Type type, string supportPointName)
         {
             IEnumerable<string> stringValues = quantityData.Values;
@@ -702,19 +710,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                     {
                         case "seconds":
                             return stringValues
-                                   .Select(s => startDate + new TimeSpan(0, 0, 0, Convert.ToInt32(double.Parse(s))))
+                                   .Select(s => ConvertToTime(s, 1L, startDate))
                                    .Cast<object>();
                         case "minutes":
                             return stringValues
-                                   .Select(s => startDate + new TimeSpan(0, 0, Convert.ToInt32(double.Parse(s)), 0))
+                                   .Select(s => ConvertToTime(s, 60L, startDate))
                                    .Cast<object>();
                         case "hours":
                             return stringValues
-                                   .Select(s => startDate + new TimeSpan(0, Convert.ToInt32(double.Parse(s)), 0, 0))
+                                   .Select(s => ConvertToTime(s, 60L * 60L, startDate))
                                    .Cast<object>();
                         case "days":
                             return stringValues
-                                   .Select(s => startDate + new TimeSpan(Convert.ToInt32(double.Parse(s)), 0, 0, 0))
+                                   .Select(s => ConvertToTime(s, 60L * 60L * 24L, startDate))
                                    .Cast<object>();
                     }
                 }

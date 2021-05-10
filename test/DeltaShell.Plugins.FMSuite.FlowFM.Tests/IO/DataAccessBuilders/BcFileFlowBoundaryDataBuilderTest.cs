@@ -5,6 +5,7 @@ using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Units;
 using DelftTools.Utils.Collections.Extensions;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders;
@@ -40,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             {
                 SupportPoint = supportPointName,
                 FunctionType = "timeseries",
-                Quantities = new List<BcQuantityData> {new BcQuantityData {QuantityName = "tracerbnd" + tracerName}}
+                Quantities = new List<BcQuantityData> { new BcQuantityData { QuantityName = "tracerbnd" + tracerName } }
             };
 
             // Call
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             Assert.That(insertWasSuccessful, Is.True);
             Assert.That(blockData.Quantities.Single().TracerName, Is.EqualTo(tracerName));
 
-            var flowBoundaryCondition = (FlowBoundaryCondition) boundaryConditionSets.Single().BoundaryConditions.Single();
+            var flowBoundaryCondition = (FlowBoundaryCondition)boundaryConditionSets.Single().BoundaryConditions.Single();
             Assert.That(flowBoundaryCondition.FlowQuantity, Is.EqualTo(FlowBoundaryQuantityType.Tracer));
             Assert.That(flowBoundaryCondition.TracerName, Is.EqualTo(tracerName));
         }
@@ -74,7 +75,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             builder.InsertBoundaryData(new[]
             {
@@ -143,7 +144,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             builder.InsertBoundaryData(new[]
             {
@@ -224,7 +225,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             builder.InsertBoundaryData(new[]
             {
@@ -352,10 +353,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             var waterLevelBc = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                                                         BoundaryConditionDataType.AstroComponents) {Feature = feature};
+                                                         BoundaryConditionDataType.AstroComponents)
+            { Feature = feature };
             waterLevelBc.AddPoint(1);
             IFunction waterLevelAstroFunction1 = waterLevelBc.GetDataAtPoint(1);
             waterLevelAstroFunction1["A0"] = new[]
@@ -391,7 +393,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
             const string filePath = "AstroWaterLevel.bc";
 
-            var writer = new BcFile() {MultiFileMode = BcFile.WriteMode.SingleFile};
+            var writer = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile };
             writer.Write(new[]
             {
                 boundaryConditionSet
@@ -469,10 +471,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             var salinityBc = new FlowBoundaryCondition(FlowBoundaryQuantityType.Salinity,
-                                                       BoundaryConditionDataType.TimeSeries) {Feature = feature};
+                                                       BoundaryConditionDataType.TimeSeries)
+            { Feature = feature };
             salinityBc.AddPoint(0);
             salinityBc.PointDepthLayerDefinitions[0] =
                 new VerticalProfileDefinition(VerticalProfileType.PercentageFromSurface, 100, 30, 5);
@@ -534,7 +537,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
             const string filePath = "SalinityTimeSeries.bc";
 
-            var writer = new BcFile {MultiFileMode = BcFile.WriteMode.SingleFile};
+            var writer = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile };
             writer.Write(new[]
             {
                 boundaryConditionSet
@@ -629,10 +632,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             var velocityBc = new FlowBoundaryCondition(FlowBoundaryQuantityType.VelocityVector,
-                                                       BoundaryConditionDataType.TimeSeries) {Feature = feature};
+                                                       BoundaryConditionDataType.TimeSeries)
+            { Feature = feature };
             velocityBc.AddPoint(0);
             velocityBc.PointDepthLayerDefinitions[0] =
                 new VerticalProfileDefinition(VerticalProfileType.PercentageFromSurface, 100, 30, 5);
@@ -684,7 +688,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
             const string filePath = "VelocityVectorSeries.bc";
 
-            var writer = new BcFile {MultiFileMode = BcFile.WriteMode.SingleFile};
+            var writer = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile };
             writer.Write(new[]
             {
                 boundaryConditionSet
@@ -802,10 +806,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             var velocityBc = new FlowBoundaryCondition(FlowBoundaryQuantityType.VelocityVector,
-                                                       BoundaryConditionDataType.HarmonicCorrection) {Feature = feature};
+                                                       BoundaryConditionDataType.HarmonicCorrection)
+            { Feature = feature };
             velocityBc.AddPoint(0);
 
             IFunction velocityData1 = velocityBc.GetDataAtPoint(0);
@@ -1019,13 +1024,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             var startTime = new DateTime(2014, 1, 1);
             var stopTime = new DateTime(2014, 1, 2);
 
             var dischargeBc = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge,
-                                                        BoundaryConditionDataType.TimeSeries) {Feature = feature};
+                                                        BoundaryConditionDataType.TimeSeries)
+            { Feature = feature };
 
             dischargeBc.AddPoint(0);
             IFunction dischargeTimeSeries = dischargeBc.GetDataAtPoint(0);
@@ -1056,13 +1062,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             var startTime = new DateTime(2014, 1, 1);
             var stopTime = new DateTime(2014, 1, 2);
 
             var dischargeBc = new FlowBoundaryCondition(FlowBoundaryQuantityType.Discharge,
-                                                        BoundaryConditionDataType.TimeSeries) {Feature = feature};
+                                                        BoundaryConditionDataType.TimeSeries)
+            { Feature = feature };
 
             dischargeBc.AddPoint(0);
             IFunction dischargeTimeSeries = dischargeBc.GetDataAtPoint(0);
@@ -1073,7 +1080,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
             const string filePath = "Discharge.bc";
 
-            var writer = new BcFile {MultiFileMode = BcFile.WriteMode.SingleFile};
+            var writer = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile };
             writer.Write(new[]
             {
                 boundaryConditionSet
@@ -1124,13 +1131,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = "pli1"
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             var startTime = new DateTime(2014, 1, 1);
             var stopTime = new DateTime(2014, 1, 2);
 
             var waterLevelBc1 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                                                          BoundaryConditionDataType.TimeSeries) {Feature = feature};
+                                                          BoundaryConditionDataType.TimeSeries)
+            { Feature = feature };
             waterLevelBc1.AddPoint(0);
             IFunction timeSeries1 = waterLevelBc1.GetDataAtPoint(0);
             timeSeries1[startTime] = 0.9;
@@ -1141,7 +1149,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             timeSeries2[stopTime] = 1.05;
 
             var waterLevelBc2 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                                                          BoundaryConditionDataType.TimeSeries) {Feature = feature};
+                                                          BoundaryConditionDataType.TimeSeries)
+            { Feature = feature };
             waterLevelBc2.AddPoint(0);
             IFunction timeSeries3 = waterLevelBc2.GetDataAtPoint(0);
             timeSeries3[startTime] = 1.0;
@@ -1152,7 +1161,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             timeSeries4[stopTime] = 1.2;
 
             var waterLevelBc3 = new FlowBoundaryCondition(FlowBoundaryQuantityType.WaterLevel,
-                                                          BoundaryConditionDataType.TimeSeries) {Feature = feature};
+                                                          BoundaryConditionDataType.TimeSeries)
+            { Feature = feature };
             waterLevelBc3.AddPoint(1);
             IFunction timeSeries5 = waterLevelBc3.GetDataAtPoint(1);
             timeSeries5[startTime] = 0.95;
@@ -1171,7 +1181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
 
             const string filePath = "ThreeSuperposedWaterLevels.bc";
 
-            var writer = new BcFile {MultiFileMode = BcFile.WriteMode.SingleFile};
+            var writer = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile };
             writer.Write(new[]
             {
                 boundaryConditionSet
@@ -1366,6 +1376,67 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                           NoBoundaryWithSedimentFractionMessage(secondSedimentFractionName));
         }
 
+        public static IEnumerable<TestCaseData> GetLongValueTestData()
+        {
+            yield return new TestCaseData("0001-01-01 00:00:00", "seconds", 315537897599, new DateTime(9999, 12, 31, 23, 59, 59));
+            yield return new TestCaseData("0001-01-01 00:00:00", "minutes", 5258964959, new DateTime(9999, 12, 31, 23, 59, 0));
+            yield return new TestCaseData("0001-01-01 00:00:00", "hours", 87649415, new DateTime(9999, 12, 31, 23, 0, 0));
+            yield return new TestCaseData("0001-01-01 00:00:00", "days", 3652058, new DateTime(9999, 12, 31, 0, 0, 0));
+
+            yield return new TestCaseData("2001-01-01 00:00:00", "seconds", 252423993599, new DateTime(9999, 12, 31, 23, 59, 59));
+            yield return new TestCaseData("2001-01-01 00:00:00", "minutes", 4207066559, new DateTime(9999, 12, 31, 23, 59, 0));
+            yield return new TestCaseData("2001-01-01 00:00:00", "hours", 70117775, new DateTime(9999, 12, 31, 23, 0, 0));
+            yield return new TestCaseData("2001-01-01 00:00:00", "days", 2921573, new DateTime(9999, 12, 31, 0, 0, 0));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetLongValueTestData))]
+        public void InsertBoundaryData_LongValue_DoesNotLogAnException(string startTime, string unit, long nUnits, DateTime expectedEndTime)
+        {
+            // Setup
+            const string supportPointName = "boundary_0001";
+            BoundaryConditionSet[] boundaryConditionSets = CreateBoundaryConditionSet(supportPointName);
+
+            var blockData =
+                new BcBlockData
+                {
+                    SupportPoint = supportPointName,
+                    FunctionType = "timeseries",
+                    Quantities = new List<BcQuantityData>
+                    {
+                        new BcQuantityData
+                        {
+                            QuantityName = "time",
+                            Unit = $"{unit} since {startTime}",
+                            Values = { "0", $"{nUnits}" }
+                        },
+                        new BcQuantityData
+                        {
+                            QuantityName = "dischargebnd",
+                            Unit = "m3/s",
+                            Values = { "2500", "2500" }
+                        }
+                    }
+                };
+
+            // Call
+            var isSuccessful = false;
+            void Call() => isSuccessful = builder.InsertBoundaryData(boundaryConditionSets, blockData);
+
+            string[] messages = TestHelper.GetAllRenderedMessages(Call).ToArray();
+
+            // Assert
+            Assert.That(messages, Is.Empty);
+            Assert.That(isSuccessful, Is.True);
+
+            // We want to obtain the second time value that is read, as we are
+            // interested if that is read correctly. In order to do this we need 
+            // to access the following:
+            // yes ... really ...
+            object interpretedEndTime = (boundaryConditionSets[0].BoundaryConditions[0].Data as IEventedList<IFunction>)?[0].Arguments[0].Values[1];
+            Assert.That(interpretedEndTime, Is.EqualTo(expectedEndTime));
+        }
+
         private static string NoBoundaryWithSedimentFractionMessage(string sedimentFractionName)
         {
             return $"There was no boundary condition with sediment fraction '{sedimentFractionName}'.";
@@ -1380,7 +1451,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                     new Coordinate(0, 0),
                     new Coordinate(1, 1)
                 }),
-                Attributes = new DictionaryFeatureAttributeCollection {{"Locations", new List<string> {supportPointName}}}
+                Attributes = new DictionaryFeatureAttributeCollection { { "Locations", new List<string> { supportPointName } } }
             };
 
             return new[]
@@ -1401,7 +1472,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
                 Name = boundaryName
             };
 
-            var boundaryConditionSet = new BoundaryConditionSet {Feature = feature};
+            var boundaryConditionSet = new BoundaryConditionSet { Feature = feature };
 
             var boundaryCondition = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration,
                                                               BoundaryConditionDataType.TimeSeries)
