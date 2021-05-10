@@ -92,17 +92,17 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
             if (!longTimeAveraging || table == null )
                 return table;
+            
             if (!startDateTime.HasValue || !stopDateTime.HasValue) return table;
-            DataTable modelTimesTable = CreateTimeEvaporationTable(numberOfStations);
-            var currentTime = startDateTime.Value;
-            while (!currentTime.Equals(stopDateTime.Value.AddDays(1)))
+            
+            DataTable longTimeAverageTable = CreateTimeEvaporationTable(numberOfStations);
+            DateTime currentTime = startDateTime.Value;
+            
+            foreach (DataRow dataRow in table.AsEnumerable())
             {
-                var dataRow = table.AsEnumerable()
-                    .SingleOrDefault(myRow => myRow.Field<int>("Month") == currentTime.Month
-                                              && myRow.Field<int>("Day") == currentTime.Day);
                 if (dataRow != null)
                 {
-                    var row = modelTimesTable.NewRow();
+                    var row = longTimeAverageTable.NewRow();
                     row[0] = currentTime.Year;
                     row[1] = currentTime.Month;
                     row[2] = currentTime.Day;
@@ -110,12 +110,13 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
                     {
                         row[3 + i] = dataRow[3 + i];
                     }
-                    modelTimesTable.Rows.Add(row);
+                    longTimeAverageTable.Rows.Add(row);
+
+                    currentTime = currentTime.AddDays(1);
                 }
-                currentTime = currentTime.AddDays(1);
             }
 
-            return modelTimesTable;
+            return longTimeAverageTable;
         }
 
         private static bool CheckIfSpecialKeyIsLongTimeAveraging(string specialKey)

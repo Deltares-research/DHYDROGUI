@@ -236,6 +236,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                     else
                     {
+                        evaporation.DataDistributionType = MeteoDataDistributionType.PerStation;
                         evaporation.Data.Arguments[0].Clear();
                         evaporation.Data.Arguments[0].SetValues(evapDict.Keys);
 
