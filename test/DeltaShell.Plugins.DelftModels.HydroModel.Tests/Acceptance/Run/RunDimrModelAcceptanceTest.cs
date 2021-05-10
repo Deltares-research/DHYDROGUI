@@ -95,8 +95,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 string saveDirectory = savePath + "_data";
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
                 string mduFileName = "FlowFM";
-                InputFileComparer.CompareInputDirectories(saveDirectory,
-                                                          referenceSaveDataDirectory,
+                InputFileComparer.CompareInputDirectories(referenceSaveDataDirectory,
+                                                          saveDirectory,
                                                           mduFileName,
                                                           tempDirectory,
                                                           hasRrData,

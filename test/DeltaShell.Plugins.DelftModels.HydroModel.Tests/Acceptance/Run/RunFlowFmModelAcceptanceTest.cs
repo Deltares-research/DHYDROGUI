@@ -99,8 +99,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 Console.WriteLine("Comparing saved input data with reference input data");
                 string saveDirectory = savePath + "_data";
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
-                InputFileComparer.CompareInputDirectories(saveDirectory,
-                                                          referenceSaveDataDirectory,
+                InputFileComparer.CompareInputDirectories(referenceSaveDataDirectory,
+                                                          saveDirectory,
                                                           acceptanceModelFileName,
                                                           tempDirectory,
                                                           false,
