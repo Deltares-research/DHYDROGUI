@@ -109,7 +109,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             
             dataTable = lstEvaporationData.FirstOrDefault();
             Assert.NotNull(dataTable);
-            Assert.AreEqual(3, dataTable.Rows.Count);// today + 2 more days
+            Assert.AreEqual(366, dataTable.Rows.Count);
             Assert.That(dataTable.Rows[0]["Year"], Is.EqualTo(startDateTime.Year));
             Assert.That(dataTable.Rows[0]["Month"], Is.EqualTo(startDateTime.Month));
             Assert.That(dataTable.Rows[0]["Day"], Is.EqualTo(startDateTime.Day));
