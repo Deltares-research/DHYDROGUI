@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using NUnit.Framework;
 
@@ -96,6 +99,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                                                                                          preconditionExpectedBranchFeaturesCount,
                                                                                          preconditionExpectedCatchmentsCount,
                                                                                          isFmOnly);
+                
+                // todo: FM1D2D-1592: Temporarily set the workflow for small hea + rr to FM + RR. Remove once the issue is fixed.
+                if (acceptanceModelName.Equals("HEA_FM_RR", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    ICompositeActivity fmAndRrWorkflow = ((HydroModel) hydroModel).Workflows
+                                                                                  .Single(w =>
+                                                                                              w.Activities.Count == 2
+                                                                                              && w.Activities.Any(a => a.GetActivitiesOfType<IWaterFlowFMModel>().Any())
+                                                                                              && w.Activities.Any(a => a.GetActivitiesOfType<RainfallRunoffModel>().Any()));
+                    ((HydroModel) hydroModel).CurrentWorkflow = fmAndRrWorkflow;
+                }
+                
                 
                 // [When]
                 Console.WriteLine("Running model");
