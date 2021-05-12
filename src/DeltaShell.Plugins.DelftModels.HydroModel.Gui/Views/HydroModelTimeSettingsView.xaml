@@ -85,6 +85,7 @@
                         <RowDefinition />
                         <RowDefinition />
                         <RowDefinition />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Label Grid.Row="0"
                            Grid.Column="0"
@@ -119,15 +120,6 @@
                             </Style>
                         </Label.Style>
                     </Label>
-                    <ListView Grid.Row="4"
-                              Grid.Column="0"
-                              Grid.ColumnSpan="4"
-                              Background="Transparent"
-                              BorderBrush="Transparent"
-                              Focusable="False"
-                              FontWeight="Normal"
-                              Foreground="Red"
-                              ItemsSource="{Binding ErrorTexts}" />
 
                     <CheckBox Grid.Row="0"
                               Grid.Column="1"
@@ -169,6 +161,16 @@
                                            VerticalContentAlignment="Center"
                                            CurrentTimeSpan="{Binding TimeStep, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                            IsEnabled="{Binding TimeStepSynchronisationEnabled}" />
+
+                    <ListView Grid.Row="4"
+                              Grid.Column="0"
+                              Grid.ColumnSpan="4"
+                              Background="Transparent"
+                              BorderBrush="Transparent"
+                              Focusable="False"
+                              FontWeight="Normal"
+                              Foreground="Red"
+                              ItemsSource="{Binding ErrorTexts}" />
                 </Grid>
             </GroupBox>
 
