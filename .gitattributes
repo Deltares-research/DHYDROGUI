@@ -7668,6 +7668,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/MorphologySediment_Models
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/MorphologySpatialVarying_Project/FM_model_Zandmotor_MOR1.dsproj -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/MorphologySpatialVarying_Project/FM_model_Zandmotor_MOR1.dsproj_data/state_zm_dfm_2011-08-01_02-00-00-7113f181-e530-443b-b380-d7aa77db77a7.zip -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/MorphologySpatialVarying_Project/FM_model_Zandmotor_MOR1.dsproj_data/zm_dfm/zm_dfm.zip -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/PliFileImporter/structures.pli -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/RasterImport/2D_bedlevels_Tutorial2.asc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/RasterImport/Bed_Levels_SOBEK2.tif -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/RasterImport/FlowFM.mdu -text

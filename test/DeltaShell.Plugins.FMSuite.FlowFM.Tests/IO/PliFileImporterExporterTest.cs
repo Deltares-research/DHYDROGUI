@@ -107,6 +107,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        [Test]
+        [Category(TestCategory.Integration)]
+        [Category(TestCategory.DataAccess)]
+        public void GivenFmModel_WhenImportingTheSameFileTwice_TheFeaturesWithTheSameNameAreReplaced()
+        {
+            var filePath = TestHelper.GetTestFilePath("PliFileImporter/structures.pli");
+            
+            var fmModel = new WaterFlowFMModel();
+            var importer = new PliFileImporterExporter<FixedWeir, FixedWeir>();
+            importer.ImportItem(filePath, fmModel.Area.FixedWeirs);
+
+            Assert.AreEqual(10, fmModel.Area.FixedWeirs.Count);
+            Assert.AreEqual(10, fmModel.Area.FixedWeirs.Select(w => w.Name).Distinct().Count(), "All names should be unique");
+
+            var firstWeir = fmModel.Area.FixedWeirs[0];
+            Assert.NotNull(firstWeir);
+
+            importer.ImportItem(filePath, fmModel.Area.FixedWeirs);
+
+            var newFirstWeir = fmModel.Area.FixedWeirs[0];
+
+            Assert.AreEqual(10, fmModel.Area.FixedWeirs.Count);
+            Assert.AreNotEqual(firstWeir, newFirstWeir);
+        }
+
         private static void CheckImportedFixedWeirs(WaterFlowFMModel fmModel)
         {
             var fixedWeirs = fmModel.Area.FixedWeirs;

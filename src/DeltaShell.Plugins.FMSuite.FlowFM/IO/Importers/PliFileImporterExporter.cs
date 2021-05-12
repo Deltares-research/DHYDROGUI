@@ -38,8 +38,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             get { return Properties.Resources.TextDocument; }
         }
 
-
-
         public override IEnumerable<Type> SourceTypes()
         {
             yield return typeof (TParent);

@@ -14,6 +14,7 @@ using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
+using log4net;
 using SharpMap.CoordinateSystems.Transformations;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
@@ -41,7 +42,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
 
     public abstract class Feature2DImportExportBase<TFeat> : MapFeaturesImporterBase, IFileExporter, IFeature2DImporterExporter where TFeat : IFeature, INameable
-    {    
+    {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Feature2DImportExportBase<TFeat>));
+
         protected abstract string ExporterName { get; }
 
         protected abstract string ImporterName { get; }
@@ -221,22 +224,30 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
         protected void AddOrReplace<T>(IList<T> featureList, IEnumerable<T> featuresToAdd, IEqualityComparer comparer) where T : INameable
         {
             var featuresToAddList = featuresToAdd.ToList();
-
-            featuresToAdd.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
-
-            GetEditableObject?.Invoke(featureList).BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
+            featuresToAddList.OfType<TFeat>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
 
             var equalityComparer = comparer != null
-                ? (IEqualityComparer<T>)comparer
-                : new NameableFeatureComparer<T>();
+                                       ? (IEqualityComparer<T>) comparer
+                                       : new NameableFeatureComparer<T>();
+            
+            GetEditableObject?.Invoke(featureList).BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
 
-            var hashListIndexLookup = featureList
-                    .Select((f, i) => new System.Tuple<int, int>(equalityComparer.GetHashCode(f), i))
-                    .ToDictionary(t => t.Item1, t => t.Item2);
+            Dictionary<int, int> hashListIndexLookup = null;
+            try
+            {
+                hashListIndexLookup = featureList
+                                      .Select((f, i) => new System.Tuple<int, int>(equalityComparer.GetHashCode(f), i))
+                                      .ToDictionary(t => t.Item1, t => t.Item2);
+            }
+            catch (ArgumentException exception) when(exception.Message.Contains("An item with the same key has already been added."))
+            {
+                log.WarnFormat($"The current list of {typeof(T).Name}, is not unique so existing values will not be replaced but ignored");
+            }
 
             var hashSet = new HashSet<T>(featureList, equalityComparer);
             var newItems = new List<T>();
-            
+            var ignoredItems = new List<T>();
+
             for (int i = 0; i < featuresToAddList.Count; i++)
             {
                 ProgressChanged?.Invoke("Adding features", i, featuresToAddList.Count);
@@ -244,6 +255,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 var item = featuresToAddList[i];   
                 if (hashSet.Contains(item))
                 {
+                    if (hashListIndexLookup == null)
+                    {
+                        ignoredItems.Add(item);
+                        continue;
+                    }
+
                     var hash = equalityComparer.GetHashCode(item);
                     var index = hashListIndexLookup[hash];
 
@@ -256,8 +273,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     newItems.Add(item);
                 }
             }
-
+            
             featureList.AddRange(newItems);
+            NamingHelper.MakeNamesUnique(featureList.OfType<INameable>());
+
+            if (ignoredItems.Count > 0)
+            {
+                log.Warn($"Ignored the following items {string.Join(",",ignoredItems)}");
+            }
 
             GetEditableObject?.Invoke(featureList).EndEdit();
         }
