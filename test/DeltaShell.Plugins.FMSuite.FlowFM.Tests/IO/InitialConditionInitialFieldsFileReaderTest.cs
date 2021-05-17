@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase(PointwiseOperationType.Multiply)]
         [TestCase(PointwiseOperationType.Maximum)]
         [TestCase(PointwiseOperationType.Minimum)]
-        public void WriteFile_ReadFile_WithWaterLevelQuantity_CorrectOperand([Values] PointwiseOperationType operand)
+        public void WriteFile_ReadFile_WithWaterLevelQuantity_CorrectOperand(PointwiseOperationType operand)
         {
             using (var temp = new TemporaryDirectory())
             {
