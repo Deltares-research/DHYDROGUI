@@ -275,7 +275,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             }
             
             featureList.AddRange(newItems);
-            NamingHelper.MakeNamesUnique(featureList.OfType<INameable>());
+            if (equalityComparer is NameableFeatureComparer<T>)
+            {
+                NamingHelper.MakeNamesUnique(featureList.OfType<INameable>());
+            }
 
             if (ignoredItems.Count > 0)
             {
