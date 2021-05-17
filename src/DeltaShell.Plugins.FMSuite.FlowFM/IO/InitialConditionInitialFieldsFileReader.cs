@@ -163,6 +163,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Name = operationName,
                 FilePath = sampleFile
             };
+
+            var operand = parameterItem.ReadProperty<string>(InitialConditionRegion.Operand.Key, true);
+            if (operand != null)
+            {
+                operation.Operand = ExtForceQuantNames.ParseOperationType(operand);
+            }
+            
             var averagingType = parameterItem.ReadProperty<string>(InitialConditionRegion.AveragingType.Key, true);
             if (averagingType != null)
             {

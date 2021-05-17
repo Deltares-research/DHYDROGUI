@@ -29,7 +29,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public virtual double RelativeSearchCellSize { get; set; }
         public virtual GridCellAveragingMethod AveragingMethod { get; set; }
         public virtual SpatialInterpolationMethod InterpolationMethod { get; set; }
-
+        public virtual PointwiseOperationType Operand { get; set; }
+        
         public ImportSamplesSpatialOperationExtension() : base(false)
         {
             RelativeSearchCellSize = 1;
@@ -56,7 +57,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Enabled = Enabled,
                 RelativeSearchCellSize = RelativeSearchCellSize,
                 GridCellAveragingMethod = AveragingMethod,
-                InterpolationMethod = InterpolationMethod
+                InterpolationMethod = InterpolationMethod,
+                OperationType = Operand
             };
             interpolateOperation.Mask.Provider = new FeatureCollection(new List<Feature>(), typeof(Feature));
             interpolateOperation.LinkInput(InterpolateOperation.InputSamplesName, importSamplesOperation.Output);
@@ -716,7 +718,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             extForceFileItem.Enabled = importSamplesOperation.Enabled;
-            extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[Operator.Overwrite];
+            extForceFileItem.Operand = ExtForceQuantNames.OperatorToStringMapping[ExtForceQuantNames.OperatorMapping[importSamplesOperation.Operand]];
 
             return extForceFileItem;
         }

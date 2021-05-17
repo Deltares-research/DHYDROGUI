@@ -15,6 +15,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
@@ -201,6 +202,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             finally
             {
                 FileUtils.DeleteIfExists(tempFolder);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase(PointwiseOperationType.Add)]
+        [TestCase(PointwiseOperationType.Overwrite)]
+        [TestCase(PointwiseOperationType.OverwriteWhereMissing)]
+        [TestCase(PointwiseOperationType.Multiply)]
+        [TestCase(PointwiseOperationType.Maximum)]
+        [TestCase(PointwiseOperationType.Minimum)]
+        public void WriteFile_ReadFile_WithWaterLevelQuantity_CorrectOperand([Values] PointwiseOperationType operand)
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string filePath = Path.Combine(temp.Path, "initialFields.ini");
+
+                var writeSpatialOperation = new ImportSamplesSpatialOperationExtension
+                {
+                    Operand = operand,
+                    FilePath = filePath
+                };
+
+                var writeModelDefinition = new WaterFlowFMModelDefinition();
+                writeModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.InitialWaterLevelDataItemName] = new List<ISpatialOperation> {writeSpatialOperation};
+
+                // Call: write
+                InitialConditionInitialFieldsFileWriter.WriteFile(filePath, writeModelDefinition, true);
+
+                // Call: read
+                var readModelDefinition = new WaterFlowFMModelDefinition();
+                InitialConditionInitialFieldsFileReader.ReadFile(filePath, readModelDefinition);
+
+                var readSpatialOperation = readModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.InitialWaterLevelDataItemName].Single() as ImportSamplesSpatialOperationExtension;
+
+                // Assert
+                Assert.That(readSpatialOperation, Is.Not.Null);
+                Assert.That(readSpatialOperation.Operand, Is.EqualTo(writeSpatialOperation.Operand));
             }
         }
 

@@ -960,7 +960,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     Enabled = importSamplesOperation.Enabled,
                     InterpolationMethod = interpolateOperation.InterpolationMethod,
                     AveragingMethod = interpolateOperation.GridCellAveragingMethod,
-                    RelativeSearchCellSize = interpolateOperation.RelativeSearchCellSize
+                    RelativeSearchCellSize = interpolateOperation.RelativeSearchCellSize,
+                    Operand = interpolateOperation.OperationType
                 };
             }
             return operation;
