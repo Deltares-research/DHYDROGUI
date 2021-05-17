@@ -458,5 +458,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCase("tif", "GeoTiff")]
+        [TestCase("asc", "arcinfo")]
+        public void ReadFile_(string extension, string fileType)
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string content =
+                    "[General]                                       " + Environment.NewLine +
+                    "    fileVersion           = 2.00                " + Environment.NewLine +
+                    "    fileType              = iniField            " + Environment.NewLine +
+                    "                                                " + Environment.NewLine +
+                    "[Initial]                                       " + Environment.NewLine +
+                    "    quantity              = waterlevel          " + Environment.NewLine +
+                    $"   dataFile              = quantity.{extension}" + Environment.NewLine +
+                    $"   dataFileType          = {fileType}          " + Environment.NewLine +
+                    "    interpolationMethod   = averaging           " + Environment.NewLine +
+                    "    operand               = O                   " + Environment.NewLine +
+                    "    locationType          = 2d                  " + Environment.NewLine +
+                    "    averagingType         = nearestNb           " + Environment.NewLine +
+                    "    averagingRelSize      = 1                   " + Environment.NewLine;
+
+
+                string filePath = temp.CreateFile("initialFields.ini", content);
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                // Call
+                InitialConditionInitialFieldsFileReader.ReadFile(filePath, modelDefinition);
+                
+                // Assert
+                var spatialOperation = modelDefinition.SpatialOperations[WaterFlowFMModelDefinition.InitialWaterLevelDataItemName].Single() as ImportRasterSamplesSpatialOperationExtension;
+                
+                Assert.That(spatialOperation, Is.Not.Null);
+                Assert.That(spatialOperation.Name, Is.EqualTo("quantity"));
+                Assert.That(spatialOperation.FilePath, Is.EqualTo(Path.Combine(temp.Path, $"quantity.{extension}")));
+                Assert.That(spatialOperation.Operand, Is.EqualTo(PointwiseOperationType.Overwrite));
+                Assert.That(spatialOperation.AveragingMethod, Is.EqualTo(GridCellAveragingMethod.ClosestPoint));
+                Assert.That(spatialOperation.RelativeSearchCellSize, Is.EqualTo(1));
+                Assert.That(spatialOperation.InterpolationMethod, Is.EqualTo(SpatialInterpolationMethod.Averaging));
+            }
+        }
+
     }
 }

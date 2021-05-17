@@ -121,11 +121,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static ISpatialOperation CreateSpatialOperation(DelftIniCategory parameterItem, string path)
         {
             var dataFile = parameterItem.ReadProperty<string>(InitialConditionRegion.DataFile.Key);
-            var dataFileType = parameterItem.ReadProperty<string>(InitialConditionRegion.DataFileType.Key);
+            var dataFileType = parameterItem.ReadProperty<string>(InitialConditionRegion.DataFileType.Key).ToLower();
             switch (dataFileType)
             {
+                case "geotiff":
+                case "arcinfo":
+                    return CreateSamplesOperation<ImportRasterSamplesSpatialOperationExtension>(parameterItem,Path.Combine(path, dataFile));
                 case "sample":
-                    return CreateSamplesOperation(parameterItem,Path.Combine(path, dataFile));
+                    return CreateSamplesOperation<ImportSamplesSpatialOperationExtension>(parameterItem,Path.Combine(path, dataFile));
                 case "polygon":
                     return CreatePolygonOperation(parameterItem, Path.Combine(path, dataFile));
                 default:
@@ -154,11 +157,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return operation;
         }
 
-        private static ISpatialOperation CreateSamplesOperation(DelftIniCategory parameterItem, string sampleFile)
+        private static T CreateSamplesOperation<T>(DelftIniCategory parameterItem, string sampleFile) where T: ImportSamplesSpatialOperationExtension, new()
         {
             var operationName = Path.GetFileNameWithoutExtension(sampleFile);
 
-            var operation = new ImportSamplesSpatialOperationExtension
+            var operation = new T
             {
                 Name = operationName,
                 FilePath = sampleFile

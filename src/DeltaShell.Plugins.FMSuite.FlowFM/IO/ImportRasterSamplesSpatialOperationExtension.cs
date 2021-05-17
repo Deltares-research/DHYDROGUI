@@ -10,11 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class ImportRasterSamplesSpatialOperationExtension : ImportSamplesSpatialOperationExtension
     {
-        public ImportRasterSamplesSpatialOperationExtension():base()
-        {
-            
-        }
-        
         public override IEnumerable<IPointValue> GetPoints()
         {
             if (!Dirty && Output.Provider != null)
