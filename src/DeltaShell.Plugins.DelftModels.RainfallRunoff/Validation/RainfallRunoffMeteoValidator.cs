@@ -76,10 +76,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             if (timeArgument == null) return issues;
             
             int startEndDateDaysDifference = startTime.Date.CompareTo(stopTime.Date);
-            if (timeArgument.Values.Count < 2 && startEndDateDaysDifference != 0)
+            int valuesCount = timeArgument.Values.Count;
+            if (valuesCount == 0 || valuesCount < 2 && startEndDateDaysDifference != 0)
             {
-                issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error,
-                                               "Not enough values defined"));
+                issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error, "Not enough values defined"));
                 return issues;
             }
 
@@ -93,21 +93,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             if (meteoStart > startTime)
             {
                 issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error,
-                                               String.Format("Time series starts ({0}) after start of model ({1})",
-                                                             meteoStart, startTime)));
+                                               $"Time series starts ({meteoStart}) after start of model ({startTime})"));
             }
 
-            if (timeArgument.Values.Count > 1)
+            if (valuesCount > 1)
             {
-                DateTime timeSeriesEnd = timeArgument.Values[timeArgument.Values.Count - 1];
+                DateTime timeSeriesEnd = timeArgument.Values[valuesCount - 1];
                 TimeSpan timestep = timeArgument.Values[1] - timeArgument.Values[0];
                 DateTime meteoEnd = addtimestep ? timeSeriesEnd.Add(timestep) : timeSeriesEnd;
 
                 if (meteoEnd < stopTime)
                 {
                     issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error,
-                                                   String.Format("Time series stops ({0}) before end of model ({1})",
-                                                                 meteoEnd, stopTime)));
+                                                   $"Time series stops ({meteoEnd}) before end of model ({stopTime})"));
                 }
             }
 
