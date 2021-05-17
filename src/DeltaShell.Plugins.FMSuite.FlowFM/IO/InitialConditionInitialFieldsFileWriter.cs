@@ -141,10 +141,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             switch (fileType)
             {
+                case ExtForceQuantNames.FileTypes.ArcInfo:
+                    return "arcinfo";
+                case ExtForceQuantNames.FileTypes.GeoTiff:
+                    return "GeoTiff";
                 case ExtForceQuantNames.FileTypes.Triangulation:
                 case ExtForceQuantNames.FileTypes.TriangulationMagDir:
                     return "sample";
-                case ExtForceQuantNames.FileTypes.InsidePolygon: return "polygon";
+                case ExtForceQuantNames.FileTypes.InsidePolygon: 
+                    return "polygon";
             }
             return string.Empty;
         }

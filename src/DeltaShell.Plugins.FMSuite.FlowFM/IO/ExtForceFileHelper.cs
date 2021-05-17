@@ -781,13 +781,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private static int GetSpatialOperationFileType(ISpatialOperation operation)
         {
-            if (operation is ImportSamplesOperation)
+            if (operation is ImportSamplesOperation importSamplesOperation)
             {
-                return 7;
+                var fileExtension = Path.GetExtension(importSamplesOperation.FilePath);
+                if (fileExtension.Equals(".asc", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ExtForceQuantNames.FileTypes.ArcInfo;
+                }
+                if (fileExtension.Equals(".tif", StringComparison.OrdinalIgnoreCase))
+                {
+                    return ExtForceQuantNames.FileTypes.GeoTiff;
+                }
+                return ExtForceQuantNames.FileTypes.Triangulation;
             }
             if (operation is SetValueOperation)
             {
-                return 10;
+                return ExtForceQuantNames.FileTypes.InsidePolygon;
             }
             return -1;
         }

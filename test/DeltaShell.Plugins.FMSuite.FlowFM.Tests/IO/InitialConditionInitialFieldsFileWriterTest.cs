@@ -15,6 +15,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
 using SharpMapTestUtils;
@@ -224,6 +225,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             finally
             {
                 FileUtils.DeleteIfExists(tempFolder);
+            }
+        }
+
+        [TestCase("tif", "GeoTiff")]
+        [TestCase("asc", "arcinfo")]
+        [TestCase("xyz", "sample")]
+        public void WriteFile_WithImportSamplesOperation_WritesCorrectFileType(string fileExtension, string expFileType)
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string filePath = Path.Combine(temp.Path, "initialFields.ini");
+
+                var writeSpatialOperation = new ImportSamplesSpatialOperationExtension
+                {
+                    FilePath = $"quantity.{fileExtension}"
+                };
+
+                var writeModelDefinition = new WaterFlowFMModelDefinition();
+                writeModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.InitialWaterLevelDataItemName] = new List<ISpatialOperation> {writeSpatialOperation};
+
+                // Call
+                InitialConditionInitialFieldsFileWriter.WriteFile(filePath, writeModelDefinition, true);
+
+                // Assert
+                Assert.That(filePath, Does.Exist);
+
+                string line = File.ReadAllLines(filePath).First(l => l.Contains("dataFileType"));
+                string fileType = line.Split('=')[1].Trim();
+                
+                Assert.That(fileType, Is.EqualTo(expFileType));
+
             }
         }
     }

@@ -92,6 +92,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             public const int PolyTim = 9;
             public const int InsidePolygon = 10;
             public const int NCgrid = 11;
+            public const int GeoTiff = 12;
         }
 
         // spatial operation operator mappings
