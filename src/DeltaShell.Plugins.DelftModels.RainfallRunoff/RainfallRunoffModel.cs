@@ -1230,11 +1230,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                         coverage.Clear();
                     }
                 }
-
-                if (InputWaterLevel != null)
-                {
-                    InputWaterLevel.Clear();
-                }
             }
             finally
             {
