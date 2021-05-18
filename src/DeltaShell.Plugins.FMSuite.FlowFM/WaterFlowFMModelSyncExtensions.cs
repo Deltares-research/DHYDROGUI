@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
 
-            fmModel.NetworkDiscretization.UpdateNetworkLocations(pointsToAdd);
+            fmModel.NetworkDiscretization.AddNetworkLocationsIfNotAlreadyCreated(pointsToAdd);
             fmModel.AddMissingLateralSourceData(lateralSourcesToAdd);
         }
 

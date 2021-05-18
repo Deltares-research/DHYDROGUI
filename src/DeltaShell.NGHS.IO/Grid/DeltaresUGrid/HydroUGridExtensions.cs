@@ -248,7 +248,9 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="discretization">Discretization to base the mesh on</param>
         public static Disposable1DMeshGeometry CreateDisposable1DMeshGeometry(this IDiscretization discretization)
         {
+
             var locations = discretization.Locations.Values.ToArray();
+            var locationCount = locations.Length;
 
             var segments = discretization.Segments.Values.ToList();
             var edgeCount = segments.Count;
@@ -266,7 +268,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             //update because of missing and thus new points
             locations = discretization.Locations.Values.ToArray();
-            var locationCount = locations.Length;
+            locationCount = locations.Length;
             if (doNotWriteTheseSegments != null)
             {
                 foreach (var networkSegment in doNotWriteTheseSegments)
@@ -352,7 +354,20 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             if (indices[0] == -1)
             {
                 // no begin point found, search neighboring branches
-                var firstLocation = discretization.GetLocationForBranchNode(segment.Branch, BranchNodeType.Begin);
+                var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Source, discretization, segment.Branch);
+                if (firstLocation != null)
+                    indices[0] = locationIdLookup[firstLocation];
+                else
+                {
+                    indices[0] = -1;
+                }
+            }
+
+            if (indices[0] == -1)
+            {
+                // no begin point found, search coordinates
+                var firstLocation = discretization.Locations.Values.FirstOrDefault(l =>l.Geometry.Coordinate.Equals2D(segment.Geometry.Coordinates.FirstOrDefault(), epsilonLocation));
+                
                 if (firstLocation != null)
                     indices[0] = locationIdLookup[firstLocation];
                 else
@@ -366,17 +381,59 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             if (indices[1] == -1)
             {
                 // no end point found, search neighboring branches
-                var firstLocation = discretization.GetLocationForBranchNode(segment.Branch, BranchNodeType.End);
+                var firstLocation = GetNeighboringNetworkLocation(segment.Branch.Target, discretization, segment.Branch);
+                if (firstLocation != null)
+                    indices[1] = locationIdLookup[firstLocation];
+                else
+                {
+                    indices[1] = -1;
+                }
+            }
+            if (indices[1] == -1)
+            {
+                // no end point found, search coordinates
+                var firstLocation = discretization.Locations.Values.FirstOrDefault(l => l.Geometry.Coordinate.Equals2D(segment.Geometry.Coordinates.LastOrDefault(), epsilonLocation));
+
                 if (firstLocation != null)
                     indices[1] = locationIdLookup[firstLocation];
                 else
                 {
                     Log.Warn($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}. Creating one on end node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
+                    if (indices[0] != -1 && Math.Abs(segment.Chainage) > epsilonLocation)
+                    {
+                        var moveToEndChainage = branchLocations.FirstOrDefault(loc => Math.Abs(loc.Chainage - segment.Chainage) < epsilonLocation);
+                        if (moveToEndChainage == null)
+                        {
+                            moveToEndChainage = discretization.Locations.Values.FirstOrDefault(l => l.Geometry.Coordinate.Equals2D(segment.Geometry.Coordinates.FirstOrDefault(), epsilonLocation));
+                        }
+
+                        if (moveToEndChainage != null)
+                        {
+                            moveToEndChainage.Chainage = segment.EndChainage;
+                            locationIdLookup[moveToEndChainage] = indices[0];
+                        }
+                    }
                     indices[1] = -1;
                     doNotWriteTheseSegments.Add(segment);
                 }
             }
             return indices;
+        }
+
+        private static INetworkLocation GetNeighboringNetworkLocation(INode node, IDiscretization discretization, IBranch originalBranch)
+        {
+            var networkLocationsIn = node.IncomingBranches
+                .Where(b => b != originalBranch)
+                .Select(b => new { branch = b, location = discretization.GetLocationsForBranch(b).LastOrDefault() })
+                .Where(l => l.location != null && Math.Abs(l.location.Chainage - l.branch.Length) < EpsilonLocation)
+                .Select(l => l.location);
+
+            var networkLocationsOut = node.OutgoingBranches
+                .Where(b => b != originalBranch)
+                .Select(b => discretization.GetLocationsForBranch(b).FirstOrDefault())
+                .Where(l => l != null && Math.Abs(l.Chainage) < EpsilonLocation);
+
+            return networkLocationsIn.Concat(networkLocationsOut).FirstOrDefault();
         }
 
         #endregion

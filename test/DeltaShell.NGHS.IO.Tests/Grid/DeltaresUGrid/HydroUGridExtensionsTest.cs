@@ -4,14 +4,11 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using Deltares.UGrid.Api;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
-using DeltaShell.NGHS.TestUtils;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -501,103 +498,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual((int)LinkStorageType.Embedded, disposableLinksGeometry.LinkType[2]);
         }
 
-        [Test, Category(TestCategory.Integration)]
-        public void GivenHydroUGridExtensions_CreateMesh1dWithUrbanGrid_ShouldGiveCorrect1dMesh()
-        {
-            //Arrange
-            var network = new HydroNetwork();
-            network.AddSimpleUrbanNetwork();
-            var discretization = new Discretization { Network = network };
-
-            // add default grid
-            discretization.Locations.AddValues(discretization.GenerateSewerConnectionNetworkLocations());
-            discretization.UpdateNetworkLocations(discretization.Locations.Values, false);
-
-            // Act
-            var mesh = discretization.CreateDisposable1DMeshGeometry();
-
-            // Assert
-            Assert.AreEqual(5, mesh.NodeIds.Length);
-        }
-
-        [Test, Category(TestCategory.Integration)]
-        public void GivenHydroUGridExtensions_CreateMesh1dWithUrbanGridAndMultipleCompartments_ShouldGiveCorrect1dMesh()
-        {
-            //Arrange
-            var network = new HydroNetwork();
-
-            var manhole1 = new Manhole { Name = "manhole1" };
-            var manhole2 = new Manhole { Name = "manhole2" };
-            var manhole3 = new Manhole { Name = "manhole3" };
-            var manhole4 = new Manhole { Name = "manhole4" };
-            var manhole5 = new Manhole { Name = "manhole4" };
-
-            var compartment1 = new Compartment { Name = "compartment1" };
-            var compartment2 = new Compartment { Name = "compartment2" };
-            var compartment3 = new Compartment { Name = "compartment3" };
-            var compartment4 = new Compartment { Name = "compartment4" };
-            var compartment5 = new Compartment { Name = "compartment5" };
-            var compartment6 = new Compartment { Name = "compartment6" };
-            var compartment7 = new Compartment { Name = "compartment7" };
-
-            manhole1.Compartments.Add(compartment1);
-            manhole1.Compartments.Add(compartment2);
-            manhole1.Compartments.Add(compartment3);
-            manhole2.Compartments.Add(compartment4);
-            manhole3.Compartments.Add(compartment5);
-            manhole4.Compartments.Add(compartment6);
-            manhole5.Compartments.Add(compartment7);
-
-            var connection1 = new SewerConnection { Name = "Con1", SourceCompartment = compartment4, TargetCompartment = compartment2, Length = 11 };
-            var connection2 = new SewerConnection { Name = "Con2", SourceCompartment = compartment5, TargetCompartment = compartment2, Length = 12 };
-            var connection3 = new SewerConnection { Name = "Con3", SourceCompartment = compartment6, TargetCompartment = compartment3, Length = 13 };
-            var connection4 = new SewerConnection { Name = "Con4", SourceCompartment = compartment1, TargetCompartment = compartment7, Length = 14 };
-            var connection5 = new SewerConnection { Name = "Con5", SourceCompartment = compartment3, TargetCompartment = compartment2, Length = 1 };
-            var connection6 = new SewerConnection { Name = "Con6", SourceCompartment = compartment2, TargetCompartment = compartment1, Length = 1 };
-
-            network.Nodes.AddRange(new[] { manhole1, manhole2, manhole3, manhole4, manhole5 });
-            network.Branches.AddRange(new[] { connection1, connection2, connection3, connection4, connection5, connection6 });
-
-            var discretization = new Discretization { Network = network, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered};
-
-            // add default grid
-            discretization.Locations.AddValues(discretization.GenerateSewerConnectionNetworkLocations());
-            discretization.UpdateNetworkLocations(discretization.Locations.Values, false);
-
-            // Act
-            var mesh = discretization.CreateDisposable1DMeshGeometry();
-
-            // Assert
-            Assert.AreEqual(7, mesh.NodeIds.Length);
-            Assert.AreEqual(6, mesh.EdgeBranchIds.Length);
-
-            int[] nodes = mesh.EdgeNodes;
-
-            // Con1
-            Assert.AreEqual(0,nodes[0]);
-            Assert.AreEqual(1,nodes[1]);
-
-            // con2
-            Assert.AreEqual(2,nodes[2]);
-            Assert.AreEqual(1,nodes[3]);
-
-            // con3
-            Assert.AreEqual(3,nodes[4]);
-            Assert.AreEqual(4,nodes[5]);
-
-            // con4
-            Assert.AreEqual(6,nodes[6]);
-            Assert.AreEqual(5,nodes[7]);
-
-            // con5
-            Assert.AreEqual(4,nodes[8]);
-            Assert.AreEqual(1,nodes[9]);
-
-            // con6
-            Assert.AreEqual(1,nodes[10]);
-            Assert.AreEqual(6,nodes[11]);
-        }
-
         private static IHydroNetwork CreateTestNetwork()
         {
             //          Rural network             Urban network
@@ -606,7 +506,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             // y             \          /               |                           (manhole2 has 2 compartments)
             //         branch1 \      / branch2         | pipe1
             //                   \  /                   |
-            //     50             o node3               o--------o pipe2
+            //     50             o node3              o--------o pipe2
             //                     \              manhole2    manhole3
             //                       \ branch3
             //                         \

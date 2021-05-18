@@ -262,11 +262,6 @@
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj">
-      <Project>{0AE5102C-0560-4A9C-8197-A6D8CA99B5DE}</Project>
-      <Name>DeltaShell.NGHS.Utils</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
       <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>

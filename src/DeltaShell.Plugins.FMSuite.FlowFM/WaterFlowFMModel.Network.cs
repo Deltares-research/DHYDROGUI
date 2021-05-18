@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -26,6 +27,7 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Actions;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Networks;
 using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -34,7 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
     {
         private IDiscretization networkDiscretization;
         private IFeatureCoverage inflows;
-        private ICompartment previousCompartment;
 
         public const string DiscretizationObjectName = "Computational 1D Grid";
 
@@ -68,9 +69,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ((INotifyCollectionChanging) network).CollectionChanging += NetworkCollectionChanging;
             ((INotifyCollectionChanged) network).CollectionChanged += NetworkCollectionChanged;
-            ((INotifyPropertyChanging) network).PropertyChanging += NetworkPropertyChanging;
             ((INotifyPropertyChanged) network).PropertyChanged += NetworkPropertyChanged;
-            
+            ((INotifyPropertyChanged) network).PropertyChanged += NetworkCoordinateSystemPropertyChanged;
+
             var hydroNetworkParent = network.Parent;
             fmRegion?.SubRegions?.Add(network);
             network.Parent = hydroNetworkParent;
@@ -78,36 +79,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UpdateRoughnessSections();
         }
 
-        private void NetworkPropertyChanging(object sender, PropertyChangingEventArgs e)
-        {
-            if (DisableNetworkSynchronization || !(sender is ISewerConnection connection))
-            {
-                return;
-            }
-
-            if (string.Equals(e.PropertyName, nameof(connection.TargetCompartment)))
-            {
-                previousCompartment = connection.TargetCompartment;
-            }
-
-            if (string.Equals(e.PropertyName, nameof(connection.TargetCompartment)))
-            {
-                previousCompartment = connection.SourceCompartment;
-            }
-        }
-
         private void NetworkCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)
         {
-            if (DisableNetworkSynchronization)
-                return;
-
-            if (Equals(sender, Network.Branches) && e.Action == NotifyCollectionChangeAction.Remove && e.OldItem is IChannel channel)
-            {
-                NetworkDiscretization.ReplacePointsForRemovedBranch(channel);
-            }
-
             if (SuspendClearOutputOnInputChange ||
-                sender is IEventedList<Route>)
+                sender is IEventedList<Route> ||
+                DisableNetworkSynchronization)
                 return;
 
             if (!OutputIsEmpty)
@@ -120,9 +96,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             ((INotifyCollectionChanging)network).CollectionChanging -= NetworkCollectionChanging;
             ((INotifyCollectionChanged) network).CollectionChanged -= NetworkCollectionChanged;
-            ((INotifyPropertyChanging)network).PropertyChanging -= NetworkPropertyChanging;
             ((INotifyPropertyChanged) network).PropertyChanged -= NetworkPropertyChanged;
-            
+            ((INotifyPropertyChanged) network).PropertyChanged -= NetworkCoordinateSystemPropertyChanged;
+
             var hydroNetworkParent = network.Parent;
             fmRegion?.SubRegions?.Remove(network);
             network.Parent = hydroNetworkParent;
@@ -133,12 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void NetworkPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (DisableNetworkSynchronization) return;
-
-            if (sender == Network && e.PropertyName == nameof(CoordinateSystem))
-            {
-                CoordinateSystem = Network.CoordinateSystem;
-                Network.UpdateGeodeticDistancesOfChannels();
-            }
 
             //is dit nodig?
             if (sender is IDataItem item && 
@@ -154,28 +124,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 model1DBoundaryNodeData.SetBoundaryConditionDataForOutlet();
             }
 
-            if (sender is ISewerConnection connection)
+            if (sender is SewerConnection connection && e.PropertyName.Equals(nameof(IBranch.Length)))
             {
-                if (string.Equals(e.PropertyName, nameof(connection.TargetCompartment)))
+                var locationsToRemove = NetworkDiscretization.Locations.Values
+                    .OfType<NetworkLocation>()
+                    .Where(nl => nl.Branch.Equals(connection) && Math.Abs(nl.Chainage) < 0.00001).ToArray();
+                if (locationsToRemove.Any())
+                    NetworkDiscretization.Locations.RemoveValues(new IVariableValueFilter[] { new VariableValueFilter<NetworkLocation>(NetworkDiscretization.Locations, locationsToRemove) });
+                NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
+                    new NetworkLocation(connection, 0));
+                if (connection.Length > 0)
                 {
-                    NetworkDiscretization.HandleCompartmentSwitch(previousCompartment, connection.TargetCompartment);
-                    previousCompartment = null;
-                }
-
-                if (string.Equals(e.PropertyName, nameof(connection.SourceCompartment)))
-                {
-                    NetworkDiscretization.HandleCompartmentSwitch(previousCompartment, connection.SourceCompartment);
-                    previousCompartment = null;
-                }
-
-                if (e.PropertyName.Equals(nameof(IBranch.Length)))
-                {
-                    // assuming connection only has 2 locations
-                    var endLocation = NetworkDiscretization.GetLocationsForBranch(connection).FirstOrDefault(n => n.Chainage > 0);
-                    if (endLocation != null)
-                    {
-                        endLocation.Chainage = connection.Length;
-                    }
+                    
+                    locationsToRemove = NetworkDiscretization.Locations.Values
+                        .OfType<NetworkLocation>()
+                        .Where(nl => nl.Branch.Equals(connection) && nl.Chainage > 0).ToArray();
+                    if(locationsToRemove.Any())
+                        NetworkDiscretization.Locations.RemoveValues(new IVariableValueFilter[] { new VariableValueFilter<NetworkLocation>(NetworkDiscretization.Locations, locationsToRemove) });
+                    NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(
+                        new NetworkLocation(connection, connection.Length));
                 }
             }
 
@@ -274,8 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
         
-        public IDiscretization NetworkDiscretization 
-        {
+        public IDiscretization NetworkDiscretization {
             get { return networkDiscretization;}
             set
             {
@@ -331,25 +297,118 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 UpdateBoundaryCondition(e);
             }
-            else if (removedOrAddedItem is LateralSource && !(Network.CurrentEditAction is BranchMergeAction))
+            else if (e.GetRemovedOrAddedItem() is LateralSource && !(Network.CurrentEditAction is BranchMergeAction))
             {
                 UpdateLateralSource(e);
             }
-            else if (removedOrAddedItem is CrossSectionSectionType)
+            else if (e.GetRemovedOrAddedItem() is CrossSectionSectionType)
             {
                 UpdateCrossSectionSectionType(e);
+            }
+            else if (removedOrAddedItem is IChannel channel)
+            {
+                if (Equals(sender, Network.Branches))
+                {
+                    switch (e.Action)
+                    {
+                        case NotifyCollectionChangedAction.Remove:
+                        {
+                            foreach (var lateralSource in channel.BranchSources)
+                            {
+                                RemoveLateralSourceData(lateralSource);
+                            }
+
+                            ChannelFrictionDefinitions.Remove(ChannelFrictionDefinitions.First(cfd => ReferenceEquals(cfd.Channel, channel)));
+                            ChannelInitialConditionDefinitions.Remove(ChannelInitialConditionDefinitions.First(cicd => ReferenceEquals(cicd.Channel, channel)));
+
+                            // remove all child data items
+                            var dataItemsToRemove = new List<IDataItem>();
+                            var networkDataItem = GetDataItemByValue(Network);
+
+                            if (networkDataItem != null)
+                            {
+                                foreach (var dataItem in networkDataItem.Children)
+                                {
+                                    // check if child data item uses WaterFlowModelBranchFeatureValueConverter
+                                    var valueConverter = dataItem.ValueConverter as Model1DBranchFeatureValueConverter;
+                                    if (valueConverter == null || !(valueConverter.Location is IBranchFeature))
+                                    {
+                                        continue;
+                                    }
+
+                                    // check if data item is related to the removed branch
+                                    var branchFeature = (IBranchFeature) valueConverter.Location;
+                                    if (!channel.BranchFeatures.Contains(branchFeature))
+                                    {
+                                        continue;
+                                    }
+
+                                    dataItemsToRemove.Add(dataItem);
+                                }
+
+                                foreach (var dataItem in dataItemsToRemove)
+                                {
+                                    dataItem.Unlink();
+                                    dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
+                                    networkDataItem.Children.Remove(dataItem);
+                                }
+                            }
+
+                            break;
+                        }
+                        case NotifyCollectionChangedAction.Add:
+                        {
+                            foreach (var lateralSource in channel.BranchSources)
+                            {
+                                AddLateralSourceData(new Model1DLateralSourceData
+                                {
+                                    Feature = lateralSource, 
+                                    UseSalt = UseSalinity, 
+                                    UseTemperature = UseTemperature
+                                });
+                            }
+
+                            ChannelFrictionDefinitions.Add(new ChannelFrictionDefinition(channel));
+                            ChannelInitialConditionDefinitions.Add(new ChannelInitialConditionDefinition(channel));
+
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (Equals(sender, Network.Branches) && removedOrAddedItem is ISewerConnection sewerConnection && !isLoading)
+            {
+                NamingHelper.MakeNamesUnique(Network.Branches);
+
+                switch (e.Action)
+                {
+                    case NotifyCollectionChangedAction.Add:
+                        NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, 0.0));
+                        if (sewerConnection?.Length > 0)
+                        {
+                            NetworkDiscretization.AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(new NetworkLocation(sewerConnection, sewerConnection.Length));
+                        }
+
+                        break;
+                }
+            }
+            else if (removedOrAddedItem is CrossSectionSectionType)
+            {
                 UpdateRoughnessSectionsEvent(e);
             }
-            else if (Equals(sender, Network.Branches) && removedOrAddedItem is IBranch branch && !isLoading)
+            if (removedOrAddedItem is IBranch && e.Action == NotifyCollectionChangedAction.Remove && !isLoading)
             {
-                switch (branch)
+                // if discretization point is on branch which is deleted, move this point to a connecting branch
+                var discretizationPointsWhichWereOnTheDeletedBranch =
+                    NetworkDiscretization.Locations.Values.Where(l =>
+                        l.Network.Equals(Network) && l.Branch.Equals(removedOrAddedItem)).ToArray();
+                for (var i = 0; i <discretizationPointsWhichWereOnTheDeletedBranch.Length; i++)
                 {
-                    case IChannel channel:
-                        HandleChannelsChanged(e.Action, channel);
-                        break;
-                    case ISewerConnection sewerConnection:
-                        HandleSewerConnectionsChanged(e.Action, sewerConnection);
-                        break;
+                    var l = discretizationPointsWhichWereOnTheDeletedBranch[i];
+                    var newBranch = NetworkHelper.GetNearestBranch(Network.Branches.Except(new[]{(IBranch)removedOrAddedItem}), l.Geometry, 0.1);//0.1 is Peelen empirical tolerance
+                    if (newBranch == null) continue;
+                    l.Branch = newBranch;
+                    l.Chainage = NetworkHelper.GetBranchFeatureChainageFromGeometry(newBranch, l.Geometry);
                 }
             }
 
@@ -361,7 +420,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             // check if removed item is used in the child data items
             if (!(removedOrAddedItem is HydroLink) && removedOrAddedItem is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
             {
-                if (removedOrAddedItem is INetworkFeature asNetworkFeature && asNetworkFeature.IsBeingMoved())
+                var asNetworkFeature = removedOrAddedItem as INetworkFeature;
+                if (asNetworkFeature != null && asNetworkFeature.IsBeingMoved())
                 {
                     return;
                 }
@@ -385,86 +445,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             }
         }
+        
+        /// <summary>
+        /// - Synchronize the coordinate system in the model with the network coordinate system
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
 
-        private void HandleSewerConnectionsChanged(NotifyCollectionChangedAction action, ISewerConnection sewerConnection)
+        private void NetworkCoordinateSystemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            switch (action)
+            if (DisableNetworkSynchronization) return;
+
+            if (sender == Network && e.PropertyName == nameof(CoordinateSystem))
             {
-                case NotifyCollectionChangedAction.Add:
-                    NamingHelper.MakeNamesUnique(Network.Branches);
-                    NetworkDiscretization.AddMissingLocationsForSewerConnections(sewerConnection);
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    NetworkDiscretization.ReplacePointsForRemovedBranch(sewerConnection);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
+                CoordinateSystem = Network.CoordinateSystem;
+                Network.UpdateGeodeticDistancesOfChannels();
             }
         }
 
-        private void HandleChannelsChanged(NotifyCollectionChangedAction action, IChannel channel)
-        {
-            switch (action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    foreach (var lateralSource in channel.BranchSources)
-                    {
-                        AddLateralSourceData(new Model1DLateralSourceData
-                        {
-                            Feature = lateralSource,
-                            UseSalt = UseSalinity,
-                            UseTemperature = UseTemperature
-                        });
-                    }
-
-                    ChannelFrictionDefinitions.Add(new ChannelFrictionDefinition(channel));
-                    ChannelInitialConditionDefinitions.Add(new ChannelInitialConditionDefinition(channel));
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    foreach (var lateralSource in channel.BranchSources)
-                    {
-                        RemoveLateralSourceData(lateralSource);
-                    }
-
-                    ChannelFrictionDefinitions.Remove(ChannelFrictionDefinitions.First(cfd => ReferenceEquals(cfd.Channel, channel)));
-                    ChannelInitialConditionDefinitions.Remove(ChannelInitialConditionDefinitions.First(cicd => ReferenceEquals(cicd.Channel, channel)));
-
-                    // remove all child data items
-                    var dataItemsToRemove = new List<IDataItem>();
-                    var networkDataItem = GetDataItemByValue(Network);
-
-                    if (networkDataItem != null)
-                    {
-                        foreach (var dataItem in networkDataItem.Children)
-                        {
-                            // check if child data item uses WaterFlowModelBranchFeatureValueConverter
-                            if (!(dataItem.ValueConverter is Model1DBranchFeatureValueConverter valueConverter) 
-                                || !(valueConverter.Location is IBranchFeature branchFeature))
-                            {
-                                continue;
-                            }
-
-                            // check if data item is related to the removed branch
-                            if (!channel.BranchFeatures.Contains(branchFeature))
-                            {
-                                continue;
-                            }
-
-                            dataItemsToRemove.Add(dataItem);
-                        }
-
-                        foreach (var dataItem in dataItemsToRemove)
-                        {
-                            dataItem.Unlink();
-                            dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
-                            networkDataItem.Children.Remove(dataItem);
-                        }
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(action), action, null);
-            }
-        }
 
         /// <summary>
         /// Called when a network is inserted into or linked to the model
