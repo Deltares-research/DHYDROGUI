@@ -234,13 +234,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (Network != null && Area != null)
                 {
                     //baseTypeChecking?
-                    features = Network.BranchFeatures.OfType<INameable>()
-                                .Concat(Area.AllHydroObjects)
-                                .Concat(Area.ObservationPoints)
-                                .Concat(Area.ObservationCrossSections)
-                                .Except(Network.Branches)
-                                .Except(Network.Retentions)
-                                    .Where(p => ids.Contains(p.Name)).OfType<IFeature>().ToArray(); 
+                    var allFeatures = Network.BranchFeatures.OfType<INameable>()
+                                             .Concat(Area.AllHydroObjects)
+                                             .Concat(Area.ObservationPoints)
+                                             .Concat(Area.ObservationCrossSections)
+                                             .Except(Network.Branches)
+                                             .Except(Network.Retentions)
+                                             .GroupBy(n => n.Name, StringComparer.InvariantCultureIgnoreCase)
+                                             .ToDictionary(g => g.Key, StringComparer.InvariantCultureIgnoreCase);
+
+                    features = new IFeature[ids.Length];
+                    for (int i = 0; i < ids.Length; i++)
+                    {
+                        if (allFeatures.TryGetValue(ids[i], out var grouping))
+                        {
+                            features[i] = grouping.OfType<IFeature>().FirstOrDefault();
+                        }
+                    }
                 }
                 else if ((ids != null || xCoordinates != null && yCoordinates != null) && FMHisFileFunctionStoreHelper.OutputStructuresGenerators.ContainsKey(featureName))
                 {
@@ -285,7 +295,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var functionName = function.Attributes[NcNameAttribute];
             if (function.Attributes[NcUseVariableSizeAttribute] == "false" 
-                && !string.IsNullOrEmpty(functionName)) 
+                && !string.IsNullOrEmpty(functionName))
             {
                 if (FeaturesByCoverage.ContainsKey(functionName))
                 {
