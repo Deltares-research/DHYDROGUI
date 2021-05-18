@@ -392,6 +392,7 @@
     <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
     <Compile Include="Validation\WaterFlowFMRoughnessValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTest.cs" />
+    <Compile Include="WaterFlowFMModelSynchronizeTest.cs" />
     <Compile Include="WaterFlowFMModelTest.CacheFile.cs" />
     <Compile Include="WaterFlowFMTestHelper.cs" />
     <Compile Include="WaterFlowFMModelNetworkTest.cs" />
@@ -479,6 +480,11 @@
     <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
       <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
       <Name>DeltaShell.NGHS.IO.TestUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
+      <Project>{4A0F7700-AA64-463F-A602-8C15E3886EC5}</Project>
+      <Name>DeltaShell.NGHS.TestUtils</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj">
       <Project>{7EC5B8E8-E326-4C4C-9D9B-E70388F0E4CA}</Project>

@@ -1398,7 +1398,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(model.Links[1].FaceIndex, Is.EqualTo(9));
             
             model.Network.Branches.Remove(model.Network.Branches[0]);
-            Assert.That(model.NetworkDiscretization.Locations.Values.Count, Is.EqualTo(16));
+            Assert.That(model.NetworkDiscretization.Locations.Values.Count, Is.EqualTo(15));
             Assert.That(model.Links.Count, Is.EqualTo(14)); //no links at start and end points 16-2 = 14
             Assert.That(model.Links[0].DiscretisationPointIndex, Is.EqualTo(1));
             Assert.That(model.Links[0].FaceIndex, Is.EqualTo(449));

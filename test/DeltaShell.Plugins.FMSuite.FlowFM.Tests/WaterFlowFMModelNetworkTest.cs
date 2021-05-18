@@ -74,7 +74,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var fmModel = new WaterFlowFMModel();
             var network = fmModel.Network;
             var discretization = fmModel.NetworkDiscretization;
-            var sewerConnection = new SewerConnection {Length = 100, Geometry = new LineString(new[]{ new Coordinate(0, 0), new Coordinate(0, 100) })};
+            var manhole1 = new Manhole {Compartments = {new Compartment()}};
+            var manhole2 = new Manhole {Compartments = {new Compartment()}};
+
+            var sewerConnection = new SewerConnection
+            {
+                Length = 100,
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, 100)
+                }),
+                Source = manhole1,
+                Target = manhole2
+            };
 
             network.Branches.Add(sewerConnection);
 
@@ -88,7 +101,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var fmModel = new WaterFlowFMModel();
             var network = fmModel.Network;
             var discretization = fmModel.NetworkDiscretization;
-            var sewerConnection = new SewerConnection { Length = 100, Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }) };
+
+            var manhole1 = new Manhole { Compartments = { new Compartment() } };
+            var manhole2 = new Manhole { Compartments = { new Compartment() } };
+            var sewerConnection = new SewerConnection
+            {
+                Length = 100,
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(0, 100) }),
+                Source = manhole1,
+                Target = manhole2
+            };
 
             network.Branches.Add(sewerConnection);
             network.Branches.Remove(sewerConnection);
