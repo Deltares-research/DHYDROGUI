@@ -501,13 +501,18 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             return branch;
         }
 
-        private void ImportGwswNetworkInFmModel(
-            ILookup<SewerFeatureType, GwswElement> elementTypesList, WaterFlowFMModel fmModel)
+        private void ImportGwswNetworkInFmModel(ILookup<SewerFeatureType, GwswElement> elementTypesList, WaterFlowFMModel fmModel)
         {
-            var network = fmModel?.Network;
-            network?.BeginEdit(new DefaultEditAction("Importing GWSW database."));
-            fmModel?.UnSubscribeFromNetwork(network);
+            if (fmModel is null)
+            {
+                return;
+            }
+
+            var network = fmModel.Network;
+            
+            network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
             var bubblingEnabledSetting = EventSettings.BubblingEnabled;
+            fmModel.DisableNetworkSynchronization = true;
             try
             {
                 var importedFeatureElements = SewerFeatureFactory.CreateSewerEntities(elementTypesList, this).ToArray();
@@ -538,7 +543,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             finally
             {
                 EventSettings.BubblingEnabled = bubblingEnabledSetting;
-                fmModel?.SubscribeToNetwork(network);
+                fmModel.DisableNetworkSynchronization = false;
                 network?.EndEdit();
             }
         }

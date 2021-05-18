@@ -13,6 +13,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
@@ -752,12 +753,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
             if (discretization == null) return;
 
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.None;
-
-            discretization.Clear();
-            discretization.AddLocations(discretization.GenerateSewerConnectionNetworkLocations());
-
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered;
+            discretization.DoWithPropertySet(nameof(discretization.SegmentGenerationMethod), SegmentGenerationMethod.None, () =>
+            {
+                discretization.Clear();
+                discretization.AddLocations(discretization.GenerateSewerConnectionNetworkLocations());
+            });
+            
             MapControl.SelectTool.RefreshSelection();
             MapControl.Refresh();
         }
