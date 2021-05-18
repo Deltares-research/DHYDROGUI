@@ -184,6 +184,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 operation.RelativeSearchCellSize = relSearchCellSize;
             }
 
+            var minSamplePoints = parameterItem.ReadProperty<int>(InitialConditionRegion.AveragingNumMin.Key, true, 1);
+            if (minSamplePoints >= 0)
+            {
+                operation.MinSamplePoints = minSamplePoints;
+            }
+
             var interpolationMethod = parameterItem.ReadProperty<string>(InitialConditionRegion.InterpolationMethod.Key)?.ToLower();
             switch (interpolationMethod)
             {

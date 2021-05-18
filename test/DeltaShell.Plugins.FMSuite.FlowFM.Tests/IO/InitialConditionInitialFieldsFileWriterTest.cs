@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("tif", "GeoTiff")]
         [TestCase("asc", "arcinfo")]
         [TestCase("xyz", "sample")]
-        public void WriteFile_WithImportSamplesOperation_WritesCorrectFileType(string fileExtension, string expFileType)
+        public void WriteFile_WithImportSamplesOperation_WritesCorrectFile(string fileExtension, string expFileType)
         {
             using (var temp = new TemporaryDirectory())
             {
@@ -240,7 +240,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var writeSpatialOperation = new ImportSamplesSpatialOperationExtension
                 {
-                    FilePath = $"quantity.{fileExtension}"
+                    FilePath = $"quantity.{fileExtension}",
+                    RelativeSearchCellSize = 1.23,
+                    MinSamplePoints = 4,
+                    AveragingMethod = GridCellAveragingMethod.SimpleAveraging,
+                    InterpolationMethod = SpatialInterpolationMethod.Averaging,
+                    Operand = PointwiseOperationType.Add
                 };
 
                 var writeModelDefinition = new WaterFlowFMModelDefinition();
@@ -252,12 +257,35 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Assert
                 Assert.That(filePath, Does.Exist);
 
-                string line = File.ReadAllLines(filePath).First(l => l.Contains("dataFileType"));
-                string fileType = line.Split('=')[1].Trim();
+                IDictionary<string, string> properties = GetProperties(filePath);
                 
-                Assert.That(fileType, Is.EqualTo(expFileType));
-
+                Assert.That(properties["quantity"], Is.EqualTo("waterlevel"));
+                Assert.That(properties["dataFile"], Is.EqualTo($"quantity.{fileExtension}"));
+                Assert.That(properties["dataFileType"], Is.EqualTo(expFileType));
+                Assert.That(properties["interpolationMethod"], Is.EqualTo("averaging"));
+                Assert.That(properties["operand"], Is.EqualTo("+"));
+                Assert.That(properties["locationType"], Is.EqualTo("2d"));
+                Assert.That(properties["averagingType"], Is.EqualTo("mean"));
+                Assert.That(properties["averagingRelSize"], Is.EqualTo("1.23"));
+                Assert.That(properties["averagingNumMin"], Is.EqualTo("4"));
             }
+        }
+
+        private static IDictionary<string, string> GetProperties(string filePath)
+        {
+            var dict = new Dictionary<string, string>();
+            
+            foreach (string line in File.ReadAllLines(filePath))
+            {
+                string[] kvp = line.Split('=');
+                if (kvp.Length != 2)
+                {
+                    continue;
+                }
+                dict[kvp[0].Trim()] = kvp[1].Trim();
+            }
+
+            return dict;
         }
     }
 }

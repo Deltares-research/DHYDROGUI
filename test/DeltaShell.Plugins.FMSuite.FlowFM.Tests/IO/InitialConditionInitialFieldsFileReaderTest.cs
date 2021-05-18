@@ -462,7 +462,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [Category(TestCategory.DataAccess)]
         [TestCase("tif", "GeoTiff")]
         [TestCase("asc", "arcinfo")]
-        public void ReadFile_(string extension, string fileType)
+        public void ReadFile_CreatesTheCorrectSpatialOperation(string extension, string fileType)
         {
             using (var temp = new TemporaryDirectory())
             {
@@ -480,7 +480,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "    operand               = O                   " + Environment.NewLine +
                     "    locationType          = 2d                  " + Environment.NewLine +
                     "    averagingType         = nearestNb           " + Environment.NewLine +
-                    "    averagingRelSize      = 1                   " + Environment.NewLine;
+                    "    averagingRelSize      = 1                   " + Environment.NewLine +
+                    "    averagingNumMin       = 4                   ";
 
 
                 string filePath = temp.CreateFile("initialFields.ini", content);
@@ -499,8 +500,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(spatialOperation.AveragingMethod, Is.EqualTo(GridCellAveragingMethod.ClosestPoint));
                 Assert.That(spatialOperation.RelativeSearchCellSize, Is.EqualTo(1));
                 Assert.That(spatialOperation.InterpolationMethod, Is.EqualTo(SpatialInterpolationMethod.Averaging));
+                Assert.That(spatialOperation.MinSamplePoints, Is.EqualTo(4));
             }
         }
-
     }
 }

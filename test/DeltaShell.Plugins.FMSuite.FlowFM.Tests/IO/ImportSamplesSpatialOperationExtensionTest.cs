@@ -18,6 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const string name = "some_name";
             const string filePath = "some_file_path";
             const double relativeSearchSize = 1.23;
+            const int minSamplePoints = 4;
 
             var importSamplesSpatialOperationExtension = new ImportSamplesSpatialOperationExtension
             {
@@ -27,6 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 InterpolationMethod = interpolationMethod,
                 AveragingMethod = averagingMethod,
                 RelativeSearchCellSize = relativeSearchSize,
+                MinSamplePoints = 4,
                 Operand = operand
             };
 
@@ -45,6 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(interpolateOperation.Dirty, Is.True);
             Assert.That(interpolateOperation.Enabled, Is.EqualTo(enabled));
             Assert.That(interpolateOperation.RelativeSearchCellSize, Is.EqualTo(relativeSearchSize));
+            Assert.That(interpolateOperation.MinNumSamples, Is.EqualTo(minSamplePoints));
             Assert.That(interpolateOperation.GridCellAveragingMethod, Is.EqualTo(averagingMethod));
             Assert.That(interpolateOperation.InterpolationMethod, Is.EqualTo(interpolationMethod));
             Assert.That(interpolateOperation.OperationType, Is.EqualTo(operand));

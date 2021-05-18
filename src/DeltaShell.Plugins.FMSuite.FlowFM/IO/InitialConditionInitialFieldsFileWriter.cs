@@ -65,6 +65,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             category.AddProperty(InitialConditionRegion.AveragingType.Key, GetAveragingType(averagingTypeInt));
                         if (forceFileItem.ModelData.TryGetValue(ExtForceFile.RelSearchCellSizeKey, out var relSearchCellSize))
                             category.AddProperty(InitialConditionRegion.AveragingRelSize.Key, relSearchCellSize.ToString());
+                        if (forceFileItem.ModelData.TryGetValue(ExtForceFile.MinSamplePointsKey, out var minSamplePoints))
+                            category.AddProperty(InitialConditionRegion.AveragingNumMin.Key, minSamplePoints.ToString());
                     }
 
                     if (!Double.IsNaN(forceFileItem.Value) && forceFileItem.FileType == ExtForceQuantNames.FileTypes.InsidePolygon)

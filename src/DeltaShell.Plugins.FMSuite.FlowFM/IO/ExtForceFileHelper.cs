@@ -28,12 +28,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     {
         public virtual double RelativeSearchCellSize { get; set; }
         public virtual GridCellAveragingMethod AveragingMethod { get; set; }
+        public virtual int MinSamplePoints { get; set; }
         public virtual SpatialInterpolationMethod InterpolationMethod { get; set; }
         public virtual PointwiseOperationType Operand { get; set; }
         
         public ImportSamplesSpatialOperationExtension() : base(false)
         {
             RelativeSearchCellSize = 1;
+            MinSamplePoints = 1;
             AveragingMethod = GridCellAveragingMethod.ClosestPoint;
             InterpolationMethod = SpatialInterpolationMethod.Averaging;
         }
@@ -56,6 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 Dirty = true,
                 Enabled = Enabled,
                 RelativeSearchCellSize = RelativeSearchCellSize,
+                MinNumSamples = MinSamplePoints,
                 GridCellAveragingMethod = AveragingMethod,
                 InterpolationMethod = InterpolationMethod,
                 OperationType = Operand
@@ -713,8 +716,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (importSamplesOperation.InterpolationMethod == SpatialInterpolationMethod.Averaging)
             {
                 extForceFileItem.ModelData[ExtForceFile.AveragingTypeKey] = (int) importSamplesOperation.AveragingMethod;
-                extForceFileItem.ModelData[ExtForceFile.RelSearchCellSizeKey] =
-                    importSamplesOperation.RelativeSearchCellSize;
+                extForceFileItem.ModelData[ExtForceFile.RelSearchCellSizeKey] = importSamplesOperation.RelativeSearchCellSize;
+                extForceFileItem.ModelData[ExtForceFile.MinSamplePointsKey] = importSamplesOperation.MinSamplePoints;
             }
 
             extForceFileItem.Enabled = importSamplesOperation.Enabled;
@@ -737,6 +740,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             };
             forceFileItem.ModelData[ExtForceFile.AveragingTypeKey] = (int) GridCellAveragingMethod.ClosestPoint;
             forceFileItem.ModelData[ExtForceFile.RelSearchCellSizeKey] = 1.0;
+            forceFileItem.ModelData[ExtForceFile.MinSamplePointsKey] = 1;
 
             if (writeToDisk)
             {

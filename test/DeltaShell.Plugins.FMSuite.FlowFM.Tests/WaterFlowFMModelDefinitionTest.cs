@@ -1438,12 +1438,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             const string name = "some_name";
             const string filePath = "some_file_path";
             const double relativeSearchSize = 1.23;
+            const int minSamplePoints = 4;
 
             var interpolateOperation = new InterpolateOperation
             {
                 InterpolationMethod = interpolationMethod,
                 GridCellAveragingMethod = averagingMethod,
                 RelativeSearchCellSize = relativeSearchSize,
+                MinNumSamples = minSamplePoints,
                 OperationType = operand
             };
             var importSamplesOperation = new ImportSamplesOperation(false)
@@ -1471,6 +1473,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(convertedOperation.InterpolationMethod, Is.EqualTo(interpolationMethod));
             Assert.That(convertedOperation.AveragingMethod, Is.EqualTo(averagingMethod));
             Assert.That(convertedOperation.RelativeSearchCellSize, Is.EqualTo(relativeSearchSize));
+            Assert.That(convertedOperation.MinSamplePoints, Is.EqualTo(minSamplePoints));
             Assert.That(convertedOperation.Operand, Is.EqualTo(operand));
         }
     }
