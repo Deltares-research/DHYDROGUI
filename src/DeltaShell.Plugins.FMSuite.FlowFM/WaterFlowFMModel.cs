@@ -164,7 +164,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             AddDataItem(network, DataItemRole.Input, WaterFlowFMModelDataSet.NetworkTag);
             networkDataItem = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag);
             SubscribeToNetwork(network);
-            NetworkDiscretization = new Discretization {Network = network, Name = DiscretizationObjectName, SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered };
+            NetworkDiscretization = new Discretization
+            {
+                Network = network, 
+                Name = DiscretizationObjectName, 
+                SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsAndConnectedBranchesWithoutLocationOnThemFullyCovered
+            };
             
             // q's supplied by externals
             AddInflowsDataItem();
