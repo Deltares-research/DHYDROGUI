@@ -241,8 +241,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var writeSpatialOperation = new ImportSamplesSpatialOperationExtension
                 {
                     FilePath = $"quantity.{fileExtension}",
-                    RelativeSearchCellSize = 1.23,
-                    MinSamplePoints = 4,
+                    RelativeSearchCellSize = 1234.5678,
+                    MinSamplePoints = 9,
                     AveragingMethod = GridCellAveragingMethod.SimpleAveraging,
                     InterpolationMethod = SpatialInterpolationMethod.Averaging,
                     Operand = PointwiseOperationType.Add
@@ -266,8 +266,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(properties["operand"], Is.EqualTo("+"));
                 Assert.That(properties["locationType"], Is.EqualTo("2d"));
                 Assert.That(properties["averagingType"], Is.EqualTo("mean"));
-                Assert.That(properties["averagingRelSize"], Is.EqualTo("1.23"));
-                Assert.That(properties["averagingNumMin"], Is.EqualTo("4"));
+                Assert.That(properties["averagingRelSize"], Is.EqualTo("1234.5678"));
+                Assert.That(properties["averagingNumMin"], Is.EqualTo("9"));
             }
         }
 
