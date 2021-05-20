@@ -59,6 +59,7 @@
     <Compile Include="Utils\MigrationHelper.cs" />
     <Compile Include="Utils\NameableCollectionExtensions.cs" />
     <Compile Include="Utils\UniqueFileNameProvider.cs" />
+    <Compile Include="Utils\UniqueStringProvider.cs" />
     <Compile Include="Validation\RestartTimeRangeValidator.cs" />
   </ItemGroup>
   <ItemGroup>

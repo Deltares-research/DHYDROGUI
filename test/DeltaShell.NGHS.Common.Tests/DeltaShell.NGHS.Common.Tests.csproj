@@ -114,6 +114,7 @@
     <Compile Include="SystemEnvironmentTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="Utils\NameableCollectionExtensionsTest.cs" />
+    <Compile Include="Utils\UniqueStringProviderTest.cs" />
     <Compile Include="Validation\RestartTimeRangeValidatorTest.cs" />
   </ItemGroup>
   <ItemGroup>
