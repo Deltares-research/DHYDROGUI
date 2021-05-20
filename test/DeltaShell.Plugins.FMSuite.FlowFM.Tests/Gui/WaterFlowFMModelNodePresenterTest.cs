@@ -3,6 +3,7 @@ using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
@@ -14,6 +15,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui;
 using DeltaShell.Plugins.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.SharpMapGis.Gui;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
@@ -206,6 +208,45 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var after = TestReferenceHelper.FindEventSubscriptions(outputFunction, true);
 
             Assert.AreEqual(before, after);
+        }
+        
+        [Test]
+        public void GetChildNodeObjects_ContainsCorrectObjects()
+        {
+            // Setup
+            var guiPlugin = Substitute.For<GuiPlugin>();
+            var graphicsProvider = Substitute.For<IGraphicsProvider>();
+            guiPlugin.GraphicsProvider.Returns(graphicsProvider);
+            
+            var nodePresenter = new WaterFlowFMModelNodePresenter(guiPlugin);
+            var model = new WaterFlowFMModel();
+            
+            // Call
+            var objects = nodePresenter.GetChildNodeObjects(model, null).Cast<object>().ToArray();
+            
+            // Assert
+            var physicalParameters = objects
+                                     .OfType<TreeFolder>().First(f => f.Text == "2D").ChildItems
+                                     .OfType<FmModelTreeShortcut>().First(f => f.Text == "Physical Parameters")
+                                     .ChildObjects.ToArray();
+
+            var roughness = GetShortCut(physicalParameters, "Roughness");
+            Assert.That(roughness.Data, Is.SameAs(model.Roughness));
+            
+            var viscosity = GetShortCut(physicalParameters, "Viscosity");
+            Assert.That(viscosity.Data, Is.SameAs(model.Viscosity));
+            
+            var diffusivity = GetShortCut(physicalParameters, "Diffusivity");
+            Assert.That(diffusivity.Data, Is.SameAs(model.Diffusivity));
+            
+            var infiltration = GetShortCut(physicalParameters, "Infiltration");
+            Assert.That(infiltration.Data, Is.SameAs(model.Infiltration));
+            
+        }
+
+        private static FmModelTreeShortcut GetShortCut(object[] objects, string text)
+        {
+            return objects.OfType<FmModelTreeShortcut>().First(f => f.Text == text);
         }
 
 

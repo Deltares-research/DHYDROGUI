@@ -192,6 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.RoughnessDataItemName, Resources.Roughness, model, model.Roughness, ShortCutType.SpatialCoverage);
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.ViscosityDataItemName, Resources.tube, model, model.Viscosity, ShortCutType.SpatialCoverage);
             yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.DiffusivityDataItemName, Resources.drop, model, model.Diffusivity, ShortCutType.SpatialCoverage);
+            yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InfiltrationDataItemName, Resources.drop, model, model.Infiltration, ShortCutType.SpatialCoverage);
            
             if (model.ModelDefinition.HeatFluxModel.MeteoData != null)
             {
