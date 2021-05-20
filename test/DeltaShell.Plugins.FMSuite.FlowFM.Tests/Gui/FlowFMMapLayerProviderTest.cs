@@ -540,6 +540,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             Assert.AreEqual(2, layersWithoutOrder);
         }
 
+        [Test]
+        public void ChildLayerObjects_ContainsCorrectObjects()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            var layerProvider = new FlowFMMapLayerProvider();
+            
+            // Precondition
+            Assert.That(model.Infiltration, Is.Not.Null);
+            
+            // Call
+            object[] objects = layerProvider.ChildLayerObjects(model).ToArray();
+            
+            // Assert
+            Assert.That(objects, Contains.Item(model.Bathymetry));
+            Assert.That(objects, Contains.Item(model.InitialWaterLevel));
+            Assert.That(objects, Contains.Item(model.Roughness));
+            Assert.That(objects, Contains.Item(model.Viscosity));
+            Assert.That(objects, Contains.Item(model.Diffusivity));
+            Assert.That(objects, Contains.Item(model.Infiltration));
+        }
+
         #region Test helper methods
         private static void ShowModelLayers(WaterFlowFMModel model)
         {

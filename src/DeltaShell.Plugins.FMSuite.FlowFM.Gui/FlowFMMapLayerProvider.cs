@@ -546,6 +546,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 yield return model.Roughness;
                 yield return model.Viscosity;
                 yield return model.Diffusivity;
+                yield return model.Infiltration;
 
                 if (model.HeatFluxModelType != HeatFluxModelType.None)
                 {
@@ -686,7 +687,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     model.Roughness,
                     model.Bathymetry,
                     model.Viscosity,
-                    model.Diffusivity
+                    model.Diffusivity,
+                    model.Infiltration
                 }
                 .Where(o => o != null)
                 .ToList();
