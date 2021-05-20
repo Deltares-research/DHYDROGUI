@@ -228,17 +228,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        [TestCase("tif", "GeoTiff")]
-        [TestCase("asc", "arcinfo")]
-        [TestCase("xyz", "sample")]
-        public void WriteFile_WithImportSamplesOperation_WritesCorrectFile(string fileExtension, string expFileType)
+        [TestCase("tif", "GeoTiff", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, "waterlevel" )]
+        [TestCase("asc", "arcinfo", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, "waterlevel")]
+        [TestCase("xyz", "sample", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, "waterlevel")]
+        [TestCase("tif", "GeoTiff", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
+        [TestCase("asc", "arcinfo", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
+        [TestCase("xyz", "sample", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
+        public void WriteFile_WithImportSamplesOperation_WritesCorrectFile(string fileExtension, string expFileType, string dataItemName, string expQuantity)
         {
             using (var temp = new TemporaryDirectory())
             {
                 // Setup
                 string filePath = Path.Combine(temp.Path, "initialFields.ini");
 
-                var writeSpatialOperation = new ImportSamplesSpatialOperationExtension
+                var operation = new ImportSamplesSpatialOperationExtension
                 {
                     FilePath = $"quantity.{fileExtension}",
                     RelativeSearchCellSize = 1234.5678,
@@ -249,7 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
 
                 var writeModelDefinition = new WaterFlowFMModelDefinition();
-                writeModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.InitialWaterLevelDataItemName] = new List<ISpatialOperation> {writeSpatialOperation};
+                writeModelDefinition.SpatialOperations[dataItemName] = new List<ISpatialOperation> {operation};
 
                 // Call
                 InitialConditionInitialFieldsFileWriter.WriteFile(filePath, writeModelDefinition, true);
@@ -259,7 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 IDictionary<string, string> properties = GetProperties(filePath);
                 
-                Assert.That(properties["quantity"], Is.EqualTo("waterlevel"));
+                Assert.That(properties["quantity"], Is.EqualTo(expQuantity));
                 Assert.That(properties["dataFile"], Is.EqualTo($"quantity.{fileExtension}"));
                 Assert.That(properties["dataFileType"], Is.EqualTo(expFileType));
                 Assert.That(properties["interpolationMethod"], Is.EqualTo("averaging"));
