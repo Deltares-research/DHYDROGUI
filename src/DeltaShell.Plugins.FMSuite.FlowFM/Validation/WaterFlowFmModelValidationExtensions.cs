@@ -104,6 +104,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             ValidateCoverageValues(model, model.Roughness, issues);
             ValidateCoverageValues(model, model.Viscosity, issues);
             ValidateCoverageValues(model, model.Diffusivity, issues);
+            ValidateCoverageValues(model, model.Infiltration, issues);
 
             return new ValidationReport("Physical Processes", issues);
         }

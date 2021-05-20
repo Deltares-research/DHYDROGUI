@@ -159,6 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, waterFlowFMModel.InitialWaterLevel);
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.ViscosityDataItemName, waterFlowFMModel.Viscosity);
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.DiffusivityDataItemName, waterFlowFMModel.Diffusivity);
+            SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InfiltrationDataItemName, waterFlowFMModel.Infiltration);
             SynchronizeDataItemValue(waterFlowFMModel, WaterFlowFMModelDefinition.InitialTemperatureDataItemName, waterFlowFMModel.InitialTemperature);
             SynchronizeDataItemValues(waterFlowFMModel, WaterFlowFMModelDefinition.InitialSalinityDataItemName, waterFlowFMModel.InitialSalinity);
 
@@ -182,6 +183,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.InitialWaterLevel);
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Viscosity);
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Diffusivity);
+            ExecuteOperations(waterFlowFMModel, waterFlowFMModel.Infiltration);
             ExecuteOperations(waterFlowFMModel, waterFlowFMModel.InitialTemperature);
             foreach (var cov in waterFlowFMModel.InitialSalinity.Coverages)
             {

@@ -380,6 +380,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
 
             UpdateNewDataItem(waterQuantityName, InitialWaterLevel);
+            UpdateNewDataItem(WaterFlowFMModelDefinition.InfiltrationDataItemName, Infiltration);
 
         }
 

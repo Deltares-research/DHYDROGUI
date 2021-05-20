@@ -694,6 +694,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             AddOrRenameDataItem(Roughness, WaterFlowFMModelDefinition.RoughnessDataItemName);
             AddOrRenameDataItem(Viscosity, WaterFlowFMModelDefinition.ViscosityDataItemName);
             AddOrRenameDataItem(Diffusivity, WaterFlowFMModelDefinition.DiffusivityDataItemName);
+            AddOrRenameDataItem(Infiltration, WaterFlowFMModelDefinition.InfiltrationDataItemName);
             AddOrRenameDataItem(InitialTemperature, WaterFlowFMModelDefinition.InitialTemperatureDataItemName);
             AddOrRenameDataItems(InitialSalinity, WaterFlowFMModelDefinition.InitialSalinityDataItemName);
             AddOrRenameTracerDataItems();
@@ -820,6 +821,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return Viscosity;
             yield return Diffusivity;
             yield return Roughness;
+            yield return Infiltration;
             yield return InitialWaterLevel;
             yield return InitialTemperature;
             yield return InitialTracers;

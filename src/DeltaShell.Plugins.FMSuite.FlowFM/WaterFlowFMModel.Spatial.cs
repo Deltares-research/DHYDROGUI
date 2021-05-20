@@ -42,6 +42,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public UnstructuredGridFlowLinkCoverage Roughness { get; private set; }
         public UnstructuredGridFlowLinkCoverage Viscosity { get; private set; }
         public UnstructuredGridFlowLinkCoverage Diffusivity { get; private set; }
+        public UnstructuredGridCellCoverage Infiltration { get; private set; }
         public IEventedList<UnstructuredGridCellCoverage> InitialTracers { get; private set; }
         public IEventedList<UnstructuredGridCellCoverage> InitialFractions { get; private set; }
 
@@ -309,6 +310,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 yield return Roughness;
                 yield return Viscosity;
                 yield return Diffusivity;
+                yield return Infiltration;
             }
         }
 
@@ -364,6 +366,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             Diffusivity =
                 CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.DiffusivityDataItemName, Grid);
             Roughness = CreateUnstructuredGridFlowLinkCoverage(WaterFlowFMModelDefinition.RoughnessDataItemName, Grid);
+            Infiltration = CreateUnstructuredGridCellCoverage(WaterFlowFMModelDefinition.InfiltrationDataItemName, Grid);
             InitialFractions = new EventedList<UnstructuredGridCellCoverage>();
             InitialFractions.CollectionChanged += SpatialDataFractionsChanged;
         }
@@ -475,6 +478,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Roughness, g => Roughness = g);
             UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Viscosity, g => Viscosity = g);
             UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Diffusivity, g => Diffusivity = g);
+            UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, Infiltration, g => Infiltration = g);
             UpdateCoverageGrid(newGrid, nodesChanged, cellsChanged, linksChanged, InitialTemperature, g => InitialTemperature = g);
             
             if (InitialSalinity != null)
@@ -760,6 +764,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 CreateCacheForCoverage(Roughness);
                 CreateCacheForCoverage(Viscosity);
                 CreateCacheForCoverage(Diffusivity);
+                CreateCacheForCoverage(Infiltration);
                 CreateCacheForCoverage(InitialTemperature);
                 InitialSalinity?.Coverages.OfType<UnstructuredGridCoverage>().ForEach(CreateCacheForCoverage);
                 InitialTracers?.ForEach(CreateCacheForCoverage);
@@ -790,6 +795,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 UpdateCoverageOnGridStateChange(Roughness, g => Roughness = g);
                 UpdateCoverageOnGridStateChange(Viscosity, g => Viscosity = g);
                 UpdateCoverageOnGridStateChange(Diffusivity, g => Diffusivity = g);
+                UpdateCoverageOnGridStateChange(Infiltration, g => Infiltration = g);
                 UpdateCoverageOnGridStateChange(InitialTemperature, g => InitialTemperature = g);
 
                 InitialSalinity?.Coverages
