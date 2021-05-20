@@ -38,20 +38,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (categories.Count == 0) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
             
             ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
-            if (categories.Any(c => c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase) &&
-                                    c.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all")
-                                        .Equals("2d", StringComparison.InvariantCultureIgnoreCase) &&
-                                    c.ReadProperty<string>(InitialConditionRegion.Quantity.Key)
-                                        .Equals(ExtForceQuantNames.WaterLevel, StringComparison.InvariantCultureIgnoreCase)))
+            if (categories.Any(IsInitialField(ExtForceQuantNames.WaterLevel)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterLevel).ToString());
                 ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.WaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
             }
-            else if (categories.Any(c => c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase) &&
-                                    c.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all")
-                                        .Equals("2d", StringComparison.InvariantCultureIgnoreCase) &&
-                                    c.ReadProperty<string>(InitialConditionRegion.Quantity.Key)
-                                        .Equals(ExtForceQuantNames.WaterDepth, StringComparison.InvariantCultureIgnoreCase)))
+            else if (categories.Any(IsInitialField(ExtForceQuantNames.WaterDepth)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterDepth).ToString());
                 ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.WaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
@@ -73,6 +65,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 ? ReadInitialConditionCategory(modelDefinition, initialConditionCategories.First())
                 : (InitialConditionQuantity.WaterLevel, "");
 
+        }
+
+        private static Func<DelftIniCategory, bool> IsInitialField(string quantity)
+        {
+            return c => c.Name.Equals(InitialConditionRegion.InitialConditionIniHeader, StringComparison.InvariantCultureIgnoreCase) &&
+                        c.ReadProperty<string>(InitialConditionRegion.LocationType.Key, true, "all")
+                         .Equals("2d", StringComparison.InvariantCultureIgnoreCase) &&
+                        c.ReadProperty<string>(InitialConditionRegion.Quantity.Key)
+                         .Equals(quantity, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private static void ReadSpatialOperation(
