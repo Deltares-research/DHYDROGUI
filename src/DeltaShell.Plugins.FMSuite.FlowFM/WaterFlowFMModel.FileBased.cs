@@ -379,16 +379,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
                     : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName;
 
-            if (!AllDataItems.Any(di => di.Name.Equals(waterQuantityName, StringComparison.CurrentCultureIgnoreCase)))
+            UpdateNewDataItem(waterQuantityName, InitialWaterLevel);
+
+        }
+
+        private void UpdateNewDataItem(string quantityName, UnstructuredGridCoverage coverage)
+        {
+            if (AllDataItems.Any(di => di.Name.Equals(quantityName, StringComparison.CurrentCultureIgnoreCase)))
             {
-                AddOrRenameDataItem(InitialWaterLevel,
-                    initialWaterQuantityNameType == InitialConditionQuantity.WaterLevel
-                        ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
-                        : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName);
-                UpdateSpatialDataAfterGridSet(grid, false, false, false);
-                ImportSpatialOperationsAfterCreating(new EventedList<IDataItem>() { GetDataItemByValue(InitialWaterLevel) });
+                return;
             }
 
+            AddOrRenameDataItem(coverage, quantityName);
+            UpdateSpatialDataAfterGridSet(grid, false, false, false);
+            ImportSpatialOperationsAfterCreating(new EventedList<IDataItem> {GetDataItemByValue(coverage)});
         }
 
         internal void ImportSpatialOperationsAfterLoading()
