@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Validators;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -100,28 +101,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             var issues = new List<ValidationIssue>();
 
-            var roughnessValues = model.Roughness.GetValues<double>();
-            if (roughnessValues.Contains(model.Roughness.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                    string.Format("Roughness contains unspecified points, the calculation kernel will replace these with default values")));
-            }
-
-            var viscosityValues = model.Viscosity.GetValues<double>();
-            if (viscosityValues.Contains(model.Viscosity.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                    string.Format("Viscosity contains unspecified points, the calculation kernel will replace these with default values")));
-            }
-
-            var diffusivityValues = model.Diffusivity.GetValues<double>();
-            if (diffusivityValues.Contains(model.Diffusivity.Components[0].NoDataValue))
-            {
-                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                    string.Format("Diffusivity contains unspecified points, the calculation kernel will replace these with default values")));
-            }
+            ValidateCoverageValues(model, model.Roughness, issues);
+            ValidateCoverageValues(model, model.Viscosity, issues);
+            ValidateCoverageValues(model, model.Diffusivity, issues);
 
             return new ValidationReport("Physical Processes", issues);
+        }
+
+        private static void ValidateCoverageValues(IModel model, UnstructuredGridCoverage coverage, ICollection<ValidationIssue> issues)
+        {
+            var values = coverage.GetValues<double>();
+            if (values.Contains(coverage.Components[0].NoDataValue))
+            {
+                issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
+                                               $"{coverage.Name} contains unspecified points, the calculation kernel will replace these with default values."));
+            }
         }
 
         private static ValidationReport ValidateBathymetry(WaterFlowFMModel model)
