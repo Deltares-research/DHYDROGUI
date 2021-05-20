@@ -19,5 +19,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// The bed level quantity.
         /// </summary>
         public const string BedLevel = "bedlevel";
+
+        /// <summary>
+        /// The infiltration quantity.
+        /// </summary>
+        public const string Infiltration = "InfiltrationCapacity";
     }
 }
