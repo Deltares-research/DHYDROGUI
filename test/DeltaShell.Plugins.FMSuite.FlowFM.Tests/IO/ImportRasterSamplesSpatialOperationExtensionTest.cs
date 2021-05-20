@@ -6,7 +6,7 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
     [TestFixture]
-    public class ImportSamplesSpatialOperationExtensionTest
+    public class ImportRasterSamplesSpatialOperationExtensionTest
     {
         [Test]
         public void CreateOperations_CreatesCorrectOperations(
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const double relativeSearchSize = 1.23;
             const int minSamplePoints = 4;
 
-            var importSamplesSpatialOperationExtension = new ImportSamplesSpatialOperationExtension
+            var operation = new ImportRasterSamplesSpatialOperationExtension()
             {
                 Name = name,
                 FilePath = filePath,
@@ -33,10 +33,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             // Call
-            Tuple<ImportSamplesOperation, InterpolateOperation> convertedOperations = importSamplesSpatialOperationExtension.CreateOperations();
+            Tuple<ImportSamplesOperation, InterpolateOperation> convertedOperations = operation.CreateOperations();
 
             // Assert
             ImportSamplesOperation importSamplesOperation = convertedOperations.First;
+            Assert.That(importSamplesOperation, Is.TypeOf<ImportRasterSamplesSpatialOperationExtension>());
             Assert.That(importSamplesOperation.Name, Is.EqualTo(name));
             Assert.That(importSamplesOperation.Dirty, Is.True);
             Assert.That(importSamplesOperation.Enabled, Is.EqualTo(enabled));

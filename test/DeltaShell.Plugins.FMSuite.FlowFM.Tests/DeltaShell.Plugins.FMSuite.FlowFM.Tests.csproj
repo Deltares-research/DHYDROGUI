@@ -346,6 +346,7 @@
     <Compile Include="IO\Importers\QhFileImporterTest.cs" />
     <Compile Include="IO\Importers\SourceAndSinkImportExtensionsTest.cs" />
     <Compile Include="IO\Importers\TimFileImporterTest.cs" />
+    <Compile Include="IO\ImportRasterSamplesSpatialOperationExtensionTest.cs" />
     <Compile Include="IO\ImportSamplesSpatialOperationExtensionTest.cs" />
     <Compile Include="IO\InitialConditionInitialFieldsFileReaderTest.cs" />
     <Compile Include="IO\InitialConditionInitialFieldsFileWriterTest.cs" />

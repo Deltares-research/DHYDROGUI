@@ -42,18 +42,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public virtual DelftTools.Utils.Tuple<ImportSamplesOperation, InterpolateOperation> CreateOperations()
         {
-            var importSamplesOperation = new ImportSamplesOperation(false)
-            {
-                Name = Name,
-                CoordinateSystem = CoordinateSystem,
-                Dirty = true,
-                Enabled = Enabled,
-                FilePath = FilePath,
-            };
+            var importSamplesOperation = CreateImportSamplesOperation();
 
             var interpolateOperation = new InterpolateOperation
             {
-                Name = "Interpolation",
+                Name = "Interpolate",
                 CoordinateSystem = CoordinateSystem,
                 Dirty = true,
                 Enabled = Enabled,
@@ -66,6 +59,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             interpolateOperation.Mask.Provider = new FeatureCollection(new List<Feature>(), typeof(Feature));
             interpolateOperation.LinkInput(InterpolateOperation.InputSamplesName, importSamplesOperation.Output);
             return new DelftTools.Utils.Tuple<ImportSamplesOperation, InterpolateOperation>(importSamplesOperation, interpolateOperation);
+        }
+
+        protected virtual ImportSamplesOperation CreateImportSamplesOperation()
+        {
+            return new ImportSamplesOperation(false)
+            {
+                Name = Name,
+                CoordinateSystem = CoordinateSystem,
+                Dirty = true,
+                Enabled = Enabled,
+                FilePath = FilePath,
+            };
         }
     }
 
