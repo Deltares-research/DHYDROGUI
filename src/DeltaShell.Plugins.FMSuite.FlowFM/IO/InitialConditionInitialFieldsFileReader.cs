@@ -38,6 +38,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (categories.Count == 0) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
             
             ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
+            
+            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFileConstants.BedLevel, WaterFlowFMModelDefinition.BathymetryDataItemName, modelDefinition);
+            
             if (categories.Any(IsInitialField(InitialFieldsFileConstants.WaterLevel)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterLevel).ToString());

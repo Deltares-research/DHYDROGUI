@@ -460,9 +460,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [TestCase("tif", "GeoTiff")]
-        [TestCase("asc", "arcinfo")]
-        public void ReadFile_CreatesTheCorrectSpatialOperation(string extension, string fileType)
+        [TestCase("tif", "GeoTiff", "waterlevel", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName)]
+        [TestCase("asc", "arcinfo", "waterlevel", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName)]
+        [TestCase("tif", "GeoTiff", "bedlevel", WaterFlowFMModelDefinition.BathymetryDataItemName)]
+        [TestCase("asc", "arcinfo", "bedlevel", WaterFlowFMModelDefinition.BathymetryDataItemName)]
+        public void ReadFile_CreatesTheCorrectSpatialOperation(string extension, string fileType, string quantity, string dataItemName)
         {
             using (var temp = new TemporaryDirectory())
             {
@@ -473,7 +475,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "    fileType              = iniField            " + Environment.NewLine +
                     "                                                " + Environment.NewLine +
                     "[Initial]                                       " + Environment.NewLine +
-                    "    quantity              = waterlevel          " + Environment.NewLine +
+                    $"   quantity              = {quantity}          " + Environment.NewLine +
                     $"   dataFile              = quantity.{extension}" + Environment.NewLine +
                     $"   dataFileType          = {fileType}          " + Environment.NewLine +
                     "    interpolationMethod   = averaging           " + Environment.NewLine +
@@ -491,7 +493,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 InitialConditionInitialFieldsFileReader.ReadFile(filePath, modelDefinition);
                 
                 // Assert
-                var spatialOperation = modelDefinition.SpatialOperations[WaterFlowFMModelDefinition.InitialWaterLevelDataItemName].Single() as ImportRasterSamplesSpatialOperationExtension;
+                var spatialOperation = modelDefinition.SpatialOperations[dataItemName].Single() as ImportRasterSamplesSpatialOperationExtension;
                 
                 Assert.That(spatialOperation, Is.Not.Null);
                 Assert.That(spatialOperation.Name, Is.EqualTo("quantity"));
