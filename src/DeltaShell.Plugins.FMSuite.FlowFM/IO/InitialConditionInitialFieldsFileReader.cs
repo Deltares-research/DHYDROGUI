@@ -40,6 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
             
             ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFileConstants.BedLevel, WaterFlowFMModelDefinition.BathymetryDataItemName, modelDefinition);
+            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFileConstants.Infiltration, WaterFlowFMModelDefinition.InfiltrationDataItemName, modelDefinition);
             
             if (categories.Any(IsInitialField(InitialFieldsFileConstants.WaterLevel)))
             {
