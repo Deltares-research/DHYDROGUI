@@ -14,5 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// The water depth quantity.
         /// </summary>
         public const string WaterDepth = "waterdepth";
+
+        /// <summary>
+        /// The bed level quantity.
+        /// </summary>
+        public const string BedLevel = "bedlevel";
     }
 }
