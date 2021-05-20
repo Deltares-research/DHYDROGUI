@@ -380,6 +380,7 @@
     <Compile Include="MapFileImporterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Layers\UnstructuredGridVertexCoverageLayerTest.cs" />
+    <Compile Include="Spatial\SpatialOperationHelperTest.cs" />
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="UnstructuredGridCoverageExtensionsTest.cs" />
     <Compile Include="Validation\VerticalProfileValidatorTests.cs" />
@@ -492,7 +493,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>

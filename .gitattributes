@@ -2282,6 +2282,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/Resources/validation.png -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Scripts/Examples/FlowFlexibleMesh.py -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Scripts/Libraries/FlowFlexibleMeshFunctions.py -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/SedimentModelDataItem.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/Spatial/SpatialOperationHelper.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Uml/FlowBoundaryConditions.cd -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Uml/FlowFMOverview.cd -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Uml/HydroAreaCollection.cd -text
@@ -5164,6 +5165,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/ModelDefinition/ISedimentFractionEx
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Nini.dll -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Properties/AssemblyInfo.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/ScriptingTest/FlowFlexibleMeshFunctionsScriptTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Spatial/SpatialOperationHelperTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/TestClassSetup.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/UnstructuredGridCoverageExtensionsTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Validation/VerticalProfileValidatorTests.cs -text

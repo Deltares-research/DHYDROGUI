@@ -157,6 +157,7 @@
     <Compile Include="FileConstants.cs" />
     <Compile Include="IO\InitialFieldsFileConstants.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
+    <Compile Include="Spatial\SpatialOperationHelper.cs" />
     <Compile Include="WaterFlowFMModel.Synchronize.cs" />
     <Compile Include="WaterFlowFMModelSyncExtensions.cs" />
     <Compile Include="Grid\UnstructuredGridExtensions.cs" />
