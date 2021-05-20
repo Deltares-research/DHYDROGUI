@@ -32,6 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
             categories.AddRange(CreateSpatialOperationQuantityCategory(filename,ExtForceQuantNames.FrictCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName), true));
             categories.AddRange(CreateSpatialOperationQuantityCategory(filename,InitialFieldsFileConstants.BedLevel, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.BathymetryDataItemName), false));
+            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,InitialFieldsFileConstants.Infiltration, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InfiltrationDataItemName), false));
             
             var globalInitialConditionQuantity2D = (InitialConditionQuantity)(int)modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
             categories.AddRange(CreateSpatialOperationQuantityCategory(filename,globalInitialConditionQuantity2D == InitialConditionQuantity.WaterLevel 

@@ -234,6 +234,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("tif", "GeoTiff", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
         [TestCase("asc", "arcinfo", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
         [TestCase("xyz", "sample", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
+        [TestCase("tif", "GeoTiff", WaterFlowFMModelDefinition.InfiltrationDataItemName, "InfiltrationCapacity")]
+        [TestCase("asc", "arcinfo", WaterFlowFMModelDefinition.InfiltrationDataItemName, "InfiltrationCapacity")]
+        [TestCase("xyz", "sample", WaterFlowFMModelDefinition.InfiltrationDataItemName, "InfiltrationCapacity")]
         public void WriteFile_WithImportSamplesOperation_WritesCorrectFile(string fileExtension, string expFileType, string dataItemName, string expQuantity)
         {
             using (var temp = new TemporaryDirectory())
