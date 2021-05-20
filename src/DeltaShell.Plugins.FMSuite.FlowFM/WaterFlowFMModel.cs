@@ -54,6 +54,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Helpers.CopyHandlers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
+using DeltaShell.Plugins.FMSuite.FlowFM.Spatial;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
@@ -671,6 +672,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         valueConverter.SpatialOperationSet.AddOperation(operation);
                     }
                 }
+                
+                SpatialOperationHelper.MakeNamesUniquePerSet(valueConverter.SpatialOperationSet);
             }
         }
         

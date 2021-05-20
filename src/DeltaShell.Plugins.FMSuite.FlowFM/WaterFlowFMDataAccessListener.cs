@@ -5,9 +5,11 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Spatial;
 using DeltaShell.Plugins.SharpMapGis.SpatialOperations;
 using GeoAPI.Extensions.Coverages;
 using log4net;
@@ -104,6 +106,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var spatialOperationSetValueConverter = dataItem.ValueConverter as SpatialOperationSetValueConverter;
             if (spatialOperationSetValueConverter != null)
             {
+                SpatialOperationHelper.MakeNamesUniquePerSet(spatialOperationSetValueConverter.SpatialOperationSet);
+                
                 var coverage = (ICoverage) spatialOperationSetValueConverter.OriginalValue;
                 var originalValues =
                     coverage.Components[0].GetValues<double>();
