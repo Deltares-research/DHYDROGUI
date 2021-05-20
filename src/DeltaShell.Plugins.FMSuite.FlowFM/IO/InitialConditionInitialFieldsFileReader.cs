@@ -38,15 +38,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (categories.Count == 0) throw new FileReadingException(string.Format(Properties.Resources.ReadFile_Could_not_read_file__0__properly__it_seems_empty, filePath));
             
             ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
-            if (categories.Any(IsInitialField(ExtForceQuantNames.WaterLevel)))
+            if (categories.Any(IsInitialField(InitialFieldsFileConstants.WaterLevel)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterLevel).ToString());
-                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.WaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFileConstants.WaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
             }
-            else if (categories.Any(IsInitialField(ExtForceQuantNames.WaterDepth)))
+            else if (categories.Any(IsInitialField(InitialFieldsFileConstants.WaterDepth)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterDepth).ToString());
-                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.WaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFileConstants.WaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
             }
 
 
