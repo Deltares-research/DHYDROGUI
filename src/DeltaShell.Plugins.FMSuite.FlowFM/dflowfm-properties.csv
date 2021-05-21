@@ -128,6 +128,8 @@ numerics,maxNonlinearIterations,numerics,Numerical Parameters,Max non linear ite
 numerics,setHorizontalBobsFor1d2d,numerics,Urban,Horizontal Bobs 1d2d,0|1,0,0,1,FALSE,,,,,,"bobs are set to 2D bedlevel, to prevent incorrect storage in sewer system (0: no, 1:yes).",
 numerics,Pure1D,numerics,Numerical Parameters,Usage of Pure 1D solver,Double,0.0,0,1,FALSE,,,,,,"Use purely 1D solver or not (0.0: no, original 1D advection, 1.0: yes)",
 numerics,jposhchk,numerics,Numerical Parameters,Check positive waterdepth:No|0.7*dts (just redo)|1.0*dts (close all links)|0.7*dts (close all links)|1.0*dts (reduce au)|0.7*dts (reduce au),0|1|2|3|4|5,2,0,5,FALSE,,,,,,"Check for positive waterdepth (0: no, 1: 0.7*dts, just redo, 2: 1.0*dts, close all links, 3: 0.7*dts, close all links, 4: 1.0*dts, reduce au, 5: 0.7*dts, reduce au)",
+grw,groundwater,physics,Hydrology,Ground water flow:No groundwater flow|With groundwater flow,0|1,0,0,1,FALSE,,,,,,Groundwater flow (0: No (horizontal) groundwater flow, 1: With groundwater flow),
+grw,Infiltrationmodel,physics,Hydrology,Infiltration method:No infiltration|Interception layer|Constant infiltration|Model unsaturated/saturated (with groundwater)|Horton,0|1|2|3|4,2,0,4,FALSE,,,,,,Infiltration method (0: No infiltration1: Interception layer, 2: Constant infiltration capacity, 3: model unsaturated/saturated (with grw), 4: Horton),
 physics,UnifFrictCoef,physics,Roughness (2D),Uniform friction coefficient,Double,2.3d-2,0,,FALSE,,,,,,Uniform friction coefficient (0: no friction),
 physics,UnifFrictType,physics,Roughness (2D),Uniform friction type:Chezy|Manning|Wall Law Nikuradse|White-Colebrook,0|1|2|3,1,0,3,FALSE,,,,,,"Uniform friction type (0: Chezy, 1: Manning, 2: Wall Law Nikuradse, 3: White-Colebrook)",
 physics,UnifFrictCoef1D,physics,Roughness (2D),Uniform 1D friction coefficient,Double,2.3d-2,0,,TRUE,,,,,,Uniform friction coefficient in 1D links (0: no friction),
@@ -333,5 +335,4 @@ geometry,UseCaching,geometry,Others,Use caching,0|1,1,,,FALSE,,,,,,"Use caching 
 volumeTables,useVolumeTables,geometry,Volume Tables,Use Volume Tables,0|1,0,,,FALSE,FALSE,,,,,"Use 1D volume tables (1: yes, 0: no)",
 volumeTables,increment,geometry,Volume Tables,Increment(m),Double,0.1,0,,FALSE,useVolumeTables,useVolumeTables,,,,"Desired increment for volume tables (m)",
 volumeTables,useVolumeTablesFile,geometry,Volume Tables,Use Volume Table File,0|1,0,,,FALSE,useVolumeTables,useVolumeTables,,,,"Use volume table file (1:yes, 0: no)",
-grw,Infiltrationmodel,,Processes,Infiltration method:No infiltration|Constant infiltration capacity|Horton,0|2|4,0,0,4,FALSE,,,,,,"Infiltration method (0: No infiltration, 2: Constant infiltration capacity, 4: Horton)",
 hydrology,InterceptionModel,,Processes,Interception Model:None|on via layer thickness,0|1,0,0,1,FALSE,,,,,,"Interception model (0: none, 1: on, via layer thickness)"
