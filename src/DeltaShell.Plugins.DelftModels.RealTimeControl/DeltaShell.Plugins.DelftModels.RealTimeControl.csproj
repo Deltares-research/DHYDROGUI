@@ -52,7 +52,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Shell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
@@ -69,7 +69,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.Plugins.CommonTools, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="DeltaShell.Plugins.CommonTools">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
     </Reference>

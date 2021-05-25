@@ -35,29 +35,29 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DelftTools.Controls, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="DelftTools.Controls">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Controls.Swf, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="DelftTools.Controls.Swf">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Controls.Wpf, Version=1.5.0.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Controls.Wpf">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Shell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Gui, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="DelftTools.Shell.Gui">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Utils, Version=1.5.0.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Utils">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.492\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
