@@ -35,7 +35,7 @@ Todo:
         <PropertyRef Id="ApplicationFolderName" />
         
         <CustomAction Id="DeltaresWixSetDefaultPerUserFolder" Property="WixPerUserFolder" Value="[LocalAppDataFolder]Apps\[ApplicationFolderName]" Execute="immediate" />
-        <CustomAction Id="DeltaresWixSetDefaultPerMachineFolder" Property="WixPerMachineFolder" Value="[ProgramFilesFolder][ApplicationFolderName]" Execute="immediate" />
+        <CustomAction Id="DeltaresWixSetDefaultPerMachineFolder" Property="WixPerMachineFolder" Value="[ProgramFiles64Folder][ApplicationFolderName]" Execute="immediate" />
         <CustomAction Id="DeltaresWixSetPerUserFolder" Property="APPLICATIONFOLDER" Value="[WixPerUserFolder]" Execute="immediate" />
         <CustomAction Id="DeltaresWixSetPerMachineFolder" Property="APPLICATIONFOLDER" Value="[WixPerMachineFolder]" Execute="immediate" />
 

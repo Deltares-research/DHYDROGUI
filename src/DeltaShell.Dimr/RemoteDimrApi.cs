@@ -19,7 +19,7 @@ namespace DeltaShell.Dimr
             // so we need to start the 64bit worker. This works as long as the data send over the Api border 
             // is not bit dependent, eg IntPtr and the like.
             RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
-            api = RemoteInstanceContainer.CreateInstance<IDimrApi, DimrApi>(true);
+            api = RemoteInstanceContainer.CreateInstance<IDimrApi, DimrApi>();
             api.SetLoggingLevel(DimrApiDataSet.FeedbackLevelKey, DimrApiDataSet.FeedbackLevel);
             api.SetLoggingLevel(DimrApiDataSet.LogFileLevelKey, DimrApiDataSet.LogFileLevel);
         }

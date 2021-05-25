@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <Include>
-  <Directory Id="dir_geometrydll_x86" Name="x86">
-    <Component Id="comp_geometrydll_x86" Guid="48BBD09E-5B11-4064-B70B-D9FD799C2EA3">
-      <File Id="ec_moduledll_x86" Source="$(var.deltashell_gui_bin)x86\ec_module.dll" />
-      <File Id="gridgeomdll_x86" Source="$(var.deltashell_gui_bin)x86\gridgeom.dll" />
-	  <File Id="libifcoremddll_x86" Source="$(var.deltashell_gui_bin)x64\libifcoremd.dll" />
-	  <File Id="libmmddll_x86" Source="$(var.deltashell_gui_bin)x64\libmmd.dll" />
-	  <File Id="svmldispmddll_x86" Source="$(var.deltashell_gui_bin)x64\svml_dispmd.dll" />
-    </Component>
-  </Directory>
-
   <Component Id="comp_OpenTK" Guid="8A834442-150C-4DDB-973D-AF8A522C4B87">
     <File Id="OpenTK" Source="$(var.deltashell_gui_bin)OpenTK.dll" />
   </Component>

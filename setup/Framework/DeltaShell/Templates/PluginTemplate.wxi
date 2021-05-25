@@ -43,11 +43,11 @@
                             </Include>
   - setupbanner:            The file path to the image that is used in all dialogs of the installer.
   - setupstartuppath:       The path to the image that is used in the first dialog that shows the splash screen. The name of the startup image must be specified in localization file.
-  - explicitX86desktopshortcut Set this to true if you don't want the AnyCPU exe to be installed. An exe with specific 32-bitness will be installed.
-                               If this variable is set to false, the x86.exe will also be installed, but the start menu and desktop won't link to it.
       
                         
   Optional variables:
+  - CheckOriginOfProject:			If you set this to true, projects from not supported products can not be opened.
+  - StartNamesCompatibleProducts:	Start names of other compatible products. You don't have to mention current product, only start names of different products.
   - ShowStartUpScreen:               If you set this to false, the start up screen will not be shown. 
   - EnableDHydroDelft3DFMVersionNaming: Enable to use the d-hydro specific setup configuration. You must define the following variables: var.ApplicationName
                                         and var.PublicReleaseVersion.
@@ -164,7 +164,7 @@
     <!--define a directory structure for main application and plugins -->
     <!-- use include files to tell the installer which files should be copied to target directories -->
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
+      <Directory Id="ProgramFiles64Folder">
         <Directory Id="DeltaresDir" Name="Deltares">
           <Directory Id="INSTALLDIR" Name="$(var.FullProductName)">
             <Directory Id="BINDIR" Name="bin">
@@ -195,37 +195,12 @@
 
               </Component>
               <Component Id="MainExecutableX64" Guid="62854CF3-4C9F-4EB3-AD97-E368F69BBDE8">
-                <File Id="RemoteInstanceServer.x64.exe" Source="$(var.deltashell_gui_bin)DelftTools.Utils.RemoteInstanceServer.x64.exe" />
+                <File Id="RemoteInstanceServer.exe" Source="$(var.deltashell_gui_bin)DelftTools.Utils.RemoteInstanceServer.exe" />
               </Component>
 
               <?include ..\SharpMap.wxi?>
               <?include ..\NetCdf.wxi?>
               <?include ..\GdalData.wxi?>
-              
-              <!-- ! Put files/executables targeted by shortcuts in separate component ! -->
-              <Component Id="DeltaShellx86Exe" Guid="3DAA0D8A-CC34-4CBE-B53B-DA76E50E2F3A">
-                <File Id="DeltaShell86EXE" Source="$(var.deltashell_gui_bin)DeltaShell.Gui.x86.exe"/>
-                <File Id="DeltaShell.Gui.x86.exe.config" Source="$(var.deltashell_gui_bin)DeltaShell.Gui.x86.exe.config"/>
-                <File Id="DeltaShell.Console.x86.exe" Source="$(var.deltashell_gui_bin)DeltaShell.Console.x86.exe" />
-                <File Id="DeltaShell.Console.x86.exe.config" Source="$(var.deltashell_gui_bin)DeltaShell.Console.x86.exe.config" />
-
-                <?define GUICONFIGFILE = "DeltaShell.Gui.x86.exe.config"?>
-                <?include GuiConfigXml.wxi?>
-                <?undef GUICONFIGFILE?>
-                
-              </Component>
-
-              <?if $(var.explicitX86desktopshortcut)=true?>
-              <Component Id="DeltaShellx86DesktopShortcut" Guid="AF591184-73FF-457A-92A6-C3BB65B29893">
-                <Shortcut Id="desktopDeltaShellx86" Directory="DesktopFolder" Name="$(var.FullProductName)" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.x86.exe"/>
-                <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDesktopShortcutx86" Type="integer" Value="1" KeyPath="yes" />
-              </Component>
-
-              <Component Id="DeltaShellx86StartMenuShortcut" Guid="06989698-DE28-4925-BF13-9A8C68C5F5BE">
-                <Shortcut Id="startmenuDeltaShellx86" Directory="ProgramGroupMenuDir" Name="$(var.FullProductName)" WorkingDirectory="BINDIR" Icon="icon.ico" IconIndex="0" Target="[BINDIR]DeltaShell.Gui.x86.exe"/>
-                <RegistryValue Root="HKMU" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedStartMenuShortcutx86" Type="integer" Value="1" KeyPath="yes"/>
-              </Component>
-              <?endif?>
  
               <Component Id="DeltaShellAnyCPUExe" Guid="B8FA73D8-A1C1-460A-A850-DC57806A6FB5">
                 <File Id="DeltaShellAnyCPUExe" Source="$(var.deltashell_gui_bin)DeltaShell.Gui.exe"/>
@@ -281,13 +256,8 @@
                   <File Id="nl.DelftTools.Utils.resources.dll" Source='$(var.deltashell_gui_bin)nl-NL\DelftTools.Utils.resources.dll' />
                 </Component>
                 
-               
-                <Component Id='DelftToolsUtilsRemoteInstanceServerx86PluginResourcesNL' Guid='e4a07edf-78fc-449f-863b-3efd2b06471e'>
-                  <File Id="nl.DelftTools.Utils.RemoteInstanceServer.x86.resources.dll" Source='$(var.deltashell_gui_bin)nl-NL\DelftTools.Utils.RemoteInstanceServer.x86.resources.dll' />
-                </Component>
-
                 <Component Id='DelftToolsUtilsRemoteInstanceServerx64PluginResourcesNL' Guid='91d72380-e19d-44b9-ae7f-555f4790df6b'>
-                  <File Id="nl.DelftTools.Utils.RemoteInstanceServer.x64.resources.dll" Source='$(var.deltashell_gui_bin)nl-NL\DelftTools.Utils.RemoteInstanceServer.x64.resources.dll' />
+                  <File Id="nl.DelftTools.Utils.RemoteInstanceServer.resources.dll" Source='$(var.deltashell_gui_bin)nl-NL\DelftTools.Utils.RemoteInstanceServer.resources.dll' />
                 </Component>
 
                 <Component Id='DelftToolsUnitsResourcesNL' Guid='a4af0c07-372a-485c-9366-6754796f4e9b'>
@@ -408,29 +378,13 @@
     <Feature Id="Complete" Title="$(var.ProductName)" Description="!(loc.CompletePackageDescription)"
              Display="expand" Level="1" Absent="disallow" AllowAdvertise="no" ConfigurableDirectory="INSTALLDIR">
       
-      <Feature Id="DeltaShellExeFeature_64bit" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
-        <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition> <!-- Extra x86 exe is only required when installing on a 64-bit machine. But always installed -->
-        <ComponentRef Id="DeltaShellx86Exe"/>
-        <?if $(var.explicitX86desktopshortcut)=false?>
+      <Feature Id="DeltaShellExeFeature_64bit" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
         <ComponentRef Id="DeltaShellAnyCPUExe"/>
         <ComponentRef Id="DeltaShellAnyCPUStartMenuShortcut"/>
         <ComponentRef Id="DeltaShellAnyCPUDesktopShortcut"/>
-        <?else?>
-        <ComponentRef Id="DeltaShellx86StartMenuShortcut"/>
-        <ComponentRef Id="DeltaShellx86DesktopShortcut"/>
-        <?endif?>
       </Feature>
-      
-      <Feature Id="DeltaShellExeFeature_32bit" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
-        <Condition Level="1"><![CDATA[NOT(VersionNT64)]]></Condition>
-        <ComponentRef Id="DeltaShellAnyCPUExe"/> <!-- Just install the anycpu version on a 32-bit machine-->
-        <ComponentRef Id="DeltaShellAnyCPUStartMenuShortcut"/>
-        <ComponentRef Id="DeltaShellAnyCPUDesktopShortcut"/>
-      </Feature>
-      
 
-      <Feature Id="RemoteInstanceX64Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
-        <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+      <Feature Id="RemoteInstanceX64Feature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
         <ComponentRef Id="MainExecutableX64"/>
         <ComponentRef Id='DelftToolsUtilsRemoteInstanceServerx64PluginResourcesNL'/>
       </Feature>
@@ -453,7 +407,6 @@
         <ComponentRef Id='DeltaShellCorePluginResourcesNL' />
         <ComponentRef Id='DelftToolsUtilsPluginResourcesNL' />
         <ComponentRef Id='DelftToolsShellGuiResourcesNL' />
-        <ComponentRef Id='DelftToolsUtilsRemoteInstanceServerx86PluginResourcesNL'/>
         <ComponentRef Id='DelftToolsUnitsResourcesNL'/>
         <ComponentRef Id='DelftToolsShellCoreResourcesNL'/>
         <ComponentRef Id='DelftToolsFunctionsResourcesNL'/>
@@ -463,12 +416,9 @@
         
         <ComponentRef Id="ProgramGroupMenuDir_Component"/>
         <ComponentRef Id="UninstallShortcutComponent" />
-        <ComponentRef Id="comp_netcdf_x86" />
-        <ComponentRef Id="comp_SharpMap_Extensions_gdal_x86" />
         <ComponentRef Id="comp_OpenTK"/>
 
-        <Feature Id="DeltaShellX64Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
-          <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+        <Feature Id="DeltaShellX64Feature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
           <ComponentRef Id="comp_netcdf_x64" />
           <ComponentRef Id="comp_SharpMap_Extensions_gdal_x64" />
         </Feature>
@@ -483,13 +433,10 @@
           <ComponentRef Id="CommonToolsGuiResourcesNL"/>
           <ComponentRef Id="NHibernatePlugin" />
           <ComponentRef Id='NHibernateResourcesNL'/>
-          <ComponentRef Id="comp_sqlite_x86" />
-          <ComponentRef Id="comp_geometrydll_x86" />
 
-          <Feature Id="DeltaShellPluginsX64" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
-            <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
-            <ComponentRef Id="comp_sqlite_x64" />
-            <ComponentRef Id="comp_geometrydll_x64" />
+          <Feature Id="DeltaShellPluginsX64" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
+          <ComponentRef Id="comp_sqlite_x64" />
+          <ComponentRef Id="comp_geometrydll_x64" />
           </Feature>
 
           <ComponentRef Id="NetCDFPlugin"/>

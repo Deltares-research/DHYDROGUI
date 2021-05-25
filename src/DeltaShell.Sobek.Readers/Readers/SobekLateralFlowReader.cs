@@ -99,9 +99,9 @@ namespace DeltaShell.Sobek.Readers.Readers
 
             if (warningList.Any())
             {
-                foreach (var (key, value) in warningList)
+                foreach (var kvp in warningList)
                 {
-                    Log.Warn(key + Environment.NewLine + string.Join(Environment.NewLine, value));
+                    Log.Warn(kvp.Key + Environment.NewLine + string.Join(Environment.NewLine, kvp.Value));
                 }
             }
         }

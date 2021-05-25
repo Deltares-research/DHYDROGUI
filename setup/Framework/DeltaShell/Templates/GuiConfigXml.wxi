@@ -33,6 +33,22 @@
                 File="[#$(var.GUICONFIGFILE)]"
                 Value="$(var.ShowStartUpScreen)"/>
   <?endif?>
+  
+  <?ifdef CheckOriginOfProject?>
+  <util:XmlFile Id="SetKey22$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;CheckOriginOfProject&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.CheckOriginOfProject)"/>
+  <?endif?>
+  
+  <?ifdef StartNamesCompatibleProducts?>
+  <util:XmlFile Id="SetKey23$(var.GUICONFIGFILE)"
+                Action="setValue"
+                ElementPath="/configuration/appSettings/add[\[]@key=&quot;StartNamesCompatibleProducts&quot;[\]]/@value"
+                File="[#$(var.GUICONFIGFILE)]"
+                Value="$(var.StartNamesCompatibleProducts)"/>
+  <?endif?>
 
   <?ifdef RealNumberFormat?>
   <util:XmlFile Id="SetKey21$(var.GUICONFIGFILE)"

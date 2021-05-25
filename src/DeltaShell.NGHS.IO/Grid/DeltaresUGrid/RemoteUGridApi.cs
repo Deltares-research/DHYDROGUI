@@ -15,7 +15,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         private static readonly ILog log = LogManager.GetLogger(typeof(RemoteUGridApi));
         public RemoteUGridApi()
         {
-            api = RemoteInstanceContainer.CreateInstance<IUGridApi, UGridApi>(true);
+            api = RemoteInstanceContainer.CreateInstance<IUGridApi, UGridApi>();
         }
 
         /// <inheritdoc/>

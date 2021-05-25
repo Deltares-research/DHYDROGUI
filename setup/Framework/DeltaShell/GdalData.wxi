@@ -2,35 +2,6 @@
 
 <Include>
   <Directory Id="dir_SharpMap_Extensions_gdal" Name="gdal">
-    <Directory Id="dir_SharpMap_Extensions_gdal_x86" Name="x86">
-	   <Component Id="comp_SharpMap_Extensions_gdal_x86" Guid="31F7B3A9-2D46-4263-906A-3B83941937BE">
-       <File Id="x86_expat.dll" Source="$(var.deltashell_gui_bin)gdal\x86\expat.dll" />
-       <File Id="x86_freexl.dll" Source="$(var.deltashell_gui_bin)gdal\x86\freexl.dll" />  
-       <File Id="x86_gdal203.dll" Source="$(var.deltashell_gui_bin)gdal\x86\gdal203.dll" />  
-       <File Id="x86_gdalconst_wrap.dll" Source="$(var.deltashell_gui_bin)gdal\x86\gdalconst_wrap.dll" />  
-       <File Id="x86_gdal_wrap.dll" Source="$(var.deltashell_gui_bin)gdal\x86\gdal_wrap.dll" />
-       <File Id="x86_gd_geos.dll" Source="$(var.deltashell_gui_bin)gdal\x86\geos.dll" />
-       <File Id="x86_gd_geos_c.dll" Source="$(var.deltashell_gui_bin)gdal\x86\geos_c.dll" />
-       <File Id="x86_gd_iconv.dll" Source="$(var.deltashell_gui_bin)gdal\x86\iconv.dll" />
-       <File Id="x86_gd_libcurl.dll" Source="$(var.deltashell_gui_bin)gdal\x86\libcurl.dll" />
-       <File Id="x86_gd_libeay32.dll" Source="$(var.deltashell_gui_bin)gdal\x86\libeay32.dll" />
-       <File Id="x86_gd_libmysql.dll" Source="$(var.deltashell_gui_bin)gdal\x86\libmysql.dll" />
-       <File Id="x86_gd_libpq.dll" Source="$(var.deltashell_gui_bin)gdal\x86\libpq.dll" />
-       <File Id="x86_gd_libxml2.dll" Source="$(var.deltashell_gui_bin)gdal\x86\libxml2.dll" />
-       <File Id="gdal_x86_msvcp140.dll" Source="$(var.deltashell_gui_bin)gdal\x86\msvcp140.dll" />
-       <File Id="x86_ogr_wrap.dll" Source="$(var.deltashell_gui_bin)gdal\x86\ogr_wrap.dll" />
-       <File Id="x86_gd_openjp2.dll" Source="$(var.deltashell_gui_bin)gdal\x86\openjp2.dll" />
-       <File Id="x86_osr_wrap.dll" Source="$(var.deltashell_gui_bin)gdal\x86\osr_wrap.dll" />
-       <File Id="x86_gd_proj.dll" Source="$(var.deltashell_gui_bin)gdal\x86\proj.dll" />
-       <File Id="x86_gd_spatialite.dll" Source="$(var.deltashell_gui_bin)gdal\x86\spatialite.dll" />
-       <File Id="x86_gd_sqlite3.dll" Source="$(var.deltashell_gui_bin)gdal\x86\sqlite3.dll" />
-       <File Id="x86_gd_ssleay32.dll" Source="$(var.deltashell_gui_bin)gdal\x86\ssleay32.dll" />
-       <File Id="x86_gd_vcruntime140" Source="$(var.deltashell_gui_bin)gdal\x86\vcruntime140.dll" />
-       <File Id="x86_gd_xerces" Source="$(var.deltashell_gui_bin)gdal\x86\xerces-c_3_2.dll" />
-       <File Id="x86_gd_zlib1.dll" Source="$(var.deltashell_gui_bin)gdal\x86\zlib1.dll" />
-     </Component>
-   </Directory>
-
    <Directory Id="dir_SharpMap_Extensions_gdal_x64" Name="x64">
      <Component Id="comp_SharpMap_Extensions_gdal_x64" Guid="32F7B3A9-1D46-4263-906C-3B83941927BE">
        <File Id="x64_expat.dll" Source="$(var.deltashell_gui_bin)gdal\x64\expat.dll" />

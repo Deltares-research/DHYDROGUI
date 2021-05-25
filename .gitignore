@@ -5980,11 +5980,6 @@ test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/Waterplanner_v2/packages
 test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/bin
 test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/obj
 test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/packages
-test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/shapefile_Tools9784/*.suo
-test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/shapefile_Tools9784/*.user
-test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/shapefile_Tools9784/bin
-test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/shapefile_Tools9784/obj
-test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/shapefile_Tools9784/packages
 test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/shapefiles_CoverageImport/*.suo
 test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/shapefiles_CoverageImport/*.user
 test/DeltaShell.Plugins.NetworkEditor.Tests/test-data/shapefiles_CoverageImport/bin

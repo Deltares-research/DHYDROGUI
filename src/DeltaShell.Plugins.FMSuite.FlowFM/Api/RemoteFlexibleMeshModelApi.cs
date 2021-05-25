@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
                     RemotingTypeConverters.RegisterTypeConverter(new LoggerToProtoConverter());
                 }
             }
-            remoteInstanceApi = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(true, showConsole: showDebugConsole);
+            remoteInstanceApi = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>(showConsole: showDebugConsole);
             // for non-remote use: remoteInstanceApi = new FlexibleMeshModelApi();
         }
 

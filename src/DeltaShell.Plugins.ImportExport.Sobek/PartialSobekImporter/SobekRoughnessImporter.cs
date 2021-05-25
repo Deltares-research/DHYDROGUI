@@ -263,9 +263,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
             coveragesWithInterpolationSet.Clear(); //clear our administration, we no longer care
 
-            foreach (var (key, value) in warningList)
+            foreach (var kvp in warningList)
             {
-                log.Warn(key + Environment.NewLine + string.Join(Environment.NewLine, value));
+                log.Warn(kvp.Key + Environment.NewLine + string.Join(Environment.NewLine, kvp.Value));
             }
         }
 
@@ -830,9 +830,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             if (warningList.Any())
             {
-                foreach (var (key, value) in warningList)
+                foreach (var kvp in warningList)
                 {
-                    log.Warn(key + Environment.NewLine + string.Join(Environment.NewLine, value));
+                    log.Warn(kvp.Key + Environment.NewLine + string.Join(Environment.NewLine, kvp.Value));
                 }
             }
 

@@ -16,13 +16,6 @@
       </Component>
     </Directory>
 
-    <Directory Id="dir_sqlite_x86" Name="x86">
-      <Component Id="comp_sqlite_x86" Guid="1117B3A9-1D46-4263-906C-3B83941927BE">
-        <File Id="x86_SQLite.Interop.dll" Source="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.Data.NHibernate\x86\SQLite.Interop.dll" />
-        <File Id="x86_msvcr100.dll" Source="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.Data.NHibernate\x86\msvcr100.dll" />
-      </Component>
-    </Directory>
-
     <Directory Id="dir_sqlite_x64" Name="x64">
       <Component Id="comp_sqlite_x64" Guid="2227B3A9-1D46-4263-906C-3B83941927BE">
         <File Id="x64_SQLite.Interop.dll" Source="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.Data.NHibernate\x64\SQLite.Interop.dll" />

@@ -10,7 +10,7 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
         public GridGeomApiRemote()
         {
-            gridGeomApi = RemoteInstanceContainer.CreateInstance<IGridGeomApi, GridGeomApi>(true);
+            gridGeomApi = RemoteInstanceContainer.CreateInstance<IGridGeomApi, GridGeomApi>();
         }
         
         /// <inheritdoc/>
