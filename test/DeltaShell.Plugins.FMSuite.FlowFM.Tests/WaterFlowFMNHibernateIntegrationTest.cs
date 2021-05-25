@@ -260,18 +260,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                 var setValueOperation = new SetValueOperation
                 {
+                    Name = "Set value",
                     Value = 0.0,
                     OperationType = PointwiseOperationType.Overwrite
                 };
                 setValueOperation.Mask.Provider = maskFeatureColl;
                 Assert.IsNotNull(operationSet.AddOperation(setValueOperation));
 
-                var cropOperation = new CropOperation();
+                var cropOperation = new CropOperation {Name = "Crop"};
                 cropOperation.Mask.Provider = maskFeatureColl;
                 Assert.IsNotNull(operationSet.AddOperation(cropOperation));
 
                 var smoothOperation = new SmoothingOperation
                 {
+                    Name = "Smoothing",
                     InverseDistanceWeightExponent = 2.0,
                     IterationCount = 3
                 };
