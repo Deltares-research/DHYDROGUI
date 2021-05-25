@@ -23,6 +23,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         private static readonly XNamespace DHyd = "http://schemas.deltares.nl/dimr";
 
         private static readonly XName RootName = "dimrConfig";
+        private const string defaultNumThreadsKey = "threads";
+        private const int defaultNumThreads = 1;
 
         public DHydroConfigWriter()
         {
@@ -93,7 +95,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                                            string.Join(" ",
                                                        Enumerable.Range(0, numCores).Select(i => i.ToString(CultureInfo.InvariantCulture)))));
             }
-
+            if (dimrModel.LibraryName.Equals("dflowfm"))
+            {
+                XElement setting = new XElement(DHyd + "setting");
+                setting.Add(new XAttribute("key", defaultNumThreadsKey));
+                setting.Add(new XAttribute("value", defaultNumThreads));
+                component.Add(setting);
+            }
             component.Add(new XElement(DHyd + "workingDir", dimrModel.DirectoryName));
             component.Add(new XElement(DHyd + "inputFile", dimrModel.InputFile));
             return component;
