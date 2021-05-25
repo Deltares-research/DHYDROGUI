@@ -1913,6 +1913,56 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             }
         }
 
+        [Test]
+        public void GivenAnIntegratedModel_WhenImportingGwswData_ThenExpectedModelSettingsAreSet()
+        {
+            // Given
+            string originalDir = TestHelper.GetTestFilePath(@"gwswFiles\GWSW_DidactischStelsel");
+            string testDir = FileUtils.CreateTempDirectory();
+            FileUtils.CopyDirectory(originalDir, testDir);
+
+            HydroModel hydroModel = new HydroModelBuilder().BuildModel(ModelGroup.RHUModels);
+            
+            try
+            {
+                var filesToImport = new List<string>()
+                {
+                    Path.Combine(testDir, "Knooppunt.csv"),
+                    Path.Combine(testDir, "Verbinding.csv"),
+                };
+                var gwswImporter = SetupGwswFileImporter(filesToImport, testDir);
+                
+                // When
+                gwswImporter.ImportItem(null, hydroModel);
+                
+                // Then
+                Assert.That(hydroModel.OverrideTimeStep, Is.True);
+                Assert.That(hydroModel.OverrideStartTime, Is.True);
+                Assert.That(hydroModel.OverrideStopTime, Is.True);
+                
+                var expectedTimeStep = new TimeSpan(0, 1, 0);
+
+                TimeSpan actualHydroModelTimeStep = hydroModel.TimeStep;
+                Assert.That(actualHydroModelTimeStep, Is.EqualTo(expectedTimeStep));
+                
+                WaterFlowFMModel fmModel = hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>()?.FirstOrDefault();
+                Assert.IsNotNull(fmModel);
+                
+                TimeSpan flowFmModelHisOutputTimeStep = (TimeSpan) fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value;
+                Assert.That(flowFmModelHisOutputTimeStep, Is.EqualTo(expectedTimeStep));
+                
+                TimeSpan flowFmModelMapOutputTimeStep = (TimeSpan) fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value;
+                Assert.That(flowFmModelMapOutputTimeStep, Is.EqualTo(expectedTimeStep));
+
+                TimeSpan flowFmModelTimeStep = (TimeSpan) fmModel.ModelDefinition.GetModelProperty(KnownProperties.DtUser).Value;
+                Assert.That(flowFmModelTimeStep, Is.EqualTo(expectedTimeStep));
+            }
+            finally
+            {
+                FileUtils.DeleteIfExists(testDir);
+            }
+        }
+
 
         private GwswFileImporter SetupGwswFileImporter(IList<string> filesToImport, string testDir, DefinitionsProvider definitionProvider = null)
         {

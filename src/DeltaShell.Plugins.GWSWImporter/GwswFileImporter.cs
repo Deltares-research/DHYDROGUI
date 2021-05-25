@@ -135,14 +135,14 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         private void SetDefaultModelSettings(IWaterFlowFMModel fmModel, HydroModel hydroModel)
         {
             var timeStep = new TimeSpan(0, 1, 0);
-            hydroModel.TimeStep = timeStep;
-            
             double timeStepInSeconds = timeStep.TotalSeconds;
 
             string timeStepValue = timeStepInSeconds.ToString(CultureInfo.InvariantCulture);
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.DtUser, timeStepValue);
             fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, timeStepValue);
             fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, timeStepValue);
+            
+            hydroModel.TimeStep = timeStep;
         }
 
         /// <summary>
