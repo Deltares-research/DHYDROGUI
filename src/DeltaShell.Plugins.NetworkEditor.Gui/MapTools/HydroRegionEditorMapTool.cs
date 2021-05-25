@@ -755,8 +755,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             discretization.DoWithPropertySet(nameof(discretization.SegmentGenerationMethod), SegmentGenerationMethod.None, () =>
             {
-                discretization.Clear();
-                discretization.AddLocations(discretization.GenerateSewerConnectionNetworkLocations());
+                discretization.ResetValues(discretization.GenerateSewerConnectionNetworkLocations());
             });
             
             MapControl.SelectTool.RefreshSelection();

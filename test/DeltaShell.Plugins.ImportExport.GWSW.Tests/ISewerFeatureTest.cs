@@ -151,20 +151,25 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         }
 
         [Test]
-        public void GivenFmModel_WhenAddingSewerConnectionWithZeroLength_ThenStillOneDiscretisationPointsHaveBeenAddedToTheModelNetwork()
+        public void GivenFmModel_WhenAddingSewerConnectionWithZeroLength_ThenStillTwoDiscretisationPointsHaveBeenAddedToTheModelNetwork()
         {
             var fmModel = new WaterFlowFMModel();
             var network = fmModel.Network;
+            var manhole1 = new Manhole { Compartments = { new Compartment() } };
+            var manhole2 = new Manhole { Compartments = { new Compartment() } };
+
             var sewerConnection = new SewerConnection("mySewerConnection")
             {
+                Source = manhole1,
+                Target = manhole2,
                 Length = 0
             };
 
             sewerConnection.AddToHydroNetwork(network, null);
-            Assert.That(Enumerable.Count<ISewerConnection>(network.SewerConnections), Is.EqualTo(1));
+            Assert.That(Enumerable.Count(network.SewerConnections), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
-            Assert.That((object) discretizationLocations.Count, Is.EqualTo(01));
+            Assert.That((object)discretizationLocations.Count, Is.EqualTo(2));
         }
 
         [Test]
@@ -597,13 +602,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             };
 
             structureOrifice.AddToHydroNetwork(fmModel.Network, null);
-            Assert.That(Enumerable.Count<ISewerConnection>(fmModel.Network.SewerConnections), Is.EqualTo(1));
+            Assert.That(Enumerable.Count(fmModel.Network.SewerConnections), Is.EqualTo(1));
 
             var discretizationLocations = fmModel.NetworkDiscretization.Locations.Values;
             Assert.That((object) discretizationLocations.Count, Is.EqualTo(1));
 
             connectionOrifice.AddToHydroNetwork(fmModel.Network, null);
-            Assert.That(Enumerable.Count<ISewerConnection>(fmModel.Network.SewerConnections), Is.EqualTo(1));
+            Assert.That(Enumerable.Count(fmModel.Network.SewerConnections), Is.EqualTo(1));
             Assert.That((object) discretizationLocations.Count, Is.EqualTo(2));
         }
 

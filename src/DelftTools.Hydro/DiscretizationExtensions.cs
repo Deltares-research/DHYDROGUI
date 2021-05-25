@@ -2,80 +2,227 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Filters;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
-using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DelftTools.Hydro
 {
+    public enum BranchNodeType
+    {
+        Begin,
+        End
+    }
+
     public static class DiscretizationExtensions
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(DiscretizationExtensions));
+        private static readonly ILog log = LogManager.GetLogger(typeof(DiscretizationExtensions));
+        private const double chainageDelta = 1e-10;
 
-        public static void AddNetworkDiscretizationCalculationLocationIfNotAlreadyCreated(this IDiscretization discretization, NetworkLocation toLocation)
+        public static void AddMissingLocationsForSewerConnections(this IDiscretization discretization, params ISewerConnection[] sewerConnections)
         {
-            var locations = new HashSet<Coordinate>(discretization.Locations.Values.Select(l => l.Geometry?.Coordinate));
-            var locationGeometry = toLocation.Geometry;
-            if (locationGeometry == null) Log.Warn($"No geometry set for {toLocation.Name}");
-            if (!locations.Contains(locationGeometry?.Coordinate))
+            var locationsToAdd = new List<INetworkLocation>();
+            foreach (var sewerConnection in sewerConnections)
             {
-                discretization.Locations.AddValues(new[] { toLocation });
+                var sourcePoints = sewerConnection.SourceCompartment == null
+                                       ? GetNetworkLocationsAtNode(discretization.GetLocationsForBranch, sewerConnection.Source)
+                                       : discretization.GetLocationsForCompartment(sewerConnection.SourceCompartment);
+
+                var targetPoints = sewerConnection.TargetCompartment == null
+                                       ? GetNetworkLocationsAtNode(discretization.GetLocationsForBranch, sewerConnection.Target)
+                                       : discretization.GetLocationsForCompartment(sewerConnection.TargetCompartment);
+
+                bool hasSourcePoints = sourcePoints.Any();
+                if (!hasSourcePoints)
+                {
+                    locationsToAdd.Add(new NetworkLocation(sewerConnection, 0));
+                }
+
+                if (!targetPoints.Any() && sewerConnection.Length != 0)
+                {
+                    locationsToAdd.Add(new NetworkLocation(sewerConnection, sewerConnection.Length));
+                }
+            }
+
+            discretization.Locations.AddValues(locationsToAdd);
+        }
+
+        /// <summary>
+        /// Adds missing points for removed branches
+        /// (for channels call before remove is done => otherwise computation points of the removed channel are already removed). 
+        /// </summary>
+        /// <param name="discretization">The discretization to update</param>
+        /// <param name="branches">Branches that will be removed</param>
+        public static void ReplacePointsForRemovedBranch(this IDiscretization discretization, params IBranch[] branches)
+        {
+            var locationsToAdd = new List<INetworkLocation>();
+            foreach (var branch in branches)
+            {
+                switch (branch)
+                {
+                    case IChannel channel:
+                        // move node computation points to other branches if available
+                        var locationsOnBranch = discretization.GetLocationsForBranch(channel).OrderBy(l => l.Chainage).ToArray();
+
+                        void AddLocationForNode(INode node)
+                        {
+                            var otherChannel = node.OutgoingBranches.FirstOrDefault(c => c != channel);
+                            if (otherChannel != null)
+                            {
+                                locationsToAdd.Add(new NetworkLocation(otherChannel, 0));
+                                return;
+                            }
+
+                            otherChannel = node.IncomingBranches.FirstOrDefault(c => c != channel);
+                            if (otherChannel != null)
+                            {
+                                locationsToAdd.Add(new NetworkLocation(otherChannel, otherChannel.Length));
+                            }
+
+                        };
+
+                        var location = locationsOnBranch.FirstOrDefault();
+                        if (location != null && location.Chainage == 0)
+                        {
+                            AddLocationForNode(channel.Source);
+                        }
+
+                        location = locationsOnBranch.LastOrDefault();
+                        if (location != null && IsEndLocation(location))
+                        {
+                            AddLocationForNode(channel.Target);
+                        }
+
+                        break;
+                    case ISewerConnection sewerConnection:
+                        if (sewerConnection.SourceCompartment != null)
+                        {
+                            var missingSourceLocation = discretization.GetMissingLocationForCompartment(sewerConnection.SourceCompartment);
+                            if (missingSourceLocation != null)
+                            {
+                                locationsToAdd.Add(missingSourceLocation);
+                            }
+                        }
+
+                        if (sewerConnection.TargetCompartment != null)
+                        {
+                            var missingTargetLocation = discretization.GetMissingLocationForCompartment(sewerConnection.TargetCompartment);
+                            if (missingTargetLocation != null)
+                            {
+                                locationsToAdd.Add(missingTargetLocation);
+                            }
+                        }
+                        break;
+                }
+
+                discretization.Locations.AddValues(locationsToAdd);
+            }
+        }
+
+        public static void HandleCompartmentSwitch(this IDiscretization discretization, ICompartment fromCompartment, ICompartment toCompartment)
+        {
+            var missingLocation = discretization.GetMissingLocationForCompartment(fromCompartment);
+            if (missingLocation != null)
+            {
+                discretization.Locations.AddValues(new[] { missingLocation });
+            }
+
+            var duplicateLocations = discretization.GetLocationsForCompartment(toCompartment).Skip(1).ToArray();
+            if (duplicateLocations.Any())
+            {
+                discretization.Locations.RemoveValues(new VariableValueFilter<INetworkLocation>(discretization.Locations, duplicateLocations));
             }
         }
 
         /// <summary>
-        /// Adds the given <paramref name="locationToAdd"/> to the <paramref name="discretization"/> if they are not already present (based on geometry)
+        /// Update the <paramref name="discretization"/> with the <paramref name="newLocations"/>
         /// </summary>
-        /// <param name="discretization">Discretization to add the locations to</param>
-        /// <param name="locationToAdd">Locations that need to be added</param>
-        public static void AddNetworkLocationsIfNotAlreadyCreated(this IDiscretization discretization, IEnumerable<NetworkLocation> locationToAdd)
+        /// <param name="discretization">The discretization to update</param>
+        /// <param name="newLocations">New locations to add</param>
+        /// <param name="merge">True to merge <paramref name="newLocations"/> with the existing discretization points</param>
+        public static void UpdateNetworkLocations(this IDiscretization discretization, IEnumerable<INetworkLocation> newLocations, bool merge = true)
         {
-            var locations = new HashSet<Coordinate>(discretization.Locations.Values.Select(l => l.Geometry?.Coordinate));
-            
-            foreach (var location in locationToAdd)
-            {
-                var coordinate = location.Geometry?.Coordinate;
-                if (coordinate == null)
-                {
-                    Log.Warn($"No geometry set for {location.Name}");
-                    continue;
-                }
+            var network = discretization.Network;
+            if (network == null) return;
 
-                if (!locations.Contains(coordinate))
+            List<INetworkLocation> locationsToAdd;
+
+            var existingLocations = discretization.Locations.GetValues();
+            if (!merge || existingLocations.Count == 0)
+            {
+                // add only new locations
+                locationsToAdd = new List<INetworkLocation>(newLocations);
+            }
+            else
+            {
+                locationsToAdd = new List<INetworkLocation>(existingLocations);
+
+                var newLocationsByBranch = newLocations.GroupBy(l => l.Branch);
+
+                foreach (var locations in newLocationsByBranch)
                 {
-                    discretization.Locations.AddValues(new[] { location });
-                    locations.Add(coordinate);
+                    var branch = locations.Key;
+                    var locationsOnBranch = discretization.GetLocationsForBranch(branch);
+
+                    if (locationsOnBranch.Count == 0)
+                    {
+                        // only new locations on branch
+                        locationsToAdd.AddRange(locations);
+                        continue;
+                    }
+
+                    locationsToAdd.AddRange(FilterExistingLocationsForBranch(locationsOnBranch, locations, branch));
                 }
             }
+
+            // cleanup duplicate locations over branches (on nodes)
+            CleanupLocationsAtNodes(locationsToAdd, network.Nodes);
+            discretization.ResetValues(locationsToAdd);
         }
 
-        public static void AddLocations(this IDiscretization discretization, IEnumerable<INetworkLocation> locationsToAdd)
+        /// <summary>
+        /// Replaces the <paramref name="discretization"/> locations with the <paramref name="newLocations"/>
+        /// </summary>
+        /// <param name="discretization">The discretization to set</param>
+        /// <param name="newLocations">New locations to set</param>
+        public static void ResetValues(this IDiscretization discretization, IEnumerable<INetworkLocation> newLocations)
         {
-            var autoSortedValue = discretization.Locations.IsAutoSorted;
-            discretization.Locations.IsAutoSorted = false;
-            discretization.SetLocations(discretization.Locations.Values.Concat(locationsToAdd).ToList());
-            discretization.Locations.IsAutoSorted = autoSortedValue;
+            // reset locations
+            discretization.BeginEdit(new DefaultEditAction("Setting values"));
+            discretization.Clear();
+
+            discretization.Locations.DoWithPropertySet(nameof(discretization.Locations.SkipUniqueValuesCheck), true, () =>
+            {
+                FunctionHelper.SetValuesRaw(discretization.Locations, newLocations);
+                FunctionHelper.SetValuesRaw(discretization.Components[0], Enumerable.Repeat(0d, discretization.Locations.Values.Count));
+            });
+
+            discretization.EndEdit();
+
+            // force refresh of caching (location dictionary) -> new locations are added
+            TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
         }
 
-        public static void RemoveLocations(this IDiscretization discretization, IEnumerable<INetworkLocation> locationsToRemove) 
-        {
-            var locationsToSet = discretization.Locations.Values.Except(locationsToRemove).ToList();
-
-            discretization.Locations.Clear();
-            discretization.SetLocations(locationsToSet);
-        }
-
+        /// <summary>
+        /// Generates network locations for all sewer connections in <paramref name="discretization"/> network
+        /// </summary>
+        /// <param name="discretization">Discretization generate points for</param>
+        /// <returns>A start and end point for each sewer connection</returns>
         public static IEnumerable<INetworkLocation> GenerateSewerConnectionNetworkLocations(this IDiscretization discretization)
         {
-            var hydroNetwork = discretization.GetHydroNetwork();
-            if (hydroNetwork == null) yield break;
+            if (!(discretization.Network is IHydroNetwork hydroNetwork))
+            {
+                log.Error("Could not find network to generate grid.");
+                yield break;
+            }
 
             foreach (var sewerConnection in hydroNetwork.SewerConnections)
             {
@@ -87,52 +234,156 @@ namespace DelftTools.Hydro
                 }
             }
         }
-        
-        public static IEnumerable<INetworkLocation> GetDuplicatePointsOnManholes(this IDiscretization discretization)
+
+        public static INetworkLocation GetLocationForBranchNode(this IDiscretization discretization, IBranch branch, BranchNodeType nodeType)
         {
-            var duplicateLocations = new List<INetworkLocation>();
-            var hydroNetwork = discretization.GetHydroNetwork();
-            if (hydroNetwork == null) return duplicateLocations;
-
-            foreach (var manhole in hydroNetwork.Manholes)
+            if (branch is ISewerConnection sewerConnection)
             {
-                if (manhole.IsOnSingleBranch)
-                    continue;
-
-                var nodeLocations = GetNetworkLocationAtNode(discretization, manhole);
-                if (nodeLocations.Count <= 1) 
-                    continue;
-
-                if (manhole.Compartments.Count == 1)
+                var compartment = nodeType == BranchNodeType.Begin ? sewerConnection.SourceCompartment : sewerConnection.TargetCompartment;
+                if (compartment != null) // could be null for combined urban/rural networks
                 {
-                    duplicateLocations.AddRange(nodeLocations.Skip(1));
-                }
-                else
-                {
-                    // points per compartment
-                    var pointsPerCompartment = nodeLocations.GroupBy(GetCompartmentForLocation);
-
-                    foreach (var compartmentPoints in pointsPerCompartment.Where(p => p.Key != null))
-                    {
-                        duplicateLocations.AddRange(compartmentPoints.Skip(1));
-                    }
+                    return discretization.GetLocationsForCompartment(compartment).FirstOrDefault();
                 }
             }
 
-            return duplicateLocations;
+            var node = nodeType == BranchNodeType.Begin ? branch.Source : branch.Target;
+            return GetNetworkLocationsAtNode(discretization.GetLocationsForBranch, node).FirstOrDefault();
         }
 
+        private static INetworkLocation GetMissingLocationForCompartment(this IDiscretization discretization, ICompartment compartment)
+        {
+            if (compartment == null)
+            {
+                return null;
+            }
+
+            var sourceLocations = discretization.GetLocationsForCompartment(compartment);
+            if (sourceLocations.Any())
+            {
+                return null;
+            }
+
+            var firstIncomingConnection = GetIncomingSewerConnectionsForCompartment(compartment).FirstOrDefault();
+            if (firstIncomingConnection != null)
+            {
+                return new NetworkLocation(firstIncomingConnection, firstIncomingConnection.Length);
+            }
+
+            var firstOutgoingConnection = GetOutgoingSewerConnectionsForCompartment(compartment).FirstOrDefault();
+            if (firstOutgoingConnection != null)
+            {
+                return new NetworkLocation(firstOutgoingConnection, 0);
+            }
+
+            return null;
+        }
+
+        private static IEnumerable<INetworkLocation> GetLocationsForCompartment(this IDiscretization discretization, ICompartment compartment)
+        {
+            if (compartment == null)
+            {
+                return Enumerable.Empty<INetworkLocation>();
+            }
+
+            var incomingLocations = GetIncomingSewerConnectionsForCompartment(compartment)
+                                     .Select(c => discretization.GetLocationsForBranch(c).FirstOrDefault(IsEndLocation))
+                                     .Where(l => l != null);
+
+            var outgoingLocations = GetOutgoingSewerConnectionsForCompartment(compartment)
+                                    .Select(c => discretization.GetLocationsForBranch(c).LastOrDefault(IsBeginNode))
+                                    .Where(l => l != null);
+
+            return incomingLocations.Concat(outgoingLocations);
+        }
+
+        /// <summary>
+        /// Removes duplicate computation points from the 
+        /// </summary>
+        /// <param name="locations">Locations to scan</param>
+        /// <param name="nodes">Nodes to cleanup</param>
+        /// <param name="chainageDelta">Delta to compare chainages</param>
+        private static void CleanupLocationsAtNodes(ICollection<INetworkLocation> locations, IList<INode> nodes)
+        {
+            var locationsByBranch = locations
+                                         .GroupBy(l => l.Branch)
+                                         .ToDictionary(b => b.Key, b => b.ToList());
+
+            IList<INetworkLocation> GetLocationsForBranch(IBranch b)
+            {
+                return locationsByBranch.TryGetValue(b, out var branchLocations) ? branchLocations : new List<INetworkLocation>(0);
+            }
+
+            foreach (var node in nodes)
+            {
+                var nodeLocations = GetNetworkLocationsAtNode(GetLocationsForBranch, node);
+                if (nodeLocations.Count <= 1)
+                    continue;
+
+                var locationsToRemove = new INetworkLocation[0];
+
+                switch (node)
+                {
+                    case HydroNode _:
+                        locationsToRemove = nodeLocations.Skip(1).ToArray();
+                        break;
+                    case Manhole manhole:
+                        locationsToRemove = GetDuplicatePointsForManhole(manhole, nodeLocations).ToArray();
+                        break;
+                }
+
+                if (!locationsToRemove.Any()) continue;
+
+                locationsToRemove.ForEach(n =>
+                {
+                    locations.Remove(n);
+                    locationsByBranch[n.Branch].Remove(n);
+                });
+            }
+        }
+
+        /// <summary>
+        /// Gets unique points for <paramref name="manhole"/> from <paramref name="locationsOnManHole"/>
+        /// </summary>
+        /// <param name="manhole">Manhole to search for</param>
+        /// <param name="locationsOnManHole">Locations on manhole</param>
+        /// <param name="chainageDelta">Delta for comparing chainages</param>
+        /// <returns>Filtered <paramref name="locationsOnManHole"/> (one for each compartment)</returns>
+        private static IEnumerable<INetworkLocation> GetDuplicatePointsForManhole(IManhole manhole, IList<INetworkLocation> locationsOnManHole)
+        {
+            if (manhole.Compartments.Count == 1)
+            {
+                return locationsOnManHole.Skip(1);
+            }
+
+            var duplicatePoints = new List<INetworkLocation>();
+            var pointsPerCompartment = locationsOnManHole.GroupBy(GetCompartmentForLocation);
+
+            foreach (var compartmentPoints in pointsPerCompartment.Where(p => p.Key != null))
+            {
+                // add one point per compartment
+                duplicatePoints.AddRange(compartmentPoints.Skip(1));
+            }
+
+            return duplicatePoints;
+        }
+
+        /// <summary>
+        /// Get corresponding compartment for <paramref name="location"/>
+        /// </summary>
+        /// <param name="location">Location to search for</param>
+        /// <param name="chainageDelta">Delta for comparing chainage</param>
+        /// <returns>corresponding compartment for <paramref name="location"/></returns>
         private static ICompartment GetCompartmentForLocation(INetworkLocation location)
         {
             if (!(location.Branch is ISewerConnection sewerConnection))
                 return null;
 
-            if (Math.Abs(location.Chainage) < 1e-8)
+            if (IsBeginNode(location))
             {
                 return sewerConnection.SourceCompartment;
             }
 
-            if (Math.Abs(sewerConnection.Length - location.Chainage) < 1e-8)
+            if (IsEndLocation(location))
             {
                 return sewerConnection.TargetCompartment;
             }
@@ -140,91 +391,127 @@ namespace DelftTools.Hydro
             return null;
         }
 
-        private static List<INetworkLocation> GetNetworkLocationAtNode(this IDiscretization discretization, INode node)
+        /// <summary>
+        /// Get the network locations that are on the same node (but on multiple branches)
+        /// </summary>
+        /// <param name="getLocationsForBranch">Function to get the locations on a branch</param>
+        /// <param name="node">Node to search locations for</param>
+        /// <returns>Locations that are on the <paramref name="node"/></returns>
+        private static List<INetworkLocation> GetNetworkLocationsAtNode(Func<IBranch, IList<INetworkLocation>> getLocationsForBranch, INode node)
         {
+            if (node == null)
+                return new List<INetworkLocation>();
+
             var branches = node.IncomingBranches
-                .Select(b => new {branch = b, incoming = true})
-                .Concat(node.OutgoingBranches.Select(b => new {branch = b, incoming = false}));
+                               .Select(b => new { branch = b, incoming = true })
+                               .Concat(node.OutgoingBranches.Select(b => new { branch = b, incoming = false }));
 
             return branches
-                .Select(b =>
+                   .Select(b =>
+                   {
+                       var locations = getLocationsForBranch(b.branch);
+                       if (locations.Count == 0)
+                       {
+                           return null;
+                       }
+
+                       // check if first or last is at begin or end node location
+                       var index = b.incoming ? locations.Count - 1 : 0;
+                       var atBeginOrEnd = b.incoming
+                                              ? Math.Abs(locations[index].Chainage - b.branch.Length) < 1e-8
+                                              : Math.Abs(locations[index].Chainage) < 1e-8;
+
+                       return atBeginOrEnd
+                                  ? locations[index]
+                                  : null;
+                   })
+                   .Where(l => l != null)
+                   .ToList();
+        }
+
+        /// <summary>
+        /// Filters the <paramref name="existingLocations"/> from the <paramref name="newLocations"/>
+        /// </summary>
+        /// <param name="existingLocations">Current locations for the <paramref name="branch"/></param>
+        /// <param name="newLocations">New points to add to the <paramref name="branch"/></param>
+        /// <param name="chainageDelta">Delta value to determine if chainage is the same</param>
+        /// <param name="branch">Branch for the points</param>
+        /// <returns>New points that are not already in the cu</returns>
+        private static IEnumerable<INetworkLocation> FilterExistingLocationsForBranch(IList<INetworkLocation> existingLocations, IEnumerable<INetworkLocation> newLocations, IBranch branch)
+        {
+            var chainages = existingLocations.Select(l => l.Chainage).OrderBy(c => c).ToArray();
+            if (chainages.Length == 0)
+            {
+                foreach (var networkLocation in newLocations)
                 {
-                    var locations = discretization.GetLocationsForBranch(b.branch);
-                    if (locations.Count == 0)
+                    yield return networkLocation;
+                }
+
+                yield break;
+            }
+
+            var locations = newLocations.OrderBy(l => l.Chainage).ToArray();
+            var chainageIndex = 0;
+
+            for (int i = 0; i < locations.Length; i++)
+            {
+                var location = locations[i];
+                if (Math.Abs(location.Chainage - chainages[chainageIndex]) < chainageDelta || location.Chainage > branch.Length)
+                {
+                    continue;
+                }
+
+                if (location.Chainage < chainages[chainageIndex])
+                {
+                    yield return location;
+                    continue;
+                }
+
+                if (location.Chainage > chainages[chainageIndex])
+                {
+                    if (chainageIndex != chainages.Length - 1)
                     {
-                        return null;
+                        chainageIndex += 1;
+                        i -= 1; // re-evaluate this node
                     }
-
-                    // check if first or last is at begin or end node location
-                    var index = b.incoming ? locations.Count - 1 : 0;
-                    var atBeginOrEnd = b.incoming
-                        ? Math.Abs(locations[index].Chainage - b.branch.Length) < 1e-8
-                        : Math.Abs(locations[index].Chainage) < 1e-8;
-
-                    return atBeginOrEnd
-                        ? locations[index]
-                        : null;
-                })
-                .Where(l => l != null)
-                .ToList();
+                    else
+                    {
+                        yield return location;
+                    }
+                }
+            }
         }
 
-        public static void UpdateNetworkLocations(this IDiscretization networkDiscretization, IEnumerable<INetworkLocation> newLocations, bool merge = true)
+        /// <summary>
+        /// Incoming <see cref="ISewerConnection"/>s for compartment
+        /// </summary>
+        /// <param name="compartment">Compartment to look for</param>
+        /// <returns>Incoming connections</returns>
+        private static IEnumerable<ISewerConnection> GetIncomingSewerConnectionsForCompartment(ICompartment compartment)
         {
-            // remember network locations the user has fixed.
-            var currentLocations = networkDiscretization.Locations.Values.ToArray();
-
-            var fixedOffsetNetworkLocations = new HashSet<INetworkLocation>(currentLocations
-                                              .Where(networkDiscretization.IsFixedPoint));
-
-            // Merge existing locations and remove locations with the same geometry
-            var networkLocations = newLocations as INetworkLocation[] ?? newLocations.ToArray();
-            
-
-            networkDiscretization.BeginEdit(new DefaultEditAction("Setting values"));
-            networkDiscretization.Clear();
-            if (merge)
-            {
-                var locationsMerged = networkLocations
-                                      .Union(currentLocations)
-                                      .GroupBy(lv => lv.Geometry?.Coordinate)
-                                      .Select(crdGroup =>
-                                                  crdGroup.Select(nl => fixedOffsetNetworkLocations.Contains(nl) ? nl : null).FirstOrDefault() ??
-                                                  crdGroup.Min())
-                                      .OrderBy(l => l)
-                                      .ToArray();
-                FunctionHelper.SetValuesRaw<INetworkLocation>(networkDiscretization.Locations, locationsMerged);
-                FunctionHelper.SetValuesRaw(networkDiscretization.Components[0], Enumerable.Repeat(0d, locationsMerged.Length));
-            }
-            else
-            {
-                var locationsMerged = networkLocations
-                                      .GroupBy(lv => lv.Geometry?.Coordinate)
-                                      .Select(crdGroup =>
-                                                  crdGroup.Select(nl => fixedOffsetNetworkLocations.Contains(nl) ? nl : null).FirstOrDefault() ??
-                                                  crdGroup.Min())
-                                      .OrderBy(l => l)
-                                      .ToArray();
-                FunctionHelper.SetValuesRaw<INetworkLocation>(networkDiscretization.Locations, locationsMerged);
-                FunctionHelper.SetValuesRaw(networkDiscretization.Components[0], Enumerable.Repeat(0d, locationsMerged.Length));
-            }
-
-            fixedOffsetNetworkLocations.ForEach(networkDiscretization.ToggleFixedPoint);
-            networkDiscretization.EndEdit();
-
-            // force refresh of caching (location dictionary) -> new locations are added
-            TypeUtils.SetField(networkDiscretization, "updateLocationsDictionary", true);
+            return compartment.ParentManhole.IncomingBranches.OfType<ISewerConnection>()
+                              .Where(c => c.TargetCompartment == compartment);
         }
 
-        private static IHydroNetwork GetHydroNetwork(this IDiscretization discretization)
+        /// <summary>
+        /// Outgoing <see cref="ISewerConnection"/>s for compartment
+        /// </summary>
+        /// <param name="compartment">Compartment to look for</param>
+        /// <returns>Outgoing connections</returns>
+        private static IEnumerable<ISewerConnection> GetOutgoingSewerConnectionsForCompartment(ICompartment compartment)
         {
-            var hydroNetwork = discretization.Network as IHydroNetwork;
-            if (hydroNetwork == null)
-            {
-                Log.Error("Could not find network to generate grid.");
-            }
+            return compartment.ParentManhole.OutgoingBranches.OfType<ISewerConnection>()
+                              .Where(c => c.SourceCompartment == compartment);
+        }
 
-            return hydroNetwork;
+        private static bool IsBeginNode(INetworkLocation location)
+        {
+            return Math.Abs(location.Chainage) < chainageDelta;
+        }
+
+        private static bool IsEndLocation(INetworkLocation location)
+        {
+            return Math.Abs(location.Chainage - location.Branch.Length) < chainageDelta;
         }
     }
 }
