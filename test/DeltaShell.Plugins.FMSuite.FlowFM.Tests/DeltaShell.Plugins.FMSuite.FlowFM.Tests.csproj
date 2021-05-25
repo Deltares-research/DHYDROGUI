@@ -396,6 +396,7 @@
     <Compile Include="Validation\WaterFlowFMRoughnessValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTest.cs" />
     <Compile Include="WaterFlowFMModelTest.CacheFile.cs" />
+    <Compile Include="WaterFlowFmModelValidationExtensionsTest.cs" />
     <Compile Include="WaterFlowFMTestHelper.cs" />
     <Compile Include="WaterFlowFMModelNetworkTest.cs" />
     <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />

@@ -26,6 +26,7 @@ using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
@@ -68,12 +69,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
-        public void CheckDefaultPropertiesOfFMModel()
+        public void Constructor_CorrectlyInitializesInstance()
         {
-            var model = new WaterFlowFMModel();
+            // Call
+            using (var model = new WaterFlowFMModel())
+            {
+                // Assert
+                Assert.That(model.SnapVersion, Is.EqualTo(0));
+                Assert.That(model.ValidateBeforeRun, Is.True);
+            
+                Assert.That(model.Bathymetry, Is.Not.Null);
+                Assert.That(model.Bathymetry, Is.TypeOf<UnstructuredGridCellCoverage>());
+                Assert.That(model.InitialWaterLevel, Is.Not.Null);
+                Assert.That(model.InitialWaterLevel, Is.TypeOf<UnstructuredGridCellCoverage>());
+                Assert.That(model.InitialTemperature, Is.Not.Null);
+                Assert.That(model.InitialTemperature, Is.TypeOf<UnstructuredGridCellCoverage>());
+                Assert.That(model.InitialSalinity, Is.Not.Null);
+                Assert.That(model.InitialSalinity, Is.TypeOf<CoverageDepthLayersList>());
+                Assert.That(model.Roughness, Is.Not.Null);
+                Assert.That(model.Roughness, Is.TypeOf<UnstructuredGridFlowLinkCoverage>());
+                Assert.That(model.Viscosity, Is.Not.Null);
+                Assert.That(model.Viscosity, Is.TypeOf<UnstructuredGridFlowLinkCoverage>());
+                Assert.That(model.Diffusivity, Is.Not.Null);
+                Assert.That(model.Diffusivity, Is.TypeOf<UnstructuredGridFlowLinkCoverage>());
+                Assert.That(model.Infiltration, Is.Not.Null);
+                Assert.That(model.Infiltration, Is.TypeOf<UnstructuredGridCellCoverage>());
+                Assert.That(model.InitialTracers, Is.Empty);
+                Assert.That(model.InitialTracers, Is.TypeOf<EventedList<UnstructuredGridCellCoverage>>());
+                Assert.That(model.InitialFractions, Is.Empty);
+                Assert.That(model.InitialFractions, Is.TypeOf<EventedList<UnstructuredGridCellCoverage>>());
 
-            Assert.That(model.SnapVersion, Is.EqualTo(0));
-            Assert.IsTrue(model.ValidateBeforeRun);
+                string[] dataItemNames = model.DataItems.Select(d => d.Name).ToArray();
+                Assert.That(dataItemNames.Contains("Bed Level"));
+                Assert.That(dataItemNames.Contains("Initial Water Level"));
+                Assert.That(dataItemNames.Contains("Initial Salinity"));
+                Assert.That(dataItemNames.Contains("Initial Salinity"));
+                Assert.That(dataItemNames.Contains("Initial Temperature"));
+                Assert.That(dataItemNames.Contains("Viscosity"));
+                Assert.That(dataItemNames.Contains("Diffusivity"));
+                Assert.That(dataItemNames.Contains("Infiltration"));
+            }
         }
 
         [Test]
@@ -2433,6 +2468,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                     Assert.That(propertyChangedCounter, Is.GreaterThan(0)); // Apparently, the event can be fired multiple times
                     propertyChangedCounter = 0; // Reset counter
                 }
+            }
+        }
+
+        [Test]
+        public void GetDirectChildren_ReturnsCorrectObjects()
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                // Call
+                object[] objects = model.GetDirectChildren().ToArray();
+                
+                // Assert
+                Assert.That(objects, Contains.Item(model.InitialWaterLevel));
+                Assert.That(objects, Contains.Item(model.InitialTemperature));
+                Assert.That(objects, Contains.Item(model.InitialSalinity));
+                Assert.That(objects, Contains.Item(model.Roughness));
+                Assert.That(objects, Contains.Item(model.Viscosity));
+                Assert.That(objects, Contains.Item(model.Diffusivity));
+                Assert.That(objects, Contains.Item(model.Infiltration));
             }
         }
     }

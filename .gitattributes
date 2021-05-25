@@ -5193,6 +5193,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMNHibernateIntegrationTes
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMResourcesTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMSaveLoadTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFMTestHelper.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/WaterFlowFmModelValidationExtensionsTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/packages.config -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/2contour_hang_testcase/0.xyz -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/2contour_hang_testcase/001.ext -text

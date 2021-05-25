@@ -1476,5 +1476,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(convertedOperation.MinSamplePoints, Is.EqualTo(minSamplePoints));
             Assert.That(convertedOperation.Operand, Is.EqualTo(operand));
         }
+        
+        [TestCase(WaterFlowFMModelDefinition.BathymetryDataItemName, "Bed Level")]
+        [TestCase(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, "Initial Water Level")]
+        [TestCase(WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, "Initial Water Depth")]
+        [TestCase(WaterFlowFMModelDefinition.InitialSalinityDataItemName, "Initial Salinity")]
+        [TestCase(WaterFlowFMModelDefinition.InitialTemperatureDataItemName, "Initial Temperature")]
+        [TestCase(WaterFlowFMModelDefinition.RoughnessDataItemName, "Roughness")]
+        [TestCase(WaterFlowFMModelDefinition.ViscosityDataItemName, "Viscosity")]
+        [TestCase(WaterFlowFMModelDefinition.DiffusivityDataItemName, "Diffusivity")]
+        [TestCase(WaterFlowFMModelDefinition.InfiltrationDataItemName, "Infiltration")]
+        public void ConstantFields(string actual, string expected)
+        {
+            Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void SpatialDataItemNames_ContainsCorrectValues()
+        {
+            // Call
+            string[] names = WaterFlowFMModelDefinition.SpatialDataItemNames;
+            
+            // Assert
+            Assert.That(names, Has.Length.EqualTo(9));
+            Assert.That(names.Contains("Bed Level"));
+            Assert.That(names.Contains("Initial Water Level"));
+            Assert.That(names.Contains("Initial Water Depth"));
+            Assert.That(names.Contains("Initial Salinity"));
+            Assert.That(names.Contains("Initial Salinity"));
+            Assert.That(names.Contains("Initial Temperature"));
+            Assert.That(names.Contains("Viscosity"));
+            Assert.That(names.Contains("Diffusivity"));
+            Assert.That(names.Contains("Infiltration"));
+        }
     }
 }
