@@ -546,8 +546,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 yield return model.Roughness;
                 yield return model.Viscosity;
                 yield return model.Diffusivity;
-                yield return model.Infiltration;
 
+                if (model.UseInfiltration)
+                {
+                    yield return model.Infiltration;
+                }
+                
                 if (model.HeatFluxModelType != HeatFluxModelType.None)
                 {
                     yield return model.InitialTemperature;

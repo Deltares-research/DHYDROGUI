@@ -544,22 +544,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         public void ChildLayerObjects_ContainsCorrectObjects()
         {
             // Setup
-            var model = new WaterFlowFMModel();
-            var layerProvider = new FlowFMMapLayerProvider();
+            using (var model = new WaterFlowFMModel())
+            {
+                var layerProvider = new FlowFMMapLayerProvider();
             
-            // Precondition
-            Assert.That(model.Infiltration, Is.Not.Null);
+                // Precondition
+                Assert.That(model.Infiltration, Is.Not.Null);
             
-            // Call
-            object[] objects = layerProvider.ChildLayerObjects(model).ToArray();
+                // Call
+                object[] objects = layerProvider.ChildLayerObjects(model).ToArray();
             
-            // Assert
-            Assert.That(objects, Contains.Item(model.Bathymetry));
-            Assert.That(objects, Contains.Item(model.InitialWaterLevel));
-            Assert.That(objects, Contains.Item(model.Roughness));
-            Assert.That(objects, Contains.Item(model.Viscosity));
-            Assert.That(objects, Contains.Item(model.Diffusivity));
-            Assert.That(objects, Contains.Item(model.Infiltration));
+                // Assert
+                Assert.That(objects, Does.Contain(model.Bathymetry));
+                Assert.That(objects, Does.Contain(model.InitialWaterLevel));
+                Assert.That(objects, Does.Contain(model.Roughness));
+                Assert.That(objects, Does.Contain(model.Viscosity));
+                Assert.That(objects, Does.Contain(model.Diffusivity));
+                Assert.That(objects, Does.Contain(model.Infiltration));
+            }
+        }
+        
+        [Test]
+        public void ChildLayerObjects_ModelDoesNotUseInfiltration_DoesNotContainInfiltration()
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                var layerProvider = new FlowFMMapLayerProvider();
+            
+                // Set to: no infiltration
+                model.ModelDefinition.GetModelProperty("infiltrationmodel").SetValueAsString("0");
+            
+                // Precondition
+                Assert.That(model.Infiltration, Is.Not.Null);
+            
+                // Call
+                object[] objects = layerProvider.ChildLayerObjects(model).ToArray();
+            
+                // Assert
+                Assert.That(objects, Does.Not.Contain(model.Infiltration));
+            }
         }
 
         #region Test helper methods

@@ -73,6 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public const string InitialSalinity = "InitialSalinity";
         public const string Temperature = "temperature";
         public const string FrictionType = "UnifFrictType";
+        public const string InfiltrationModel = "Infiltrationmodel";
         public const string WaveModelNr = "Wavemodelnr";
         public const string WaterLevIni = "WaterLevIni";
         public const string IniFieldFile = "IniFieldFile";

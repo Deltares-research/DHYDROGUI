@@ -346,7 +346,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get { return (HeatFluxModelType)ModelDefinition.GetModelProperty(KnownProperties.Temperature).Value != HeatFluxModelType.None; }
         }
-            
+
+        /// <summary>
+        /// Whether this model uses spatial infiltration data. 
+        /// </summary>
+        public bool UseInfiltration => (int) ModelDefinition.GetModelProperty(KnownProperties.InfiltrationModel).Value == 2;
+
         private void ToggleTemperature(bool useTemperature)
         {
             if (UseTemperature == useTemperature) return;

@@ -222,42 +222,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var model = new WaterFlowFMModel();
             
             // Call
-            var objects = nodePresenter.GetChildNodeObjects(model, null).Cast<object>().ToArray();
+            object[] objects = nodePresenter.GetChildNodeObjects(model, null).Cast<object>().ToArray();
             
             // Assert
-            var physicalParameters = objects
-                                     .OfType<TreeFolder>().First(f => f.Text == "2D").ChildItems
-                                     .OfType<FmModelTreeShortcut>().First(f => f.Text == "Physical Parameters")
-                                     .ChildObjects.ToArray();
+            object[] physicalParameters = objects
+                                          .OfType<TreeFolder>().First(f => f.Text == "2D").ChildItems
+                                          .OfType<FmModelTreeShortcut>().First(f => f.Text == "Physical Parameters")
+                                          .ChildObjects.ToArray();
 
-            var roughness = GetShortCut(physicalParameters, "Roughness");
+            FmModelTreeShortcut roughness = GetShortCut(physicalParameters, "Roughness");
             Assert.That(roughness.Data, Is.SameAs(model.Roughness));
             
-            var viscosity = GetShortCut(physicalParameters, "Viscosity");
+            FmModelTreeShortcut viscosity = GetShortCut(physicalParameters, "Viscosity");
             Assert.That(viscosity.Data, Is.SameAs(model.Viscosity));
             
-            var diffusivity = GetShortCut(physicalParameters, "Diffusivity");
+            FmModelTreeShortcut diffusivity = GetShortCut(physicalParameters, "Diffusivity");
             Assert.That(diffusivity.Data, Is.SameAs(model.Diffusivity));
             
-            var infiltration = GetShortCut(physicalParameters, "Infiltration");
+            FmModelTreeShortcut infiltration = GetShortCut(physicalParameters, "Infiltration");
             Assert.That(infiltration.Data, Is.SameAs(model.Infiltration));
+        }
+
+        [Test]
+        public void GetChildNodeObjects_DoesNotUseInfiltration_DoesNotContainInfiltration()
+        {
+            // Setup
+            var guiPlugin = Substitute.For<GuiPlugin>();
+            var graphicsProvider = Substitute.For<IGraphicsProvider>();
+            guiPlugin.GraphicsProvider.Returns(graphicsProvider);
             
+            var nodePresenter = new WaterFlowFMModelNodePresenter(guiPlugin);
+            var model = new WaterFlowFMModel();
+            
+            // Set to: no infiltration
+            model.ModelDefinition.GetModelProperty("infiltrationmodel").SetValueAsString("0");
+            
+            // Call
+            object[] objects = nodePresenter.GetChildNodeObjects(model, null).Cast<object>().ToArray();
+            
+            // Assert
+            object[] physicalParameters = objects
+                                          .OfType<TreeFolder>().First(f => f.Text == "2D").ChildItems
+                                          .OfType<FmModelTreeShortcut>().First(f => f.Text == "Physical Parameters")
+                                          .ChildObjects.ToArray();
+            
+            FmModelTreeShortcut infiltration = GetShortCut(physicalParameters, "Infiltration");
+            Assert.That(infiltration, Is.Null);
         }
 
         private static FmModelTreeShortcut GetShortCut(object[] objects, string text)
         {
-            return objects.OfType<FmModelTreeShortcut>().First(f => f.Text == text);
+            return objects.OfType<FmModelTreeShortcut>().FirstOrDefault(f => f.Text == text);
         }
-
-
-/*        private static WaterFlowFMModelView GetActiveFMModelView()
-        {
-            return (WaterFlowFMModelView)FlowFMGuiPlugin.ActiveMapView.TabControl.ActiveView;
-        }
-
-        private static TabPage GetSelectedTab(WaterFlowFMModelView modelView)
-        {
-            return modelView.Controls[0].Controls.OfType<TabControl>().First().SelectedTab;
-        }*/
     }
 }

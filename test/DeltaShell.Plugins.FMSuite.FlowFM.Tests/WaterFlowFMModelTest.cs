@@ -2490,6 +2490,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(objects, Contains.Item(model.Infiltration));
             }
         }
+
+        [Test]
+        [TestCase(0, false)]
+        [TestCase(1, false)]
+        [TestCase(2, true)]
+        [TestCase(3, false)]
+        [TestCase(4, false)]
+        public void UseInfiltration_ReturnsCorrectResult(int infiltrationModel, bool expResult)
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                model.ModelDefinition.GetModelProperty("infiltrationmodel").SetValueAsString(infiltrationModel.ToString());
+
+                // Call
+                bool result = model.UseInfiltration;
+                
+                // Assert
+                Assert.That(result, Is.EqualTo(expResult));
+            }
+        }
     }
 
 }
