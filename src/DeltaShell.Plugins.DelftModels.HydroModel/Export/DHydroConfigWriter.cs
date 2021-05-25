@@ -95,6 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                                            string.Join(" ",
                                                        Enumerable.Range(0, numCores).Select(i => i.ToString(CultureInfo.InvariantCulture)))));
             }
+            component.Add(new XElement(DHyd + "workingDir", dimrModel.DirectoryName));
             if (dimrModel.LibraryName.Equals("dflowfm"))
             {
                 XElement setting = new XElement(DHyd + "setting");
@@ -102,7 +103,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 setting.Add(new XAttribute("value", defaultNumThreads));
                 component.Add(setting);
             }
-            component.Add(new XElement(DHyd + "workingDir", dimrModel.DirectoryName));
             component.Add(new XElement(DHyd + "inputFile", dimrModel.InputFile));
             return component;
         }
