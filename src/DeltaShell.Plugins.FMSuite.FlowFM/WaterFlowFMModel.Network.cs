@@ -345,14 +345,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 UpdateCrossSectionSectionType(e);
                 UpdateRoughnessSectionsEvent(e);
             }
-            else if (Equals(sender, Network.Branches) && removedOrAddedItem is IBranch branch && !isLoading)
+            else if (Equals(sender, Network.Branches) && removedOrAddedItem is IBranch branch)
             {
                 switch (branch)
                 {
                     case IChannel channel:
                         HandleChannelsChanged(e.Action, channel);
                         break;
-                    case ISewerConnection sewerConnection:
+                    case ISewerConnection sewerConnection when !isLoading:
                         HandleSewerConnectionsChanged(e.Action, sewerConnection);
                         break;
                 }
