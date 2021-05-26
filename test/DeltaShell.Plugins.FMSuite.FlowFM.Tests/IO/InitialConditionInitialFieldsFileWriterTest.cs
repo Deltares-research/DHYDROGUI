@@ -228,13 +228,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        [TestCase("tif", "GeoTiff", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, "waterlevel" )]
+        [TestCase("tif", "GeoTIFF", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, "waterlevel" )]
         [TestCase("asc", "arcinfo", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, "waterlevel")]
         [TestCase("xyz", "sample", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, "waterlevel")]
-        [TestCase("tif", "GeoTiff", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
+        [TestCase("tif", "GeoTIFF", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
         [TestCase("asc", "arcinfo", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
         [TestCase("xyz", "sample", WaterFlowFMModelDefinition.BathymetryDataItemName, "bedlevel")]
-        [TestCase("tif", "GeoTiff", WaterFlowFMModelDefinition.InfiltrationDataItemName, "InfiltrationCapacity")]
+        [TestCase("tif", "GeoTIFF", WaterFlowFMModelDefinition.InfiltrationDataItemName, "InfiltrationCapacity")]
         [TestCase("asc", "arcinfo", WaterFlowFMModelDefinition.InfiltrationDataItemName, "InfiltrationCapacity")]
         [TestCase("xyz", "sample", WaterFlowFMModelDefinition.InfiltrationDataItemName, "InfiltrationCapacity")]
         public void WriteFile_WithImportSamplesOperation_WritesCorrectFile(string fileExtension, string expFileType, string dataItemName, string expQuantity)

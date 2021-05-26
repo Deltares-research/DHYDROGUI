@@ -31,15 +31,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 categories.Add(CreateInitialConditionQuantityCategory(globalInitialConditionQuantity1D));
             }
             categories.AddRange(CreateSpatialOperationQuantityCategory(filename,ExtForceQuantNames.FrictCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName), true));
-            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,InitialFieldsFileConstants.BedLevel, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.BathymetryDataItemName), false));
-            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,InitialFieldsFileConstants.Infiltration, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InfiltrationDataItemName), false));
+            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,InitialFieldsFile.Quantity.BedLevel, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.BathymetryDataItemName), false));
+            categories.AddRange(CreateSpatialOperationQuantityCategory(filename,InitialFieldsFile.Quantity.Infiltration, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InfiltrationDataItemName), false));
             
             var globalInitialConditionQuantity2D = (InitialConditionQuantity)(int)modelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
             categories.AddRange(CreateSpatialOperationQuantityCategory(filename,globalInitialConditionQuantity2D == InitialConditionQuantity.WaterLevel 
-                ? InitialFieldsFileConstants.WaterLevel 
-                : InitialFieldsFileConstants.WaterDepth, modelDefinition.GetSpatialOperations(globalInitialConditionQuantity2D == InitialConditionQuantity.WaterLevel 
-                ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
-                : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName), false));
+                ? InitialFieldsFile.Quantity.WaterLevel 
+                : InitialFieldsFile.Quantity.WaterDepth, modelDefinition.GetSpatialOperations(globalInitialConditionQuantity2D == InitialConditionQuantity.WaterLevel 
+                                                                                                    ? WaterFlowFMModelDefinition.InitialWaterLevelDataItemName
+                                                                                                    : WaterFlowFMModelDefinition.InitialWaterDepthDataItemName), false));
 
             if (File.Exists(filename)) File.Delete(filename);
             new IniFileWriter().WriteIniFile(categories, filename);
@@ -147,14 +147,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             switch (fileType)
             {
                 case ExtForceQuantNames.FileTypes.ArcInfo:
-                    return "arcinfo";
+                    return InitialFieldsFile.DataType.ArcInfo;
                 case ExtForceQuantNames.FileTypes.GeoTiff:
-                    return "GeoTiff";
+                    return InitialFieldsFile.DataType.GeoTiff;
                 case ExtForceQuantNames.FileTypes.Triangulation:
                 case ExtForceQuantNames.FileTypes.TriangulationMagDir:
-                    return "sample";
+                    return InitialFieldsFile.DataType.Sample;
                 case ExtForceQuantNames.FileTypes.InsidePolygon: 
-                    return "polygon";
+                    return InitialFieldsFile.DataType.Polygon;
             }
             return string.Empty;
         }

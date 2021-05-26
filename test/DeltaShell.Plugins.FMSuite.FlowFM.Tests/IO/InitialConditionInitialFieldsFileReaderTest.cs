@@ -460,11 +460,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        [TestCase("tif", "GeoTiff", "waterlevel", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName)]
+        [TestCase("tif", "GeoTIFF", "waterlevel", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName)]
         [TestCase("asc", "arcinfo", "waterlevel", WaterFlowFMModelDefinition.InitialWaterLevelDataItemName)]
-        [TestCase("tif", "GeoTiff", "bedlevel", WaterFlowFMModelDefinition.BathymetryDataItemName)]
+        [TestCase("tif", "GeoTIFF", "bedlevel", WaterFlowFMModelDefinition.BathymetryDataItemName)]
         [TestCase("asc", "arcinfo", "bedlevel", WaterFlowFMModelDefinition.BathymetryDataItemName)]
-        [TestCase("tif", "GeoTiff", "InfiltrationCapacity", WaterFlowFMModelDefinition.InfiltrationDataItemName)]
+        [TestCase("tif", "GeoTIFF", "InfiltrationCapacity", WaterFlowFMModelDefinition.InfiltrationDataItemName)]
         [TestCase("asc", "arcinfo", "InfiltrationCapacity", WaterFlowFMModelDefinition.InfiltrationDataItemName)]
         public void ReadFile_CreatesTheCorrectSpatialOperation(string extension, string fileType, string quantity, string dataItemName)
         {

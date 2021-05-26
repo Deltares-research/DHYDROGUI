@@ -155,7 +155,7 @@
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="FileConstants.cs" />
-    <Compile Include="IO\InitialFieldsFileConstants.cs" />
+    <Compile Include="IO\InitialFieldsFile.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Spatial\SpatialOperationHelper.cs" />
     <Compile Include="WaterFlowFMModel.Synchronize.cs" />

@@ -39,18 +39,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             
             ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, ExtForceQuantNames.FrictCoef, WaterFlowFMModelDefinition.RoughnessDataItemName, modelDefinition);
             
-            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFileConstants.BedLevel, WaterFlowFMModelDefinition.BathymetryDataItemName, modelDefinition);
-            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFileConstants.Infiltration, WaterFlowFMModelDefinition.InfiltrationDataItemName, modelDefinition);
+            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFile.Quantity.BedLevel, WaterFlowFMModelDefinition.BathymetryDataItemName, modelDefinition);
+            ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFile.Quantity.Infiltration, WaterFlowFMModelDefinition.InfiltrationDataItemName, modelDefinition);
             
-            if (categories.Any(IsInitialField(InitialFieldsFileConstants.WaterLevel)))
+            if (categories.Any(IsInitialField(InitialFieldsFile.Quantity.WaterLevel)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterLevel).ToString());
-                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFileConstants.WaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFile.Quantity.WaterLevel, WaterFlowFMModelDefinition.InitialWaterLevelDataItemName, modelDefinition);
             }
-            else if (categories.Any(IsInitialField(InitialFieldsFileConstants.WaterDepth)))
+            else if (categories.Any(IsInitialField(InitialFieldsFile.Quantity.WaterDepth)))
             {
                 modelDefinition.SetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D, ((int)InitialConditionQuantity.WaterDepth).ToString());
-                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFileConstants.WaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
+                ReadSpatialOperation(Path.GetDirectoryName(filePath), categories, InitialFieldsFile.Quantity.WaterDepth, WaterFlowFMModelDefinition.InitialWaterDepthDataItemName, modelDefinition);
             }
 
 

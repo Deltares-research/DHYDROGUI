@@ -2197,7 +2197,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/WaterFlowFMFileImporter.cs -t
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionInitialFieldsFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionInitialFieldsFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionRegion.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialFieldsFileConstants.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialFieldsFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/KnownFeatureCategories.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/LdbFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/LinkCoveragesDoneReadingEventArgs.cs -text
@@ -5139,7 +5139,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Importers/TimFileImporterTest.cs
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Importers/WaterFlowFMFileImporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/InitialConditionInitialFieldsFileReaderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/InitialConditionInitialFieldsFileWriterTest.cs -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/InitialFieldsFileConstantsTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/InitialFieldsFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/LdbFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/MduFileHelperTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/MduFileTest.cs -text
