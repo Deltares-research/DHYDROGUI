@@ -455,9 +455,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<IPolygon, RoofArea>>();
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<IPoint, Gully>>();
 
-            yield return GetFeature2DImportDialogViewInfo<PolFileImporterExporter>();
-            yield return GetFeature2DImportDialogViewInfo<PointFileImporterExporter>();
-
             yield return new ViewInfo<BoundaryConditionWpsImporter, BoundaryConditionWpsDialog>
             {
                 AfterCreate = (v, o) =>
