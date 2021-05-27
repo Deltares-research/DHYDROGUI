@@ -95,6 +95,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             { KnownProperties.StructuresFile, "StructureFile" },
             { KnownProperties.ObsFile, "ObsFile" },
             { KnownProperties.ObsCrsFile, "CrsFile" },
+            { KnownProperties.RoofAreaFile, "RoofAreaFile" },
         };
 
         public MduFile()
