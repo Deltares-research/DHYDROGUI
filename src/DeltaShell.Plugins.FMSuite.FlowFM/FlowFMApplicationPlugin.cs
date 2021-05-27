@@ -384,7 +384,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             yield return new GisToFeature2DImporter<IPoint, Gully>();
 
-            yield return new GisToFeature2DImporter<IPolygon, RoofArea>();
+            yield return new GisToFeature2DImporter<IPolygon, GroupableFeature2DPolygon>();
         }
 
         private WaterFlowFMModel GetModelFor<T>(object target, params Func<HydroArea, IEnumerable<T>>[] listSelectors) where T : IFeature, INameable

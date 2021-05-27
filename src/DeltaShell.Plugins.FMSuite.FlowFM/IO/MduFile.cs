@@ -69,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private PliFile<ObservationCrossSection2D> obsCrsFile;
         private PolFile<GroupableFeature2DPolygon> dryAreaFile;
         private PolFile<GroupableFeature2DPolygon> enclosureFile;
-        private PolFile<RoofArea> roofAreaFile;
+        private PolFile<GroupableFeature2DPolygon> roofAreaFile;
         
 
         // the following mdu-referenced files are written by the UI, or at least should not be copied along blindly 
@@ -684,7 +684,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             }
 
-            var roofAreaFileWriter = fileWriter as PolFile<RoofArea>;
+            var roofAreaFileWriter = fileWriter as PolFile<GroupableFeature2DPolygon>;
             if (roofAreaFileWriter != null)
             {
                 roofAreaFileWriter.IncludeClosingCoordinate = true;

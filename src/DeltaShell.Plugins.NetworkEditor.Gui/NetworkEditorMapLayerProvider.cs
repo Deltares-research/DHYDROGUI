@@ -83,8 +83,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                    || (data is IEventedList<FixedWeir> && parentObject is HydroArea) //fixed weirs
                    || (data is IEventedList<Embankment> && parentObject is HydroArea)
                    || (data is IEventedList<BridgePillar> && parentObject is HydroArea)
-                   || (data is IEventedList<Gully> && parentObject is HydroArea) //gullies
-                   || (data is IEventedList<RoofArea> && parentObject is HydroArea) //roofareas;
+                   || (data is IEventedList<Gully> && parentObject is HydroArea)                     //gullies
+                   // (data is IEventedList<GroupableFeature2DPolygon> && parentObject is HydroArea) //roofareas;
                    || data is IEventedList<RoughnessSection>
                    || data is RoughnessSection;
         }
@@ -406,7 +406,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             geometry = new Polygon(new LinearRing(coordinates.ToArray()));
                         }
 
-                        var newFeature = new RoofArea {Geometry = geometry};
+                        var newFeature = new GroupableFeature2DPolygon {Geometry = geometry};
                         ds.Features.Add(newFeature);
 
                         return newFeature;

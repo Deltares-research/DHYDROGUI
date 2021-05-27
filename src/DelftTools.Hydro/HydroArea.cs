@@ -56,7 +56,7 @@ namespace DelftTools.Hydro
             Weirs = new EventedList<Weir2D>();
             Gates = new EventedList<Gate2D>();
 
-            RoofAreas = new EventedList<RoofArea>();
+            RoofAreas = new EventedList<GroupableFeature2DPolygon>();
             Gullies = new EventedList<Gully>();
         }
 
@@ -78,7 +78,7 @@ namespace DelftTools.Hydro
         public virtual IEventedList<Weir2D> Weirs { get; protected set; }
         public virtual IEventedList<Gate2D> Gates { get; protected set; }
 
-        public virtual IEventedList<RoofArea> RoofAreas { get; protected set; }
+        public virtual IEventedList<GroupableFeature2DPolygon> RoofAreas { get; protected set; }
 
         public virtual IEventedList<Gully> Gullies { get; protected set; }
 

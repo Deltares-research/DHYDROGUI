@@ -926,7 +926,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new FeatureProjectTreeViewNodePresenter<Gate2D>(HydroArea.GatesPluralName, Properties.Resources.Gate) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroArea.EmbankmentsPluralName, Properties.Resources.Embankment) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroArea.BridgePillarsPluralName, Properties.Resources.BridgeSmall) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<RoofArea>(HydroArea.RoofAreaName, Properties.Resources.Roof) { GuiPlugin = this };
+            yield return new FeatureProjectTreeViewNodePresenter<GroupableFeature2DPolygon>(HydroArea.RoofAreaName, Properties.Resources.Roof) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Gully>(HydroArea.GullyName, Properties.Resources.Gully) { GuiPlugin = this };
             yield return new RoughnessSectionNodePresenter { GuiPlugin = this };
 

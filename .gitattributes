@@ -447,7 +447,6 @@ src/DelftTools.Hydro/Resources/sacramento.png -text
 src/DelftTools.Hydro/Resources/unpaved.png -text
 src/DelftTools.Hydro/Retention.cs -text
 src/DelftTools.Hydro/Retention.hbm.xml -text svneol=unset#application/octet-stream
-src/DelftTools.Hydro/RoofArea.cs -text
 src/DelftTools.Hydro/Roughness/IModelWithRoughnessSections.cs -text
 src/DelftTools.Hydro/Roughness/ReverseRoughnessSection.cs -text
 src/DelftTools.Hydro/Roughness/RoughnessDataSet.cs -text
