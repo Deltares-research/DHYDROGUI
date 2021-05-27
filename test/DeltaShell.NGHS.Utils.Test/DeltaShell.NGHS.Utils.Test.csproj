@@ -36,12 +36,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Shell.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.623-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.TestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.623-beta\lib\net40\DelftTools.TestUtils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.662-beta\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
@@ -94,17 +94,17 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.623-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.623-beta\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.2.0.0.623-beta\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.2.0.0.623-beta\build\net40\DeltaShell.TestProject.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.662-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.662-beta\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.2.0.0.662-beta\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.2.0.0.662-beta\build\net40\DeltaShell.TestProject.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <PropertyGroup>
     <PostBuildEvent>
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.623-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.2.0.0.623-beta\test-data\DelftTools.TestUtils
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.662-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.2.0.0.662-beta\test-data\DelftTools.TestUtils
 
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.623-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
+cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.662-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
 </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.623-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.623-beta\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\DeltaShell.TestProject.2.0.0.623-beta\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.2.0.0.623-beta\build\net40\DeltaShell.TestProject.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.662-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.662-beta\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.TestProject.2.0.0.662-beta\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.2.0.0.662-beta\build\net40\DeltaShell.TestProject.targets')" />
 </Project>
