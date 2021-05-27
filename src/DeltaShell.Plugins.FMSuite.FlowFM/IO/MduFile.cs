@@ -1181,6 +1181,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, ref obsFile, ObsExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections, ref obsCrsFile, ObsCrossExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.BridgePillarFile, hydroArea.BridgePillars, ref bridgePillarFile, BridgePillarExtension);
+            ReadFeatures(filePath, modelDefinition, KnownProperties.RoofAreaFile, hydroArea.RoofAreas, ref roofAreaFile, RoofAreaExtension);
 
 
             var structures = new List<IStructure>();
@@ -1223,7 +1224,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 enclosureMultipleFilePath.RemoveAllWhere(efp => !efp.EndsWith(PolFile<GroupableFeature2DPolygon>.Extension));
             }
 
-            if (enclosureMultipleFilePath.Count > 0)
+            if (enclosureMultipleFilePath.Any())
             {
                 ReadFeatures(filePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures, ref enclosureFile, EnclosureExtension);
 
