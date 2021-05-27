@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!FeaturesByCoverage.ContainsKey(featureName))
             {
                 IFeature[] features = null;
-                if (Network != null && Area != null)
+                if (Network != null && Area != null && ids != null)
                 {
                     //baseTypeChecking?
                     var allFeatures = Network.BranchFeatures.OfType<INameable>()
