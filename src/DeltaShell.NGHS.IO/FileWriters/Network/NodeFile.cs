@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -102,10 +103,15 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 ManholeId = category.ReadProperty<string>(manholeId),
                 UseTable = false
             };
-            
-            var useTable = category.ReadProperty<bool>(RetentionRegion.UseTable, true) ||
-                               category.ReadProperty<int>(RetentionRegion.UseTable, true) != 0;
-            if (useTable)
+
+            var useTable = category.ReadProperty<bool?>(RetentionRegion.UseTable, true);
+            if (!useTable.HasValue)
+            {
+                var intValue = category.ReadProperty<int?>(RetentionRegion.UseTable, true);
+                useTable = intValue.HasValue && intValue !=0;
+            }
+
+            if (useTable.Value)
             {
                 log.Warn($"compartments with storage tables are not supported, using DEFAULT VALUES for " +
                          $"compartment id {properties.CompartmentId} ({properties.Name}) on " +
