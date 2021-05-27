@@ -102,20 +102,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         {
             data.CollectionChanged += OnBoundaryConditionSetsChanged;
             boundaryConditions.CollectionChanged += OnBoundaryConditionRemoved;
-            foreach (var boundaryConditionSet in data)
-            {
-                boundaryConditionSet.BoundaryConditions.CollectionChanged += OnBoundaryConditionSetsChanged;
-            }
         }
 
         private void UnSubscribeToData()
         {
             data.CollectionChanged -= OnBoundaryConditionSetsChanged;
             boundaryConditions.CollectionChanged -= OnBoundaryConditionRemoved;
-            foreach (var boundaryConditionSet in data)
-            {
-                boundaryConditionSet.BoundaryConditions.CollectionChanged -= OnBoundaryConditionSetsChanged;
-            }
         }
         
         [InvokeRequired]
