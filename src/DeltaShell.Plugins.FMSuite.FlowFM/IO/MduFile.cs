@@ -553,7 +553,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (fileWriter == null)
                 {
-                    fileWriter = CreateFeatureFile<TFeat, TFile>(modelDefinition);
+                    fileWriter = CreateFeatureFile<TFeat, TFile>(modelDefinition, propertyKey);
                 }
 
                 foreach (var filePath in featuresFilePaths)
@@ -653,7 +653,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static TFile CreateFeatureFile<TFeat, TFile>(WaterFlowFMModelDefinition modelDefinition)
+        private static TFile CreateFeatureFile<TFeat, TFile>(WaterFlowFMModelDefinition modelDefinition, string propertyKey)
             where TFile : IFeature2DFileBase<TFeat>, new()
         {
             var fileWriter = new TFile();
@@ -686,7 +686,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             var roofAreaFileWriter = fileWriter as PolFile<GroupableFeature2DPolygon>;
-            if (roofAreaFileWriter != null)
+            if (roofAreaFileWriter != null && propertyKey == KnownProperties.RoofAreaFile)
             {
                 roofAreaFileWriter.IncludeClosingCoordinate = true;
             }
@@ -1135,7 +1135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (featuresFilePaths == null || featuresFilePaths.Count == 0) return;
 
-            fileReader = CreateFeatureFile<TFeat, TFile>(modelDefinition);
+            fileReader = CreateFeatureFile<TFeat, TFile>(modelDefinition, propertyKey);
 
             var readFeatures = new List<TFeat>();
             foreach (var featuresFilePath in featuresFilePaths)
