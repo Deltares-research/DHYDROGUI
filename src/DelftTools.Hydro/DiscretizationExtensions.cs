@@ -185,7 +185,9 @@ namespace DelftTools.Hydro
 
             // cleanup duplicate locations over branches (on nodes)
             CleanupLocationsAtNodes(locationsToAdd, network.Nodes);
-            discretization.ResetValues(locationsToAdd);
+
+            double[] fixedPointsMask = FixedPointsMask(discretization, locationsToAdd);
+            discretization.ResetValues(locationsToAdd, fixedPointsMask);
         }
 
         /// <summary>
@@ -193,16 +195,19 @@ namespace DelftTools.Hydro
         /// </summary>
         /// <param name="discretization">The discretization to set</param>
         /// <param name="newLocations">New locations to set</param>
-        public static void ResetValues(this IDiscretization discretization, IEnumerable<INetworkLocation> newLocations)
+        /// <param name="fixedPointsMask">Mask for the locations containing the fixed points (value = 1 instead of 0)</param>
+        public static void ResetValues(this IDiscretization discretization, ICollection<INetworkLocation> newLocations, IEnumerable<double> fixedPointsMask = null)
         {
             // reset locations
             discretization.BeginEdit(new DefaultEditAction("Setting values"));
             discretization.Clear();
 
+            fixedPointsMask = fixedPointsMask ?? Enumerable.Repeat(0d, newLocations.Count).ToArray();
+
             discretization.Locations.DoWithPropertySet(nameof(discretization.Locations.SkipUniqueValuesCheck), true, () =>
             {
                 FunctionHelper.SetValuesRaw(discretization.Locations, newLocations);
-                FunctionHelper.SetValuesRaw(discretization.Components[0], Enumerable.Repeat(0d, discretization.Locations.Values.Count));
+                FunctionHelper.SetValuesRaw(discretization.Components[0], fixedPointsMask);
             });
 
             discretization.EndEdit();
@@ -512,6 +517,39 @@ namespace DelftTools.Hydro
         private static bool IsEndLocation(INetworkLocation location)
         {
             return Math.Abs(location.Chainage - location.Branch.Length) < chainageDelta;
+        }
+
+        private static double[] FixedPointsMask(IDiscretization discretization, IList<INetworkLocation> locationsToAdd)
+        {
+            var values = discretization.Components[0].GetValues<double>();
+            if (values.Count == 0)
+            {
+                return null;
+            }
+
+            var fixedLocations = new List<INetworkLocation>();
+            for (int i = 0; i < values.Count; i++)
+            {
+                if (values[i] > 0.0)
+                {
+                    fixedLocations.Add(discretization.Locations.Values[i]);
+                }
+            }
+
+            if (fixedLocations.Count == 0)
+            {
+                return null;
+            }
+
+            var fixedLocationsHashset = new HashSet<INetworkLocation>(fixedLocations);
+            var fixedPointsMask = new double[locationsToAdd.Count];
+
+            for (int i = 0; i < locationsToAdd.Count; i++)
+            {
+                fixedPointsMask[i] = fixedLocationsHashset.Contains(locationsToAdd[i]) ? 1.0 : 0.0;
+            }
+
+            return fixedPointsMask;
         }
     }
 }
