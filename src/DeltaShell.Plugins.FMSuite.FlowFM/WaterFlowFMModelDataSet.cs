@@ -217,8 +217,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {Model1DParameterNames.StructureWaterlevelUp, FunctionAttributes.StandardNames.StructureWaterLevelUpstream},
                 {Model1DParameterNames.StructureWaterlevelDown, FunctionAttributes.StandardNames.StructureWaterLevelDownstream},
                 {Model1DParameterNames.StructureHeadDifference, FunctionAttributes.StandardNames.StructureWaterHead},
-                {Model1DParameterNames.StructureWaterLevelAtCrest, FunctionAttributes.StandardNames.StructureWaterLevelAtCrest},
-                {Model1DParameterNames.StructureSetPoint, FunctionAttributes.StandardNames.StructureSetPoint}
+                {Model1DParameterNames.StructureWaterLevelAtCrest, FunctionAttributes.StandardNames.StructureWaterLevelAtCrest}
             };
         }
 

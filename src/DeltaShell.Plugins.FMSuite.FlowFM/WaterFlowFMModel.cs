@@ -881,7 +881,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private IEnumerable<IFeature> Get1DChildDataItemLocations(DataItemRole role)
         {
-            if ((role & DataItemRole.Input) == DataItemRole.Input || (role & DataItemRole.Output) == DataItemRole.Output)
+            if ((role & DataItemRole.Input) == DataItemRole.Input)
             {
                 foreach (var weir in Network.Weirs)
                 {
@@ -919,33 +919,34 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     yield return location;
                 }
 
-                INetworkLocation[] segmentsCentroidLocations = NetworkDiscretization.Segments.Values
-                                        .Where(s => s.Geometry.Centroid != null)
-                                        .Select(s => new NetworkLocation(s.Branch, (s.EndChainage + s.Chainage) / 2))
-                                        .OfType<INetworkLocation>()
-                                        .ToArray();
-
-                yield return new Feature // all locations
-                {
-                    Geometry = NetworkDiscretization.Geometry,
-                    Attributes = new DictionaryFeatureAttributeCollection
-                            {
-                                { "locations", NetworkDiscretization.Locations.Values },
-                                { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.GridpointsOnBranches)},
-                                { "ElementType", "GridpointsOnBranches" }
-                            }
-                };
-
-                yield return new Feature // all staggered locations
-                {
-                    Geometry = new GeometryCollection(segmentsCentroidLocations.Select(nl => nl.Geometry).ToArray()),
-                    Attributes = new DictionaryFeatureAttributeCollection
-                            {
-                                { "locations", segmentsCentroidLocations },
-                                { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.ReachSegElmSet)},
-                                { "ElementType", "ReachSegElmSet" }
-                            }
-                };
+                // Was used for OpenMI, can be removed.
+                // INetworkLocation[] segmentsCentroidLocations = NetworkDiscretization.Segments.Values
+                //                         .Where(s => s.Geometry.Centroid != null)
+                //                         .Select(s => new NetworkLocation(s.Branch, (s.EndChainage + s.Chainage) / 2))
+                //                         .OfType<INetworkLocation>()
+                //                         .ToArray();
+                //
+                // yield return new Feature // all locations
+                // {
+                //     Geometry = NetworkDiscretization.Geometry,
+                //     Attributes = new DictionaryFeatureAttributeCollection
+                //             {
+                //                 { "locations", NetworkDiscretization.Locations.Values },
+                //                 { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.GridpointsOnBranches)},
+                //                 { "ElementType", "GridpointsOnBranches" }
+                //             }
+                // };
+                //
+                // yield return new Feature // all staggered locations
+                // {
+                //     Geometry = new GeometryCollection(segmentsCentroidLocations.Select(nl => nl.Geometry).ToArray()),
+                //     Attributes = new DictionaryFeatureAttributeCollection
+                //             {
+                //                 { "locations", segmentsCentroidLocations },
+                //                 { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.ReachSegElmSet)},
+                //                 { "ElementType", "ReachSegElmSet" }
+                //             }
+                // };
             }
         }
 

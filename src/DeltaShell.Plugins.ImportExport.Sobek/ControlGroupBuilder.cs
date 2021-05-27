@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
                     return QuantityType.GateLowerEdgeLevel;
                 case SobekControllerParameter.PumpCapacity:
-                    return QuantityType.Setpoint;
+                    return QuantityType.PumpCapacity;
             }
 
             throw new ArgumentException("Unsupported type", "measurementLocationParameter");
@@ -670,7 +670,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     {
                         var converter = (Model1DBranchFeatureValueConverter) item.ValueConverter;
                         return converter.QuantityType == GetWaterFlowModelQuantityType(structure, controller.SobekControllerParameterType)
-                               && converter.ElementSet == ElementSet.Structures;
+                               && (converter.ElementSet == ElementSet.Structures || converter.ElementSet == ElementSet.Pumps && controller.SobekControllerParameterType == SobekControllerParameter.PumpCapacity);
                     });
 
             if (structureDataItem == null)
@@ -705,7 +705,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                                ==
                                GetWaterFlowModelQuantityType(
                                    structure, controller.SobekControllerParameterType)
-                               && flowValueConverter.ElementSet == ElementSet.Structures;
+                               && (flowValueConverter.ElementSet == ElementSet.Structures || flowValueConverter.ElementSet == ElementSet.Pumps && controller.SobekControllerParameterType == SobekControllerParameter.PumpCapacity);
                     }
 
                     return false;

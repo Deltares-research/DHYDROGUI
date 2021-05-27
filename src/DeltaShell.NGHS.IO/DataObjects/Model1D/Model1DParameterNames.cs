@@ -75,7 +75,6 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         public const string StructureWaterlevelDown = "Water level down (s)";
         public const string StructureHeadDifference = "Head Difference (s)";
         public const string StructureWaterLevelAtCrest = "Water level at crest (s)";
-        public const string StructureSetPoint = "Setpoint (s)";
 
         /// <summary>
         /// Pumps parameter names

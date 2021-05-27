@@ -1270,7 +1270,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(QuantityType.CrestWidth, ControlGroupBuilder.GetWaterFlowModelQuantityType(new Weir(), SobekControllerParameter.CrestWidth));
             Assert.AreEqual(QuantityType.GateLowerEdgeLevel, ControlGroupBuilder.GetWaterFlowModelQuantityType(new Weir(), SobekControllerParameter.GateHeight));
             Assert.AreEqual(QuantityType.ValveOpening, ControlGroupBuilder.GetWaterFlowModelQuantityType(new Culvert(), SobekControllerParameter.GateHeight));
-            Assert.AreEqual(QuantityType.Setpoint, ControlGroupBuilder.GetWaterFlowModelQuantityType(new Weir(), SobekControllerParameter.PumpCapacity));
+            Assert.AreEqual(QuantityType.PumpCapacity, ControlGroupBuilder.GetWaterFlowModelQuantityType(new Weir(), SobekControllerParameter.PumpCapacity));
         }
 
         [Test]

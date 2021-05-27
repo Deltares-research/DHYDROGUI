@@ -30,7 +30,6 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         PressureDifference = 26, // Structures
         PumpCapacity = 27, // Pumps
         Flux = 28, // 
-        Setpoint = 29, // 
         Xcor = 30, // 
         Ycor = 31, // 
         WindShield = 32, // 

@@ -246,9 +246,6 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                 new EngineParameter(QuantityType.WaterLevelAtCrest, ElementSet.Structures, DataItemRole.Output,
                     Model1DParameterNames.StructureWaterLevelAtCrest,
                     new Unit("meter above reference level", "m AD")),
-                new EngineParameter(QuantityType.Setpoint, ElementSet.Structures, DataItemRole.Input,
-                    Model1DParameterNames.StructureSetPoint,
-                    new Unit("cubic meter per second", "m³/s")),
 
                 // Pumps
                 new EngineParameter(QuantityType.SuctionSideLevel, ElementSet.Pumps, DataItemRole.Output,
@@ -267,7 +264,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                     Model1DParameterNames.PumpStage,
                     new Unit(string.Empty, string.Empty)),
 
-                new EngineParameter(QuantityType.PumpCapacity, ElementSet.Pumps, DataItemRole.Output,
+                new EngineParameter(QuantityType.PumpCapacity, ElementSet.Pumps, DataItemRole.Input | DataItemRole.Output,
                     Model1DParameterNames.PumpCapacity,
                     new Unit("cubic meter per second", "m³/s")),
 
@@ -407,43 +404,54 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
         /// <returns></returns>
         public static bool AllowedAsQuantityTypeForFeature(IFeature feature, EngineParameter engineParameter)
         {
+            bool isAllowed = false;
             if (feature is IWeir weir)
             {
-                if ((engineParameter.QuantityType == QuantityType.ValveOpening) ||
-                    (engineParameter.QuantityType == QuantityType.Setpoint))
-                {
-                    return false;
-                }
 
-                if ((!weir.IsGated) && ((engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel) ||
-                                        (engineParameter.QuantityType == QuantityType.GateOpeningHeight)))
+                if (weir.IsGated)
                 {
-                    return false;
+                    if (engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel ||
+                        engineParameter.QuantityType == QuantityType.GateOpeningHeight)
+                    {
+                        isAllowed = true;
+                    }
+                }
+                else
+                {
+                    if (engineParameter.QuantityType == QuantityType.CrestLevel ||
+                        engineParameter.QuantityType == QuantityType.CrestWidth)
+                    {
+                        isAllowed = true;
+                    }
                 }
             }
 
             if (feature is ICulvert culvert)
             {
-                if ((engineParameter.QuantityType == QuantityType.CrestLevel) ||
-                    (engineParameter.QuantityType == QuantityType.CrestWidth) ||
-                    (engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel) ||
-                    (engineParameter.QuantityType == QuantityType.GateOpeningHeight) ||
-                    (engineParameter.QuantityType == QuantityType.Setpoint))
+                if (culvert.IsGated && engineParameter.QuantityType == QuantityType.ValveOpening)
                 {
-                    return false;
-                }
-
-                if ((!culvert.IsGated) && (engineParameter.QuantityType == QuantityType.ValveOpening))
-                {
-                    return false;
+                    isAllowed = true;
                 }
             }
 
-            return !(feature is IPump) || ((engineParameter.QuantityType != QuantityType.CrestLevel) &&
-                                           (engineParameter.QuantityType != QuantityType.CrestWidth) &&
-                                           (engineParameter.QuantityType != QuantityType.GateLowerEdgeLevel) &&
-                                           (engineParameter.QuantityType != QuantityType.GateOpeningHeight) &&
-                                           (engineParameter.QuantityType != QuantityType.ValveOpening));
+            if (feature is IPump)
+            {
+                if (engineParameter.QuantityType == QuantityType.PumpCapacity)
+                {
+                    isAllowed = true;
+                }
+            }
+
+            if (feature is IObservationPoint)
+            {
+                if (engineParameter.QuantityType == QuantityType.WaterLevel ||
+                    engineParameter.QuantityType == QuantityType.WaterDepth)
+                {
+                    isAllowed = true;
+                }
+            }
+
+            return isAllowed;
         }
 
         public static ElementSet? GetElementSet(IFeature feature)
@@ -456,6 +464,11 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
             if (feature is ILateralSource)
             {
                 return ElementSet.Laterals;
+            }
+
+            if (feature is IPump)
+            {
+                return ElementSet.Pumps;
             }
 
             if (feature is IStructure1D)
@@ -512,7 +525,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                 var pump = (IPump) feature;
                 switch (quantityType)
                 {
-                    case QuantityType.Setpoint:
+                    case QuantityType.PumpCapacity:
                         return pump.Capacity; // or 0
                 }
             }
@@ -562,7 +575,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
             {
                 switch (parameter)
                 {
-                    case Model1DParameterNames.StructureSetPoint:
+                    case Model1DParameterNames.PumpCapacity:
                         return pump.Capacity; // or 0
                 }
             }
@@ -657,8 +670,6 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
                 return FunctionAttributes.StandardNames.StructurePressureDifference;
             if (qt == QuantityType.WaterLevelAtCrest && es == ElementSet.Structures)
                 return FunctionAttributes.StandardNames.StructureWaterLevelAtCrest;
-            if (qt == QuantityType.Setpoint && es == ElementSet.Structures)
-                return FunctionAttributes.StandardNames.StructureSetPoint;
             if (qt == QuantityType.SuctionSideLevel && es == ElementSet.Pumps) return "nonstandard_pump_suction_side";
             if (qt == QuantityType.DeliverySideLevel && es == ElementSet.Pumps) return "nonstandard_pump_delivery_side";
             if (qt == QuantityType.PumpHead && es == ElementSet.Pumps) return "nonstandard_pump_head";
