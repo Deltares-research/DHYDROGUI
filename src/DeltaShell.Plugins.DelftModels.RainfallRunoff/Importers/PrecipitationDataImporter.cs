@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
+using DelftTools.Functions;
 using DelftTools.Functions.Filters;
+using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -86,35 +91,34 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
         {
             try
             {
-                if (buiFileReader.StationNames.Count > 1)
-                {
-                    precipitation.BeginEdit(new DefaultEditAction("import data"));
-                    precipitation.DataDistributionType = MeteoDataDistributionType.PerStation;
-                    precipitation.Data.Clear();
-                    precipitation.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
-                    precipitation.Data.Arguments[1].SetValues(buiFileReader.StationNames);
+                var stationNames = buiFileReader.StationNames;
+                if (stationNames.Count == 0) return;
 
-                    foreach (var measurement in measurements)
-                    {
-                        precipitation.Data.SetValues(measurement.MeasuredValues,
-                                                     new VariableValueFilter<DateTime>(precipitation.Data.Arguments[0],
-                                                                                       measurement.TimeOfMeasurement));
-                    }
-                    precipitation.EndEdit();
-                }
-                else if (buiFileReader.StationNames.Count == 1)
+                var distributionType = stationNames.Count == 1 
+                               ? MeteoDataDistributionType.Global 
+                               : MeteoDataDistributionType.PerStation;
+
+                using (precipitation.InEditMode("import data"))
                 {
-                    precipitation.BeginEdit(new DefaultEditAction("import data"));
-                    precipitation.DataDistributionType = MeteoDataDistributionType.Global;
-                    precipitation.Data.Clear();
-                    precipitation.Data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
-                    foreach (var measurement in measurements)
+                    if (precipitation.DataDistributionType != distributionType)
                     {
-                        precipitation.Data.SetValues(measurement.MeasuredValues,
-                                                     new VariableValueFilter<DateTime>(precipitation.Data.Arguments[0],
-                                                                                       measurement.TimeOfMeasurement));
+                        precipitation.DataDistributionType = distributionType;
                     }
-                    precipitation.EndEdit();
+
+                    IFunction data = precipitation.Data;
+                    data.Clear();
+                    data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
+
+                    if (distributionType == MeteoDataDistributionType.PerStation)
+                    {
+                        data.Arguments[1].SetValues(stationNames);
+                    }
+
+                    var values = measurements.SelectMany(m => m.MeasuredValues).ToArray();
+                    data.Components[0].Values.DoWithPropertySet(nameof(IMultiDimensionalArray.FireEvents), false, () =>
+                    {
+                        data.Components[0].SetValues(values);
+                    });
                 }
             }
             catch (Exception e)
