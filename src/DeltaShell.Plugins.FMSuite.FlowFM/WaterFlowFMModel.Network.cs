@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (DisableNetworkSynchronization)
                 return;
 
-            if (Equals(sender, Network.Branches) && e.Action == NotifyCollectionChangeAction.Remove && e.OldItem is IChannel channel)
+            if (Equals(sender, Network.Branches) && e.Action == NotifyCollectionChangeAction.Remove && e.Item is IChannel channel)
             {
                 NetworkDiscretization.ReplacePointsForRemovedBranch(channel);
             }
@@ -299,8 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void OnNetworkDiscretisationChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender != networkDiscretization || e.PropertyName != nameof(IEditableObject.IsEditing)) return;
-            if(((Discretization)sender).IsEditing) return;
+            if (sender != networkDiscretization || networkDiscretization.IsEditing || e.PropertyName != nameof(IEditableObject.IsEditing)) return;
             RefreshMappings();
         }
         
