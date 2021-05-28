@@ -678,6 +678,7 @@ src/DeltaShell.NGHS.Common/Properties/AssemblyInfo.cs.svn -text
 src/DeltaShell.NGHS.Common/Properties/Resources.Designer.cs -text
 src/DeltaShell.NGHS.Common/Properties/Resources.resx -text
 src/DeltaShell.NGHS.Common/SystemEnvironment.cs -text
+src/DeltaShell.NGHS.Common/Utils/EnumerableExtensions.cs -text
 src/DeltaShell.NGHS.Common/Utils/MigrationHelper.cs -text
 src/DeltaShell.NGHS.Common/Utils/NameableCollectionExtensions.cs -text
 src/DeltaShell.NGHS.Common/Utils/UniqueFileNameProvider.cs -text
@@ -3562,6 +3563,7 @@ test/DeltaShell.NGHS.Common.Tests/Logging/LogMessagesListTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/Properties/AssemblyInfo.cs -text
 test/DeltaShell.NGHS.Common.Tests/SystemEnvironmentTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/TestClassSetup.cs -text
+test/DeltaShell.NGHS.Common.Tests/Utils/EnumerableExtensionsTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/Utils/NameableCollectionExtensionsTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/Utils/UniqueStringProviderTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/Validation/RestartTimeRangeValidatorTest.cs -text

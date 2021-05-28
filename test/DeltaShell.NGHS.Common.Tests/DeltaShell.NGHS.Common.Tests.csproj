@@ -69,6 +69,7 @@
       <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="mscorlib" />
     <Reference Include="NSubstitute, Version=4.2.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca">
       <HintPath>..\..\packages\NSubstitute.4.2.2\lib\net46\NSubstitute.dll</HintPath>
     </Reference>
@@ -99,6 +100,10 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -113,6 +118,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemEnvironmentTest.cs" />
     <Compile Include="TestClassSetup.cs" />
+    <Compile Include="Utils\EnumerableExtensionsTest.cs" />
     <Compile Include="Utils\NameableCollectionExtensionsTest.cs" />
     <Compile Include="Utils\UniqueStringProviderTest.cs" />
     <Compile Include="Validation\RestartTimeRangeValidatorTest.cs" />
