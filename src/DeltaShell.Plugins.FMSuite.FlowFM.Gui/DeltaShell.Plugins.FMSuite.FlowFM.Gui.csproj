@@ -601,6 +601,7 @@
     <None Include="Resources\BoundaryType_Harmonics.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\infiltration.jpg" />
     <None Include="Resources\Synchronize_grey_16x.png" />
     <None Include="Resources\Boundary_1d.png" />
     <None Include="Resources\realtime.png" />
