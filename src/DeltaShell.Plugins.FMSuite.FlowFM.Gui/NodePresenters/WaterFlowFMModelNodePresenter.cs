@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
 
             if (model.UseInfiltration)
             {
-                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InfiltrationDataItemName, null, model, model.Infiltration, ShortCutType.SpatialCoverage);
+                yield return new FmModelTreeShortcut(WaterFlowFMModelDefinition.InfiltrationDataItemName, Resources.infiltration, model, model.Infiltration, ShortCutType.SpatialCoverage);
             }
             
             if (model.ModelDefinition.HeatFluxModel.MeteoData != null)
