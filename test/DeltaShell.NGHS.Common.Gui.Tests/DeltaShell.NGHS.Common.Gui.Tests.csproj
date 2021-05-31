@@ -113,6 +113,7 @@
   <ItemGroup>
     <Compile Include="CoordinateSystemPickerViewModelTest.cs" />
     <Compile Include="LayerExtensionsTest.cs" />
+    <Compile Include="MapLayers\LayerExtensionsTest.cs" />
     <Compile Include="NodePresenters\ContextMenuFactoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClassSetup.cs" />

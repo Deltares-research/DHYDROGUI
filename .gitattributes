@@ -647,6 +647,7 @@ src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPickerViewModel.cs -text
 src/DeltaShell.NGHS.Common.Gui/DefaultControlTemplates.xaml -text
 src/DeltaShell.NGHS.Common.Gui/DeltaShell.NGHS.Common.Gui.csproj -text
 src/DeltaShell.NGHS.Common.Gui/LayerExtensions.cs -text
+src/DeltaShell.NGHS.Common.Gui/MapLayers/LayerExtensions.cs -text
 src/DeltaShell.NGHS.Common.Gui/NodePresenters/ContextMenuFactory.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/AssemblyInfo.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/Resources.Designer.cs -text
@@ -3548,6 +3549,7 @@ test/DeltaShell.NGHS.Common.Gui.Tests/App.config -text
 test/DeltaShell.NGHS.Common.Gui.Tests/CoordinateSystemPickerViewModelTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/DeltaShell.NGHS.Common.Gui.Tests.csproj -text
 test/DeltaShell.NGHS.Common.Gui.Tests/LayerExtensionsTest.cs -text
+test/DeltaShell.NGHS.Common.Gui.Tests/MapLayers/LayerExtensionsTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/NodePresenters/ContextMenuFactoryTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/Properties/AssemblyInfo.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/TestClassSetup.cs -text
