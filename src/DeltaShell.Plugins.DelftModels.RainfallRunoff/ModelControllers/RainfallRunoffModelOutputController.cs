@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             {
                 if (!functionLookUp.ContainsKey(engineParameter.Name))
                 {
-                    log.ErrorFormat("Output spatial data for {0} appears to be missing. Not implemented yet?", engineParameter.Name);
+                    //log.ErrorFormat("Output spatial data for {0} appears to be missing. Not implemented yet?", engineParameter.Name);
                 }
                 else
                 {
