@@ -15,6 +15,7 @@ using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
+using log4net;
 using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
@@ -27,6 +28,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
     /// </summary>
     public class FMHisFileFunctionStore : FMNetCdfFileFunctionStore
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(FMHisFileFunctionStore));
+
         public IHydroNetwork Network { get; } = null;
         public HydroArea Area { get; } = null;
 
@@ -256,8 +259,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     features = FMHisFileFunctionStoreHelper.OutputStructuresGenerators[featureName](ids, maxNumberOfCoordinatesTheGeometryOfTheObjectConsistOf, xCoordinates, yCoordinates).ToArray();
                 }
+
                 if (features != null && features.Length != 0)
-                    FeaturesByCoverage[featureName] = features; // null check?
+                {
+                    if (features.All(f => f != null))
+                    {
+                        FeaturesByCoverage[featureName] = features;
+                    }
+                    else if (ids != null)
+                    {
+                        var missingIds = ids
+                                  .Zip(features, (id, feature) => new {id, feature})
+                                  .Where(t => t.feature == null)
+                                  .Select(t => t.id);
+                        log.Error($"Could not find the referenced feature(s) \"{string.Join(",", missingIds)}\" for {coverage.Name}");
+                    }
+                }
             }
 
             coverage.Features = new EventedList<IFeature>(FeaturesByCoverage.ContainsKey(featureName) ? FeaturesByCoverage[featureName] : new IFeature[0]);

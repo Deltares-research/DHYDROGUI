@@ -34,6 +34,7 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -143,6 +144,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void OpenHisFileCheckFunctions()
         {
+            LogHelper.ConfigureLogging(Level.Error);
+
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(1, true);
             var branch = network.Branches[0];
             var pump = new Pump("PMP1", true) { Chainage = branch.Length / 4 };
@@ -208,6 +211,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 };
 
                 WpfTestHelper.ShowModal((Control) gui.MainWindow, mainWindowShown);
+                LogHelper.ResetLogging();
             }
         }
 
