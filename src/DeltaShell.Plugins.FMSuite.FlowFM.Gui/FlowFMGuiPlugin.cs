@@ -21,6 +21,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui.MapLayers;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
@@ -1114,10 +1115,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     Equals(l.Coverage, FlowModels.FirstOrDefault()?.InitialWaterLevel));
                 if (layer != null && layer.Name != layer.Coverage.Name)
                 {
-                    var layerNameIsReadOnly = layer.NameIsReadOnly;
-                    layer.NameIsReadOnly = false;
-                    layer.Name = layer.Coverage.Name;
-                    layer.NameIsReadOnly = layerNameIsReadOnly;
+                    layer.SetName(layer.Coverage.Name);
                 }
 
             }

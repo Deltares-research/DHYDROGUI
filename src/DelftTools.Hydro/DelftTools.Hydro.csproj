@@ -596,6 +596,11 @@
     <None Include="Resources\nwrw.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
+      <Project>{6fad9209-03ea-439c-8b41-80d1fd6ab4e2}</Project>
+      <Name>DeltaShell.NGHS.Common.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj">
       <Project>{0ae5102c-0560-4a9c-8197-a6d8ca99b5de}</Project>
       <Name>DeltaShell.NGHS.Utils</Name>

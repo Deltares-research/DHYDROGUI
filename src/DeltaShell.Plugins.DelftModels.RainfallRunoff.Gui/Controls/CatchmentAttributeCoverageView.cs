@@ -7,6 +7,7 @@ using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.Gui.MapLayers;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
 using GeoAPI.Extensions.Coverages;
@@ -193,7 +194,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
             CreateSecondaryLayerIfNonExisting();
 
             //todo: figure out how to preserve zoom
-            primaryAttributeLayer.Name = "[Primary] " + featureCoverage.Name;
+            primaryAttributeLayer.SetName("[Primary] " + featureCoverage.Name);
             coverageView.Data = featureCoverage;
             FireTimesChanged();
         }
