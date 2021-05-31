@@ -1017,8 +1017,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 return;
             }
 
-            string[] newOutputFiles = Directory.GetFiles(outputPath);
+            if (!Directory.Exists(outputPath))
+            {
+                return;
+            }
 
+            string[] newOutputFiles = Directory.GetFiles(outputPath);
             if (newOutputFiles.Length == 0)
             {
                 return;
