@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             return new Dictionary<string, string>
             {
-                {Model1DParameterNames.StructureValveOpeningHeight, "valveOpeningHeight"},
+                {Model1DParameterNames.StructureValveOpening, "valveOpeningHeight"},
             };
         }
 
