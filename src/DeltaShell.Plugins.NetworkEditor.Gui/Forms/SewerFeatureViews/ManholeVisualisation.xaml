@@ -1,6 +1,7 @@
 <UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ManholeVisualisation"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:binding="clr-namespace:DelftTools.Controls.Wpf.Binding;assembly=DelftTools.Controls.Wpf"
              xmlns:crossSections="clr-namespace:DelftTools.Hydro.CrossSections;assembly=DelftTools.Hydro"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hydro="clr-namespace:DelftTools.Hydro;assembly=DelftTools.Hydro"
@@ -15,7 +16,17 @@
         <local:ManholeVisualisationViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <UserControl.Resources>
-        <ResourceDictionary Source="NetworkStructureBrushes.xaml" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="NetworkStructureBrushes.xaml" />
+                <ResourceDictionary>
+                    <binding:BindingProxy x:Key="Proxy"
+                                          Data="{Binding}" />
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
     </UserControl.Resources>
     <Grid x:Name="ViewGrid"
           PreviewMouseLeftButtonDown="UIElement_OnPreviewMouseLeftButtonDown">
@@ -25,7 +36,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <local:CanvasItemsControl ClipToBounds="True"
+        <local:CanvasItemsControl ClipToBounds="False"
                                   ItemsSource="{Binding Shapes}">
             <ItemsControl.Resources>
                 <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="1,1">
@@ -38,11 +49,17 @@
                                    Height="{Binding HeightPix}"
                                    Fill="{StaticResource BackgroundBrush}"
                                    Stroke="Black"
-                                   StrokeThickness="2"
+                                   StrokeThickness="1"
                                    ToolTip="{Binding Compartment.Name}" />
                         <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Top"
                                    FontSize="15"
                                    Text="{Binding TopLevel, StringFormat={}{0:G2} m}" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="15"
+                                   Text="{Binding Compartment.Name}"
+                                   Visibility="{Binding Data.ShowLabels, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}" />
                         <TextBlock HorizontalAlignment="Center"
                                    VerticalAlignment="Bottom"
                                    FontSize="15"
@@ -54,7 +71,7 @@
                         <Style x:Key="PipeStyle"
                                TargetType="Shape">
                             <Setter Property="Stroke" Value="Black" />
-                            <Setter Property="StrokeThickness" Value="2" />
+                            <Setter Property="StrokeThickness" Value="1" />
                             <Setter Property="Opacity" Value="0.5" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Pipe.WaterType}"
@@ -79,11 +96,17 @@
                                TargetType="ContentControl">
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
-                                    <DataTemplate>
-                                        <Rectangle Width="{Binding WidthPix}"
-                                                   Height="{Binding HeightPix}"
-                                                   Style="{StaticResource PipeStyle}"
-                                                   ToolTip="{Binding Pipe.Name}" />
+                                    <DataTemplate DataType="{x:Type local:PipeShape}">
+                                        <Grid>
+                                            <Rectangle Width="{Binding WidthPix}"
+                                                       Height="{Binding HeightPix}"
+                                                       Style="{StaticResource PipeStyle}"
+                                                       ToolTip="{Binding Pipe.Name}" />
+                                            <TextBlock HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Text="{Binding Pipe.Name}"
+                                                       Visibility="{Binding Data.ShowLabels, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
                             </Setter>
@@ -92,11 +115,17 @@
                                              Value="{x:Static crossSections:CrossSectionStandardShapeType.Rectangle}">
                                     <Setter Property="ContentTemplate">
                                         <Setter.Value>
-                                            <DataTemplate>
-                                                <Rectangle Width="{Binding WidthPix}"
-                                                           Height="{Binding HeightPix}"
-                                                           Style="{StaticResource PipeStyle}"
-                                                           ToolTip="{Binding Pipe.Name}" />
+                                            <DataTemplate DataType="{x:Type local:PipeShape}">
+                                                <Grid>
+                                                    <Rectangle Width="{Binding WidthPix}"
+                                                               Height="{Binding HeightPix}"
+                                                               Style="{StaticResource PipeStyle}"
+                                                               ToolTip="{Binding Pipe.Name}" />
+                                                    <TextBlock HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Text="{Binding Pipe.Name}"
+                                                               Visibility="{Binding Data.ShowLabels, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                </Grid>
                                             </DataTemplate>
                                         </Setter.Value>
                                     </Setter>
@@ -105,11 +134,17 @@
                                              Value="{x:Static crossSections:CrossSectionStandardShapeType.Circle}">
                                     <Setter Property="ContentTemplate">
                                         <Setter.Value>
-                                            <DataTemplate>
-                                                <Ellipse Width="{Binding WidthPix}"
-                                                         Height="{Binding HeightPix}"
-                                                         Style="{StaticResource PipeStyle}"
-                                                         ToolTip="{Binding Pipe.Name}" />
+                                            <DataTemplate DataType="{x:Type local:PipeShape}">
+                                                <Grid>
+                                                    <Ellipse Width="{Binding WidthPix}"
+                                                             Height="{Binding HeightPix}"
+                                                             Style="{StaticResource PipeStyle}"
+                                                             ToolTip="{Binding Pipe.Name}" />
+                                                    <TextBlock HorizontalAlignment="Center"
+                                                               VerticalAlignment="Center"
+                                                               Text="{Binding Pipe.Name}"
+                                                               Visibility="{Binding Data.ShowLabels, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                </Grid>
                                             </DataTemplate>
                                         </Setter.Value>
                                     </Setter>
@@ -127,13 +162,18 @@
                                 Height="{Binding HeightPix}"
                                 HorizontalAlignment="Left"
                                 BorderBrush="Black"
-                                BorderThickness="0,2,0,2">
+                                BorderThickness="0,1,0,1">
                             <Rectangle Fill="{StaticResource BackgroundBrush}"
                                        ToolTip="{Binding Orifice.Name}" />
                         </Border>
-                        <Rectangle Width="16"
-                                   Height="16"
-                                   Fill="{StaticResource OrificeBrush}" />
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <Rectangle Width="16"
+                                       Height="16"
+                                       Fill="{StaticResource OrificeBrush}" />
+                            <TextBlock Text="{Binding Orifice.Name}"
+                                       Visibility="{Binding Data.ShowLabels, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:PumpShape}">
@@ -143,6 +183,7 @@
                                                 Background="{StaticResource BackgroundBrush}"
                                                 PumpShape="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext}"
                                                 SnapsToDevicePixels="True" />
+                        <TextBlock Text="{Binding Pump.Name}" />
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:WeirShape}">
@@ -152,12 +193,18 @@
                                 Height="{Binding HeightPix}"
                                 HorizontalAlignment="Left"
                                 BorderBrush="Black"
-                                BorderThickness="0,2,0,2">
-                            <Rectangle Fill="{StaticResource BackgroundBrush}" />
+                                BorderThickness="0,1,0,1">
+                            <Rectangle Fill="{StaticResource BackgroundBrush}"
+                                       ToolTip="{Binding Weir.Name}" />
                         </Border>
-                        <Rectangle Width="16"
-                                   Height="16"
-                                   Fill="{StaticResource WeirBrush}" />
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <Rectangle Width="16"
+                                       Height="16"
+                                       Fill="{StaticResource WeirBrush}" />
+                            <TextBlock Text="{Binding Weir.Name}"
+                                       Visibility="{Binding Data.ShowLabels, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </StackPanel>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.Resources>

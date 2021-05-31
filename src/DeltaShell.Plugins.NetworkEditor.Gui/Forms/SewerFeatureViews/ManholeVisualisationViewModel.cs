@@ -104,6 +104,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
+        public bool ShowLabels { get; set; }
+
         public void SetShapesPixelValues()
         {
             foreach (var shape in Shapes)

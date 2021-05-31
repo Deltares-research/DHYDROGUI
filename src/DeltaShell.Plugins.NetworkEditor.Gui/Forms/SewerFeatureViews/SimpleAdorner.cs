@@ -9,14 +9,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         public SimpleAdorner(UIElement adornedElement) : base(adornedElement)
         {
-            VisualBrush brush = new VisualBrush(adornedElement);
-
             child = new Rectangle();
             child.Width = adornedElement.RenderSize.Width;
             child.Height = adornedElement.RenderSize.Height;
-            child.Fill = brush;
+            //child.Fill = new SolidColorBrush(Colors.Transparent);
 
-            base.IsClipEnabled = true;
+            IsClipEnabled = false;
         }
         
         protected override void OnRender(DrawingContext drawingContext)

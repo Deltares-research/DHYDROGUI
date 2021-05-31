@@ -7,6 +7,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     {
         public SelectedAdorner(UIElement adornerdElement) : base(adornerdElement)
         {
+            IsHitTestVisible = false;
         }
         
         protected override void OnRender(DrawingContext drawingContext)
@@ -15,6 +16,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             // after the rendering pass.  This will be used to draw at the corners of the 
             // adorned element.
             Rect adornedElementRect = new Rect(this.AdornedElement.RenderSize);
+
+            var selectBrush = new SolidColorBrush(Colors.LightBlue) { Opacity = 0.5 };
+            drawingContext.DrawRectangle(selectBrush, null, adornedElementRect);
 
             // Some arbitrary drawing implements.
             SolidColorBrush renderBrush = new SolidColorBrush(Colors.Green);

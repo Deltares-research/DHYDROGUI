@@ -1,73 +1,98 @@
 ﻿<UserControl x:Class="DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews.ShapeEditView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:gui="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui"
-             xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sewerFeatures="clr-namespace:DelftTools.Hydro.SewerFeatures;assembly=DelftTools.Hydro"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             mc:Ignorable="d">
     <UserControl.DataContext>
-        <gui:ShapeEditViewModel x:Name="ViewModel"/>
+        <gui:ShapeEditViewModel x:Name="ViewModel" />
     </UserControl.DataContext>
     <Grid>
-        <ContentControl Content="{Binding Source}" >
+        <ContentControl Content="{Binding Source}">
             <ContentControl.Resources>
                 <DataTemplate DataType="{x:Type structures:Weir}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="120" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Crest level [m]"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding CrestLevel, StringFormat={}{0:G3}}"/>
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Content="Crest level [m]" />
+                        <TextBox Grid.Row="0"
+                                 Grid.Column="1"
+                                 Text="{Binding CrestLevel, StringFormat={}{0:G3}}" />
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type structures:Pump}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="120" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Grid.Row="2" Content="Start level delivery side[m]"/>
-                        <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding StartDelivery, StringFormat={}{0:G3}}"/>
-                        <Label Grid.Column="0" Grid.Row="3" Content="Stop level delivery side [m]"/>
-                        <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding StopDelivery, StringFormat={}{0:G3}}"/>
-                        <Label Grid.Column="0" Grid.Row="0" Content="Start level suction side [m]"/>
-                        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding StartSuction, StringFormat={}{0:G3}}"/>
-                        <Label Grid.Column="0" Grid.Row="1" Content="Stop level suction side [m]"/>
-                        <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding StopSuction, StringFormat={}{0:G3}}"/>
+                        <Label Grid.Row="2"
+                               Grid.Column="0"
+                               Content="Start level delivery side[m]" />
+                        <TextBox Grid.Row="2"
+                                 Grid.Column="1"
+                                 Text="{Binding StartDelivery, StringFormat={}{0:G3}}" />
+                        <Label Grid.Row="3"
+                               Grid.Column="0"
+                               Content="Stop level delivery side [m]" />
+                        <TextBox Grid.Row="3"
+                                 Grid.Column="1"
+                                 Text="{Binding StopDelivery, StringFormat={}{0:G3}}" />
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Content="Start level suction side [m]" />
+                        <TextBox Grid.Row="0"
+                                 Grid.Column="1"
+                                 Text="{Binding StartSuction, StringFormat={}{0:G3}}" />
+                        <Label Grid.Row="1"
+                               Grid.Column="0"
+                               Content="Stop level suction side [m]" />
+                        <TextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Text="{Binding StopSuction, StringFormat={}{0:G3}}" />
                     </Grid>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type sewerFeatures:Orifice}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="120"/>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="120" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.Column="0" Content="Bottom level [m]"/>
-                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding BottomLevel, StringFormat={}{0:G3}}"/>
+                        <Label Grid.Row="0"
+                               Grid.Column="0"
+                               Content="Bottom level [m]" />
+                        <TextBox Grid.Row="0"
+                                 Grid.Column="1"
+                                 Text="{Binding BottomLevel, StringFormat={}{0:G3}}" />
                     </Grid>
                 </DataTemplate>
 
             </ContentControl.Resources>
         </ContentControl>
-        
-        
+
+
     </Grid>
 </UserControl>
 

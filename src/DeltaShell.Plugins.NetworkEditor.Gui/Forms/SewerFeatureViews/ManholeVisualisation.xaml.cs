@@ -26,6 +26,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             typeof(ManholeVisualisation),
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        public static readonly DependencyProperty ShowLabelsProperty = DependencyProperty.Register(
+            nameof(ShowLabels), typeof(bool), typeof(ManholeVisualisation), new PropertyMetadata(default(bool), PropertyChangedCallback));
+
+        public bool ShowLabels
+        {
+            get
+            {
+                return (bool) GetValue(ShowLabelsProperty);
+            }
+            set
+            {
+                SetValue(ShowLabelsProperty, value);
+            }
+        }
+
         private Point startPoint;
         private Point currentPosition;
         private double originalLeft;
@@ -91,8 +106,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
             isDown = false;
 
-            var canvas = sender as Canvas;
-            if (canvas == null)
+            if (!(sender is Canvas canvas))
             {
                 ContentPresenter = null;
                 return;
@@ -112,8 +126,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         {
             if (!isDown) return;
 
-            var canvas = sender as Canvas;
-            if (canvas == null) return;
+            if (!(sender is Canvas canvas)) return;
 
             var mousePosition = e.GetPosition(canvas);
 
@@ -178,7 +191,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void DragFinished(bool cancelled)
         {
-            Mouse. Capture(null);
+            Mouse.Capture(null);
             try
             {
                 if (!isDragging || cancelled) return;
@@ -275,10 +288,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var view = dependencyObject as ManholeVisualisation;
-            if (view == null) return;
+            if (!(dependencyObject is ManholeVisualisation view))
+            {
+                return;
+            }
 
-            view.ViewModel.Manhole = dependencyPropertyChangedEventArgs.NewValue as Manhole;
+            if (dependencyPropertyChangedEventArgs.Property == ManholeProperty)
+            {
+                view.ViewModel.Manhole = dependencyPropertyChangedEventArgs.NewValue as Manhole;
+            }
+
+            if (dependencyPropertyChangedEventArgs.Property == ShowLabelsProperty)
+            {
+                view.ViewModel.ShowLabels = (bool) dependencyPropertyChangedEventArgs.NewValue;
+            }
         }
 
         private void ManholeVisualisation_OnSizeChanged(object sender, SizeChangedEventArgs e)

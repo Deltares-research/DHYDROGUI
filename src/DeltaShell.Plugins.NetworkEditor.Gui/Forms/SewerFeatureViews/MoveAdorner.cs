@@ -20,6 +20,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             // adorned element.
             adornedElementRect = new Rect(this.AdornedElement.RenderSize);
 
+            VisualBrush brush = new VisualBrush(AdornedElement) { Opacity = 0.5 };
+            drawingContext.DrawRectangle(brush, null, adornedElementRect);
+
             // Some arbitrary drawing implements.
             renderBrush.Opacity = 0.2;
             
