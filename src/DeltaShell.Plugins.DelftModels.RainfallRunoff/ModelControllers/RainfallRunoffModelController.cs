@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             }
             else
             {
-                workingDirectory = Path.GetTempFileName();
+                workingDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             }
             FileUtils.DeleteIfExists(workingDirectory);
             Directory.CreateDirectory(workingDirectory);

@@ -459,7 +459,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void SaveAsImageAction(object sender, EventArgs e)
         {
-            string tempImagePath = Path.GetTempFileName();
+            string tempImagePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             graphControl.NetronGraph.SaveImage(tempImagePath, true);
 
             using (Image image = Image.FromFile(tempImagePath))
