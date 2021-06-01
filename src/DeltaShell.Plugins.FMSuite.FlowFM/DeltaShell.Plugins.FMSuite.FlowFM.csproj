@@ -186,7 +186,6 @@
     <Compile Include="IO\InitialConditionRegion.cs" />
     <Compile Include="IO\KnownFeatureCategories.cs" />
     <Compile Include="IO\LocationMetaData.cs" />
-    <Compile Include="IO\MeteoExtForceFile.cs" />
     <Compile Include="IO\NetworkDataLocation.cs" />
     <Compile Include="IO\OutputFile1DMetaData.cs" />
     <Compile Include="IO\StructureFile.cs" />

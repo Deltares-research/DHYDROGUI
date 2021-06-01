@@ -135,8 +135,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         public BndExtForceFile BoundaryExternalForcingsFile { get; private set; }
 
-        public MeteoExtForceFile MeteoExtForceFile { get; private set; }
-
         #region write logic
 
         public void Write(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IEnumerable<RoughnessSection> roughnessSections, IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions, IEnumerable<ChannelInitialConditionDefinition> channelInitialConditionDefinitions, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, IEnumerable<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, bool switchTo = true, bool writeExtForcings = true, bool writeFeatures = true, bool disableFlowNodeRenumbering = false, ISedimentModelData sedimentModelData = null, bool writeStructureFile = true, string workNetFilePath = null)
