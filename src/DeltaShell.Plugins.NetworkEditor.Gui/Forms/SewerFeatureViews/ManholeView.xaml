@@ -10,6 +10,7 @@
              x:Name="UserControl"
              d:DesignHeight="1020"
              d:DesignWidth="1000"
+             Background="White"
              mc:Ignorable="d">
     <UserControl.DataContext>
         <local:ManholeViewModel x:Name="ViewModel" />
@@ -24,6 +25,8 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="NetworkStructureBrushes.xaml" />
+                <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/DefaultControlTemplates.xaml" />
+                <ResourceDictionary Source="/DelftTools.Controls.Wpf;component/deltaresstyledictionairy.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="{x:Type TextBlock}">
@@ -54,33 +57,28 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="350" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="300" />
             </Grid.ColumnDefinitions>
 
-            <!--  Manhole overview  -->
-            <Grid Grid.Column="0"
-                  Margin="7,7,0,5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0"
-                      HorizontalAlignment="Left">
+            <GroupBox Grid.Row="0"
+                      Header="Manhole properties"
+                      Style="{StaticResource GroupBoxStyle}">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
 
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="120" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="120" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
                     <!--  Row 0  -->
@@ -92,128 +90,144 @@
                              Text="{Binding Manhole.Name}" />
 
                     <!--  Row 1  -->
-                    <Label Grid.Row="0"
-                           Grid.Column="2"
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           VerticalAlignment="Center"
                            Content="Coordinate" />
-                    <StackPanel Grid.Row="0"
-                                Grid.Column="3"
-                                Orientation="Horizontal">
+                    <StackPanel Grid.Row="1"
+                                Grid.Column="1"
+                                Orientation="Vertical">
                         <TextBlock Text="{Binding Manhole.XCoordinate, StringFormat=X: \{0\}}" />
-                        <TextBlock Margin="5,0,0,0"
-                                   Text="{Binding Manhole.YCoordinate, StringFormat=Y: \{0\}}" />
+                        <TextBlock Text="{Binding Manhole.YCoordinate, StringFormat=Y: \{0\}}" />
                     </StackPanel>
-
                 </Grid>
+            </GroupBox>
 
-                <ListView Grid.Row="1"
-                          GiveFeedback="ToolBoxGiveFeedback"
-                          ItemsSource="{Binding ShapeTypes}"
-                          PreviewMouseDown="ToolBoxMouseDown"
-                          PreviewMouseMove="ToolBoxMouseMove"
-                          SelectionMode="Single">
-                    <ListView.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel Orientation="Horizontal" />
-                        </ItemsPanelTemplate>
-                    </ListView.ItemsPanel>
-                    <ListView.ItemTemplate>
-                        <DataTemplate DataType="local:ShapeType">
-                            <StackPanel Margin="5">
-                                <Rectangle Width="32"
-                                           Height="32">
-                                    <Rectangle.Style>
-                                        <Style TargetType="{x:Type Rectangle}">
-                                            <Setter Property="Fill" Value="Transparent" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding}"
-                                                             Value="{x:Static local:ShapeType.Compartment}">
-                                                    <Setter Property="Fill">
-                                                        <Setter.Value>
-                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                                <GradientStop Offset="0.0" Color="#FFF0F0F0" />
-                                                                <GradientStop Offset="1" Color="#FFB0B0B0" />
-                                                            </LinearGradientBrush>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Setter Property="Stroke">
-                                                        <Setter.Value>
-                                                            <SolidColorBrush Color="Black" />
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Setter Property="StrokeThickness" Value="2" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding}"
-                                                             Value="{x:Static local:ShapeType.Pump}">
-                                                    <Setter Property="Fill" Value="{StaticResource PumpBrush}" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding}"
-                                                             Value="{x:Static local:ShapeType.Weir}">
-                                                    <Setter Property="Fill" Value="{StaticResource WeirBrush}" />
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding}"
-                                                             Value="{x:Static local:ShapeType.Orifice}">
-                                                    <Setter Property="Fill" Value="{StaticResource OrificeBrush}" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Rectangle.Style>
-                                </Rectangle>
-                                <TextBlock HorizontalAlignment="Center"
-                                           Text="{Binding}" />
-                            </StackPanel>
+            <GroupBox Grid.Row="1"
+                      Grid.Column="0"
+                      Style="{StaticResource GroupBoxStyle}">
+                <GroupBox.Header>
+                    <TextBlock Margin="0"
+                               Foreground="White"
+                               Text="{Binding SelectedItem.Name, StringFormat=Properties \{0\}}" />
+                </GroupBox.Header>
+                <ContentControl x:Name="ContentControl"
+                                VerticalContentAlignment="Top"
+                                Content="{Binding SelectedItem}">
+                    <ContentControl.Resources>
+                        <DataTemplate DataType="{x:Type sewerFeatures:Compartment}">
+                            <local:CompartmentView Compartment="{Binding Content, ElementName=ContentControl}" />
                         </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                        <DataTemplate DataType="{x:Type structures:Weir}">
+                            <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}" />
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type structures:Pump}">
+                            <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}" />
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type sewerFeatures:Orifice}">
+                            <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}" />
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type sewerFeatures:Pipe}">
+                            <WindowsFormsHost local:WindowsFormsHostProfileView.Pipe="{Binding Content, ElementName=ContentControl}"
+                                              Background="White">
+                                <WindowsFormsHost.Child>
+                                    <crossSectionView:ProfileChartView x:Name="ProfileChartView" />
+                                </WindowsFormsHost.Child>
+                            </WindowsFormsHost>
+                        </DataTemplate>
+                    </ContentControl.Resources>
+                </ContentControl>
+            </GroupBox>
 
-                <local:ManholeVisualisation x:Name="ManholeVisualisationControl"
-                                            Grid.Row="2"
-                                            Margin="5"
-                                            AllowDrop="True"
-                                            Drop="ManholeVisualisationControl_OnDrop"
-                                            Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
-                                            SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}" />
+            <!--  Manhole overview  -->
+            <GroupBox Grid.Row="0"
+                      Grid.RowSpan="2"
+                      Grid.Column="1"
+                      Header="Manhole visualization"
+                      Style="{StaticResource GroupBoxStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <local:ManholeVisualisation x:Name="ManholeVisualisationControl"
+                                                Grid.Row="0"
+                                                Margin="5"
+                                                AllowDrop="True"
+                                                Drop="ManholeVisualisationControl_OnDrop"
+                                                Manhole="{Binding DataContext.Manhole, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}"
+                                                SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}" />
 
-                <CheckBox Grid.Row="3"
-                          Content="Show labels"
-                          IsChecked="{Binding ShowLabels, ElementName=ManholeVisualisationControl}" />
-            </Grid>
+                    <CheckBox Grid.Row="1"
+                              Content="Show labels"
+                              IsChecked="{Binding ShowLabels, ElementName=ManholeVisualisationControl}" />
 
-            <GridSplitter Grid.Row="0"
-                          Grid.Column="1"
-                          Width="5"
-                          ResizeBehavior="PreviousAndNext"
-                          ResizeDirection="Columns" />
+                    <GroupBox Grid.Row="2"
+                              Header="Add item (drag to add)"
+                              Style="{StaticResource GroupBoxStyle}">
 
-            <ContentControl x:Name="ContentControl"
-                            Grid.Row="0"
-                            Grid.Column="2"
-                            VerticalContentAlignment="Top"
-                            Content="{Binding SelectedItem}">
-                <ContentControl.Resources>
-                    <DataTemplate DataType="{x:Type sewerFeatures:Compartment}">
-                        <local:CompartmentView Compartment="{Binding Content, ElementName=ContentControl}" />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type structures:Weir}">
-                        <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}" />
-
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type structures:Pump}">
-                        <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}" />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type sewerFeatures:Orifice}">
-                        <local:ShapeEditView Source="{Binding Content, ElementName=ContentControl}" />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type sewerFeatures:Pipe}">
-                        <WindowsFormsHost Grid.Column="2"
-                                          local:WindowsFormsHostProfileView.Pipe="{Binding Content, ElementName=ContentControl}"
-                                          Background="White">
-                            <WindowsFormsHost.Child>
-                                <crossSectionView:ProfileChartView x:Name="ProfileChartView" />
-                            </WindowsFormsHost.Child>
-                        </WindowsFormsHost>
-                    </DataTemplate>
-                </ContentControl.Resources>
-            </ContentControl>
+                        <ListView GiveFeedback="ToolBoxGiveFeedback"
+                                  ItemsSource="{Binding ShapeTypes}"
+                                  PreviewMouseDown="ToolBoxMouseDown"
+                                  PreviewMouseMove="ToolBoxMouseMove"
+                                  SelectionMode="Single">
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+                            <ListView.ItemTemplate>
+                                <DataTemplate DataType="local:ShapeType">
+                                    <StackPanel Margin="5">
+                                        <Rectangle Width="32"
+                                                   Height="32">
+                                            <Rectangle.Style>
+                                                <Style TargetType="{x:Type Rectangle}">
+                                                    <Setter Property="Fill" Value="Transparent" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding}"
+                                                                     Value="{x:Static local:ShapeType.Compartment}">
+                                                            <Setter Property="Fill">
+                                                                <Setter.Value>
+                                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                        <GradientStop Offset="0.0" Color="#FFF0F0F0" />
+                                                                        <GradientStop Offset="1" Color="#FFB0B0B0" />
+                                                                    </LinearGradientBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter Property="Stroke">
+                                                                <Setter.Value>
+                                                                    <SolidColorBrush Color="Black" />
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                            <Setter Property="StrokeThickness" Value="2" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding}"
+                                                                     Value="{x:Static local:ShapeType.Pump}">
+                                                            <Setter Property="Fill" Value="{StaticResource PumpBrush}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding}"
+                                                                     Value="{x:Static local:ShapeType.Weir}">
+                                                            <Setter Property="Fill" Value="{StaticResource WeirBrush}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding}"
+                                                                     Value="{x:Static local:ShapeType.Orifice}">
+                                                            <Setter Property="Fill" Value="{StaticResource OrificeBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Rectangle.Style>
+                                        </Rectangle>
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   Text="{Binding}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </GroupBox>
+                </Grid>
+            </GroupBox>
         </Grid>
     </ScrollViewer>
 </UserControl>

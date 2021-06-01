@@ -283,6 +283,7 @@
       <DependentUpon>PipeVisualisation.xaml</DependentUpon>
     </Compile>
     <Compile Include="Forms\SewerFeatureViews\PipeVisualisationViewModel.cs" />
+    <Compile Include="Forms\SewerFeatureViews\ProfileToGeometryConverter.cs" />
     <Compile Include="Forms\SewerFeatureViews\PumpShape.cs" />
     <Compile Include="Forms\SewerFeatureViews\PumpShapeControl.xaml.cs">
       <DependentUpon>PumpShapeControl.xaml</DependentUpon>

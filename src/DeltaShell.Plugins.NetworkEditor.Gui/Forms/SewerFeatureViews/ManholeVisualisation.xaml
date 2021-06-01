@@ -68,6 +68,7 @@
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:PipeShape}">
                     <DataTemplate.Resources>
+                        <local:ProfileToGeometryConverter x:Key="ProfileToGeometryConverter" />
                         <Style x:Key="PipeStyle"
                                TargetType="Shape">
                             <Setter Property="Stroke" Value="Black" />
@@ -98,10 +99,13 @@
                                 <Setter.Value>
                                     <DataTemplate DataType="{x:Type local:PipeShape}">
                                         <Grid>
-                                            <Rectangle Width="{Binding WidthPix}"
-                                                       Height="{Binding HeightPix}"
-                                                       Style="{StaticResource PipeStyle}"
-                                                       ToolTip="{Binding Pipe.Name}" />
+                                            <Path Width="{Binding WidthPix}"
+                                                  Height="{Binding HeightPix}"
+                                                  Data="{Binding Pipe.Profile.Shape.Profile, Converter={StaticResource ProfileToGeometryConverter}}"
+                                                  Stretch="Uniform"
+                                                  StrokeThickness="0.001"
+                                                  Style="{StaticResource PipeStyle}" />
+
                                             <TextBlock HorizontalAlignment="Center"
                                                        VerticalAlignment="Center"
                                                        Text="{Binding Pipe.Name}"

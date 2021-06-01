@@ -39,6 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
                 manhole = value;
                 network = manhole?.Network as IHydroNetwork;
+                SelectedItem = null;
             }
         }
 

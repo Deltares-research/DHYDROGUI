@@ -5,10 +5,10 @@ using DelftTools.Utils.Aop;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     [Entity]
-    public class InternalConnectionShape : DrawingShape
+    public abstract class InternalConnectionShape : DrawingShape
     {
         public virtual ISewerConnection SewerConnection { get; set; }
-     
+
         public override double Height
         {
             get { return TopLevel - BottomLevel; }

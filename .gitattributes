@@ -2860,6 +2860,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/PipeViewModel.c
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/PipeVisualisation.xaml -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/PipeVisualisation.xaml.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/PipeVisualisationViewModel.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/ProfileToGeometryConverter.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/PumpShape.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/PumpShapeControl.xaml -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/SewerFeatureViews/PumpShapeControl.xaml.cs -text

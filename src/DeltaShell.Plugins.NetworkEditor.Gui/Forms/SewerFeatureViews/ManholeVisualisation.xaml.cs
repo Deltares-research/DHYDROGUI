@@ -27,7 +27,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public static readonly DependencyProperty ShowLabelsProperty = DependencyProperty.Register(
-            nameof(ShowLabels), typeof(bool), typeof(ManholeVisualisation), new PropertyMetadata(default(bool), PropertyChangedCallback));
+            nameof(ShowLabels), typeof(bool), typeof(ManholeVisualisation), new PropertyMetadata(true, PropertyChangedCallback));
 
         public bool ShowLabels
         {

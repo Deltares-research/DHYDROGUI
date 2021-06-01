@@ -119,63 +119,8 @@
         </DrawingBrush.Drawing>
     </DrawingBrush>
 
-    <DrawingBrush x:Key="PipeBrushCombined"
-                  Stretch="Uniform">
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <DrawingGroup.Children>
-                    <GeometryDrawing Geometry="F1 M 7.96875,1.34375C 11.5586,1.34375 14.4688,4.2539 14.4688,7.84375C 14.4688,11.4336 11.5586,14.3438 7.96875,14.3438C 4.3789,14.3438 1.46875,11.4336 1.46875,7.84375C 1.46875,4.2539 4.3789,1.34375 7.96875,1.34375 Z ">
-                        <GeometryDrawing.Brush>
-                            <Brush>DarkSlateGray</Brush>
-                        </GeometryDrawing.Brush>
-                    </GeometryDrawing>
-                </DrawingGroup.Children>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-
-    <DrawingBrush x:Key="PipeBrushDryWater"
-                  Stretch="Uniform">
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <DrawingGroup.Children>
-                    <GeometryDrawing Geometry="F1 M 7.96875,1.34375C 11.5586,1.34375 14.4688,4.2539 14.4688,7.84375C 14.4688,11.4336 11.5586,14.3438 7.96875,14.3438C 4.3789,14.3438 1.46875,11.4336 1.46875,7.84375C 1.46875,4.2539 4.3789,1.34375 7.96875,1.34375 Z ">
-                        <GeometryDrawing.Brush>
-                            <Brush>IndianRed</Brush>
-                        </GeometryDrawing.Brush>
-                    </GeometryDrawing>
-                </DrawingGroup.Children>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-
-    <DrawingBrush x:Key="PipeBrushStormWater"
-                  Stretch="Uniform">
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <DrawingGroup.Children>
-                    <GeometryDrawing Geometry="F1 M 7.96875,1.34375C 11.5586,1.34375 14.4688,4.2539 14.4688,7.84375C 14.4688,11.4336 11.5586,14.3438 7.96875,14.3438C 4.3789,14.3438 1.46875,11.4336 1.46875,7.84375C 1.46875,4.2539 4.3789,1.34375 7.96875,1.34375 Z ">
-                        <GeometryDrawing.Brush>
-                            <Brush>RoyalBlue</Brush>
-                        </GeometryDrawing.Brush>
-                    </GeometryDrawing>
-                </DrawingGroup.Children>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
-
-    <DrawingBrush x:Key="PipeBrushNone"
-                  Stretch="Uniform">
-        <DrawingBrush.Drawing>
-            <DrawingGroup>
-                <DrawingGroup.Children>
-                    <GeometryDrawing Geometry="F1 M 7.96875,1.34375C 11.5586,1.34375 14.4688,4.2539 14.4688,7.84375C 14.4688,11.4336 11.5586,14.3438 7.96875,14.3438C 4.3789,14.3438 1.46875,11.4336 1.46875,7.84375C 1.46875,4.2539 4.3789,1.34375 7.96875,1.34375 Z ">
-                        <GeometryDrawing.Brush>
-                            <Brush>DimGray</Brush>
-                        </GeometryDrawing.Brush>
-                    </GeometryDrawing>
-                </DrawingGroup.Children>
-            </DrawingGroup>
-        </DrawingBrush.Drawing>
-    </DrawingBrush>
+    <Brush x:Key="PipeBrushCombined">DarkSlateGray</Brush>
+    <Brush x:Key="PipeBrushDryWater">IndianRed</Brush>
+    <Brush x:Key="PipeBrushStormWater">RoyalBlue</Brush>
+    <Brush x:Key="PipeBrushNone">DimGray</Brush>
 </ResourceDictionary>
