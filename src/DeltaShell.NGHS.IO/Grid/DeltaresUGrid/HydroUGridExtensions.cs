@@ -157,8 +157,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         private static void SetCellArrays(this Disposable2DMeshGeometry mesh, IList<Cell> gridCells)
         {
             mesh.MaxNumberOfFaceNodes = gridCells.Count > 0 ? gridCells.Max(c => c.VertexIndices.Length) : 0;
-            
-            mesh.FaceNodes = new int[mesh.MaxNumberOfFaceNodes * gridCells.Count];
+
+            mesh.FaceNodes = Enumerable.Repeat(-999, mesh.MaxNumberOfFaceNodes * gridCells.Count).ToArray();
             mesh.FaceX = new double[gridCells.Count];
             mesh.FaceY = new double[gridCells.Count];
 
