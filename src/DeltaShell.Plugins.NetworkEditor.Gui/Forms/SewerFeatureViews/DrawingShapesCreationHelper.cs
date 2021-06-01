@@ -30,67 +30,92 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             var connectionShapes = shapes.OfType<InternalConnectionShape>().ToList();
             var compartmentShapes = shapes.OfType<CompartmentShape>().ToList();
 
-            if (compartmentShapes.Count < 2) return shapes;
-
-            var reorderedList = new List<IDrawingShape>();
-
-            CompartmentShape firtCompartmentShape = null;
-            CompartmentShape lastCompartmentShape = null;
-
-            foreach (var compartmentShape in compartmentShapes)
+            if (compartmentShapes.Count < 2)
             {
-                var isFirstCompartment = connectionShapes.All(cs => cs.SewerConnection.TargetCompartment != compartmentShape.Compartment);
-                if (isFirstCompartment)
-                {
-                    firtCompartmentShape = compartmentShape;
-                    continue;
-                }
+                return shapes;
+            }
 
-                var isLastCompartment = connectionShapes.All(cs => cs.SewerConnection.SourceCompartment != compartmentShape.Compartment);
-                if (isLastCompartment)
+            var connectionShapeByConnection = connectionShapes.ToDictionary(c => c.SewerConnection);
+            var shapeByCompartment = compartmentShapes.ToDictionary(s => s.Compartment);
+            var connectionsPerCompartment = GetConnectionsPerCompartment(compartmentShapes, connectionShapes);
+
+            var compartmentsWithOneConnection = connectionsPerCompartment
+                                                .Where(kvp => kvp.Value.Count == 1)
+                                                .Select(kvp => kvp.Key)
+                                                .ToArray();
+
+            var orderedShapes = new List<IDrawingShape>();
+            var currentCompartment = compartmentsWithOneConnection.Length != 0
+                                         ? compartmentsWithOneConnection[0]
+                                         : compartmentShapes[0].Compartment;
+
+            var orderedCount = compartmentShapes.OfType<IDrawingShape>().Concat(connectionShapes).Count();
+
+            for (int i = 0; i < orderedCount; i++)
+            {
+                orderedShapes.Add(shapeByCompartment[currentCompartment]);
+                
+                var connections = connectionsPerCompartment[currentCompartment]
+                                  .Except(orderedShapes.OfType<InternalConnectionShape>()
+                                                       .Select(s => s.SewerConnection))
+                                  .ToList();
+
+                if (connections.Count >= 1)
                 {
-                    lastCompartmentShape = compartmentShape;
+                    var sewerConnection = connections[0];
+
+                    orderedShapes.Add(connectionShapeByConnection[sewerConnection]);
+                    i++;
+
+                    if (sewerConnection.TargetCompartment == currentCompartment)
+                    {
+                        currentCompartment = sewerConnection.SourceCompartment;
+                    }
+                    else if (sewerConnection.SourceCompartment == currentCompartment)
+                    {
+                        currentCompartment = sewerConnection.TargetCompartment;
+                    }
+                }
+                else
+                {
+                    var usedCompartments = orderedShapes.OfType<CompartmentShape>().Select(cs => cs.Compartment);
+                    var unusedCompartment = compartmentsWithOneConnection.Except(usedCompartments).FirstOrDefault() 
+                                            ?? compartmentShapes.Except(orderedShapes.OfType<CompartmentShape>()).Select(cs => cs.Compartment).FirstOrDefault();
+
+                    if (unusedCompartment == null)
+                    {
+                        break;
+                    }
+
+                    currentCompartment = unusedCompartment;
                 }
             }
 
-            reorderedList.Add(firtCompartmentShape);
+            var missingShapes = shapes.Except(orderedShapes);
 
-            IDrawingShape lastAdded = firtCompartmentShape;
-            var counter = 0;
-            while (!reorderedList.Contains(lastCompartmentShape) && counter <= connectionShapes.Count + compartmentShapes.Count)
+            return orderedShapes.Concat(missingShapes);
+        }
+
+        private static Dictionary<ICompartment, List<ISewerConnection>> GetConnectionsPerCompartment(IEnumerable<CompartmentShape> compartmentShapes, IEnumerable<InternalConnectionShape> connectionShapes)
+        {
+            var compartmentConnections = compartmentShapes
+                                             .Select(c => c.Compartment)
+                                             .ToDictionary(c => c, c => new List<ISewerConnection>());
+
+            foreach (var connection in connectionShapes.Select(s => s.SewerConnection))
             {
-                counter++;
-
-                var compartmentShape = lastAdded as CompartmentShape;
-                if (compartmentShape != null)
+                if (compartmentConnections.TryGetValue(connection.SourceCompartment, out var listSourceCompartment))
                 {
-                    // Now add a connection
-                    var connection = connectionShapes.FirstOrDefault(cs => cs.SewerConnection.SourceCompartment == compartmentShape.Compartment);
-                    if (connection != null)
-                    {
-                        reorderedList.Add(connection);
-                        lastAdded = connection;
-                    }
-
-                    continue;
+                    listSourceCompartment.Add(connection);
                 }
 
-                var connectionShape = lastAdded as InternalConnectionShape;
-                if (connectionShape != null)
+                if (compartmentConnections.TryGetValue(connection.TargetCompartment, out var listTargetCompartment))
                 {
-                    // Now add a compartment
-                    var compartment = compartmentShapes.FirstOrDefault(cs => connectionShape.SewerConnection.TargetCompartment == cs.Compartment);
-                    if (compartment != null)
-                    {
-                        reorderedList.Add(compartment);
-                        lastAdded = compartment;
-                    }
+                    listTargetCompartment.Add(connection);
                 }
             }
 
-            // Add all shapes which are not in the reorderedList yet
-            reorderedList.AddRange(shapes.Where(s => !reorderedList.Contains(s)));
-            return reorderedList;
+            return compartmentConnections;
         }
 
         private static IEnumerable<CompartmentShape> CreateCompartmentShapes(Manhole manhole)
