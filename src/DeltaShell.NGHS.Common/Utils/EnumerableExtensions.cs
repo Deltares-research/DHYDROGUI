@@ -17,7 +17,7 @@ namespace DeltaShell.NGHS.Common.Utils
         /// <typeparam name="T1">The type of the elements of the first input sequence.</typeparam>
         /// <typeparam name="T2">The type of the elements of the second input sequence.</typeparam>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when a collection in <paramref name="sources"/> is <c>null</c>.
+        /// Thrown when a collection in <paramref name="sources"/>  or <paramref name="action"/> is <c>null</c>.
         /// </exception>
         /// <remarks>
         /// The collection are expected to be of equal size.
@@ -25,6 +25,7 @@ namespace DeltaShell.NGHS.Common.Utils
         /// </remarks>
         public static void ForEach<T1, T2>(this (IEnumerable<T1>, IEnumerable<T2>) sources, Action<T1, T2> action)
         {
+            Ensure.NotNull(action, nameof(action));
             Ensure.NotNull(sources.Item1, $"{nameof(sources)}.{nameof(sources.Item1)}");
             Ensure.NotNull(sources.Item2, $"{nameof(sources)}.{nameof(sources.Item2)}");
             

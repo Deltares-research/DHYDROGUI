@@ -9,15 +9,26 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
     public class EnumerableExtensionsTest
     {
         [Test]
-        [TestCaseSource(nameof(ForEachArgumentNullCases))]
-        public void ForEach_ArgumentNull_ThrowsArgumentNullException((IEnumerable<string>, IEnumerable<string>) args, string expParam)
+        [TestCaseSource(nameof(ForEachSourceCollectionNullCases))]
+        public void ForEach_SourceCollectionNull_ThrowsArgumentNullException((IEnumerable<string>, IEnumerable<string>) args, string expParam)
         {
             // Call
-            void Call() => args.ForEach((s, s1) =>  Assert.Fail());
+            void Call() => args.ForEach((s, s1) => Assert.Fail());
 
             // Assert
             var e = Assert.Throws<ArgumentNullException>(Call);
             Assert.That(e.ParamName, Is.EqualTo(expParam));
+        }
+
+        [Test]
+        public void ForEach_ArgumentNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => (new string[0], new string[0]).ForEach(null);
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("action"));
         }
 
         [Test]
@@ -61,7 +72,7 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
-        private static IEnumerable<TestCaseData> ForEachArgumentNullCases()
+        private static IEnumerable<TestCaseData> ForEachSourceCollectionNullCases()
         {
             yield return new TestCaseData(((IEnumerable<string>) null, (IEnumerable<string>) new string[0]), "sources.Item1");
             yield return new TestCaseData(((IEnumerable<string>) new string[0], (IEnumerable<string>) null), "sources.Item2");
