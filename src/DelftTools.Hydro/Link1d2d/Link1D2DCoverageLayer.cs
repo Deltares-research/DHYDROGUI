@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils;
-using DeltaShell.NGHS.Common.Gui.MapLayers;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -43,14 +42,16 @@ namespace DelftTools.Hydro.Link1d2d
                     envelope = null;
                     links1D2DCoverage.ValuesChanged += CoverageValuesChanged;
                     ((INotifyPropertyChange)links1D2DCoverage).PropertyChanged += Coverage_PropertyChanged;
-
-                    this.SetName(links1D2DCoverage.Name);
+                    var nameIsReadOnly = NameIsReadOnly;
+                    NameIsReadOnly = false;
+                    Name = links1D2DCoverage.Name;
 
                     if (links1D2DCoverage.Components.Count > 0)
                     {
                         MissingValue = Convert.ToDouble(links1D2DCoverage.Components[0].NoDataValue);
                     }
-                    
+
+                    NameIsReadOnly = nameIsReadOnly;
                     updateThemeRequired = true;
                     coverage = new UnstructuredGridFlowLinkCoverage(links1D2DCoverage.Grid, true)
                     {
