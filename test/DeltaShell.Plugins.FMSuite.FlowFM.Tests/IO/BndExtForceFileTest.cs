@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -925,6 +926,72 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             
 
             FileUtils.DeleteIfExists(filePath);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FileWithMeteoData_CorrectlyReadsTheMeteoData()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                          " + Environment.NewLine +
+                    "    fileVersion     = 2.0          " + Environment.NewLine +
+                    "    fileType        = extForce     " + Environment.NewLine +
+                    "    fileType        = extForce     " + Environment.NewLine +
+                    "                                   " + Environment.NewLine +
+                    "[meteo]                            " + Environment.NewLine +
+                    "    quantity        = rainfall_rate" + Environment.NewLine +
+                    "    forcingFileType = bcAscii      " + Environment.NewLine +
+                    "    forcingFile     = file_meteo.bc";
+
+                string bcFileContent =
+                    "[General]                                            " + Environment.NewLine +
+                    "    fileVersion   = 1.01                             " + Environment.NewLine +
+                    "    fileType      = boundConds                       " + Environment.NewLine +
+                    "                                                     " + Environment.NewLine +
+                    "[forcing]                                            " + Environment.NewLine +
+                    "Name              = global                           " + Environment.NewLine +
+                    "Function          = timeseries                       " + Environment.NewLine +
+                    "timeInterpolation = linear                           " + Environment.NewLine +
+                    "Quantity          = time                             " + Environment.NewLine +
+                    "Unit              = seconds since 2021-01-01 00:00:00" + Environment.NewLine +
+                    "Quantity          = rainfall_rate                    " + Environment.NewLine +
+                    "Unit              = mm day-1                         " + Environment.NewLine +
+                    "100    1.23                                          " + Environment.NewLine +
+                    "200    4.56                                          " + Environment.NewLine +
+                    "300    7.89                                          ";
+                
+                string extFile = temp.CreateFile("file_bnd.ext", extFileContent);
+                temp.CreateFile("file_meteo.bc", bcFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                // Call
+                bndExtForceFile.Read(extFile, modelDefinition);
+
+                // Assert
+                IFmMeteoField meteoData = modelDefinition.FmMeteoFields.Single();
+                Assert.That(meteoData.Name, Is.EqualTo("Precipication rainfall (Global)"));
+                Assert.That(meteoData.Quantity, Is.EqualTo(FmMeteoQuantity.Precipitation));
+                Assert.That(meteoData.FmMeteoLocationType, Is.EqualTo(FmMeteoLocationType.Global));
+
+                var function = (TimeSeries) meteoData.Data;
+                Assert.That(function.Arguments, Has.Count.EqualTo(1));
+                Assert.That(function.Components, Has.Count.EqualTo(1));
+                Assert.That(function.Components[0].Name, Is.EqualTo("Precipitation"));
+                
+                IMultiDimensionalArray<DateTime> times = function.Time.Values;
+                IMultiDimensionalArray values = function.Components[0].Values;
+                Assert.That(times[0], Is.EqualTo(new DateTime(2021, 1, 1).AddSeconds(100)));
+                Assert.That(values[0], Is.EqualTo(1.23));
+                Assert.That(times[1], Is.EqualTo(new DateTime(2021, 1, 1).AddSeconds(200)));
+                Assert.That(values[1], Is.EqualTo(4.56));
+                Assert.That(times[2], Is.EqualTo(new DateTime(2021, 1, 1).AddSeconds(300)));
+                Assert.That(values[2], Is.EqualTo(7.89));
+            }
         }
     }
 }
