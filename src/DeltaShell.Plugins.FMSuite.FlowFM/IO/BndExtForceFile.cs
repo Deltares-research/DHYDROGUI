@@ -819,7 +819,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (quantityKey == ExtForceQuantNames.Precipitation)
                 {
-                    ParseMeteoRainFallBoundaryExtForceCategory(modelDefinition, quantityKey, dataBlocks);
+                    List<BcBlockData> meteoDataBlocks = dataBlocks.Where(b => IsCorrespondingMeteoBlock(b, delftIniCategory)).ToList();
+                    ParseMeteoRainFallBoundaryExtForceCategory(modelDefinition, quantityKey, meteoDataBlocks);
                     continue;
                 }
 
@@ -912,6 +913,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     modelDefinition.BoundaryConditionSets[i].BoundaryConditions.AddRange(bcSets[i].BoundaryConditions);
                 }
             }
+        }
+        
+        private static bool IsCorrespondingMeteoBlock(BcBlockData b, DelftIniCategory delftIniCategory)
+        {
+            string fileName = Path.GetFileName(delftIniCategory.GetPropertyValue(ForcingFileKey));
+            string quantity = delftIniCategory.GetPropertyValue(QuantityKey);
+
+            return Path.GetFileName(b.FilePath) == fileName &&
+                   b.Quantities.Any(q => q.Quantity == quantity);
         }
 
         private bool CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D,  IEnumerable<DelftIniCategory> modelBoundary1DBlocks)
