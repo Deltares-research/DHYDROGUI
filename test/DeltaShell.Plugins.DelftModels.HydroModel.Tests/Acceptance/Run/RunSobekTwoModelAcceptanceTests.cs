@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -111,6 +112,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                     ((HydroModel) hydroModel).CurrentWorkflow = fmAndRrWorkflow;
                 }
                 
+                bool hasRrData = preconditionExpectedCatchmentsCount > 0;
+                if (hasRrData)
+                {
+                    RainfallRunoffModel rrModel = ((HydroModel)hydroModel).GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                    Assert.That(rrModel, Is.Not.Null);
+                    AcceptanceModelTestHelper.EnableAllRainfallRunoffOutputSettings(rrModel);
+                }
+                
                 
                 // [When]
                 Console.WriteLine("Running model");
@@ -123,7 +132,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 
                 // [Then]
                 Console.WriteLine("Comparing saved input data with reference input data");
-                bool hasRrData = preconditionExpectedCatchmentsCount > 0;
                 string saveDirectory = savePath + "_data";
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
                 string mduFileName = "FlowFM";
