@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
             importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
-            // todo: restore output settings FM1D2D-1579
+            rainfallRunoffModel.RestoreOutputSettings();
             rainfallRunoffModel.ConnectOutput(Path.GetDirectoryName(rainfallRunoffModel.Path));
         }
 

@@ -773,23 +773,28 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 var engineParameter = (EngineParameter) sender;
 
-                if (engineParameter.AggregationOptions == AggregationOptions.None)
-                {
-                    DataItems.RemoveAllWhere(
-                        di =>
+                SynchronizeOutputSettings(engineParameter);
+            }
+        }
+
+        private void SynchronizeOutputSettings(EngineParameter engineParameter)
+        {
+            if (engineParameter.AggregationOptions == AggregationOptions.None)
+            {
+                DataItems.RemoveAllWhere(
+                    di =>
                         (di.Role & DataItemRole.Output) == DataItemRole.Output &&
                         IsDataItemCoverageForEngineParameter(di, engineParameter));
-                }
-                else
-                {
-                    if (
-                        !DataItems.Any(
-                            di =>
+            }
+            else
+            {
+                if (
+                    !DataItems.Any(
+                        di =>
                             (di.Role & DataItemRole.Output) == DataItemRole.Output &&
                             IsDataItemCoverageForEngineParameter(di, engineParameter)))
-                    {
-                        AddOutputCoverage((EngineParameter) sender);
-                    }
+                {
+                    AddOutputCoverage(engineParameter);
                 }
             }
         }
@@ -1032,6 +1037,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
             SetPathsOfFunctionStores(outputPath);
             OutputIsEmpty = false;
+        }
+
+        public virtual void RestoreOutputSettings()
+        {
+            foreach (EngineParameter engineParameter in OutputSettings.EngineParameters)
+            {
+                SynchronizeOutputSettings(engineParameter);
+            }
         }
 
         public virtual string WorkingDirectory

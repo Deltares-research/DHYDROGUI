@@ -543,6 +543,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return EngineParameters.FirstOrDefault(m => m.QuantityType == quantityType && m.ElementSet == elementSet);
         }
 
+        public bool IsOutputEnabledForElementSet(ElementSet elementSet)
+        {
+            return EngineParameters.Any(ep => ep.ElementSet == elementSet && ep.AggregationOptions != AggregationOptions.None);
+        }
+        
         public object Clone()
         {
             var clone = new RainfallRunoffOutputSettingData();

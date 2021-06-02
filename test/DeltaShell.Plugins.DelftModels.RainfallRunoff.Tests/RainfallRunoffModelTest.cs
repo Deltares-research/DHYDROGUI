@@ -1,11 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
@@ -32,6 +39,45 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
+        public void GivenRainfallRunoffModelWithOutputEnabled_WhenSavingAndLoadingModel_ThenOutputDataItemsAreCorrectlyAdded()
+        {
+            // Given
+            using (DeltaShellGui gui = RainfallRunoffIntegrationTestHelper.GetRunningGuiWithRRPlugins())
+            {
+                var model = new RainfallRunoffModel();
+
+                RainfallRunoffOutputSettingData outputSettings = model.OutputSettings;
+                foreach (EngineParameter engineParameter in outputSettings.EngineParameters)
+                {
+                    engineParameter.AggregationOptions = AggregationOptions.Current;
+                }
+
+                string tempDir = Path.Combine(Path.GetTempPath(), TestHelper.GetCurrentMethodName());
+                string path = Path.Combine(tempDir, "test.dsproj");
+                
+                gui.Application.Project.RootFolder.Add(model);
+                
+                gui.Application.SaveProjectAs(path);
+                gui.Application.CloseProject();
+                
+                // When
+                gui.Application.OpenProject(path);
+                
+                // Then
+                RainfallRunoffModel loadedModel = (RainfallRunoffModel) gui.Application.Project.RootFolder.Models.First();
+
+                IEnumerable<IDataItem> loadedOutputDataItems = loadedModel.OutputDataItems;
+                IEventedList<EngineParameter> loadedEngineParameters = loadedModel.OutputSettings.EngineParameters;
+                foreach (EngineParameter loadedEngineParameter in loadedEngineParameters)
+                {
+                    Assert.That(loadedEngineParameter.AggregationOptions, Is.EqualTo(AggregationOptions.Current));
+                    Assert.That(loadedOutputDataItems.Any(di => di.Name.Equals(loadedEngineParameter.Name)));
+                }
+            }
+        }
+        
+    [Test]
         public void LinkCoverageIsAdded()
         {
             var model = new RainfallRunoffModel();

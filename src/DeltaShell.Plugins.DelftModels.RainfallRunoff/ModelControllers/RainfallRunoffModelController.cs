@@ -446,6 +446,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                 Writer.AddIniOption("Options", "RestartIn", model.UseRestart ? "1" : "0");
                 Writer.AddIniOption("Options", "RestartOut", model.WriteRestart ? "1" : "0");
                 Writer.AddIniOption("Options", "RestartFileEachTimestep", model.UseSaveStateTimeRange ? "1" : "0");
+                
+                SetOutputOptions(model.OutputSettings);
 
                 if (model.CapSim)
                 {
@@ -471,6 +473,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             });
             
             return true;            
+        }
+
+        private void SetOutputOptions(RainfallRunoffOutputSettingData outputSettings)
+        {
+            Writer.AddIniOption("OutputOptions", "OutputRRPaved", outputSettings.IsOutputEnabledForElementSet(ElementSet.PavedElmSet) ? "-1" : "0");
+            Writer.AddIniOption("OutputOptions", "OutputRRUnpaved", outputSettings.IsOutputEnabledForElementSet(ElementSet.UnpavedElmSet) ? "-1" : "0");
+            Writer.AddIniOption("OutputOptions", "OutputRRGreenhouse", outputSettings.IsOutputEnabledForElementSet(ElementSet.GreenhouseElmSet) ? "-1" : "0");
+            Writer.AddIniOption("OutputOptions", "OutputRROpenWater", outputSettings.IsOutputEnabledForElementSet(ElementSet.OpenWaterElmSet) ? "-1" : "0");
+            Writer.AddIniOption("OutputOptions", "OutputRRBoundary", outputSettings.IsOutputEnabledForElementSet(ElementSet.BoundaryElmSet) ? "-1" : "0");
+            Writer.AddIniOption("OutputOptions", "OutputRRNWRW", outputSettings.IsOutputEnabledForElementSet(ElementSet.NWRWElmSet) ? "-1" : "0");
+            Writer.AddIniOption("OutputOptions", "OutputRRWWTP", outputSettings.IsOutputEnabledForElementSet(ElementSet.WWTPElmSet) ? "-1" : "0");
+            Writer.AddIniOption("OutputOptions", "OutputRRSacramento", outputSettings.IsOutputEnabledForElementSet(ElementSet.SacramentoElmSet) ? "-1" : "0");
+            Writer.AddIniOption("OutputOptions", "OutputRRBalance", outputSettings.IsOutputEnabledForElementSet(ElementSet.BalanceModelElmSet) ? "-1" : "0");
+            Writer.AddIniOption("OutputOptions", "OutputRRLinkFlows", outputSettings.IsOutputEnabledForElementSet(ElementSet.LinkElmSet) ? "-1" : "0");
         }
 
         #region Initialize/Execute/Finalize/Cleanup
