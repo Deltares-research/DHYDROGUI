@@ -339,7 +339,7 @@ namespace DelftTools.Hydro.Validators
                 }
             }
 
-            if (!CrossSectionValidator.AreCrossSectionsLengthsLargerThanTheFlowWidth(crossSectionDefinition))
+            if (!CrossSectionValidator.AreCrossSectionsEqualToTheFlowWidth(crossSectionDefinition))
             {
                 yield return new ValidationIssue(crossSection, ValidationSeverity.Error,
                     "The maximum flow width of this cross section does not match the total width of all its sections.", crossSection);

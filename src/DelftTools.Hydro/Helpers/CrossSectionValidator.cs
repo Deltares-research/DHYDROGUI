@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
@@ -125,11 +126,11 @@ namespace DelftTools.Hydro.Helpers
             return false;
         }
 
-        public static bool AreCrossSectionsLengthsLargerThanTheFlowWidth(ICrossSectionDefinition crossSectionDefinition)
+        public static bool AreCrossSectionsEqualToTheFlowWidth(ICrossSectionDefinition crossSectionDefinition)
         {
             var csDefToCheck = crossSectionDefinition.IsProxy ? GetUnProxiedCrossSectionDefinition(crossSectionDefinition) : crossSectionDefinition;
             var crossSection = csDefToCheck as CrossSectionDefinition;
-            return crossSection == null || IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(crossSection);
+            return crossSection == null || IsTotalSectionsWidthEqualToFlowWidth(crossSection);
         }
 
         public static bool AreFloodPlain1AndFloodPlain2WidthsValid(ICrossSectionDefinition crossSectionDefinition)
@@ -147,7 +148,7 @@ namespace DelftTools.Hydro.Helpers
             return !(floodPlain2Width > 0.0);
         }
 
-        private static bool IsTotalSectionsWidthAtLeastAsWideAsFlowWidth(CrossSectionDefinition crossSectionDefinition)
+        private static bool IsTotalSectionsWidthEqualToFlowWidth(CrossSectionDefinition crossSectionDefinition)
         {
             // Skip trapezium
             if (crossSectionDefinition is CrossSectionDefinitionStandard stdCrossSection &&
@@ -162,7 +163,7 @@ namespace DelftTools.Hydro.Helpers
                 return true;
             }
 
-            return crossSectionDefinition.SectionsTotalWidth() - crossSectionDefinition.FlowWidth() >= -1e-4;
+            return Math.Abs(crossSectionDefinition.SectionsTotalWidth() - crossSectionDefinition.FlowWidth()) <= 1e-4;
         }
 
         private static ICrossSectionDefinition GetUnProxiedCrossSectionDefinition(ICrossSectionDefinition crossSectionDefinition)

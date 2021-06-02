@@ -15,7 +15,7 @@ namespace DelftTools.Hydro.Tests.Helpers
     [TestFixture]
     public class CrossSectionValidatorTest
     {
-        private readonly Func<ICrossSectionDefinition, bool> checkSectionsTotalWidth = csd => CrossSectionValidator.AreCrossSectionsLengthsLargerThanTheFlowWidth(csd);
+        private readonly Func<ICrossSectionDefinition, bool> checkSectionsTotalWidth = csd => CrossSectionValidator.AreCrossSectionsEqualToTheFlowWidth(csd);
         private readonly Func<ICrossSectionDefinition, bool> checkFloodPlain1AndFloodPlain2 = csd => CrossSectionValidator.AreFloodPlain1AndFloodPlain2WidthsValid(csd);
 
         #region CrossSectionDefinition SectionWidths
@@ -35,10 +35,10 @@ namespace DelftTools.Hydro.Tests.Helpers
 
         [TestCase(20.0, false, false)]
         [TestCase(45.0, true, false)]
-        [TestCase(50.0, true, false)]
+        [TestCase(50.0, false, false)]
         [TestCase(20.0, false, true)]
         [TestCase(45.0, true, true)]
-        [TestCase(50.0, true, true)]
+        [TestCase(50.0, false, true)]
         public void GivenCrossSectionDefinitionWithOnlyMainSection_WhenValidatingSections_ThenMainSectionIsValidWhenItsWidthIsEqualToMaxFlowWidth(double mainSectionWidth, bool expectedResult, bool useCsdProxy)
         {
             var csDef = GetSimpleCrossSectionDefinition();
@@ -57,14 +57,14 @@ namespace DelftTools.Hydro.Tests.Helpers
         [TestCase(45.0, 0.0, true, false)]
         [TestCase(0.0, 45.0, true, false)]
         [TestCase(30.0, 15.0, true, false)]
-        [TestCase(45.0, 5.0, true, false)]
+        [TestCase(45.0, 5.0, false, false)]
         [TestCase(20.0, 20.0, false, true)]
         [TestCase(0.0, 20.0, false, true)]
         [TestCase(20.0, 0.0, false, true)]
         [TestCase(45.0, 0.0, true, true)]
         [TestCase(0.0, 45.0, true, true)]
         [TestCase(30.0, 15.0, true, true)]
-        [TestCase(45.0, 5.0, true, true)]
+        [TestCase(45.0, 5.0, false, true)]
         public void GivenCrossSectionDefinitionWithMainSectionAndFloodPlain1_WhenValidatingSections_ThenSectionsAreValidWhenTheirTotalWidthIsEqualToMaxFlowWidth(double mainSectionWidth, double floodPlain1Width, bool expectedResult, bool useCsdProxy)
         {
             var csDef = GetSimpleCrossSectionDefinition();
@@ -89,7 +89,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         [TestCase(45.0, 0.0, 0.0, true, false)]
         [TestCase(0.0, 45.0, 0.0, true, false)]
         [TestCase(0.0, 0.0, 45.0, true, false)]
-        [TestCase(10.0, 20.0, 45.0, true, false)]
+        [TestCase(10.0, 20.0, 45.0, false, false)]
         [TestCase(10.0, 20.0, 10.0, false, true)]
         [TestCase(10.0, 20.0, 0.0, false, true)]
         [TestCase(10.0, 0.0, 10.0, false, true)]
@@ -101,7 +101,7 @@ namespace DelftTools.Hydro.Tests.Helpers
         [TestCase(45.0, 0.0, 0.0, true, true)]
         [TestCase(0.0, 45.0, 0.0, true, true)]
         [TestCase(0.0, 0.0, 45.0, true, true)]
-        [TestCase(10.0, 20.0, 45.0, true, true)]
+        [TestCase(10.0, 20.0, 45.0, false, true)]
         public void GivenCrossSectionDefinitionZWWithThreeSectionsDefined_WhenValidatingSections_ThenSectionsAreValidWhenTheirTotalWidthIsEqualToMaxFlowWidth(double mainSectionWidth, double floodPlain1Width, double floodPlain2Width, bool expectedResult, bool useCsdProxy)
         {
             var csDef = GetSimpleCrossSectionDefinition();
@@ -160,10 +160,10 @@ namespace DelftTools.Hydro.Tests.Helpers
         [TestCase(true)]
         public void GivenCrossSectionDefinitionYZ_WhenValidiatingFloodPlain1AndFloodPlain2_ThenCrossSectionPassesThisValidation(bool useCsdProxy)
         {
-            var crossSectionDefYz = new CrossSectionDefinitionYZ();
+            var crossSectionDefYz = GetSimpleCrossSectionDefinitionZw();
             crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.MainSectionTypeName }, 10.0);
             crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain1SectionTypeName }, 20.0);
-            crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain2SectionTypeName }, 30.0);
+            crossSectionDefYz.AddSection(new CrossSectionSectionType { Name = RoughnessDataSet.Floodplain2SectionTypeName }, 15.0);
 
             var validationResult = useCsdProxy
                 ? ValidateWithProxyCrossSectionDefinition(crossSectionDefYz, checkFloodPlain1AndFloodPlain2)
@@ -176,10 +176,10 @@ namespace DelftTools.Hydro.Tests.Helpers
         [TestCase(true)]
         public void GivenCrossSectionDefinitionStandard_WhenValidiatingFloodPlain1AndFloodPlain2_ThenCrossSectionPassesThisValidation(bool useCsdProxy)
         {
-            var crossSectionDefStandard = new CrossSectionDefinitionStandard();
+            var crossSectionDefStandard = GetSimpleCrossSectionDefinition();
             crossSectionDefStandard.AddSection(new CrossSectionSectionType {Name = RoughnessDataSet.MainSectionTypeName}, 10.0);
             crossSectionDefStandard.AddSection(new CrossSectionSectionType {Name = RoughnessDataSet.Floodplain1SectionTypeName}, 20.0);
-            crossSectionDefStandard.AddSection(new CrossSectionSectionType {Name = RoughnessDataSet.Floodplain2SectionTypeName}, 30.0);
+            crossSectionDefStandard.AddSection(new CrossSectionSectionType {Name = RoughnessDataSet.Floodplain2SectionTypeName}, 15.0);
 
             var validationResult = useCsdProxy
                 ? ValidateWithProxyCrossSectionDefinition(crossSectionDefStandard, checkFloodPlain1AndFloodPlain2)
