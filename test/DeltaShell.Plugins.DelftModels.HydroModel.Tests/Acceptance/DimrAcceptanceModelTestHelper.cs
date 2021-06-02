@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 {
     public static class DimrAcceptanceModelTestHelper
     {
-        public static IHydroModel ImportDimrModelAndAssertPreconditions(
+        public static HydroModel ImportDimrModelAndAssertPreconditions(
             string acceptanceModelName,
             string acceptanceModelsDirectory,
             string xmlFileName,
@@ -28,8 +28,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
 
             string xmlFilePath = Path.Combine(inputDataDirectory, xmlFileName + ".xml");
 
-            IHydroModel hydroModel = null;
-            IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(() => hydroModel = (IHydroModel)dimrImporter.ImportItem(xmlFilePath), Level.Error);
+            HydroModel hydroModel = null;
+            IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(() => hydroModel = (HydroModel)dimrImporter.ImportItem(xmlFilePath), Level.Error);
             
             Assert.That(hydroModel, Is.Not.Null);
             app.Project.RootFolder.Add(hydroModel);
