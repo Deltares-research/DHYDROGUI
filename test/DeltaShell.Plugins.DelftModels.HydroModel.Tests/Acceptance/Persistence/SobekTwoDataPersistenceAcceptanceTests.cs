@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using NUnit.Framework;
 
@@ -97,13 +100,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                                                                                          preconditionExpectedBranchFeaturesCount,
                                                                                          preconditionExpectedCatchmentsCount,
                                                                                          isFmOnly);
-
+                bool hasRrData = preconditionExpectedCatchmentsCount > 0;
+                if (hasRrData)
+                {
+                    RainfallRunoffModel rrModel = ((HydroModel)hydroModel).GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                    Assert.That(rrModel, Is.Not.Null);
+                    AcceptanceModelTestHelper.EnableAllRainfallRunoffOutputSettings(rrModel);
+                }
+                
                 // [When]
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
 
                 // [Then]
                 Console.WriteLine("Comparing saved data");
-                bool hasRrData = preconditionExpectedCatchmentsCount > 0;
                 string firstSaveProjectDirectory = firstSaveProjectPath + "_data";
                 string secondSaveProjectDirectory = secondSaveProjectPath + "_data";
                 string mduFileName = "FlowFM";
