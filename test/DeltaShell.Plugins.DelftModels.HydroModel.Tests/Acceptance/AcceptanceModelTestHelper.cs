@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr.Gui;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.CommonTools;
@@ -211,6 +213,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             return filePath.EndsWith(ncExtension, StringComparison.InvariantCultureIgnoreCase)
                    || filePath.EndsWith(hisExtension, StringComparison.InvariantCultureIgnoreCase)
                    || filePath.EndsWith(mapExtension, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        /// <summary>
+        /// Enables all Rainfall Runoff Output by setting the aggregation option for each engine parameter to 'current'.
+        /// </summary>
+        /// <param name="rrModel">The rainfall runoff model to enable the output for.</param>
+        public static void EnableAllRainfallRunoffOutputSettings(RainfallRunoffModel rrModel)
+        {
+            IEventedList<EngineParameter> engineParameters = rrModel.OutputSettings.EngineParameters;
+            engineParameters.ForEach(ep => ep.AggregationOptions = AggregationOptions.Current);
         }
     }
 }

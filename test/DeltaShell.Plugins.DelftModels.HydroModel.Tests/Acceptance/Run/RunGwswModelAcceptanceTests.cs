@@ -6,8 +6,6 @@ using DelftTools.Functions.Filters;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -153,15 +151,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
             SetHydroModelSettings(hydroModel);
             SetFlowFmModelSettings(fmModel);
             SetRrModelSettings(rrModel);
-            EnableRainfallRunoffOutput(rrModel);
+            AcceptanceModelTestHelper.EnableAllRainfallRunoffOutputSettings(rrModel);
         }
-
-        private static void EnableRainfallRunoffOutput(RainfallRunoffModel rrModel)
-        {
-            IEventedList<EngineParameter> engineParameters = rrModel.OutputSettings.EngineParameters;
-            engineParameters.ForEach(ep => ep.AggregationOptions = AggregationOptions.Current);
-        }
-
+        
         private static void SetHydroModelSettings(HydroModel hydroModel)
         {
             hydroModel.StartTime = new DateTime(2020, 01, 01, 0, 0, 0);

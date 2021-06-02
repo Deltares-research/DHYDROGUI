@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
@@ -80,6 +83,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                     preconditionExpectedBranchFeaturesCount,
                     preconditionExpectedCatchmentsCount, gui.Application);
 
+                RainfallRunoffModel rrModel = hydroModel.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                Assert.That(rrModel, Is.Not.Null);
+                AcceptanceModelTestHelper.EnableAllRainfallRunoffOutputSettings(rrModel);
+                
                 // [When]
                 AcceptanceModelTestHelper.SaveLoadAndResaveProject(gui.Application, firstSaveProjectPath, secondSaveProjectPath);
 
