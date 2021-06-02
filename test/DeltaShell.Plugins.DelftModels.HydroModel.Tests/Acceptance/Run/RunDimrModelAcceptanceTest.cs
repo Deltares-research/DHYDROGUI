@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DelftTools.Hydro;
+using System.Linq;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
@@ -18,8 +20,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
     {
         private bool keepOutput = true;
         private string tempDirectory;
-        private string firstSaveProjectPath;
-        private string secondSaveProjectPath;
         private string acceptanceModelsDirectory;
         private string acceptanceModelsReferenceOutputDirectory;
         private string referenceSaveData;
@@ -73,13 +73,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             using (DeltaShellGui gui = AcceptanceModelTestHelper.CreateRunningDeltaShellGui())
             {
                 Console.WriteLine("Importing model");
-                IHydroModel hydroModel = DimrAcceptanceModelTestHelper.ImportDimrModelAndAssertPreconditions(acceptanceModelName,
-                                                                                                             acceptanceModelsDirectory,
-                                                                                                             xmlFileName,
-                                                                                                             preconditionExpectedBranchFeaturesCount,
-                                                                                                             preconditionExpectedCatchmentsCount,
-                                                                                                             gui.Application);
-                
+                HydroModel hydroModel = DimrAcceptanceModelTestHelper.ImportDimrModelAndAssertPreconditions(acceptanceModelName,
+                                                                                                            acceptanceModelsDirectory,
+                                                                                                            xmlFileName,
+                                                                                                            preconditionExpectedBranchFeaturesCount,
+                                                                                                            preconditionExpectedCatchmentsCount,
+                                                                                                            gui.Application);
+
+                bool hasRrData = preconditionExpectedCatchmentsCount > 0;
+                if (hasRrData)
+                {
+                    RainfallRunoffModel rrModel = hydroModel.GetAllActivitiesRecursive<RainfallRunoffModel>()?.FirstOrDefault();
+                    Assert.That(rrModel, Is.Not.Null);
+                    AcceptanceModelTestHelper.EnableAllRainfallRunoffOutputSettings(rrModel);
+                }
+
                 // [When]
                 Console.WriteLine("Running model");
                 ActivityRunner.RunActivity(hydroModel);
@@ -91,7 +99,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 
                 // [Then]
                 Console.WriteLine("Comparing saved input data with reference input data");
-                bool hasRrData = preconditionExpectedCatchmentsCount > 0;
                 string saveDirectory = savePath + "_data";
                 string referenceSaveDataDirectory = Path.Combine(referenceSaveData, acceptanceModelName);
                 string mduFileName = "FlowFM";
