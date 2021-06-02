@@ -202,6 +202,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [InvokeRequired]
         private void ClearBoundaryConditionDataIfNodeIsNotAnEndNodeAnymore(INode node)
         {
+            if (node == null)
+            {
+                return;
+            }
+            
             if (node.IncomingBranches.Count >= 1 
                 && node.OutgoingBranches.Count >=1
                 && BoundaryConditions1D.Any(bc =>
