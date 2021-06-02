@@ -158,7 +158,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             if (!File.Exists(caseDescriptionFile))
             {
-                log.ErrorFormat("Could not find file {0}.", caseDescriptionFile);
                 return false;
             }
 
