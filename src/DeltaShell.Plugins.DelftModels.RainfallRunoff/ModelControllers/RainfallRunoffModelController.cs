@@ -485,8 +485,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             Writer.AddIniOption("OutputOptions", "OutputRRNWRW", outputSettings.IsOutputEnabledForElementSet(ElementSet.NWRWElmSet) ? "-1" : "0");
             Writer.AddIniOption("OutputOptions", "OutputRRWWTP", outputSettings.IsOutputEnabledForElementSet(ElementSet.WWTPElmSet) ? "-1" : "0");
             Writer.AddIniOption("OutputOptions", "OutputRRSacramento", outputSettings.IsOutputEnabledForElementSet(ElementSet.SacramentoElmSet) ? "-1" : "0");
-            Writer.AddIniOption("OutputOptions", "OutputRRBalance", outputSettings.IsOutputEnabledForElementSet(ElementSet.BalanceModelElmSet) ? "-1" : "0");
             Writer.AddIniOption("OutputOptions", "OutputRRLinkFlows", outputSettings.IsOutputEnabledForElementSet(ElementSet.LinkElmSet) ? "-1" : "0");
+
+            bool enableRRBalanceOutput = outputSettings.IsOutputEnabledForElementSet(ElementSet.BalanceModelElmSet)
+                                         || outputSettings.IsOutputEnabledForElementSet(ElementSet.BalanceNodeElmSet);
+            Writer.AddIniOption("OutputOptions", "OutputRRBalance", enableRRBalanceOutput ? "-1" : "0");
         }
 
         #region Initialize/Execute/Finalize/Cleanup
