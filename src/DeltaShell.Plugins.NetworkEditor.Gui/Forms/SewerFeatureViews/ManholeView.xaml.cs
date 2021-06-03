@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms.Integration;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -10,6 +11,7 @@ using DelftTools.Controls.Wpf.Extensions;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
@@ -178,6 +180,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
 
             e.Handled = true;
+        }
+
+        private void WindowsFormsHost_OnChildChanged(object sender, ChildChangedEventArgs e)
+        {
+            if (!(sender is WindowsFormsHost host)) return;
+            // reset selected pipe (attached property was set when ProfileChartView was null)
+            WindowsFormsHostProfileView.SetPipe(host, null);
+            WindowsFormsHostProfileView.SetPipe(host, ViewModel.SelectedItem as IPipe);
         }
     }
 }

@@ -129,7 +129,8 @@
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type sewerFeatures:Pipe}">
                             <WindowsFormsHost local:WindowsFormsHostProfileView.Pipe="{Binding Content, ElementName=ContentControl}"
-                                              Background="White">
+                                              Background="White"
+                                              ChildChanged="WindowsFormsHost_OnChildChanged">
                                 <WindowsFormsHost.Child>
                                     <crossSectionView:ProfileChartView x:Name="ProfileChartView" />
                                 </WindowsFormsHost.Child>
