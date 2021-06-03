@@ -160,6 +160,7 @@
                                                 SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type local:ManholeView}}}" />
 
                     <CheckBox Grid.Row="1"
+                              Margin="7,0,0,0"
                               Content="Show labels"
                               IsChecked="{Binding ShowLabels, ElementName=ManholeVisualisationControl}" />
 
@@ -167,7 +168,8 @@
                               Header="Add item (drag to add)"
                               Style="{StaticResource GroupBoxStyle}">
 
-                        <ListView GiveFeedback="ToolBoxGiveFeedback"
+                        <ListView BorderThickness="0"
+                                  GiveFeedback="ToolBoxGiveFeedback"
                                   ItemsSource="{Binding ShapeTypes}"
                                   PreviewMouseDown="ToolBoxMouseDown"
                                   PreviewMouseMove="ToolBoxMouseMove"

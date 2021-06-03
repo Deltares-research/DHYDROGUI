@@ -187,7 +187,8 @@
                                                 Background="{StaticResource BackgroundBrush}"
                                                 PumpShape="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=DataContext}"
                                                 SnapsToDevicePixels="True" />
-                        <TextBlock Text="{Binding Pump.Name}" />
+                        <TextBlock Text="{Binding Pump.Name}" VerticalAlignment="Center" 
+                                   Visibility="{Binding Data.ShowLabels, Source={StaticResource Proxy}, Converter={StaticResource BooleanToVisibilityConverter}}" />
                     </Grid>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type local:WeirShape}">
