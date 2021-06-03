@@ -79,7 +79,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var rrNodesPath = GetFilePath(SobekFileNames.SobekRRNodeFileName);
             var nodes = new SobekRRNodeReader().Read(rrNodesPath).ToDictionaryWithErrorDetails(rrNodesPath, n => n.Id, n => n.ObjectTypeName);
-            var links = new SobekRRLinkReader().Read(GetFilePath(SobekFileNames.SobekRRLinkFileName));
+            var links = new SobekRRLinkReader().Read(GetFilePath(SobekFileNames.SobekRRLinkFileName))
+                                               .GroupBy(l => l.NodeToId)
+                                               .ToDictionary(g => g.Key, g => g.ToArray());
+
             var importedBoundaryConditions = new SobekRRBoundaryReader().Read(filePathBoundaryConditions);
             var dicBCTable = new SobekRRTableReader("BN_T", formatBCTable).Read(filePathBoundaryTableConditions).ToDictionaryWithErrorDetails(filePathBoundaryTableConditions, item => item.TableName, item => item);
 
@@ -87,15 +90,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var unpavedDatas = model.GetAllModelData().OfType<UnpavedData>().ToList();
 
             // If a standalone RR model is imported, also convert the 'Flow-RR Connections on Flow Channel' (type 35) to Runoff boundaries (TOOLS-20516). 
-            var integratedModel = TargetObject as ICompositeActivity;
-            bool rrStandalone = integratedModel != null && integratedModel.Activities.Count == 1;
-            
+            bool rrStandalone = TargetObject is ICompositeActivity integratedModel && integratedModel.Activities.Count == 1;
+            var unFoundNodes = new List<string>();
+
             foreach (var bc in importedBoundaryConditions)
             {
                 string type;
                 if (!nodes.TryGetValue(bc.Id, out type))
                 {
-                    log.WarnFormat("Could not find node with id {0} for boundary condition.", bc.Id);
+                    unFoundNodes.Add(bc.Id);
                     continue;
                 }
 
@@ -111,7 +114,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 else
                 {
                     //put condition on the linked unpaved catchments
-                    var incomingLinksToBoundary = links.Where(l => l.NodeToId == bc.Id);
+                    links.TryGetValue(bc.Id, out var incomingLinksToBoundary);
+                    if (incomingLinksToBoundary == null) continue;
 
                     foreach (var incomingLink in incomingLinksToBoundary)
                     {
@@ -128,6 +132,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         SetBoundaryCondition(unpaved.BoundaryData, bc, dicBCTable);
                     }
                 }
+            }
+
+            if (unFoundNodes.Any())
+            {
+                log.WarnFormat("Could not find nodes with the following with ids {0} for boundary condition.", string.Join(",", unFoundNodes));
             }
         }
 
