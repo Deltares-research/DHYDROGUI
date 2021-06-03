@@ -1012,16 +1012,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             }
 
             var dirInfo = new DirectoryInfo(outputPath);
-            if (dirInfo.Parent == null)
+            if (dirInfo.Parent == null || !dirInfo.Exists)
             {
                 return;
             }
-
-            if (!Directory.Exists(outputPath))
-            {
-                return;
-            }
-
+            
             string[] newOutputFiles = Directory.GetFiles(outputPath);
             if (newOutputFiles.Length == 0)
             {
