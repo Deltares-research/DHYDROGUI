@@ -590,10 +590,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
                 // todo: find out what to do with branch type from file.
                 // Currently the branch type from the properties is used
-                var branch = GetBranch(propertiesLookup, networkGeometry.BranchIds[i]);
-                
-                branch.Source = nodeLookup[fromNodeId];
-                branch.Target = nodeLookup[toNodeId];
+                INode source = nodeLookup[fromNodeId];
+                INode target = nodeLookup[toNodeId];
+                var branch = GetBranch(propertiesLookup, networkGeometry.BranchIds[i], source, target);
+
+                branch.Source = source;
+                branch.Target = target;
                 branch.Name = networkGeometry.BranchIds[i];
                 ((IHydroNetworkFeature)branch).LongName = networkGeometry.BranchLongNames[i];
                 if (branch.IsLengthCustom)
@@ -662,10 +664,15 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             yield return node.Name;
         }
 
-        private static IBranch GetBranch(IReadOnlyDictionary<string, BranchProperties> propertiesLookup, string branchName)
+        private static IBranch GetBranch(IReadOnlyDictionary<string, BranchProperties> propertiesLookup, string branchName, INode source, INode target)
         {
             if (propertiesLookup == null || !propertiesLookup.ContainsKey(branchName))
             {
+                if (source is Manhole || target is Manhole)
+                {
+                    return new Pipe();
+                }
+
                 return new Channel();
             }
 
