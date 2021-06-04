@@ -476,7 +476,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual(0.05, specificProperties.DeadBandFixedSize);
             Assert.AreEqual(1.23, specificProperties.ConstantSetPoint);
 
-            Assert.AreEqual(IntervalControllerIntervalType.Fixed, specificProperties.ControllerIntervalType);
+            Assert.AreEqual(IntervalControllerSetPointType.Fixed, specificProperties.SetPointType);
             Assert.AreEqual(0.2, specificProperties.FixedInterval);
         }
 

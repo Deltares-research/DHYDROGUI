@@ -657,6 +657,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
 
         [Test]
         [Category(TestCategory.Integration)]
+        [Category("Quarantine")]
         [TestCase(IntervalRule.IntervalRuleIntervalType.Variable, 3)]
         [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed, 6)]
         public void GivenAnIntervalRuleWithAVariableOrFixedSetPoint_WhenAskingForTimeSeriesFile_ThenThisFileShouldBeCreatedWithOneTimeSerie(IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType, int expectedValueInTimeSeriesFile)

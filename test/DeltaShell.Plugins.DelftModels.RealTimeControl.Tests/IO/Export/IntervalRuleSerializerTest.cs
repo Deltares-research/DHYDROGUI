@@ -76,6 +76,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
         }
 
         [Test]
+        [Category("Quarantine")]
         public void GivenAnIntervalRuleWithSignalAsSetPoint_WhenCallingTheTimeSeries_ThenAnExceptionShouldBeThrown()
         {
             IntervalRule intervalRule = CreateIntervalRule();
@@ -132,13 +133,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                             serializer.ToXml(fns, "").Single().ToString(SaveOptions.DisableFormatting));
         }
 
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed, 1.23)]
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Variable, 5.0)]
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Fixed, 1.23)]
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Variable, 5.0)]
         public void GivenAnIntervalRuleWithAFixedOrVariableSetPoint_WhenCallingTheTimeSeries_ThenTheseShouldBeGenerated(
-            IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType, double expectedValue)
+            IntervalRule.IntervalRuleSetPointType intervalRuleIntervalType, double expectedValue)
         {
             IntervalRule intervalRule = CreateIntervalRule();
-            intervalRule.IntervalType = intervalRuleIntervalType;
+            intervalRule.SetPointType = intervalRuleIntervalType;
 
             DateTime start = DateTime.Now;
             DateTime stop = start.Add(new TimeSpan(3, 0, 0));

@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Domain
             var intervalRule = new IntervalRule
             {
                 Inputs = new EventedList<IInput> {input},
-                IntervalType = IntervalRule.IntervalRuleIntervalType.Variable
+                SetPointType = IntervalRule.IntervalRuleSetPointType.Variable
             };
 
             var exception = Assert.Throws<ValidationContextException>(() => { IntervalRule.Validate(intervalRule); });
