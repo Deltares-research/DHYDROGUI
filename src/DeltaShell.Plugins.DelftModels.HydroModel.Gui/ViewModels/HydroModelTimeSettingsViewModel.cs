@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -151,6 +152,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets the current workflows of the hydro model.
+        /// </summary>
+        public ObservableCollection<ICompositeActivity> WorkFlows { get; } = new ObservableCollection<ICompositeActivity>();
+
         public bool DurationIsValid { get; set; }
 
         #endregion
@@ -214,12 +220,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             return HydroModel != null;
         }
 
+        [InvokeRequired]
         private void OnModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var timeDependentModel = e.GetRemovedOrAddedItem() as ITimeDependentModel;
-            if (sender != HydroModel.Activities || timeDependentModel == null) return;
+            switch (e.GetRemovedOrAddedItem())
+            {
+                case ICompositeActivity activity when sender == HydroModel.Workflows:
+                    UpdateWorkflows(e.Action, activity);
+                    break;
+                case ITimeDependentModel timeDependentModel when sender == HydroModel.Activities:
+                    UpdateModels(e.Action, timeDependentModel);
+                    break;
+            }
+        }
 
-            switch (e.Action)
+        private void UpdateModels(NotifyCollectionChangedAction action, ITimeDependentModel timeDependentModel)
+        {
+            switch (action)
             {
                 case NotifyCollectionChangedAction.Add:
                     if (Models.Any(m => m.Model == timeDependentModel)) return;
@@ -230,6 +247,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                     if (tdViewModel == null) return;
                     Models.Remove(tdViewModel);
                     tdViewModel.Dispose();
+                    break;
+            }
+        }
+
+        private void UpdateWorkflows(NotifyCollectionChangedAction action, ICompositeActivity activity)
+        {
+            switch (action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    WorkFlows.Add(activity);
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    WorkFlows.Remove(activity);
                     break;
             }
         }

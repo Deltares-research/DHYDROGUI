@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             yield return new ViewInfo<HydroModel, HydroModelSettings>
                 {
                     Description = "Hydro Model Settings",
-                    GetViewName = (v, o) => o.Name + " Settings",
+                    GetViewName = (v, o) => o?.Name + " Settings",
                     CompositeViewType = typeof(ProjectItemMapView),
                     GetCompositeViewData = o => o,
                     AfterCreate = (v, o) =>
