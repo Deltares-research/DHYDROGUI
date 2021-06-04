@@ -896,8 +896,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 intervalRule.DeadbandAroundSetpoint = specificProperties.DeadBandPecentage;
             }
 
-            intervalRule.IntervalType = (IntervalRule.IntervalRuleIntervalType) specificProperties.IntervalType;
+            intervalRule.IntervalType = (IntervalRule.IntervalRuleIntervalType) specificProperties.ControllerIntervalType;
             intervalRule.FixedInterval = specificProperties.FixedInterval;
+
+            intervalRule.SetPointType = (IntervalRule.IntervalRuleSetPointType)specificProperties.SetPointType;
 
             if (controller.TimeTable != null)
             {
@@ -906,6 +908,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
 
             intervalRule.TimeSeries.Components[0].DefaultValue = specificProperties.ConstantSetPoint;
+
+            intervalRule.IntervalType = (IntervalRule.IntervalRuleIntervalType)specificProperties.ControllerIntervalType;
 
             return intervalRule;
         }

@@ -38,6 +38,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             Signal = 2
         }
 
+        public enum IntervalRuleSetPointType
+        {
+            Fixed = 0,
+            Variable = 1
+        }
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(IntervalRule));
 
         /// <summary>
@@ -72,6 +78,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         /// continous on/off switching of pump).
         /// </summary>
         public double DeadbandAroundSetpoint { get; set; }
+
+        public IntervalRuleSetPointType SetPointType { get; set; }
 
         [NoNotifyPropertyChange]
         public double ConstantValue
@@ -146,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             var exceptions = new List<ValidationException>();
 
-            if (intervalRule.IntervalType == IntervalRuleIntervalType.Variable && intervalRule.TimeSeries.Arguments[0].Values.Count == 0)
+            if (intervalRule.SetPointType == IntervalRuleSetPointType.Variable && intervalRule.TimeSeries.Arguments[0].Values.Count == 0)
             {
                 exceptions.Add(new ValidationException(string.Format(Resources.RealTimeControlModelIntervalRule_Interval_rule__0__has_empty_time_series, intervalRule.Name)));
             }

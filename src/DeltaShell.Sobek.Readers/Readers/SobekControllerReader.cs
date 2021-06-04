@@ -293,6 +293,7 @@ namespace DeltaShell.Sobek.Readers.Readers
 
             const string propertiesPatternUSminimum = @"ui\s(?<usminimum>" + RegularExpression.Scientific + @")\s";
             const string propertiesPatternUSmaximum = @"ua\s(?<usmaximum>" + RegularExpression.Scientific + @")\s";
+            const string propertiesControllerIntervalType = @"cn\s(?<contrintervaltype>" + RegularExpression.Integer + @")\s";
             const string propertiesPatternIntervalType = @"sp tc\s(?<intervaltype>" + RegularExpression.Integer + @")\s";
             const string propertiesPatternFixedInterval = @"du\s(?<fixedinterval>" + RegularExpression.Scientific + @")\s";
             const string propertiesPatternControlVelocity = @"cv\s(?<controlvelocity>" + RegularExpression.Scientific + @")\s";
@@ -320,10 +321,16 @@ namespace DeltaShell.Sobek.Readers.Readers
                 specificProperties.USmaximum = ConversionHelper.ToDouble(matches[0].Groups["usmaximum"].Value);
             }
 
+            matches = RegularExpression.GetMatches(propertiesControllerIntervalType, properties);
+            if (matches.Count == 1)
+            {
+                specificProperties.ControllerIntervalType = (IntervalControllerIntervalType)Convert.ToInt32(matches[0].Groups["contrintervaltype"].Value);
+            }
+
             matches = RegularExpression.GetMatches(propertiesPatternIntervalType, properties);
             if (matches.Count == 1)
             {
-                specificProperties.IntervalType = (IntervalControllerIntervalType)Convert.ToInt32(matches[0].Groups["intervaltype"].Value);
+                specificProperties.SetPointType = (IntervalControllerSetPointType)Convert.ToInt32(matches[0].Groups["intervaltype"].Value);
             }
 
             matches = RegularExpression.GetMatches(propertiesPatternFixedInterval, properties);

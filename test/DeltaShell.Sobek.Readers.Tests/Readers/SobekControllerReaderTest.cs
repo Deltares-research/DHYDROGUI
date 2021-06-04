@@ -436,7 +436,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual(IntervalControllerDeadBandType.PercentageDischarge, specificProperties.DeadBandType);
             Assert.AreEqual(20.0, specificProperties.DeadBandPecentage); //pe
 
-            Assert.AreEqual(IntervalControllerIntervalType.Variable, specificProperties.IntervalType);
+            Assert.AreEqual(IntervalControllerIntervalType.Variable, specificProperties.ControllerIntervalType);
             Assert.AreEqual(0.0, specificProperties.FixedInterval); //du is not defined in fileText
         }
 
@@ -476,7 +476,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual(0.05, specificProperties.DeadBandFixedSize);
             Assert.AreEqual(1.23, specificProperties.ConstantSetPoint);
 
-            Assert.AreEqual(IntervalControllerIntervalType.Fixed, specificProperties.IntervalType);
+            Assert.AreEqual(IntervalControllerIntervalType.Fixed, specificProperties.ControllerIntervalType);
             Assert.AreEqual(0.2, specificProperties.FixedInterval);
         }
 

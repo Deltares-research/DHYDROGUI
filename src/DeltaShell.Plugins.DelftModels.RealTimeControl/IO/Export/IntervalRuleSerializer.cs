@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
                 PeriodSpan = periodSpan
             };
 
-            if (IntervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Fixed)
+            if (IntervalRule.SetPointType == IntervalRule.IntervalRuleSetPointType.Fixed)
             {
                 xmlTimeSeries.TimeSeries = IntervalRuleTimeSeriesCreator.Create();
                 xmlTimeSeries.InterpolationType = xmlTimeSeries.TimeSeries.Time.InterpolationType;
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
                     stop
                 });
             }
-            else if (IntervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Variable)
+            else if (IntervalRule.SetPointType == IntervalRule.IntervalRuleSetPointType.Variable)
             {
                 xmlTimeSeries.TimeSeries = (TimeSeries) IntervalRule.TimeSeries.Clone();
                 xmlTimeSeries.InterpolationType = IntervalRule.TimeSeries.Time.InterpolationType;
