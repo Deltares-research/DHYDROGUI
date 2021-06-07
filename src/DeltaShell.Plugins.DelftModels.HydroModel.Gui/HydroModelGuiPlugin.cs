@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Extensions;
@@ -134,7 +135,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     networkCoverageGroupLayer.NetworkCoverage = new NetworkCoverage("dummy", false);
                     break;
                 case FeatureCoverageLayer featureCoverageLayer:
-                    featureCoverageLayer.FeatureCoverage = new FeatureCoverage();
+                    var coverage = new FeatureCoverage();
+                    coverage.Components.Add(new Variable<double>());
+                    featureCoverageLayer.FeatureCoverage = coverage;
                     break;
             }
 

@@ -267,6 +267,7 @@
     <Compile Include="Forms\SettingsWpf\WpfGuiPropertyTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfGuiSubCategoryTest.cs" />
     <Compile Include="Forms\SettingsWpf\WpfSettingsViewModelTest.cs" />
+    <Compile Include="Gui\HydroModelGuiPluginTest.cs" />
     <Compile Include="HydroModelApplicationPluginTest.cs" />
     <Compile Include="HydroModelGuiIntegrationTest.cs" />
     <Compile Include="HydroModelTest.cs" />
@@ -463,7 +464,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

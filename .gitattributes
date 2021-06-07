@@ -3717,6 +3717,7 @@ test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/WpfGuiCat
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/WpfGuiPropertyTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/WpfGuiSubCategoryTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Forms/SettingsWpf/WpfSettingsViewModelTest.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Gui/HydroModelGuiPluginTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/HydroModelApplicationPluginTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/HydroModelExtensionsTest.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/HydroModelGuiIntegrationTest.cs -text
