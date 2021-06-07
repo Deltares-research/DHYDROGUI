@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.FeatureCoverageProviders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FeatureCoverageProviders;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.FeatureCoverageProviders
@@ -9,6 +12,37 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.FeatureCoveragePro
     [TestFixture]
     public class CompositeFeatureCoverageProviderTest
     {
+        private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
+        {
+            yield return new TestCaseData(Enumerable.Empty<IFeatureCoverageProvider>(), null, "model");
+            yield return new TestCaseData(null, Substitute.For<IRainfallRunoffModel>(), "providers");
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(ConstructorArgumentNullCases))]
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(IEnumerable<IFeatureCoverageProvider> providers, IRainfallRunoffModel model, string expParamName)
+        {
+            // Call
+            void Call() => new CompositeFeatureCoverageProvider(providers, model);
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo(expParamName));
+        }
+
+        [Test]
+        public void Constructor_InitializesInstanceCorrectly()
+        {
+            // Setup
+            var model = Substitute.For<IRainfallRunoffModel>();
+            
+            // Call
+            var coverageProvider = new CompositeFeatureCoverageProvider(Enumerable.Empty<IFeatureCoverageProvider>(), model);
+            
+            // Assert
+            Assert.That(coverageProvider.Model, Is.SameAs(model));
+        }
+        
         [Test]
         [Category(TestCategory.Integration)]
         public void CreateCompositeProvider()
@@ -21,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.FeatureCoveragePro
                                                                     {
                                                                         unpavedProvider,
                                                                         modelOutputProvider
-                                                                    });
+                                                                    }, model);
 
             Assert.IsNotNull(compositeProvider.FeatureCoverageNames);
             var numCompositeCoverages = compositeProvider.FeatureCoverageNames.Count();
@@ -44,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.FeatureCoveragePro
                                                                     {
                                                                         unpavedProvider,
                                                                         modelOutputProvider
-                                                                    });
+                                                                    }, model);
 
             var name = modelOutputProvider.FeatureCoverageNames.First();
 

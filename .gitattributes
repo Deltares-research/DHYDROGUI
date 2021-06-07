@@ -4291,6 +4291,7 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/RainfallRunoffGuiInt
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/RainfallRunoffGuiIntegrationTests.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/RainfallRunoffMapLayerProviderTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/RainfallRunoffOutputPropertiesTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/RainfallRunoffViewInfoBuilderTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/TestUnpavedData.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/TimeDependentFeatureCoverageViewTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Validation/RainfallRunoffBasinValidatorTest.cs -text
