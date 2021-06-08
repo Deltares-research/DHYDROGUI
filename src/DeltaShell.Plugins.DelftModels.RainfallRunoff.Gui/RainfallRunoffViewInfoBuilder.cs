@@ -208,7 +208,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 {
                     Description = "Catchment attribute viewer",
                     AdditionalDataCheck = o => o.Parent is RainfallRunoffModel && (o.Text == "Input" || o.Text == "Output"),
-                    ViewDataContainsData = (view,data) => ReferenceEquals(((CompositeFeatureCoverageProvider)view.Data).Model, data),
+                    ViewDataContainsData = (view,data) => ReferenceEquals((view?.Data as CompositeFeatureCoverageProvider)?.Model, data),
                     GetViewData = o =>
                         {
                             var featureCoverageProviders = new IFeatureCoverageProvider[]
