@@ -372,8 +372,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 hydroLink.Source is Catchment && 
                 hydroLink.Target is LateralSource lateralSource)
             {
-                Model1DLateralSourceData lateralSourceData = LateralSourcesData.First(d => d.Feature == lateralSource);
-                lateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
+                UpdateLateralSourceData(lateralSource);
             }
 
             // check if removed item is used in the child data items
@@ -401,6 +400,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     childDataItem.Parent.Children.Remove(childDataItem);
                 }
             }
+        }
+        
+        private void UpdateLateralSourceData(LateralSource lateralSource)
+        {
+            Model1DLateralSourceData lateralSourceData = LateralSourcesData.First(d => d.Feature == lateralSource);
+            lateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
         }
 
         private void HandleSewerConnectionsChanged(NotifyCollectionChangedAction action, ISewerConnection sewerConnection)
