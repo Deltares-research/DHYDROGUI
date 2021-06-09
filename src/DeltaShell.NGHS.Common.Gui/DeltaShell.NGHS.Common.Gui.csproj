@@ -106,12 +106,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitmapConversionExtensions.cs" />
+    <Compile Include="Converters\EnumToDescriptionConverter.cs" />
     <Compile Include="CoordinateSystemPicker.xaml.cs">
       <DependentUpon>CoordinateSystemPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="CoordinateSystemPickerViewModel.cs" />
     <Compile Include="LayerExtensions.cs" />
     <Compile Include="MapLayers\LayerExtensions.cs" />
+    <Compile Include="Modals\Helpers\IRequestUserInputService.cs" />
+    <Compile Include="Modals\Helpers\RequestUserInputService.cs" />
+    <Compile Include="Modals\ViewModels\UserInputModalViewModel.cs" />
+    <Compile Include="Modals\ViewModels\UserInputModalViewModelBase.cs" />
+    <Compile Include="Modals\Views\UserInputModalView.xaml.cs">
+      <DependentUpon>UserInputModalView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NodePresenters\ContextMenuFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -131,6 +139,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CommonSettingsStyle.xaml" />
     <Page Include="CoordinateSystemPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -139,6 +148,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Modals\Views\UserInputModalView.xaml" />
     <Resource Include="DefaultControlTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

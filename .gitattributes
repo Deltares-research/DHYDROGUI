@@ -641,6 +641,8 @@ src/DeltaShell.Dimr/drtc_xsd/treeVector.xsd -text
 src/DeltaShell.Dimr/packages.config -text
 src/DeltaShell.NGHS.Common.Gui/BitmapConversionExtensions.cs -text
 src/DeltaShell.NGHS.Common.Gui/Brushes.xaml -text
+src/DeltaShell.NGHS.Common.Gui/CommonSettingsStyle.xaml -text
+src/DeltaShell.NGHS.Common.Gui/Converters/EnumToDescriptionConverter.cs -text
 src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPicker.xaml -text
 src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPicker.xaml.cs -text
 src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPickerViewModel.cs -text
@@ -648,6 +650,12 @@ src/DeltaShell.NGHS.Common.Gui/DefaultControlTemplates.xaml -text
 src/DeltaShell.NGHS.Common.Gui/DeltaShell.NGHS.Common.Gui.csproj -text
 src/DeltaShell.NGHS.Common.Gui/LayerExtensions.cs -text
 src/DeltaShell.NGHS.Common.Gui/MapLayers/LayerExtensions.cs -text
+src/DeltaShell.NGHS.Common.Gui/Modals/Helpers/IRequestUserInputService.cs -text
+src/DeltaShell.NGHS.Common.Gui/Modals/Helpers/RequestUserInputService.cs -text
+src/DeltaShell.NGHS.Common.Gui/Modals/ViewModels/UserInputModalViewModel.cs -text
+src/DeltaShell.NGHS.Common.Gui/Modals/ViewModels/UserInputModalViewModelBase.cs -text
+src/DeltaShell.NGHS.Common.Gui/Modals/Views/UserInputModalView.xaml -text
+src/DeltaShell.NGHS.Common.Gui/Modals/Views/UserInputModalView.xaml.cs -text
 src/DeltaShell.NGHS.Common.Gui/NodePresenters/ContextMenuFactory.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/AssemblyInfo.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/Resources.Designer.cs -text
@@ -3546,10 +3554,13 @@ test/DeltaShell.Dimr.Tests/test-data/structures_all_types/unstruc_001.dia -text
 test/DeltaShell.Dimr.Tests/test-data/structures_all_types/weir02.pli -text
 test/DeltaShell.Dimr.Tests/test-data/structures_all_types/weir02_crest_level.tim -text
 test/DeltaShell.NGHS.Common.Gui.Tests/App.config -text
+test/DeltaShell.NGHS.Common.Gui.Tests/Converters/EnumToDescriptionConverterTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/CoordinateSystemPickerViewModelTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/DeltaShell.NGHS.Common.Gui.Tests.csproj -text
 test/DeltaShell.NGHS.Common.Gui.Tests/LayerExtensionsTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/MapLayers/LayerExtensionsTest.cs -text
+test/DeltaShell.NGHS.Common.Gui.Tests/Modals/Helpers/RequestUserInputServiceTest.cs -text
+test/DeltaShell.NGHS.Common.Gui.Tests/Modals/ViewModels/UserInputModalViewModelTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/NodePresenters/ContextMenuFactoryTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/Properties/AssemblyInfo.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/TestClassSetup.cs -text
