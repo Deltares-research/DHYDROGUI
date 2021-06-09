@@ -31,7 +31,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
     public static class HydroUGridExtensions
     {
         private static ILog Log = LogManager.GetLogger(typeof(HydroUGridExtensions));
-        private const double EpsilonLocation = 1e-5;
 
         #region Mesh2d
 

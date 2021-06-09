@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
@@ -86,8 +87,7 @@ namespace DelftTools.Hydro
                             {
                                 locationsToAdd.Add(new NetworkLocation(otherChannel, otherChannel.Length));
                             }
-
-                        };
+                        }
 
                         var location = locationsOnBranch.FirstOrDefault();
                         if (location != null && location.Chainage == 0)
@@ -163,24 +163,7 @@ namespace DelftTools.Hydro
             }
             else
             {
-                locationsToAdd = new List<INetworkLocation>(existingLocations);
-
-                var newLocationsByBranch = newLocations.GroupBy(l => l.Branch);
-
-                foreach (var locations in newLocationsByBranch)
-                {
-                    var branch = locations.Key;
-                    var locationsOnBranch = discretization.GetLocationsForBranch(branch);
-
-                    if (locationsOnBranch.Count == 0)
-                    {
-                        // only new locations on branch
-                        locationsToAdd.AddRange(locations);
-                        continue;
-                    }
-
-                    locationsToAdd.AddRange(FilterExistingLocationsForBranch(locationsOnBranch, locations, branch));
-                }
+                locationsToAdd = MergeLocations(discretization, newLocations, existingLocations);
             }
 
             // cleanup duplicate locations over branches (on nodes)
@@ -306,7 +289,6 @@ namespace DelftTools.Hydro
         /// </summary>
         /// <param name="locations">Locations to scan</param>
         /// <param name="nodes">Nodes to cleanup</param>
-        /// <param name="chainageDelta">Delta to compare chainages</param>
         private static void CleanupLocationsAtNodes(ICollection<INetworkLocation> locations, IList<INode> nodes)
         {
             var locationsByBranch = locations
@@ -315,7 +297,9 @@ namespace DelftTools.Hydro
 
             IList<INetworkLocation> GetLocationsForBranch(IBranch b)
             {
-                return locationsByBranch.TryGetValue(b, out var branchLocations) ? branchLocations : new List<INetworkLocation>(0);
+                return locationsByBranch.TryGetValue(b, out var branchLocations) 
+                           ? branchLocations 
+                           : new List<INetworkLocation>(0);
             }
 
             foreach (var node in nodes)
@@ -336,8 +320,6 @@ namespace DelftTools.Hydro
                         break;
                 }
 
-                if (!locationsToRemove.Any()) continue;
-
                 locationsToRemove.ForEach(n =>
                 {
                     locations.Remove(n);
@@ -351,7 +333,6 @@ namespace DelftTools.Hydro
         /// </summary>
         /// <param name="manhole">Manhole to search for</param>
         /// <param name="locationsOnManHole">Locations on manhole</param>
-        /// <param name="chainageDelta">Delta for comparing chainages</param>
         /// <returns>Filtered <paramref name="locationsOnManHole"/> (one for each compartment)</returns>
         private static IEnumerable<INetworkLocation> GetDuplicatePointsForManhole(IManhole manhole, IList<INetworkLocation> locationsOnManHole)
         {
@@ -372,11 +353,34 @@ namespace DelftTools.Hydro
             return duplicatePoints;
         }
 
+        private static List<INetworkLocation> MergeLocations(IDiscretization discretization, IEnumerable<INetworkLocation> newLocations, IMultiDimensionalArray<INetworkLocation> existingLocations)
+        {
+            var locationsToAdd = new List<INetworkLocation>(existingLocations);
+
+            var newLocationsByBranch = newLocations.GroupBy(l => l.Branch);
+
+            foreach (var locations in newLocationsByBranch)
+            {
+                var branch = locations.Key;
+                var locationsOnBranch = discretization.GetLocationsForBranch(branch);
+
+                if (locationsOnBranch.Count == 0)
+                {
+                    // only new locations on branch
+                    locationsToAdd.AddRange(locations);
+                    continue;
+                }
+
+                locationsToAdd.AddRange(FilterExistingLocationsForBranch(locationsOnBranch, locations, branch));
+            }
+
+            return locationsToAdd;
+        }
+
         /// <summary>
         /// Get corresponding compartment for <paramref name="location"/>
         /// </summary>
         /// <param name="location">Location to search for</param>
-        /// <param name="chainageDelta">Delta for comparing chainage</param>
         /// <returns>corresponding compartment for <paramref name="location"/></returns>
         private static ICompartment GetCompartmentForLocation(INetworkLocation location)
         {
@@ -406,32 +410,33 @@ namespace DelftTools.Hydro
         {
             if (node == null)
                 return new List<INetworkLocation>();
-
+            
             var branches = node.IncomingBranches
                                .Select(b => new { branch = b, incoming = true })
                                .Concat(node.OutgoingBranches.Select(b => new { branch = b, incoming = false }));
 
             return branches
-                   .Select(b =>
-                   {
-                       var locations = getLocationsForBranch(b.branch);
-                       if (locations.Count == 0)
-                       {
-                           return null;
-                       }
-
-                       // check if first or last is at begin or end node location
-                       var index = b.incoming ? locations.Count - 1 : 0;
-                       var atBeginOrEnd = b.incoming
-                                              ? Math.Abs(locations[index].Chainage - b.branch.Length) < 1e-8
-                                              : Math.Abs(locations[index].Chainage) < 1e-8;
-
-                       return atBeginOrEnd
-                                  ? locations[index]
-                                  : null;
-                   })
-                   .Where(l => l != null)
+                   .SelectMany(b => GetBranchNodeLocations(getLocationsForBranch, b.branch, b.incoming))
                    .ToList();
+        }
+
+        private static IEnumerable<INetworkLocation> GetBranchNodeLocations(Func<IBranch, IList<INetworkLocation>> getLocationsForBranch, IBranch branch, bool incoming)
+        {
+            var locations = getLocationsForBranch(branch);
+            if (!locations.Any())
+            {
+                yield break;
+            }
+
+            // check if first or last is at begin or end node location
+            var index = incoming ? locations.Count - 1 : 0;
+            var atBeginOrEnd = incoming
+                                   ? Math.Abs(locations[index].Chainage - branch.Length) < 1e-8
+                                   : Math.Abs(locations[index].Chainage) < 1e-8;
+
+            yield return atBeginOrEnd
+                       ? locations[index]
+                       : null;
         }
 
         /// <summary>
@@ -439,7 +444,6 @@ namespace DelftTools.Hydro
         /// </summary>
         /// <param name="existingLocations">Current locations for the <paramref name="branch"/></param>
         /// <param name="newLocations">New points to add to the <paramref name="branch"/></param>
-        /// <param name="chainageDelta">Delta value to determine if chainage is the same</param>
         /// <param name="branch">Branch for the points</param>
         /// <returns>New points that are not already in the cu</returns>
         private static IEnumerable<INetworkLocation> FilterExistingLocationsForBranch(IList<INetworkLocation> existingLocations, IEnumerable<INetworkLocation> newLocations, IBranch branch)

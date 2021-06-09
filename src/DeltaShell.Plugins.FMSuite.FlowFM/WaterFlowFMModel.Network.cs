@@ -384,11 +384,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     return;
                 }
 
-                var childDataItems =
-                    AllDataItems.Where(
-                        di =>
-                            di.Parent != null && di.ValueConverter != null &&
-                            di.ValueConverter.OriginalValue == removedOrAddedItem).ToList();
+                var childDataItems = AllDataItems
+                                     .Where(di => di.Parent != null
+                                                  && di.ValueConverter?.OriginalValue == removedOrAddedItem)
+                                     .ToList();
 
                 foreach (var childDataItem in childDataItems)
                 {
@@ -449,34 +448,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                     // remove all child data items
                     var dataItemsToRemove = new List<IDataItem>();
-                    var networkDataItem = GetDataItemByValue(Network);
+                    var networkDataItemChildren = GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag)?.Children;
 
-                    if (networkDataItem != null)
+                    if (networkDataItemChildren == null)
                     {
-                        foreach (var dataItem in networkDataItem.Children)
+                        break;
+                    }
+
+                    foreach (var dataItem in networkDataItemChildren)
+                    {
+                        // check if child data item uses WaterFlowModelBranchFeatureValueConverter
+                        if (!(dataItem.ValueConverter is Model1DBranchFeatureValueConverter valueConverter)
+                            || !(valueConverter.Location is IBranchFeature branchFeature))
                         {
-                            // check if child data item uses WaterFlowModelBranchFeatureValueConverter
-                            if (!(dataItem.ValueConverter is Model1DBranchFeatureValueConverter valueConverter) 
-                                || !(valueConverter.Location is IBranchFeature branchFeature))
-                            {
-                                continue;
-                            }
-
-                            // check if data item is related to the removed branch
-                            if (!channel.BranchFeatures.Contains(branchFeature))
-                            {
-                                continue;
-                            }
-
-                            dataItemsToRemove.Add(dataItem);
+                            continue;
                         }
 
-                        foreach (var dataItem in dataItemsToRemove)
+                        // check if data item is related to the removed branch
+                        if (!channel.BranchFeatures.Contains(branchFeature))
                         {
-                            dataItem.Unlink();
-                            dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
-                            networkDataItem.Children.Remove(dataItem);
+                            continue;
                         }
+
+                        dataItemsToRemove.Add(dataItem);
+                    }
+
+                    foreach (var dataItem in dataItemsToRemove)
+                    {
+                        dataItem.Unlink();
+                        dataItem.LinkedBy.ToArray().ForEach(di => di.Unlink());
+                        networkDataItemChildren.Remove(dataItem);
                     }
                     break;
                 default:
