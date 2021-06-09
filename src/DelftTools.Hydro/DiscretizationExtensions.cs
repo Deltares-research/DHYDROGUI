@@ -434,9 +434,10 @@ namespace DelftTools.Hydro
                                    ? Math.Abs(locations[index].Chainage - branch.Length) < 1e-8
                                    : Math.Abs(locations[index].Chainage) < 1e-8;
 
-            yield return atBeginOrEnd
-                       ? locations[index]
-                       : null;
+            if (atBeginOrEnd)
+            {
+                yield return locations[index];
+            }
         }
 
         /// <summary>
