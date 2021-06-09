@@ -247,11 +247,6 @@
       <Name>DeltaShell.Dimr</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
-      <Project>{6fad9209-03ea-439c-8b41-80d1fd6ab4e2}</Project>
-      <Name>DeltaShell.NGHS.Common.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
       <Project>{368694eb-cb62-4008-a27c-37afac0fdf14}</Project>
       <Name>DeltaShell.NGHS.Common</Name>
@@ -260,11 +255,6 @@
     <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj">
-      <Project>{0AE5102C-0560-4A9C-8197-A6D8CA99B5DE}</Project>
-      <Name>DeltaShell.NGHS.Utils</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">

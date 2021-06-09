@@ -86,7 +86,6 @@
       <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="NetTopologySuite.Extensions">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
@@ -104,13 +103,10 @@
       <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationPluginTestHelper.cs" />
