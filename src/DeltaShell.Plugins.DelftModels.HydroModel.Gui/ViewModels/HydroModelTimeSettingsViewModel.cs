@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
@@ -47,6 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                     var models = Models.ToList();
                     Models.Clear();
                     models.ForEach(m => m.Dispose());
+                    WorkFlows.Clear();
                 }
 
                 hydroModel = value;
@@ -59,6 +61,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                     .OfType<ITimeDependentModel>()
                     .Select(m => new TimeDependentModelBaseViewModel(m)));
 
+                WorkFlows.AddRange(hydroModel.Workflows);
+
                 ((INotifyPropertyChanged)hydroModel).PropertyChanged += OnModelPropertyChanged;
                 hydroModel.CollectionChanged += OnModelCollectionChanged;
             }
@@ -67,8 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         public Func<HydroModel, IActivity> AddNewActivityCallback { get; set; }
 
         public Action<HydroModel> RunActivityCallback { get; set; }
-
-
+        
         public ICommand RemoveSubmodel
         {
             get { return deleteModelCommand ?? (deleteModelCommand = new RelayCommand(RemoveModelFromHydroModel, CanRemoveModel)); }
@@ -187,7 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             if (!CanRemoveModel(model)) return;
 
             var modelToRemove = model as TimeDependentModelBaseViewModel;
-            HydroModel.Activities.RemoveAllWhere(m => { return modelToRemove != null && m.Name == modelToRemove.Name; });
+            HydroModel.Activities.RemoveAllWhere(m => modelToRemove != null && m.Name == modelToRemove.Name);
         }
 
         private bool CanRemoveModel(object model)
