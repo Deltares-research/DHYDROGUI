@@ -277,24 +277,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 var segment = route.Segments.Values[i];
 
-                if (!(segment.Branch is IPipe pipe))
+                if (!(segment.Branch is ISewerConnection connection))
                     continue;
 
-                if (previousPipe == pipe)
+                if (previousPipe == connection)
                 {
                     currentChainage += segment.Length;
                     continue;
                 }
 
-                previousPipe = pipe;
+                previousPipe = connection;
 
-                var levelSource = segment.DirectionIsPositive ? pipe.LevelSource : pipe.LevelTarget;
-                var levelTarget = segment.DirectionIsPositive ? pipe.LevelTarget : pipe.LevelSource;
-                var pipeLength = pipe.Length;
+                var levelSource = segment.DirectionIsPositive ? connection.LevelSource : connection.LevelTarget;
+                var levelTarget = segment.DirectionIsPositive ? connection.LevelTarget : connection.LevelSource;
+                var pipeLength = connection.Length;
 
                 if (i == 0)
                 {
-                    levelSource = GetLevelAtChainage(segment.Chainage, pipe);
+                    levelSource = GetLevelAtChainage(segment.Chainage, connection);
                     pipeLength = segment.DirectionIsPositive
                         ? pipeLength - segment.Chainage
                         : segment.Chainage;
@@ -302,13 +302,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
                 if (i == route.Segments.Values.Count - 1)
                 {
-                    levelTarget = GetLevelAtChainage(segment.EndChainage, pipe);
+                    levelTarget = GetLevelAtChainage(segment.EndChainage, connection);
                     pipeLength = segment.DirectionIsPositive 
                         ? segment.EndChainage 
                         : pipeLength - segment.EndChainage;
                 }
 
-                var crossSectionHeight = pipe.CrossSectionDefinition.HighestPoint;
+                var crossSectionHeight = connection is Pipe pipe ? pipe.CrossSectionDefinition.HighestPoint : 0;
 
                 xValues.Add(currentChainage);
                 yValuesTop.Add(levelSource + crossSectionHeight);
@@ -542,22 +542,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 coverage[endLocationRoute] = GetSurfaceLevelAtChainage(endLocationRoute.Chainage, endLocationRoutePipe);
         }
 
-        private static double GetSurfaceLevelAtChainage(double chainage, IPipe pipe)
+        private static double GetSurfaceLevelAtChainage(double chainage, ISewerConnection connection)
         {
-            return GetPipeLevelAtChainage(pipe, chainage, pipe.SourceCompartment.SurfaceLevel, pipe.TargetCompartment.SurfaceLevel);
+            return GetPipeLevelAtChainage(connection, chainage, connection.SourceCompartment.SurfaceLevel, connection.TargetCompartment.SurfaceLevel);
         }
 
-        private static double GetLevelAtChainage(double chainage, IPipe pipe)
+        private static double GetLevelAtChainage(double chainage, ISewerConnection connection)
         {
-            return GetPipeLevelAtChainage(pipe, chainage, pipe.LevelSource, pipe.LevelTarget);
+            return GetPipeLevelAtChainage(connection, chainage, connection.LevelSource, connection.LevelTarget);
         }
 
-        private static double GetPipeLevelAtChainage(IPipe pipe, double chainage, double sourceLevel, double targetLevel)
+        private static double GetPipeLevelAtChainage(ISewerConnection connection, double chainage, double sourceLevel, double targetLevel)
         {
             var heightDiff = sourceLevel - targetLevel;
-            var ratio = heightDiff / pipe.Length;
+            var ratio = heightDiff / connection.Length;
 
-            var newPipeLength = pipe.Length - chainage;
+            var newPipeLength = connection.Length - chainage;
             return (ratio * newPipeLength) + Math.Min(sourceLevel, targetLevel);
         }
 

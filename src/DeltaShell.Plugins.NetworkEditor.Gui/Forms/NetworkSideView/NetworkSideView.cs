@@ -350,7 +350,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         public void EnsureVisible(object item) { }
         public ViewInfo ViewInfo { get; set; }
 
-        
+        [InvokeRequired]
         public void OnViewDataChanged(bool computeMinMax)
         {
             if (null == networkSideViewDataController)
@@ -404,7 +404,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 bottomProfileChartData.Add(waterLevelChartData);
             }
 
-            if (NetworkRoute.Segments.Values.All(s => s.Branch is IPipe))
+            if (NetworkRoute.Segments.Values.All(s => s.Branch is ISewerConnection))
             {
                 var pipeSeries = CreatePipeChartData().Select(CreateSeries).ToList();
                 chart.Series.AddRange(pipeSeries);
