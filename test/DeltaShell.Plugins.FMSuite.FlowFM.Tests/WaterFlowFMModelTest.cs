@@ -2511,6 +2511,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 Assert.That(result, Is.EqualTo(expResult));
             }
         }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        public void WhenAddingAHydroLink_WithCatchmentSourceAndLateralSourceTarget_LateralSourceDataTypeIsRealTime()
+        {
+            // Setup
+            using (var model = new WaterFlowFMModel())
+            {
+                var lateralSource = new LateralSource();
+                var lateralSourceData = new Model1DLateralSourceData
+                {
+                    Feature = lateralSource,
+                    DataType = Model1DLateralDataType.FlowTimeSeries
+                };
+                
+                model.LateralSourcesData.Add(lateralSourceData);
+                
+                var hydroLink = new HydroLink(new Catchment(), lateralSource);
+                
+                // Call
+                model.Network.Links.Add(hydroLink);
+                
+                // Assert
+                Assert.That(lateralSourceData.DataType, Is.EqualTo(Model1DLateralDataType.FlowRealTime));
+            }
+        }
     }
 
 }
