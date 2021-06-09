@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -704,6 +704,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
             get {
                 object obj = ResourceManager.GetObject("HydroRegion", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connecting a hydro link to this lateral source removes any existing flow data. .
+        /// </summary>
+        public static string HydroRegionEditorMapTool_Connecting_hydro_link_removes_existing_data {
+            get {
+                return ResourceManager.GetString("HydroRegionEditorMapTool_Connecting_hydro_link_removes_existing_data", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you want to continue?.
+        /// </summary>
+        public static string HydroRegionEditorMapTool_Do_you_want_to_continue {
+            get {
+                return ResourceManager.GetString("HydroRegionEditorMapTool_Do_you_want_to_continue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Overwriting existing later source flow data.
+        /// </summary>
+        public static string HydroRegionEditorMapTool_Overwriting_existing_later_source_flow_data {
+            get {
+                return ResourceManager.GetString("HydroRegionEditorMapTool_Overwriting_existing_later_source_flow_data", resourceCulture);
             }
         }
         

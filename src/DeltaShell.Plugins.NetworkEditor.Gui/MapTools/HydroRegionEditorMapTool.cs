@@ -13,6 +13,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.Gui.Modals.Helpers;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
@@ -104,6 +105,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private INetworkCoverageGroupLayer activeNetworkCoverageGroupLayer;
 
+        private static readonly IRequestUserInputService<UserInputLinkingLateralSource> userInputServiceLinkCatchment = new RequestUserInputService<UserInputLinkingLateralSource>();
+        
         private static readonly Cursor PointCrossSectionCuror = MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmall);
         private static readonly Cursor NewInsertNodeCursor = MapCursors.CreateArrowOverlayCuror(Resources.NodeOnMultipleBranches);
         private static readonly Cursor NewLateralSourceCursor = MapCursors.CreateArrowOverlayCuror(Resources.LateralSourceSmall);
@@ -152,6 +155,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             return typeof(T).IsAssignableFrom(layer.DataSource.FeatureType);
         }
 
+        /// <summary>
+        /// Enum for requesting the user input when linking a <see cref="HydroLink"/> to a <see cref="LateralSource"/>.
+        /// </summary>
+        private enum UserInputLinkingLateralSource
+        {
+            /// <summary>
+            /// The user continues.
+            /// </summary>
+            Continue,
+            
+            /// <summary>
+            /// The user cancels.
+            /// </summary>
+            Cancel
+        }
+        
         private void AddNetworkEditorTools()
         {
             // TODO: extend to multiple regions!
@@ -281,6 +300,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 {
                     AddNewFeature = (g, cs, sourecSr, targetSr, tool) =>
                         {
+                            if (sourecSr.SnappedFeature is Catchment && targetSr.SnappedFeature is LateralSource)
+                            {
+                                UserInputLinkingLateralSource? result = userInputServiceLinkCatchment.RequestUserInput(
+                                    Resources.HydroRegionEditorMapTool_Overwriting_existing_later_source_flow_data,
+                                    Resources.HydroRegionEditorMapTool_Connecting_hydro_link_removes_existing_data + Environment.NewLine +
+                                    Resources.HydroRegionEditorMapTool_Do_you_want_to_continue);
+
+                                if (result != UserInputLinkingLateralSource.Continue)
+                                {
+                                    return;
+                                }
+                            }
                             // Find the correct link layer to add to
                             var region = HydroRegion.GetCommonRegion((IHydroObject) sourecSr.SnappedFeature,(IHydroObject) targetSr.SnappedFeature);
                             var layer = tool.Layers.FirstOrDefault(l => Equals(l.DataSource.Features, region.Links));
