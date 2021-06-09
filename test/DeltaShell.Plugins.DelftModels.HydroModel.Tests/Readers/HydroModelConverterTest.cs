@@ -10,7 +10,6 @@ using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileReaders;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
-using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Import;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;

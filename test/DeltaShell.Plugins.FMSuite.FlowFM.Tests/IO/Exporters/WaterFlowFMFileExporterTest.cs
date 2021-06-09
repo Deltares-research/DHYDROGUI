@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
 using NUnit.Framework;

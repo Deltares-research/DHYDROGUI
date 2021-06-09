@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +11,6 @@ using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
-using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;

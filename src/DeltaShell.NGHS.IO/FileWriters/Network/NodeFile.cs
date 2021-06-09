@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;

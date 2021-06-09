@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms;

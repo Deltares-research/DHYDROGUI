@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;

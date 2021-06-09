@@ -40,7 +40,6 @@ using Rhino.Mocks;
 using SharpMap;
 using SharpTestsEx;
 using Control = System.Windows.Controls.Control;
-using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {

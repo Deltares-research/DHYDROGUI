@@ -9,7 +9,6 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {

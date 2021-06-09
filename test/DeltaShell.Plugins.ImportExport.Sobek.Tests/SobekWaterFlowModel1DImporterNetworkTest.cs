@@ -6,7 +6,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.DataObjects;
-using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using DeltaShell.Sobek.Readers.Readers;
 using NUnit.Framework;

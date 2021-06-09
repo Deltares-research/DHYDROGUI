@@ -9,7 +9,6 @@ using DelftTools.TestUtils.TestReferenceHelper;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;

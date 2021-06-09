@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui;
-using NUnit.Framework;
 using NSubstitute;
+using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Gui
 {

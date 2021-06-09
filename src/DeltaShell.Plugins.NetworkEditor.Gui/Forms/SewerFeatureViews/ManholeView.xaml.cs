@@ -11,7 +11,6 @@ using DelftTools.Controls.Wpf.Extensions;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Aop;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
