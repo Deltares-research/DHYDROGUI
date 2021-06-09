@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
         {
             get
             {
-                return MapView.MapControl.GetToolByName(HydroRegionEditorMapTool.AddHydroLinkToolName);
+                return MapView.MapControl.GetToolByName(AddHydroLinkMapTool.ToolName);
             }
         }
 

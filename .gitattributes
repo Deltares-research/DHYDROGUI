@@ -2942,6 +2942,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/HydroNetworkCopyAndPasteHelper.
 src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/HydroRegionEditorHelper.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/NetworkCoordinateConvertor.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Helpers/PropertyWindowCategoryHelper.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/AddHydroLinkMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/AddNWRWCatchmentContextMenuMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/CopyBranchFeaturesMapTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/ExportCrossSectionToCsvMapTool.cs -text

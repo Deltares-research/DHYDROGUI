@@ -695,6 +695,7 @@
     <Compile Include="Helpers\HydroNetworkCopyAndPasteHelper.cs" />
     <Compile Include="Helpers\NetworkCoordinateConvertor.cs" />
     <Compile Include="Helpers\PropertyWindowCategoryHelper.cs" />
+    <Compile Include="MapTools\AddHydroLinkMapTool.cs" />
     <Compile Include="MapTools\AddNWRWCatchmentContextMenuMapTool.cs" />
     <Compile Include="MapTools\CopyBranchFeaturesMapTool.cs" />
     <Compile Include="MapTools\LeveeBreachMapTool.cs" />

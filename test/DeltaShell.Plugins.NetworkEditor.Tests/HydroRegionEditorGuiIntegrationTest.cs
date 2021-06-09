@@ -184,8 +184,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
         private HydroLink AddLink(Coordinate start, Coordinate end)
         {
-            var newLinkTool = regionEditor.MapView.MapControl.Tools.OfType<NewArrowLineTool>().First(
-                t => t.Name == HydroRegionEditorMapTool.AddHydroLinkToolName);
+            var newLinkTool = regionEditor.MapView.MapControl.Tools.OfType<AddHydroLinkMapTool>().First();
 
             newLinkTool.OnMouseDown(start, args);
             newLinkTool.OnMouseMove(start, args);

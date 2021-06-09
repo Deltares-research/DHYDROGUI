@@ -13,14 +13,12 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Editing;
-using DeltaShell.NGHS.Common.Gui.Modals.Helpers;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Providers;
-using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -31,8 +29,6 @@ using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api;
 using SharpMap.Api.Layers;
-using SharpMap.CoordinateSystems.Transformations;
-using SharpMap.Extensions.CoordinateSystems;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
@@ -58,7 +54,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string InsertManholeToolName = "insert new manhole";
         public const string AddWasteWaterTreatmentPlantToolName = "add waste water treatment plant";
         public const string AddRunoffBoundaryToolName = "add runoff boundary";
-        public const string AddHydroLinkToolName = "add hydro link";
         public const string AddCompositeStructureToolName = "add composite structure";
         public const string AddPumpToolName = "add pump";
         public const string AddLateralSourceToolName = "add lateral source";
@@ -105,8 +100,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private INetworkCoverageGroupLayer activeNetworkCoverageGroupLayer;
 
-        private static readonly IRequestUserInputService<UserInputLinkingLateralSource> userInputServiceLinkCatchment = new RequestUserInputService<UserInputLinkingLateralSource>();
-        
         private static readonly Cursor PointCrossSectionCuror = MapCursors.CreateArrowOverlayCuror(Resources.CrossSectionSmall);
         private static readonly Cursor NewInsertNodeCursor = MapCursors.CreateArrowOverlayCuror(Resources.NodeOnMultipleBranches);
         private static readonly Cursor NewLateralSourceCursor = MapCursors.CreateArrowOverlayCuror(Resources.LateralSourceSmall);
@@ -122,7 +115,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private static readonly Cursor NewExtraResistanceToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.ExtraResistanceSmall);
         private static readonly Cursor NewWwtpToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.wwtp);
         private static readonly Cursor NewRunoffBoundaryToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.runoff);
-        private static readonly Cursor NewLinkToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.Link);
         private static readonly Cursor AddInterpolatedCrossSectionToolCursor = MapCursors.CreateArrowOverlayCuror(Resources.AddInterpolatedCrossSection);
         private static readonly Cursor AddNewPipeCursor = MapCursors.CreateArrowOverlayCuror(Resources.Pipe_Small);
         private static readonly Cursor AddNewSewerConnectionCursor = MapCursors.CreateArrowOverlayCuror(Resources.Pipe_Small);
@@ -153,22 +145,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
 
             return typeof(T).IsAssignableFrom(layer.DataSource.FeatureType);
-        }
-
-        /// <summary>
-        /// Enum for requesting the user input when linking a <see cref="HydroLink"/> to a <see cref="LateralSource"/>.
-        /// </summary>
-        private enum UserInputLinkingLateralSource
-        {
-            /// <summary>
-            /// The user continues.
-            /// </summary>
-            Continue,
-            
-            /// <summary>
-            /// The user cancels.
-            /// </summary>
-            Cancel
         }
         
         private void AddNetworkEditorTools()
@@ -296,33 +272,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var newRunoffBoundaryTool = new NewPointFeatureTool<RunoffBoundary>(AddRunoffBoundaryToolName) { Cursor = NewRunoffBoundaryToolCursor };
             AddMapTool(newRunoffBoundaryTool);
 
-            var newLinkTool = new NewArrowLineTool(FeatureTypeLayerFilter<HydroLink>, AddHydroLinkToolName)
-                {
-                    AddNewFeature = (g, cs, sourecSr, targetSr, tool) =>
-                        {
-                            if (sourecSr.SnappedFeature is Catchment && targetSr.SnappedFeature is LateralSource)
-                            {
-                                UserInputLinkingLateralSource? result = userInputServiceLinkCatchment.RequestUserInput(
-                                    Resources.HydroRegionEditorMapTool_Overwriting_existing_later_source_flow_data,
-                                    Resources.HydroRegionEditorMapTool_Connecting_hydro_link_removes_existing_data + Environment.NewLine +
-                                    Resources.HydroRegionEditorMapTool_Do_you_want_to_continue);
-
-                                if (result != UserInputLinkingLateralSource.Continue)
-                                {
-                                    return;
-                                }
-                            }
-                            // Find the correct link layer to add to
-                            var region = HydroRegion.GetCommonRegion((IHydroObject) sourecSr.SnappedFeature,(IHydroObject) targetSr.SnappedFeature);
-                            var layer = tool.Layers.FirstOrDefault(l => Equals(l.DataSource.Features, region.Links));
-                            if (layer == null) return;
-
-                            layer.DataSource.Add(GetLocalGeometry(g,cs, layer.CoordinateSystem));
-                            layer.RenderRequired = true;
-                        },
-                    Cursor = NewLinkToolCursor
-                };
-
+            var newLinkTool = new AddHydroLinkMapTool(FeatureTypeLayerFilter<HydroLink>);
             AddMapTool(newLinkTool);
 
             // TODO: merge the tools below into the hydro network editor map tool?! (context menus only)
@@ -391,20 +341,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(addInterpolatedCrossSectionTool);
 
             MapControl.ActivateTool(MapControl.SelectTool);
-        }
-
-        private static IGeometry GetLocalGeometry(IGeometry geometry, ICoordinateSystem sourceCoordinateSystem, ICoordinateSystem targetCoordinateSystem)
-        {
-            if (sourceCoordinateSystem == null || targetCoordinateSystem == null ||
-                sourceCoordinateSystem == targetCoordinateSystem)
-            {
-                return geometry;
-            }
-
-            var coordinateSystemFactory = new OgrCoordinateSystemFactory();
-            var transformation = coordinateSystemFactory.CreateTransformation(sourceCoordinateSystem, targetCoordinateSystem);
-
-            return GeometryTransform.TransformGeometry(geometry, transformation.MathTransform);
         }
 
         private static bool HydroNetworkFilter(ILayer layer)
