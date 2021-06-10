@@ -30,6 +30,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
+using DeltaShell.Plugins.FMSuite.Common.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
@@ -154,6 +155,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new ViewInfo<WaterFlowFMModel, WaterFlowFMFileStructureView>
             {
                 Description = "File tree"
+            };
+
+            yield return new ViewInfo<HydroNode, Model1DBoundaryNodeData, Model1DBoundaryNodeDataViewWpf>
+            {
+                Description = "Lateral Source Data View (Flow 1D)",
+                AdditionalDataCheck = hydroNode => FlowModels.Any(fm => fm.BoundaryConditions1D.Any(d => ReferenceEquals(d.Feature, hydroNode))),
+                GetViewData = hydroNode => FlowModels.SelectMany(fm => fm.BoundaryConditions1D).FirstOrDefault(d => ReferenceEquals(d.Feature, hydroNode))
+            };
+
+            yield return new ViewInfo<ILateralSource, Model1DLateralSourceData, Model1DLateralSourceDataViewWpf>
+            {
+                Description = "Lateral Source Data View (Flow 1D)",
+                AdditionalDataCheck = lateralSource => FlowModels.Any(fm => fm.LateralSourcesData.Any(d => ReferenceEquals(d.Feature, lateralSource))),
+                GetViewData = lateralSource => FlowModels.SelectMany(fm => fm.LateralSourcesData).FirstOrDefault(d => ReferenceEquals(d.Feature, lateralSource))
             };
 
             // Todo : think about a weir that is shared between 2 FM models -> Show a dialog to choose model ??
