@@ -9,7 +9,6 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Units;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
-using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
@@ -48,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                     var models = Models.ToList();
                     Models.Clear();
                     models.ForEach(m => m.Dispose());
-                    WorkFlows.Clear();
+                    WorkFlows = null;
                 }
 
                 hydroModel = value;
@@ -61,7 +60,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
                     .OfType<ITimeDependentModel>()
                     .Select(m => new TimeDependentModelBaseViewModel(m)));
 
-                WorkFlows.AddRange(hydroModel.Workflows);
+                WorkFlows = new ObservableCollection<ICompositeActivity>(hydroModel.Workflows);
+                CurrentWorkflow = hydroModel.CurrentWorkflow; // trigger event
 
                 ((INotifyPropertyChanged)hydroModel).PropertyChanged += OnModelPropertyChanged;
                 hydroModel.CollectionChanged += OnModelCollectionChanged;
@@ -157,9 +157,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         /// <summary>
         /// Gets the current workflows of the hydro model.
         /// </summary>
-        public ObservableCollection<ICompositeActivity> WorkFlows { get; } = new ObservableCollection<ICompositeActivity>();
+        public ObservableCollection<ICompositeActivity> WorkFlows { get; set; }
 
         public bool DurationIsValid { get; set; }
+
+        public ICompositeActivity CurrentWorkflow
+        {
+            get { return hydroModel?.CurrentWorkflow; }
+            set
+            {
+                if (hydroModel is null || WorkFlows == null || hydroModel.CurrentWorkflow == value)
+                {
+                    return;
+                }
+
+                hydroModel.CurrentWorkflow = value;
+            }
+        }
 
         #endregion
 

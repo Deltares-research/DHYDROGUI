@@ -343,7 +343,7 @@
                              Margin="5"
                              BorderThickness="0"
                              ItemsSource="{Binding WorkFlows}"
-                             SelectedItem="{Binding HydroModel.CurrentWorkflow}" />
+                             SelectedItem="{Binding CurrentWorkflow}" />
 
                     <ContentPresenter Grid.Row="0"
                                       Grid.Column="1"
