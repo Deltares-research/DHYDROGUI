@@ -2893,7 +2893,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual ValidationReport Validate()
         {
-            return ValidateBeforeRun ? WaterFlowFmModelValidationExtensions.Validate(this) : null;
+            if (Status == ActivityStatus.Initializing && !ValidateBeforeRun)
+            {
+                return null;
+            }
+
+            return WaterFlowFmModelValidationExtensions.Validate(this);
         }
 
         public virtual ValidationReport ValidationReport

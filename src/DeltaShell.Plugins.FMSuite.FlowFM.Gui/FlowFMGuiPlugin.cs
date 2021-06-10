@@ -21,6 +21,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.Common.Gui.MapLayers;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
@@ -204,7 +205,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AfterCreate = (v, o) =>
                 {
                     v.Gui = Gui;
-                    v.OnValidate = d => (d as WaterFlowFMModel)?.ValidationReport;
+                    v.OnValidate = d => (d as WaterFlowFMModel)?.ValidationReport 
+                                        ?? new ValidationReport("No report available", new List<ValidationIssue>());
                 }
             };
             Func<object, string, string> FmSettingsPropertyChanged = (object sender, string propertyName) =>
