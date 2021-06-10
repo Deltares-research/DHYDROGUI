@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
@@ -45,7 +46,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
             // since we use rendered geometry - skip candidates and use rendered geometry
             foreach (var layer in StructureLayers)
             {
-                foreach (IStructure1D structure in layer.DataSource.Features)
+                IList dataSourceFeatures = layer?.DataSource?.Features ?? new List<IFeature>();
+                foreach (IStructure1D structure in dataSourceFeatures)
                 {
                     var renderer = (StructureRenderer)layer.CustomRenderers.FirstOrDefault();
                     var renderedGeometry = renderer.GetRenderedFeatureGeometry(structure, layer);
