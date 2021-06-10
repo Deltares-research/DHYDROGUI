@@ -252,6 +252,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction
 
             var rowIndex = vectorLayerAttributeTableView.TableView.GetRowIndexByDataSourceIndex(dataSourceIndex);
             var channelFrictionDefinition = (ChannelFrictionDefinition) vectorLayerAttributeTableView.TableView.GetRowObjectAt(rowIndex);
+            if (channelFrictionDefinition == null) return null;
 
             if (columnIndex == ChannelColumnIndex)
             {
