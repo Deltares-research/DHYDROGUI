@@ -24,6 +24,7 @@
     <Folder Include="Templates\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CreateZipFromMSI.targets" />
     <Content Include="DotNetFramework4Check.wxi" />
     <Content Include="GdalData.wxi" />
     <Content Include="GdalData_FeatureContent.wxi" />
