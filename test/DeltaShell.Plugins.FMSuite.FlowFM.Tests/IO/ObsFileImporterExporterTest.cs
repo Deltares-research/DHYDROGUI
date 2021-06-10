@@ -113,11 +113,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 var pointsAfterImportFromGroupB =
                     (List<GroupableFeature2DPoint>) obsFileImporterExporter.ImportItem(obsFileGroupB, allPoints);
-                Assert.AreEqual(12, pointsAfterImportFromGroupB.Count);
+                Assert.AreEqual(13, pointsAfterImportFromGroupB.Count);
 
                 // check if there are indeed no duplicates names
                 Assert.AreEqual(1, pointsAfterImportFromGroupB.Count(p => p.Name == "ObservationPoint1" && p.GroupName == obsFileGroupA));
-                Assert.AreEqual(1, pointsAfterImportFromGroupB.Count(p => p.Name == "ObservationPoint1" && p.GroupName == obsFileGroupB));
+                Assert.AreEqual(13, pointsAfterImportFromGroupB.Select(i => i.Name).Distinct().Count());
             }
             finally
             {

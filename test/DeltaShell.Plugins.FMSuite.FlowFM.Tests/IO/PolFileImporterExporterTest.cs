@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.TestUtils;
@@ -32,6 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.AreEqual(0, area.Enclosures.Count);
                 importer.ImportItem(polFilePath, area.Enclosures);
                 Assert.AreEqual(expectedEnclosures, area.Enclosures.Count);
+                Assert.AreEqual(expectedEnclosures, area.Enclosures.Select(w => w.Name).Distinct().Count(), "All names should be unique");
             }
             catch (Exception e)
             {

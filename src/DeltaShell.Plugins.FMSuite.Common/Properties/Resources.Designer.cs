@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -76,6 +76,26 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
         public static string DiaFileReader_GetAllMessages_Stream_is_not_readable_ {
             get {
                 return ResourceManager.GetString("DiaFileReader_GetAllMessages_Stream_is_not_readable_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import failed. Current project does not contain unique names for features..
+        /// </summary>
+        public static string Feature2DImportExportBase_AddOrReplace_Import_failed_Current_project_does_not_contain_unique_names_for_features {
+            get {
+                return ResourceManager.GetString("Feature2DImportExportBase_AddOrReplace_Import_failed_Current_project_does_not_con" +
+                        "tain_unique_names_for_features", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The list of imported features did not contain unique names. Names were made unique during import..
+        /// </summary>
+        public static string Feature2DImportExportBase_AddOrReplace_The_list_of_imported_features_did_not_contain_unique_names_Names_were_made_unique_during_import {
+            get {
+                return ResourceManager.GetString("Feature2DImportExportBase_AddOrReplace_The_list_of_imported_features_did_not_cont" +
+                        "ain_unique_names_Names_were_made_unique_during_import", resourceCulture);
             }
         }
         

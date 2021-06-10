@@ -1,15 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro.Area.Objects;
+using DelftTools.Hydro.GroupableFeatures;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Files;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
@@ -36,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             importPath = TestHelper.CreateLocalCopy(importPath);
             Assert.IsTrue(File.Exists(importPath));
 
-            using (var app = new DeltaShellApplication {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridge pillars in the Importer/Exporter.
@@ -85,6 +90,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        public static IEnumerable<TestCaseData> GetPlizImportTestData()
+        {
+            PlizFileImporterExporter<T, T> GetImporter<T>(WaterFlowFMModel fmModel) where T : class, IFeature, INameable, IGroupableFeature, new() =>
+                new PlizFileImporterExporter<T, T>
+                {
+                    EqualityComparer = new GroupableFeatureComparer<T>(),
+                    AfterCreateAction = (featureList, feature) =>
+                    {
+                        feature.UpdateGroupName(fmModel);
+                    }
+                };
+
+            yield return new TestCaseData((Func<WaterFlowFMModel, PlizFileImporterExporter<BridgePillar, BridgePillar>>)GetImporter<BridgePillar>,
+                                          new Func<WaterFlowFMModel, IEventedList<BridgePillar>>(model => model.Area.BridgePillars));
+            yield return new TestCaseData((Func<WaterFlowFMModel, PlizFileImporterExporter<FixedWeir, FixedWeir>>)GetImporter<FixedWeir>,
+                                          new Func<WaterFlowFMModel, IEventedList<FixedWeir>>(model => model.Area.FixedWeirs));
+        }
+
+        [Test]
+        [Category(TestCategory.Integration)]
+        [TestCaseSource(nameof(GetPlizImportTestData))]
+        public void GivenFmModelWithoutPlizFeatures_WhenImportingFeaturesFromAPlizFileWithNonUniqueNames_ThenTheFeaturesWithTheSameNameInTheFileWillBeRenamed<T>(Func<WaterFlowFMModel, PlizFileImporterExporter<T, T>> importerFunc,
+                                                                                                                                                                 Func<WaterFlowFMModel, IEventedList<T>> featuresFunc)
+            where T : class, IFeature, INameable, IGroupableFeature, new()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                // Arrange
+                string filePath = TestHelper.GetTestFilePath("pli_files/geometries_non_unique_names.pliz");
+                string tempFilePath = tempDirectory.CopyTestDataFileToTempDirectory(filePath);
+                var fmModel = new WaterFlowFMModel();
+
+                PlizFileImporterExporter<T, T> importer = importerFunc(fmModel);
+
+                // Act and assert
+                IEventedList<T> featuresImport = featuresFunc(fmModel);
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => importer.ImportItem(tempFilePath, featuresImport), Resources.Feature2DImportExportBase_AddOrReplace_The_list_of_imported_features_did_not_contain_unique_names_Names_were_made_unique_during_import);
+
+                IEventedList<T> featuresResult = featuresFunc(fmModel);
+                Assert.AreEqual(10, featuresResult.Count);
+                Assert.AreEqual(10, featuresResult.Select(w => w.Name).Distinct().Count(), "All names should be unique");
+            }
+        }
         #endregion
 
         #region Basic properties tests
@@ -199,7 +247,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             //Checking the content of the file is an integration test done later on.
-            Assert.IsTrue(plizIE.Export(new List<BridgePillar>() {pillar}, null));
+            Assert.IsTrue(plizIE.Export(new List<BridgePillar>() { pillar }, null));
         }
 
         #endregion
@@ -214,7 +262,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
             FileUtils.DeleteIfExists(exportPath);
 
-            using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridgepillars in the Importer/Exporter.
@@ -251,7 +299,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 IList<ModelFeatureCoordinateData<BridgePillar>> modelFeatureCoordinateDatas = model.BridgePillarsDataModel;
                 modelFeatureCoordinateDatas.Clear();
 
-                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() {Feature = pillar};
+                var modelFeatureCoordinateData = new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar };
                 modelFeatureCoordinateData.UpdateDataColumns();
                 //Diameters
                 modelFeatureCoordinateData.DataColumns[0].ValueList = new List<double>
@@ -317,7 +365,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             string exportPath = TestHelper.GetTestFilePath("bridgePillars\\testBridgePillars.pliz");
             FileUtils.DeleteIfExists(exportPath);
 
-            using (var app = new DeltaShellApplication() {IsProjectCreatedInTemporaryDirectory = true})
+            using (var app = new DeltaShellApplication() { IsProjectCreatedInTemporaryDirectory = true })
             {
                 //We need to initialize the application as the PlizFile requires to have the custom delegate
                 //methods for the bridgepillars in the Importer/Exporter.
@@ -368,7 +416,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 IList<ModelFeatureCoordinateData<BridgePillar>> modelFeatureCoordinateDatas = model.BridgePillarsDataModel;
                 modelFeatureCoordinateDatas.Clear();
 
-                var mfPillar1 = new ModelFeatureCoordinateData<BridgePillar>() {Feature = pillar1};
+                var mfPillar1 = new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar1 };
                 mfPillar1.UpdateDataColumns();
                 //Diameters
                 mfPillar1.DataColumns[0].ValueList = new List<double>
@@ -387,7 +435,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     1.0
                 };
 
-                var mfPillar2 = new ModelFeatureCoordinateData<BridgePillar>() {Feature = pillar2};
+                var mfPillar2 = new ModelFeatureCoordinateData<BridgePillar>() { Feature = pillar2 };
                 mfPillar2.UpdateDataColumns();
                 //Diameters
                 mfPillar2.DataColumns[0].ValueList = new List<double>

@@ -162,4 +162,10 @@
   <data name="FMNetCdfFileFunctionStore_Could_not_parse_time_reference" xml:space="preserve">
     <value>Could not parse time reference</value>
   </data>
+  <data name="Feature2DImportExportBase_AddOrReplace_The_list_of_imported_features_did_not_contain_unique_names_Names_were_made_unique_during_import" xml:space="preserve">
+    <value>The list of imported features did not contain unique names. Names were made unique during import.</value>
+  </data>
+  <data name="Feature2DImportExportBase_AddOrReplace_Import_failed_Current_project_does_not_contain_unique_names_for_features" xml:space="preserve">
+    <value>Import failed. Current project does not contain unique names for features.</value>
+  </data>
 </root>

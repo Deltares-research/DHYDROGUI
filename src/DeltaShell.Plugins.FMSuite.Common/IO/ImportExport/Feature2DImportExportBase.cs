@@ -14,6 +14,8 @@ using DelftTools.Utils.Editing;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
+using log4net;
+using DeltaShell.Plugins.FMSuite.Common.Properties;
 using SharpMap.CoordinateSystems.Transformations;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
@@ -43,6 +45,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
                                                                 IFeature2DImporterExporter
         where TFeature : IFeature, INameable
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(Feature2DImportExportBase<TFeature>));
+
         /// <summary>
         /// Gets the editable object associated with the import action
         /// </summary>
@@ -124,20 +128,29 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
             where T : INameable
         {
             List<T> featuresToAddList = featuresToAdd.ToList();
-
-            featuresToAdd.OfType<TFeature>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
+            featuresToAddList.OfType<TFeature>().ForEach(f => AfterCreateAction?.Invoke(featureList, f));
 
             GetEditableObject?.Invoke(featureList)
                              .BeginEdit(new DefaultEditAction($"Importing features of type {typeof(T).Name}"));
 
-            IEqualityComparer<T> equalityComparer = comparer != null
-                                                        ? (IEqualityComparer<T>) comparer
-                                                        : new NameableFeatureComparer<T>();
+            IEqualityComparer<T> equalityComparer =
+                comparer != null ? (IEqualityComparer<T>)comparer
+                                 : new NameableFeatureComparer<T>();
 
-            Dictionary<int, int> hashListIndexLookup = featureList
-                                                       .Select((f, i) => new System.Tuple<int, int>(
-                                                                   equalityComparer.GetHashCode(f), i))
-                                                       .ToDictionary(t => t.Item1, t => t.Item2);
+            Dictionary<int, int> hashListIndexLookup;
+            try
+            {
+                hashListIndexLookup = featureList
+                                      .Select((f, i) => new System.Tuple<int, int>(
+                                                  equalityComparer.GetHashCode(f), i))
+                                      .ToDictionary(t => t.Item1, t => t.Item2);
+            }
+
+            catch (ArgumentException)
+            {
+                log.ErrorFormat(Resources.Feature2DImportExportBase_AddOrReplace_Import_failed_Current_project_does_not_contain_unique_names_for_features);
+                return;
+            }
 
             var hashSet = new HashSet<T>(featureList, equalityComparer);
             var newItems = new List<T>();
@@ -166,6 +179,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
             }
 
             featureList.AddRange(newItems);
+            if (featureList.Any() && featureList.Select(i => i.Name).Distinct().Count() != featureList.Count)
+            {
+                NamingHelper.MakeNamesUnique((IEnumerable<INameable>)featureList);
+                log.WarnFormat(Resources.Feature2DImportExportBase_AddOrReplace_The_list_of_imported_features_did_not_contain_unique_names_Names_were_made_unique_during_import);
+            }
 
             GetEditableObject?.Invoke(featureList).EndEdit();
         }
@@ -213,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
                 return target;
             }
 
-            IList<TFeature> featureList = target != null ? (IList<TFeature>) target : new List<TFeature>();
+            IList<TFeature> featureList = target != null ? (IList<TFeature>)target : new List<TFeature>();
 
             if (files == null)
             {
@@ -296,7 +314,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.ImportExport
                 return feature;
             }
 
-            var clonedFeature = (TFeature) feature.Clone();
+            var clonedFeature = (TFeature)feature.Clone();
             clonedFeature.Geometry = GeometryTransform.TransformGeometry(feature.Geometry,
                                                                          CoordinateTransformation.MathTransform);
             return clonedFeature;
