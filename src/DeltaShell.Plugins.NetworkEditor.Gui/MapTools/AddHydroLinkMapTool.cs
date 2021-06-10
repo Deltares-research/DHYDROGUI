@@ -63,13 +63,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private static void AddNewHydroLink(IGeometry geometry, ICoordinateSystem coordinateSystem, SnapResult snappedSource, SnapResult snappedTarget, NewArrowLineTool tool)
         {
-            if (snappedSource.SnappedFeature is Catchment && snappedTarget.SnappedFeature is LateralSource)
-            {
-                if (UserCancels())
-                {
-                    return;
-                }
-            }
+            // TODO (FM1D2D-1487): A dialog should only be prompted when the Lateral Source has data, but we do not have that information on this level.
+            // if (snappedSource.SnappedFeature is Catchment && snappedTarget.SnappedFeature is LateralSource)
+            // {
+            //     if (UserCancels())
+            //     {
+            //         return;
+            //     }
+            // }
 
             if (!TryGetLinksLayer(snappedSource, snappedTarget, tool, out ILayer layer))
             {
