@@ -101,17 +101,20 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\LabeledButton.xaml.cs">
-      <DependentUpon>LabeledButton.xaml</DependentUpon>
+    <Compile Include="Components\FileSelectorBoxRow.xaml.cs">
+      <DependentUpon>FileSelectorBoxRow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\LabeledCheckBox.xaml.cs">
-      <DependentUpon>LabeledCheckBox.xaml</DependentUpon>
+    <Compile Include="Components\LabeledButtonRow.xaml.cs">
+      <DependentUpon>LabeledButtonRow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\LabeledComboBox.xaml.cs">
-      <DependentUpon>LabeledComboBox.xaml</DependentUpon>
+    <Compile Include="Components\LabeledCheckBoxRow.xaml.cs">
+      <DependentUpon>LabeledCheckBoxRow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\LabeledValueBox.xaml.cs">
-      <DependentUpon>LabeledValueBox.xaml</DependentUpon>
+    <Compile Include="Components\LabeledComboBoxRow.xaml.cs">
+      <DependentUpon>LabeledComboBoxRow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\LabeledValueBoxRow.xaml.cs">
+      <DependentUpon>LabeledValueBoxRow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\EnumToDescriptionConverter.cs" />
     <Compile Include="Converters\TypeToDescriptionConverter.cs" />
@@ -119,6 +122,13 @@
     <Compile Include="DeltaresColor.cs" />
     <Compile Include="Layers\ILayerSubProvider.cs" />
     <Compile Include="Layers\MapLayerProvider.cs" />
+    <Compile Include="Modals\Helpers\IRequestUserInputService.cs" />
+    <Compile Include="Modals\Helpers\RequestUserInputService.cs" />
+    <Compile Include="Modals\ViewModels\UserInputModalViewModelBase.cs" />
+    <Compile Include="Modals\ViewModels\UserInputModalViewModel.cs" />
+    <Compile Include="Modals\Views\UserInputModalView.xaml.cs">
+      <DependentUpon>UserInputModalView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NodePresenters\ContextMenuFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -151,19 +161,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Components\LabeledButton.xaml">
+    <Page Include="Components\FileSelectorBoxRow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Components\LabeledCheckBox.xaml">
+    <Page Include="Components\LabeledButtonRow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\LabeledCheckBoxRow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Components\LabeledComboBox.xaml">
+    <Page Include="Components\LabeledComboBoxRow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Components\LabeledValueBox.xaml">
+    <Page Include="Components\LabeledValueBoxRow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Modals\Views\UserInputModalView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

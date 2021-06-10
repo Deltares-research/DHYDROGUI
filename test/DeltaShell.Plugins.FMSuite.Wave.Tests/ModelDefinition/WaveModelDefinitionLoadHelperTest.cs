@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             var targetDefinition = new WaveModelDefinition();
 
             var outerDomain = Substitute.For<IWaveDomainData>();
-            var loadedDefinition = new WaveModelDefinition {OuterDomain = outerDomain};
+            var loadedDefinition = new WaveModelDefinition { OuterDomain = outerDomain };
 
             // Precondition
             Assert.That(targetDefinition.OuterDomain, Is.Null);
@@ -206,78 +206,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
 
             // Then
             Assert.That(targetDefinition.OuterDomain, Is.SameAs(outerDomain));
-        }
-
-        [Test]
-        public void GivenModelDefinitionWithWaveInputFieldData_WhenTransferLoadedProperties_ThenWaveInputFieldDataTransferred()
-        {
-            // Given
-            var targetDefinition = new WaveModelDefinition();
-
-            var random = new Random(21);
-            var loadedMeteoData = new WaveMeteoData
-            {
-                FileType = WindDefinitionType.WindXYP,
-                XYVectorFilePath = nameof(WaveMeteoData.XYVectorFilePath),
-                XComponentFilePath = nameof(WaveMeteoData.XComponentFilePath),
-                YComponentFilePath = nameof(WaveMeteoData.YComponentFilePath),
-                HasSpiderWeb = true,
-                SpiderWebFilePath = nameof(WaveMeteoData.SpiderWebFilePath)
-            };
-
-            var loadedInputFieldData = new WaveInputFieldData
-            {
-                HydroDataType = InputFieldDataType.TimeVarying,
-                WindDataType = InputFieldDataType.TimeVarying,
-                WaterLevelConstant = random.NextDouble(),
-                VelocityXConstant = random.NextDouble(),
-                VelocityYConstant = random.NextDouble(),
-                WindSpeedConstant = random.NextDouble(),
-                WindDirectionConstant = random.NextDouble(),
-                InputFields = Substitute.For<IFunction>(),
-                MeteoData = loadedMeteoData
-            };
-
-            var loadedDefinition = new WaveModelDefinition {TimePointData = loadedInputFieldData};
-
-            // Precondition
-            WaveInputFieldData targetInputFieldData = targetDefinition.TimePointData;
-            Assert.That(targetInputFieldData.HydroDataType, Is.EqualTo(InputFieldDataType.Constant));
-            Assert.That(targetInputFieldData.WindDataType, Is.EqualTo(InputFieldDataType.Constant));
-            Assert.That(targetInputFieldData.WaterLevelConstant, Is.EqualTo(0.0));
-            Assert.That(targetInputFieldData.VelocityXConstant, Is.EqualTo(0.0));
-            Assert.That(targetInputFieldData.VelocityYConstant, Is.EqualTo(0.0));
-            Assert.That(targetInputFieldData.WindSpeedConstant, Is.EqualTo(0.0));
-            Assert.That(targetInputFieldData.WindDirectionConstant, Is.EqualTo(0.0));
-            Assert.That(targetInputFieldData.InputFields, Is.Not.SameAs(loadedInputFieldData.InputFields));
-
-            WaveMeteoData targetMeteoData = targetInputFieldData.MeteoData;
-            Assert.That(targetMeteoData.FileType, Is.EqualTo(WindDefinitionType.WindXY));
-            Assert.That(targetMeteoData.XYVectorFilePath, Is.Null);
-            Assert.That(targetMeteoData.XComponentFilePath, Is.Null);
-            Assert.That(targetMeteoData.YComponentFilePath, Is.Null);
-            Assert.That(targetMeteoData.HasSpiderWeb, Is.False);
-            Assert.That(targetMeteoData.SpiderWebFilePath, Is.Null);
-
-            // When
-            WaveModelDefinitionLoadHelper.TransferLoadedProperties(targetDefinition, loadedDefinition);
-
-            // Then
-            Assert.That(targetInputFieldData.HydroDataType, Is.EqualTo(loadedInputFieldData.HydroDataType));
-            Assert.That(targetInputFieldData.WindDataType, Is.EqualTo(loadedInputFieldData.WindDataType));
-            Assert.That(targetInputFieldData.WaterLevelConstant, Is.EqualTo(loadedInputFieldData.WaterLevelConstant));
-            Assert.That(targetInputFieldData.VelocityXConstant, Is.EqualTo(loadedInputFieldData.VelocityXConstant));
-            Assert.That(targetInputFieldData.VelocityYConstant, Is.EqualTo(loadedInputFieldData.VelocityYConstant));
-            Assert.That(targetInputFieldData.WindSpeedConstant, Is.EqualTo(loadedInputFieldData.WindSpeedConstant));
-            Assert.That(targetInputFieldData.WindDirectionConstant, Is.EqualTo(loadedInputFieldData.WindDirectionConstant));
-            Assert.That(targetInputFieldData.InputFields, Is.SameAs(loadedInputFieldData.InputFields));
-
-            Assert.That(targetMeteoData.FileType, Is.EqualTo(loadedMeteoData.FileType));
-            Assert.That(targetMeteoData.XYVectorFilePath, Is.EqualTo(loadedMeteoData.XYVectorFilePath));
-            Assert.That(targetMeteoData.XComponentFilePath, Is.EqualTo(loadedMeteoData.XComponentFilePath));
-            Assert.That(targetMeteoData.YComponentFilePath, Is.EqualTo(loadedMeteoData.YComponentFilePath));
-            Assert.That(targetMeteoData.HasSpiderWeb, Is.EqualTo(loadedMeteoData.HasSpiderWeb));
-            Assert.That(targetMeteoData.SpiderWebFilePath, Is.EqualTo(loadedMeteoData.SpiderWebFilePath));
         }
 
         [Test]

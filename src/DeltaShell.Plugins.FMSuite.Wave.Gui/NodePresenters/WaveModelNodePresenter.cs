@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private bool firstTimeCreate = true;
 
-        public WaveModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) {}
+        public WaveModelNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin) { }
 
         public override void UpdateNode(ITreeNode parentNode, ITreeNode node, WaveModel nodeData)
         {
@@ -72,7 +72,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
             yield return new WaveModelTreeShortcut(SpectralDomainName, PhysicalParametersImage, parentNodeData,
                                                    SpectralDomainName);
             yield return parentNodeData.OuterDomain;
-            yield return new WaveModelTreeShortcut(TimePointFolderName, TimePointImage, parentNodeData, parentNodeData.TimePointData,
+            yield return new WaveModelTreeShortcut(TimePointFolderName,
+                                                   TimePointImage,
+                                                   parentNodeData,
+                                                   parentNodeData.TimeFrameData,
                                                    ShortCutType.FeatureSet);
 
             yield return new WaveModelTreeShortcut(BoundaryFolderName,
@@ -170,13 +173,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters
 
         private void OnSettingsClicked(object sender, EventArgs args)
         {
-            var model = (WaveModel) ((ToolStripItem) sender).Tag;
+            var model = (WaveModel)((ToolStripItem)sender).Tag;
             Gui.DocumentViewsResolver.OpenViewForData(model, typeof(WpfSettingsView));
         }
 
         private void OnValidateClicked(object sender, EventArgs args)
         {
-            var model = (WaveModel) ((ToolStripItem) sender).Tag;
+            var model = (WaveModel)((ToolStripItem)sender).Tag;
             Gui.DocumentViewsResolver.OpenViewForData(model, typeof(ValidationView));
         }
     }

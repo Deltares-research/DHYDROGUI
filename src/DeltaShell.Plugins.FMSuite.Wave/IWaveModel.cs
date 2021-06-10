@@ -1,8 +1,10 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Editing;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
+using DeltaShell.Plugins.FMSuite.Wave.TimeFrame.DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
 
 namespace DeltaShell.Plugins.FMSuite.Wave
 {
@@ -12,7 +14,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
     /// <seealso cref="ITimeDependentModel"/>
     /// <seealso cref="IHasCoordinateSystem"/>
     /// <seealso cref="IEditableObject"/>
-    public interface IWaveModel : ITimeDependentModel, IHasCoordinateSystem, IEditableObject
+    public interface IWaveModel : ITimeDependentModel,
+                                  IHasCoordinateSystem,
+                                  IEditableObject,
+                                  IFileBased
     {
         /// <summary>
         /// Gets the feature container of this <see cref="IWaveModel"/>.
@@ -25,8 +30,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         IBoundaryContainer BoundaryContainer { get; }
 
         /// <summary>
-        /// Gets the <see cref="IWaveOutputData"/> of this <see cref="WaveModel"/>
+        /// Gets the <see cref="IWaveOutputData"/> of this <see cref="IWaveModel"/>
         /// </summary>
         IWaveOutputData WaveOutputData { get; }
+
+        /// <summary>
+        /// Gets the <see cref="ITimeFrameData"/> of this <see cref="IWaveModel"/>.
+        /// </summary>
+        ITimeFrameData TimeFrameData { get; }
     }
 }

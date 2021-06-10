@@ -35,13 +35,13 @@
 
     <GroupBox Header="Settings">
         <StackPanel Margin="10">
-            <components:LabeledValueBox Label="Name:"
+            <components:LabeledValueBoxRow Label="Name:"
                                         ValueContent="{Binding Path=Name}" />
-            <components:LabeledComboBox Label="Forcing Type:"
+            <components:LabeledComboBoxRow Label="Forcing Type:"
                                         SelectedItem="{Binding Path=ForcingType}"
                                         ItemsSource="{Binding Source={StaticResource ForcingTypes}}"
                                         ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
-            <components:LabeledComboBox Label="Spatial Definition:"
+            <components:LabeledComboBoxRow Label="Spatial Definition:"
                                         SelectedItem="{Binding Path=SpatialDefinition}"
                                         ItemsSource="{Binding Source={StaticResource SpatialDefinitions}}"
                                         ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />

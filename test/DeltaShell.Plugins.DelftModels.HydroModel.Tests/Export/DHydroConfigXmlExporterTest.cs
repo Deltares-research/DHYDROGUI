@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
-            var observationPointFm = new GroupableFeature2DPoint {Name = "ObservationFM"};
+            var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
             var weirFm = new Structure
             {
                 Name = "Weir1",
@@ -101,14 +101,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             var rule = new PIDRule
             {
                 Name = "noot",
-                Inputs = {input},
-                Outputs = {output}
+                Inputs = { input },
+                Outputs = { output }
             };
             /*  Control groups  */
             var controlGroup = new ControlGroup
             {
                 Name = "test",
-                Rules = {rule}
+                Rules = { rule }
             };
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             }
 
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmrtc");
-            var exporter = new DHydroConfigXmlExporter {ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml")};
+            var exporter = new DHydroConfigXmlExporter { ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml") };
             exporter.Export(hydroModel, null);
 
             Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dimr.xml")));
@@ -191,7 +191,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
                      .Value = true;
             waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.OutputCategory,
                                                        KnownWaveProperties.COMFile).Value = "file.txt";
-            waveModel.TimePointData.WindSpeedConstant = 2;
+            waveModel.TimeFrameData.WindConstantData.Speed = 2;
             WaterFlowFMModel fmModel = hydroModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault();
             Assert.NotNull(fmModel);
 
@@ -229,7 +229,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             fmModel.Grid = UnstructuredGridFactory.CreateFromVertexAndEdgeList(vertices, edges);
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.HisOutputDeltaT).Value = fmModel.TimeStep;
             fmModel.ModelDefinition.GetModelProperty(GuiProperties.MapOutputDeltaT).Value = fmModel.TimeStep;
-            var observationPointFm = new GroupableFeature2DPoint {Name = "ObservationFM"};
+            var observationPointFm = new GroupableFeature2DPoint { Name = "ObservationFM" };
             var weirFm = new Structure
             {
                 Name = "Weir1",
@@ -258,14 +258,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             var rule = new PIDRule
             {
                 Name = "noot",
-                Inputs = {input},
-                Outputs = {output}
+                Inputs = { input },
+                Outputs = { output }
             };
             /*  Control groups  */
             var controlGroup = new ControlGroup
             {
                 Name = "test",
-                Rules = {rule}
+                Rules = { rule }
             };
             controlGroup.Inputs.Add(input);
             controlGroup.Outputs.Add(output);
@@ -287,7 +287,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             }
 
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmrtcwave");
-            var exporter = new DHydroConfigXmlExporter {ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml")};
+            var exporter = new DHydroConfigXmlExporter { ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml") };
             exporter.Export(hydroModel, null);
 
             Assert.IsTrue(File.Exists(Path.Combine(dirInfo.FullName, "dimr.xml")));
@@ -309,7 +309,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             }
 
             DirectoryInfo dirInfo = Directory.CreateDirectory("fmdimr");
-            var exporter = new DHydroConfigXmlExporter {ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml")};
+            var exporter = new DHydroConfigXmlExporter { ExportFilePath = Path.Combine(dirInfo.FullName, "dimr.xml") };
             var waterFlowFmModel = new WaterFlowFMModel();
             Assert.NotNull(waterFlowFmModel);
 
@@ -360,7 +360,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Export
             var rtcModel = new RealTimeControlModel("rtcModel");
             hydroModel.Activities.Add(rtcModel);
 
-            var dimrModels = (IEnumerable<IDimrModel>) TypeUtils.CallPrivateStaticMethod(typeof(DHydroConfigXmlExporter), "GetDimrModelsFromItem", hydroModel);
+            var dimrModels = (IEnumerable<IDimrModel>)TypeUtils.CallPrivateStaticMethod(typeof(DHydroConfigXmlExporter), "GetDimrModelsFromItem", hydroModel);
             Assert.IsEmpty(dimrModels);
         }
     }

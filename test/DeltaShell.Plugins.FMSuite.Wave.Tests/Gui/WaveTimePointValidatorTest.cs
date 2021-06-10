@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
+using DeltaShell.Plugins.FMSuite.Wave.TimeFrame.DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NUnit.Framework;
 
@@ -43,9 +44,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
         public void GivenWaveModelWithStartTimePrecedingTheReferenceTime_WhenValidating_ThenValidationErrorIsGiven()
         {
             var timePoint = new DateTime(2000, 01, 01);
-            var timePoints = new List<DateTime> {timePoint};
-            WaveInputFieldData timePointData = waveModel.TimePointData;
-            timePointData.InputFields.Arguments[0].AddValues(timePoints);
+            var timePoints = new List<DateTime> { timePoint };
+            ITimeFrameData timePointData = waveModel.TimeFrameData;
+            timePointData.TimeVaryingData.Arguments[0].AddValues(timePoints);
             Assert.That(timePointData.TimePoints, Is.Not.Empty);
 
             ValidationReport validationReport = WaveTimePointValidator.Validate(waveModel);
@@ -66,18 +67,14 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             Assert.That(validationReport.ErrorCount, Is.EqualTo(0));
         }
 
-        #region Helper methods
-
         private void SetupModelWithTimePoints(int yearsToAdd)
         {
             DateTime timePoint = waveModel.ModelDefinition.ModelReferenceDateTime.AddYears(yearsToAdd);
-            var timePoints = new List<DateTime> {timePoint};
-            WaveInputFieldData timePointsData = waveModel.TimePointData;
-            timePointsData.InputFields.Arguments[0].AddValues(timePoints);
+            var timePoints = new List<DateTime> { timePoint };
+            ITimeFrameData timePointsData = waveModel.TimeFrameData;
+            timePointsData.TimeVaryingData.Arguments[0].AddValues(timePoints);
 
             Assert.That(timePointsData.TimePoints, Is.Not.Empty);
         }
-
-        #endregion
     }
 }

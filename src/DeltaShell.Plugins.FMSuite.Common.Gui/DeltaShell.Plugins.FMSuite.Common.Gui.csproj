@@ -240,6 +240,7 @@
     <Compile Include="ModelTreeShortcut.cs" />
     <Compile Include="NodePresenters\FMSuiteNodePresenterBase.cs" />
     <Compile Include="NodePresenters\ModelTreeShortcutNodePresenterBase.cs" />
+    <Compile Include="NotifyPropertyChangedEventPropagator.cs" />
     <Compile Include="RgfGrid\RgfConfig.cs" />
     <Compile Include="ShortCutType.cs" />
     <Compile Include="TimeArgumentConfigurer.cs" />

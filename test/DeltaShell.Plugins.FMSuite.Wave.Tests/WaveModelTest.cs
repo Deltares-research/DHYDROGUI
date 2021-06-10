@@ -17,6 +17,8 @@ using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
+using DeltaShell.Plugins.FMSuite.Wave.TimeFrame.DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Geometries;
@@ -53,6 +55,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
+        public void Constructor_SetsCorrectTimeFrameData()
+        {
+            // Call
+            using (var model = new WaveModel())
+            {
+                // Assert
+                Assert.That(model.TimeFrameData, Is.Not.Null);
+            }
+        }
+
+        [Test]
         public void Constructor_SetsCorrectFeatureContainer()
         {
             // Call
@@ -73,7 +86,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 var counter = 0;
 
-                ((INotifyCollectionChanged) model).CollectionChanged += delegate { counter += 1; };
+                ((INotifyCollectionChanged)model).CollectionChanged += delegate { counter += 1; };
 
                 model.BoundaryContainer.Boundaries.Add(waveBoundary);
 
@@ -134,7 +147,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         {
             // Setup
             Func<string> func = () => "working_dir";
-            using (var model = new WaveModel {WorkingDirectoryPathFunc = func})
+            using (var model = new WaveModel { WorkingDirectoryPathFunc = func })
             {
                 // Call
                 Func<string> result = model.WorkingDirectoryPathFunc;
@@ -167,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         public void DimrExportDirectoryPath_ShouldAlwaysBeUpToDate()
         {
             // Setup
-            var provider = new PathProvider {Path = "orig_working_dir"};
+            var provider = new PathProvider { Path = "orig_working_dir" };
 
             using (var model = new WaveModel
             {
@@ -228,7 +241,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             const int rd = 28992;
 
             string localMdwPath = WaveTestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"flow_coupled/wave.mdw"));
-            var waveModel = new WaveModel(localMdwPath) {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(wgs84CS)};
+            var waveModel = new WaveModel(localMdwPath) { CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(wgs84CS) };
 
             ICoordinateSystem src = new OgrCoordinateSystemFactory().CreateFromEPSG(wgs84CS);
             ICoordinateSystem target = new OgrCoordinateSystemFactory().CreateFromEPSG(rd);
@@ -258,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             string localMdwPath =
                 WaveTestHelper.CreateLocalCopy(TestHelper.GetTestFilePath(@"wave_timespacevarbnd/tst.mdw"));
-            var waveModel = new WaveModel(localMdwPath) {CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(nad27_utm16N)};
+            var waveModel = new WaveModel(localMdwPath) { CoordinateSystem = new OgrCoordinateSystemFactory().CreateFromEPSG(nad27_utm16N) };
 
             ICoordinateSystem src = new OgrCoordinateSystemFactory().CreateFromEPSG(nad27_utm16N);
             ICoordinateSystem target = new OgrCoordinateSystemFactory().CreateFromEPSG(pseudo_webm);
@@ -480,20 +493,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         }
 
         [Test]
-        public void CheckDefaultTimeDateWhenCreatingWaveTimePointData()
-        {
-            var waveInputFieldData = new WaveInputFieldData();
-
-            // get the today datetime
-
-            DateTime datetime = DateTime.Today;
-
-            // Assert
-
-            Assert.AreEqual(datetime, waveInputFieldData.InputFields.Arguments[0].DefaultValue);
-        }
-
-        [Test]
         public void IsCoupledToFlow_ShouldAlwaysBeFalseForAStandAloneModel()
         {
             var waveModel = new WaveModel();
@@ -598,7 +597,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             var diagFile2 = new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default);
             using (var model = new WaveModel())
             {
-                
+
                 model.WaveOutputData.DiagnosticFiles.Add(diagFile1);
                 model.WaveOutputData.DiagnosticFiles.Add(diagFile2);
 
@@ -619,7 +618,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             var spectraFile2 = new ReadOnlyTextFileData("", "", ReadOnlyTextFileDataType.Default);
             using (var model = new WaveModel())
             {
-                
+
                 model.WaveOutputData.SpectraFiles.Add(spectraFile1);
                 model.WaveOutputData.SpectraFiles.Add(spectraFile2);
 
@@ -640,7 +639,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             var functionStore2 = Substitute.For<IWavmFileFunctionStore>();
             using (var model = new WaveModel())
             {
-                
+
                 model.WaveOutputData.WavmFileFunctionStores.Add(functionStore1);
                 model.WaveOutputData.WavmFileFunctionStores.Add(functionStore2);
 
@@ -660,12 +659,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             using (var model = new WaveModel())
             {
                 var functionStore1 = Substitute.For<IWavhFileFunctionStore>();
-                functionStore1.Functions = new EventedList<IFunction>(new []
+                functionStore1.Functions = new EventedList<IFunction>(new[]
                 {
                     Substitute.For<IFunction>()
                 });
                 var functionStore2 = Substitute.For<IWavhFileFunctionStore>();
-                functionStore2.Functions = new EventedList<IFunction>(new []
+                functionStore2.Functions = new EventedList<IFunction>(new[]
                 {
                     Substitute.For<IFunction>(),
                     Substitute.For<IFunction>()
@@ -689,6 +688,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 {
                     Assert.That(result, Has.Member(function));
                 }
+            }
+        }
+
+        [Test]
+        public void GetDirectChildren_ContainsTimeFrameData()
+        {
+            // Setup 
+            using (var model = new WaveModel())
+            {
+                // Call
+                object[] result = model.GetDirectChildren().ToArray();
+
+                // Assert
+                Assert.That(result, Has.Member(model.TimeFrameData));
             }
         }
 
@@ -758,7 +771,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [TestCase(true, false)]
         [TestCase(false, true)]
         [TestCase(true, true)]
-        public void ConnectOutput_UpdatesWaveOutputDataCorrectly(bool withInitialPath, 
+        public void ConnectOutput_UpdatesWaveOutputDataCorrectly(bool withInitialPath,
                                                                  bool inWorkingDirectory)
         {
             using (var tempDir = new TemporaryDirectory())
@@ -773,7 +786,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     model.WaveOutputData.ConnectTo(initialPath, true);
                 }
 
-                model.WorkingDirectoryPathFunc = () => inWorkingDirectory ? newPath : @"D:\nope\"; 
+                model.WorkingDirectoryPathFunc = () => inWorkingDirectory ? newPath : @"D:\nope\";
 
                 // Call
                 model.ConnectOutput(newPath);
@@ -834,7 +847,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
 
                     // Disconnect data
                     model.WaveOutputData.Disconnect();
@@ -878,7 +891,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
 
                     // Disconnect data
                     model.WaveOutputData.Disconnect();
@@ -914,7 +927,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 string alternativeOutputPath = tempDir.CopyDirectoryToTempDirectory(alternativeOutputSourcePath);
 
                 string outputReferencePath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output_reference");
-                FileCompareInfo[] origFileDataReference = 
+                FileCompareInfo[] origFileDataReference =
                     CollectFileInformation(new DirectoryInfo(outputReferencePath)).ToArray();
 
                 using (var model = new WaveModel(mdwPath))
@@ -924,7 +937,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
 
                     // Connect to different data source
                     model.WaveOutputData.ConnectTo(alternativeOutputPath, true);
@@ -969,7 +982,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 string alternativeOutputPath = tempDir.CopyDirectoryToTempDirectory(alternativeOutputSourcePath);
 
                 string alternativeOutputReferencePath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output_reference");
-                FileCompareInfo[] origFileDataReference = 
+                FileCompareInfo[] origFileDataReference =
                     CollectFileInformation(new DirectoryInfo(alternativeOutputReferencePath)).ToArray();
 
                 using (var model = new WaveModel(mdwPath))
@@ -979,7 +992,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
 
                     // Connect to different data source
                     model.WaveOutputData.ConnectTo(alternativeOutputPath, true);
@@ -1031,7 +1044,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
 
                     // When 
                     model.ModelSaveTo(goalMdwPath, true);
@@ -1073,7 +1086,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
 
                     string originalDataSourcePath = model.WaveOutputData.DataSourcePath;
 
@@ -1115,7 +1128,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
 
                     // Connect to different data source
                     model.WaveOutputData.ConnectTo(alternativeOutputPath, true);
@@ -1164,7 +1177,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
 
                     // Connect to different data source
                     model.WaveOutputData.ConnectTo(alternativeOutputPath, true);
@@ -1213,7 +1226,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
                     // Remove the files on disk
                     FileUtils.DeleteIfExists(outputDir);
 
@@ -1253,7 +1266,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
                     // Remove the files on disk
                     FileUtils.DeleteIfExists(outputDir);
 
@@ -1284,7 +1297,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 string connectDirectoryPath = tempDir.CopyDirectoryToTempDirectory(modelOutputPath);
 
                 var observer = new EventTestObserver<PropertyChangedEventArgs>();
-                ((INotifyPropertyChange) model).PropertyChanged += observer.OnEventFired;
+                ((INotifyPropertyChange)model).PropertyChanged += observer.OnEventFired;
 
                 // Call
                 model.WaveOutputData.ConnectTo(connectDirectoryPath, true);
@@ -1292,6 +1305,67 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 // Assert
                 Assert.That(observer.NCalls, Is.EqualTo(4));
                 Assert.That(observer.Senders, Has.All.EqualTo(model.WaveOutputData));
+            }
+        }
+
+        public static IEnumerable<TestCaseData> GetTimeFramePropertyChangedData()
+        {
+            object Identity(ITimeFrameData data) => data;
+            void UpdateHydrodynamicsInputDataType(ITimeFrameData data) => data.HydrodynamicsInputDataType = HydrodynamicsInputDataType.TimeVarying;
+            yield return new TestCaseData((Action<ITimeFrameData>)UpdateHydrodynamicsInputDataType,
+                                          (Func<ITimeFrameData, object>)Identity,
+                                          nameof(ITimeFrameData.HydrodynamicsInputDataType));
+            void UpdateWindInputDataType(ITimeFrameData data) => data.WindInputDataType = WindInputDataType.TimeVarying;
+            yield return new TestCaseData((Action<ITimeFrameData>)UpdateWindInputDataType,
+                                          (Func<ITimeFrameData, object>)Identity,
+                                          nameof(ITimeFrameData.WindInputDataType));
+
+            object Hydrodynamics(ITimeFrameData data) => data.HydrodynamicsConstantData;
+            void UpdateWaterLevel(ITimeFrameData data) => data.HydrodynamicsConstantData.WaterLevel = 10.0;
+            yield return new TestCaseData((Action<ITimeFrameData>)UpdateWaterLevel,
+                                          (Func<ITimeFrameData, object>)Hydrodynamics,
+                                          nameof(HydrodynamicsConstantData.WaterLevel));
+            void UpdateVelocityX(ITimeFrameData data) => data.HydrodynamicsConstantData.VelocityX = 10.0;
+            yield return new TestCaseData((Action<ITimeFrameData>)UpdateVelocityX,
+                                          (Func<ITimeFrameData, object>)Hydrodynamics,
+                                          nameof(HydrodynamicsConstantData.VelocityX));
+            void UpdateVelocityY(ITimeFrameData data) => data.HydrodynamicsConstantData.VelocityY = 10.0;
+            yield return new TestCaseData((Action<ITimeFrameData>)UpdateVelocityY,
+                                          (Func<ITimeFrameData, object>)Hydrodynamics,
+                                          nameof(HydrodynamicsConstantData.VelocityY));
+
+            object Wind(ITimeFrameData data) => data.WindConstantData;
+            void UpdateSpeed(ITimeFrameData data) => data.WindConstantData.Speed = 10.0;
+            yield return new TestCaseData((Action<ITimeFrameData>)UpdateSpeed,
+                                          (Func<ITimeFrameData, object>)Wind,
+                                          nameof(WindConstantData.Speed));
+            void UpdateDirection(ITimeFrameData data) => data.WindConstantData.Direction = 10.0;
+            yield return new TestCaseData((Action<ITimeFrameData>)UpdateDirection,
+                                          (Func<ITimeFrameData, object>)Wind,
+                                          nameof(WindConstantData.Direction));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetTimeFramePropertyChangedData))]
+        public void TimeFrameData_EventsAreProperlyPropagated(Action<ITimeFrameData> updateProperty,
+                                                              Func<ITimeFrameData, object> getSender,
+                                                              string expectedPropertyName)
+        {
+            using (var model = new WaveModel())
+            {
+                var observer = new EventTestObserver<PropertyChangedEventArgs>();
+
+                ((INotifyPropertyChanged)model).PropertyChanged += observer.OnEventFired;
+
+                // Call
+                updateProperty(model.TimeFrameData);
+
+                // Assert
+                Assert.That(observer.NCalls, Is.EqualTo(1));
+                Assert.That(observer.Senders.First(), Is.SameAs(getSender(model.TimeFrameData)));
+
+                PropertyChangedEventArgs args = observer.EventArgses.First();
+                Assert.That(args.PropertyName, Is.EqualTo(expectedPropertyName));
             }
         }
 
@@ -1321,7 +1395,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 File.Move(Path.Combine(alternativeOutputPath, "Waves.mdw"), Path.Combine(alternativeOutputPath, "5a.mdw"));
 
                 string alternativeOutputReferencePath = TestHelper.GetTestFilePath(@"WaveModelTest\alternative_output_reference");
-                FileCompareInfo[] origFileDataReference = 
+                FileCompareInfo[] origFileDataReference =
                     CollectFileInformation(new DirectoryInfo(alternativeOutputReferencePath)).ToArray();
 
                 using (var model = new WaveModel(mdwPath))
@@ -1331,7 +1405,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                     // previous save directory set, which is set as part of Switch to. 
                     // This is far from ideal, however changing this would require significant 
                     // changes to DeltaShell's save logic.
-                    ((IFileBased) model).SwitchTo(modelPath);
+                    ((IFileBased)model).SwitchTo(modelPath);
 
                     // Connect to different data source
                     model.WaveOutputData.ConnectTo(alternativeOutputPath, true);
@@ -1379,8 +1453,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
         [TestCase("Potato", "path/to/workDir", "Potato.mdw")]
         [TestCase("", "path/to/workDir", "Waves.mdw")]
         [TestCase(null, "path/to/workDir", "Waves.mdw")]
-        public void GetExporterPath_ReturnsExpectedPath(string modelName, 
-                                                        string dirPath, 
+        public void GetExporterPath_ReturnsExpectedPath(string modelName,
+                                                        string dirPath,
                                                         string expectedInputFile)
         {
             // Setup
@@ -1410,9 +1484,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
             {
                 string modelDirectory = tempDir.CopyDirectoryToTempDirectory(testPath);
                 string mdwPath = Path.Combine(modelDirectory, "input", "Waves.mdw");
-                DirectoryInfo initialInputDirectoryInfo = 
+                DirectoryInfo initialInputDirectoryInfo =
                     new DirectoryInfo(mdwPath).Parent;
-                var initialOutputDirectoryInfo = 
+                var initialOutputDirectoryInfo =
                     new DirectoryInfo(Path.Combine(initialInputDirectoryInfo.Parent.FullName, "output"));
 
                 IReadOnlyList<FileCompareInfo> referenceFiles =
@@ -1424,29 +1498,29 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
                 using (var model = new WaveModel(mdwPath))
                 {
-                    ((IFileBased) model).Open(mdwPath);
+                    ((IFileBased)model).Open(mdwPath);
 
                     model.Name = newName;
 
                     // Call
                     // Trigger save: This mimicks the behaviour of a BeforePersist call, which passes a
                     // string containing a hash to the path.
-                    ((IFileBased) model).Path = persistPath;
+                    ((IFileBased)model).Path = persistPath;
 
                     // Assert
-                    var actualInputDirectoryInfo = 
+                    var actualInputDirectoryInfo =
                         new DirectoryInfo(Path.Combine(tempDir.Path, newName, "input"));
-                    var actualOutputDirectoryInfo = 
+                    var actualOutputDirectoryInfo =
                         new DirectoryInfo(Path.Combine(tempDir.Path, newName, "output"));
 
-                    IReadOnlyList<FileCompareInfo> actualFiles = 
+                    IReadOnlyList<FileCompareInfo> actualFiles =
                         CollectFileInformation(actualInputDirectoryInfo)
                             .Where(x => !x.Name.EndsWith(".mdw"))
                             .Concat(CollectFileInformation(actualOutputDirectoryInfo))
                             .ToList();
 
                     AssertContainsSameFiles(referenceFiles, actualFiles);
-                    Assert.That(File.Exists(Path.Combine(actualInputDirectoryInfo.FullName, (newName + ".mdw"))), 
+                    Assert.That(File.Exists(Path.Combine(actualInputDirectoryInfo.FullName, (newName + ".mdw"))),
                                 Is.True);
                 }
             }

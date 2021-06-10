@@ -270,6 +270,35 @@
     <Compile Include="Editors\MeteoFileSelectionControl.Designer.cs">
       <DependentUpon>MeteoFileSelectionControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\TimeFrame\Converters\ColumnVisibilitiesConverter.cs" />
+    <Compile Include="Editors\TimeFrame\Converters\EnumToVisibilityConverter.cs" />
+    <Compile Include="Editors\TimeFrame\Converters\HydrodynamicsInputDataTypeToVisibilityConverter.cs" />
+    <Compile Include="Editors\TimeFrame\Converters\SpiderWebPathVisibilityConverter.cs" />
+    <Compile Include="Editors\TimeFrame\Converters\UseSpiderWebVisibilityConverter.cs" />
+    <Compile Include="Editors\TimeFrame\Converters\WindInputDataTypeToVisibilityConverter.cs" />
+    <Compile Include="Editors\TimeFrame\Converters\WindInputTypeToVisibilityConverter.cs" />
+    <Compile Include="Editors\TimeFrame\Enums\FileAlreadyExistsChoice.cs" />
+    <Compile Include="Editors\TimeFrame\Extensions\WindInputTypeExtensions.cs" />
+    <Compile Include="Editors\TimeFrame\Helpers\ITimeFrameEditorFileImportHelper.cs" />
+    <Compile Include="Editors\TimeFrame\Helpers\TimeFrameEditorFileImportHelper.cs" />
+    <Compile Include="Editors\TimeFrame\TimeFrameFileFilters.cs" />
+    <Compile Include="Editors\TimeFrame\ViewModels\TimeFrameEditorViewModel.cs" />
+    <Compile Include="Editors\TimeFrame\ViewModels\TimeFrameEditor\HydrodynamicsConstantsViewModel.cs" />
+    <Compile Include="Editors\TimeFrame\ViewModels\TimeFrameEditor\WindConstantsViewModel.cs" />
+    <Compile Include="Editors\TimeFrame\ViewModels\TimeFrameEditor\WindFilesViewModel.cs" />
+    <Compile Include="Editors\TimeFrame\Views\TimeFrameEditorView.xaml.cs">
+      <DependentUpon>TimeFrameEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TimeFrame\Views\TimeFrameEditor\HydrodynamicsConstantsView.xaml.cs">
+      <DependentUpon>HydrodynamicsConstantsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TimeFrame\Views\TimeFrameEditor\TableViewWindowsFormsHostMap.cs" />
+    <Compile Include="Editors\TimeFrame\Views\TimeFrameEditor\WindConstantsView.xaml.cs">
+      <DependentUpon>WindConstantsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TimeFrame\Views\TimeFrameEditor\WindFilesView.xaml.cs">
+      <DependentUpon>WindFilesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Editors\WaveDomainEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -288,12 +317,6 @@
     </Compile>
     <Compile Include="Editors\WaveObstacleListView.Designer.cs">
       <DependentUpon>WaveObstacleListView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\WaveTimePointEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\WaveTimePointEditor.Designer.cs">
-      <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="FeatureProviders\Boundaries\Factories\BoundaryMapFeaturesContainerFactory.cs" />
     <Compile Include="FeatureProviders\Boundaries\Providers\Behaviours\AddBehaviours\BoundaryFromLineAddBehaviour.cs" />
@@ -447,9 +470,6 @@
     <EmbeddedResource Include="Editors\WaveMeteoDataEditor.resx">
       <DependentUpon>WaveMeteoDataEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editors\WaveTimePointEditor.resx">
-      <DependentUpon>WaveTimePointEditor.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\WaveSupportPointSelectionForm.resx">
       <DependentUpon>WaveSupportPointSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -509,6 +529,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Editors\DomainSpecificDataEditor\Views\MainDomainSpecificDataView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\TimeFrame\Views\TimeFrameEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\TimeFrame\Views\TimeFrameEditor\HydrodynamicsConstantsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\TimeFrame\Views\TimeFrameEditor\WindConstantsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Editors\TimeFrame\Views\TimeFrameEditor\WindFilesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

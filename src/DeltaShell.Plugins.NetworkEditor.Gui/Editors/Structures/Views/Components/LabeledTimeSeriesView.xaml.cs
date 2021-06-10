@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         }
 
         /// <summary>
-        /// Gets or sets the label of this <see cref="LabeledButton"/>.
+        /// Gets or sets the label of this <see cref="LabeledButtonRow"/>.
         /// </summary>
         public string Label
         {
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         }
 
         /// <summary>
-        /// Gets or sets the single value of this <see cref="LabeledValueBox"/>.
+        /// Gets or sets the single value of this <see cref="LabeledValueBoxRow"/>.
         /// </summary>
         public string SingleValueContent
         {
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Editors.Structures.Views.Componen
         }
 
         /// <summary>
-        /// Gets or sets the unit of this <see cref="LabeledValueBox"/>.
+        /// Gets or sets the unit of this <see cref="LabeledValueBoxRow"/>.
         /// </summary>
         public string Unit
         {

@@ -19,6 +19,8 @@ using DeltaShell.Plugins.FMSuite.Wave.Boundaries.ConditionDefinitions.WaveEnergy
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries.GeometricDefinitions;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
+using DeltaShell.Plugins.FMSuite.Wave.TimeFrame.DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
 using log4net.Core;
 using NetTopologySuite.Extensions.Grids;
 using NSubstitute;
@@ -42,17 +44,17 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 string mdwTargetPath = Path.Combine(temp.Path, "obw_compare.mdw");
 
                 var mdwFile = new MdwFile();
-                WaveModelDefinition modelDef = mdwFile.Load(mdwPath);
+                MdwFileDTO dto = mdwFile.Load(mdwPath);
 
-                mdwFile.SaveTo(mdwTargetPath, modelDef, true);
+                mdwFile.SaveTo(mdwTargetPath, dto, true);
 
                 var target = new MdwFile();
-                WaveModelDefinition modelDefOut = target.Load(mdwTargetPath);
+                MdwFileDTO modelDTOOut = target.Load(mdwTargetPath);
 
-                foreach (WaveModelPropertyDefinition propDef in modelDef.ModelSchema.PropertyDefinitions.Values)
+                foreach (WaveModelPropertyDefinition propDef in dto.WaveModelDefinition.ModelSchema.PropertyDefinitions.Values)
                 {
-                    object valueBefore = modelDef.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
-                    object valueAfter = modelDefOut.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
+                    object valueBefore = dto.WaveModelDefinition.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
+                    object valueAfter = modelDTOOut.WaveModelDefinition.GetModelProperty(propDef.FileCategoryName, propDef.FilePropertyName).Value;
                     Assert.AreEqual(valueBefore, valueAfter);
                 }
             }
@@ -66,10 +68,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             string mdwPath = TestHelper.GetTestFilePath(@"coordinateBasedBoundary\obw.mdw");
 
             // Call
-            WaveModelDefinition modelDef = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
 
             // Assert
-            Assert.That(modelDef.OuterDomain.Grid.IsEmpty, Is.False);
+            Assert.That(dto.WaveModelDefinition.OuterDomain.Grid.IsEmpty, Is.False);
         }
 
         [Test]
@@ -78,7 +80,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         {
             string mdwPath = TestHelper.GetTestFilePath(@"wave_spacevarbnd\tst.mdw");
             var mdwFile = new MdwFile();
-            WaveModelDefinition modelDef = mdwFile.Load(mdwPath);
+            MdwFileDTO dto = mdwFile.Load(mdwPath);
+            WaveModelDefinition modelDef = dto.WaveModelDefinition;
 
             WaveObstacle obs1 = modelDef.FeatureContainer.Obstacles[0];
             WaveObstacle obs2 = modelDef.FeatureContainer.Obstacles[1];
@@ -109,14 +112,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
             const string warningMessage = "Parsing error in file 'tstInvalid.obt'. Can't convert 'ThisInvalidString' to a double. The property 'Beta' has been given the default value '0'.";
 
-            WaveModelDefinition modelDef = null;
+            MdwFileDTO dto = null;
             LogHelper.ConfigureLogging();
             LogHelper.SetLoggingLevel(Level.Warn);
             TestHelper.AssertLogMessageIsGenerated(
-                () => modelDef = mdwFile.Load(mdwPath), warningMessage);
+                () => dto = mdwFile.Load(mdwPath), warningMessage);
             LogHelper.SetLoggingLevel(Level.Error);
             LogHelper.ResetLogging();
 
+            WaveModelDefinition modelDef = dto.WaveModelDefinition;
             WaveObstacle obs1 = modelDef.FeatureContainer.Obstacles[0];
             WaveObstacle obs2 = modelDef.FeatureContainer.Obstacles[1];
 
@@ -143,9 +147,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         {
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
             var mdwFile = new MdwFile();
-            WaveModelDefinition modelDef = mdwFile.Load(mdwPath);
-
-            IFunction function = modelDef.TimePointData.InputFields;
+            MdwFileDTO dto = mdwFile.Load(mdwPath);
+            IFunction function = dto.TimeFrameData.TimeVaryingData;
 
             Assert.AreEqual(3, function.Arguments[0].Values.Count);
             Assert.AreEqual(new DateTime(2006, 1, 5), function.Arguments[0].Values[0]);
@@ -163,12 +166,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             {
                 string mdwPath = TestHelper.GetTestFilePath(@"domainWithSpectralData\te0.mdw");
                 var mdwFile = new MdwFile();
-                WaveModelDefinition modelDef = mdwFile.Load(mdwPath);
+
+                MdwFileDTO dto = mdwFile.Load(mdwPath);
+                WaveModelDefinition modelDef = dto.WaveModelDefinition;
 
                 string targetPath = Path.Combine(temp.Path, "output.mdw");
-                mdwFile.SaveTo(targetPath, modelDef, true);
+                mdwFile.SaveTo(targetPath, dto, true);
 
-                WaveModelDefinition savedModelDef = mdwFile.Load(targetPath);
+                MdwFileDTO savedDto = mdwFile.Load(targetPath);
+                WaveModelDefinition savedModelDef = savedDto.WaveModelDefinition;
 
                 Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.NFreq, savedModelDef.OuterDomain.SpectralDomainData.NFreq);
                 Assert.AreEqual(modelDef.OuterDomain.SpectralDomainData.FreqMax, savedModelDef.OuterDomain.SpectralDomainData.FreqMax, 1e-07);
@@ -185,6 +191,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         {
             // Arrange
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+            var timeFrameData = new TimeFrameData();
 
             UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> uniformComponent = CreateUniformConstantDataComponent();
             IWaveBoundary boundary = BuildWaveBoundary(uniformComponent);
@@ -196,7 +203,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 string targetPath = Path.Combine(tempDirectory.Path, "output.mdw");
 
                 // Act
-                new MdwFile().SaveTo(targetPath, modelDefinition, true);
+                new MdwFile().SaveTo(targetPath, new MdwFileDTO(modelDefinition, timeFrameData), true);
 
                 // Assert
                 Assert.IsTrue(File.Exists(targetPath));
@@ -215,6 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         {
             // Arrange
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+            var timeFrameData = new TimeFrameData();
 
             UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> spatiallyVaryingComponent = CreateUniformTimeDependentDataComponent();
             IWaveBoundary boundary = BuildWaveBoundary(spatiallyVaryingComponent);
@@ -226,7 +234,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 string targetPath = Path.Combine(tempDirectory.Path, "output.mdw");
 
                 // Act
-                new MdwFile().SaveTo(targetPath, modelDefinition, false);
+                new MdwFile().SaveTo(targetPath, new MdwFileDTO(modelDefinition, timeFrameData), false);
 
                 // Assert
                 Assert.IsTrue(File.Exists(targetPath));
@@ -248,6 +256,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         {
             // Setup
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
+            var timeFrameData = new TimeFrameData();
 
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -261,7 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
 
                 // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, true);
+                new MdwFile().SaveTo(saveFilePath, new MdwFileDTO(modelDefinition, timeFrameData), true);
 
                 // Assert
                 Assert.That(saveFilePath, Does.Exist);
@@ -290,7 +299,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             {
                 var mdwFile = new MdwFile();
                 string importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
-                WaveModelDefinition modelDef = mdwFile.Load(importedMdwFilePath);
+
+                MdwFileDTO dto = mdwFile.Load(importedMdwFilePath);
+                WaveModelDefinition modelDef = dto.WaveModelDefinition;
+
                 string targetPath = Path.Combine(temp.Path, "output.mdw");
 
                 Assert.AreEqual("wad.obt",
@@ -300,14 +312,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 modelDef.FeatureContainer.Obstacles.Clear();
 
                 // Model definition properties updated during save
-                mdwFile.SaveTo(targetPath, modelDef, true);
+                mdwFile.SaveTo(targetPath, dto, true);
 
                 Assert.AreEqual(string.Empty,
                                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
                                         .GetValueAsString());
 
                 // Verify what was really written in the file
-                WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
+                MdwFileDTO dto2 = mdwFile.Load(targetPath);
+                WaveModelDefinition modelDef2 = dto2.WaveModelDefinition;
 
                 Assert.AreEqual(string.Empty,
                                 modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.ObstacleFile)
@@ -323,7 +336,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             {
                 var mdwFile = new MdwFile();
                 string importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
-                WaveModelDefinition modelDef = mdwFile.Load(importedMdwFilePath);
+
+                MdwFileDTO dto = mdwFile.Load(importedMdwFilePath);
+                WaveModelDefinition modelDef = dto.WaveModelDefinition;
+
                 string targetPath = Path.Combine(temp.Path, "output.mdw");
 
                 Assert.AreEqual("10",
@@ -334,10 +350,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindDirection)
                                         .GetValueAsString());
 
-                modelDef.TimePointData.WindDataType = InputFieldDataType.TimeVarying;
+                var timeFrameData = dto.TimeFrameData;
+                timeFrameData.WindInputDataType = WindInputDataType.TimeVarying;
 
                 // Model definition properties updated during save
-                mdwFile.SaveTo(targetPath, modelDef, true);
+                mdwFile.SaveTo(targetPath, dto, true);
 
                 Assert.AreEqual("0",
                                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
@@ -348,7 +365,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                                         .GetValueAsString());
 
                 // Verify what was really written in the file
-                WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
+                MdwFileDTO dto2 = mdwFile.Load(targetPath);
+                WaveModelDefinition modelDef2 = dto2.WaveModelDefinition;
 
                 Assert.AreEqual("0",
                                 modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WindSpeed)
@@ -367,16 +385,18 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             using (var temp = new TemporaryDirectory())
             {
                 var mdwFile = new MdwFile();
-                var modelDef = new WaveModelDefinition {OuterDomain = new WaveDomainData("Outer")};
+                var modelDef = new WaveModelDefinition { OuterDomain = new WaveDomainData("Outer") };
                 string targetPath = Path.Combine(temp.Path, "output.mdw");
 
-                modelDef.TimePointData.HydroDataType = InputFieldDataType.Constant;
-                modelDef.TimePointData.WaterLevelConstant = 6;
-                modelDef.TimePointData.VelocityXConstant = 6;
-                modelDef.TimePointData.VelocityYConstant = 6;
+                var timeFrameData = new TimeFrameData();
+
+                timeFrameData.HydrodynamicsInputDataType = HydrodynamicsInputDataType.Constant;
+                timeFrameData.HydrodynamicsConstantData.WaterLevel = 6;
+                timeFrameData.HydrodynamicsConstantData.VelocityX = 6;
+                timeFrameData.HydrodynamicsConstantData.VelocityY = 6;
 
                 // update model definition properties
-                mdwFile.SaveTo(targetPath, modelDef, true);
+                mdwFile.SaveTo(targetPath, new MdwFileDTO(modelDef, timeFrameData), true);
 
                 Assert.AreEqual("6",
                                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
@@ -390,9 +410,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterVelocityX)
                                         .GetValueAsString());
 
-                modelDef.TimePointData.HydroDataType = InputFieldDataType.TimeVarying;
+                timeFrameData.HydrodynamicsInputDataType = HydrodynamicsInputDataType.TimeVarying;
 
-                mdwFile.SaveTo(targetPath, modelDef, true);
+                mdwFile.SaveTo(targetPath, new MdwFileDTO(modelDef, timeFrameData), true);
 
                 Assert.AreEqual("0",
                                 modelDef.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
@@ -407,7 +427,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                                         .GetValueAsString());
 
                 //Verify what was really written in the file
-                WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
+                MdwFileDTO resultDto = mdwFile.Load(targetPath);
+                WaveModelDefinition modelDef2 = resultDto.WaveModelDefinition;
 
                 Assert.AreEqual("0",
                                 modelDef2.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.WaterLevel)
@@ -431,7 +452,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             {
                 var mdwFile = new MdwFile();
                 string importedMdwFilePath = TestHelper.GetTestFilePath(@"wad\wad.mdw");
-                WaveModelDefinition modelDef = mdwFile.Load(importedMdwFilePath);
+
+                MdwFileDTO dto = mdwFile.Load(importedMdwFilePath);
+                WaveModelDefinition modelDef = dto.WaveModelDefinition;
+
                 string targetPath = Path.Combine(temp.Path, "output.mdw");
 
                 Assert.AreEqual("wad.loc",
@@ -441,14 +465,15 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 modelDef.FeatureContainer.ObservationPoints.Clear();
 
                 // Model definition properties updated during save
-                mdwFile.SaveTo(targetPath, modelDef, true);
+                mdwFile.SaveTo(targetPath, dto, true);
 
                 Assert.AreEqual(string.Empty,
                                 modelDef.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
                                         .GetValueAsString());
 
                 // Verify what was really written in the file
-                WaveModelDefinition modelDef2 = mdwFile.Load(targetPath);
+                MdwFileDTO dto2 = mdwFile.Load(targetPath);
+                WaveModelDefinition modelDef2 = dto2.WaveModelDefinition;
 
                 Assert.AreEqual(string.Empty,
                                 modelDef2.GetModelProperty(KnownWaveCategories.OutputCategory, KnownWaveProperties.LocationFile)
@@ -465,7 +490,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
             void Action()
             {
-                WaveModelDefinition modelDefinition = mdwFile.Load(importedMdwFilePath);
+                MdwFileDTO dto = mdwFile.Load(importedMdwFilePath);
+                WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
+
                 WaveModelProperty propertyBedFrictionCoef = modelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.BedFrictionCoef);
                 Assert.IsNotNull(propertyBedFrictionCoef);
                 Assert.AreEqual("0.05", propertyBedFrictionCoef.GetValueAsString());
@@ -489,12 +516,13 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             using (var temporaryDirectory = new TemporaryDirectory())
             {
                 const string comFilePath = @"myDir1\myDir2\myComFile_com.nc";
-                var modelDefinition = new WaveModelDefinition {CommunicationsFilePath = comFilePath};
+                var modelDefinition = new WaveModelDefinition { CommunicationsFilePath = comFilePath };
+                var timeFrameData = new TimeFrameData();
 
                 // Act
                 var mdwFile = new MdwFile();
                 string mdwFilePath = Path.Combine(temporaryDirectory.Path, "myModel.mdw");
-                mdwFile.SaveTo(mdwFilePath, modelDefinition, false);
+                mdwFile.SaveTo(mdwFilePath, new MdwFileDTO(modelDefinition, timeFrameData), false);
 
                 // Assert
                 IEnumerable<string> mdwFileLines = File.ReadLines(mdwFilePath);
@@ -517,21 +545,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 var mdwFile = new MdwFile();
 
                 // Call
-                WaveModelDefinition result = null;
-
-                void Call() => result = mdwFile.Load(legacyFile);
+                MdwFileDTO resultDto = null;
+                void Call() => resultDto = mdwFile.Load(legacyFile);
 
                 List<string> logMessages =
                     TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToList();
 
                 // Assert
+                WaveModelDefinition result = resultDto.WaveModelDefinition;
                 WaveModelProperty timeFrameProperty =
                     result.Properties.FirstOrDefault(x => x.PropertyDefinition.FilePropertyName == "TimeInterval");
 
                 Assert.That(timeFrameProperty, Is.Not.Null, "Expected the TimeFrame property to be found.");
                 Assert.That(timeFrameProperty.PropertyDefinition.Category, Is.EqualTo("General"));
 
-                var value = (double) timeFrameProperty.Value;
+                var value = (double)timeFrameProperty.Value;
                 Assert.That(value, Is.EqualTo(255.0));
 
                 Assert.That(result.Properties.Any(x => x.PropertyDefinition.FilePropertyName == "TScale"),
@@ -553,7 +581,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\constant-uniform.mdw");
 
             // Call
-            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
+            WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
             // Assert
             IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
@@ -588,7 +617,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\constant-spatially_varying.mdw");
 
             // Call
-            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
+            WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
             // Assert
             IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
@@ -631,7 +661,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\time_dependent-uniform.mdw");
 
             // Call
-            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
+            WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
             // Assert
             IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
@@ -669,7 +700,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\time_dependent-spatially_varying.mdw");
 
             // Call
-            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
+            WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
             // Assert
             IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
@@ -732,7 +764,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\file_based-uniform.mdw");
 
             // Call
-            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
+            WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
             // Assert
             IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
@@ -762,7 +795,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\file_based-spatially_varying.mdw");
 
             // Call
-            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
+            WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
             // Assert
             IWaveBoundary boundary = modelDefinition.BoundaryContainer.Boundaries.Single();
@@ -801,7 +835,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             string mdwPath = TestHelper.GetTestFilePath(@"read_wave_boundaries\overall-file_based.mdw");
 
             // Call
-            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
+            WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
             // Assert
             IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
@@ -853,7 +888,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 string filePath = CreateMdwFileWithSpectralDomainData(tempDirectory.Path, expectedDomainData);
 
                 // Call
-                WaveModelDefinition modelDefinition = new MdwFile().Load(filePath);
+                MdwFileDTO dto = new MdwFile().Load(filePath);
+                WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
                 // Assert
                 SpectralDomainData spectralData = modelDefinition.OuterDomain.SpectralDomainData;
@@ -875,11 +911,12 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             string mdwPath = Path.Combine(testDataPath, "Wind.mdw");
 
             // Call
-            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
+            ITimeFrameData timeFrameData = dto.TimeFrameData;
 
             // Assert
-            Assert.That(modelDefinition.TimePointData.MeteoData.XComponentFilePath, Is.EqualTo("xwind.wnd"));
-            Assert.That(modelDefinition.TimePointData.MeteoData.YComponentFilePath, Is.EqualTo("ywind.wnd"));
+            Assert.That(timeFrameData.WindFileData.XComponentFilePath, Is.EqualTo("xwind.wnd"));
+            Assert.That(timeFrameData.WindFileData.YComponentFilePath, Is.EqualTo("ywind.wnd"));
         }
 
         [Test]
@@ -924,8 +961,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
 
                 string saveFilePath = Path.Combine(targetDir, "output.mdw");
 
+                var timeFrameData = new TimeFrameData();
+
                 // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+                new MdwFile().SaveTo(saveFilePath, new MdwFileDTO(modelDefinition, timeFrameData), switchTo);
 
                 // Assert
                 Assert.That(saveFilePath, Does.Exist);
@@ -965,9 +1004,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
 
                 string saveFilePath = Path.Combine(Path.Combine(tempDirectory.Path), "output.mdw");
+                var timeFrameData = new TimeFrameData();
 
                 // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+                new MdwFile().SaveTo(saveFilePath, new MdwFileDTO(modelDefinition, timeFrameData), switchTo);
 
                 // Assert
                 Assert.That(saveFilePath, Does.Exist);
@@ -1020,8 +1060,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 modelDefinition.BoundaryContainer.Boundaries.Add(boundary);
                 string saveFilePath = Path.Combine(targetDir, "output.mdw");
 
+                var timeFrameData = new TimeFrameData();
+
                 // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+                new MdwFile().SaveTo(saveFilePath, new MdwFileDTO(modelDefinition, timeFrameData), switchTo);
 
                 // Assert
                 Assert.That(saveFilePath, Does.Exist);
@@ -1074,8 +1116,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 boundaryContainer.FilePathForBoundariesPerFile = sourceFilePath;
                 string saveFilePath = Path.Combine(targetDir, "output.mdw");
 
+                var timeFrameData = new TimeFrameData();
+
                 // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+                new MdwFile().SaveTo(saveFilePath, new MdwFileDTO(modelDefinition, timeFrameData), switchTo);
 
                 // Assert
                 Assert.That(saveFilePath, Does.Exist);
@@ -1103,6 +1147,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             WaveModelDefinition modelDefinition = CreateWaveModelDefinition();
             IBoundaryContainer boundaryContainer = modelDefinition.BoundaryContainer;
             boundaryContainer.DefinitionPerFileUsed = true;
+            var timeFrameData = new TimeFrameData();
 
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -1110,7 +1155,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
                 string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
 
                 // Call
-                new MdwFile().SaveTo(saveFilePath, modelDefinition, switchTo);
+                new MdwFile().SaveTo(saveFilePath, new MdwFileDTO(modelDefinition, timeFrameData), switchTo);
 
                 // Assert
                 Assert.That(saveFilePath, Does.Exist);
@@ -1137,15 +1182,16 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             {
                 modelDefinition.Properties.First(p => p.PropertyDefinition.FilePropertyName == KnownWaveProperties.MeteoFile).Value = "wind.wnd";
 
-                modelDefinition.TimePointData.WindDataType = InputFieldDataType.FromInputFiles;
-                modelDefinition.TimePointData.MeteoData.FileType = WindDefinitionType.WindXWindY;
-                modelDefinition.TimePointData.MeteoData.XComponentFilePath = Path.Combine(testDataPath, "xwind.wnd");
-                modelDefinition.TimePointData.MeteoData.YComponentFilePath = Path.Combine(testDataPath, "ywind.wnd");
+                var timeFrameData = new TimeFrameData();
+                timeFrameData.WindInputDataType = WindInputDataType.FileBased;
+                timeFrameData.WindFileData.FileType = WindDefinitionType.WindXWindY;
+                timeFrameData.WindFileData.XComponentFilePath = Path.Combine(testDataPath, "xwind.wnd");
+                timeFrameData.WindFileData.YComponentFilePath = Path.Combine(testDataPath, "ywind.wnd");
 
                 string saveFilePath = Path.Combine(tempDirectory.Path, "output.mdw");
 
                 // Call
-                new MdwFile {MdwFilePath = saveFilePath}.SaveTo(saveFilePath, modelDefinition, switchTo);
+                new MdwFile { MdwFilePath = saveFilePath }.SaveTo(saveFilePath, new MdwFileDTO(modelDefinition, timeFrameData), switchTo);
 
                 // Assert
                 Assert.That(saveFilePath, Does.Exist);
@@ -1238,7 +1284,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         {
             var modelDefinition = new WaveModelDefinition();
             CurvilinearGrid grid = CreateCurvilinearGrid(10, 10);
-            modelDefinition.OuterDomain = new WaveDomainData("Outer") {Grid = grid};
+            modelDefinition.OuterDomain = new WaveDomainData("Outer") { Grid = grid };
             modelDefinition.BoundaryContainer.UpdateGridBoundary(new GridBoundary(grid));
             return modelDefinition;
         }
@@ -1262,7 +1308,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
         private static UniformDataComponent<ConstantParameters<PowerDefinedSpreading>> CreateUniformConstantDataComponent()
         {
             return new UniformDataComponent<ConstantParameters<PowerDefinedSpreading>>(
-                new ConstantParameters<PowerDefinedSpreading>(1, 2, 3, new PowerDefinedSpreading {SpreadingPower = 10}));
+                new ConstantParameters<PowerDefinedSpreading>(1, 2, 3, new PowerDefinedSpreading { SpreadingPower = 10 }));
         }
 
         private static UniformDataComponent<TimeDependentParameters<PowerDefinedSpreading>> CreateUniformTimeDependentDataComponent()

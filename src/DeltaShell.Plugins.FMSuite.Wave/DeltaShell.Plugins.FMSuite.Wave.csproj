@@ -232,6 +232,7 @@
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueBehaviour.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueWithDependentsBehaviour.cs" />
     <Compile Include="DataAccess\Helpers\WaveOutputData\WaveOutputFileHelper.cs" />
+    <Compile Include="DataAccess\IInputFileImporterService.cs" />
     <Compile Include="DataAccess\Importers\WaveBoundaryFileImporter.cs" />
     <Compile Include="DataAccess\Importers\WaveDepthFileImporter.cs" />
     <Compile Include="DataAccess\Importers\WaveGridFileImporter.cs" />
@@ -242,10 +243,12 @@
     <Compile Include="Boundaries\ConditionDefinitions\Shapes\IShapeVisitor.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponentVisitor.cs" />
     <Compile Include="Boundaries\ConditionDefinitions\Spreading\ISpreadingVisitor.cs" />
+    <Compile Include="DataAccess\InputFileImporterService.cs" />
     <Compile Include="DataAccess\MdwBoundaryCategoryConditionsExtender.cs" />
     <Compile Include="DataAccess\MdwFile.cs" />
     <Compile Include="DataAccess\MdwBoundaryCategoryGeometryExtender.cs" />
     <Compile Include="DataAccess\MdwBoundaryCategoriesCreator.cs" />
+    <Compile Include="DataAccess\MdwFileDTO.cs" />
     <Compile Include="DataAccess\MeteoFileProperty.cs" />
     <Compile Include="DataAccess\MeteoFileReader.cs" />
     <Compile Include="DataAccess\SpectrumDataComponentVisitor.cs" />
@@ -283,6 +286,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TimeFrame\HydrodynamicsConstantData.cs" />
+    <Compile Include="TimeFrame\HydrodynamicsInputDataType.cs" />
+    <Compile Include="TimeFrame\ITimeFrameData.cs" />
+    <Compile Include="TimeFrame\TimeFrameDataExtensions.cs" />
+    <Compile Include="TimeFrame\TimeFrameData.cs" />
+    <Compile Include="TimeFrame\WindConstantData.cs" />
+    <Compile Include="TimeFrame\WindInputDataType.cs" />
     <Compile Include="Validation\DomainSpecificValidationShortcut.cs" />
     <Compile Include="Validation\WaveBoundariesValidator.cs" />
     <Compile Include="Validation\WaveCouplingValidator.cs" />
@@ -301,7 +311,6 @@
     <Compile Include="WaveModelCoordinateConversion.cs" />
     <Compile Include="WaveModelFileHelper.cs" />
     <Compile Include="WaveObstacle.cs" />
-    <Compile Include="WaveTimePointData.cs" />
     <Compile Include="WaveApplicationPlugin.cs" />
     <Compile Include="WaveDomainData.cs" />
     <Compile Include="ModelDefinition\WaveModelDefinition.cs" />
@@ -360,6 +369,7 @@
   <ItemGroup>
     <EmbeddedResource Include="WaveModel.1.1.0.hbm.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

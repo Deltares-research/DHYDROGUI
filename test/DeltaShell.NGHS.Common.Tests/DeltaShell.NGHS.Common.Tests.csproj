@@ -137,6 +137,8 @@
     <Compile Include="Gui\Converters\EnumToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Converters\TypeToDescriptionConverterTest.cs" />
     <Compile Include="Gui\Converters\UnitStringToUnitDisplayStringConverterTest.cs" />
+    <Compile Include="Gui\Modals\Helpers\RequestUserInputTest.cs" />
+    <Compile Include="Gui\Modals\ViewModels\UserInputModalViewModelTest.cs" />
     <Compile Include="Gui\NodePresenters\ContextMenuFactoryTest.cs" />
     <Compile Include="Gui\Restart\RestartFileContextMenuTest.cs" />
     <Compile Include="Gui\Restart\RestartFileNodePresenterTest.cs" />

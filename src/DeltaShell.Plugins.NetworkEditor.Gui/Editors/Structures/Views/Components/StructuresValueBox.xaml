@@ -20,9 +20,9 @@
             <ColumnDefinition Width="{StaticResource BoxColumn}" />
             <ColumnDefinition Width="{StaticResource IsTimeSeriesColumn}" />
         </Grid.ColumnDefinitions>
-        <components:LabeledValueBox Grid.Column="0"
-                                    Label="{Binding ElementName=StructuresValueBoxControl, Path=Label}"
-                                    ValueContent="{Binding ElementName=StructuresValueBoxControl, Path=ValueContent}"
-                                    Unit="{Binding ElementName=StructuresValueBoxControl, Path=Unit}" />
+        <components:LabeledValueBoxRow Grid.Column="0"
+                                       Label="{Binding ElementName=StructuresValueBoxControl, Path=Label}"
+                                       ValueContent="{Binding ElementName=StructuresValueBoxControl, Path=ValueContent}"
+                                       Unit="{Binding ElementName=StructuresValueBoxControl, Path=Unit}" />
     </Grid>
 </UserControl>

@@ -20,10 +20,10 @@
             <ColumnDefinition Width="{StaticResource BoxColumn}" />
             <ColumnDefinition Width="{StaticResource IsTimeSeriesColumn}" />
         </Grid.ColumnDefinitions>
-        <components:LabeledComboBox Grid.Column="0"
-                                    Label="{Binding ElementName=StructuresComboBoxControl, Path=Label}"
-                                    SelectedItem="{Binding ElementName=StructuresComboBoxControl, Path=SelectedItem}"
-                                    ItemsSource="{Binding ElementName=StructuresComboBoxControl,  Path=ItemsSource}"
-                                    ItemTemplate="{Binding ElementName=StructuresComboBoxControl, Path=ItemTemplate}" />
+        <components:LabeledComboBoxRow Grid.Column="0"
+                                       Label="{Binding ElementName=StructuresComboBoxControl, Path=Label}"
+                                       SelectedItem="{Binding ElementName=StructuresComboBoxControl, Path=SelectedItem}"
+                                       ItemsSource="{Binding ElementName=StructuresComboBoxControl,  Path=ItemsSource}"
+                                       ItemTemplate="{Binding ElementName=StructuresComboBoxControl, Path=ItemTemplate}" />
     </Grid>
 </UserControl>

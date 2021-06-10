@@ -28,20 +28,20 @@
             <ColumnDefinition Width="{StaticResource IsTimeSeriesColumn}" />
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
-            <components:LabeledValueBox Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
-                                        ValueContent="{Binding ElementName=LabeledTimeSeriesViewControl, Path=SingleValueContent}"
-                                        Unit="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Unit}"
-                                        Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
-                                                            Path=IsTimeSeries, 
-                                                            Converter={StaticResource InverseBooleanToVisibilityConverter}}"
-                                        VerticalAlignment="Center" />
-            <components:LabeledButton Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
-                                      ButtonLabel="Time Series"
-                                      ButtonCommand="{Binding ElementName=LabeledTimeSeriesViewControl, Path=TimeSeriesCommand}"
-                                      Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
-                                                           Path=IsTimeSeries, 
-                                                           Converter={StaticResource BooleanToVisibilityConverter}}"
-                                      VerticalAlignment="Center" />
+            <components:LabeledValueBoxRow Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
+                                           ValueContent="{Binding ElementName=LabeledTimeSeriesViewControl, Path=SingleValueContent}"
+                                           Unit="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Unit}"
+                                           Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
+                                                               Path=IsTimeSeries, 
+                                                               Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                           VerticalAlignment="Center" />
+            <components:LabeledButtonRow Label="{Binding ElementName=LabeledTimeSeriesViewControl, Path=Label}"
+                                         ButtonLabel="Time Series"
+                                         ButtonCommand="{Binding ElementName=LabeledTimeSeriesViewControl, Path=TimeSeriesCommand}"
+                                         Visibility="{Binding ElementName=LabeledTimeSeriesViewControl,
+                                                              Path=IsTimeSeries, 
+                                                              Converter={StaticResource BooleanToVisibilityConverter}}"
+                                         VerticalAlignment="Center" />
         </StackPanel>
         <CheckBox Grid.Column="1"
                   VerticalAlignment="Center"

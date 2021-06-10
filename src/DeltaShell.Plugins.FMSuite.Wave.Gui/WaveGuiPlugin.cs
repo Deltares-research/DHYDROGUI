@@ -13,16 +13,23 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Gui.Modals.Helpers;
 using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
+using DeltaShell.Plugins.FMSuite.Wave.DataAccess;
 using DeltaShell.Plugins.FMSuite.Wave.DataAccess.Importers;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.ViewModels;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.DomainSpecificDataEditor.ViewModels;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.Enums;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.Helpers;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.ViewModels;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.ViewModels.TimeFrameEditor;
+using DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.Views;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Factories;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.FeatureProviders.Boundaries.Features;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.Layers;
@@ -30,6 +37,7 @@ using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.Wave.Gui.NodePresenters.OutputData;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.OutputData;
+using DeltaShell.Plugins.FMSuite.Wave.TimeFrame.DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -160,26 +168,45 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui
                                                            o => WaveModels.Any(
                                                                m => m.FeatureContainer.ObservationCrossSections.Contains(o)));
 
-            // time points
-            var timePointViewInfo = new ViewInfo<WaveInputFieldData, WaveTimePointEditor>
+            // Time frame editor
+            var timeFrameViewInfo = new ViewInfo<ITimeFrameData, TimeFrameEditorView>()
             {
-                Description = "Time Point Editor",
+                Description = "Time Frame Editor",
+                Image = Common.Gui.Properties.Resources.timers,
                 GetViewName =
-                    (v, o) => "Time Point Editor (" + WaveModels.First(m => Equals(o, m.TimePointData)).Name + ")",
-                AdditionalDataCheck = o => WaveModels.Any(m => Equals(o, m.TimePointData)),
-                AfterCreate = (v, o) =>
+                    (v, o) => $"Time Frame Editor ({WaveModels.First(m => Equals(o, m.TimeFrameData)).Name})",
+                AdditionalDataCheck = o => WaveModels.Any(m => Equals(o, m.TimeFrameData)),
+                AfterCreate = (view, data) =>
                 {
-                    WaveModel model = WaveModels.First(m => Equals(o, m.TimePointData));
-                    v.ImportFileIntoModelDirectory = model.ImportIntoModelDirectory;
+                    WaveModel model = WaveModels.First(m => Equals(data, m.TimeFrameData));
+
+                    var dialogService = new FileDialogService();
+                    var inputFileImporterService = new InputFileImporterService(model);
+                    var userInteractionService = new RequestUserInputService<FileAlreadyExistsChoice>();
+
+                    var importHelper = new TimeFrameEditorFileImportHelper(dialogService,
+                                                                           inputFileImporterService,
+                                                                           userInteractionService);
+
+                    var hydrodynamicsConstantsViewModel = new HydrodynamicsConstantsViewModel(data.HydrodynamicsConstantData);
+                    var windConstantsViewModel = new WindConstantsViewModel(data.WindConstantData);
+                    var windFilesViewModel = new WindFilesViewModel(data.WindFileData,
+                                                                    importHelper);
+
+                    view.DataContext = new TimeFrameEditorViewModel(data,
+                                                                    hydrodynamicsConstantsViewModel,
+                                                                    windConstantsViewModel,
+                                                                    windFilesViewModel);
                 }
             };
-            yield return timePointViewInfo;
-            ViewInfo fromTreeShortcut = ViewInfoWrapper<WaveModelTreeShortcut>.Create(
-                timePointViewInfo, o => o.Value,
-                o => o.Value is WaveInputFieldData && o.ShortCutType == ShortCutType.FeatureSet);
-            fromTreeShortcut.CloseForData = (v, o) => o.Equals(v.Data);
+            yield return timeFrameViewInfo;
 
-            yield return fromTreeShortcut;
+            ViewInfo timeFrameTreeShortcutViewInfo = ViewInfoWrapper<WaveModelTreeShortcut>.Create(
+                timeFrameViewInfo,
+                o => o.Value,
+                o => o.Value is ITimeFrameData && o.ShortCutType == ShortCutType.FeatureSet);
+            timeFrameTreeShortcutViewInfo.CloseForData = (v, o) => o.Equals(v.Data);
+            yield return timeFrameTreeShortcutViewInfo;
 
             // Spatially varying boundary editor
             var boundaryViewInfo = new ViewInfo<IWaveBoundary, WaveBoundaryConditionEditorView>()

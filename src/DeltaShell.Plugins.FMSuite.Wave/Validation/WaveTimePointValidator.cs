@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         {
             waveModel = model;
             issues = new List<ValidationIssue>();
-            timePoints = model.TimePointData.TimePoints;
+            timePoints = model.TimeFrameData.TimePoints.ToList();
 
             ValidateReferenceTime();
             ValidateTimePoints();
@@ -38,9 +38,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 if (hasInvalidTimePoint)
                 {
                     issues.Add(new ValidationIssue(null, ValidationSeverity.Error,
-                                                   Resources
-                                                       .WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time,
-                                                   waveModel.TimePointData));
+                                                   Resources.WaveTimePointValidator_Validate_Model_start_time_precedes_reference_time,
+                                                   waveModel.TimeFrameData));
                 }
             }
         }
@@ -51,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 issues.Add(new ValidationIssue(waveModel, ValidationSeverity.Error,
                                                Resources.WaveTimePointValidator_Validate_No_time_points_defined,
-                                               waveModel.TimePointData));
+                                               waveModel.TimeFrameData));
             }
         }
     }

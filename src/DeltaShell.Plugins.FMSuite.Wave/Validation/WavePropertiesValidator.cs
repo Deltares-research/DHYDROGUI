@@ -6,6 +6,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.Boundaries;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
 
 namespace DeltaShell.Plugins.FMSuite.Wave.Validation
 {
@@ -66,10 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
         private static IEnumerable<ValidationIssue> GetTimeStepTimeIntervalValidationIssues(WaveModel model)
         {
             WaveModelProperty timeStepProperty = model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep);
-            var timeStep = (double) timeStepProperty.Value;
+            var timeStep = (double)timeStepProperty.Value;
 
             WaveModelProperty tScaleProperty = model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeScale);
-            var tScale = (double) tScaleProperty.Value;
+            var tScale = (double)tScaleProperty.Value;
 
             if (timeStep > tScale && timeStepProperty.IsEnabled(model.ModelDefinition.Properties) &&
                 tScaleProperty.IsEnabled(model.ModelDefinition.Properties))
@@ -107,19 +108,20 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
                 yield break;
             }
 
-            IVariable windSpeedValueTimeSeries = waveModel.TimePointData.InputFields.Components.FirstOrDefault(c => c.Name == "Wind Speed");
+            IVariable windSpeedValueTimeSeries = waveModel.TimeFrameData.TimeVaryingData.Components.FirstOrDefault(c => c.Name == "Wind Speed");
 
             WaveModelProperty quadrupletsProperty = waveModel.ModelDefinition.GetModelProperty(KnownWaveCategories.ProcessesCategory, KnownWaveProperties.Quadruplets);
             bool quadrupletsSelected = Convert.ToBoolean(quadrupletsProperty.Value);
 
             if (quadrupletsSelected)
             {
-                if (waveModel.TimePointData.WindDataType == InputFieldDataType.Constant && Math.Abs(waveModel.TimePointData.WindSpeedConstant) <= double.Epsilon)
+                if (waveModel.TimeFrameData.WindInputDataType == WindInputDataType.Constant &&
+                    Math.Abs(waveModel.TimeFrameData.WindConstantData.Speed) <= double.Epsilon)
                 {
                     yield return new ValidationIssue(waveModel, ValidationSeverity.Warning,
                                                      Resources.WavePropertiesValidator_ValidateWindSpeedAndQuadruple_WindSpeed_is_zero_whereas_quadruplets_is_activated_);
                 }
-                else if (waveModel.TimePointData.WindDataType == InputFieldDataType.TimeVarying &&
+                else if (waveModel.TimeFrameData.WindInputDataType == WindInputDataType.TimeVarying &&
                          windSpeedValueTimeSeries != null &&
                          windSpeedValueTimeSeries.Values.Cast<double>()
                                                  .Any(windSpeedValue => Math.Abs(windSpeedValue) < double.Epsilon))

@@ -31,7 +31,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
 
             TransferFeatures(targetDefinition.FeatureContainer, loadedDefinition.FeatureContainer);
             TransferProperties(targetDefinition, loadedDefinition.Properties);
-            TransferTimePointData(targetDefinition.TimePointData, loadedDefinition.TimePointData);
             TransferBoundaryContainer(targetDefinition.BoundaryContainer, loadedDefinition.BoundaryContainer);
         }
 
@@ -40,31 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.ModelDefinition
             targetFeatureContainer.ObservationPoints.AddRange(loadedFeatureContainer.ObservationPoints);
             targetFeatureContainer.ObservationCrossSections.AddRange(loadedFeatureContainer.ObservationCrossSections);
             targetFeatureContainer.Obstacles.AddRange(loadedFeatureContainer.Obstacles);
-        }
-
-        private static void TransferTimePointData(WaveInputFieldData targetTimePointData, WaveInputFieldData loadedTimePointData)
-        {
-            targetTimePointData.HydroDataType = loadedTimePointData.HydroDataType;
-            targetTimePointData.WindDataType = loadedTimePointData.WindDataType;
-            targetTimePointData.WaterLevelConstant = loadedTimePointData.WaterLevelConstant;
-            targetTimePointData.VelocityXConstant = loadedTimePointData.VelocityXConstant;
-            targetTimePointData.VelocityYConstant = loadedTimePointData.VelocityYConstant;
-            targetTimePointData.WindSpeedConstant = loadedTimePointData.WindSpeedConstant;
-            targetTimePointData.WindDirectionConstant = loadedTimePointData.WindDirectionConstant;
-
-            targetTimePointData.InputFields = loadedTimePointData.InputFields;
-
-            TransferMeteoData(targetTimePointData.MeteoData, loadedTimePointData.MeteoData);
-        }
-
-        private static void TransferMeteoData(WaveMeteoData targetMeteoData, WaveMeteoData loadedMeteoData)
-        {
-            targetMeteoData.FileType = loadedMeteoData.FileType;
-            targetMeteoData.XYVectorFilePath = loadedMeteoData.XYVectorFilePath;
-            targetMeteoData.XComponentFilePath = loadedMeteoData.XComponentFilePath;
-            targetMeteoData.YComponentFilePath = loadedMeteoData.YComponentFilePath;
-            targetMeteoData.HasSpiderWeb = loadedMeteoData.HasSpiderWeb;
-            targetMeteoData.SpiderWebFilePath = loadedMeteoData.SpiderWebFilePath;
         }
 
         private static void TransferBoundaryContainer(IBoundaryContainer targetBoundaryContainer, IBoundaryContainer loadedBoundaryContainer)

@@ -40,25 +40,25 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBound
                                                 new PropertyMetadata(PropertyChanged));
 
         public static ChartViewOptions GetChartViewOption(DependencyObject element) =>
-            (ChartViewOptions) element.GetValue(ChartViewOptionProperty);
+            (ChartViewOptions)element.GetValue(ChartViewOptionProperty);
 
         public static void SetChartViewOption(DependencyObject element, ChartViewOptions value) =>
             element.SetValue(ChartViewOptionProperty, value);
 
         public static ChartSeriesType GetChartSeriesType(DependencyObject element) =>
-            (ChartSeriesType) element.GetValue(ChartSeriesTypeProperty);
+            (ChartSeriesType)element.GetValue(ChartSeriesTypeProperty);
 
         public static void SetChartSeriesType(DependencyObject element, ChartSeriesType value) =>
             element.SetValue(ChartSeriesTypeProperty, value);
 
         public static DockStyle GetDock(DependencyObject element) =>
-            (DockStyle) element.GetValue(DockProperty);
+            (DockStyle)element.GetValue(DockProperty);
 
         public static void SetDock(DependencyObject element, DockStyle value) =>
             element.SetValue(DockProperty, value);
 
         public static IEnumerable<IFunction> GetFunctions(DependencyObject element) =>
-            (IEnumerable<IFunction>) element.GetValue(FunctionsProperty);
+            (IEnumerable<IFunction>)element.GetValue(FunctionsProperty);
 
         public static void SetFunctions(DependencyObject element, IEnumerable<IFunction> value) =>
             element.SetValue(FunctionsProperty, value);
@@ -72,22 +72,22 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.Boundaries.Views.WaveBound
 
             if (e.Property == ChartViewOptionProperty)
             {
-                multipleFunctionView.ChartViewOption = (ChartViewOptions) e.NewValue;
+                multipleFunctionView.ChartViewOption = (ChartViewOptions)e.NewValue;
             }
             else if (e.Property == ChartSeriesTypeProperty)
             {
-                multipleFunctionView.ChartSeriesType = (ChartSeriesType) e.NewValue;
+                multipleFunctionView.ChartSeriesType = (ChartSeriesType)e.NewValue;
             }
             else if (e.Property == DockProperty)
             {
-                multipleFunctionView.Dock = (DockStyle) e.NewValue;
+                multipleFunctionView.Dock = (DockStyle)e.NewValue;
             }
             else if (e.Property == FunctionsProperty)
             {
                 // Reset the current content of the MultipleFunctionView, such that is cleared, 
                 // otherwise the e.NewValue is just added to the existing functions.
                 multipleFunctionView.Functions = null;
-                multipleFunctionView.Functions = (IEnumerable<IFunction>) e.NewValue;
+                multipleFunctionView.Functions = (IEnumerable<IFunction>)e.NewValue;
             }
         }
     }

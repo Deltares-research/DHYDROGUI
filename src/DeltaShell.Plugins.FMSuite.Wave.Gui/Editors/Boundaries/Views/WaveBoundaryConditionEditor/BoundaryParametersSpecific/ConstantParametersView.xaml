@@ -14,16 +14,16 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <StackPanel>
-        <components:LabeledValueBox Label="Height:"
+        <components:LabeledValueBoxRow Label="Height:"
                                     ValueContent="{Binding Path=Height}"
                                     Unit="m" />
-        <components:LabeledValueBox Label="Period:"
+        <components:LabeledValueBoxRow Label="Period:"
                                     ValueContent="{Binding Path=Period}"
                                     Unit="s" />
-        <components:LabeledValueBox Label="Direction:"
+        <components:LabeledValueBoxRow Label="Direction:"
                                     ValueContent="{Binding Path=Direction}"
                                     Unit="-" />
-        <components:LabeledValueBox Label="Spreading:"
+        <components:LabeledValueBoxRow Label="Spreading:"
                                     ValueContent="{Binding Path=Spreading}"
                                     Unit="{Binding Path=SpreadingUnit}" />
     </StackPanel>

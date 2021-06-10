@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
 
             ValidationReport report = new WaveModelValidator().Validate(waveModel);
             Assert.AreEqual(0, report.ErrorCount);
-            waveModel.TimePointData.InputFields[waveModel.ModelDefinition.ModelReferenceDateTime] = new[]
+            waveModel.TimeFrameData.TimeVaryingData[waveModel.ModelDefinition.ModelReferenceDateTime] = new[]
             {
                 0,
                 0,
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 0,
                 0
             };
-            waveModel.TimePointData.InputFields[waveModel.ModelDefinition.ModelReferenceDateTime.AddHours(12)] = new[]
+            waveModel.TimeFrameData.TimeVaryingData[waveModel.ModelDefinition.ModelReferenceDateTime.AddHours(12)] = new[]
             {
                 1,
                 1,
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 1,
                 1
             };
-            waveModel.TimePointData.InputFields[waveModel.ModelDefinition.ModelReferenceDateTime.AddHours(24)] = new[]
+            waveModel.TimeFrameData.TimeVaryingData[waveModel.ModelDefinition.ModelReferenceDateTime.AddHours(24)] = new[]
             {
                 2,
                 2,
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests
                 2,
                 2
             };
-            waveModel.TimePointData.InputFields[waveModel.ModelDefinition.ModelReferenceDateTime.AddHours(36)] = new[]
+            waveModel.TimeFrameData.TimeVaryingData[waveModel.ModelDefinition.ModelReferenceDateTime.AddHours(36)] = new[]
             {
                 3,
                 3,

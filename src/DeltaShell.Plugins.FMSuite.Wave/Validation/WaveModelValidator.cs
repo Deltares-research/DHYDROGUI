@@ -24,7 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Validation
             {
                 WaveDomainValidator.Validate(rootObject),
                 WaveTimePointValidator.Validate(rootObject),
-                WaveBoundariesValidator.Validate(rootObject.BoundaryContainer.Boundaries, rootObject.TimePointData.TimePoints.FirstOrDefault()),
+                WaveBoundariesValidator.Validate(rootObject.BoundaryContainer.Boundaries,
+                                                 rootObject.TimeFrameData.TimePoints.FirstOrDefault()),
                 WaveAreaValidator.Validate(rootObject),
                 WaveCouplingValidator.Validate(rootObject),
                 WavePropertiesValidator.Validate(rootObject),

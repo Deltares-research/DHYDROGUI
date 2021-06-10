@@ -45,27 +45,27 @@
 
     <GroupBox Header="Parameters">
         <StackPanel Margin="10" Visibility="{Binding IsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
-            <components:LabeledComboBox Label="Shape:"
+            <components:LabeledComboBoxRow Label="Shape:"
                                         SelectedItem="{Binding Path=ShapeType}"
                                         ItemsSource="{Binding Path=ShapeTypeList}"
                                         ItemTemplate="{StaticResource TypeLabeledComboBoxTemplate}" />
-            <components:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+            <components:LabeledValueBoxRow Visibility="{Binding Path=ShapeType, 
                                                      Converter={StaticResource TypeToVisibilityConverter},
                                                      ConverterParameter={x:Type shapes:JonswapViewShape}}"
                                         Label="Peak Enhancement Factor:"
                                         ValueContent="{Binding Path=Shape.PeakEnhancementFactor}"
                                         Unit="-" />
-            <components:LabeledValueBox Visibility="{Binding Path=ShapeType, 
+            <components:LabeledValueBoxRow Visibility="{Binding Path=ShapeType, 
                                                      Converter={StaticResource TypeToVisibilityConverter},
                                                      ConverterParameter={x:Type shapes:GaussViewShape}}"
                                         Label="Gaussian Spread:"
                                         ValueContent="{Binding Path=Shape.GaussianSpread}"
                                         Unit="-" />
-            <components:LabeledComboBox Label="Period:"
+            <components:LabeledComboBoxRow Label="Period:"
                                         SelectedItem="{Binding Path=PeriodType}"
                                         ItemsSource="{Binding Source={StaticResource PeriodTypes}}"
                                         ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />
-            <components:LabeledComboBox Label="Directional Spreading:"
+            <components:LabeledComboBoxRow Label="Directional Spreading:"
                                         SelectedItem="{Binding Path=DirectionalSpreadingType}"
                                         ItemsSource="{Binding Source={StaticResource SpreadingTypes}}"
                                         ItemTemplate="{StaticResource EnumLabeledComboBoxTemplate}" />

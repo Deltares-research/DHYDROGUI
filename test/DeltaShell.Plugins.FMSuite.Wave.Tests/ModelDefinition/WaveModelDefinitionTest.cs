@@ -15,7 +15,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
         public void ReadModelDefinitionFromMdw()
         {
             string mdwPath = TestHelper.GetTestFilePath(@"wave_timespacevarbnd\tst.mdw");
-            WaveModelDefinition modelDefinition = new MdwFile().Load(mdwPath);
+            MdwFileDTO dto = new MdwFile().Load(mdwPath);
+
+            WaveModelDefinition modelDefinition = dto.WaveModelDefinition;
 
             Assert.AreEqual(6, modelDefinition.ModelSchema.GuiPropertyGroups.Count);
             Assert.AreEqual(6, modelDefinition.ModelSchema.ModelDefinitionCategory.Count);
@@ -36,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             Assert.IsNotNull(propertyBedFriction);
 
             //Check DefaultValueAsString
-            var valueBedFriction = (int) propertyBedFriction.Value;
+            var valueBedFriction = (int)propertyBedFriction.Value;
             string expectedDefaultValue = propertyDefinitionBedFrictionCoef.MultipleDefaultValues[valueBedFriction];
             Assert.AreEqual(expectedDefaultValue, propertyDefinitionBedFrictionCoef.DefaultValueAsString);
 
@@ -58,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
             Assert.IsNotNull(propertySimMode);
 
             //Check DefaultValueAsString
-            var valueBedFriction = (int) propertySimMode.Value;
+            var valueBedFriction = (int)propertySimMode.Value;
             string expectedDefaultValue = propertyDefinitionMaxIter.MultipleDefaultValues[valueBedFriction];
             Assert.AreEqual(expectedDefaultValue, propertyDefinitionMaxIter.DefaultValueAsString);
 
@@ -80,7 +82,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.ModelDefinition
 
             // Then
             Assert.That(waveModelDefinition.Properties, Is.Not.Empty);
-            Assert.That(waveModelDefinition.TimePointData, Is.Not.Null);
             Assert.That(waveModelDefinition.FeatureContainer, Is.Not.Null);
             Assert.That(waveModelDefinition.BoundaryContainer, Is.Not.Null);
         }

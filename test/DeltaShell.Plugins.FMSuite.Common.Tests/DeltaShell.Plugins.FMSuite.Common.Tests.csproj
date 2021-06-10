@@ -184,6 +184,7 @@
     <Compile Include="Gui\FileBasedWindDefinitionViewTest.cs" />
     <Compile Include="Gui\ModelTreeShortcutNodePresenterBaseTest.cs" />
     <Compile Include="Gui\NodePresenters\FMSuiteNodePresenterBaseTest.cs" />
+    <Compile Include="Gui\NotifyPropertyChangedEventPropagatorTest.cs" />
     <Compile Include="Gui\SupportPointListBoxTest.cs" />
     <Compile Include="IO\ApwxwyFileReaderTest.cs" />
     <Compile Include="IO\BackwardCompatibility\DelftIniBackwardsCompatibilityHelperTest.cs" />

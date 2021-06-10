@@ -4,6 +4,7 @@ using DelftTools.Functions;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.Wave.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.Wave.Properties;
+using DeltaShell.Plugins.FMSuite.Wave.TimeFrame;
 using DeltaShell.Plugins.FMSuite.Wave.Validation;
 using NUnit.Framework;
 
@@ -85,8 +86,9 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.SimulationMode).SetValueAsString("non-stationary");
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeScale).SetValueAsString("60");
             model.ModelDefinition.GetModelProperty(KnownWaveCategories.GeneralCategory, KnownWaveProperties.TimeStep).SetValueAsString("10");
-            model.TimePointData.WindDataType = InputFieldDataType.Constant;
-            model.TimePointData.WindSpeedConstant = 10;
+
+            model.TimeFrameData.WindInputDataType = WindInputDataType.Constant;
+            model.TimeFrameData.WindConstantData.Speed = 10;
 
             ValidationReport validationReport = WavePropertiesValidator.Validate(model);
 
@@ -353,8 +355,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             /// <returns> An instance of <see cref="WaveModelForPropertiesValidationBuilder"/>. </returns>
             public WaveModelForPropertiesValidationBuilder WithConstantWindSpeed(double value)
             {
-                waveModel.TimePointData.WindDataType = InputFieldDataType.Constant;
-                waveModel.TimePointData.WindSpeedConstant = value;
+                waveModel.TimeFrameData.WindInputDataType = WindInputDataType.Constant;
+                waveModel.TimeFrameData.WindConstantData.Speed = value;
 
                 return this;
             }
@@ -366,8 +368,8 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Validation
             /// <returns> An instance of <see cref="WaveModelForPropertiesValidationBuilder"/>. </returns>
             public WaveModelForPropertiesValidationBuilder WithWindSpeedTimeSeries(params double[] values)
             {
-                waveModel.TimePointData.WindDataType = InputFieldDataType.TimeVarying;
-                IVariable timeSeriesWindSpeed = waveModel.TimePointData.InputFields.Components.FirstOrDefault(c => c.Name == "Wind Speed");
+                waveModel.TimeFrameData.WindInputDataType = WindInputDataType.TimeVarying;
+                IVariable timeSeriesWindSpeed = waveModel.TimeFrameData.TimeVaryingData.Components.FirstOrDefault(c => c.Name == "Wind Speed");
                 timeSeriesWindSpeed?.Values.AddRange(values);
 
                 return this;
