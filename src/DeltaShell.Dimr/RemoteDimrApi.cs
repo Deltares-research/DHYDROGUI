@@ -49,23 +49,13 @@ namespace DeltaShell.Dimr
             {
                 if (api != null)
                 {
-                    // Issue: SOBEK3-1523
-                    // This try/catch was introduced to handle exceptions that might occur
-                    // when disposing the API, this should be replaced by a check if the api
-                    // thread is still valid, once the framework supports this.
-                    try
+                    if (RemoteInstanceContainer.IsProcessAlive(api))
                     {
                         api.Dispose();
                     }
-                    catch (InvalidOperationException e)
-                    {
-                        Log.Debug(e.Message);
-                    }
-                    finally
-                    {
-                        RemoteInstanceContainer.RemoveInstance(api);
-                        Thread.Sleep(100); // wait for process to truly exit
-                    }
+
+                    RemoteInstanceContainer.RemoveInstance(api);
+                    Thread.Sleep(100); // wait for process to truly exit
                 }
 
                 api = null;
@@ -199,6 +189,8 @@ namespace DeltaShell.Dimr
 
         public void ProcessMessages()
         {
+            if (!RemoteInstanceContainer.IsProcessAlive(api)) return;
+
             string[] infoMsgs = Messages;
             if (infoMsgs.Length > 0 && !(infoMsgs.Length == 1 && infoMsgs[0] == string.Empty))
             {

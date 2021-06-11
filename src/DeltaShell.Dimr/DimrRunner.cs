@@ -62,8 +62,10 @@ namespace DeltaShell.Dimr
             }
             catch (Exception e)
             {
-                HandleException(e);
-                throw;
+                if (!HandleException(e))
+                {
+                    throw;
+                }
             }
         }
 
@@ -102,8 +104,10 @@ namespace DeltaShell.Dimr
             }
             catch (Exception e)
             {
-                HandleException(e);
-                throw;
+                if (!HandleException(e))
+                {
+                    throw;
+                }
             }
         }
 
@@ -125,8 +129,10 @@ namespace DeltaShell.Dimr
             }
             catch (Exception e)
             {
-                HandleException(e);
-                throw;
+                if (!HandleException(e))
+                {
+                    throw;
+                }
             }
         }
 
@@ -235,16 +241,30 @@ namespace DeltaShell.Dimr
                                                    model.Status == ActivityStatus.Done)
                                                   && Api != null;
 
-        private void HandleException(Exception e)
+        private bool HandleException(Exception e)
         {
-            log.ErrorFormat(e.Message);
-            model.Status = ActivityStatus.Failed;
-            if (Api != null)
+            // suppress messages about crashed remote process (log as debug for developers)
+            bool remoteProcessCrash = e is InvalidOperationException ex 
+                                      && ex.Message.Contains("Remote process");
+
+            if (remoteProcessCrash)
             {
-                Api.ProcessMessages();
-                Api.Dispose();
-                Api = null;
+                log.Debug(e.Message);
             }
+
+            var errorMessage = remoteProcessCrash
+                                   ? $"{model.Name} crashed during {model.Status}, please look the validation report and diagnostic/log file."
+                                   : e.Message;
+
+            log.Error(errorMessage);
+
+            model.Status = ActivityStatus.Failed;
+            
+            Api?.ProcessMessages();
+            Api?.Dispose();
+            Api = null;
+
+            return remoteProcessCrash;
         }
 
         private void ValidateExportAndInitialize(bool disconnectOutput)
