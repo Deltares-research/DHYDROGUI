@@ -1,6 +1,6 @@
 ﻿namespace DeltaShell.Sobek.Readers.SobekDataObjects
 {
-    public class SobekRROpenWater
+    public class SobekRROpenWater : ISobekCatchment
     {
         public SobekRROpenWater()
         {

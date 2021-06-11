@@ -97,6 +97,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 ReadAndAddOrUpdateCatchmentArea(catchment, CatchmentType.Hbv);
             }
+            
+            log.DebugFormat("Importing open waters ...");
+            var openWaterReader = new SobekRROpenWaterReader();
+            foreach (var catchment in openWaterReader.Read(GetFilePath(SobekFileNames.SobekRROpenWaterFileName)))
+            {
+                ReadAndAddOrUpdateCatchmentArea(catchment, CatchmentType.OpenWater);
+            }
         }
 
         private void AddOrUpdateRunoffBoundaries()
