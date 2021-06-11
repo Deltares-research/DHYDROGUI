@@ -9,6 +9,7 @@ using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests.Validators
@@ -114,7 +115,7 @@ namespace DelftTools.Hydro.Tests.Validators
         [Test]
         public void ValidateCheckBranchStructureLocationsDiscretizationTest()
         {
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            IHydroNetwork network = GetNetworkWithChannel(100);
             var discretization = new Discretization(){Network = network};
             var channel = network.Channels.First();
             var structure = new Weir("weir1"){Chainage = channel.Length/2-1};
@@ -130,6 +131,28 @@ namespace DelftTools.Hydro.Tests.Validators
             Console.WriteLine(string.Join(Environment.NewLine, report.AllErrors.Select(i => i.Message)));
             Assert.That(report.AllErrors.Count(), Is.EqualTo(1));
             report.AllErrors.Select(i => i.Message).ForEach(m => Assert.That(m,  Contains.Substring($"No grid points defined between structure")));
+        }
+
+        private static IHydroNetwork GetNetworkWithChannel(double length)
+        {
+            var node1 = new HydroNode("node1") {Geometry = new Point(0, 0)};
+            var node2 = new HydroNode("node2") {Geometry = new Point(0, length)};
+            
+            var channel = new Channel("channel", node1, node2)
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(0, length)
+                })
+            };
+            
+            var network = new HydroNetwork();
+            network.Nodes.Add(node1);
+            network.Nodes.Add(node2);
+            network.Branches.Add(channel);
+
+            return network;
         }
     }
 }
