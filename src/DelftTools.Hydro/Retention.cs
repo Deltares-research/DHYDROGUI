@@ -54,9 +54,6 @@ namespace DelftTools.Hydro
         [DisplayName("Street storage area")]
         [DynamicReadOnly]
         public virtual double StreetStorageArea { get; set; }
-
-        public virtual double LevelBL { get; set; }
-
         
         [DisplayName("Street level")]
         [DynamicReadOnly]
@@ -69,7 +66,6 @@ namespace DelftTools.Hydro
             StorageArea = ((Retention) source).StorageArea;
             StreetStorageArea = ((Retention)source).StreetStorageArea;
             BedLevel = ((Retention) source).BedLevel;
-            LevelBL = ((Retention) source).LevelBL;
             StreetLevel = ((Retention)source).StreetLevel;
             Data = (IFunction) ((Retention)source).Data.Clone(true);
         }

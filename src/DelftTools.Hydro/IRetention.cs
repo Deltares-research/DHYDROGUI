@@ -11,7 +11,7 @@ namespace DelftTools.Hydro
         RetentionType Type { get; set; }
         double StorageArea { get; set; }
         double BedLevel { get; set; }
-        double LevelBL { get; set; }
+
         /// <summary>
         /// Storage bed definition
         /// </summary>

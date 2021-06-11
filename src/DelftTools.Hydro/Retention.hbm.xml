@@ -7,7 +7,6 @@
     <property name="StreetStorageArea"/>
     <property name="BedLevel"/>
     <property name="StreetLevel"/>
-    <property name="LevelBL"/>
     <property name="UseTable"/>
     <property name="LongName"/>
     <many-to-one name="Data" class="DelftTools.Functions.Function, DelftTools.Functions" column="data_id" cascade="all" />
