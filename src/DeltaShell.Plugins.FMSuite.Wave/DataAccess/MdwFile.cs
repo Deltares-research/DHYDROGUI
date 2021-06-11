@@ -935,7 +935,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             {
                 case 1:
                     windFileData.FileType = WindDefinitionType.WindXY;
-                    windFileData.XYVectorFilePath = Path.Combine(MdwFilePath, otherFiles[0]);
+                    windFileData.XYVectorFilePath = otherFiles[0];
                     break;
                 case 2:
                     windFileData.FileType = WindDefinitionType.WindXWindY;
@@ -950,7 +950,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
             if (spwFiles.Count == 1)
             {
                 windFileData.HasSpiderWeb = true;
-                windFileData.SpiderWebFilePath = Path.Combine(MdwFilePath, spwFiles[0]);
+                windFileData.SpiderWebFilePath = spwFiles[0];
             }
         }
 

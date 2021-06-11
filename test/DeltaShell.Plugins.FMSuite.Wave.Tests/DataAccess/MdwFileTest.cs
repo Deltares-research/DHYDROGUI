@@ -1203,6 +1203,88 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.DataAccess
             }
         }
 
+        public static IEnumerable<TestCaseData> GetLoadMeteoTestData()
+        {
+
+            var spwOnly = new WaveMeteoData
+            {
+                FileType = WindDefinitionType.SpiderWebGrid,
+                SpiderWebFilePath = "empty.spw",
+            };
+
+            yield return new TestCaseData("spw_only", spwOnly);
+
+            var wndOnly = new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXY,
+                XYVectorFilePath = "empty.wnd",
+            };
+
+            yield return new TestCaseData("wnd_only", wndOnly);
+
+            var wndSpw = new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXY,
+                XYVectorFilePath = "empty.wnd",
+                HasSpiderWeb = true,
+                SpiderWebFilePath = "empty.spw",
+            };
+
+            yield return new TestCaseData("wnd_spw", wndSpw);
+
+            var xyOnly = new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXWindY,
+                XComponentFilePath = "xwind.wnd",
+                YComponentFilePath = "ywind.wnd",
+            };
+
+            yield return new TestCaseData("xy_only", xyOnly);
+
+            var xySpw = new WaveMeteoData
+            {
+                FileType = WindDefinitionType.WindXWindY,
+                XComponentFilePath = "xwind.wnd",
+                YComponentFilePath = "ywind.wnd",
+                HasSpiderWeb = true,
+                SpiderWebFilePath = "empty.spw",
+            };
+
+            yield return new TestCaseData("xy_spw", xySpw);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(GetLoadMeteoTestData))]
+        public void Load_MdwFileWithMeteoData_ReturnsCorrectMeteoData(string subDirectory,
+                                                                      WaveMeteoData expectedFileData)
+        {
+            // Setup
+            string meteoDataBasePath = TestHelper.GetTestFilePath("MdwFile/MeteoFiles");
+            string dataPath = Path.Combine(meteoDataBasePath, subDirectory);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                string localPath = tempDir.CopyDirectoryToTempDirectory(dataPath);
+                string mdwPath = Path.Combine(localPath, "waves.mdw");
+
+                var mdwFile = new MdwFile();
+
+                // Call
+                MdwFileDTO result = mdwFile.Load(mdwPath);
+
+                // Assert
+                WaveMeteoData fileData = result.TimeFrameData.WindFileData;
+
+                Assert.That(fileData.FileType, Is.EqualTo(expectedFileData.FileType));
+                Assert.That(fileData.XYVectorFilePath, Is.EqualTo(expectedFileData.XYVectorFilePath));
+                Assert.That(fileData.XComponentFilePath, Is.EqualTo(expectedFileData.XComponentFilePath));
+                Assert.That(fileData.YComponentFilePath, Is.EqualTo(expectedFileData.YComponentFilePath));
+                Assert.That(fileData.HasSpiderWeb, Is.EqualTo(expectedFileData.HasSpiderWeb));
+                Assert.That(fileData.SpiderWebFilePath, Is.EqualTo(expectedFileData.SpiderWebFilePath));
+            }
+        }
+
         /// <summary>
         /// Method to test by dot Trace. Should be public for setting thresholds.
         /// </summary>
