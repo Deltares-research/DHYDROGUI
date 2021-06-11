@@ -46,10 +46,15 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping
             // since we use rendered geometry - skip candidates and use rendered geometry
             foreach (var layer in StructureLayers)
             {
-                IList dataSourceFeatures = layer?.DataSource?.Features ?? new List<IFeature>();
+                IList dataSourceFeatures = layer?.DataSource?.Features;
+                if (dataSourceFeatures == null) 
+                    continue;
+
                 foreach (IStructure1D structure in dataSourceFeatures)
                 {
-                    var renderer = (StructureRenderer)layer.CustomRenderers.FirstOrDefault();
+                    if (!(layer.CustomRenderers.FirstOrDefault() is StructureRenderer renderer))
+                        continue;
+
                     var renderedGeometry = renderer.GetRenderedFeatureGeometry(structure, layer);
 
                     if (!envelope.Intersects(renderedGeometry.EnvelopeInternal) || Equals(sourceFeature, structure))
