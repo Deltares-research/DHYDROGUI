@@ -32,11 +32,6 @@ namespace DeltaShell.Dimr.Tests
             var mocks = new MockRepository();
             var dimrApi = mocks.StrictMock<IDimrApi>();
 
-            const string msg = "Remote process not available / terminated during call Dispose";
-            dimrApi.Expect(m => m.Dispose())
-                   .Throw(new InvalidOperationException(msg))
-                   .Repeat.Any();
-
             var remoteDimrApi = new RemoteDimrApi();
 
             // clean up api object 
@@ -51,7 +46,7 @@ namespace DeltaShell.Dimr.Tests
 
             mocks.ReplayAll();
             // When
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => remoteDimrApi.Dispose(), msg);
+            remoteDimrApi.Dispose();
 
             // Then
             mocks.VerifyAll();
