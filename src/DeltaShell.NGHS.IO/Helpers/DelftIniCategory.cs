@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.FileReaders;
 using GeoAPI.Geometries;
 using log4net;
@@ -164,6 +165,22 @@ namespace DeltaShell.NGHS.IO.Helpers
         {
             SetProperty(name, value.ToString(format, CultureInfo.InvariantCulture), comment);
         }
+        
+        /// <summary>
+        /// Gets the property with the specified <paramref name="propertyName"/> from this category.
+        /// </summary>
+        /// <param name="propertyName"> The property name to search for. </param>
+        /// <param name="stringComparison"> Optional parameter; the type of comparison used to compare the name strings. </param>
+        /// <returns> If found, the property with the specified <paramref name="propertyName"/>; otherwise, <c>null</c>.</returns>
+        /// <exception cref="InvalidEnumArgumentException">
+        /// Thrown when <paramref name="stringComparison"/> is not defined.
+        /// </exception>
+        public IDelftIniProperty GetProperty(string propertyName, StringComparison stringComparison = StringComparison.InvariantCultureIgnoreCase)
+        {
+            Ensure.IsDefined(stringComparison, nameof(stringComparison));
+            
+            return Properties.FirstOrDefault(p => string.Equals(p.Name, propertyName, stringComparison));
+        }
     }
 
     public interface IDelftIniCategory
@@ -225,7 +242,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
 
             if (iniProperty != null)
-                return (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(iniProperty.Value);
+                return iniProperty.ReadValue<T>();
 
             errorMessage += $"Unable to parse {category.Name} property: {key}{Environment.NewLine}";
             return default(T);
@@ -356,6 +373,25 @@ namespace DeltaShell.NGHS.IO.Helpers
                 }
             }
             return propertyDoubleValues.ToArray();
+        }
+
+        /// <summary>
+        /// Reads the value of the property and converts it to type <typeparamref name="T"/>.
+        /// </summary>
+        /// <param name="property"> The property to read the value from. </param>
+        /// <typeparam name="T"> The converted value type. </typeparam>
+        /// <returns> The converted value. </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="property"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="Exception">
+        /// Thrown when the value of the specified <paramref name="property"/> cannot be converted to type <typeparamref name="T"/>.
+        /// </exception>
+        public static T ReadValue<T>(this IDelftIniProperty property)
+        {
+            Ensure.NotNull(property, nameof(property));
+
+            return (T) TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(property.Value);
         }
     }
     #endregion
