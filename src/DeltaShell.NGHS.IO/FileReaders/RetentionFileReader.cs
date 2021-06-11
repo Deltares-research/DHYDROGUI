@@ -6,13 +6,17 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.Networks;
+using log4net;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.NGHS.IO.FileReaders
 {
     public static class RetentionFileReader
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(RetentionFileReader));
+        
         public static void ReadFile(string retentionFile, IHydroNetwork network)
         {
             if (!File.Exists(retentionFile))
@@ -24,9 +28,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             categories
                 .Skip(1) // skip general section
-                .Where(c => //Only read retentions here
-                    c.Properties.Any(p => p.Name.Equals(RetentionRegion.IsRetention.Key, StringComparison.InvariantCultureIgnoreCase))
-                    && c.ReadProperty<bool>(RetentionRegion.IsRetention.Key))
+                .Where(IsRetention)
                 .Select(c => ReadRetention(network, c))
                 .Where(r => r != null)
                 .ForEach(r =>
@@ -65,18 +67,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     retention.Geometry = new Point(geometryCoordinate);
             }
 
-            var retentionType = category.ReadProperty<string>(RetentionRegion.StorageType.Key);
-            if (Enum.TryParse(retentionType, true, out RetentionType type))
-                retention.Type = type;
-
-            retention.UseTable = category.ReadProperty<int>(RetentionRegion.UseTable.Key) == 1;
-
+            retention.UseTable = category.ReadProperty<int>(RetentionRegion.NumLevels.Key) > 1;
             if (!retention.UseTable)
             {
-                retention.BedLevel = category.ReadProperty<double>(RetentionRegion.BedLevel.Key);
-                retention.StorageArea = category.ReadProperty<double>(RetentionRegion.Area.Key);
-                retention.StreetLevel = category.ReadProperty<double>(RetentionRegion.StreetLevel.Key);
-                retention.StreetStorageArea = category.ReadProperty<double>(RetentionRegion.StreetStorageArea.Key);
+                retention.BedLevel = category.ReadProperty<double>(RetentionRegion.Levels.Key);
+                retention.StorageArea = category.ReadProperty<double>(RetentionRegion.StorageArea.Key);
                 return retention;
             }
 
@@ -103,6 +98,19 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 case "linear": return InterpolationType.Linear;
                 default: return InterpolationType.None;
             }
+        }
+        
+        private static bool IsRetention(DelftIniCategory category)
+        {
+            IDelftIniProperty useTableProperty = category.GetProperty(RetentionRegion.UseTable.Key);
+            if (useTableProperty == null)
+            {
+                log.WarnFormat(Resources.NodeFile_The_category_does_not_contain_property, 
+                               category.Name, category.LineNumber, RetentionRegion.UseTable.Key);
+                return false;
+            }
+
+            return useTableProperty.ReadValue<bool>();
         }
     }
 }

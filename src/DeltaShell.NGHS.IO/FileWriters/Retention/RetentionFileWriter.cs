@@ -31,7 +31,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
 
             definition.AddProperty(RetentionRegion.Id.Key, retention.Name, RetentionRegion.Id.Description);
             definition.AddProperty(RetentionRegion.Name.Key, retention.LongName ?? retention.Name, RetentionRegion.Name.Description);
-            definition.AddProperty(RetentionRegion.IsRetention.Key, "true", RetentionRegion.IsRetention.Description);
 
             definition.AddProperty(RetentionRegion.BranchId.Key, retention.Branch.Name, RetentionRegion.BranchId.Description);
             if (retention.Chainage > 0 && retention.Geometry?.Coordinate != null)
@@ -46,8 +45,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
 
             definition.AddProperty(RetentionRegion.Chainage.Key, retention.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(retention.Chainage), RetentionRegion.Chainage.Description, RetentionRegion.Chainage.Format);
             
-            definition.AddProperty(RetentionRegion.StorageType.Key, retention.Type.ToString(), RetentionRegion.StorageType.Description);
-            definition.AddProperty(RetentionRegion.UseTable.Key, retention.UseTable ? 1 : 0, RetentionRegion.UseTable.Description);
+            definition.AddProperty(RetentionRegion.UseTable.Key, true, RetentionRegion.UseTable.Description);
             if (retention.UseTable)
             {
                 retention.Data.AddStorageTable(definition, retention.Name);
@@ -55,10 +53,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
             }
             else
             {
-                definition.AddProperty(RetentionRegion.BedLevel.Key, retention.BedLevel, RetentionRegion.BedLevel.Description, RetentionRegion.BedLevel.Format);
-                definition.AddProperty(RetentionRegion.Area.Key, retention.StorageArea, RetentionRegion.Area.Description, RetentionRegion.BedLevel.Format);
-                definition.AddProperty(RetentionRegion.StreetLevel.Key, retention.StreetLevel, RetentionRegion.StreetLevel.Description, RetentionRegion.BedLevel.Format);
-                definition.AddProperty(RetentionRegion.StreetStorageArea.Key, retention.StreetStorageArea, RetentionRegion.StreetStorageArea.Description, RetentionRegion.BedLevel.Format);
+                definition.AddProperty(RetentionRegion.NumLevels, 1);
+                definition.AddProperty(RetentionRegion.Levels, retention.BedLevel);
+                definition.AddProperty(RetentionRegion.StorageArea, retention.StorageArea);
+                definition.AddProperty(RetentionRegion.Interpolate, "block");
             }
 
 

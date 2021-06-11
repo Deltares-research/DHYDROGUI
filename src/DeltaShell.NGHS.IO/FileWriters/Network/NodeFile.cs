@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Functions.Generic;
@@ -9,6 +8,7 @@ using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Network
@@ -85,13 +85,11 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
             return categories
                 .Skip(1) // skip version info
-                .Where(category => //Don't read retentions here
-                    !(category.Properties.Any(p => string.Equals(p.Name, RetentionRegion.IsRetention.Key, StringComparison.InvariantCultureIgnoreCase)) 
-                      && category.ReadProperty<bool>(RetentionRegion.IsRetention)))
+                .Where(IsManHole)
                 .Select(category => CreateCompartmentProperties(filePath, category))
                 .ToList();
         }
-
+        
         private static CompartmentProperties CreateCompartmentProperties(string filePath, DelftIniCategory category)
         {
             var properties = new CompartmentProperties
@@ -149,6 +147,19 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 case "linear": return InterpolationType.Linear;
                 default:       return InterpolationType.None;
             }
+        }
+        
+        private static bool IsManHole(DelftIniCategory category)
+        {
+            IDelftIniProperty useTableProperty = category.GetProperty(RetentionRegion.UseTable.Key);
+            if (useTableProperty == null)
+            {
+                log.WarnFormat(Resources.NodeFile_The_category_does_not_contain_property, 
+                               category.Name, category.LineNumber, RetentionRegion.UseTable.Key);
+                return false;
+            }
+
+            return !useTableProperty.ReadValue<bool>();
         }
     }
 }

@@ -46,11 +46,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             const string aRetentionArea = "A retention area";
             var retentions = new List<IRetention>()
             {
-                new Retention(){Name = "1", LongName = aRetentionArea, Branch = network.Branches.ElementAt(0), Chainage = network.Branches.ElementAt(0).Length/2, Type = RetentionType.Reservoir, UseTable = false, BedLevel = 1,StorageArea = 10,StreetLevel = 2,StreetStorageArea = 100},
-                new Retention(){Name = "2", LongName = aRetentionArea, Branch = network.Branches.ElementAt(1), Chainage = network.Branches.ElementAt(1).Length/3, Type = RetentionType.Closed, UseTable = false, BedLevel = 1,StorageArea = 10,StreetLevel = 2,StreetStorageArea = 100},
-                new Retention(){Name = "3", LongName = aRetentionArea, Branch = network.Branches.ElementAt(2), Chainage = network.Branches.ElementAt(2).Length/4, Type = RetentionType.Loss, UseTable = false, BedLevel = 1,StorageArea = 10,StreetLevel = 2,StreetStorageArea = 100},
-                new Retention(){Name = "4", LongName = aRetentionArea, Branch = network.Branches.ElementAt(3), Chainage = network.Branches.ElementAt(3).Length/5, Type = RetentionType.Reservoir, UseTable = true, Data = data},
-                new Retention(){Name = "5", LongName = aRetentionArea, Branch = network.Branches.ElementAt(4), Chainage = network.Branches.ElementAt(4).Length/6, Type = RetentionType.Closed, UseTable = true, Data = data2},
+                new Retention(){Name = "1", LongName = aRetentionArea, Branch = network.Branches.ElementAt(0), Chainage = network.Branches.ElementAt(0).Length/2, UseTable = false, BedLevel = 1,StorageArea = 10},
+                new Retention(){Name = "2", LongName = aRetentionArea, Branch = network.Branches.ElementAt(1), Chainage = network.Branches.ElementAt(1).Length/3, UseTable = false, BedLevel = 1,StorageArea = 10},
+                new Retention(){Name = "3", LongName = aRetentionArea, Branch = network.Branches.ElementAt(2), Chainage = network.Branches.ElementAt(2).Length/4, UseTable = false, BedLevel = 1,StorageArea = 10},
+                new Retention(){Name = "4", LongName = aRetentionArea, Branch = network.Branches.ElementAt(3), Chainage = network.Branches.ElementAt(3).Length/5, UseTable = true, Data = data},
+                new Retention(){Name = "5", LongName = aRetentionArea, Branch = network.Branches.ElementAt(4), Chainage = network.Branches.ElementAt(4).Length/6, UseTable = true, Data = data2},
             };
             RetentionFileWriter.WriteFile(FileWriterTestHelper.ModelFileNames.Retention, retentions);
             var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Retention);
@@ -70,23 +70,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             var chainage = retention.ReadProperty<double>(RetentionRegion.Chainage.Key);
             Assert.AreEqual(network.Branches.ElementAt(0).Length /2, chainage, 0.1); // hmm double compare!!
             
-            var type = retention.ReadProperty<RetentionType>(RetentionRegion.StorageType.Key);
-            Assert.AreEqual(RetentionType.Reservoir, type);
-            
-            var useTable = retention.ReadProperty<int>(RetentionRegion.UseTable.Key);
-            Assert.AreEqual(0, useTable);
+            var useTable = retention.ReadProperty<bool>(RetentionRegion.UseTable.Key);
+            Assert.AreEqual(true, useTable);
 
-            var bedLevel = retention.ReadProperty<double>(RetentionRegion.BedLevel.Key);
-            Assert.AreEqual(1, bedLevel, 0.1); // hmm double compare!!
+            var level = retention.ReadProperty<double>(RetentionRegion.Levels.Key);
+            Assert.AreEqual(1, level, 0.1); // hmm double compare!!
             
-            var storageArea = retention.ReadProperty<double>(RetentionRegion.Area.Key);
+            var storageArea = retention.ReadProperty<double>(RetentionRegion.StorageArea.Key);
             Assert.AreEqual(10, storageArea, 0.1); // hmm double compare!!
-            
-            var streetLevel = retention.ReadProperty<double>(RetentionRegion.StreetLevel.Key);
-            Assert.AreEqual(2, streetLevel, 0.1); // hmm double compare!!
-            
-            var streetStorageArea = retention.ReadProperty<double>(RetentionRegion.StreetStorageArea.Key);
-            Assert.AreEqual(100, streetStorageArea, 0.1); // hmm double compare!!
 
             retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(1);
             name = retention.ReadProperty<string>(RetentionRegion.Id.Key);
@@ -100,24 +91,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             chainage = retention.ReadProperty<double>(RetentionRegion.Chainage.Key);
             Assert.AreEqual(network.Branches.ElementAt(1).Length / 3, chainage, 0.1); // hmm double compare!!
+            
+            useTable = retention.ReadProperty<bool>(RetentionRegion.UseTable.Key);
+            Assert.AreEqual(true, useTable);
 
-            type = retention.ReadProperty<RetentionType>(RetentionRegion.StorageType.Key);
-            Assert.AreEqual(RetentionType.Closed, type);
+            level = retention.ReadProperty<double>(RetentionRegion.Levels.Key);
+            Assert.AreEqual(1, level, 0.1); // hmm double compare!!
 
-            useTable = retention.ReadProperty<int>(RetentionRegion.UseTable.Key);
-            Assert.AreEqual(0, useTable);
-
-            bedLevel = retention.ReadProperty<double>(RetentionRegion.BedLevel.Key);
-            Assert.AreEqual(1, bedLevel, 0.1); // hmm double compare!!
-
-            storageArea = retention.ReadProperty<double>(RetentionRegion.Area.Key);
+            storageArea = retention.ReadProperty<double>(RetentionRegion.StorageArea.Key);
             Assert.AreEqual(10, storageArea, 0.1); // hmm double compare!!
-
-            streetLevel = retention.ReadProperty<double>(RetentionRegion.StreetLevel.Key);
-            Assert.AreEqual(2, streetLevel, 0.1); // hmm double compare!!
-
-            streetStorageArea = retention.ReadProperty<double>(RetentionRegion.StreetStorageArea.Key);
-            Assert.AreEqual(100, streetStorageArea, 0.1); // hmm double compare!!
             
             retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(2);
             name = retention.ReadProperty<string>(RetentionRegion.Id.Key);
@@ -131,24 +113,15 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             chainage = retention.ReadProperty<double>(RetentionRegion.Chainage.Key);
             Assert.AreEqual(network.Branches.ElementAt(2).Length / 4, chainage, 0.1); // hmm double compare!!
+            
+            useTable = retention.ReadProperty<bool>(RetentionRegion.UseTable.Key);
+            Assert.AreEqual(true, useTable);
 
-            type = retention.ReadProperty<RetentionType>(RetentionRegion.StorageType.Key);
-            Assert.AreEqual(RetentionType.Loss, type);
+            level = retention.ReadProperty<double>(RetentionRegion.Levels.Key);
+            Assert.AreEqual(1, level, 0.1); // hmm double compare!!
 
-            useTable = retention.ReadProperty<int>(RetentionRegion.UseTable.Key);
-            Assert.AreEqual(0, useTable);
-
-            bedLevel = retention.ReadProperty<double>(RetentionRegion.BedLevel.Key);
-            Assert.AreEqual(1, bedLevel, 0.1); // hmm double compare!!
-
-            storageArea = retention.ReadProperty<double>(RetentionRegion.Area.Key);
+            storageArea = retention.ReadProperty<double>(RetentionRegion.StorageArea.Key);
             Assert.AreEqual(10, storageArea, 0.1); // hmm double compare!!
-
-            streetLevel = retention.ReadProperty<double>(RetentionRegion.StreetLevel.Key);
-            Assert.AreEqual(2, streetLevel, 0.1); // hmm double compare!!
-
-            streetStorageArea = retention.ReadProperty<double>(RetentionRegion.StreetStorageArea.Key);
-            Assert.AreEqual(100, streetStorageArea, 0.1); // hmm double compare!!
             
             retention = categories.Where(c => c.Name == RetentionRegion.Header).ElementAt(3);
             name = retention.ReadProperty<string>(RetentionRegion.Id.Key);
@@ -162,12 +135,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             chainage = retention.ReadProperty<double>(RetentionRegion.Chainage.Key);
             Assert.AreEqual(network.Branches.ElementAt(3).Length / 5, chainage, 0.1); // hmm double compare!!
-
-            type = retention.ReadProperty<RetentionType>(RetentionRegion.StorageType.Key);
-            Assert.AreEqual(RetentionType.Reservoir, type);
-
-            useTable = retention.ReadProperty<int>(RetentionRegion.UseTable.Key);
-            Assert.AreEqual(1, useTable);
+            
+            useTable = retention.ReadProperty<bool>(RetentionRegion.UseTable.Key);
+            Assert.AreEqual(true, useTable);
             
             var numLevels = retention.ReadProperty<int>(RetentionRegion.NumLevels.Key);
             Assert.AreEqual(3, numLevels);
@@ -199,12 +169,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
 
             chainage = retention.ReadProperty<double>(RetentionRegion.Chainage.Key);
             Assert.AreEqual(network.Branches.ElementAt(4).Length / 6, chainage, 0.1); // hmm double compare!!
-
-            type = retention.ReadProperty<RetentionType>(RetentionRegion.StorageType.Key);
-            Assert.AreEqual(RetentionType.Closed, type);
-
-            useTable = retention.ReadProperty<int>(RetentionRegion.UseTable.Key);
-            Assert.AreEqual(1, useTable);
+            
+            useTable = retention.ReadProperty<bool>(RetentionRegion.UseTable.Key);
+            Assert.AreEqual(true, useTable);
             
             numLevels = retention.ReadProperty<int>(RetentionRegion.NumLevels.Key);
             Assert.AreEqual(3, numLevels);

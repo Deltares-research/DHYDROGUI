@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -161,7 +161,16 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filling the table of the Q or H function failed!.
+        ///   Looks up a localized string similar to The category {0} on line {1} does not contain the {2} property..
+        /// </summary>
+        public static string NodeFile_The_category_does_not_contain_property {
+            get {
+                return ResourceManager.GetString("NodeFile_The_category_does_not_contain_property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filling the table of the Q or H variable failed!.
         /// </summary>
         public static string RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed_ {
             get {
@@ -171,7 +180,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Filling the table of the Q or H function failed, values count doesn&apos;t match the defined levels count!.
+        ///   Looks up a localized string similar to Filling the table of the Q or H variable failed, values count doesn&apos;t match the defined levels count!.
         /// </summary>
         public static string RoughnessDataFileReader_FillFunctionWithTableData_Filling_the_table_of_the_Q_or_H_function_failed__values_count_doesn_t_match_the_defined_levels_count_ {
             get {
@@ -191,7 +200,7 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couldn&apos;t read roughness section with a function type of : {0}.
+        ///   Looks up a localized string similar to Couldn&apos;t read roughness section with a variable type of : {0}.
         /// </summary>
         public static string RoughnessDataFileReader_ReadDefinitionData_Couldn_t_read_roughness_section_with_a_function_type_of____0_ {
             get {

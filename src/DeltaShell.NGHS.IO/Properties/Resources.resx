@@ -381,4 +381,7 @@
   <data name="degreeCelcius" xml:space="preserve">
     <value>°C</value>
   </data>
+  <data name="NodeFile_The_category_does_not_contain_property" xml:space="preserve">
+    <value>The category {0} on line {1} does not contain the {2} property.</value>
+  </data>
 </root>
