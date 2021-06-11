@@ -74,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         private static bool UsesTimeSeries(RtcBaseObject rtcObject)
         {
             if (rtcObject is IntervalRule intervalRule &&
-                intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Signal)
+                intervalRule.SetPointType == IntervalRule.IntervalRuleSetPointType.Signal)
             {
                 return false;
             }

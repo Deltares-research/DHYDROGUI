@@ -611,7 +611,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             condition.TrueOutputs.Add(intervalRule);
             condition.FalseOutputs.Add(intervalRule);
             SetUpLookupSignalForIntervalRule();
-            intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Signal;
+            intervalRule.SetPointType = IntervalRule.IntervalRuleSetPointType.Signal;
             var controlGroupList = new List<ControlGroup> {controlGroup};
 
             // When
@@ -630,7 +630,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             condition.TrueOutputs.Add(intervalRule);
             condition.FalseOutputs.Add(intervalRule);
             SetUpLookupSignalForIntervalRule();
-            intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Signal;
+            intervalRule.SetPointType = IntervalRule.IntervalRuleSetPointType.Signal;
             var controlGroupList = new List<ControlGroup> {controlGroup};
 
             // When
@@ -657,16 +657,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
 
         [Test]
         [Category(TestCategory.Integration)]
-        [Category("Quarantine")]
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Variable, 3)]
-        [TestCase(IntervalRule.IntervalRuleIntervalType.Fixed, 6)]
-        public void GivenAnIntervalRuleWithAVariableOrFixedSetPoint_WhenAskingForTimeSeriesFile_ThenThisFileShouldBeCreatedWithOneTimeSerie(IntervalRule.IntervalRuleIntervalType intervalRuleIntervalType, int expectedValueInTimeSeriesFile)
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Variable, 3)]
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Fixed, 6)]
+        public void GivenAnIntervalRuleWithAVariableOrFixedSetPoint_WhenAskingForTimeSeriesFile_ThenThisFileShouldBeCreatedWithOneTimeSerie(IntervalRule.IntervalRuleSetPointType intervalRuleSetPointType, int expectedValueInTimeSeriesFile)
         {
             // Given
             SetUpIntervalRule();
             condition.TrueOutputs.Add(intervalRule);
             condition.FalseOutputs.Add(intervalRule);
-            intervalRule.IntervalType = intervalRuleIntervalType;
+            intervalRule.SetPointType = intervalRuleSetPointType;
             var controlGroupList = new List<ControlGroup> {controlGroup};
 
             // When

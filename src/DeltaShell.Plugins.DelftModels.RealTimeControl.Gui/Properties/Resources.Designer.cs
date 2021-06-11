@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -606,6 +606,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interval type.
+        /// </summary>
+        internal static string IntervalType {
+            get {
+                return ResourceManager.GetString("IntervalType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interval type to use (constant, time series).
+        /// </summary>
+        internal static string IntervalType_Description {
+            get {
+                return ResourceManager.GetString("IntervalType_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lookup Signal.
         /// </summary>
         internal static string LookupSignalProperties_DisplayName {
@@ -1126,20 +1144,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Setpoint mode.
+        ///   Looks up a localized string similar to Setpoint type.
         /// </summary>
-        internal static string SetpointMode {
+        internal static string Setpoint_Type {
             get {
-                return ResourceManager.GetString("SetpointMode", resourceCulture);
+                return ResourceManager.GetString("Setpoint_Type", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Setpoint mode to use (constant, signal, time series).
+        ///   Looks up a localized string similar to Setpoint type to use (constant, time series, signal).
         /// </summary>
-        internal static string SetpointMode_Description {
+        internal static string SetpointType_Description {
             get {
-                return ResourceManager.GetString("SetpointMode_Description", resourceCulture);
+                return ResourceManager.GetString("SetpointType_Description", resourceCulture);
             }
         }
         

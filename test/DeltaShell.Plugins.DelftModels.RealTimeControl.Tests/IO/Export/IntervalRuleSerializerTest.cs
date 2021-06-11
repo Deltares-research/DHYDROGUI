@@ -76,11 +76,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
         }
 
         [Test]
-        [Category("Quarantine")]
         public void GivenAnIntervalRuleWithSignalAsSetPoint_WhenCallingTheTimeSeries_ThenAnExceptionShouldBeThrown()
         {
             IntervalRule intervalRule = CreateIntervalRule();
-            intervalRule.IntervalType = IntervalRule.IntervalRuleIntervalType.Signal;
+            intervalRule.SetPointType = IntervalRule.IntervalRuleSetPointType.Signal;
 
             DateTime start = DateTime.Now;
             DateTime stop = start.Add(new TimeSpan(3, 0, 0));

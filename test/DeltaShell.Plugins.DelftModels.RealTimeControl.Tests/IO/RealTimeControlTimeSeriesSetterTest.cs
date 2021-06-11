@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         {
             // Given
             List<TimeSeriesComplexType> timeSeriesElements = CreateTimeSeriesElementList(RtcXmlTag.IntervalRule, 2, 2);
-            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleIntervalType.Fixed);
+            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleSetPointType.Fixed);
 
             // When
             timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             var timeSeriesElements = new List<TimeSeriesComplexType> {new TimeSeriesComplexType {header = new HeaderComplexType {locationId = locationId}}};
 
-            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleIntervalType.Fixed);
+            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleSetPointType.Fixed);
 
             // When
             timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
@@ -163,7 +163,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
             var timeSeriesElements = new List<TimeSeriesComplexType> {new TimeSeriesComplexType {header = new HeaderComplexType {locationId = locationId}}};
 
-            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleIntervalType.Signal);
+            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleSetPointType.Signal);
 
             // When
             timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
@@ -300,9 +300,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         private static ControlGroup CreateControlGroupWithAnIntervalRule(
-            IntervalRule.IntervalRuleIntervalType intervalType)
+            IntervalRule.IntervalRuleSetPointType intervalType)
         {
-            var intervalRule = new IntervalRule(componentName) {IntervalType = intervalType};
+            var intervalRule = new IntervalRule(componentName) {SetPointType = intervalType};
             var controlGroup = new ControlGroup {Name = controlGroupName};
             controlGroup.Rules.Add(intervalRule);
             Assert.AreEqual(0, intervalRule.TimeSeries.GetValues().Count,

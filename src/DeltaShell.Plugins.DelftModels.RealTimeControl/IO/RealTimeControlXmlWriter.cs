@@ -568,7 +568,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                     import.Add(serializer.OutputAsInputToDataConfigXml(Fns));
 
                     if (ruleBase is IntervalRule intervalRule &&
-                        intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Signal)
+                        intervalRule.SetPointType == IntervalRule.IntervalRuleSetPointType.Signal)
                     {
                         continue;
                     }
@@ -757,7 +757,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                         continue;
                     }
 
-                    if (ruleBase is IntervalRule intervalRule && intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Signal)
+                    if (ruleBase is IntervalRule intervalRule && intervalRule.SetPointType == IntervalRule.IntervalRuleSetPointType.Signal)
                     {
                         Log.WarnFormat(Resources.RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_IntervalRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_Signal, intervalRule.Name);
                         continue;

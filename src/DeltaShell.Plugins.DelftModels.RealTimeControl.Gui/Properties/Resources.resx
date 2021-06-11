@@ -478,11 +478,17 @@
   <data name="Category_Limits" xml:space="preserve">
     <value>Limits</value>
   </data>
-  <data name="SetpointMode" xml:space="preserve">
-    <value>Setpoint mode</value>
+  <data name="Setpoint_Type" xml:space="preserve">
+    <value>Setpoint type</value>
   </data>
-  <data name="SetpointMode_Description" xml:space="preserve">
-    <value>Setpoint mode to use (constant, signal, time series)</value>
+  <data name="SetpointType_Description" xml:space="preserve">
+    <value>Setpoint type to use (constant, time series, signal)</value>
+  </data>
+  <data name="IntervalType" xml:space="preserve">
+    <value>Interval type</value>
+  </data>
+  <data name="IntervalType_Description" xml:space="preserve">
+    <value>Interval type to use (constant, time series)</value>
   </data>
   <data name="RelativeTimeRuleProperties_MinimumPeriod_Description" xml:space="preserve">
     <value>Minimum period in seconds between two active periods of the time controller</value>

@@ -34,14 +34,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         public enum IntervalRuleIntervalType
         {
             Fixed = 0,
-            Variable = 1,
-            Signal = 2
+            Variable = 1
         }
 
         public enum IntervalRuleSetPointType
         {
             Fixed = 0,
-            Variable = 1
+            Variable = 1,
+            Signal = 2
         }
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(IntervalRule));
@@ -177,7 +177,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override bool IsLinkedFromSignal()
         {
-            return IntervalType == IntervalRuleIntervalType.Signal;
+            return SetPointType == IntervalRuleSetPointType.Signal;
         }
 
         public override object Clone()

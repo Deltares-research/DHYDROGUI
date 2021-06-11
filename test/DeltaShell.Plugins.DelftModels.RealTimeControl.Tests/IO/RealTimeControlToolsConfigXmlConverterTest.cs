@@ -346,17 +346,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         [TestCase(ItemChoiceType6.settingMaxStep, Item1ChoiceType3.deadbandSetpointAbsolute,
-                  IntervalRule.IntervalRuleIntervalType.Fixed, IntervalRule.IntervalRuleDeadBandType.Fixed, false)]
+                  IntervalRule.IntervalRuleSetPointType.Fixed, IntervalRule.IntervalRuleDeadBandType.Fixed, false)]
         [TestCase(ItemChoiceType6.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
-                  IntervalRule.IntervalRuleIntervalType.Variable, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
+                  IntervalRule.IntervalRuleSetPointType.Variable, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
                   false)]
         [TestCase(ItemChoiceType6.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
-                  IntervalRule.IntervalRuleIntervalType.Signal, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
+                  IntervalRule.IntervalRuleSetPointType.Signal, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
                   true)]
         public void ConvertToDataAccessObjects_IntervalRule_CorrectResultIsReturned(
             ItemChoiceType6 intervalType,
             Item1ChoiceType3 deadBandType,
-            IntervalRule.IntervalRuleIntervalType expectedIntervalType,
+            IntervalRule.IntervalRuleSetPointType expectedSetPointType,
             IntervalRule.IntervalRuleDeadBandType expectedDeadBandType,
             bool signalAsSetpoint)
         {
@@ -379,7 +379,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
             var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
             Assert.That(ruleObj, Is.Not.Null);
-            AssertIntervalRuleValidity(ruleObj.Object, expectedIntervalType, expectedDeadBandType);
+            AssertIntervalRuleValidity(ruleObj.Object, expectedSetPointType, expectedDeadBandType);
         }
 
         [TestCase(interpolationOptionEnumStringType.LINEAR, interpolationOptionEnumStringType.LINEAR,
@@ -776,7 +776,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         private void AssertIntervalRuleValidity(RuleBase rule,
-                                                IntervalRule.IntervalRuleIntervalType expectedIntervalType,
+                                                IntervalRule.IntervalRuleSetPointType expectedSetPointType,
                                                 IntervalRule.IntervalRuleDeadBandType expectedDeadBandType)
         {
             var intervalRule = rule as IntervalRule;
@@ -787,15 +787,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                             $"Interval rule: settings below was expected to be {1d}.");
             Assert.AreEqual(2d, setting.Above,
                             $"Interval rule: settings above was expected to be {2d}.");
-            Assert.AreEqual(expectedIntervalType, intervalRule.IntervalType,
-                            $"Interval rule: interval type was expected to be {expectedIntervalType.ToString()}.");
+            Assert.AreEqual(expectedSetPointType, intervalRule.SetPointType,
+                            $"Interval rule: setpoint type was expected to be {expectedSetPointType.ToString()}.");
             Assert.AreEqual(expectedDeadBandType, intervalRule.DeadBandType,
                             $"Interval rule: dead band type was expected to be {expectedDeadBandType.ToString()}.");
             Assert.AreEqual(4d, intervalRule.DeadbandAroundSetpoint,
                             $"Interval rule: dead band around set point was expected to be {4d}.");
 
             var expectedIntervalValue = 3d;
-            if (expectedIntervalType == IntervalRule.IntervalRuleIntervalType.Fixed)
+            if (expectedSetPointType == IntervalRule.IntervalRuleSetPointType.Fixed)
             {
                 Assert.AreEqual(expectedIntervalValue, intervalRule.FixedInterval,
                                 $"Interval rule: fixed interval was expected to be {expectedIntervalValue}.");

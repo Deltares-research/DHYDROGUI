@@ -41,13 +41,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 
         [ExcludeFromCodeCoverage]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
-        [ResourcesDisplayName(typeof(Resources), "SetpointMode")]
-        [ResourcesDescription(typeof(Resources), "SetpointMode_Description")]
+        [ResourcesDisplayName(typeof(Resources), "Setpoint_Type")]
+        [ResourcesDescription(typeof(Resources), "Setpoint_Type_Description")]
         [PropertyOrder(5)]
-        public IntervalRule.IntervalRuleIntervalType IntervalType
+        public IntervalRule.IntervalRuleSetPointType SetPointType
         {
-            get => data.IntervalType;
-            set => data.IntervalType = value;
+            get => data.SetPointType;
+            set => data.SetPointType = value;
         }
 
         [ExcludeFromCodeCoverage]
@@ -75,11 +75,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         }
 
         [ExcludeFromCodeCoverage]
+        [ResourcesCategory(typeof(Resources), "Category_Limits")]
+        [ResourcesDisplayName(typeof(Resources), "IntervalType")]
+        [ResourcesDescription(typeof(Resources), "IntervalType_Description")]
+        [PropertyOrder(8)]
+        public IntervalRule.IntervalRuleIntervalType IntervalType
+        {
+            get => data.IntervalType;
+            set => data.IntervalType = value;
+        }
+
+        [ExcludeFromCodeCoverage]
         [DynamicReadOnly]
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_MaxSpeed_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_MaxSpeed_Description")]
-        [PropertyOrder(8)]
+        [PropertyOrder(9)]
         public double MaxSpeed
         {
             get => data.Setting.MaxSpeed;
@@ -91,7 +102,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_FixedInterval_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_FixedInterval_Description")]
-        [PropertyOrder(9)]
+        [PropertyOrder(10)]
         public double FixedInterval
         {
             get => data.FixedInterval;
@@ -102,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_AboutOutput_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_Above_Description")]
-        [PropertyOrder(10)]
+        [PropertyOrder(11)]
         public double Above
         {
             get => data.Setting.Above;
@@ -113,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_Below_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_Below_Description")]
-        [PropertyOrder(11)]
+        [PropertyOrder(12)]
         public double Below
         {
             get => data.Setting.Below;
@@ -124,7 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_DeadbankAroundSetpoint_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_DeadbankAroundSetpoint_Description")]
-        [PropertyOrder(12)]
+        [PropertyOrder(13)]
         public double DeadbandAroundSetpoint
         {
             get => data.DeadbandAroundSetpoint;
@@ -135,7 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesCategory(typeof(Resources), "Category_Limits")]
         [ResourcesDisplayName(typeof(Resources), "IntervalRuleProperties_DeadbandType_DisplayName")]
         [ResourcesDescription(typeof(Resources), "IntervalRuleProperties_DeadbandType_Description")]
-        [PropertyOrder(13)]
+        [PropertyOrder(14)]
         public IntervalRule.IntervalRuleDeadBandType DeadBandType
         {
             get => data.DeadBandType;
@@ -148,13 +159,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             switch (propertyName)
             {
                 case "ConstantSetpoint":
-                    return IntervalType != IntervalRule.IntervalRuleIntervalType.Fixed;
+                    return SetPointType != IntervalRule.IntervalRuleSetPointType.Fixed;
                 case "TimeSeries":
-                    return IntervalType != IntervalRule.IntervalRuleIntervalType.Variable;
+                    return SetPointType != IntervalRule.IntervalRuleSetPointType.Variable;
                 case "Interpolation":
-                    return IntervalType != IntervalRule.IntervalRuleIntervalType.Variable;
+                    return SetPointType != IntervalRule.IntervalRuleSetPointType.Variable;
                 case "Extrapolation":
-                    return IntervalType != IntervalRule.IntervalRuleIntervalType.Variable;
+                    return SetPointType != IntervalRule.IntervalRuleSetPointType.Variable;
                 case "FixedInterval":
                     return IntervalType != IntervalRule.IntervalRuleIntervalType.Fixed;
                 case "MaxSpeed":

@@ -194,6 +194,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
         {
             string ruleName = RealTimeControlXmlReaderHelper.GetComponentNameFromElementId(intervalRuleElement.id);
             IntervalRule.IntervalRuleIntervalType intervalType = GetIntervalType(intervalRuleElement.ItemElementName);
+            IntervalRule.IntervalRuleSetPointType setPointType = GetSetPointType(intervalRuleElement.input.setpoint);
+
 
             var rule = new IntervalRule(ruleName)
             {
@@ -202,6 +204,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                     Below = intervalRuleElement.settingBelow,
                     Above = intervalRuleElement.settingAbove
                 },
+                SetPointType = setPointType,
                 IntervalType = intervalType,
                 DeadBandType = GetDeadBandSetPointType(intervalRuleElement.Item1ElementName),
                 DeadbandAroundSetpoint = intervalRuleElement.Item1
@@ -216,12 +219,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             {
                 rule.Setting.MaxSpeed = interval;
 
-                string setPoint = intervalRuleElement.input.setpoint;
-
-                if (setPoint?.Contains(RtcXmlTag.Signal) == true)
-                {
-                    rule.IntervalType = IntervalRule.IntervalRuleIntervalType.Signal;
-                }
             }
 
             return rule;
@@ -339,6 +336,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                        : IntervalRule.IntervalRuleIntervalType.Variable;
         }
 
+        private static IntervalRule.IntervalRuleSetPointType GetSetPointType(string setPoint)
+        {
+            if (setPoint?.Contains(RtcXmlTag.Signal) == true)
+            {
+                return IntervalRule.IntervalRuleSetPointType.Signal;
+            }
+
+            return IntervalRule.IntervalRuleSetPointType.Variable;
+        }
         private static ExtrapolationType GetExtrapolationType(interpolationOptionEnumStringType extrapolationOption)
         {
             return extrapolationOption == interpolationOptionEnumStringType.BLOCK
