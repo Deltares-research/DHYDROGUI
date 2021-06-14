@@ -175,4 +175,10 @@
   <data name="nwrw" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\nwrw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="BranchExtensions_Cannot_not_determine_the_coordinates_of_node_" xml:space="preserve">
+    <value>Cannot not determine the coordinates of the {0} node.</value>
+  </data>
+  <data name="BranchExtensions_Cannot_determine_node_coordinates" xml:space="preserve">
+    <value>Cannot determine the node coordinates of branch {0}.</value>
+  </data>
 </root>

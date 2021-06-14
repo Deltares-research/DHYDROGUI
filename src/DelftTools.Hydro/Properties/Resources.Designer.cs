@@ -19,7 +19,7 @@ namespace DelftTools.Hydro.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -57,6 +57,24 @@ namespace DelftTools.Hydro.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot determine the node coordinates of branch {0}..
+        /// </summary>
+        internal static string BranchExtensions_Cannot_determine_node_coordinates {
+            get {
+                return ResourceManager.GetString("BranchExtensions_Cannot_determine_node_coordinates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot not determine the coordinates of the {0} node..
+        /// </summary>
+        internal static string BranchExtensions_Cannot_not_determine_the_coordinates_of_node_ {
+            get {
+                return ResourceManager.GetString("BranchExtensions_Cannot_not_determine_the_coordinates_of_node_", resourceCulture);
             }
         }
         
