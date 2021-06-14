@@ -75,18 +75,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
-        [Description("Type")]
-        [PropertyOrder(6)]
-        public RetentionType Type
-        {
-            get { return data.Type; }
-            set { data.Type = value; }
-        }
-
-        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [Description("Storage area (manhole).")]
         [DisplayName("Storage area")]
-        [PropertyOrder(7)]
+        [PropertyOrder(6)]
         [DynamicReadOnly]
         public double Area
         {
@@ -95,20 +86,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
-        [Description("Street storage area.")]
-        [DisplayName("Street storage area")]
-        [PropertyOrder(8)]
-        [DynamicReadOnly]
-        public double StreetStorageArea
-        {
-            get { return data.StreetStorageArea; }
-            set{data.StreetStorageArea = value;}
-        }
-
-        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [Description("Bed level storage reservoir (manhole)")]
         [DisplayName("Bed level")]
-        [PropertyOrder(9)]
+        [PropertyOrder(7)]
         [DynamicReadOnly]
         public double BedLevel
         {
@@ -116,20 +96,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.BedLevel = value; }
         }
 
-        [Category(PropertyWindowCategoryHelper.GeneralCategory)]
-        [Description("Street level.")]
-        [DisplayName("Street level")]
-        [PropertyOrder(10)]
-        [DynamicReadOnly]
-        public double StreetLevel
-        {
-            get { return data.StreetLevel; }
-            set { data.StreetLevel = value; }
-        }
-
         [Category(PropertyWindowCategoryHelper.TableCategory)]
         [Description("Storage bed definition.")]
-        [PropertyOrder(11)]
+        [PropertyOrder(8)]
         [Editor(typeof(ViewPropertyEditor), typeof(UITypeEditor))]
         [DynamicReadOnly]
         public Function Storage
@@ -140,7 +109,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category(PropertyWindowCategoryHelper.TableCategory)]
         [Description("Type")]
-        [PropertyOrder(12)]
+        [PropertyOrder(9)]
         [DynamicReadOnly]
         public InterpolationType InterpolationType
         {
@@ -151,7 +120,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category(PropertyWindowCategoryHelper.TableCategory)]
         [Description("Use storage as function of level.")]
         [DisplayName("Use table")]
-        [PropertyOrder(13)]
+        [PropertyOrder(10)]
         public bool UseTable
         {
             get { return data.UseTable; }
@@ -165,17 +134,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             {
                 return GetUseTable();
             }
-
-            if (propertyName == "StreetLevel")
-            {
-                return GetUseTable();
-            }
-
-            if (propertyName == "StreetStorageArea")
-            {
-                return GetUseTable();
-            }
-
             if (propertyName == "BedLevel")
             {
                 return GetUseTable();
