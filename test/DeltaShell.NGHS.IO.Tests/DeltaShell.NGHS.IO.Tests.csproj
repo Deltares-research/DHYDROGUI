@@ -155,6 +155,7 @@
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
     <Compile Include="FileReaders\LocationFileReaderTest.cs" />
     <Compile Include="FileReaders\NetworkAndGridReaderTest.cs" />
+    <Compile Include="FileReaders\RetentionFileReaderTest.cs" />
     <Compile Include="FileReaders\StructureFileReaderTest.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\CrossSectionDefinitionFileWritersTest.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\CrossSectionDefinitionIniCategoryGeneratorFactoryTest.cs" />

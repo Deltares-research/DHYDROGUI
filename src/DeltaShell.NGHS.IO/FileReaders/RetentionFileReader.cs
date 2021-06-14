@@ -104,7 +104,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             IDelftIniProperty useTableProperty = category.GetProperty(RetentionRegion.UseTable.Key);
             if (useTableProperty == null)
             {
-                log.WarnFormat(Resources.NodeFile_The_category_does_not_contain_property, 
+                log.ErrorFormat(Resources.NodeFile_The_category_does_not_contain_property, 
                                category.Name, category.LineNumber, RetentionRegion.UseTable.Key);
                 return false;
             }

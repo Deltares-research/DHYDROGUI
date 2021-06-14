@@ -3611,6 +3611,7 @@ test/DeltaShell.NGHS.IO.Tests/DeltaShell.NGHS.IO.Tests.csproj -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/CrossSectionDefinitionFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/LocationFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/NetworkAndGridReaderTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/FileReaders/RetentionFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/StructureFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/CrossSectionDefinition/CrossSectionDefinitionFileWritersTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/CrossSectionDefinition/CrossSectionDefinitionIniCategoryGeneratorFactoryTest.cs -text
