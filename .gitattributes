@@ -354,7 +354,6 @@ src/DelftTools.Hydro/ExtensionMethods.cs -text
 src/DelftTools.Hydro/FlowDirection.cs -text
 src/DelftTools.Hydro/Friction.cs -text
 src/DelftTools.Hydro/FrictionTypeConverter.cs -text
-src/DelftTools.Hydro/Geometries/BranchExtensions.cs -text
 src/DelftTools.Hydro/GroupableFeature2D.cs -text
 src/DelftTools.Hydro/GroupableFeature2DPoint.cs -text
 src/DelftTools.Hydro/GroupableFeature2DPolygon.cs -text
@@ -3459,7 +3458,6 @@ test/DelftTools.Hydro.Tests/DelftTools.Hydro.Tests.csproj -text
 test/DelftTools.Hydro.Tests/DiscretizationExtensionsTest.cs -text
 test/DelftTools.Hydro.Tests/DrainageBasinTest.cs -text
 test/DelftTools.Hydro.Tests/Forms/NetworkCoverageFunctionViewTest.cs -text
-test/DelftTools.Hydro.Tests/Geometries/BranchExtensionsTest.cs -text
 test/DelftTools.Hydro.Tests/GroupableFeatureComparerTest.cs -text
 test/DelftTools.Hydro.Tests/GroupableFeatureExtensionsTest.cs -text
 test/DelftTools.Hydro.Tests/Helpers/CrossSectionConverterTest.cs -text
