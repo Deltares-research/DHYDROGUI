@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
@@ -55,9 +56,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             if (retention.Chainage > 0)
             {
-                var x = category.ReadProperty<double>(RetentionRegion.X.Key);
-                var y = category.ReadProperty<double>(RetentionRegion.Y.Key);
-                retention.Geometry = new Point(x, y);
+                retention.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, retention.Chainage);
             }
             else
             {
