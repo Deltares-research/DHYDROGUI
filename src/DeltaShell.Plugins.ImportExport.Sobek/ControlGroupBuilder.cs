@@ -908,9 +908,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
 
             intervalRule.TimeSeries.Components[0].DefaultValue = specificProperties.ConstantSetPoint;
-
-            intervalRule.IntervalType = (IntervalRule.IntervalRuleIntervalType)specificProperties.ControllerIntervalType;
-
+            
             return intervalRule;
         }
 
