@@ -346,17 +346,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         [TestCase(ItemChoiceType6.settingMaxStep, Item1ChoiceType3.deadbandSetpointAbsolute,
-                  IntervalRule.IntervalRuleSetPointType.Fixed, IntervalRule.IntervalRuleDeadBandType.Fixed, false)]
-        [TestCase(ItemChoiceType6.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
-                  IntervalRule.IntervalRuleSetPointType.Variable, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
+                  IntervalRule.IntervalRuleSetPointType.Variable, IntervalRule.IntervalRuleIntervalType.Fixed, IntervalRule.IntervalRuleDeadBandType.Fixed, 
                   false)]
         [TestCase(ItemChoiceType6.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
-                  IntervalRule.IntervalRuleSetPointType.Signal, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
+                  IntervalRule.IntervalRuleSetPointType.Variable, IntervalRule.IntervalRuleIntervalType.Variable, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
+                  false)]
+        [TestCase(ItemChoiceType6.settingMaxStep, Item1ChoiceType3.deadbandSetpointRelative,
+                  IntervalRule.IntervalRuleSetPointType.Signal, IntervalRule.IntervalRuleIntervalType.Fixed, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
+                  true)]
+        [TestCase(ItemChoiceType6.settingMaxSpeed, Item1ChoiceType3.deadbandSetpointRelative,
+                  IntervalRule.IntervalRuleSetPointType.Signal, IntervalRule.IntervalRuleIntervalType.Variable, IntervalRule.IntervalRuleDeadBandType.PercentageDischarge,
                   true)]
         public void ConvertToDataAccessObjects_IntervalRule_CorrectResultIsReturned(
             ItemChoiceType6 intervalType,
             Item1ChoiceType3 deadBandType,
             IntervalRule.IntervalRuleSetPointType expectedSetPointType,
+            IntervalRule.IntervalRuleIntervalType expectedIntervalRuleIntervalType,
             IntervalRule.IntervalRuleDeadBandType expectedDeadBandType,
             bool signalAsSetpoint)
         {
@@ -379,7 +384,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
             var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
             Assert.That(ruleObj, Is.Not.Null);
-            AssertIntervalRuleValidity(ruleObj.Object, expectedSetPointType, expectedDeadBandType);
+            AssertIntervalRuleValidity(ruleObj.Object, expectedSetPointType, expectedIntervalRuleIntervalType, expectedDeadBandType);
         }
 
         [TestCase(interpolationOptionEnumStringType.LINEAR, interpolationOptionEnumStringType.LINEAR,
@@ -777,6 +782,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
 
         private void AssertIntervalRuleValidity(RuleBase rule,
                                                 IntervalRule.IntervalRuleSetPointType expectedSetPointType,
+                                                IntervalRule.IntervalRuleIntervalType expectedIntervalRuleIntervalType,
                                                 IntervalRule.IntervalRuleDeadBandType expectedDeadBandType)
         {
             var intervalRule = rule as IntervalRule;
@@ -789,13 +795,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                             $"Interval rule: settings above was expected to be {2d}.");
             Assert.AreEqual(expectedSetPointType, intervalRule.SetPointType,
                             $"Interval rule: setpoint type was expected to be {expectedSetPointType.ToString()}.");
+            Assert.AreEqual(expectedIntervalRuleIntervalType, intervalRule.IntervalType,
+                            $"Interval rule: interval type was expected to be {expectedIntervalRuleIntervalType.ToString()}.");
             Assert.AreEqual(expectedDeadBandType, intervalRule.DeadBandType,
                             $"Interval rule: dead band type was expected to be {expectedDeadBandType.ToString()}.");
             Assert.AreEqual(4d, intervalRule.DeadbandAroundSetpoint,
                             $"Interval rule: dead band around set point was expected to be {4d}.");
 
             var expectedIntervalValue = 3d;
-            if (expectedSetPointType == IntervalRule.IntervalRuleSetPointType.Fixed)
+            if (expectedIntervalRuleIntervalType == IntervalRule.IntervalRuleIntervalType.Fixed)
             {
                 Assert.AreEqual(expectedIntervalValue, intervalRule.FixedInterval,
                                 $"Interval rule: fixed interval was expected to be {expectedIntervalValue}.");
