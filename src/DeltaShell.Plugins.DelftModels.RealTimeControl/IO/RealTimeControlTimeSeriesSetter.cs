@@ -59,10 +59,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                     continue;
                 }
 
-                if (correspondingRuleOrCondition is IntervalRule intervalRule &&
-                    intervalRule.IntervalType == IntervalRule.IntervalRuleIntervalType.Fixed)
+                if (correspondingRuleOrCondition is IntervalRule intervalRule)
                 {
-                    SetDefaultValueIntervalRule(records, intervalRule);
+                    SetFixedOrVariableIntervalRule(records, intervalRule, missingValue);
                 }
                 else
                 {
@@ -88,22 +87,32 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             return true;
         }
 
-        private void SetDefaultValueIntervalRule(IEnumerable<EventComplexType> records, IntervalRule intervalRule)
+        private void SetFixedOrVariableIntervalRule(IReadOnlyCollection<EventComplexType> records, IntervalRule intervalRule, double missingValue)
         {
-            double? fixedValue = records?.FirstOrDefault()?.value;
-            if (fixedValue != null)
+            double? possibleFixedValue = records?.FirstOrDefault()?.value;
+
+            if (possibleFixedValue != null)
             {
-                intervalRule.TimeSeries.Components[0].DefaultValue = fixedValue;
+                if (records.Select(r => r.value).Distinct().Count() == 1)
+                {
+                    intervalRule.SetPointType = IntervalRule.IntervalRuleSetPointType.Fixed;
+                    intervalRule.TimeSeries.Components[0].DefaultValue = possibleFixedValue;
+                }
+                else
+                {
+                    intervalRule.SetPointType = IntervalRule.IntervalRuleSetPointType.Variable;
+                    SetTimeSeriesFromXmlRecords(intervalRule.TimeSeries, records, missingValue);
+                }
             }
             else
             {
                 logHandler.ReportWarningFormat(
                     Resources
-                        .RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value,
+                        .RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_fixed_or_variable_setpoint_type_Setpoint_type_will_be_variable__,
                     intervalRule.Name, RealTimeControlXmlFiles.XmlTimeSeries);
             }
         }
-
+        
         private RtcBaseObject GetCorrespondingRuleOrCondition(string locationId, IEnumerable<IControlGroup> controlGroups)
         {
             IControlGroup controlGroup = controlGroups?.GetControlGroupByElementId(locationId, logHandler);

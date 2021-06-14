@@ -103,11 +103,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         [Test]
-        public void GivenTimeSeriesXmlObjectForAnIntervalRuleWithAFixedSetpoint_WhenSetTimeSeriesIsCalled_ThenTheConstantValueOfTimeSeriesShouldBeSetAsDefaultValue()
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Fixed)]
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Variable)]
+        public void GivenTimeSeriesXmlObjectWithConstantValuesForAnIntervalRuleWhichSetpointIsNotSignal_WhenSetTimeSeriesIsCalled_ThenSetPointShouldBeSetToFixedWithCorrectConstantValue(IntervalRule.IntervalRuleSetPointType setPointType)
         {
             // Given
             List<TimeSeriesComplexType> timeSeriesElements = CreateTimeSeriesElementList(RtcXmlTag.IntervalRule, 2, 2);
-            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleSetPointType.Fixed);
+            controlGroup = CreateControlGroupWithAnIntervalRule(setPointType);
 
             // When
             timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
@@ -118,20 +120,89 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             // Then
             TimeSeries intervalRuleTimeSeries = ((IntervalRule) controlGroup.Rules[0]).TimeSeries;
 
+            Assert.AreEqual(IntervalRule.IntervalRuleSetPointType.Fixed, ((IntervalRule)controlGroup.Rules[0]).SetPointType);
             Assert.AreEqual(2, intervalRuleTimeSeries.Components[0].DefaultValue, "Fixed setpoint value of the interval rule is not imported");
             Assert.AreEqual(0, intervalRuleTimeSeries.GetValues().Count,
                             "Expected was that the number of time series record would be zero after importing the time serie on the interval rule with a fixed setpoint.");
         }
 
         [Test]
-        public void GivenTimeSeriesXmlObjectWithoutValuesForAnIntervalRuleWithAFixedSetpoint_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
+        public void GivenTimeSeriesXmlObjectWithConstantValuesForAnIntervalRuleWhichSetpointIsSignal_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
+        {
+
+            // Given
+            List<TimeSeriesComplexType> timeSeriesElements = CreateTimeSeriesElementList(RtcXmlTag.IntervalRule, 2, 2);
+
+            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleSetPointType.Signal);
+
+            // When
+            timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
+            {
+                controlGroup
+            });
+
+            // Then
+            string expectedMessage = string.Format(
+                Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported,
+                $"{RtcXmlTag.IntervalRule}{controlGroupName}/{componentName}", RealTimeControlXmlFiles.XmlTimeSeries);
+
+            Assert.That(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
+                        "The collected log messages did not contain the expected message.");
+        }
+
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Fixed)]
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Variable)]
+        public void GivenTimeSeriesXmlObjectWithVariableValuesForAnIntervalRuleWhichSetpointIsNotSignal_WhenSetTimeSeriesIsCalled_ThenSetpointShouldBeSetToVariableAndTheTimeSeriesShouldBeSet(IntervalRule.IntervalRuleSetPointType setPointType)
+        {
+            // Given
+            List<TimeSeriesComplexType> timeSeriesElements = CreateTimeSeriesElementList(RtcXmlTag.IntervalRule, 2, 3);
+            controlGroup = CreateControlGroupWithAnIntervalRule(setPointType);
+
+            // When
+            timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
+            {
+                controlGroup
+            });
+
+            // Then
+            Assert.AreEqual(IntervalRule.IntervalRuleSetPointType.Variable, ((IntervalRule)controlGroup.Rules[0]).SetPointType);
+            CheckValidityTimeSeriesIntervalRule(controlGroup, 2, 3);
+        }
+
+        [Test]
+        public void GivenTimeSeriesXmlObjectWithVariableValuesForAnIntervalRuleWhichSetpointIsSignal_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
+        {
+            // Given
+            List<TimeSeriesComplexType> timeSeriesElements = CreateTimeSeriesElementList(RtcXmlTag.IntervalRule, 2, 3);
+
+            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleSetPointType.Signal);
+
+            // When
+            timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
+            {
+                controlGroup
+            });
+
+            // Then
+            string expectedMessage = string.Format(
+                Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported,
+                $"{RtcXmlTag.IntervalRule}{controlGroupName}/{componentName}", RealTimeControlXmlFiles.XmlTimeSeries);
+
+            Assert.That(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
+                        "The collected log messages did not contain the expected message.");
+        }
+
+        [Test]
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Fixed)]
+        [TestCase(IntervalRule.IntervalRuleSetPointType.Variable)]
+        public void GivenTimeSeriesXmlObjectWithoutValuesForAnIntervalRuleWhichSetpointIsNotSignal_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven(IntervalRule.IntervalRuleSetPointType setPointType)
         {
             // Given
             string locationId = CreateLocationId(RtcXmlTag.IntervalRule);
 
             var timeSeriesElements = new List<TimeSeriesComplexType> {new TimeSeriesComplexType {header = new HeaderComplexType {locationId = locationId}}};
 
-            controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleSetPointType.Fixed);
+            controlGroup = CreateControlGroupWithAnIntervalRule(setPointType);
 
             // When
             timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
@@ -147,7 +218,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                             "Expected was that the number of time series record would be zero after importing the time serie on the interval rule with a fixed setpoint.");
 
             string expectedMessage = string.Format(
-                Resources.RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value,
+                Resources.RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_fixed_or_variable_setpoint_type_Setpoint_type_will_be_variable__,
                 intervalRule.Name, RealTimeControlXmlFiles.XmlTimeSeries);
 
             // Then
@@ -156,12 +227,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         [Test]
-        public void GivenTimeSeriesXmlObjectForAnIntervalRuleWithASignalIntervalType_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
+        public void GivenTimeSeriesXmlObjectWithoutValuesForAnIntervalRuleWhichSetpointIsSignal_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven()
         {
             // Given
             string locationId = CreateLocationId(RtcXmlTag.IntervalRule);
 
-            var timeSeriesElements = new List<TimeSeriesComplexType> {new TimeSeriesComplexType {header = new HeaderComplexType {locationId = locationId}}};
+            var timeSeriesElements = new List<TimeSeriesComplexType> { new TimeSeriesComplexType { header = new HeaderComplexType { locationId = locationId } } };
 
             controlGroup = CreateControlGroupWithAnIntervalRule(IntervalRule.IntervalRuleSetPointType.Signal);
 
@@ -174,7 +245,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             // Then
             string expectedMessage = string.Format(
                 Resources.RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported,
-                locationId, RealTimeControlXmlFiles.XmlTimeSeries);
+                $"{RtcXmlTag.IntervalRule}{controlGroupName}/{componentName}", RealTimeControlXmlFiles.XmlTimeSeries);
 
             Assert.That(logHandler.LogMessagesTable.WarningMessages.Contains(expectedMessage),
                         "The collected log messages did not contain the expected message.");
@@ -350,6 +421,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.AreEqual(new DateTime(2018, 12, 13), timeRuleTimeSeriesDates[1]);
 
             IMultiDimensionalArray timeRuleTimeSeriesValues = timeRuleTimeSeries.Components[0].Values;
+            Assert.AreEqual(value1, timeRuleTimeSeriesValues[0]);
+            Assert.AreEqual(value2, timeRuleTimeSeriesValues[1]);
+        }
+
+        private static void CheckValidityTimeSeriesIntervalRule(IControlGroup controlGroup, double value1, double value2)
+        {
+            IntervalRule intervalRule = controlGroup.Rules.OfType<IntervalRule>().Single();
+            Assert.AreEqual(2, intervalRule.TimeSeries.GetValues().Count,
+                            "Expected was that the count of time series records of the time rule was 2.");
+
+            TimeSeries intervalRuleTimeSeries = intervalRule.TimeSeries;
+            IMultiDimensionalArray timeRuleTimeSeriesDates = intervalRuleTimeSeries.Arguments[0].Values;
+            Assert.AreEqual(new DateTime(2018, 12, 12), timeRuleTimeSeriesDates[0]);
+            Assert.AreEqual(new DateTime(2018, 12, 13), timeRuleTimeSeriesDates[1]);
+
+            IMultiDimensionalArray timeRuleTimeSeriesValues = intervalRuleTimeSeries.Components[0].Values;
             Assert.AreEqual(value1, timeRuleTimeSeriesValues[0]);
             Assert.AreEqual(value2, timeRuleTimeSeriesValues[1]);
         }

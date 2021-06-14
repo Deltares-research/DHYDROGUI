@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rtcToolsConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rtc="http://www.wldelft.nl/fews" xmlns="http://www.wldelft.nl/fews" xsi:schemaLocation="http://www.wldelft.nl/fews C:\Users\belt_pe\OneDrive%20-%20Stichting%20Deltares\Documents\IntervalRule\rtc\rtcToolsConfig.xsd">
+  <general>
+    <description>RTC Model DeltaShell</description>
+    <poolRoutingScheme>Theta</poolRoutingScheme>
+    <theta>0.5</theta>
+  </general>
+  <rules>
+    <rule>
+      <unitDelay id="Interval Rule_unitDelay">
+        <input>
+          <x>[Output]Weir_2D_01/CrestLevel</x>
+        </input>
+        <output>
+          <y>[Output]Weir_2D_01/CrestLevel</y>
+        </output>
+      </unitDelay>
+    </rule>
+    <rule>
+      <interval id="[IntervalRule]Control Group 1/Interval Rule">
+        <settingBelow>1</settingBelow>
+        <settingAbove>2</settingAbove>
+        <settingMaxStep>3</settingMaxStep>
+        <deadbandSetpointAbsolute>4</deadbandSetpointAbsolute>
+        <input>
+          <x ref="EXPLICIT">[Input]ObservationPoint_2D_01/water_level</x>
+          <setpoint>[SP]Control Group 1/Interval Rule</setpoint>
+        </input>
+        <output>
+          <y>[Output]Weir_2D_01/CrestLevel</y>
+          <status>[Status]Control Group 1/Interval Rule</status>
+        </output>
+      </interval>
+    </rule>
+  </rules>
+  <triggers>
+    <trigger>
+      <standard id="[StandardCondition]Control Group 1/Standard Condition">
+        <condition>
+          <x1Series ref="EXPLICIT">[Input]ObservationPoint_2D_01/water_level</x1Series>
+          <relationalOperator>Equal</relationalOperator>
+          <x2Value>0</x2Value>
+        </condition>
+        <true>
+          <trigger>
+            <ruleReference>[IntervalRule]Control Group 1/Interval Rule</ruleReference>
+          </trigger>
+        </true>
+        <output>
+          <status>[Status]Control Group 1/Standard Condition</status>
+        </output>
+      </standard>
+    </trigger>
+  </triggers>
+</rtcToolsConfig>

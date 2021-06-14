@@ -4807,6 +4807,11 @@ test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/DataConfigFiles/rtcDataConfig_noconnectionpoints.xml -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/DataConfigFiles/rtcDataConfig_nocontrolgroupnames.xml -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/DataConfigFiles/rtcDataConfig_noelements.xml -text
+test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/IntervalRuleFixedSetpoint/rtcDataConfig.xml -text
+test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/IntervalRuleFixedSetpoint/rtcRuntimeConfig.xml -text
+test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/IntervalRuleFixedSetpoint/rtcToolsConfig.xml -text
+test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/IntervalRuleFixedSetpoint/state_import.xml -text
+test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/IntervalRuleFixedSetpoint/timeseries_import.xml -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/RuntimeConfigFiles/rtcRuntimeConfig.xml -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/SimpleModel/rtcDataConfig.xml -text
 test/DeltaShell.Plugins.DelftModels.RealTimeControl.Tests/test-data/ImportExport/SimpleModel/rtcRuntimeConfig.xml -text

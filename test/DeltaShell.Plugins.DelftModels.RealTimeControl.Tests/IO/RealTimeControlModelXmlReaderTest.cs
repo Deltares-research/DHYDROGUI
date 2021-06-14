@@ -107,6 +107,30 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                                                                          directoryPath));
         }
 
+        [Test]
+        public void ReadingRTCModel_WhenIntervalRuleWithFixedSetpointHasBeenDefined_ThenTimeSeriesFileShouldCorrectSetpointTypeAfterReadingToolsConfigFile()
+        {
+            using (var tempDirectory = new TemporaryDirectory())
+            {
+                string directoryTemp = tempDirectory.CopyDirectoryToTempDirectory(TestHelper.GetTestFilePath(Path.Combine("ImportExport", "IntervalRuleFixedSetpoint")));
+                RealTimeControlModel model = RealTimeControlModelXmlReader.Read(directoryTemp);
+
+                Assert.AreEqual(1, model.ControlGroups.Count);
+                ControlGroup controlGroup = model.ControlGroups[0];
+                Assert.AreEqual(1, controlGroup.Rules.Count);
+                var intervalRule = model.ControlGroups[0].Rules[0] as IntervalRule;
+                Assert.NotNull(intervalRule);
+                
+                Assert.AreEqual(IntervalRule.IntervalRuleSetPointType.Fixed, intervalRule.SetPointType);
+                Assert.AreEqual(5, intervalRule.ConstantValue);
+                Assert.AreEqual(IntervalRule.IntervalRuleIntervalType.Fixed, intervalRule.IntervalType);
+                Assert.AreEqual(3, intervalRule.FixedInterval);
+                Assert.AreEqual(1, intervalRule.Setting.Below);
+                Assert.AreEqual(2, intervalRule.Setting.Above);
+                Assert.AreEqual(4, intervalRule.DeadbandAroundSetpoint);
+            }
+        }
+
         private static void CheckSimpleModelTimeSettings(ITimeDependentModel rtcModel)
         {
             Assert.AreEqual(new DateTime(2018, 12, 12, 0, 0, 0), rtcModel.StartTime, "Model start time is incorrectly set.");

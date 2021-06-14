@@ -331,8 +331,8 @@
   <data name="RealTimeControlTimeSeriesConnector_ConnectTimeSeries_Rule__with_id___0___does_not_seem_to_use_a_time_serie_as_setpoint__See_file____1___Therefore_the_time_serie_is_not_imported" xml:space="preserve">
     <value>Rule with id '{0}' does not seem to use a time serie as setpoint. See file: '{1}'. Therefore, the time serie is not imported.</value>
   </data>
-  <data name="RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value" xml:space="preserve">
-    <value>For interval rule with id '{0}', there is no time data found in file '{1}' for setting the fixed setpoint value.</value>
+  <data name="RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_fixed_or_variable_setpoint_type_Setpoint_type_will_be_variable;;" xml:space="preserve">
+    <value>For interval rule with id '{0}', there is no time data found in file '{1}' for setting fixed or variable setpoint type. Setpoint type will be variable.</value>
   </data>
   <data name="RealTimeControlTimeSeriesXmlReader_Read_File___0___does_not_exist_" xml:space="preserve">
     <value>File '{0}' does not exist.</value>

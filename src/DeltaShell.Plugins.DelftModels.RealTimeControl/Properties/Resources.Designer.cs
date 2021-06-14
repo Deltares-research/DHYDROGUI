@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -813,12 +813,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to For interval rule with id &apos;{0}&apos;, there is no time data found in file &apos;{1}&apos; for setting the fixed setpoint value..
+        ///   Looks up a localized string similar to For interval rule with id &apos;{0}&apos;, there is no time data found in file &apos;{1}&apos; for setting fixed or variable setpoint type. Setpoint type will be variable..
         /// </summary>
-        public static string RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_the_fixed_setpoint_value {
+        public static string RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_data_found_in_file__1__for_setting_fixed_or_variable_setpoint_type_Setpoint_type_will_be_variable__ {
             get {
                 return ResourceManager.GetString("RealTimeControlTimeSeriesSetter_For_interval_rule_with_id__0__there_is_no_time_da" +
-                        "ta_found_in_file__1__for_setting_the_fixed_setpoint_value", resourceCulture);
+                        "ta_found_in_file__1__for_setting_fixed_or_variable_setpoint_type_Setpoint_type_w" +
+                        "ill_be_variable;;", resourceCulture);
             }
         }
         
