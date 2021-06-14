@@ -101,17 +101,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                                                                                          preconditionExpectedCatchmentsCount,
                                                                                          isFmOnly);
                 
-                // todo: FM1D2D-1592: Temporarily set the workflow for small hea + rr to FM + RR. Remove once the issue is fixed.
-                if (acceptanceModelName.Equals("HEA_FM_RR", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    ICompositeActivity fmAndRrWorkflow = ((HydroModel) hydroModel).Workflows
-                                                                                  .Single(w =>
-                                                                                              w.Activities.Count == 2
-                                                                                              && w.Activities.Any(a => a.GetActivitiesOfType<IWaterFlowFMModel>().Any())
-                                                                                              && w.Activities.Any(a => a.GetActivitiesOfType<RainfallRunoffModel>().Any()));
-                    ((HydroModel) hydroModel).CurrentWorkflow = fmAndRrWorkflow;
-                }
-                
                 bool hasRrData = preconditionExpectedCatchmentsCount > 0;
                 if (hasRrData)
                 {
@@ -119,7 +108,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                     Assert.That(rrModel, Is.Not.Null);
                     AcceptanceModelTestHelper.EnableAllRainfallRunoffOutputSettings(rrModel);
                 }
-                
                 
                 // [When]
                 Console.WriteLine("Running model");

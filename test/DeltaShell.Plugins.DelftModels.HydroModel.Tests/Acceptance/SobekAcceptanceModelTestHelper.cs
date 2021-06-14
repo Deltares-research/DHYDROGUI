@@ -31,14 +31,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             var caseDirectory = Path.Combine(extractedModelDirectory, litDirectoryName, caseFolder);
             var pathToNetworkFile = Path.Combine(caseDirectory, "NETWORK.TP");
             
-            var sobekHydroModelImporter = new SobekHydroModelImporter(false)
+            bool useRr = !isFmOnly;
+            var sobekHydroModelImporter = new SobekHydroModelImporter(useRr)
             {
                 TargetObject = hydroModel,
                 PartialSobekImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToNetworkFile, hydroModel),
                 PathSobek = pathToNetworkFile
             };
 
-            var errorMessages = TestHelper.GetAllRenderedMessages(() => sobekHydroModelImporter.Import(), Level.Error);
+            var errorMessages = TestHelper.GetAllRenderedMessages(() => sobekHydroModelImporter.ImportItem(pathToNetworkFile, hydroModel), Level.Error);
 
             // [Precondition]
             Assert.IsEmpty(errorMessages, $"[Precondition failure] Received unexpected error messages during the import of the SOBEK2 model:{Environment.NewLine}{errorMessages}");
