@@ -143,6 +143,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot parse {0} to a {1} for property {2} on line {3}..
+        /// </summary>
+        public static string DelftIniPropertyExtensionMethods_Cannot_parse_value_for_property {
+            get {
+                return ResourceManager.GetString("DelftIniPropertyExtensionMethods_Cannot_parse_value_for_property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Level: {0}. message = {1}.
         /// </summary>
         public static string GridApi_Initialize_Level_0__Message_1_ {

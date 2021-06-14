@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Functions.Generic;
@@ -159,7 +160,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
                 return false;
             }
 
-            return !useTableProperty.ReadValue<bool>();
+            return !useTableProperty.ReadBooleanValue();
         }
     }
 }

@@ -110,7 +110,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 return false;
             }
 
-            return useTableProperty.ReadValue<bool>();
+            return useTableProperty.ReadBooleanValue();
         }
     }
 }

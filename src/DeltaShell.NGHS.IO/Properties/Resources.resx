@@ -384,4 +384,7 @@
   <data name="NodeFile_The_category_does_not_contain_property" xml:space="preserve">
     <value>The category {0} on line {1} does not contain the {2} property.</value>
   </data>
+  <data name="DelftIniPropertyExtensionMethods_Cannot_parse_value_for_property" xml:space="preserve">
+    <value>Cannot parse {0} to a {1} for property {2} on line {3}.</value>
+  </data>
 </root>
