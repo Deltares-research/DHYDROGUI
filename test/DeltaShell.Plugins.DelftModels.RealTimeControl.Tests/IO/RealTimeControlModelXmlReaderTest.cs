@@ -108,6 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         [Test]
+        [Category(TestCategory.DataAccess)]
         public void ReadingRTCModel_WhenIntervalRuleWithFixedSetpointHasBeenDefined_ThenTimeSeriesFileShouldCorrectSetpointTypeAfterReadingToolsConfigFile()
         {
             using (var tempDirectory = new TemporaryDirectory())

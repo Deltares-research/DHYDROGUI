@@ -102,7 +102,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                                 "When calling the method (RealTimeControlTimeSeriesSetter.SetTimeSeries()) with null parameters it threw an unexpected exception.");
         }
 
-        [Test]
         [TestCase(IntervalRule.IntervalRuleSetPointType.Fixed)]
         [TestCase(IntervalRule.IntervalRuleSetPointType.Variable)]
         public void GivenTimeSeriesXmlObjectWithConstantValuesForAnIntervalRuleWhichSetpointIsNotSignal_WhenSetTimeSeriesIsCalled_ThenSetPointShouldBeSetToFixedWithCorrectConstantValue(IntervalRule.IntervalRuleSetPointType setPointType)
@@ -192,7 +191,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                         "The collected log messages did not contain the expected message.");
         }
 
-        [Test]
         [TestCase(IntervalRule.IntervalRuleSetPointType.Fixed)]
         [TestCase(IntervalRule.IntervalRuleSetPointType.Variable)]
         public void GivenTimeSeriesXmlObjectWithoutValuesForAnIntervalRuleWhichSetpointIsNotSignal_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven(IntervalRule.IntervalRuleSetPointType setPointType)
