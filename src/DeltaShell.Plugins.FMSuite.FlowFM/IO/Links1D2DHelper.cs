@@ -64,9 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                     }
                 }
-
-
-
+                
                 locationIndex = locations.Length > 0 && networkDiscretization.Locations.Values.Contains(locations[0]) &&
                                 //no links at end points of our network, then use missing_index so link will be deleted...tjiske and arthur van dam knows more about this
                                 !LocationIsOnEndPointOfNetwork(networkDiscretization, locations[0])
@@ -93,6 +91,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var network = networkDiscretization.Network;
             if (network == null) return true;
             var branch = NetworkHelper.GetNearestBranch(network.Branches, location.Geometry, 0.0001);
+            if (branch == null)
+            {
+                return false;
+            }
             // if calculation point is on start or end of the branch and source or target node is connected to another branch then this location is not on an end point of a network
             if (Math.Abs(location.Chainage) < 0.001 && branch.Source.IsConnectedToMultipleBranches ||
                 Math.Abs(branch.Length - location.Chainage) < 0.001 && branch.Target.IsConnectedToMultipleBranches)
