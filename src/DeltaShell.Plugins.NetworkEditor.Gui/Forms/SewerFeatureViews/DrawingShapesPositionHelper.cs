@@ -62,11 +62,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         /// <summary>
         /// Sets a shape horizontal position relative to another shape. 
         /// </summary>
-        /// <param name="shape"></param>
+        /// <param name="shape">Shape to correct</param>
         /// <param name="referenceShape">Factor to determine the offset, 0) shapes collide at the left edge, 1) at right edge, 0.5) in the middle</param>
-        /// <param name="offsetFactor"></param>
+        /// <param name="offsetFactor">Offset factor</param>
         private static void SetShapeLeftOffsetRelativeTo(IDrawingShape shape, IDrawingShape referenceShape, double offsetFactor)
         {
+            if (referenceShape == null) return;
+
             var leftOffset = referenceShape.LeftOffset + referenceShape.Width * offsetFactor - shape.Width * 0.5;
             shape.LeftOffset = leftOffset;
         }

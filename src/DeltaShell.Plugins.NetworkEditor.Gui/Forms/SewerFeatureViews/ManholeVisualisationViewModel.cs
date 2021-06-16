@@ -183,32 +183,39 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void CompartmentsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
-            {
-                var compartment = e.GetRemovedOrAddedItem() as Compartment;
-                if (compartment != null)
-                {
-                    Shapes.Add(new CompartmentShape { Compartment = compartment });
-                }
-            }
+            if (!(e.GetRemovedOrAddedItem() is Compartment compartment)) return;
 
-            if (e.Action == NotifyCollectionChangedAction.Remove)
+            switch (e.Action)
             {
-                var compartment = e.GetRemovedOrAddedItem() as Compartment;
-                if (compartment != null)
+                case NotifyCollectionChangedAction.Add:
+                {
+                    var compartmentShape = new CompartmentShape { Compartment = compartment };
+
+                    PipeShapes.Where(s => s.Pipe?.SourceCompartment == compartment 
+                                          || s.Pipe?.TargetCompartment == compartment)
+                              .ForEach(s => s.ConnectedCompartmentShape = compartmentShape);
+
+                    Shapes.Insert(0, compartmentShape);
+                    break;
+                }
+                case NotifyCollectionChangedAction.Remove:
                 {
                     var compartmentShapeToRemove = Shapes.OfType<CompartmentShape>().FirstOrDefault(cs => cs.Compartment == compartment);
+
                     // Set new compartment shape in pipe when a pipe is connected to the compartment to remove
-                    var pipeShapes = PipeShapes.Where(ps => ps.ConnectedCompartmentShape == compartmentShapeToRemove);
-                    foreach (var pipeShape in pipeShapes)
+                    var compartmentPipeShapes = PipeShapes.Where(ps => ps.ConnectedCompartmentShape == compartmentShapeToRemove);
+
+                    foreach (var pipeShape in compartmentPipeShapes)
                     {
                         var compartmentInManhole = (Manhole)pipeShape.Pipe.Source == manhole
-                            ? pipeShape.Pipe.SourceCompartment
-                            : pipeShape.Pipe.TargetCompartment;
+                                                       ? pipeShape.Pipe.SourceCompartment
+                                                       : pipeShape.Pipe.TargetCompartment;
 
                         pipeShape.ConnectedCompartmentShape = CompartmentShapes.FirstOrDefault(cs => cs.Compartment == compartmentInManhole);
                     }
+
                     Shapes.Remove(compartmentShapeToRemove);
+                    break;
                 }
             }
         }
