@@ -779,8 +779,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
-                    Status = ActivityStatus.Failed;
+                    HandleException(e);
                 }
             }
             else
@@ -873,10 +872,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                    .ForEach(m => m.CurrentTime = CurrentTime);
                     OnProgressChanged();
                 }
-                catch (DimrErrorCodeException e)
+                catch (Exception e)
                 {
-                    HandleDimrErrorCodeException(e);
-                    throw;
+                    HandleException(e);
                 }
             }
             else
@@ -921,11 +919,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         protected override void OnProgressChanged()
         {
-            if (dimrApi != null)
-            {
-                dimrApi.ProcessMessages();
-            }
-
+            dimrApi?.ProcessMessages();
             base.OnProgressChanged();
         }
 
@@ -952,7 +946,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     dimrApi = null;
                 }
                 catch (Exception e)
-
                 {
                     Log.Debug(e.Message);
                 }
@@ -1019,17 +1012,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     }
                 }
             }
-            catch (DimrErrorCodeException e)
+            catch (Exception e)
             {
-                HandleDimrErrorCodeException(e);
-                throw;
+                HandleException(e);
             }
         }
 
-        private void HandleDimrErrorCodeException(DimrErrorCodeException e)
+        
+        private void HandleException(Exception e)
         {
-            Log.ErrorFormat(e.Message);
+            // suppress messages about crashed remote process (log as debug for developers)
+            bool remoteProcessCrash = e is InvalidOperationException ex
+                                      && ex.Message.Contains("Remote process");
 
+            if (remoteProcessCrash)
+            {
+                log.Debug(e.Message);
+            }
+
+            var errorMessage = remoteProcessCrash
+                                   ? $"{Name} crashed during {Status}, please look the validation report and diagnostic/log file."
+                                   : e.Message;
+
+            log.Error(errorMessage);
+
+            Status = ActivityStatus.Failed;
+
+            dimrApi?.ProcessMessages();
             dimrApi?.Dispose();
             dimrApi = null;
         }
