@@ -720,11 +720,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
             if (discretization == null) return;
 
-            discretization.DoWithPropertySet(nameof(discretization.SegmentGenerationMethod), SegmentGenerationMethod.None, () =>
-            {
-                discretization.ResetValues(discretization.GenerateSewerConnectionNetworkLocations().ToArray());
-            });
-            
+            discretization.ClearRuralLocations();
+
             MapControl.SelectTool.RefreshSelection();
             MapControl.Refresh();
         }

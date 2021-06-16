@@ -24,6 +24,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
@@ -1431,8 +1432,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void removeCalculationGridLocationsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var discretization = ((ToolStripMenuItem)sender).Tag as IDiscretization;
-            discretization?.ResetValues(discretization.GenerateSewerConnectionNetworkLocations().ToArray());
-            
+
+            discretization.ClearRuralLocations();
+
             //this should not be necessary...but collectionchanged is not properly handled in map
             var mapView = Gui.DocumentViews.ActiveView.GetViewsOfType<MapView>().FirstOrDefault();
             if (mapView != null)

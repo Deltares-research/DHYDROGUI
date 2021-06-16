@@ -127,6 +127,12 @@ namespace DelftTools.Hydro
             }
         }
 
+        /// <summary>
+        /// Handles switching of compartment for a <see cref="ISewerConnection"/>
+        /// </summary>
+        /// <param name="discretization">The discretization that needs to be updated</param>
+        /// <param name="fromCompartment">Previous compartment</param>
+        /// <param name="toCompartment">Current compartment</param>
         public static void HandleCompartmentSwitch(this IDiscretization discretization, ICompartment fromCompartment, ICompartment toCompartment)
         {
             var missingLocation = discretization.GetMissingLocationForCompartment(fromCompartment);
@@ -174,32 +180,6 @@ namespace DelftTools.Hydro
         }
 
         /// <summary>
-        /// Replaces the <paramref name="discretization"/> locations with the <paramref name="newLocations"/>
-        /// </summary>
-        /// <param name="discretization">The discretization to set</param>
-        /// <param name="newLocations">New locations to set</param>
-        /// <param name="fixedPointsMask">Mask for the locations containing the fixed points (value = 1 instead of 0)</param>
-        public static void ResetValues(this IDiscretization discretization, ICollection<INetworkLocation> newLocations, IEnumerable<double> fixedPointsMask = null)
-        {
-            // reset locations
-            discretization.BeginEdit(new DefaultEditAction("Setting values"));
-            discretization.Clear();
-
-            fixedPointsMask = fixedPointsMask ?? Enumerable.Repeat(0d, newLocations.Count).ToArray();
-
-            discretization.Locations.DoWithPropertySet(nameof(discretization.Locations.SkipUniqueValuesCheck), true, () =>
-            {
-                FunctionHelper.SetValuesRaw(discretization.Locations, newLocations);
-                FunctionHelper.SetValuesRaw(discretization.Components[0], fixedPointsMask);
-            });
-
-            discretization.EndEdit();
-
-            // force refresh of caching (location dictionary) -> new locations are added
-            TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
-        }
-
-        /// <summary>
         /// Generates network locations for all sewer connections in <paramref name="discretization"/> network
         /// </summary>
         /// <param name="discretization">Discretization generate points for</param>
@@ -223,6 +203,13 @@ namespace DelftTools.Hydro
             }
         }
 
+        /// <summary>
+        /// Gets locations for the node of a branch 
+        /// </summary>
+        /// <param name="discretization">The discretization containing the locations</param>
+        /// <param name="branch">Branch connected to the node</param>
+        /// <param name="nodeType">Node type (start/end node)</param>
+        /// <returns>Locations on the begin or end node</returns>
         public static INetworkLocation GetLocationForBranchNode(this IDiscretization discretization, IBranch branch, BranchNodeType nodeType)
         {
             if (branch is ISewerConnection sewerConnection)
@@ -236,6 +223,18 @@ namespace DelftTools.Hydro
 
             var node = nodeType == BranchNodeType.Begin ? branch.Source : branch.Target;
             return GetNetworkLocationsAtNode(discretization.GetLocationsForBranch, node).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Removes all rural locations, and adds missing the urban nodes
+        /// </summary>
+        /// <param name="discretization">Discretization to clear</param>
+        public static void ClearRuralLocations(this IDiscretization discretization)
+        {
+            discretization.DoWithPropertySet(nameof(discretization.SegmentGenerationMethod), SegmentGenerationMethod.None, () =>
+            {
+                discretization.UpdateNetworkLocations(discretization.GenerateSewerConnectionNetworkLocations().ToArray(), false);
+            });
         }
 
         private static INetworkLocation GetMissingLocationForCompartment(this IDiscretization discretization, ICompartment compartment)
@@ -282,6 +281,32 @@ namespace DelftTools.Hydro
                                     .Where(l => l != null);
 
             return incomingLocations.Concat(outgoingLocations);
+        }
+
+        /// <summary>
+        /// Replaces the <paramref name="discretization"/> locations with the <paramref name="newLocations"/>
+        /// </summary>
+        /// <param name="discretization">The discretization to set</param>
+        /// <param name="newLocations">New locations to set</param>
+        /// <param name="fixedPointsMask">Mask for the locations containing the fixed points (value = 1 instead of 0)</param>
+        private static void ResetValues(this IDiscretization discretization, ICollection<INetworkLocation> newLocations, IEnumerable<double> fixedPointsMask = null)
+        {
+            // reset locations
+            discretization.BeginEdit(new DefaultEditAction("Setting values"));
+            discretization.Clear();
+
+            fixedPointsMask = fixedPointsMask ?? Enumerable.Repeat(0d, newLocations.Count).ToArray();
+
+            discretization.Locations.DoWithPropertySet(nameof(discretization.Locations.SkipUniqueValuesCheck), true, () =>
+            {
+                FunctionHelper.SetValuesRaw(discretization.Locations, newLocations);
+                FunctionHelper.SetValuesRaw(discretization.Components[0], fixedPointsMask);
+            });
+
+            discretization.EndEdit();
+
+            // force refresh of caching (location dictionary) -> new locations are added
+            TypeUtils.SetField(discretization, "updateLocationsDictionary", true);
         }
 
         /// <summary>
