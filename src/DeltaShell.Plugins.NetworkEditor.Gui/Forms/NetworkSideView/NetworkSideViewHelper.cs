@@ -544,6 +544,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private static double GetSurfaceLevelAtChainage(double chainage, ISewerConnection connection)
         {
+            // check for pipes between urban and rural networks
+            if (connection.SourceCompartment == null || connection.TargetCompartment == null)
+            {
+                return double.NaN;
+            }
             return GetPipeLevelAtChainage(connection, chainage, connection.SourceCompartment.SurfaceLevel, connection.TargetCompartment.SurfaceLevel);
         }
 
