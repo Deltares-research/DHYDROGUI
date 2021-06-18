@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
         [TypeConverter(typeof (EnumDescriptionAttributeTypeConverter))]
         public enum CapsimInitOptions
         {
+            [Description("No Capsim")] NoCapsim = 0,
             [Description("At equilibrium moisture")] AtEquilibriumMoisture = 1,
             [Description("At moisture content pF2")] AtMoistureContentpF2 = 2,
             [Description("At moisture content pF3")] AtMoistureContentpF3 = 3
