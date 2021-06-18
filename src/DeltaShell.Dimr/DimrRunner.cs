@@ -22,6 +22,9 @@ namespace DeltaShell.Dimr
         private const string createdBy = "Deltares, Coupling Team";
         private static readonly ILog log = LogManager.GetLogger(typeof(DimrRunner));
 
+        private const string defaultNumThreadsKey = "threads";
+        private const string defaultNumThreads = "1";
+
         private static readonly dimrDocumentationXML documentation = new dimrDocumentationXML
         {
             createdBy = createdBy,
@@ -183,6 +186,16 @@ namespace DeltaShell.Dimr
                 workingDir = dimrModel.DirectoryName,
                 inputFile = dimrModel.InputFile
             };
+
+            if (dimrModel.LibraryName.Equals("dflowfm"))
+            {
+                component.setting = new dimrKeyValuePairXML
+                {
+                    key = defaultNumThreadsKey,
+                    value = defaultNumThreads
+                };
+            }
+
             dimrConfig.component = new[]
             {
                 component
