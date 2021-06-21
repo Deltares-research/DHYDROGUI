@@ -57,7 +57,6 @@
         PavedArea = 1,
         UnpavedArea = 2,
         Greenhouse = 3,
-        OpenWater = 4,
         InternallyReservedForAllStructures = 5,
         Boundary = 6,
         NWRW = 7, //???
@@ -73,6 +72,7 @@
         ExternalRunoff = 18,
         HBV = 19,
         SCS = 20,
+        OpenWater = 21,
         NAM = 31
     }
 }
