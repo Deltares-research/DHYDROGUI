@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
 {
-    public class FlowFmOutputFileComparer
+    public static class FlowFmOutputFileComparer
     {
         /// <summary>
         /// Compares the contents of two output file directories.
@@ -45,11 +45,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 string actualOutputFile = actualOutputFiles.Single(f => Path.GetFileName(f).Equals(fileName));
                 string expectedOutputFile = expectedOutputFiles.Single(f => Path.GetFileName(f).Equals(fileName));
                 
-                bool netCdfIsEqual = NetcdfFileComparer.Compare(actualOutputFile, expectedOutputFile, ref overallErrorMessage);
+                ICollection<string> validationErrors = NetcdfFileValidator.Validate(actualOutputFile, expectedOutputFile);
                 
-                if (!netCdfIsEqual)
+                if (validationErrors.Any())
                 {
                     identical = false;
+                    overallErrorMessage += string.Join(Environment.NewLine, validationErrors);
                 }
             }
 

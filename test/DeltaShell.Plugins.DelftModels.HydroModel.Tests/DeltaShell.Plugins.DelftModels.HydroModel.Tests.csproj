@@ -234,9 +234,9 @@
     <Compile Include="Acceptance\DimrAcceptanceModelTestHelper.cs" />
     <Compile Include="Acceptance\FileComparerHelper.cs" />
     <Compile Include="Acceptance\GwswAcceptanceModelTestHelper.cs" />
-    <Compile Include="Acceptance\HisMapFileComparer.cs" />
+    <Compile Include="Acceptance\HisMapFileValidator.cs" />
     <Compile Include="Acceptance\InputFileComparer.cs" />
-    <Compile Include="Acceptance\NetcdfFileComparer.cs" />
+    <Compile Include="Acceptance\NetcdfFileValidator.cs" />
     <Compile Include="Acceptance\Persistence\CustomComparers\RunoffTpFileComparer.cs" />
     <Compile Include="Acceptance\Persistence\CustomComparers\CrossSectionDefinitionFileComparer.cs" />
     <Compile Include="Acceptance\Persistence\DimrDataPersistanceAcceptanceTests.cs" />

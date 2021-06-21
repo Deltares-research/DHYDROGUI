@@ -51,11 +51,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 switch (extension.ToLowerInvariant())
                 {
                     case ".nc":
-                        filesAreEqual = NetcdfFileComparer.Compare(actualOutputFile, expectedOutputFile, ref overallErrorMessage);
+                        ICollection<string> validationIssues = NetcdfFileValidator.Validate(actualOutputFile, expectedOutputFile);
+                        filesAreEqual = !validationIssues.Any();
+                        overallErrorMessage += string.Join(Environment.NewLine, validationIssues);
                         break;
                     case ".his":
                     case ".map":
-                        filesAreEqual = HisMapFileComparer.Compare(actualOutputFile, expectedOutputFile, ref overallErrorMessage);
+                        ICollection<string> hisMapValidationIssues = HisMapFileValidator.Validate(actualOutputFile, expectedOutputFile);
+                        filesAreEqual = !hisMapValidationIssues.Any();
+                        overallErrorMessage += string.Join(Environment.NewLine, hisMapValidationIssues);
                         break;
                     default:
                         throw new NotSupportedException($"Comparing output file of type {extension} is not yet supported.");

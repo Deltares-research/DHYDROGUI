@@ -3697,9 +3697,9 @@ test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/AcceptanceModelT
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/DimrAcceptanceModelTestHelper.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/FileComparerHelper.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/GwswAcceptanceModelTestHelper.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/HisMapFileComparer.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/HisMapFileValidator.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/InputFileComparer.cs -text
-test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/NetcdfFileComparer.cs -text
+test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/NetcdfFileValidator.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/CustomComparers/CrossSectionDefinitionFileComparer.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/CustomComparers/RunoffTpFileComparer.cs -text
 test/DeltaShell.Plugins.DelftModels.HydroModel.Tests/Acceptance/Persistence/DimrDataPersistanceAcceptanceTests.cs -text
