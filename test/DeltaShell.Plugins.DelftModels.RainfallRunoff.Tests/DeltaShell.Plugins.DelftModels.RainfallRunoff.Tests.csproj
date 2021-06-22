@@ -64,6 +64,7 @@
     <Compile Include="TestClassSetup.cs" />
     <Compile Include="UI\Concepts\HbvDataPropertiesTest.cs" />
     <Compile Include="UI\Concepts\HbvDataViewTest.cs" />
+    <Compile Include="UI\Concepts\OpenWaterDataViewModelTest.cs" />
     <Compile Include="UI\Concepts\SacramentoDataPropertiesTest.cs" />
     <Compile Include="UI\Concepts\SacramentoDataViewTest.cs" />
     <Compile Include="UI\DataRows\RainfallRunoffDataRowProviderFactoryTest.cs" />

@@ -191,6 +191,7 @@
     <Compile Include="Concepts\OpenWaterDataView.Designer.cs">
       <DependentUpon>OpenWaterDataView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Concepts\OpenWaterDataViewModel.cs" />
     <Compile Include="Concepts\OpenWaterInitialConditionsDataRow.cs" />
     <Compile Include="Concepts\PavedDataRow.cs" />
     <Compile Include="Concepts\PavedDataView.cs">
@@ -455,6 +456,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.OpenWaterDataViewModel.datasource" />
     <None Include="Resources\evaporation.png" />
   </ItemGroup>
   <ItemGroup>

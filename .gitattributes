@@ -1075,6 +1075,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/OpenWaterDataRow.
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/OpenWaterDataView.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/OpenWaterDataView.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/OpenWaterDataView.resx -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/OpenWaterDataViewModel.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/OpenWaterInitialConditionsDataRow.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/PavedDataRow.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Concepts/PavedDataView.Designer.cs -text
@@ -1156,6 +1157,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/RainfallRun
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/RainfallRunoffInitialConditionsProjectNodePresenter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/NodePresenters/RainfallRunoffModelProjectNodePresenter.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/AssemblyInfo.cs.svn -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/DataSources/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.OpenWaterDataViewModel.datasource -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/Resources.Designer.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui/Properties/Resources.nl-NL.resx -text
@@ -4282,6 +4284,7 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Concepts/GreenhouseD
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Concepts/HbvDataPropertiesTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Concepts/HbvDataViewTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Concepts/KrayenhoffDrainageControlTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Concepts/OpenWaterDataViewModelTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Concepts/PavedDataPropertiesTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Concepts/PavedDataViewTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/UI/Concepts/SacramentoDataPropertiesTest.cs -text
