@@ -190,62 +190,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return extForceFileItem;
         }
 
-        public static ExtForceFileItem WriteMeteoData(string filePath, IFmMeteoField fmMeteoField,
-                                                         DateTime modelReferenceDate,
-                                                         bool writeToDisk = true)
-        {
-            var quantityName = ExtForceQuantNames.MeteoQuantityNames[fmMeteoField.Quantity];
-
-            var operand = Operator.Overwrite;
-
-            var extForceFileItem = new ExtForceFileItem(quantityName)
-            {
-                FileName = GetPliFileName(fmMeteoField.FeatureData),
-                FileType = ExtForceQuantNames.FileTypes.PolyTim,
-                Method = 3,
-                Operand = ExtForceQuantNames.OperatorToStringMapping[operand]
-            };
-
-            extForceFileItem.Quantity = quantityName;
-            
-            AddSuffixInCaseOfDuplicateFile(extForceFileItem);
-
-            if (writeToDisk)
-            {
-                var directory = Path.GetDirectoryName(filePath);
-
-                var pliFilePath = Path.Combine(directory, extForceFileItem.FileName);
-
-                new PliFile<Feature2D>().Write(pliFilePath, new EventedList<Feature2D> { (Feature2D)fmMeteoField.FeatureData.Feature });
-
-                var dataFilePath = GetNumberedFilePath(pliFilePath, "tim", 0);
-
-                for (var i = 0; i < 1; ++i)
-                {
-                    var data = fmMeteoField.Data;
-
-                    if (data == null)
-                    {
-                        if (File.Exists(dataFilePath))
-                        {
-                            File.Delete(dataFilePath);
-                        }
-                    }
-                    else
-                    {
-                        switch (fmMeteoField.Quantity)
-                        {
-                            case FmMeteoQuantity.Precipitation:
-                                new TimFile().Write(dataFilePath, data, modelReferenceDate);
-                                break;
-                        }
-                    }
-                }
-
-            }
-
-            return extForceFileItem;
-        }
         public static ExtForceFileItem WriteSourceAndSinkData(string filePath, SourceAndSink sourceAndSink,
                                                               DateTime referenceTime,
                                                               ExtForceFileItem existingExtForceFileItem,
@@ -847,16 +791,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 : string.Format("{0}_{1:0000}.{2}", filePathWithoutExtension, i, fileExtension);
         }
 
-        public static ExtForceFileItem CreateMeteoFieldExtForceFileItem(IFmMeteoField meteoField, string filePath)
-        {
-            return new ExtForceFileItem(ExtForceQuantNames.MeteoQuantityNames[meteoField.Quantity])
-                   {
-                       FileName = filePath,
-                       FileType = GetFileType(meteoField),
-                       Method = GetMethod(meteoField),
-                       Operand = "+"
-                   };
-        }
         public static ExtForceFileItem CreateWindFieldExtForceFileItem(IWindField windField, string filePath)
         {
             return new ExtForceFileItem(ExtForceQuantNames.WindQuantityNames[windField.Quantity])
@@ -868,15 +802,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                    };
         }
 
-        private static int GetFileType(IFmMeteoField meteoField)
-        {
-            var timeseriesMeteoField = meteoField as FmMeteoField;
-            if (timeseriesMeteoField != null)
-            {
-                return ExtForceQuantNames.FileTypes.Uniform;
-            }
-            return -1;
-        }
         private static int GetFileType(IWindField windField)
         {
             var uniformWindField = windField as UniformWindField;
@@ -899,15 +824,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return -1;
         }
 
-        private static int GetMethod(IFmMeteoField meteoField)
-        {
-            if (meteoField is FmMeteoField)
-            {
-                return 1;
-            }
-            return -1;
-        }
-
         private static int GetMethod(IWindField windField)
         {
             if (windField is UniformWindField)
@@ -923,24 +839,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return 1;
             }
             return -1;
-        }
-
-        public static IFmMeteoField CreateMeteoField(ExtForceFileItem extForceFileItem, string extForceFilePath)
-        {
-            if (!ExtForceQuantNames.MeteoQuantityNames.Values.Contains(extForceFileItem.Quantity))
-            {
-                throw new NotSupportedException(string.Format("Meteo quantity {0} is not supported",
-                    extForceFileItem.Quantity));
-            }
-            var quantity = ExtForceQuantNames.MeteoQuantityNames.First(kvp => kvp.Value == extForceFileItem.Quantity).Key;
-
-            switch (quantity)
-            {
-                case FmMeteoQuantity.Precipitation:
-                    return FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
         }
 
         public static IWindField CreateWindField(ExtForceFileItem extForceFileItem, string extForceFilePath)
