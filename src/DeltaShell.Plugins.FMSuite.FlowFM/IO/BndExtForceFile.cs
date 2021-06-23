@@ -722,7 +722,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 var locationFile = delftIniCategory.GetPropertyValue(LocationFileKey);
                 var isEmbankment = delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
-                var isMeteo = delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.Precipitation;
           
                 if (existingPolylineFiles.Values.Contains(locationFile)) continue;
 
@@ -748,34 +747,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     var features = reader.Read(pliFilePath);
                     if (!features.Any()) continue;
                     modelDefinition.Embankments.Add(features.First());
-                }
-                else if (isMeteo)
-                {
-                    Log.DebugFormat("This is meteo data. We only support global.");
-                    var locationType = delftIniCategory.GetPropertyValue(LocationTypeKey);
-                    var meteoLocationType = FmMeteoLocationType.Global;
-                    if (!Enum.TryParse(locationType, out meteoLocationType))
-                    {
-                        Log.DebugFormat("What the F*** is this kind of meteo location!!! : '{0}'", locationType);
-                        continue;
-                    }
-
-                    if (meteoLocationType != FmMeteoLocationType.Polygon)
-                    {
-                        Log.DebugFormat("Can't read polygon of fm location type: '{0}'", locationType);
-                        continue;
-                    }
-                    var reader = new PliFile<Feature2D>();
-                    var features = reader.Read(pliFilePath);
-                    if (!features.Any()) continue;
-                    foreach (var feature in features)
-                    {
-                        existingPolylineFiles[feature] = locationFile;
-                        var meteoField = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Polygon);
-                        meteoField.FeatureData.Feature = feature;
-                        modelDefinition.FmMeteoFields.Add(meteoField);
-                    }
-
                 }
                 else
                 {                
