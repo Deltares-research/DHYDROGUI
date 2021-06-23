@@ -16,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using GeoAPI.Geometries;
+using log4net.Core;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -936,15 +937,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 // Setup
                 string extFileContent =
-                    "[general]                          " + Environment.NewLine +
-                    "    fileVersion     = 2.0          " + Environment.NewLine +
-                    "    fileType        = extForce     " + Environment.NewLine +
-                    "    fileType        = extForce     " + Environment.NewLine +
-                    "                                   " + Environment.NewLine +
-                    "[meteo]                            " + Environment.NewLine +
-                    "    quantity        = rainfall_rate" + Environment.NewLine +
-                    "    forcingFileType = bcAscii      " + Environment.NewLine +
-                    "    forcingFile     = file_meteo.bc";
+                    "[general]                            " + Environment.NewLine +
+                    "    fileVersion     = 2.0            " + Environment.NewLine +
+                    "    fileType        = extForce       " + Environment.NewLine +
+                    "    fileType        = extForce       " + Environment.NewLine +
+                    "                                     " + Environment.NewLine +
+                    "[meteo]                              " + Environment.NewLine +
+                    "    quantity        = rainfall_rate  " + Environment.NewLine +
+                    "    forcingFileType = bcAscii        " + Environment.NewLine +
+                    "    forcingFile     = FlowFM_meteo.bc";
 
                 string bcFileContent =
                     "[General]                                            " + Environment.NewLine +
@@ -963,14 +964,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "200    4.56                                          " + Environment.NewLine +
                     "300    7.89                                          ";
                 
-                string extFile = temp.CreateFile("file_bnd.ext", extFileContent);
-                temp.CreateFile("file_meteo.bc", bcFileContent);
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+                temp.CreateFile("FlowFM_meteo.bc", bcFileContent);
 
                 var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
+                var hydroArea = new HydroArea();
                 
                 // Call
-                bndExtForceFile.Read(extFile, modelDefinition);
+                bndExtForceFile.Read(extFile, modelDefinition, area: hydroArea);
 
                 // Assert
                 IFmMeteoField meteoData = modelDefinition.FmMeteoFields.Single();
@@ -991,6 +993,200 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(values[1], Is.EqualTo(4.56));
                 Assert.That(times[2], Is.EqualTo(new DateTime(2021, 1, 1).AddSeconds(300)));
                 Assert.That(values[2], Is.EqualTo(7.89));
+                
+                Assert.That(hydroArea.RoofAreas, Is.Empty);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FileWithMeteoDataAndRoofs_CorrectlyReadsTheMeteoDataAndRoofs()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                                " + Environment.NewLine +
+                    "    fileVersion        = 2.0             " + Environment.NewLine +
+                    "    fileType           = extForce        " + Environment.NewLine +
+                    "    fileType           = extForce        " + Environment.NewLine +
+                    "                                         " + Environment.NewLine +
+                    "[meteo]                                  " + Environment.NewLine +
+                    "    quantity           = rainfall_rate   " + Environment.NewLine +
+                    "    forcingFileType    = bcAscii         " + Environment.NewLine +
+                    "    forcingFile        = FlowFM_meteo.bc " + Environment.NewLine +
+                    "    targetMaskFile     = FlowFM_roofs.pol" + Environment.NewLine +
+                    "    targetMaskInvert   = true            " + Environment.NewLine +
+                    "    interpolationMethod= nearestNb       ";
+
+                string bcFileContent =
+                    "[General]                                            " + Environment.NewLine +
+                    "    fileVersion   = 1.01                             " + Environment.NewLine +
+                    "    fileType      = boundConds                       " + Environment.NewLine +
+                    "                                                     " + Environment.NewLine +
+                    "[forcing]                                            " + Environment.NewLine +
+                    "Name              = global                           " + Environment.NewLine +
+                    "Function          = timeseries                       " + Environment.NewLine +
+                    "timeInterpolation = linear                           " + Environment.NewLine +
+                    "Quantity          = time                             " + Environment.NewLine +
+                    "Unit              = seconds since 2021-01-01 00:00:00" + Environment.NewLine +
+                    "Quantity          = rainfall_rate                    " + Environment.NewLine +
+                    "Unit              = mm day-1                         " + Environment.NewLine +
+                    "100    1.23                                          " + Environment.NewLine +
+                    "200    4.56                                          " + Environment.NewLine +
+                    "300    7.89                                          ";
+                
+                string roofFileContent =
+                    "SomeRoof                          " + Environment.NewLine +
+                    "    5    2                        " + Environment.NewLine +
+                    "        0.0        0.0            " + Environment.NewLine +
+                    "        1.0        0.0            " + Environment.NewLine +
+                    "        1.0        1.0            " + Environment.NewLine +
+                    "        0.0        1.0            " + Environment.NewLine +
+                    "        0.0        0.0            ";
+                
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+                temp.CreateFile("FlowFM_meteo.bc", bcFileContent);
+                temp.CreateFile("FlowFM_roofs.pol", roofFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                var hydroArea = new HydroArea();
+                
+                // Call
+                bndExtForceFile.Read(extFile, modelDefinition, area: hydroArea);
+
+                // Assert
+                IFmMeteoField meteoData = modelDefinition.FmMeteoFields.Single();
+                Assert.That(meteoData.Name, Is.EqualTo("Precipication rainfall (Global)"));
+                Assert.That(meteoData.Quantity, Is.EqualTo(FmMeteoQuantity.Precipitation));
+                Assert.That(meteoData.FmMeteoLocationType, Is.EqualTo(FmMeteoLocationType.Global));
+
+                var function = (TimeSeries) meteoData.Data;
+                Assert.That(function.Arguments, Has.Count.EqualTo(1));
+                Assert.That(function.Components, Has.Count.EqualTo(1));
+                Assert.That(function.Components[0].Name, Is.EqualTo("Precipitation"));
+                
+                IMultiDimensionalArray<DateTime> times = function.Time.Values;
+                IMultiDimensionalArray values = function.Components[0].Values;
+                Assert.That(times[0], Is.EqualTo(new DateTime(2021, 1, 1).AddSeconds(100)));
+                Assert.That(values[0], Is.EqualTo(1.23));
+                Assert.That(times[1], Is.EqualTo(new DateTime(2021, 1, 1).AddSeconds(200)));
+                Assert.That(values[1], Is.EqualTo(4.56));
+                Assert.That(times[2], Is.EqualTo(new DateTime(2021, 1, 1).AddSeconds(300)));
+                Assert.That(values[2], Is.EqualTo(7.89));
+                
+                GroupableFeature2DPolygon roof = hydroArea.RoofAreas.Single();
+                Assert.That(roof.Name, Is.EqualTo("SomeRoof"));
+
+                IGeometry geometry = roof.Geometry;
+                Assert.That(geometry, Is.TypeOf<Polygon>());
+                Assert.That(geometry.Coordinates, Has.Length.EqualTo(5));
+                Assert.That(geometry.Coordinates[0].X, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[0].Y, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[1].X, Is.EqualTo(1.0));
+                Assert.That(geometry.Coordinates[1].Y, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[2].X, Is.EqualTo(1.0));
+                Assert.That(geometry.Coordinates[2].Y, Is.EqualTo(1.0));
+                Assert.That(geometry.Coordinates[3].X, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[3].Y, Is.EqualTo(1.0));
+                Assert.That(geometry.Coordinates[4].X, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[4].Y, Is.EqualTo(0.0));
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FileWithRoofs_CorrectlyReadsTheRoofs()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                                " + Environment.NewLine +
+                    "    fileVersion        = 2.0             " + Environment.NewLine +
+                    "    fileType           = extForce        " + Environment.NewLine +
+                    "    fileType           = extForce        " + Environment.NewLine +
+                    "                                         " + Environment.NewLine +
+                    "[meteo]                                  " + Environment.NewLine +
+                    "    targetMaskFile     = FlowFM_roofs.pol" + Environment.NewLine +
+                    "    targetMaskInvert   = true            " + Environment.NewLine +
+                    "    interpolationMethod= nearestNb       ";
+                
+                string roofFileContent =
+                    "SomeRoof                          " + Environment.NewLine +
+                    "    5    2                        " + Environment.NewLine +
+                    "        0.0        0.0            " + Environment.NewLine +
+                    "        1.0        0.0            " + Environment.NewLine +
+                    "        1.0        1.0            " + Environment.NewLine +
+                    "        0.0        1.0            " + Environment.NewLine +
+                    "        0.0        0.0            ";
+                
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+                temp.CreateFile("FlowFM_roofs.pol", roofFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                var hydroArea = new HydroArea();
+                
+                // Call
+                bndExtForceFile.Read(extFile, modelDefinition, area: hydroArea);
+
+                // Assert
+                Assert.That(modelDefinition.FmMeteoFields, Is.Empty);
+                
+                GroupableFeature2DPolygon roof = hydroArea.RoofAreas.Single();
+                Assert.That(roof.Name, Is.EqualTo("SomeRoof"));
+
+                IGeometry geometry = roof.Geometry;
+                Assert.That(geometry, Is.TypeOf<Polygon>());
+                Assert.That(geometry.Coordinates, Has.Length.EqualTo(5));
+                Assert.That(geometry.Coordinates[0].X, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[0].Y, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[1].X, Is.EqualTo(1.0));
+                Assert.That(geometry.Coordinates[1].Y, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[2].X, Is.EqualTo(1.0));
+                Assert.That(geometry.Coordinates[2].Y, Is.EqualTo(1.0));
+                Assert.That(geometry.Coordinates[3].X, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[3].Y, Is.EqualTo(1.0));
+                Assert.That(geometry.Coordinates[4].X, Is.EqualTo(0.0));
+                Assert.That(geometry.Coordinates[4].Y, Is.EqualTo(0.0));
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_FileWithRoofs_PolFileDoesNotExist_ReportWarning()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                                " + Environment.NewLine +
+                    "    fileVersion        = 2.0             " + Environment.NewLine +
+                    "    fileType           = extForce        " + Environment.NewLine +
+                    "    fileType           = extForce        " + Environment.NewLine +
+                    "                                         " + Environment.NewLine +
+                    "[meteo]                                  " + Environment.NewLine +
+                    "    targetMaskFile     = FlowFM_roofs.pol" + Environment.NewLine +
+                    "    targetMaskInvert   = true            " + Environment.NewLine +
+                    "    interpolationMethod= nearestNb       ";
+                
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                var hydroArea = new HydroArea();
+                
+                // Call
+                void Call ()=> bndExtForceFile.Read(extFile, modelDefinition, area: hydroArea);
+
+                // Assert
+                string[] warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToArray();
+                var expWarning = $"File does not exist: {Path.Combine(temp.Path, "FlowFM_roofs.pol")}";
+                
+                Assert.That(warnings, Does.Contain(expWarning));
+                Assert.That(hydroArea.RoofAreas, Is.Empty);
             }
         }
     }
