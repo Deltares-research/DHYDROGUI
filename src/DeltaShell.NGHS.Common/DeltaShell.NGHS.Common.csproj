@@ -64,7 +64,7 @@
     <Compile Include="Validation\RestartTimeRangeValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="DelftTools.Shell.Core, Version=2.0.0.662, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Shell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
