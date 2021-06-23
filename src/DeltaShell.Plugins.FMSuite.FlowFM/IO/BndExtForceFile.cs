@@ -297,14 +297,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             foreach (var fmMeteoField in fmMeteoFields)
             {
                 var quantityName = ExtForceQuantNames.MeteoQuantityNames[fmMeteoField.Quantity];
-
-                var pliFileName = fmMeteoField.FeatureData?.Feature is Feature2D
-                    ? existingPolylineFiles[(Feature2D)fmMeteoField.FeatureData.Feature]
-                    : null;
-
-                var fmMeteoLocationType =
-                    BcMeteoFileDataBuilder.FmMeteoLocationKernelNames[fmMeteoField.FmMeteoLocationType];
-                var bndBlock = CreateMeteoBlock(quantityName, fmMeteoLocationType, pliFileName, path);
+                var bndBlock = CreateMeteoBlock(quantityName, path);
 
                 resultingItems.Add(bndBlock);
             }
@@ -318,7 +311,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             return resultingItems;
         }
-        private static DelftIniCategory CreateMeteoBlock(string quantity, string fmMeteoLocationType, string locationFilePath, string forcingFilePath)
+        private static DelftIniCategory CreateMeteoBlock(string quantity, string forcingFilePath)
         {
             var block = new DelftIniCategory(MeteoBlockKey);
             if (!string.IsNullOrEmpty(quantity))
