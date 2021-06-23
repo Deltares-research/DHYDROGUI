@@ -159,7 +159,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var modelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read(testFilePath, modelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(),new EventedList<Model1DLateralSourceData>() );
+            reader.Read(testFilePath, modelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(),new EventedList<Model1DLateralSourceData>() );
 
             Assert.AreEqual(1,modelDefinition.BoundaryConditionSets.Count);
             Assert.AreEqual(2, modelDefinition.BoundaryConditionSets[0].BoundaryConditions.Count);
@@ -230,7 +230,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(),new EventedList<Model1DLateralSourceData>());
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(),new EventedList<Model1DLateralSourceData>());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -281,7 +281,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
 
             Assert.AreEqual(thatcherHarlemanTimeLag,
                 ((FlowBoundaryCondition)newModelDefinition.BoundaryConditionSets[0].BoundaryConditions[0])
@@ -333,7 +333,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork(), new HydroArea(), new EventedList<Model1DBoundaryNodeData>(), new EventedList<Model1DLateralSourceData>());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);

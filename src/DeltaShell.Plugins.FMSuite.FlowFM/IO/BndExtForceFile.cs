@@ -30,6 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
     public class BndExtForceFile : FMSuiteFileBase
     {
+        private readonly PolFile<GroupableFeature2DPolygon> roofPolFile = new PolFile<GroupableFeature2DPolygon> {IncludeClosingCoordinate = true};
         public const string MeteoBlockKey = "[meteo]";
         public const string LocationTypeKey = "locationType";
 
@@ -536,9 +537,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 return;
             }
             
-            var roofWriter = new PolFile<GroupableFeature2DPolygon> {IncludeClosingCoordinate = true};
             string roofFilePath = GetFullPath(modelName + FileConstants.RoofAreaFileExtension);
-            roofWriter.Write(roofFilePath, roofAreas);
+            roofPolFile.Write(roofFilePath, roofAreas);
         }
 
         private void WritePolyLines(IEnumerable<BoundaryConditionSet> boundaryConditionSets)
@@ -702,24 +702,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network = null, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D=null, IEventedList<Model1DLateralSourceData> lateralSourcesData=null)
+        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network = null, HydroArea area = null, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D=null, IEventedList<Model1DLateralSourceData> lateralSourcesData=null)
         {
             FilePath = bndExtForceFilePath;
 
             var bndBlocks = new DelftIniReader().ReadDelftIniFile(bndExtForceFilePath);
 
-            ReadPolyLines(bndBlocks, modelDefinition);
+            ReadPolyLines(bndBlocks, modelDefinition, area);
 
             ReadBoundaryConditions(bndBlocks, modelDefinition, network, boundaryConditions1D, lateralSourcesData);
         }
 
         
-        private void ReadPolyLines(IEnumerable<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition)
+        private void ReadPolyLines(IEnumerable<DelftIniCategory> bndBlocks, WaterFlowFMModelDefinition modelDefinition, HydroArea area)
         {
             modelDefinition.Boundaries.ForEach(b => { existingPolylineFiles[b] = b.Name + ".pli"; });
 
             foreach (var delftIniCategory in bndBlocks)
             {
+                string roofFile = delftIniCategory.GetPropertyValue(TargetMaskFileKey);
+                if (area != null && roofFile != null)
+                {
+                    ReadRoofAreas(area, roofFile);
+                    continue;
+                }
+                
                 var locationFile = delftIniCategory.GetPropertyValue(LocationFileKey);
                 var isEmbankment = delftIniCategory.GetPropertyValue(QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
           
@@ -752,7 +759,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {                
                     var reader = new PliFile<Feature2D>();
                     var features = reader.Read(pliFilePath);
-                    if (!features.Any()) continue;
                     foreach (var feature in features)
                     {
                         existingPolylineFiles[feature] = locationFile;
@@ -762,6 +768,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 }
             }
         }
+
+        private void ReadRoofAreas(HydroArea area, string relativeFilePath)
+        {
+            string filePath = GetFullPath(relativeFilePath);
+            if (!File.Exists(filePath))
+            {
+                Log.Warn($"File does not exist: {filePath}");
+                return;
+            }
+
+            IList<GroupableFeature2DPolygon> roofAreas = roofPolFile.Read(filePath);
+            area.RoofAreas.AddRange(roofAreas);
+        }
+
         private Dictionary<FmMeteoQuantity, Func<FmMeteoLocationType, IFmMeteoField>> IFMMeteoFieldGenerator = new Dictionary<FmMeteoQuantity, Func<FmMeteoLocationType, IFmMeteoField>>()
         {
             {FmMeteoQuantity.Precipitation, FmMeteoField.CreateMeteoPrecipitationSeries }

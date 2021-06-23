@@ -916,7 +916,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (forceFilePath != null && File.Exists(forceFilePath))
                 {
                     BoundaryExternalForcingsFile = new BndExtForceFile();
-                    BoundaryExternalForcingsFile.Read(forceFilePath, modelDefinition, network, boundaryConditions1D, lateralSourcesData);
+                    BoundaryExternalForcingsFile.Read(forceFilePath, modelDefinition, network, hydroArea, boundaryConditions1D, lateralSourcesData);
                 }
             }
 
