@@ -53,21 +53,43 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void ReadAndSetBoundaryConditionsViaBC(RainfallRunoffModel model)
         {
-            ///yep... lets not do this now..
+            var boundaryDatas = model.BoundaryData;
+
+            var linksLookup = new SobekRRLinkReader()
+                              .Read(GetFilePath(SobekFileNames.SobekRRLinkFileName))
+                              .GroupBy(l => l.NodeToId)
+                              .ToDictionary(g => g.Key, g => g.ToArray());
+            
             var bcFileReader = new BcFile(){BlockKey = $"[{BoundaryRegion.BcBoundaryHeader}]" };
             var bcBlockDatas = bcFileReader.Read(GetFilePath("BoundaryConditions.bc"));
-            var boundaryDatas = model.BoundaryData;
+            
             foreach (var bcBlockData in bcBlockDatas)
             {
                 //put condition on the boundary itself
                 var boundaryCondition = boundaryDatas.FirstOrDefault(bd => bd.Boundary.Name == bcBlockData.FunctionType);
-                if (boundaryCondition == null)
-                    continue;
-                var boundaryData = boundaryCondition.Series;
-                boundaryData.IsConstant = bcBlockData.FunctionType.Equals("constant", StringComparison.InvariantCultureIgnoreCase);
-                boundaryData.Data.Time.ExtrapolationType = ExtrapolationType.Constant;
-            }
+                if (boundaryCondition != null)
+                {
+                    var boundaryData = boundaryCondition.Series;
+                    boundaryData.IsConstant = bcBlockData.FunctionType.Equals("constant", StringComparison.InvariantCultureIgnoreCase);
+                    boundaryData.Data.Time.ExtrapolationType = ExtrapolationType.Constant;
+                }
+                else
+                {
+                    string locationId = bcBlockData.SupportPoint;
+                    if (linksLookup.TryGetValue(locationId, out SobekRRLink[] links))
+                    {
+                        SobekRRLink link = links[0];
 
+                        if (links.Length > 1)
+                        {
+                            string linksToSkip = string.Join(", ", links.Skip(1).Select(l => $"'{l.Id}'"));
+                            log.Warn($"Multiple links to '{locationId}' have been found. Only one link is currently supported. Using the first link '{link.Id}'. Skipping: {linksToSkip}.");
+                        }
+
+                        model.LateralToCatchmentLookup.Add(locationId, link.NodeFromId);
+                    }
+                }
+            }
         }
 
         private void ReadAndSetBoundaryConditions(RainfallRunoffModel model)

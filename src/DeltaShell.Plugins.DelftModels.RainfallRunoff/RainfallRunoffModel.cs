@@ -273,6 +273,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 GetDataItemByTag(RainfallRunoffModelDataSet.BasinTag).Value = value; //will trigger refresh in syncer
             }
         }
+        
+        public Dictionary<string, string> LateralToCatchmentLookup { get; } = new Dictionary<string, string>();
 
         public bool InputWaterLevelIsLinked
         {
@@ -830,7 +832,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             IFeatureCoverage catchmentCoverage = CreateFeatureCoverage(name, valueName, valueUnit, timeDependent, coordinateSystem);
             catchmentCoverage.Arguments.Last().Name = "Catchment";
-
+            
             return catchmentCoverage;
         }
 
@@ -1300,7 +1302,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             if (hydroObject == null)
             {
-                throw new ArgumentException(string.Format("feature {0} in {1} cannot be found in the FM model.",
+                throw new ArgumentException(string.Format("feature {0} in {1} cannot be found in the Rainfall Runoff model.",
                                                           featureName, itemString));
             }
 
@@ -1312,7 +1314,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             switch (category)
             {
                 case "catchments":
-                    return Basin.AllCatchments.SingleOrDefault(c => string.Equals(c.Name, featureName, StringComparison.InvariantCultureIgnoreCase));
+                    Catchment catchment = Basin.AllCatchments.SingleOrDefault(c => string.Equals(c.Name, featureName, StringComparison.InvariantCultureIgnoreCase));
+                    if (catchment == null)
+                    {
+                        if (LateralToCatchmentLookup.TryGetValue(featureName, out string catchmentString))
+                        {
+                            catchment = Basin.AllCatchments.SingleOrDefault(c => string.Equals(c.Name, catchmentString, StringComparison.InvariantCultureIgnoreCase));
+                        }
+                    }
+
+                    return catchment;
                 default:
                     return null;
             }
