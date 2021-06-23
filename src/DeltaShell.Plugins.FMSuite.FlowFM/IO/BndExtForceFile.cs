@@ -178,15 +178,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var allItems = bndExtForceFileItems.Concat(embankmentForceFileItems).Concat(bnd1DExtForceFileItems).Concat(lateralSourcesDataExtForceFileItems).ToList();
             FileUtils.DeleteIfExists(FilePath);
-            if (allItems.Count > 0)
+            if (allItems.Any())
             {
                 WriteBndExtForceFile(allItems);
             }
-            if (meteoExtForceFileItems.Count > 0)
+            if (meteoExtForceFileItems.Any())
             {
                 WriteMeteoExtForceFile(meteoExtForceFileItems);
             }
-            if (allItems.Count > 0 || meteoExtForceFileItems.Count > 0)
+            if (allItems.Any() || meteoExtForceFileItems.Any())
             {
                 modelProperty.SetValueAsString(Path.GetFileName(FilePath));
             }
