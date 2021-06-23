@@ -46,7 +46,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Controls.Swf, Version=1.3.0.39676, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Controls.Swf">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
@@ -55,7 +55,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.Shell.Core, Version=2.0.0.662, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.Shell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
@@ -64,7 +64,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DelftTools.TestUtils, Version=2.0.0.662, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DelftTools.TestUtils">
       <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.662\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
@@ -85,7 +85,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.IntegrationTestUtils, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DeltaShell.IntegrationTestUtils">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.662\lib\net40\DeltaShell.IntegrationTestUtils.dll</HintPath>
       <Private>False</Private>
@@ -114,7 +114,7 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DeltaShell.Plugins.Scripting.Gui, Version=1.2.0.35290, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DeltaShell.Plugins.Scripting.Gui">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.662\lib\net461\plugins\DeltaShell.Plugins.Scripting.Gui\DeltaShell.Plugins.Scripting.Gui.dll</HintPath>
       <Private>False</Private>
