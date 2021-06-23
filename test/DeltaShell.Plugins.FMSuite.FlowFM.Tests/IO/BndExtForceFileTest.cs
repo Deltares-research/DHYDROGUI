@@ -19,6 +19,7 @@ using GeoAPI.Geometries;
 using log4net.Core;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
@@ -1187,6 +1188,116 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 
                 Assert.That(warnings, Does.Contain(expWarning));
                 Assert.That(hydroArea.RoofAreas, Is.Empty);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_WithMeteoAndRoofs_WritesCorrectFiles()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                string extFilePath = Path.Combine(temp.Path, "FlowFM_bnd.ext");
+                string bcFilePath = Path.Combine(temp.Path, "FlowFM_meteo.bc");
+                string polFilePath = Path.Combine(temp.Path, "FlowFM_roofs.pol");
+                
+                var meteoField = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
+                meteoField.Data[DateTime.Today.AddSeconds(100)] = 1.23;
+                meteoField.Data[DateTime.Today.AddSeconds(200)] = 4.56;
+                meteoField.Data[DateTime.Today.AddSeconds(300)] = 7.89;
+                
+                var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
+                modelDefinition.FmMeteoFields.Add(meteoField);
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, DateTime.Today);
+                
+                var coordinates = new[]
+                {
+                    new Coordinate(0.0, 0.0),
+                    new Coordinate(1.0, 0.0),
+                    new Coordinate(1.0, 1.0),
+                    new Coordinate(0.0, 1.0),
+                    new Coordinate(0.0, 0.0),
+                };
+                var geometry = Substitute.For<IGeometry>();
+                geometry.Coordinates.Returns(coordinates);
+                var roofArea = new GroupableFeature2DPolygon {Geometry = geometry};
+                
+                var bndExtForceFile = new BndExtForceFile();
+                
+                // Call
+                bndExtForceFile.Write(extFilePath, modelDefinition, roofAreas: new[]{roofArea});
+                
+                // Assert
+                Assert.That(extFilePath, Does.Exist);
+                Assert.That(bcFilePath, Does.Exist);
+                Assert.That(polFilePath, Does.Exist);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_WithMeteo_WritesCorrectFiles()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                string extFilePath = Path.Combine(temp.Path, "FlowFM_bnd.ext");
+                string bcFilePath = Path.Combine(temp.Path, "FlowFM_meteo.bc");
+                string polFilePath = Path.Combine(temp.Path, "FlowFM_roofs.pol");
+                
+                var meteoField = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
+                meteoField.Data[DateTime.Today.AddSeconds(100)] = 1.23;
+                meteoField.Data[DateTime.Today.AddSeconds(200)] = 4.56;
+                meteoField.Data[DateTime.Today.AddSeconds(300)] = 7.89;
+                
+                var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
+                modelDefinition.FmMeteoFields.Add(meteoField);
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, DateTime.Today);
+                
+                var bndExtForceFile = new BndExtForceFile();
+                
+                // Call
+                bndExtForceFile.Write(extFilePath, modelDefinition);
+                
+                // Assert
+                Assert.That(extFilePath, Does.Exist);
+                Assert.That(bcFilePath, Does.Exist);
+                Assert.That(polFilePath, Does.Not.Exist);
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_WithRoofs_WritesCorrectFiles()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                string extFilePath = Path.Combine(temp.Path, "FlowFM_bnd.ext");
+                string bcFilePath = Path.Combine(temp.Path, "FlowFM_meteo.bc");
+                string polFilePath = Path.Combine(temp.Path, "FlowFM_roofs.pol");
+                
+                var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
+                
+                var coordinates = new[]
+                {
+                    new Coordinate(0.0, 0.0),
+                    new Coordinate(1.0, 0.0),
+                    new Coordinate(1.0, 1.0),
+                    new Coordinate(0.0, 1.0),
+                    new Coordinate(0.0, 0.0),
+                };
+                var geometry = Substitute.For<IGeometry>();
+                geometry.Coordinates.Returns(coordinates);
+                var roofArea = new GroupableFeature2DPolygon {Geometry = geometry};
+                
+                var bndExtForceFile = new BndExtForceFile();
+                
+                // Call
+                bndExtForceFile.Write(extFilePath, modelDefinition, roofAreas: new[]{roofArea});
+                
+                // Assert
+                Assert.That(extFilePath, Does.Exist);
+                Assert.That(bcFilePath, Does.Exist);
+                Assert.That(polFilePath, Does.Exist);
             }
         }
     }
