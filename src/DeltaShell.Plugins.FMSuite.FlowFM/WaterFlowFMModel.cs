@@ -3191,8 +3191,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 });
                 if (dataItem == null)
                 {
-                    throw new ArgumentException(string.Format("parameter name {0} in {1} cannot be found in the FM model.",
-                                                              parameterName, itemString));
+                    return null;
                 }
             }
 
