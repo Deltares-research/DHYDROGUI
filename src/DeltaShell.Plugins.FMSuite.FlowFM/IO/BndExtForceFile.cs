@@ -48,6 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         
         public const string LocationFileKey = "locationfile";
         public const string ForcingFileKey = "forcingfile";
+        public const string ForcingFileTypeKey = "forcingFileType";
         private const string AreaKey = "area";
         private const string ThatcherHarlemanTimeLagKey = "return_time";
         private const string OpenBoundaryToleranceKey = "OpenBoundaryTolerance";
@@ -268,11 +269,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 {
                     WriteLine("");
                     WriteLine(MeteoBlockKey);
-                    WriteLine(QuantityKey + "=" + bndExtForceFileItem.GetPropertyValue(QuantityKey));
-                    WriteLine("forcingFileType=bcAscii");
-                    foreach (var propertyValue in bndExtForceFileItem.GetPropertyValues(ForcingFileKey))
+
+                    foreach (DelftIniProperty property in bndExtForceFileItem.Properties)
                     {
-                        WriteLine(ForcingFileKey + "=" + propertyValue);
+                        WriteLine(property.Name + "=" + property.Value);
                     }
                 }
             }
@@ -316,6 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var block = new DelftIniCategory(MeteoBlockKey);
             block.AddProperty(QuantityKey, quantity);
             block.AddProperty(ForcingFileKey, forcingFilePath);
+            block.AddProperty(ForcingFileTypeKey, "bcAscii");
 
             return block;
         }
