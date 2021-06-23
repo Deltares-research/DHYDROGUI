@@ -314,11 +314,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static DelftIniCategory CreateMeteoBlock(string quantity, string forcingFilePath)
         {
             var block = new DelftIniCategory(MeteoBlockKey);
-            if (!string.IsNullOrEmpty(quantity))
-                block.AddProperty(QuantityKey, quantity);
-
-            if (!string.IsNullOrEmpty(forcingFilePath))
-                block.AddProperty(ForcingFileKey, forcingFilePath);
+            block.AddProperty(QuantityKey, quantity);
+            block.AddProperty(ForcingFileKey, forcingFilePath);
 
             return block;
         }
