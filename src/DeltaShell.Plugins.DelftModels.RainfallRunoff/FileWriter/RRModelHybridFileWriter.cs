@@ -83,10 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             File.WriteAllText("WWTP.3b", String.Join("\r\n", wwtp.ToArray()));
             File.WriteAllText("WWTP.tbl", "");
-
-            File.WriteAllText("Bound3B.3B", String.Join("\r\n", boundaries.ToArray()));
-            File.WriteAllText("Bound3B.tbl", "");
-
+            
             File.WriteAllText("3B_NOD.TP", String.Join("\r\n", nodes.ToArray()));
             File.WriteAllText("3B_LINK.TP", String.Join("\r\n", links.ToArray()));
 
