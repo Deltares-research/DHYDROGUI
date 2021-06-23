@@ -54,7 +54,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string DryAreaExtension = "_dry.pol";
         public const string DryPointExtension = "_dry.xyz";
         public const string EnclosureExtension = "_enc.pol";
-        public const string RoofAreaExtension = "_roofs.pol";
         public const string MorphologyExtension = ".mor";
         public const string SedimentExtension = ".sed";
 
@@ -69,7 +68,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private PliFile<ObservationCrossSection2D> obsCrsFile;
         private PolFile<GroupableFeature2DPolygon> dryAreaFile;
         private PolFile<GroupableFeature2DPolygon> enclosureFile;
-        private PolFile<GroupableFeature2DPolygon> roofAreaFile;
         
 
         // the following mdu-referenced files are written by the UI, or at least should not be copied along blindly 
@@ -81,7 +79,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             KnownProperties.HisFile__Obsolete, KnownProperties.ThinDamFile, KnownProperties.FixedWeirFile,
             KnownProperties.BridgePillarFile,
             KnownProperties.ObsFile, KnownProperties.ObsCrsFile, KnownProperties.LandBoundaryFile,
-            KnownProperties.DryPointsFile, KnownProperties.RestartFile, KnownProperties.StructuresFile, KnownProperties.RoofAreaFile
+            KnownProperties.DryPointsFile, KnownProperties.RestartFile, KnownProperties.StructuresFile,
         };
 
         private static readonly Dictionary<string, string> MduFilePropertyDescriptionDictionary = new Dictionary<string, string>
@@ -95,7 +93,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             { KnownProperties.StructuresFile, "StructureFile" },
             { KnownProperties.ObsFile, "ObsFile" },
             { KnownProperties.ObsCrsFile, "CrsFile" },
-            { KnownProperties.RoofAreaFile, "RoofAreaFile" },
         };
 
         public MduFile()
@@ -363,11 +360,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var hasEmbankments = hydroArea.Embankments.Any();
             modelDefinition.Embankments = hydroArea.Embankments;
 
+            IEventedList<GroupableFeature2DPolygon> roofAreas = hydroArea.RoofAreas;
+            bool hasRoofAreas = roofAreas.Any();
+
             // will check if indeed the file is written)
             ExternalForcingsFile.Write(extForceFilePath, modelDefinition,
                 !(newFormatBoundaryConditions || hasNewBoundaries ));
 
-            if (newFormatBoundaryConditions || hasNewBoundaries || hasEmbankments || modelDefinition.FmMeteoFields.Any() || hasModel1dBoundaryConditions || hasLateralSourcesData)
+            if (newFormatBoundaryConditions || hasNewBoundaries || hasEmbankments || modelDefinition.FmMeteoFields.Any() || hasModel1dBoundaryConditions || hasLateralSourcesData || hasRoofAreas)
             {
                 var bndExtFileName = modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile).GetValueAsString();
                 if (string.IsNullOrEmpty(bndExtFileName))
@@ -380,7 +380,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     BoundaryExternalForcingsFile = new BndExtForceFile();
                 }
 
-                BoundaryExternalForcingsFile.Write(bndExtForceFilePath, modelDefinition, boundaryConditions1D, lateralSourcesData);
+                BoundaryExternalForcingsFile.Write(bndExtForceFilePath, modelDefinition, boundaryConditions1D, lateralSourcesData, roofAreas);
             }
             else if (!modelDefinition.BoundaryConditions.Any())
             {
@@ -551,7 +551,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (fileWriter == null)
                 {
-                    fileWriter = CreateFeatureFile<TFeat, TFile>(modelDefinition, propertyKey);
+                    fileWriter = CreateFeatureFile<TFeat, TFile>(modelDefinition);
                 }
 
                 foreach (var filePath in featuresFilePaths)
@@ -651,7 +651,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
         }
 
-        private static TFile CreateFeatureFile<TFeat, TFile>(WaterFlowFMModelDefinition modelDefinition, string propertyKey)
+        private static TFile CreateFeatureFile<TFeat, TFile>(WaterFlowFMModelDefinition modelDefinition)
             where TFile : IFeature2DFileBase<TFeat>, new()
         {
             var fileWriter = new TFile();
@@ -683,11 +683,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
             }
 
-            var roofAreaFileWriter = fileWriter as PolFile<GroupableFeature2DPolygon>;
-            if (roofAreaFileWriter != null && propertyKey == KnownProperties.RoofAreaFile)
-            {
-                roofAreaFileWriter.IncludeClosingCoordinate = true;
-            }
             return fileWriter;
         }
 
@@ -759,8 +754,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.EnclosureFile, hydroArea.Enclosures,
                 ref enclosureFile, EnclosureExtension);
-
-            WriteFeatures(targetMduFilePath, modelDefinition, KnownProperties.RoofAreaFile, hydroArea.RoofAreas, ref roofAreaFile, RoofAreaExtension);
         }
 
         public void WriteLandBoundaries(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea)
@@ -1133,7 +1126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             if (featuresFilePaths == null || featuresFilePaths.Count == 0) return;
 
-            fileReader = CreateFeatureFile<TFeat, TFile>(modelDefinition, propertyKey);
+            fileReader = CreateFeatureFile<TFeat, TFile>(modelDefinition);
 
             var readFeatures = new List<TFeat>();
             foreach (var featuresFilePath in featuresFilePaths)
@@ -1180,7 +1173,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, ref obsFile, ObsExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections, ref obsCrsFile, ObsCrossExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.BridgePillarFile, hydroArea.BridgePillars, ref bridgePillarFile, BridgePillarExtension);
-            ReadFeatures(filePath, modelDefinition, KnownProperties.RoofAreaFile, hydroArea.RoofAreas, ref roofAreaFile, RoofAreaExtension);
 
 
             var structures = new List<IStructure>();

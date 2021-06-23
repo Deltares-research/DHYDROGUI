@@ -8,6 +8,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO;
@@ -49,6 +50,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string LocationFileKey = "locationfile";
         public const string ForcingFileKey = "forcingfile";
         public const string ForcingFileTypeKey = "forcingFileType";
+        private const string TargetMaskFileKey = "targetMaskFile";
+        private const string TargetMaskInvertKey = "targetMaskInvert";
+        private const string InterpolationMethodKey = "interpolationMethod";
         private const string AreaKey = "area";
         private const string ThatcherHarlemanTimeLagKey = "return_time";
         private const string OpenBoundaryToleranceKey = "OpenBoundaryTolerance";
@@ -155,18 +159,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region write logic
 
-        public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D = null, IEnumerable<Model1DLateralSourceData> lateralSourcesData = null)
+        public void Write(string filePath, WaterFlowFMModelDefinition modelDefinition, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D = null, IEnumerable<Model1DLateralSourceData> lateralSourcesData = null, ICollection<GroupableFeature2DPolygon> roofAreas = null)
         {
             var refDate = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
 
-            Write(filePath, modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, boundaryConditions1D, lateralSourcesData, modelDefinition.Embankments, modelDefinition.FmMeteoFields,
+            Write(filePath, modelDefinition.ModelName, modelDefinition.BoundaryConditionSets, boundaryConditions1D, lateralSourcesData, roofAreas?? new GroupableFeature2DPolygon[0] , modelDefinition.Embankments, modelDefinition.FmMeteoFields,
                 modelDefinition.GetModelProperty(KnownProperties.BndExtForceFile), refDate);
         }
 
         private void Write(string filePath, string modelDefinitionModelName,
             IList<BoundaryConditionSet> boundaryConditionSets,
             IEnumerable<Model1DBoundaryNodeData> modelDefinitionBoundaryConditions1D,
-            IEnumerable<Model1DLateralSourceData> modelDefinitionLateralSourcesData, IList<Embankment> embankments,
+            IEnumerable<Model1DLateralSourceData> modelDefinitionLateralSourcesData, ICollection<GroupableFeature2DPolygon> roofAreas, IList<Embankment> embankments,
             IEventedList<IFmMeteoField> fmMeteoFields, WaterFlowFMProperty modelProperty, DateTime refDate)
         {
             FilePath = filePath;
@@ -174,7 +178,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var bnd1DExtForceFileItems = Write1DBndExtForceFileSubFiles(modelDefinitionModelName, modelDefinitionBoundaryConditions1D, refDate).ToList();
             var lateralSourcesDataExtForceFileItems = WriteLateralSourcesDataExtForceFileSubFiles(modelDefinitionModelName, modelDefinitionLateralSourcesData, refDate).ToList();
             var embankmentForceFileItems = WriteEmbankmentFiles(embankments);
-            var meteoExtForceFileItems = WriteMeteoExtForceFileSubFiles(modelDefinitionModelName, fmMeteoFields, refDate);
+            var meteoExtForceFileItems = WriteMeteoExtForceFileSubFiles(modelDefinitionModelName, fmMeteoFields, refDate, roofAreas.Any());
+            WriteRoofAreasPolFiles(modelDefinitionModelName, roofAreas);
 
             var allItems = bndExtForceFileItems.Concat(embankmentForceFileItems).Concat(bnd1DExtForceFileItems).Concat(lateralSourcesDataExtForceFileItems).ToList();
             FileUtils.DeleteIfExists(FilePath);
@@ -281,45 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 CloseOutputFile();
             }
         }
-        public IList<DelftIniCategory> WriteMeteoExtForceFileSubFiles(string modelDefinitionModelName, IList<IFmMeteoField> fmMeteoFields, DateTime refDate)
-        {
-            WritePolyLinesMeteo(fmMeteoFields);
-            var bcFile = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile };
-            var resultingItems = WriteFmMeteo(refDate, bcFile, fmMeteoFields, new BcMeteoFileDataBuilder(), modelDefinitionModelName).Distinct().ToList();
 
-            return resultingItems;
-        }
-        private IEnumerable<DelftIniCategory> WriteFmMeteo(DateTime refDate, BcFile bcFile, IList<IFmMeteoField> fmMeteoFields, BcMeteoFileDataBuilder bcMeteoFileDataBuilder, string modelDefinitionName)
-        {
-            var resultingItems = new List<DelftIniCategory>();
-            var fileName = modelDefinitionName + "_meteo";
-            string path = AddExtension(fileName, BcFile.Extension);
-            foreach (var fmMeteoField in fmMeteoFields)
-            {
-                var quantityName = ExtForceQuantNames.MeteoQuantityNames[fmMeteoField.Quantity];
-                var bndBlock = CreateMeteoBlock(quantityName, path);
-
-                resultingItems.Add(bndBlock);
-            }
-
-
-            if (WriteToDisk)
-            {
-                var fullPath = GetFullPath(path);
-                bcFile.Write(fmMeteoFields, fullPath, bcMeteoFileDataBuilder, refDate);
-            }
-
-            return resultingItems;
-        }
-        private static DelftIniCategory CreateMeteoBlock(string quantity, string forcingFilePath)
-        {
-            var block = new DelftIniCategory(MeteoBlockKey);
-            block.AddProperty(QuantityKey, quantity);
-            block.AddProperty(ForcingFileKey, forcingFilePath);
-            block.AddProperty(ForcingFileTypeKey, "bcAscii");
-
-            return block;
-        }
 
         private void WriteBndExtForceFile(IEnumerable<DelftIniCategory> bndExtForceFileItems)
         {
@@ -498,6 +465,80 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             return categories;
+        }
+
+        private IEnumerable<DelftIniCategory> WriteMeteoExtForceFileSubFiles(string modelDefinitionModelName, IList<IFmMeteoField> fmMeteoFields, DateTime refDate, bool hasRoofs)
+        {
+            WritePolyLinesMeteo(fmMeteoFields);
+            var bcFile = new BcFile { MultiFileMode = BcFile.WriteMode.SingleFile };
+            
+            string bcFileName = AddExtension(modelDefinitionModelName + "_meteo", BcFile.Extension);
+            
+            if (WriteToDisk)
+            {
+                string bcFilePath = GetFullPath(bcFileName);
+                bcFile.Write(fmMeteoFields, bcFilePath, new BcMeteoFileDataBuilder(), refDate);
+            }
+
+            return CreateMeteoCategories(fmMeteoFields, bcFileName, hasRoofs, modelDefinitionModelName);
+        }
+
+        private static IEnumerable<DelftIniCategory> CreateMeteoCategories(IList<IFmMeteoField> fmMeteoFields, string bcFileName, bool hasRoofs, string modelName)
+        {
+            DelftIniCategory roofCategory = null;
+            if (hasRoofs)
+            {
+                roofCategory = CreateRoofCategory(modelName);
+                
+                if (!fmMeteoFields.Any())
+                {
+                    yield return roofCategory;
+                }
+            }
+            
+            foreach (IFmMeteoField fmMeteoField in fmMeteoFields)
+            {
+                string quantityName = ExtForceQuantNames.MeteoQuantityNames[fmMeteoField.Quantity];
+                yield return CreateMeteoCategory(quantityName, bcFileName, roofCategory);
+            }
+        }
+
+        private static DelftIniCategory CreateMeteoCategory(string quantity,
+                                                            string forcingFilePath, IDelftIniCategory roofCategory)
+        {
+            var category = new DelftIniCategory(MeteoBlockKey);
+            category.AddProperty(QuantityKey, quantity);
+            category.AddProperty(ForcingFileKey, forcingFilePath);
+            category.AddProperty(ForcingFileTypeKey, "bcAscii");
+
+            if (roofCategory != null)
+            {
+                category.Properties.AddRange(roofCategory.Properties);
+            }
+            
+            return category;
+        }
+
+        private static DelftIniCategory CreateRoofCategory(string modelName)
+        {
+            var category = new DelftIniCategory(MeteoBlockKey);
+            category.AddProperty(TargetMaskFileKey, modelName + FileConstants.RoofAreaFileExtension);
+            category.AddProperty(TargetMaskInvertKey, "true");
+            category.AddProperty(InterpolationMethodKey, "nearestNb");
+
+            return category;
+        }
+
+        private void WriteRoofAreasPolFiles(string modelName, ICollection<GroupableFeature2DPolygon> roofAreas)
+        {
+            if (!roofAreas.Any())
+            {
+                return;
+            }
+            
+            var roofWriter = new PolFile<GroupableFeature2DPolygon> {IncludeClosingCoordinate = true};
+            string roofFilePath = GetFullPath(modelName + FileConstants.RoofAreaFileExtension);
+            roofWriter.Write(roofFilePath, roofAreas);
         }
 
         private void WritePolyLines(IEnumerable<BoundaryConditionSet> boundaryConditionSets)
