@@ -324,12 +324,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!string.IsNullOrEmpty(quantity))
                 block.AddProperty(QuantityKey, quantity);
 
-            if (!string.IsNullOrEmpty(fmMeteoLocationType))
-                block.AddProperty(LocationTypeKey, fmMeteoLocationType);
-
-            if (!string.IsNullOrEmpty(locationFilePath))
-                block.AddProperty(LocationFileKey, locationFilePath);
-
             if (!string.IsNullOrEmpty(forcingFilePath))
                 block.AddProperty(ForcingFileKey, forcingFilePath);
 
@@ -1148,15 +1142,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public string NodeId { get; set; }
         public string BranchId { get; set; }
         public double Chainage { get; set; }
-        public string LocationType { get; set; }
         public int NumCoordinates { get; set; }
-        public double[] CoordinatesX { get; set; }
-        public double[] CoordinatesY { get; set; }
         public double Discharge { get; set; }
         public bool RealTime { get; set; }
         public string Name { get; set; }
         public string LongName { get; set; }
         public string DischargeForcingFile { get; set; }
-        public bool IsConnectedToCompartment{ get; set; }
     }
 }
