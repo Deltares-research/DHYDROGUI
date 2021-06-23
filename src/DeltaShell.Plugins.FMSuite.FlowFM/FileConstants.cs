@@ -53,7 +53,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM {
         public const string EmbankmentFileExtension = "_bnk" + PlizFileExtension;
         public const string MeteoFileExtension = "_meteo" + TimFileExtension;
         public const string BoundaryExternalForcingFileExtension = "_bnd" + ExternalForcingFileExtension;
-        public const string RoofAreaFileExtension = "_roofs" + PolylineFileExtension;
 
         public const string MdwFileExtension = ".mdw";
         public const string SpectrumFileExtension = ".sp2";
