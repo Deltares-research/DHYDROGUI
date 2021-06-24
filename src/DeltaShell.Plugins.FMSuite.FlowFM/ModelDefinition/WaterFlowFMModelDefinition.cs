@@ -12,6 +12,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.Dependency;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
@@ -338,6 +339,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         {
             WaterFlowFMProperty waterFlowFMProperty = GetModelProperty(propertyName);
             waterFlowFMProperty?.SetValueAsString(value);
+        }
+        
+        public void SetModelProperty(string propertyName, object value)
+        {
+            Ensure.NotNull(propertyName, nameof(propertyName));
+
+            WaterFlowFMProperty waterFlowFMProperty = GetModelProperty(propertyName);
+            waterFlowFMProperty.Value = value;
         }
 
         public WaterFlowFMModelDefinition(string modelDir, string modelName) : this()
