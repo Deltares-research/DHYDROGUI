@@ -23,6 +23,7 @@ using NSubstitute;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
+using Assert = NUnit.Framework.Assert;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {
@@ -1208,7 +1209,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 
                 var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
                 modelDefinition.FmMeteoFields.Add(meteoField);
-                modelDefinition.SetModelProperty(KnownProperties.RefDate, DateTime.Today);
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, new DateTime(2021, 6, 24));
                 
                 var coordinates = new[]
                 {
@@ -1220,7 +1221,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
                 var geometry = Substitute.For<IGeometry>();
                 geometry.Coordinates.Returns(coordinates);
-                var roofArea = new GroupableFeature2DPolygon {Geometry = geometry};
+                var roofArea = new GroupableFeature2DPolygon
+                {
+                    Geometry = geometry,
+                    Name = "some_roof"
+                };
                 
                 var bndExtForceFile = new BndExtForceFile();
                 
@@ -1231,9 +1236,40 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(extFilePath, Does.Exist);
                 Assert.That(bcFilePath, Does.Exist);
                 Assert.That(polFilePath, Does.Exist);
+
+                string[][] extData = ReadData(extFilePath).ToArray();
+                AssertLine(extData[3], "[meteo]");
+                AssertLine(extData[4], "quantity", "rainfall_rate");
+                AssertLine(extData[5], "forcingfile", "FlowFM_meteo.bc");
+                AssertLine(extData[6], "forcingFileType", "bcAscii");
+                AssertLine(extData[7], "targetMaskFile", "FlowFM_roofs.pol");
+                AssertLine(extData[8], "targetMaskInvert", "true");
+                AssertLine(extData[9], "interpolationMethod", "nearestNb");
+                
+                string[][] bcData = ReadData(bcFilePath).ToArray();
+                AssertLine(bcData[3], "[forcing]");
+                AssertLine(bcData[4], "Name", "global");
+                AssertLine(bcData[5], "Function", "timeseries");
+                AssertLine(bcData[6], "timeInterpolation", "linear");
+                AssertLine(bcData[7], "Quantity", "time");
+                AssertLine(bcData[8], "Unit", "seconds", "since", "2021-06-24", "00:00:00");
+                AssertLine(bcData[9], "Quantity", "rainfall_rate");
+                AssertLine(bcData[10], "Unit", "mm", "day-1");
+                AssertLine(bcData[11], "100", "1.23");
+                AssertLine(bcData[12], "200", "4.56");
+                AssertLine(bcData[13], "300", "7.89");
+
+                string[][] polData = ReadData(polFilePath).ToArray();
+                AssertLine(polData[0], "some_roof");
+                AssertLine(polData[1], "5", "2");
+                AssertLine(polData[2], "0", "0");
+                AssertLine(polData[3], "1", "0");
+                AssertLine(polData[4], "1", "1");
+                AssertLine(polData[5], "0", "1");
+                AssertLine(polData[6], "0", "0");
             }
         }
-        
+
         [Test]
         [Category(TestCategory.DataAccess)]
         public void Write_WithMeteo_WritesCorrectFiles()
@@ -1262,6 +1298,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(extFilePath, Does.Exist);
                 Assert.That(bcFilePath, Does.Exist);
                 Assert.That(polFilePath, Does.Not.Exist);
+                
+                string[][] extData = ReadData(extFilePath).ToArray();
+                AssertLine(extData[3], "[meteo]");
+                AssertLine(extData[4], "quantity", "rainfall_rate");
+                AssertLine(extData[5], "forcingfile", "FlowFM_meteo.bc");
+                AssertLine(extData[6], "forcingFileType", "bcAscii");
+
+                string[][] bcData = ReadData(bcFilePath).ToArray();
+                AssertLine(bcData[3], "[forcing]");
+                AssertLine(bcData[4], "Name", "global");
+                AssertLine(bcData[5], "Function", "timeseries");
+                AssertLine(bcData[6], "timeInterpolation", "linear");
+                AssertLine(bcData[7], "Quantity", "time");
+                AssertLine(bcData[8], "Unit", "seconds", "since", "2021-06-24", "00:00:00");
+                AssertLine(bcData[9], "Quantity", "rainfall_rate");
+                AssertLine(bcData[10], "Unit", "mm", "day-1");
+                AssertLine(bcData[11], "100", "1.23");
+                AssertLine(bcData[12], "200", "4.56");
+                AssertLine(bcData[13], "300", "7.89");
             }
         }
         
@@ -1287,7 +1342,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 };
                 var geometry = Substitute.For<IGeometry>();
                 geometry.Coordinates.Returns(coordinates);
-                var roofArea = new GroupableFeature2DPolygon {Geometry = geometry};
+                var roofArea = new GroupableFeature2DPolygon
+                {
+                    Geometry = geometry,
+                    Name = "some_roof"
+                };
                 
                 var bndExtForceFile = new BndExtForceFile();
                 
@@ -1298,6 +1357,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(extFilePath, Does.Exist);
                 Assert.That(bcFilePath, Does.Exist);
                 Assert.That(polFilePath, Does.Exist);
+                
+                string[][] extData = ReadData(extFilePath).ToArray();
+                AssertLine(extData[3], "[meteo]");
+                AssertLine(extData[4], "targetMaskFile", "FlowFM_roofs.pol");
+                AssertLine(extData[5], "targetMaskInvert", "true");
+                AssertLine(extData[6], "interpolationMethod", "nearestNb");
+                
+                string[][] polData = ReadData(polFilePath).ToArray();
+                AssertLine(polData[0], "some_roof");
+                AssertLine(polData[1], "5", "2");
+                AssertLine(polData[2], "0", "0");
+                AssertLine(polData[3], "1", "0");
+                AssertLine(polData[4], "1", "1");
+                AssertLine(polData[5], "0", "1");
+                AssertLine(polData[6], "0", "0");
+            }
+        }
+        
+        private static IEnumerable<string[]> ReadData(string filePath)
+        {
+            foreach (string line in File.ReadAllLines(filePath))
+            {
+                string[] split = line.Split(new[] {'=', ' '}, StringSplitOptions.RemoveEmptyEntries);
+                if (!split.Any())
+                {
+                    continue;
+                }
+                yield return split.Select(s => s.Trim()).ToArray();
+            }
+        }
+
+        private static void AssertLine(string[] data, params string[] values)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                Assert.That(data[i], Is.EqualTo(values[i]));
             }
         }
     }
