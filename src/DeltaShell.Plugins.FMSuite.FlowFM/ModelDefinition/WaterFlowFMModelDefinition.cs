@@ -341,9 +341,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             waterFlowFMProperty?.SetValueAsString(value);
         }
         
+        /// <summary>
+        /// Sets the property <paramref name="propertyName"/> with the specified <paramref name="value"/>.
+        /// </summary>
+        /// <param name="propertyName"> The property name. </param>
+        /// <param name="value"> The new property value. </param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="propertyName"/> is <c>null</c> or empty.
+        /// </exception>
+        /// <remarks> The property is expected to exist. </remarks>
         public void SetModelProperty(string propertyName, object value)
         {
-            Ensure.NotNull(propertyName, nameof(propertyName));
+            Ensure.NotNullOrEmpty(propertyName, nameof(propertyName));
 
             WaterFlowFMProperty waterFlowFMProperty = GetModelProperty(propertyName);
             waterFlowFMProperty.Value = value;

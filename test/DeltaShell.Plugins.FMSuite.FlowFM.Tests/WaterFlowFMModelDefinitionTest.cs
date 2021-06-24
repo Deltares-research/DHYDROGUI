@@ -1509,5 +1509,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Assert.That(names.Contains("Diffusivity"));
             Assert.That(names.Contains("Infiltration"));
         }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        public void SetModelProperty_PropertyNameNull_ThrowsArgumentNullException(string propertyName)
+        {
+            // Setup
+            var modelDefinition = new WaterFlowFMModelDefinition();
+
+            // Call
+            void Call() => modelDefinition.SetModelProperty(propertyName, 1.23d);
+
+            // Assert
+            var e = Assert.Throws<ArgumentException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("propertyName"));
+
+        }
+        
+        [Test]
+        public void SetModelProperty_SetsPropertyValue()
+        {
+            // Setup
+            var propertyDefinition = new WaterFlowFMPropertyDefinition
+            {
+                MduPropertyName = "some_property",
+                DataType = typeof(double)
+            };
+            var property = new WaterFlowFMProperty(propertyDefinition, "1.23");
+            var modelDefinition = new WaterFlowFMModelDefinition();
+            modelDefinition.AddProperty(property);
+            
+            // Call
+            modelDefinition.SetModelProperty("some_property", 4.56d);
+
+            // Assert
+            Assert.That(property.Value, Is.EqualTo(4.56d));
+        }
     }
 }
