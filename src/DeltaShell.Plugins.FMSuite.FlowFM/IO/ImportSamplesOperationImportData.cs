@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using NetTopologySuite.Extensions.Features;
 using SharpMap.Data.Providers;
@@ -44,14 +45,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected virtual ImportSamplesOperation CreateImportSamplesOperation()
         {
-            return new ImportSamplesOperation(false)
-            {
-                Name = Name,
-                CoordinateSystem = CoordinateSystem,
-                Dirty = true,
-                Enabled = Enabled,
-                FilePath = FilePath,
-            };
+            var importSamplesOperation = (ImportSamplesOperation) Activator.CreateInstance(GetType());
+
+            importSamplesOperation.Name = Name;
+            importSamplesOperation.CoordinateSystem = CoordinateSystem;
+            importSamplesOperation.Dirty = true;
+            importSamplesOperation.Enabled = Enabled;
+            importSamplesOperation.FilePath = FilePath;
+
+            return importSamplesOperation;
         }
     }
 }
