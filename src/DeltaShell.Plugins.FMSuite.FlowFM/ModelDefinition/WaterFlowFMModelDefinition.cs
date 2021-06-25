@@ -973,7 +973,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                     (ImportSamplesOperation)
                         interpolateOperation.GetInput(InterpolateOperation.InputSamplesName).Source.Operation;
 
-                operation = new ImportSamplesSpatialOperationExtension
+                operation = new ImportSamplesOperationImportData
                 {
                     Name = importSamplesOperation.Name,
                     FilePath = importSamplesOperation.FilePath,

@@ -412,9 +412,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     continue;
                 IEnumerable<double> valuesToSet;
                 var coverage = (UnstructuredGridCoverage)dataItem.Value;
-                if (spatialOperationList[0] is ImportRasterSamplesSpatialOperationExtension)
+                if (spatialOperationList[0] is ImportRasterSamplesOperationImportData)
                 {
-                    var samplesOperation = (ImportRasterSamplesSpatialOperationExtension)spatialOperationList[0];
+                    var samplesOperation = (ImportRasterSamplesOperationImportData)spatialOperationList[0];
 
                     var rasterFile = RasterFile.ReadPointValues(samplesOperation.FilePath).ToList();
 

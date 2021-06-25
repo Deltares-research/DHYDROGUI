@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void WriteXyzIfDirectoryExist(ISedimentModelData sedimentModelData, string sedPath,
             ISpatialOperation spatialOperation, KeyValuePair<string, IList<ISpatialOperation>> operations)
         {
-            var samplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
+            var samplesOperation = spatialOperation as ImportSamplesOperationImportData;
             if (samplesOperation != null)
             {
                 WriteXYZIfDirectoryExists(sedimentModelData, sedPath, spatialOperation, samplesOperation.GetPoints());
@@ -363,7 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (!File.Exists(xyzFilePath)) return;
 
             var modelDefinition = model.ModelDefinition;
-            var operation = new ImportSamplesSpatialOperationExtension
+            var operation = new ImportSamplesOperationImportData
             {
                 Name = dataItemName,
                 FilePath = xyzFilePath,

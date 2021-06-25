@@ -5,7 +5,7 @@ using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public class ImportSamplesSpatialOperationExtension : ImportSamplesOperation
+    public class ImportSamplesOperationImportData : ImportSamplesOperation
     {
         public virtual double RelativeSearchCellSize { get; set; }
         public virtual GridCellAveragingMethod AveragingMethod { get; set; }
@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public virtual SpatialInterpolationMethod InterpolationMethod { get; set; }
         public virtual PointwiseOperationType Operand { get; set; }
         
-        public ImportSamplesSpatialOperationExtension() : base(false)
+        public ImportSamplesOperationImportData() : base(false)
         {
             RelativeSearchCellSize = 1;
             MinSamplePoints = 1;

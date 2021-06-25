@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
 
             if (coordinateSystemDialog.ShowDialog() != DialogResult.OK) return null;
 
-            return new ImportRasterSamplesSpatialOperationExtension 
+            return new ImportRasterSamplesOperationImportData 
             {
                 FilePath = fileName,
                 SourceCoordinateSystem = coordinateSystemDialog.FromCS,

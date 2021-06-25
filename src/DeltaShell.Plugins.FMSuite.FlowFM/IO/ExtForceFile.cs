@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 var spatialOperations = modelDefinition.GetSpatialOperations(spatiallyVaryingSedimentPropertyName);
                 if (spatialOperations == null ||
-                    !spatialOperations.All(s => s is ImportSamplesSpatialOperationExtension ||
+                    !spatialOperations.All(s => s is ImportSamplesOperationImportData ||
                                                 s is AddSamplesOperation))
                 {
                     var warnMsg = String.Format(
@@ -316,7 +316,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 // if all ops are interpolations/set value within polygons, write them to the file
                 foreach (var spatialOperation in spatialOperations)
                 {
-                    var importSamplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
+                    var importSamplesOperation = spatialOperation as ImportSamplesOperationImportData;
                     if (importSamplesOperation != null)
                     {
                         var existingItem = GetExistingForceFileItemOrNull(importSamplesOperation);
@@ -1008,7 +1008,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var operationName = Path.GetFileNameWithoutExtension(extForceFileItem.FileName);
 
-            var operation = new ImportSamplesSpatialOperationExtension
+            var operation = new ImportSamplesOperationImportData
             {
                 Name = operationName,
                 FilePath = GetOtherFilePathInSameDirectory(FilePath, extForceFileItem.FileName)

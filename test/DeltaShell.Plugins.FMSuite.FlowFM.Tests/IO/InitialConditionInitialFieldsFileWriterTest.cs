@@ -244,7 +244,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Setup
                 string filePath = Path.Combine(temp.Path, "initialFields.ini");
 
-                var operation = new ImportSamplesSpatialOperationExtension
+                var operation = new ImportSamplesOperationImportData
                 {
                     FilePath = $"quantity.{fileExtension}",
                     RelativeSearchCellSize = 1234.5678,

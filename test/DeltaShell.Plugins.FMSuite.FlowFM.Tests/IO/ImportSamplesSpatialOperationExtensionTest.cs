@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const double relativeSearchSize = 1.23;
             const int minSamplePoints = 4;
 
-            var importSamplesSpatialOperationExtension = new ImportSamplesSpatialOperationExtension
+            var importSamplesSpatialOperationExtension = new ImportSamplesOperationImportData
             {
                 Name = name,
                 FilePath = filePath,

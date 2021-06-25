@@ -2173,9 +2173,9 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/FileCopyException.
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/ICopyHandler.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/OverwriteCopyHandler.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/IUnsupportedFileBasedExtForceFileItem.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportRasterSamplesSpatialOperationExtension.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportRasterSamplesOperationImportData.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportRasterSamplesSpatialOperationExtension.hbm.xml -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportSamplesSpatialOperationExtension.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportSamplesOperationImportData.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportedFMNetFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportedFMNetFile.hbm.xml -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/Area2DStructuresImporter.cs -text

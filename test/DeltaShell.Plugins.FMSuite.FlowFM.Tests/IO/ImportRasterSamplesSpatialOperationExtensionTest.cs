@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             const double relativeSearchSize = 1.23;
             const int minSamplePoints = 4;
 
-            var operation = new ImportRasterSamplesSpatialOperationExtension()
+            var operation = new ImportRasterSamplesOperationImportData()
             {
                 Name = name,
                 FilePath = filePath,
@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
             // Assert
             ImportSamplesOperation importSamplesOperation = convertedOperations.First;
-            Assert.That(importSamplesOperation, Is.TypeOf<ImportRasterSamplesSpatialOperationExtension>());
+            Assert.That(importSamplesOperation, Is.TypeOf<ImportRasterSamplesOperationImportData>());
             Assert.That(importSamplesOperation.Name, Is.EqualTo(name));
             Assert.That(importSamplesOperation.Dirty, Is.True);
             Assert.That(importSamplesOperation.Enabled, Is.EqualTo(enabled));

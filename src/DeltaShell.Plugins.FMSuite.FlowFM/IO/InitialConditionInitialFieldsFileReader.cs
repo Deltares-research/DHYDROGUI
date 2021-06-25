@@ -131,9 +131,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 case "geotiff":
                 case "arcinfo":
-                    return CreateSamplesOperation<ImportRasterSamplesSpatialOperationExtension>(parameterItem,Path.Combine(path, dataFile));
+                    return CreateSamplesOperation<ImportRasterSamplesOperationImportData>(parameterItem,Path.Combine(path, dataFile));
                 case "sample":
-                    return CreateSamplesOperation<ImportSamplesSpatialOperationExtension>(parameterItem,Path.Combine(path, dataFile));
+                    return CreateSamplesOperation<ImportSamplesOperationImportData>(parameterItem,Path.Combine(path, dataFile));
                 case "polygon":
                     return CreatePolygonOperation(parameterItem, Path.Combine(path, dataFile));
                 default:
@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return operation;
         }
 
-        private static T CreateSamplesOperation<T>(DelftIniCategory parameterItem, string sampleFile) where T: ImportSamplesSpatialOperationExtension, new()
+        private static T CreateSamplesOperation<T>(DelftIniCategory parameterItem, string sampleFile) where T: ImportSamplesOperationImportData, new()
         {
             var operationName = Path.GetFileNameWithoutExtension(sampleFile);
 

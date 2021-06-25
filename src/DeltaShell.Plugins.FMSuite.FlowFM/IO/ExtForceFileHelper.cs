@@ -588,7 +588,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
 
         public static ExtForceFileItem WriteInitialConditionsSamples(string extForceFilePath,
-            string extForceFileQuantityName, ImportSamplesSpatialOperationExtension importSamplesOperation,
+            string extForceFileQuantityName, ImportSamplesOperationImportData importSamplesOperation,
             ExtForceFileItem existingExtForceFileItem, bool writeToDisk, string prefix = null)
         {
             var targetDirectory = Path.GetDirectoryName(Path.GetFullPath(extForceFilePath));
@@ -665,7 +665,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 return 4;
             }
-            if (operation is ImportSamplesSpatialOperationExtension extension)
+            if (operation is ImportSamplesOperationImportData extension)
             {
                 switch (extension.InterpolationMethod)
                 {

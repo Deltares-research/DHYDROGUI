@@ -665,7 +665,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 foreach (var operation in spatialOperationList)
                 {
                     // samples should directly be applied to the coverage with an interpolate operation
-                    var importSamplesSpatialOperationExtension = operation as ImportSamplesSpatialOperationExtension;
+                    var importSamplesSpatialOperationExtension = operation as ImportSamplesOperationImportData;
                     if (importSamplesSpatialOperationExtension != null)
                     {
                         var operations = importSamplesSpatialOperationExtension.CreateOperations();

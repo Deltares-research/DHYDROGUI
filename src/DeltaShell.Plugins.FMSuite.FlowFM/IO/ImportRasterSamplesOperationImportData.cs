@@ -9,7 +9,7 @@ using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
-    public class ImportRasterSamplesSpatialOperationExtension : ImportSamplesSpatialOperationExtension
+    public class ImportRasterSamplesOperationImportData : ImportSamplesOperationImportData
     {
         public override IEnumerable<IPointValue> GetPoints()
         {
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected override ImportSamplesOperation CreateImportSamplesOperation()
         {
-            return new ImportRasterSamplesSpatialOperationExtension
+            return new ImportRasterSamplesOperationImportData
             {
                 Name = Name,
                 CoordinateSystem = CoordinateSystem,

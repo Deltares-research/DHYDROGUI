@@ -220,7 +220,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Setup
                 string filePath = Path.Combine(temp.Path, "initialFields.ini");
 
-                var writeSpatialOperation = new ImportSamplesSpatialOperationExtension
+                var writeSpatialOperation = new ImportSamplesOperationImportData
                 {
                     Operand = operand,
                     FilePath = filePath
@@ -236,7 +236,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var readModelDefinition = new WaterFlowFMModelDefinition();
                 InitialConditionInitialFieldsFileReader.ReadFile(filePath, readModelDefinition);
 
-                var readSpatialOperation = readModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.InitialWaterLevelDataItemName].Single() as ImportSamplesSpatialOperationExtension;
+                var readSpatialOperation = readModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.InitialWaterLevelDataItemName].Single() as ImportSamplesOperationImportData;
 
                 // Assert
                 Assert.That(readSpatialOperation, Is.Not.Null);
@@ -341,11 +341,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Assert.That(fmModel.ModelDefinition.SpatialOperations.Count, Is.EqualTo(1));
                     Assert.That(fmModel.ModelDefinition.SpatialOperations.ContainsKey(WaterFlowFMModelDefinition.RoughnessDataItemName), Is.True);
                     Assert.That(fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName].Count, Is.EqualTo(1));
-                    Assert.That(fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0], Is.InstanceOf<ImportSamplesSpatialOperationExtension>());
-                    Assert.That(((ImportSamplesSpatialOperationExtension)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).FilePath, Does.EndWith("xyz"));
-                    Assert.That(((ImportSamplesSpatialOperationExtension)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).AveragingMethod, Is.EqualTo(GridCellAveragingMethod.ClosestPoint));
-                    Assert.That(((ImportSamplesSpatialOperationExtension)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).InterpolationMethod, Is.EqualTo(SpatialInterpolationMethod.Averaging));
-                    Assert.That(((ImportSamplesSpatialOperationExtension)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).RelativeSearchCellSize, Is.EqualTo(1).Within(0.0001));
+                    Assert.That(fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0], Is.InstanceOf<ImportSamplesOperationImportData>());
+                    Assert.That(((ImportSamplesOperationImportData)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).FilePath, Does.EndWith("xyz"));
+                    Assert.That(((ImportSamplesOperationImportData)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).AveragingMethod, Is.EqualTo(GridCellAveragingMethod.ClosestPoint));
+                    Assert.That(((ImportSamplesOperationImportData)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).InterpolationMethod, Is.EqualTo(SpatialInterpolationMethod.Averaging));
+                    Assert.That(((ImportSamplesOperationImportData)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).RelativeSearchCellSize, Is.EqualTo(1).Within(0.0001));
                 }
             }
             finally
@@ -445,11 +445,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Assert.That(fmModel.ModelDefinition.SpatialOperations.Count, Is.EqualTo(1));
                     Assert.That(fmModel.ModelDefinition.SpatialOperations.ContainsKey(WaterFlowFMModelDefinition.RoughnessDataItemName), Is.True);
                     Assert.That(fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName].Count, Is.EqualTo(1));
-                    Assert.That(fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0], Is.InstanceOf<ImportSamplesSpatialOperationExtension>());
-                    Assert.That(((ImportSamplesSpatialOperationExtension)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).FilePath, Does.EndWith("xyz"));
-                    Assert.That(((ImportSamplesSpatialOperationExtension)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).AveragingMethod, Is.EqualTo(GridCellAveragingMethod.ClosestPoint));
-                    Assert.That(((ImportSamplesSpatialOperationExtension)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).InterpolationMethod, Is.EqualTo(SpatialInterpolationMethod.Averaging));
-                    Assert.That(((ImportSamplesSpatialOperationExtension)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).RelativeSearchCellSize, Is.EqualTo(1).Within(0.0001));
+                    Assert.That(fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0], Is.InstanceOf<ImportSamplesOperationImportData>());
+                    Assert.That(((ImportSamplesOperationImportData)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).FilePath, Does.EndWith("xyz"));
+                    Assert.That(((ImportSamplesOperationImportData)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).AveragingMethod, Is.EqualTo(GridCellAveragingMethod.ClosestPoint));
+                    Assert.That(((ImportSamplesOperationImportData)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).InterpolationMethod, Is.EqualTo(SpatialInterpolationMethod.Averaging));
+                    Assert.That(((ImportSamplesOperationImportData)fmModel.ModelDefinition.SpatialOperations[WaterFlowFMModelDefinition.RoughnessDataItemName][0]).RelativeSearchCellSize, Is.EqualTo(1).Within(0.0001));
                 }
             }
             finally
@@ -495,7 +495,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 InitialConditionInitialFieldsFileReader.ReadFile(filePath, modelDefinition);
                 
                 // Assert
-                var spatialOperation = modelDefinition.SpatialOperations[dataItemName].Single() as ImportRasterSamplesSpatialOperationExtension;
+                var spatialOperation = modelDefinition.SpatialOperations[dataItemName].Single() as ImportRasterSamplesOperationImportData;
                 
                 Assert.That(spatialOperation, Is.Not.Null);
                 Assert.That(spatialOperation.Name, Is.EqualTo("quantity"));

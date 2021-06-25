@@ -1463,7 +1463,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             interpolateOperation.Inputs.Add(input);
 
             // Call
-            var convertedOperation = WaterFlowFMModelDefinition.ConvertSpatialOperation(interpolateOperation) as ImportSamplesSpatialOperationExtension;
+            var convertedOperation = WaterFlowFMModelDefinition.ConvertSpatialOperation(interpolateOperation) as ImportSamplesOperationImportData;
             
             // Assert
             Assert.That(convertedOperation, Is.Not.Null);

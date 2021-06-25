@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase("C:\\Folder\\AnotherFolder\\MoreFolder\\HW1995","\\YesThereIsAnotherFolder\\filename_something.xyz", "HW1995\\YesThereIsAnotherFolder\\filename_something.xyz")]
         public void WriteInitialConditionsSamplesTest(string extForceFilePath, string fileName, string expectedFileName)
         {
-            var importSamplesOperation = new ImportSamplesSpatialOperationExtension
+            var importSamplesOperation = new ImportSamplesOperationImportData
             {
                                 FilePath = Path.GetFullPath(extForceFilePath + fileName),
             };

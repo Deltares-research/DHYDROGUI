@@ -840,7 +840,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     SpatialOperationValueConverterFactory.GetOrCreateSpatialOperationValueConverter(dataItem,
                         "mysedimentName_IniSedThick");
 
-                valueConverter.SpatialOperationSet.AddOperation(new ImportSamplesSpatialOperationExtension()
+                valueConverter.SpatialOperationSet.AddOperation(new ImportSamplesOperationImportData()
                 {
                     Name = "mysedimentName_IniSedThick",
                     FilePath = Path.GetFullPath(fileName)

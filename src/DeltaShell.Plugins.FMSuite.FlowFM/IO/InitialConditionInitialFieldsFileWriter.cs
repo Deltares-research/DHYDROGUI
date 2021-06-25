@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             // if all ops are interpolations/set value within polygons, write them to the file
             foreach (var spatialOperation in spatialOperations)
             {
-                var importSamplesOperation = spatialOperation as ImportSamplesSpatialOperationExtension;
+                var importSamplesOperation = spatialOperation as ImportSamplesOperationImportData;
                 if (importSamplesOperation != null)
                 {
                     yield return ExtForceFileHelper.WriteInitialConditionsSamples(filename, quantity,
