@@ -4,6 +4,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls.Wpf.Dialogs;
+using DelftTools.Hydro.Link1d2d;
+using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using GeoAPI.Extensions.Feature;
@@ -147,7 +150,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
                 {
                     var generated1D2DLinks = MapTool1D2DLinksHelper.Generate1D2DLinks(selectedArea, LinkType, fmModel.Grid, fmModel.Area.Gullies, fmModel.NetworkDiscretization);
                     var newLinks = generated1D2DLinks.Except(fmModel.Links).ToList();
-                    fmModel.Links.AddRange(newLinks);
+                    var links = new EventedList<ILink1D2D>(fmModel.Links.Concat(newLinks));
+
+                    using (fmModel.InEditMode())
+                    {
+                        fmModel.Links = links;
+                    }
                 }
                 catch (Exception e)
                 {
