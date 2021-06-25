@@ -40,11 +40,11 @@ namespace DelftTools.Hydro.SewerFeatures
         {
         }
 
-        [DisplayName("Invert level begin")]
+        [DisplayName("Invert level from")]
         [FeatureAttribute(ExportName = "Level source", Order = 15)]
         public double LevelSource { get; set; }
 
-        [DisplayName("Invert level end")]
+        [DisplayName("Invert level to")]
         [FeatureAttribute(ExportName = "Level target", Order = 16)]
         public double LevelTarget { get; set; }
 
