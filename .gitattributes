@@ -5154,8 +5154,8 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FeatureFile1D2DWriterTest.cs -te
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/GroupablePointCloudImporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Helpers/FileCopyExceptionTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Helpers/OverwriteCopyHandlerTest.cs -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ImportRasterSamplesSpatialOperationExtensionTest.cs -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ImportSamplesSpatialOperationExtensionTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ImportRasterSamplesOperationImportDataTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ImportSamplesOperationImportDataTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Importers/BcFileImporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Importers/BcmFileImporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Importers/CmpFileImporterTest.cs -text
