@@ -95,7 +95,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
         {
             var storageInNativeUnit = (double) TypeUtils.GetPropertyValue(pavedData, propName);
 
-            return RainfallRunoffUnitConverter.ConvertStorage(pavedData.StorageUnit,
+            return RainfallRunoffUnitConverter.ConvertStorage(PavedEnums.DefaultStorageUnit,
                                                               RainfallRunoffEnums.StorageUnit.mm,
                                                               storageInNativeUnit,
                                                               pavedData.CalculationArea);

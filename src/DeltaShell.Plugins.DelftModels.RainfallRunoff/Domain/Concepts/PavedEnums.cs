@@ -9,6 +9,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         /// The default sewer pump capacity unit. 
         /// </summary>
         public const SewerPumpCapacityUnit DefaultPumpCapacityUnit = SewerPumpCapacityUnit.m3_min;
+
+        /// <summary>
+        /// The default storage unit.
+        /// </summary>
+        public const RainfallRunoffEnums.StorageUnit DefaultStorageUnit = RainfallRunoffEnums.StorageUnit.mm;
         
         #region DryWeatherFlowOptions enum
 

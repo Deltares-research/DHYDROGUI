@@ -31,7 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 VariableWaterUseFunction[i] = defaultPerc;
             }
             
-            StorageUnit = RainfallRunoffEnums.StorageUnit.mm;
             WaterUseUnit = PavedEnums.WaterUseUnit.l_day;
 
             VariableWaterUseFunction.Arguments[0].IsEditable = false;
@@ -93,23 +92,43 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         }
         
         /// <summary>
-        /// The fixed capacity of a mixed/rainfall sewer pump (m³/min) 
+        /// The fixed capacity of a mixed/rainfall sewer pump (m³/min).
         /// </summary>
         public double CapacityMixedAndOrRainfall { get; set; }
         public double CapacityDryWeatherFlow { get; set; } // m3_min
         public TimeSeries DwfSewerPumpVariableCapacitySeries { get; set; }
         public TimeSeries MixedSewerPumpVariableCapacitySeries { get; set; }
 
+        /// <summary>
+        /// The maximum street storage (mm) of the area (m²).
+        /// </summary>
         [Description("Storage")]
         public double MaximumStreetStorage { get; set; }
 
-        //mm (x Area)
-        public double InitialStreetStorage { get; set; } //mm (x Area)
-        public double MaximumSewerMixedAndOrRainfallStorage { get; set; } //mm (x Area)
-        public double InitialSewerMixedAndOrRainfallStorage { get; set; } //mm (x Area)
-        public double MaximumSewerDryWeatherFlowStorage { get; set; } //mm (x Area)
-        public double InitialSewerDryWeatherFlowStorage { get; set; } //mm (x Area)
-        public RainfallRunoffEnums.StorageUnit StorageUnit { get; set; }
+        /// <summary>
+        /// The initial street storage (mm) of the area (m²).
+        /// </summary>
+        public double InitialStreetStorage { get; set; }
+        
+        /// <summary>
+        /// The maximum mixed/rainfall sewer storage (mm) of the area (m²).
+        /// </summary>
+        public double MaximumSewerMixedAndOrRainfallStorage { get; set; }
+        
+        /// <summary>
+        /// The initial mixed/rainfall sewer storage (mm) of the area (m²).
+        /// </summary>
+        public double InitialSewerMixedAndOrRainfallStorage { get; set; }
+        
+        /// <summary>
+        /// The maximum dry weather flow sewer storage (mm) of the area (m²).
+        /// </summary>
+        public double MaximumSewerDryWeatherFlowStorage { get; set; }
+        
+        /// <summary>
+        /// The initial dry weather flow sewer storage (mm) of the area (m²).
+        /// </summary>
+        public double InitialSewerDryWeatherFlowStorage { get; set; }
 
         [Description("DryWeatherFlow")]
         public int NumberOfInhabitants { get; set; }

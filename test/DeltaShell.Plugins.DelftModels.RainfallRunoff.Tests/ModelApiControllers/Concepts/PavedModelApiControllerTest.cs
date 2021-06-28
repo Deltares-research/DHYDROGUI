@@ -95,7 +95,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             var controller = new PavedModelController();
             var pavedData = CreatePavedArea();
 
-            pavedData.StorageUnit = RainfallRunoffEnums.StorageUnit.m3;
             pavedData.InitialStreetStorage = 5;
             pavedData.MaximumStreetStorage = 6;
             pavedData.InitialSewerDryWeatherFlowStorage = 7;

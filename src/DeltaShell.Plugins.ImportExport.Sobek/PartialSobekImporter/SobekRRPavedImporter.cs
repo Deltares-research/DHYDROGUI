@@ -71,7 +71,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (dicSto.ContainsKey(sobekPaved.StorageId))
                     {
                         var storage = dicSto[sobekPaved.StorageId];
-                        pavedData.StorageUnit = RainfallRunoffEnums.StorageUnit.mm;
                         pavedData.MaximumStreetStorage = storage.MaxStreetStorage;
                         pavedData.InitialStreetStorage = storage.InitialStreetStorage;
                         pavedData.MaximumSewerMixedAndOrRainfallStorage = storage.MaxSewerStorageMixedRainfall;

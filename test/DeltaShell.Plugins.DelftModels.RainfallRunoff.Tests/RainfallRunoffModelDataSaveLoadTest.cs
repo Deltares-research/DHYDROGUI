@@ -650,7 +650,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
                         pavedData.SewerType = PavedEnums.SewerType.ImprovedSeparateSystem;
                         pavedData.SpillingDefinition = PavedEnums.SpillingDefinition.UseRunoffCoefficient;
-                        pavedData.StorageUnit = RainfallRunoffEnums.StorageUnit.mm;
                         pavedData.WaterUseUnit = PavedEnums.WaterUseUnit.l_day;
 
                         ReflectionTestHelper.FillRandomValuesForValueTypeProperties(pavedData, new[]
@@ -660,7 +659,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                             nameof(pavedData.MixedAndOrRainfallSewerPumpDischarge),
                             nameof(pavedData.SewerType),
                             nameof(pavedData.SpillingDefinition),
-                            nameof(pavedData.StorageUnit),
                             nameof(pavedData.WaterUseUnit)
                         });
 
@@ -716,7 +714,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                     retrievedPaved.CapacityMixedAndOrRainfall = pavedData.CapacityMixedAndOrRainfall;
                     retrievedPaved.CapacityDryWeatherFlow = pavedData.CapacityDryWeatherFlow;
                     retrievedPaved.WaterUse = pavedData.WaterUse;
-                    retrievedPaved.StorageUnit = pavedData.StorageUnit;
                     retrievedPaved.WaterUseUnit = pavedData.WaterUseUnit;
                     retrievedPaved.MeteoStationName = pavedData.MeteoStationName;
                     retrievedPaved.TemperatureStationName = pavedData.TemperatureStationName;
@@ -737,7 +734,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         retrievedPaved.MixedAndOrRainfallSewerPumpDischarge);
                     Assert.AreEqual(pavedData.SewerType, retrievedPaved.SewerType);
                     Assert.AreEqual(pavedData.SpillingDefinition, retrievedPaved.SpillingDefinition);
-                    Assert.AreEqual(pavedData.StorageUnit, retrievedPaved.StorageUnit);
                     Assert.AreEqual(pavedData.WaterUseUnit, retrievedPaved.WaterUseUnit);
                     Assert.AreEqual(mixedSewerPumpVariableCapacitySeries.Components.First().Values,
                         retrievedMixedSeries.Components.First().Values);
