@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using DelftTools.Hydro;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
@@ -31,8 +30,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             writer.Expect(fileWriter =>
                 fileWriter.AddPaved(pavedData.Name, 2000, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, SewerType.Mixed, true,
-                             100.0 / 60.0,
-                             200.0 / 60.0, LinkType.WasteWaterTreatmentPlant, LinkType.WasteWaterTreatmentPlant, 0,
+                             100.0,
+                             200.0, LinkType.WasteWaterTreatmentPlant, LinkType.WasteWaterTreatmentPlant, 0,
                              DwfComputationOption.NumberOfInhabitantsTimesConstantDWF,
                              new[]
                                  {
@@ -101,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             pavedData.MaximumSewerDryWeatherFlowStorage = 8;
 
             writer.Expect(fileWriter =>
-                fileWriter.AddPaved(pavedData.Name, 2000, 1.5, 2.5, 3, 0, 0, 3.5, 4, SewerType.Mixed, true,
+                fileWriter.AddPaved(pavedData.Name, 2000, 1.5, 5.0, 6.0, 0, 0, 7.0, 8.0, SewerType.Mixed, true,
                              0, 0, LinkType.WasteWaterTreatmentPlant, LinkType.WasteWaterTreatmentPlant, 0,
                              DwfComputationOption.NumberOfInhabitantsTimesConstantDWF,
                              new[]
