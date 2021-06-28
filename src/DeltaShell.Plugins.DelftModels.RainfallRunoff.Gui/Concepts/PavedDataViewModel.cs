@@ -91,11 +91,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
-        public PavedEnums.SewerPumpCapacityUnit PumpCapacityUnit
-        {
-            get { return Data.SewerPumpCapacityUnit; }
-            set { Data.SewerPumpCapacityUnit = value; }
-        }
+        /// <summary>
+        /// The unit for the pump capacity.
+        /// </summary>
+        public PavedEnums.SewerPumpCapacityUnit PumpCapacityUnit { get; set; }
 
         public RainfallRunoffEnums.StorageUnit StorageUnit 
         {
@@ -125,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedEnums.SewerPumpCapacityUnit.m3_min,
+                return RainfallRunoffUnitConverter.ConvertPumpCapacity(Data.SewerPumpCapacityUnit,
                                                                        PumpCapacityUnit,
                                                                        Data.CapacityMixedAndOrRainfall,
                                                                        Data.CalculationArea);
@@ -134,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set
             {
                 Data.CapacityMixedAndOrRainfall = RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit,
-                                                                     PavedEnums.SewerPumpCapacityUnit.m3_min,
+                                                                     Data.SewerPumpCapacityUnit,
                                                                      value,
                                                                      Data.CalculationArea);
             }
@@ -144,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedEnums.SewerPumpCapacityUnit.m3_min,
+                return RainfallRunoffUnitConverter.ConvertPumpCapacity(Data.SewerPumpCapacityUnit,
                                                      PumpCapacityUnit,
                                                      Data.CapacityDryWeatherFlow,
                                                      Data.CalculationArea);
@@ -152,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set
             {
                 Data.CapacityDryWeatherFlow = RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit,
-                                                                   PavedEnums.SewerPumpCapacityUnit.m3_min,
+                                                                   Data.SewerPumpCapacityUnit,
                                                                    value,
                                                                    Data.CalculationArea);
             }

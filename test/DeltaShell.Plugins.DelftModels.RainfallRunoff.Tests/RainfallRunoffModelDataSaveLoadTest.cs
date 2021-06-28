@@ -648,7 +648,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                             PavedEnums.DryWeatherFlowOptions.NumberOfInhabitantsTimesVariableDWF;
                         pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
                         pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
-                        pavedData.SewerPumpCapacityUnit = PavedEnums.SewerPumpCapacityUnit.mm_hr;
                         pavedData.SewerType = PavedEnums.SewerType.ImprovedSeparateSystem;
                         pavedData.SpillingDefinition = PavedEnums.SpillingDefinition.UseRunoffCoefficient;
                         pavedData.StorageUnit = RainfallRunoffEnums.StorageUnit.mm;
@@ -718,7 +717,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                     retrievedPaved.CapacityMixedAndOrRainfall = pavedData.CapacityMixedAndOrRainfall;
                     retrievedPaved.CapacityDryWeatherFlow = pavedData.CapacityDryWeatherFlow;
                     retrievedPaved.WaterUse = pavedData.WaterUse;
-                    retrievedPaved.SewerPumpCapacityUnit = pavedData.SewerPumpCapacityUnit;
                     retrievedPaved.StorageUnit = pavedData.StorageUnit;
                     retrievedPaved.WaterUseUnit = pavedData.WaterUseUnit;
                     retrievedPaved.MeteoStationName = pavedData.MeteoStationName;

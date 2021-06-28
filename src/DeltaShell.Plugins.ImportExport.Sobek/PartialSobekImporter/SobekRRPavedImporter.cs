@@ -87,7 +87,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     pavedData.SewerType = (PavedEnums.SewerType)sobekPaved.SewerSystem;
                     pavedData.IsSewerPumpCapacityFixed = sobekPaved.CapacitySewerTableId == null;
 
-                    pavedData.SewerPumpCapacityUnit = PavedEnums.SewerPumpCapacityUnit.m3_min;
                     pavedData.CapacityMixedAndOrRainfall = Math.Round(RainfallRunoffUnitConverter.ConvertPumpCapacity(
                         PavedEnums.SewerPumpCapacityUnit.m3_s,
                         PavedEnums.SewerPumpCapacityUnit.m3_min,

@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         // fixed or variable
         public double CapacityMixedAndOrRainfall { get; set; } // m3_min
         public double CapacityDryWeatherFlow { get; set; } // m3_min
-        public PavedEnums.SewerPumpCapacityUnit SewerPumpCapacityUnit { get; set; }
+        public PavedEnums.SewerPumpCapacityUnit SewerPumpCapacityUnit { get; } = PavedEnums.SewerPumpCapacityUnit.m3_min;
         public TimeSeries DwfSewerPumpVariableCapacitySeries { get; set; }
         public TimeSeries MixedSewerPumpVariableCapacitySeries { get; set; }
 
