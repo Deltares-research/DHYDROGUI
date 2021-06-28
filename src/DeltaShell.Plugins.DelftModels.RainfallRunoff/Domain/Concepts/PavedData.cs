@@ -9,11 +9,11 @@ using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 {
-    [Entity(FireOnCollectionChange=false)]
+    [Entity(FireOnCollectionChange = false)]
     public class PavedData : CatchmentModelData
     {
         /// <summary>
-        /// The sewer pump capacity unit. 
+        /// The sewer pump capacity unit.
         /// </summary>
         public const PavedEnums.SewerPumpCapacityUnit PumpCapacityUnit = PavedEnums.SewerPumpCapacityUnit.m3_s;
 
@@ -26,26 +26,21 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         /// The water use unit.
         /// </summary>
         public const PavedEnums.WaterUseUnit WaterUseUnit = PavedEnums.WaterUseUnit.l_day;
-        
-        protected PavedData()
-            : base(null)
-        {
-        }
 
-        public PavedData(Catchment catchment) : base (catchment)
+        public PavedData(Catchment catchment) : base(catchment)
         {
             CalculationArea = catchment.AreaSize;
-            double defaultPerc = 100.0/24.0;
+            double defaultPerc = 100.0 / 24.0;
             VariableWaterUseFunction = new Function
-                {
-                    Arguments = {new Variable<int>("Hour") {FixedSize = 24}},
-                    Components = {new Variable<double>("Percentage")}
-                };
-            for (int i = 0; i < 24; i++)
+            {
+                Arguments = {new Variable<int>("Hour") {FixedSize = 24}},
+                Components = {new Variable<double>("Percentage")}
+            };
+            for (var i = 0; i < 24; i++)
             {
                 VariableWaterUseFunction[i] = defaultPerc;
             }
-            
+
             VariableWaterUseFunction.Arguments[0].IsEditable = false;
             isSewerPumpCapacityFixed = true;
             SurfaceLevel = 1.5;
@@ -54,7 +49,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
             MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
         }
-        
+
+        protected PavedData()
+            : base(null) {}
+
+        public override object Clone()
+        {
+            var clone = (PavedData) base.Clone();
+            clone.MixedSewerPumpVariableCapacitySeries = MixedSewerPumpVariableCapacitySeries != null
+                                                             ? (TimeSeries) MixedSewerPumpVariableCapacitySeries.Clone()
+                                                             : null;
+            clone.DwfSewerPumpVariableCapacitySeries = DwfSewerPumpVariableCapacitySeries != null
+                                                           ? (TimeSeries) DwfSewerPumpVariableCapacitySeries.Clone()
+                                                           : null;
+            clone.VariableWaterUseFunction = VariableWaterUseFunction != null
+                                                 ? (Function) VariableWaterUseFunction.Clone()
+                                                 : null;
+            return clone;
+        }
+
         private void CreateSewerPumpCapacityFunctionsIfNeeded()
         {
             if (!IsSewerPumpCapacityFixed)
@@ -63,19 +76,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 {
                     MixedSewerPumpVariableCapacitySeries = new TimeSeries {Name = "Mixed Sewer Pump Capacity"};
                     MixedSewerPumpVariableCapacitySeries.Components.Add(new Variable<double>
-                        {
-                            Name = "Pump Capacity",
-                            Unit = new Unit("m³/s", "m³/s")
-                        });
+                    {
+                        Name = "Pump Capacity",
+                        Unit = new Unit("m³/s", "m³/s")
+                    });
                 }
+
                 if (DwfSewerPumpVariableCapacitySeries == null)
                 {
                     DwfSewerPumpVariableCapacitySeries = new TimeSeries {Name = "Dwf Sewer Pump Capacity"};
                     DwfSewerPumpVariableCapacitySeries.Components.Add(new Variable<double>
-                        {
-                            Name = "Pump Capacity",
-                            Unit = new Unit("m³/s", "m³/s")
-                        });
+                    {
+                        Name = "Pump Capacity",
+                        Unit = new Unit("m³/s", "m³/s")
+                    });
                 }
             }
         }
@@ -83,7 +97,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         #region properties
 
         private bool isSewerPumpCapacityFixed;
-        
+
         public double SurfaceLevel { get; set; } // m AD
 
         [Description("Spilling")]
@@ -96,23 +110,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 
         public bool IsSewerPumpCapacityFixed
         {
-            get { return isSewerPumpCapacityFixed; }
+            get => isSewerPumpCapacityFixed;
             set
             {
                 isSewerPumpCapacityFixed = value;
                 CreateSewerPumpCapacityFunctionsIfNeeded();
             }
         }
-        
+
         /// <summary>
         /// The fixed capacity of a mixed/rainfall sewer pump (m³/s).
         /// </summary>
         public double CapacityMixedAndOrRainfall { get; set; }
-        
+
         /// <summary>
         /// The fixed capacity of a dry weather flow sewer pump (m³/s).
         /// </summary>
         public double CapacityDryWeatherFlow { get; set; }
+
         public TimeSeries DwfSewerPumpVariableCapacitySeries { get; set; }
         public TimeSeries MixedSewerPumpVariableCapacitySeries { get; set; }
 
@@ -126,22 +141,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         /// The initial street storage (mm) of the area (m²).
         /// </summary>
         public double InitialStreetStorage { get; set; }
-        
+
         /// <summary>
         /// The maximum mixed/rainfall sewer storage (mm) of the area (m²).
         /// </summary>
         public double MaximumSewerMixedAndOrRainfallStorage { get; set; }
-        
+
         /// <summary>
         /// The initial mixed/rainfall sewer storage (mm) of the area (m²).
         /// </summary>
         public double InitialSewerMixedAndOrRainfallStorage { get; set; }
-        
+
         /// <summary>
         /// The maximum dry weather flow sewer storage (mm) of the area (m²).
         /// </summary>
         public double MaximumSewerDryWeatherFlowStorage { get; set; }
-        
+
         /// <summary>
         /// The initial dry weather flow sewer storage (mm) of the area (m²).
         /// </summary>
@@ -151,11 +166,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         public int NumberOfInhabitants { get; set; }
 
         public PavedEnums.DryWeatherFlowOptions DryWeatherFlowOptions { get; set; }
-        
+
         /// <summary>
         /// The water use per capita (l/day).
         /// </summary>
         public double WaterUse { get; set; }
+
         public Function VariableWaterUseFunction { get; set; } // distribution per hour
 
         public PavedEnums.SewerPumpDischargeTarget MixedAndOrRainfallSewerPumpDischarge { get; set; }
@@ -165,7 +181,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         {
             get
             {
-                switch(MixedAndOrRainfallSewerPumpDischarge)
+                switch (MixedAndOrRainfallSewerPumpDischarge)
                 {
                     case PavedEnums.SewerPumpDischargeTarget.BoundaryNode:
                         return Catchment.Links.Select(l => l.Target).FirstOrDefault(f => !(f is WasteWaterTreatmentPlant));
@@ -194,20 +210,5 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         }
 
         #endregion
-
-        public override object Clone()
-        {
-            var clone = (PavedData)base.Clone();
-            clone.MixedSewerPumpVariableCapacitySeries = MixedSewerPumpVariableCapacitySeries != null
-                                                             ? (TimeSeries) MixedSewerPumpVariableCapacitySeries.Clone()
-                                                             : null;
-            clone.DwfSewerPumpVariableCapacitySeries = DwfSewerPumpVariableCapacitySeries != null
-                                                           ? (TimeSeries) DwfSewerPumpVariableCapacitySeries.Clone()
-                                                           : null;
-            clone.VariableWaterUseFunction = VariableWaterUseFunction != null
-                                                 ? (Function) VariableWaterUseFunction.Clone()
-                                                 : null;
-            return clone;
-        }
     }
 }
