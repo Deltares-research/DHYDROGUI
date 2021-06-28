@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 
@@ -18,12 +17,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
 
             var capacityMixedAndOrRainfallInM3 = GetFixedCapacityInMm(pavedData, pavedData.CapacityMixedAndOrRainfall);
             var capacityDryWeatherFlowInM3 = GetFixedCapacityInMm(pavedData, pavedData.CapacityDryWeatherFlow);
-            var initialStreetStorageMm = GetStorageInMm(pavedData, pavedData.InitialStreetStorage);
-            var maximumStreetStorageMm = GetStorageInMm(pavedData, pavedData.MaximumStreetStorage);
-            var initialSewerMixedAndOrRainfallStorageMm = GetStorageInMm(pavedData, pavedData.InitialSewerMixedAndOrRainfallStorage);
-            var maximumSewerMixedAndOrRainfallStorageMm = GetStorageInMm(pavedData, pavedData.MaximumSewerMixedAndOrRainfallStorage);
-            var initialSewerDryWeatherFlowStorageMm = GetStorageInMm(pavedData, pavedData.InitialSewerDryWeatherFlowStorage);
-            var maximumSewerDryWeatherFlowStorageMm = GetStorageInMm(pavedData, pavedData.MaximumSewerDryWeatherFlowStorage);
+            var initialStreetStorageMm = pavedData.InitialStreetStorage;
+            var maximumStreetStorageMm = pavedData.MaximumStreetStorage;
+            var initialSewerMixedAndOrRainfallStorageMm = pavedData.InitialSewerMixedAndOrRainfallStorage;
+            var maximumSewerMixedAndOrRainfallStorageMm = pavedData.MaximumSewerMixedAndOrRainfallStorage;
+            var initialSewerDryWeatherFlowStorageMm = pavedData.InitialSewerDryWeatherFlowStorage;
+            var maximumSewerDryWeatherFlowStorageMm = pavedData.MaximumSewerDryWeatherFlowStorage;
             
             int inhabitants = pavedData.NumberOfInhabitants;
 
@@ -82,14 +81,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
             return pavedData.IsSewerPumpCapacityFixed
                        ? capacityInNativeUnit
                        : 0.0;
-        }
-
-        private static double GetStorageInMm(PavedData pavedData, double storageInNativeUnit)
-        {
-            return RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit,
-                                                              RainfallRunoffEnums.StorageUnit.mm,
-                                                              storageInNativeUnit,
-                                                              pavedData.CalculationArea);
         }
 
         private LinkType DischargeTargetToLinkType(PavedEnums.SewerPumpDischargeTarget dischargeTarget)
