@@ -133,9 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
         {
             var totalWaterUse = new double[24];
 
-            double totalWaterUsePerDay = RainfallRunoffUnitConverter.ConvertWaterUse(pavedData.WaterUseUnit,
-                                                                                     PavedEnums.WaterUseUnit.l_day,
-                                                                                     pavedData.WaterUse);
+            double totalWaterUsePerDay = pavedData.WaterUse;
 
             switch (pavedData.DryWeatherFlowOptions)
             {

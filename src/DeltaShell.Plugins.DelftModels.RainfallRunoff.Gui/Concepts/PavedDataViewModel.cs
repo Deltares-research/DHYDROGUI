@@ -101,11 +101,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         /// </summary>
         public RainfallRunoffEnums.StorageUnit StorageUnit { get; set; }
 
-        public PavedEnums.WaterUseUnit WaterUseUnit
-        {
-            get { return Data.WaterUseUnit; }
-            set { Data.WaterUseUnit = value; }
-        }
+        /// <summary>
+        /// The unit for the water use.
+        /// </summary>
+        public PavedEnums.WaterUseUnit WaterUseUnit { get; set; }
 
         public string AreaUnitLabel { get; private set; }
 
@@ -255,12 +254,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertWaterUse(PavedEnums.WaterUseUnit.l_day, WaterUseUnit,
+                return RainfallRunoffUnitConverter.ConvertWaterUse(PavedData.WaterUseUnit, WaterUseUnit,
                                                                    Data.WaterUse);
             }
             set
             {
-                Data.WaterUse = RainfallRunoffUnitConverter.ConvertWaterUse(WaterUseUnit, PavedEnums.WaterUseUnit.l_day,
+                Data.WaterUse = RainfallRunoffUnitConverter.ConvertWaterUse(WaterUseUnit, PavedData.WaterUseUnit,
                                                                             value);
             }
         }

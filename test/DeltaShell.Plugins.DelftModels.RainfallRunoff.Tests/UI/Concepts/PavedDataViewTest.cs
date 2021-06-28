@@ -29,7 +29,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Concepts
                 nameof(pavedData.MixedAndOrRainfallSewerPumpDischarge),
                 nameof(pavedData.SewerType),
                 nameof(pavedData.SpillingDefinition),
-                nameof(pavedData.WaterUseUnit)
             });
 
             var pavedDataView = new PavedDataView { Data = pavedData };

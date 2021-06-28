@@ -13,14 +13,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
     public class PavedData : CatchmentModelData
     {
         /// <summary>
-        /// The default sewer pump capacity unit. 
+        /// The sewer pump capacity unit. 
         /// </summary>
         public const PavedEnums.SewerPumpCapacityUnit PumpCapacityUnit = PavedEnums.SewerPumpCapacityUnit.m3_s;
 
         /// <summary>
-        /// The default storage unit.
+        /// The storage unit.
         /// </summary>
         public const RainfallRunoffEnums.StorageUnit StorageUnit = RainfallRunoffEnums.StorageUnit.mm;
+
+        /// <summary>
+        /// The water use unit.
+        /// </summary>
+        public const PavedEnums.WaterUseUnit WaterUseUnit = PavedEnums.WaterUseUnit.l_day;
         
         protected PavedData()
             : base(null)
@@ -41,8 +46,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 VariableWaterUseFunction[i] = defaultPerc;
             }
             
-            WaterUseUnit = PavedEnums.WaterUseUnit.l_day;
-
             VariableWaterUseFunction.Arguments[0].IsEditable = false;
             isSewerPumpCapacityFixed = true;
             SurfaceLevel = 1.5;
@@ -148,8 +151,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         public int NumberOfInhabitants { get; set; }
 
         public PavedEnums.DryWeatherFlowOptions DryWeatherFlowOptions { get; set; }
-        public double WaterUse { get; set; } // l/day
-        public PavedEnums.WaterUseUnit WaterUseUnit { get; set; }
+        
+        /// <summary>
+        /// The water use per capita (l/day).
+        /// </summary>
+        public double WaterUse { get; set; }
         public Function VariableWaterUseFunction { get; set; } // distribution per hour
 
         public PavedEnums.SewerPumpDischargeTarget MixedAndOrRainfallSewerPumpDischarge { get; set; }
