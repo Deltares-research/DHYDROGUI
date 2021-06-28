@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                     MixedSewerPumpVariableCapacitySeries.Components.Add(new Variable<double>
                         {
                             Name = "Pump Capacity",
-                            Unit = new Unit("m³/min", "m³/min")
+                            Unit = new Unit("m³/s", "m³/s")
                         });
                 }
                 if (DwfSewerPumpVariableCapacitySeries == null)
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                     DwfSewerPumpVariableCapacitySeries.Components.Add(new Variable<double>
                         {
                             Name = "Pump Capacity",
-                            Unit = new Unit("m³/min", "m³/min")
+                            Unit = new Unit("m³/s", "m³/s")
                         });
                 }
             }
