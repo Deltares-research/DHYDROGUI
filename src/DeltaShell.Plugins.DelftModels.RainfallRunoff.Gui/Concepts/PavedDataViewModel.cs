@@ -5,19 +5,33 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 {
+    /// <summary>
+    /// The view model for the <see cref="PavedDataView"/>.
+    /// </summary>
     [Entity(FireOnCollectionChange = false)]
     public class PavedDataViewModel
     {
         private RainfallRunoffEnums.AreaUnit areaUnit;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PavedDataViewModel"/> class.
+        /// </summary>
+        /// <param name="data">The paved data. </param>
+        /// <param name="areaUnit"> The area unit. </param>
         public PavedDataViewModel(PavedData data, RainfallRunoffEnums.AreaUnit areaUnit)
         {
             Data = data;
             AreaUnit = areaUnit;
         }
 
+        /// <summary>
+        /// The paved data.
+        /// </summary>
         public PavedData Data { get; set; } //public to bubble events to causes refreshes
 
+        /// <summary>
+        /// Whether or not the splitting definition is no delay.
+        /// </summary>
         public bool SplittingDefinitionIsNoDelay
         {
             get => Data.SpillingDefinition == PavedEnums.SpillingDefinition.NoDelay;
@@ -30,6 +44,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
+        /// <summary>
+        /// Whether or not the splitting definition uses a runoff coefficient.
+        /// </summary>
         public bool SplittingDefinitionUseRunoffCoefficient
         {
             get => Data.SpillingDefinition == PavedEnums.SpillingDefinition.UseRunoffCoefficient;
@@ -42,32 +59,29 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
-        public bool SewerTypeIsMixed
-        {
-            get => Data.SewerType == PavedEnums.SewerType.MixedSystem;
-            set
-            {
-                if (value)
-                {
-                    Data.SewerType = PavedEnums.SewerType.MixedSystem;
-                }
-            }
-        }
+        /// <summary>
+        /// Whether or not the sewer is not a mixed system.
+        /// </summary>
+        public bool SewerTypeIsNotMixed => Data.SewerType != PavedEnums.SewerType.MixedSystem;
 
-        public bool SewerTypeIsNotMixed => !SewerTypeIsMixed;
+        /// <summary>
+        /// Whether or not the pump capacity is variable over time.
+        /// </summary>
+        public bool SewerPumpCapacityIsVariable => !Data.IsSewerPumpCapacityFixed;
 
-        public bool SewerPumpCapacityIsFixed
-        {
-            get => Data.IsSewerPumpCapacityFixed;
-            set => Data.IsSewerPumpCapacityFixed = value;
-        }
+        /// <summary>
+        /// Whether or not the sewer is not a mixed system and the pump capacity is fixed.
+        /// </summary>
+        public bool SewerTypeIsNotMixedAndSewerPumpIsFixedCapacity => SewerTypeIsNotMixed && !SewerPumpCapacityIsVariable;
 
-        public bool SewerPumpCapacityIsVariable => !SewerPumpCapacityIsFixed;
+        /// <summary>
+        /// Whether or not the sewer is not a mixed system and the pump capacity is variable.
+        /// </summary>
+        public bool SewerTypeIsNotMixedAndSewerPumpIsVariableCapacity => SewerTypeIsNotMixed && SewerPumpCapacityIsVariable;
 
-        public bool SewerTypeIsNotMixedAndSewerPumpIsFixedCapacity => SewerTypeIsNotMixed && SewerPumpCapacityIsFixed;
-
-        public bool SewerTypeIsNotMixedAndSewerPumpIsVariableCapacity => SewerTypeIsNotMixed && !SewerPumpCapacityIsFixed;
-
+        /// <summary>
+        /// The unit for the area.
+        /// </summary>
         public RainfallRunoffEnums.AreaUnit AreaUnit
         {
             get => areaUnit;
@@ -95,99 +109,118 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 
         public string AreaUnitLabel { get; private set; }
 
+        /// <summary>
+        /// The total area.
+        /// </summary>
         public double TotalAreaInUnit
         {
-            get => RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, Data.CalculationArea);
-            set => Data.CalculationArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
+            get => GetArea(Data.CalculationArea);
+            set => Data.CalculationArea = GetConvertedArea(value);
         }
 
+        /// <summary>
+        /// The fixed capacity of a mixed/rainfall sewer pump.
+        /// </summary>
         public double CapacityMixedAndOrRainfall
         {
-            get => RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedData.PumpCapacityUnit,
-                                                                   PumpCapacityUnit,
-                                                                   Data.CapacityMixedAndOrRainfall,
-                                                                   Data.CalculationArea);
-            set => Data.CapacityMixedAndOrRainfall = RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit,
-                                                                                                     PavedData.PumpCapacityUnit,
-                                                                                                     value,
-                                                                                                     Data.CalculationArea);
+            get => GetCapacity(Data.CapacityMixedAndOrRainfall);
+            set => Data.CapacityMixedAndOrRainfall = GetConvertedCapacity(value);
         }
 
+        /// <summary>
+        /// The fixed capacity of a dry weather flow sewer pump.
+        /// </summary>
         public double CapacityDryWeatherFlow
         {
-            get => RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedData.PumpCapacityUnit,
-                                                                   PumpCapacityUnit,
-                                                                   Data.CapacityDryWeatherFlow,
-                                                                   Data.CalculationArea);
-            set => Data.CapacityDryWeatherFlow = RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit,
-                                                                                                 PavedData.PumpCapacityUnit,
-                                                                                                 value,
-                                                                                                 Data.CalculationArea);
+            get => GetCapacity(Data.CapacityDryWeatherFlow);
+            set => Data.CapacityDryWeatherFlow = GetConvertedCapacity(value);
         }
 
+        /// <summary>
+        /// The maximum street storage.
+        /// </summary>
         public double MaximumStreetStorage
         {
-            get => RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
-                                                              Data.MaximumStreetStorage, Data.CalculationArea);
-            set => Data.MaximumStreetStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                          PavedData.StorageUnit,
-                                                                                          value, Data.CalculationArea);
+            get => GetStorage(Data.MaximumStreetStorage);
+            set => Data.MaximumStreetStorage = GetConvertedStorage(value);
         }
 
+        /// <summary>
+        /// The initial street storage.
+        /// </summary>
         public double InitialStreetStorage
         {
-            get => RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
-                                                              Data.InitialStreetStorage, Data.CalculationArea);
-            set => Data.InitialStreetStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                          PavedData.StorageUnit,
-                                                                                          value, Data.CalculationArea);
+            get => GetStorage(Data.InitialStreetStorage);
+            set => Data.InitialStreetStorage = GetConvertedStorage(value);
         }
 
+        /// <summary>
+        /// The maximum mixed/rainfall sewer storage.
+        /// </summary>
         public double MaximumSewerMixedAndOrRainfallStorage
         {
-            get => RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
-                                                              Data.MaximumSewerMixedAndOrRainfallStorage,
-                                                              Data.CalculationArea);
-            set => Data.MaximumSewerMixedAndOrRainfallStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                                           PavedData.StorageUnit,
-                                                                                                           value,
-                                                                                                           Data.CalculationArea);
+            get => GetStorage(Data.MaximumSewerMixedAndOrRainfallStorage);
+            set => Data.MaximumSewerMixedAndOrRainfallStorage = GetConvertedStorage(value);
         }
 
+        /// <summary>
+        /// The initial mixed/rainfall sewer storage.
+        /// </summary>
         public double InitialSewerMixedAndOrRainfallStorage
         {
-            get => RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
-                                                              Data.InitialSewerMixedAndOrRainfallStorage,
-                                                              Data.CalculationArea);
-            set => Data.InitialSewerMixedAndOrRainfallStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                                           PavedData.StorageUnit,
-                                                                                                           value, Data.CalculationArea);
+            get => GetStorage(Data.InitialSewerMixedAndOrRainfallStorage);
+            set => Data.InitialSewerMixedAndOrRainfallStorage = GetConvertedStorage(value);
         }
 
+        /// <summary>
+        /// The maximum dry weather flow sewer storage.
+        /// </summary>
         public double MaximumSewerDryWeatherFlowStorage
         {
-            get => RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
-                                                              Data.MaximumSewerDryWeatherFlowStorage, Data.CalculationArea);
-            set => Data.MaximumSewerDryWeatherFlowStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                                       PavedData.StorageUnit,
-                                                                                                       value,
-                                                                                                       Data.CalculationArea);
+            get => GetStorage(Data.MaximumSewerDryWeatherFlowStorage);
+            set => Data.MaximumSewerDryWeatherFlowStorage = GetConvertedStorage(value);
         }
 
+        /// <summary>
+        /// The initial dry weather flow sewer storage.
+        /// </summary>
         public double InitialSewerDryWeatherFlowStorage
         {
-            get => RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
-                                                              Data.InitialSewerDryWeatherFlowStorage, Data.CalculationArea);
-            set => Data.InitialSewerDryWeatherFlowStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                                       PavedData.StorageUnit,
-                                                                                                       value,
-                                                                                                       Data.CalculationArea);
+            get => GetStorage(Data.InitialSewerDryWeatherFlowStorage);
+            set => Data.InitialSewerDryWeatherFlowStorage = GetConvertedStorage(value);
         }
 
+        /// <summary>
+        /// The water use per capita.
+        /// </summary>
         public double WaterUse
         {
-            get => RainfallRunoffUnitConverter.ConvertWaterUse(PavedData.WaterUseUnit, WaterUseUnit, Data.WaterUse);
-            set => Data.WaterUse = RainfallRunoffUnitConverter.ConvertWaterUse(WaterUseUnit, PavedData.WaterUseUnit, value);
+            get => GetWaterUse(Data.WaterUse);
+            set => Data.WaterUse = GetConvertedWaterUse(value);
         }
+
+        private double GetArea(double value) =>
+            RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, value);
+
+        private double GetConvertedArea(double value) =>
+            RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
+
+        private double GetStorage(double value) =>
+            RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit, value, Data.CalculationArea);
+
+        private double GetConvertedStorage(double value) =>
+            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, PavedData.StorageUnit, value, Data.CalculationArea);
+
+        private double GetCapacity(double value) =>
+            RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedData.PumpCapacityUnit, PumpCapacityUnit, value, Data.CalculationArea);
+
+        private double GetConvertedCapacity(double value) =>
+            RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit, PavedData.PumpCapacityUnit, value, Data.CalculationArea);
+
+        private double GetWaterUse(double value) =>
+            RainfallRunoffUnitConverter.ConvertWaterUse(PavedData.WaterUseUnit, WaterUseUnit, value);
+
+        private double GetConvertedWaterUse(double value) =>
+            RainfallRunoffUnitConverter.ConvertWaterUse(WaterUseUnit, PavedData.WaterUseUnit, value);
     }
 }
