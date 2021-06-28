@@ -1,93 +1,89 @@
-﻿using System.ComponentModel;
-using DelftTools.Utils.Aop;
+﻿using DelftTools.Utils.Aop;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 {
-    [Entity(FireOnCollectionChange=false)]
+    /// <summary>
+    /// The view model for the <see cref="GreenHouseDataView"/>.
+    /// </summary>
+    [Entity(FireOnCollectionChange = false)]
     public class GreenhouseDataViewModel
     {
-        private RainfallRunoffEnums.AreaUnit areaUnit;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GreenhouseDataViewModel"/> class.
+        /// </summary>
+        /// <param name="data">The green house data. </param>
+        /// <param name="areaUnit"> The area unit. </param>
         public GreenhouseDataViewModel(GreenhouseData data, RainfallRunoffEnums.AreaUnit areaUnit)
         {
             Data = data;
             AreaUnit = areaUnit;
         }
 
+        /// <summary>
+        /// The green house data.
+        /// </summary>
         public GreenhouseData Data { get; set; } //public to bubble events to causes refreshes
 
-        public RainfallRunoffEnums.AreaUnit AreaUnit
-        {
-            get { return areaUnit; }
-            set
-            {
-                areaUnit = value;
-                AreaUnitLabel = value.GetDescription();
-            }
-        }
+        /// <summary>
+        /// The unit for the area.
+        /// </summary>
+        public RainfallRunoffEnums.AreaUnit AreaUnit { get; set; }
 
-        public RainfallRunoffEnums.StorageUnit StorageUnit
-        {
-            get { return Data.RoofStorageUnit; }
-            set { Data.RoofStorageUnit = value; }
-        }
+        /// <summary>
+        /// The unit for the storage.
+        /// </summary>
+        public RainfallRunoffEnums.StorageUnit StorageUnit { get; set; }
 
-        public string AreaUnitLabel { get; private set; }
+        /// <summary>
+        /// The unit label for the area.
+        /// </summary>
+        public string AreaUnitLabel => AreaUnit.GetDescription();
 
+        /// <summary>
+        /// The maximum roof storage.
+        /// </summary>
         public double MaximumRoofStorage
         {
-            get
-            {
-                return RainfallRunoffUnitConverter.ConvertStorage(RainfallRunoffEnums.StorageUnit.mm, StorageUnit,
-                                                                  Data.MaximumRoofStorage, Data.CalculationArea);
-            }
-            set
-            {
-                Data.MaximumRoofStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                     RainfallRunoffEnums.StorageUnit.mm,
-                                                                                     value, Data.CalculationArea);
-            }
+            get => GetStorage(Data.MaximumRoofStorage);
+            set => Data.MaximumRoofStorage = GetConvertedStorage(value);
         }
 
+        /// <summary>
+        /// The initial roof storage.
+        /// </summary>
         public double InitialRoofStorage
         {
-            get
-            {
-                return RainfallRunoffUnitConverter.ConvertStorage(RainfallRunoffEnums.StorageUnit.mm, StorageUnit,
-                                                                  Data.InitialRoofStorage, Data.CalculationArea);
-            }
-            set
-            {
-                Data.InitialRoofStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                     RainfallRunoffEnums.StorageUnit.mm,
-                                                                                     value, Data.CalculationArea);
-            }
+            get => GetStorage(Data.InitialRoofStorage);
+            set => Data.InitialRoofStorage = GetConvertedStorage(value);
         }
 
+        /// <summary>
+        /// The sub soil storage area.
+        /// </summary>
         public double SubSoilStorageArea
         {
-            get
-            {
-                return RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit,
-                                                               Data.SubSoilStorageArea);
-            }
-            set
-            {
-                Data.SubSoilStorageArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit,
-                                                                                  RainfallRunoffEnums.AreaUnit.m2, value);
-            }
+            get => GetStorageArea(Data.SubSoilStorageArea);
+            set => Data.SubSoilStorageArea = GetConvertedStorageArea(value);
         }
 
-        public string AreaPerGreenhouseTypeLabel
-        {
-            get
-            {
-                var converter = TypeDescriptor.GetConverter(typeof (RainfallRunoffEnums.AreaUnit));
-                return "Area per greenhouse type in " + converter.ConvertToString(areaUnit);
-            }
-        }
+        /// <summary>
+        /// The area per green house type label.
+        /// </summary>
+        public string AreaPerGreenhouseTypeLabel => "Area per greenhouse type in " + AreaUnitLabel;
+
+        private double GetStorage(double value) =>
+            RainfallRunoffUnitConverter.ConvertStorage(GreenhouseData.StorageUnit, StorageUnit, value, Data.CalculationArea);
+
+        private double GetConvertedStorage(double value) =>
+            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, GreenhouseData.StorageUnit, value, Data.CalculationArea);
+
+        private double GetStorageArea(double value) =>
+            RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, value);
+
+        private double GetConvertedStorageArea(double value) =>
+            RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
     }
 }

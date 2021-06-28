@@ -8,6 +8,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
     [Entity(FireOnCollectionChange=false)]
     public class GreenhouseData : CatchmentModelData
     {
+        /// <summary>
+        /// The storage unit.
+        /// </summary>
+        public const RainfallRunoffEnums.StorageUnit StorageUnit = RainfallRunoffEnums.StorageUnit.mm;
+        
         //nhib
         protected GreenhouseData()
             : base(null)
@@ -19,7 +24,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         {
             InitializeAreas();
             CalculationArea = catchment.AreaSize;
-            RoofStorageUnit = RainfallRunoffEnums.StorageUnit.mm;
             SurfaceLevel = 1.5;
             SiloCapacity = 200;
             PumpCapacity = 0.02;
@@ -68,10 +72,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 
         public RainfallRunoffEnums.AreaUnit TotalAreaUnit { get; set; }
 
-        public double MaximumRoofStorage { get; set; } // mm (x Area)
-        public double InitialRoofStorage { get; set; } // mm (x Area)
-        public RainfallRunoffEnums.StorageUnit RoofStorageUnit { get; set; }
+        /// <summary>
+        /// The maximum roof storage (mm) of the area (m²).
+        /// </summary>
+        public double MaximumRoofStorage { get; set; }
         
+        /// <summary>
+        /// The initial roof storage (mm) of the area (m²).
+        /// </summary>
+        public double InitialRoofStorage { get; set; }
+
         #endregion
 
         public override object Clone()

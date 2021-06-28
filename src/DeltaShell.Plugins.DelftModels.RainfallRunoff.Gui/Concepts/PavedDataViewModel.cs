@@ -11,8 +11,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
     [Entity(FireOnCollectionChange = false)]
     public class PavedDataViewModel
     {
-        private RainfallRunoffEnums.AreaUnit areaUnit;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PavedDataViewModel"/> class.
         /// </summary>
@@ -82,15 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         /// <summary>
         /// The unit for the area.
         /// </summary>
-        public RainfallRunoffEnums.AreaUnit AreaUnit
-        {
-            get => areaUnit;
-            set
-            {
-                areaUnit = value;
-                AreaUnitLabel = value.GetDescription();
-            }
-        }
+        public RainfallRunoffEnums.AreaUnit AreaUnit { get; set; }
 
         /// <summary>
         /// The unit for the pump capacity.
@@ -107,7 +97,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         /// </summary>
         public PavedEnums.WaterUseUnit WaterUseUnit { get; set; }
 
-        public string AreaUnitLabel { get; private set; }
+        /// <summary>
+        /// The unit label for the area.
+        /// </summary>
+        public string AreaUnitLabel => AreaUnit.GetDescription();
 
         /// <summary>
         /// The total area.
@@ -196,11 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         public double WaterUse
         {
             get => GetWaterUse(Data.WaterUse);
-            set
-            {
-                var conv = GetConvertedWaterUse(value);
-                Data.WaterUse = conv;
-            }
+            set => Data.WaterUse = GetConvertedWaterUse(value);
         }
 
         private double GetArea(double value) =>

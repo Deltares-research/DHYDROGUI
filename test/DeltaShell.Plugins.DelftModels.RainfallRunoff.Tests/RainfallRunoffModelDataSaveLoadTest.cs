@@ -54,11 +54,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         model.Basin.Catchments.Add(firstCatchment);
                         greenhouseData = (GreenhouseData) model.GetCatchmentModelData(firstCatchment);
                         greenhouseData.TotalAreaUnit = RainfallRunoffEnums.AreaUnit.m2;
-                        greenhouseData.RoofStorageUnit = RainfallRunoffEnums.StorageUnit.mm;
                         ReflectionTestHelper.FillRandomValuesForValueTypeProperties(greenhouseData, new[]
                         {
                             nameof(greenhouseData.TotalAreaUnit),
-                            nameof(greenhouseData.RoofStorageUnit)
                         });
                         greenhouseData.UseSubsoilStorage = true;
                         greenhouseData.AreaPerGreenhouse[GreenhouseEnums.AreaPerGreenhouseType.from2500to3000] =
@@ -91,9 +89,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                     ReflectionTestHelper.AssertPublicPropertiesAreEqual(greenhouseData, retrievedGreenhouse);
                     Assert.AreEqual(greenhouseData.TotalAreaUnit, retrievedGreenhouse.TotalAreaUnit);
-                    Assert.AreEqual(greenhouseData.RoofStorageUnit, retrievedGreenhouse.RoofStorageUnit);
                     Assert.AreEqual(expected,
-                        greenhouseData.AreaPerGreenhouse[GreenhouseEnums.AreaPerGreenhouseType.from2500to3000]);
+                                    greenhouseData.AreaPerGreenhouse[GreenhouseEnums.AreaPerGreenhouseType.from2500to3000]);
                 }
             }
             finally
