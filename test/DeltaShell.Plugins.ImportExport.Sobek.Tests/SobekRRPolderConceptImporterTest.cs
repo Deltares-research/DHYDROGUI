@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(9.99, pavedData.SurfaceLevel);
             Assert.AreEqual(PavedEnums.SewerType.SeparateSystem, pavedData.SewerType);
             Assert.AreEqual(0.0, pavedData.CapacityMixedAndOrRainfall);
-            Assert.AreEqual(1.8899999999999999, pavedData.CapacityDryWeatherFlow, 0.00001);
+            Assert.AreEqual(0.0315, pavedData.CapacityDryWeatherFlow, 0.00001);
             Assert.AreEqual(PavedEnums.SewerPumpDischargeTarget.BoundaryNode, pavedData.MixedAndOrRainfallSewerPumpDischarge);
             Assert.AreEqual(PavedEnums.SewerPumpDischargeTarget.WWTP, pavedData.DryWeatherFlowSewerPumpDischarge);
             Assert.AreEqual(70.0, pavedData.NumberOfInhabitants);
