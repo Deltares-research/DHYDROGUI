@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 
             rbNoDelay.Checked = ViewModel.SplittingDefinitionIsNoDelay;
             rbUseRunoffCoefficient.Checked = ViewModel.SplittingDefinitionUseRunoffCoefficient;
-            rbFixedCapacity.Checked = ViewModel.SewerPumpCapacityIsFixed;
+            rbFixedCapacity.Checked = !ViewModel.SewerPumpCapacityIsVariable;
             rbVariableCapacity.Checked = ViewModel.SewerPumpCapacityIsVariable;
 
             updatingRadioButtons = false;
