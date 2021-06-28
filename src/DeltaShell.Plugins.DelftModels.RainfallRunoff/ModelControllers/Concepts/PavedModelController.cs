@@ -83,11 +83,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
             var capacityInNativeUnit = (double) TypeUtils.GetPropertyValue(pavedData, propName);
 
             return pavedData.IsSewerPumpCapacityFixed
-                       ? RainfallRunoffUnitConverter.ConvertPumpCapacity(
-                           PavedEnums.DefaultPumpCapacityUnit,
-                           PavedEnums.SewerPumpCapacityUnit.m3_s,
-                           capacityInNativeUnit,
-                           pavedData.CalculationArea)
+                       ? capacityInNativeUnit
                        : 0.0;
         }
 
@@ -95,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
         {
             var storageInNativeUnit = (double) TypeUtils.GetPropertyValue(pavedData, propName);
 
-            return RainfallRunoffUnitConverter.ConvertStorage(PavedEnums.DefaultStorageUnit,
+            return RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit,
                                                               RainfallRunoffEnums.StorageUnit.mm,
                                                               storageInNativeUnit,
                                                               pavedData.CalculationArea);

@@ -12,6 +12,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
     [Entity(FireOnCollectionChange=false)]
     public class PavedData : CatchmentModelData
     {
+        /// <summary>
+        /// The default sewer pump capacity unit. 
+        /// </summary>
+        public const PavedEnums.SewerPumpCapacityUnit PumpCapacityUnit = PavedEnums.SewerPumpCapacityUnit.m3_s;
+
+        /// <summary>
+        /// The default storage unit.
+        /// </summary>
+        public const RainfallRunoffEnums.StorageUnit StorageUnit = RainfallRunoffEnums.StorageUnit.mm;
+        
         protected PavedData()
             : base(null)
         {
@@ -92,10 +102,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         }
         
         /// <summary>
-        /// The fixed capacity of a mixed/rainfall sewer pump (m³/min).
+        /// The fixed capacity of a mixed/rainfall sewer pump (m³/s).
         /// </summary>
         public double CapacityMixedAndOrRainfall { get; set; }
-        public double CapacityDryWeatherFlow { get; set; } // m3_min
+        
+        /// <summary>
+        /// The fixed capacity of a dry weather flow sewer pump (m³/s).
+        /// </summary>
+        public double CapacityDryWeatherFlow { get; set; }
         public TimeSeries DwfSewerPumpVariableCapacitySeries { get; set; }
         public TimeSeries MixedSewerPumpVariableCapacitySeries { get; set; }
 

@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             get { return SewerType == PavedEnums.SewerType.MixedSystem; }
         }
 
-        [Description("Mixed/rainfall capacity (m³/min)")]
+        [Description("Mixed/rainfall capacity (m³/s)")]
         public double? MixedAndOrRainfallCapacity
         {
             get
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
-        [Description("Dry weather flow capacity (m³/min)")]
+        [Description("Dry weather flow capacity (m³/s)")]
         public double? DWFCapacity
         {
             get

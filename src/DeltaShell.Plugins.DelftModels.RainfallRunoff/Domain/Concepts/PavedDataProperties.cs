@@ -78,15 +78,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         }
 
         [Category("Capacity")]
-        [DisplayName("Dry weather flow capacity [m³/min]")]
+        [DisplayName("Dry weather flow capacity [m³/s]")]
         public double DWFCapacity
         {
             get { return data.CapacityDryWeatherFlow; }
-            set { data.CapacityDryWeatherFlow = value; }
+            set { data.CapacityMixedAndOrRainfall = value; }
         }
 
         [Category("Capacity")]
-        [DisplayName("Mixed/rainfall capacity [m³/min]")]
+        [DisplayName("Mixed/rainfall capacity [m³/s]")]
         public double MixedAndOrRainfallCapacity
         {
             get { return data.CapacityMixedAndOrRainfall; }

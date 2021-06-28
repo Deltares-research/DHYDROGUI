@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedEnums.DefaultPumpCapacityUnit,
+                return RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedData.PumpCapacityUnit,
                                                                        PumpCapacityUnit,
                                                                        Data.CapacityMixedAndOrRainfall,
                                                                        Data.CalculationArea);
@@ -132,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set
             {
                 Data.CapacityMixedAndOrRainfall = RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit,
-                                                                     PavedEnums.DefaultPumpCapacityUnit,
+                                                                     PavedData.PumpCapacityUnit,
                                                                      value,
                                                                      Data.CalculationArea);
             }
@@ -142,7 +142,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedEnums.DefaultPumpCapacityUnit,
+                return RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedData.PumpCapacityUnit,
                                                      PumpCapacityUnit,
                                                      Data.CapacityDryWeatherFlow,
                                                      Data.CalculationArea);
@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set
             {
                 Data.CapacityDryWeatherFlow = RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit,
-                                                                   PavedEnums.DefaultPumpCapacityUnit,
+                                                                   PavedData.PumpCapacityUnit,
                                                                    value,
                                                                    Data.CalculationArea);
             }
@@ -160,13 +160,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertStorage(PavedEnums.DefaultStorageUnit, StorageUnit,
+                return RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
                                                                   Data.MaximumStreetStorage, Data.CalculationArea);
             }
             set
             {
                 Data.MaximumStreetStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                       PavedEnums.DefaultStorageUnit,
+                                                                                       PavedData.StorageUnit,
                                                                                        value, Data.CalculationArea);
             }
         }
@@ -175,13 +175,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertStorage(PavedEnums.DefaultStorageUnit, StorageUnit,
+                return RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
                                                                   Data.InitialStreetStorage, Data.CalculationArea);
             }
             set
             {
                 Data.InitialStreetStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                       PavedEnums.DefaultStorageUnit,
+                                                                                       PavedData.StorageUnit,
                                                                                        value, Data.CalculationArea);
             }
         }
@@ -190,14 +190,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertStorage(PavedEnums.DefaultStorageUnit, StorageUnit,
+                return RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
                                                                   Data.MaximumSewerMixedAndOrRainfallStorage,
                                                                   Data.CalculationArea);
             }
             set
             {
                 Data.MaximumSewerMixedAndOrRainfallStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                                        PavedEnums.DefaultStorageUnit,
+                                                                                                        PavedData.StorageUnit,
                                                                                                         value,
                                                                                                         Data.CalculationArea);
             }
@@ -207,14 +207,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertStorage(PavedEnums.DefaultStorageUnit, StorageUnit,
+                return RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
                                                                   Data.InitialSewerMixedAndOrRainfallStorage,
                                                                   Data.CalculationArea);
             }
             set
             {
                 Data.InitialSewerMixedAndOrRainfallStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                                        PavedEnums.DefaultStorageUnit,
+                                                                                                        PavedData.StorageUnit,
                                                                                                         value, Data.CalculationArea);
             }
         }
@@ -223,13 +223,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertStorage(PavedEnums.DefaultStorageUnit, StorageUnit,
+                return RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
                                                                   Data.MaximumSewerDryWeatherFlowStorage, Data.CalculationArea);
             }
             set
             {
                 Data.MaximumSewerDryWeatherFlowStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                                    PavedEnums.DefaultStorageUnit,
+                                                                                                    PavedData.StorageUnit,
                                                                                                     value,
                                                                                                     Data.CalculationArea);
             }
@@ -239,13 +239,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertStorage(PavedEnums.DefaultStorageUnit, StorageUnit,
+                return RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit,
                                                                   Data.InitialSewerDryWeatherFlowStorage, Data.CalculationArea);
             }
             set
             {
                 Data.InitialSewerDryWeatherFlowStorage = RainfallRunoffUnitConverter.ConvertStorage(StorageUnit,
-                                                                                                    PavedEnums.DefaultStorageUnit,
+                                                                                                    PavedData.StorageUnit,
                                                                                                     value,
                                                                                                     Data.CalculationArea);
             }

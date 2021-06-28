@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -86,14 +85,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     pavedData.SewerType = (PavedEnums.SewerType)sobekPaved.SewerSystem;
                     pavedData.IsSewerPumpCapacityFixed = sobekPaved.CapacitySewerTableId == null;
 
-                    pavedData.CapacityMixedAndOrRainfall = Math.Round(RainfallRunoffUnitConverter.ConvertPumpCapacity(
-                        PavedEnums.SewerPumpCapacityUnit.m3_s,
-                        PavedEnums.SewerPumpCapacityUnit.m3_min,
-                        sobekPaved.CapacitySewerConstantRainfallInM3S, double.NaN), 4);
-                    pavedData.CapacityDryWeatherFlow = Math.Round(RainfallRunoffUnitConverter.ConvertPumpCapacity(
-                        PavedEnums.SewerPumpCapacityUnit.m3_s,
-                        PavedEnums.SewerPumpCapacityUnit.m3_min,
-                        sobekPaved.CapacitySewerConstantDWAInM3S, double.NaN), 4);
+                    pavedData.CapacityMixedAndOrRainfall = sobekPaved.CapacitySewerConstantRainfallInM3S;
+                    pavedData.CapacityDryWeatherFlow = sobekPaved.CapacitySewerConstantDWAInM3S;
 
                     if (!String.IsNullOrEmpty(sobekPaved.CapacitySewerTableId))
                     {
