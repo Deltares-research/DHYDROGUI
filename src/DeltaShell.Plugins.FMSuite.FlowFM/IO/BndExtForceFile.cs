@@ -1067,7 +1067,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     };
                 if (compartment != null)
                     model1DLateralSourceData.Compartment = compartment;
-                if (forcingFile == "realtime")
+                if (string.Equals(forcingFile, "realtime", StringComparison.InvariantCultureIgnoreCase))
                     model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
                 if (lateralSourcesData.All(lsd => lsd.Feature != lateralSource))
                     lateralSourcesData.Add(model1DLateralSourceData);
