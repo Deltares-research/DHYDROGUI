@@ -32,7 +32,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             }
             
             StorageUnit = RainfallRunoffEnums.StorageUnit.mm;
-            SewerPumpCapacityUnit = PavedEnums.SewerPumpCapacityUnit.m3_min;
             WaterUseUnit = PavedEnums.WaterUseUnit.l_day;
 
             VariableWaterUseFunction.Arguments[0].IsEditable = false;
@@ -96,7 +95,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         // fixed or variable
         public double CapacityMixedAndOrRainfall { get; set; } // m3_min
         public double CapacityDryWeatherFlow { get; set; } // m3_min
-        public PavedEnums.SewerPumpCapacityUnit SewerPumpCapacityUnit { get; } = PavedEnums.SewerPumpCapacityUnit.m3_min;
         public TimeSeries DwfSewerPumpVariableCapacitySeries { get; set; }
         public TimeSeries MixedSewerPumpVariableCapacitySeries { get; set; }
 

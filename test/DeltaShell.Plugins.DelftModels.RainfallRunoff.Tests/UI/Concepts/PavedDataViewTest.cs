@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Concepts
                 nameof(pavedData.DryWeatherFlowOptions),
                 nameof(pavedData.DryWeatherFlowSewerPumpDischarge),
                 nameof(pavedData.MixedAndOrRainfallSewerPumpDischarge),
-                nameof(pavedData.SewerPumpCapacityUnit),
                 nameof(pavedData.SewerType),
                 nameof(pavedData.SpillingDefinition),
                 nameof(pavedData.StorageUnit),

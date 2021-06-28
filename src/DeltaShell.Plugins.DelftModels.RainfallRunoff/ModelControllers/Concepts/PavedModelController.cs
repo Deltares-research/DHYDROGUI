@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
 
             return pavedData.IsSewerPumpCapacityFixed
                        ? RainfallRunoffUnitConverter.ConvertPumpCapacity(
-                           pavedData.SewerPumpCapacityUnit,
+                           PavedEnums.DefaultPumpCapacityUnit,
                            PavedEnums.SewerPumpCapacityUnit.m3_s,
                            capacityInNativeUnit,
                            pavedData.CalculationArea)

@@ -658,7 +658,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                             nameof(pavedData.DryWeatherFlowOptions),
                             nameof(pavedData.DryWeatherFlowSewerPumpDischarge),
                             nameof(pavedData.MixedAndOrRainfallSewerPumpDischarge),
-                            nameof(pavedData.SewerPumpCapacityUnit),
                             nameof(pavedData.SewerType),
                             nameof(pavedData.SpillingDefinition),
                             nameof(pavedData.StorageUnit),
@@ -736,7 +735,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         retrievedPaved.DryWeatherFlowSewerPumpDischarge);
                     Assert.AreEqual(pavedData.MixedAndOrRainfallSewerPumpDischarge,
                         retrievedPaved.MixedAndOrRainfallSewerPumpDischarge);
-                    Assert.AreEqual(pavedData.SewerPumpCapacityUnit, retrievedPaved.SewerPumpCapacityUnit);
                     Assert.AreEqual(pavedData.SewerType, retrievedPaved.SewerType);
                     Assert.AreEqual(pavedData.SpillingDefinition, retrievedPaved.SpillingDefinition);
                     Assert.AreEqual(pavedData.StorageUnit, retrievedPaved.StorageUnit);

@@ -124,7 +124,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertPumpCapacity(Data.SewerPumpCapacityUnit,
+                return RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedEnums.DefaultPumpCapacityUnit,
                                                                        PumpCapacityUnit,
                                                                        Data.CapacityMixedAndOrRainfall,
                                                                        Data.CalculationArea);
@@ -133,7 +133,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set
             {
                 Data.CapacityMixedAndOrRainfall = RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit,
-                                                                     Data.SewerPumpCapacityUnit,
+                                                                     PavedEnums.DefaultPumpCapacityUnit,
                                                                      value,
                                                                      Data.CalculationArea);
             }
@@ -143,7 +143,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         {
             get
             {
-                return RainfallRunoffUnitConverter.ConvertPumpCapacity(Data.SewerPumpCapacityUnit,
+                return RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedEnums.DefaultPumpCapacityUnit,
                                                      PumpCapacityUnit,
                                                      Data.CapacityDryWeatherFlow,
                                                      Data.CalculationArea);
@@ -151,7 +151,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             set
             {
                 Data.CapacityDryWeatherFlow = RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit,
-                                                                   Data.SewerPumpCapacityUnit,
+                                                                   PavedEnums.DefaultPumpCapacityUnit,
                                                                    value,
                                                                    Data.CalculationArea);
             }
