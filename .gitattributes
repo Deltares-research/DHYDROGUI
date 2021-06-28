@@ -691,7 +691,6 @@ src/DeltaShell.NGHS.Common/Utils/EnumerableExtensions.cs -text
 src/DeltaShell.NGHS.Common/Utils/MigrationHelper.cs -text
 src/DeltaShell.NGHS.Common/Utils/NameableCollectionExtensions.cs -text
 src/DeltaShell.NGHS.Common/Utils/UniqueFileNameProvider.cs -text
-src/DeltaShell.NGHS.Common/Utils/UniqueStringProvider.cs -text
 src/DeltaShell.NGHS.Common/Validation/RestartTimeRangeValidator.cs -text
 src/DeltaShell.NGHS.Common/packages.config -text
 src/DeltaShell.NGHS.IO/DataObjects/FlowParameter.cs -text
@@ -3583,7 +3582,6 @@ test/DeltaShell.NGHS.Common.Tests/SystemEnvironmentTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/TestClassSetup.cs -text
 test/DeltaShell.NGHS.Common.Tests/Utils/EnumerableExtensionsTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/Utils/NameableCollectionExtensionsTest.cs -text
-test/DeltaShell.NGHS.Common.Tests/Utils/UniqueStringProviderTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/Validation/RestartTimeRangeValidatorTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/packages.config -text
 test/DeltaShell.NGHS.IO.TestUtils/App.config -text
