@@ -1201,15 +1201,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string extFilePath = Path.Combine(temp.Path, "FlowFM_bnd.ext");
                 string bcFilePath = Path.Combine(temp.Path, "FlowFM_meteo.bc");
                 string polFilePath = Path.Combine(temp.Path, "FlowFM_roofs.pol");
+
+                var referenceDate = new DateTime(2021, 6, 24);
                 
                 var meteoField = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
-                meteoField.Data[DateTime.Today.AddSeconds(100)] = 1.23;
-                meteoField.Data[DateTime.Today.AddSeconds(200)] = 4.56;
-                meteoField.Data[DateTime.Today.AddSeconds(300)] = 7.89;
+                meteoField.Data[referenceDate.AddSeconds(100)] = 1.23;
+                meteoField.Data[referenceDate.AddSeconds(200)] = 4.56;
+                meteoField.Data[referenceDate.AddSeconds(300)] = 7.89;
                 
                 var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
                 modelDefinition.FmMeteoFields.Add(meteoField);
-                modelDefinition.SetModelProperty(KnownProperties.RefDate, new DateTime(2021, 6, 24));
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, referenceDate);
                 
                 var coordinates = new[]
                 {
@@ -1279,15 +1281,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string extFilePath = Path.Combine(temp.Path, "FlowFM_bnd.ext");
                 string bcFilePath = Path.Combine(temp.Path, "FlowFM_meteo.bc");
                 string polFilePath = Path.Combine(temp.Path, "FlowFM_roofs.pol");
+
+                var referenceDate = new DateTime(2021, 6, 24);
                 
                 var meteoField = FmMeteoField.CreateMeteoPrecipitationSeries(FmMeteoLocationType.Global);
-                meteoField.Data[DateTime.Today.AddSeconds(100)] = 1.23;
-                meteoField.Data[DateTime.Today.AddSeconds(200)] = 4.56;
-                meteoField.Data[DateTime.Today.AddSeconds(300)] = 7.89;
+                meteoField.Data[referenceDate.AddSeconds(100)] = 1.23;
+                meteoField.Data[referenceDate.AddSeconds(200)] = 4.56;
+                meteoField.Data[referenceDate.AddSeconds(300)] = 7.89;
                 
                 var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
                 modelDefinition.FmMeteoFields.Add(meteoField);
-                modelDefinition.SetModelProperty(KnownProperties.RefDate, DateTime.Today);
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, referenceDate);
                 
                 var bndExtForceFile = new BndExtForceFile();
                 
