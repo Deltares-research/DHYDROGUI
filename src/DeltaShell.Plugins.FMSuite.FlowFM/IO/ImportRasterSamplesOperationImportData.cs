@@ -5,6 +5,7 @@ using System.Linq;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using GeoAPI.Extensions.Coverages;
 using SharpMap;
+using SharpMap.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -46,6 +47,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             return samples;
+        }
+
+        protected override ImportSamplesOperation CreateImportSamplesOperation()
+        {
+            return new ImportRasterSamplesOperationImportData
+            {
+                Name = Name,
+                CoordinateSystem = CoordinateSystem,
+                Dirty = true,
+                Enabled = Enabled,
+                FilePath = FilePath,
+            };
         }
     }
 }
