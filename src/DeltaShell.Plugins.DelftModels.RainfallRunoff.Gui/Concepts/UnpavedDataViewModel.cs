@@ -7,17 +7,31 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 {
+    /// <summary>
+    /// View model for the <see cref="UnpavedDataView"/>.
+    /// </summary>
     [Entity(FireOnCollectionChange = false)]
     public class UnpavedDataViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnpavedDataViewModel"/> class.
+        /// </summary>
+        /// <param name="data">The unpaved data. </param>
+        /// <param name="areaUnit"> The area unit. </param>
         public UnpavedDataViewModel(UnpavedData data, RainfallRunoffEnums.AreaUnit areaUnit)
         {
             Data = data;
             AreaUnit = areaUnit;
         }
 
+        /// <summary>
+        /// The unpaved data.
+        /// </summary>
         public UnpavedData Data { get; set; } //public to bubble events to causes refreshes
 
+        /// <summary>
+        /// Whether or not the ground water level is constant.
+        /// </summary>
         public bool GroundWaterLevelIsConstant
         {
             get => Data.InitialGroundWaterLevelSource == UnpavedEnums.GroundWaterSourceType.Constant;
@@ -30,12 +44,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
+        /// <summary>
+        /// Whether or not the <see cref="RainfallRunoffModel"/> is running in parallel.
+        /// </summary>
         public bool ModelRunningParallelWithFlow { get; set; }
 
+        /// <summary>
+        /// Whether or not to use the water level from the linked node.
+        /// </summary>
         public bool UseWaterLevelFromLinkedNode => LinkedToRunoffBoundary || LinkedToFlowNode && ModelRunningParallelWithFlow;
 
+        /// <summary>
+        /// Whether or not to overwrite the water level boundary.
+        /// </summary>
         public bool OverwriteWaterLevelBoundaryEnabled => !UseWaterLevelFromLinkedNode;
 
+        /// <summary>
+        /// Whether or not the ground water level is from the linked node.
+        /// </summary>
         public bool GroundWaterLevelIsFromLinkedNode
         {
             get => Data.InitialGroundWaterLevelSource == UnpavedEnums.GroundWaterSourceType.FromLinkedNode;
@@ -48,6 +74,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
+        /// <summary>
+        /// Whether or not the ground water level is variable over time.
+        /// </summary>
         public bool GroundWaterLevelIsSeries
         {
             get => Data.InitialGroundWaterLevelSource == UnpavedEnums.GroundWaterSourceType.Series;
@@ -60,6 +89,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
+        /// <summary>
+        /// Whether or not the seepage is constant.
+        /// </summary>
         public bool SeepageIsConstant
         {
             get => Data.SeepageSource == UnpavedEnums.SeepageSourceType.Constant;
@@ -72,6 +104,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
+        /// <summary>
+        /// Whether or not the seepage is variable over time.
+        /// </summary>
         public bool SeepageIsSeries
         {
             get => Data.SeepageSource == UnpavedEnums.SeepageSourceType.Series;
@@ -84,6 +119,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
+        /// <summary>
+        /// Whether or not the seepage is calculated from a variable H0 value.
+        /// </summary>
         public bool SeepageIsH0Series
         {
             get => Data.SeepageSource == UnpavedEnums.SeepageSourceType.H0Series;
@@ -168,7 +206,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         private bool LinkedToRunoffBoundary => Data.Catchment.Links.Any() && Data.Catchment.Links.First().Target is RunoffBoundary;
 
         private bool LinkedToFlowNode => Data.Catchment.Links.Any() && !LinkedToRunoffBoundary;
-        
+
         private double GetArea(double value) =>
             RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, value);
 
@@ -180,12 +218,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
 
         private double GetConvertedStorage(double value) =>
             RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, RainfallRunoffEnums.StorageUnit.mm, value, Data.TotalAreaForGroundWaterCalculations);
-        
+
         private double GetCapacity(double value) =>
             RainfallRunoffUnitConverter.ConvertRainfall(RainfallRunoffEnums.RainfallCapacityUnit.mm_hr, InfiltrationCapacityUnit, value);
 
         private double GetConvertedCapacity(double value) =>
             RainfallRunoffUnitConverter.ConvertRainfall(InfiltrationCapacityUnit, RainfallRunoffEnums.RainfallCapacityUnit.mm_hr, value);
-
     }
 }
