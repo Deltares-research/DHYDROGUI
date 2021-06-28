@@ -5,6 +5,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 {
     public static class PavedEnums
     {
+        /// <summary>
+        /// The default sewer pump capacity unit. 
+        /// </summary>
         public const SewerPumpCapacityUnit DefaultPumpCapacityUnit = SewerPumpCapacityUnit.m3_min;
         
         #region DryWeatherFlowOptions enum

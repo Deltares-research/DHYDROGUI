@@ -91,9 +91,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 CreateSewerPumpCapacityFunctionsIfNeeded();
             }
         }
-
-        // fixed or variable
-        public double CapacityMixedAndOrRainfall { get; set; } // m3_min
+        
+        /// <summary>
+        /// The fixed capacity of a mixed/rainfall sewer pump (m³/min) 
+        /// </summary>
+        public double CapacityMixedAndOrRainfall { get; set; }
         public double CapacityDryWeatherFlow { get; set; } // m3_min
         public TimeSeries DwfSewerPumpVariableCapacitySeries { get; set; }
         public TimeSeries MixedSewerPumpVariableCapacitySeries { get; set; }
