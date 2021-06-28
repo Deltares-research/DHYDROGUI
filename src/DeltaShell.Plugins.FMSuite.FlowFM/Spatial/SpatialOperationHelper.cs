@@ -1,6 +1,5 @@
-using System.Linq;
-using DelftTools.Utils;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.Utils;
 using SharpMap.Api.SpatialOperations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Spatial
@@ -22,13 +21,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Spatial
         {
             Ensure.NotNull(operationSet, nameof(operationSet));
             
-            foreach (ISpatialOperationSet operation in operationSet.Operations.OfType<ISpatialOperationSet>())
+            var uniqueStringProvider = new UniqueStringProvider();
+            foreach (ISpatialOperation operation in operationSet.Operations)
             {
-                operation.Name = "set";
-                MakeNamesUniquePerSet(operation);
-            }
+                if (operation is ISpatialOperationSet subOperationSet)
+                {
+                    operation.Name = uniqueStringProvider.GetUniqueStringFor("set");
+                    MakeNamesUniquePerSet(subOperationSet);
+                    continue;
+                }
 
-            NamingHelper.MakeNamesUnique(operationSet.Operations, suffixFormat: " {0}");
+                operation.Name = uniqueStringProvider.GetUniqueStringFor(operation.Name);
+            }
         } 
     }
 }
