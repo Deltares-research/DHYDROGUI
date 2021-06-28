@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         public double DWFCapacity
         {
             get { return data.CapacityDryWeatherFlow; }
-            set { data.CapacityMixedAndOrRainfall = value; }
+            set { data.CapacityDryWeatherFlow = value; }
         }
 
         [Category("Capacity")]
