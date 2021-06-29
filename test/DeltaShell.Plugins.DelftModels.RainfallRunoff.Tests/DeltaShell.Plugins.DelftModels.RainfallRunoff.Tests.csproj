@@ -49,6 +49,7 @@
     <Compile Include="Domain\Concepts\Sacramento\SacramentoDataTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\Nwrw3BComponentFileWriterTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwModelFileWriterTest.cs" />
+    <Compile Include="Domain\Concepts\Unpaved\UnpavedDataViewModelTest.cs" />
     <Compile Include="Exporters\MeteoDataExporterTest.cs" />
     <Compile Include="Exporters\RainfallRunoffBoundaryDataFileWriterTest.cs" />
     <Compile Include="Exporters\RainfallRunoffModelExporterTest.cs" />

@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Gr
     [TestFixture]
     public class GreenHouseDataViewModelTest
     {
+        [Test]
         [TestCase(RainfallRunoffEnums.StorageUnit.m3, 10, 7, 700d)]
         [TestCase(RainfallRunoffEnums.StorageUnit.m3, 1, 7, 7000d)]
         [TestCase(RainfallRunoffEnums.StorageUnit.m3, 10, 70, 7000d)]
@@ -33,6 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Gr
             Assert.That(data.MaximumRoofStorage, Is.EqualTo(expValue));
         }
 
+        [Test]
         [TestCase(RainfallRunoffEnums.StorageUnit.m3, 10, 7, 700d)]
         [TestCase(RainfallRunoffEnums.StorageUnit.m3, 1, 7, 7000d)]
         [TestCase(RainfallRunoffEnums.StorageUnit.m3, 10, 70, 7000d)]
@@ -55,6 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Gr
             Assert.That(data.InitialRoofStorage, Is.EqualTo(expValue));
         }
 
+        [Test]
         [TestCase(RainfallRunoffEnums.AreaUnit.m2, 1, 1)]
         [TestCase(RainfallRunoffEnums.AreaUnit.ha, 1, 10000)]
         [TestCase(RainfallRunoffEnums.AreaUnit.km2, 1, 1000000)]
