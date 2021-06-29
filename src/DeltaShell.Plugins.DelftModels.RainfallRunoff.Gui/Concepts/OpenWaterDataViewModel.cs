@@ -47,8 +47,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         /// </summary>
         public double TotalAreaInUnit
         {
-            get => RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, data.CalculationArea);
-            set => data.CalculationArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
+            get => GetArea(data.CalculationArea);
+            set => data.CalculationArea = GetConvertedArea(value);
         }
+        
+        private double GetArea(double value) =>
+            RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, value);
+
+        private double GetConvertedArea(double value) =>
+            RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
     }
 }
