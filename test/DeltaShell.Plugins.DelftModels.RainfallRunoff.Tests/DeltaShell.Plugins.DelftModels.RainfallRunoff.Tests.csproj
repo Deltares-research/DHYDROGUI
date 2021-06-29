@@ -40,6 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CatchmentCoverageMaintainerImplTest.cs" />
+    <Compile Include="Domain\Concepts\Greenhouse\GreenHouseDataViewModelTest.cs" />
     <Compile Include="Domain\Concepts\Hbv\HbvDataTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\DryweatherFlowDistributionTypeConverterTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinitionTest.cs" />
