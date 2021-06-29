@@ -105,30 +105,30 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder
 
         public double PavedArea
         {
-            get { return RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, polderConcept.PavedArea); }
+            get => GetArea(polderConcept.PavedArea);
             set
             {
-                polderConcept.PavedArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
+                polderConcept.PavedArea = GetConvertedArea(value);
                 FirePropertyChanged(nameof(PavedPercentage));
             }
         }
 
         public double UnpavedArea
         {
-            get { return RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, polderConcept.UnpavedArea); }
+            get => GetArea(polderConcept.UnpavedArea);
             set
             {
-                polderConcept.UnpavedArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
+                polderConcept.UnpavedArea = GetConvertedArea(value);
                 FirePropertyChanged(nameof(UnpavedPercentage));
             }
         }
 
         public double GreenhouseArea
         {
-            get { return RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, polderConcept.GreenhouseArea); }
+            get => GetArea(polderConcept.GreenhouseArea);
             set
             {
-                polderConcept.GreenhouseArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
+                polderConcept.GreenhouseArea = GetConvertedArea(value);
                 FirePropertyChanged(nameof(GreenhousePercentage));
             }
         }
@@ -138,10 +138,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder
         /// </summary>
         public double OpenwaterArea
         {
-            get { return RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, polderConcept.OpenWaterArea); }
+            get => GetArea(polderConcept.OpenWaterArea);
             set
             {
-                polderConcept.OpenWaterArea = RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
+                polderConcept.OpenWaterArea = GetConvertedArea(value);
                 FirePropertyChanged(nameof(OpenwaterPercentage));
             }
         }
@@ -246,5 +246,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        
+        private double GetArea(double value) =>
+            RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, value);
+
+        private double GetConvertedArea(double value) =>
+            RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
     }
 }
