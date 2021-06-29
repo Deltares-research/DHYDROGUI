@@ -553,7 +553,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                                                                     modelParameter.Unit, true, Basin?.CoordinateSystem);
                 coverage.IsEditable = false;
                 coverage.Components[0].NoDataValue = double.NaN;
-                
+
+                if (Basin != null)
+                {
+                    coverage.Features.AddRange(Basin.Catchments);
+                }
+
                 if (!OutputDataItems.Any(odi => odi.Tag.Equals(coverage.Name, StringComparison.InvariantCultureIgnoreCase)))
                     OutputDataItems.Add(new DataItem(coverage, DataItemRole.Output, coverage.Name));
             }
@@ -1184,8 +1189,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 if (functionLookup.ContainsKey(parameter.Name))
                 {
-                    var function = functionLookup[parameter.Name];
-                    var fileName = RainfallRunoffModelParameterHisFileMapping.HisFileParameterLookup[parameter.Name].HisFileName;
+                    IFunction function = functionLookup[parameter.Name];
+                    string fileName = RainfallRunoffModelParameterHisFileMapping.HisFileParameterLookup[parameter.Name].HisFileName;
 
                     var readOnlyMapHisFileFunctionStore = function.Store as ReadOnlyMapHisFileFunctionStore;
                     if (readOnlyMapHisFileFunctionStore != null)

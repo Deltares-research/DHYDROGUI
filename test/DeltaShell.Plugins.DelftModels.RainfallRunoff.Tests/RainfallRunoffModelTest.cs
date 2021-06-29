@@ -12,6 +12,8 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
+using GeoAPI.Extensions.Coverages;
+using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
@@ -267,6 +269,32 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             // assert that the component is set to 0 for each date
             Assert.That(actualEvaporationValues.Count, Is.EqualTo(expectedDates.Count));
             Assert.That(actualEvaporationValues, Is.All.EqualTo(0));
+        }
+
+        [Test]
+        [TestCase(AggregationOptions.Average)]
+        [TestCase(AggregationOptions.Minimum)]
+        [TestCase(AggregationOptions.Maximum)]
+        [TestCase(AggregationOptions.Current)]
+        public void RestoreOutputSettings_AggregationOptionsNotNone_AddsFeaturesToFeatureCoverage(AggregationOptions aggregationOptions)
+        {
+            // Setup
+            var rrModel = new RainfallRunoffModel();
+            var catchment = new Catchment();
+            rrModel.Basin.Catchments.Add(catchment);
+
+            string nwrwParameterName = RainfallRunoffModelParameterNames.NwrwRainfall;
+            EngineParameter engineParameter = rrModel.OutputSettings.EngineParameters.First(ep => ep.Name.Equals(nwrwParameterName));
+            engineParameter.AggregationOptions = aggregationOptions;
+            
+            // Call
+            rrModel.RestoreOutputSettings();
+            
+            // Assert
+            FeatureCoverage coverage = rrModel.OutputCoverages.First(c => c.Name.Equals(nwrwParameterName)) as FeatureCoverage;
+            Assert.That(coverage, Is.Not.Null);
+            Assert.That(coverage.Features, Has.Count.EqualTo(1));
+            Assert.That(coverage.Features[0], Is.EqualTo(catchment));
         }
     }
 }
