@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             }
         }
 
-        [Description("Pump capacity (m³/min)")]
+        [Description("Pump capacity (m³/s)")]
         public double? PumpCapacity
         {
             get { return UseSubsoilStorage ? data.PumpCapacity : (double?) null; }

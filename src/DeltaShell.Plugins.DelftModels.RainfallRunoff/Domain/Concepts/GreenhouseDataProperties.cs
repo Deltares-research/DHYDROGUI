@@ -6,7 +6,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
     public class GreenhouseDataProperties : ObjectProperties<GreenhouseData>
     {
         [Category("Area")]
-        [DisplayName("Runoff area [m²]")]
+        [DisplayName("Runoff area [mÂ²]")]
         public double Area
         {
             get { return data.CalculationArea; }
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         }
 
         [Category("Storage")]
-        [DisplayName("Subsoil storage area [m²]")]
+        [DisplayName("Subsoil storage area [mÂ²]")]
         public double SubSoilStorageArea
         {
             get { return data.SubSoilStorageArea; }
@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         }
 
         [Category("Capacity")]
-        [DisplayName("Silo capacity [m³/ha]")]
+        [DisplayName("Silo capacity [mÂ³/ha]")]
         public double SiloCapacity
         {
             get { return data.SiloCapacity; }
@@ -62,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         }
 
         [Category("Capacity")]
-        [DisplayName("Pump capacity [m³/min]")]
+        [DisplayName("Pump capacity [mÂ³/s]")]
         public double PumpCapacity
         {
             get { return data.PumpCapacity; }
