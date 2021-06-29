@@ -4236,6 +4236,7 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/Nw
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/NwrwFileWriterIntegrationTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/NwrwFileWriterIntegrationTestHelper.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Nwrw/NwrwModelFileWriterTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Paved/PavedDataViewModelTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Forms/PolderConceptViewDataTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Forms/PolderConceptViewTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Domain/Concepts/Polder/Importer/PolderFromGisImporterTest.cs -text

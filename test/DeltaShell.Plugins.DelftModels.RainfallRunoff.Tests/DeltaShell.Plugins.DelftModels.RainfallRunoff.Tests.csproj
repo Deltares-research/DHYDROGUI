@@ -46,6 +46,7 @@
     <Compile Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinitionTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwFileWriterIntegrationTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwFileWriterIntegrationTestHelper.cs" />
+    <Compile Include="Domain\Concepts\Paved\PavedDataViewModelTest.cs" />
     <Compile Include="Domain\Concepts\Sacramento\SacramentoDataTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\Nwrw3BComponentFileWriterTest.cs" />
     <Compile Include="Domain\Concepts\Nwrw\NwrwModelFileWriterTest.cs" />
