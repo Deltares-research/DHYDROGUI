@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Un
         {
             // Setup
             UnpavedData data = GetData(area);
-            var viewModel = new UnpavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.km2) {StorageUnit = storageUnit};
+            var viewModel = new UnpavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.m2) {StorageUnit = storageUnit};
 
             // Call
             viewModel.MaximumLandStorage = setValue;

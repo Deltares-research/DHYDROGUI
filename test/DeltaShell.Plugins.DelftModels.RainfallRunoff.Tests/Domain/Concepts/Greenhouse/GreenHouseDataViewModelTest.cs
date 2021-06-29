@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Gr
         {
             // Setup
             GreenhouseData data = GetData(area);
-            var viewModel = new GreenhouseDataViewModel(data, RainfallRunoffEnums.AreaUnit.km2) {StorageUnit = storageUnit};
+            var viewModel = new GreenhouseDataViewModel(data, RainfallRunoffEnums.AreaUnit.m2) {StorageUnit = storageUnit};
 
             // Call
             viewModel.MaximumRoofStorage = setValue;

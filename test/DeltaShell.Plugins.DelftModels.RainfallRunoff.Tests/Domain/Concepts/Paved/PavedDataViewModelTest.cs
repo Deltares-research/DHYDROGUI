@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Pa
         {
             // Setup
             PavedData data = GetData(area);
-            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.km2) {PumpCapacityUnit = capacityUnit};
+            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.m2) {PumpCapacityUnit = capacityUnit};
 
             // Call
             viewModel.CapacityMixedAndOrRainfall = setValue;
@@ -68,7 +68,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Pa
         {
             // Setup
             PavedData data = GetData(area);
-            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.km2) {PumpCapacityUnit = capacityUnit};
+            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.m2) {PumpCapacityUnit = capacityUnit};
 
             // Call
             viewModel.CapacityDryWeatherFlow = setValue;
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Pa
         {
             // Setup
             PavedData data = GetData(area);
-            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.km2) {StorageUnit = storageUnit};
+            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.m2) {StorageUnit = storageUnit};
 
             // Call
             viewModel.MaximumStreetStorage = setValue;
@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Pa
         {
             // Setup
             PavedData data = GetData(area);
-            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.km2) {StorageUnit = storageUnit};
+            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.m2) {StorageUnit = storageUnit};
 
             // Call
             viewModel.MaximumSewerMixedAndOrRainfallStorage = setValue;
@@ -183,7 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Pa
         {
             // Setup
             PavedData data = GetData(area);
-            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.km2) {StorageUnit = storageUnit};
+            var viewModel = new PavedDataViewModel(data, RainfallRunoffEnums.AreaUnit.m2) {StorageUnit = storageUnit};
 
             // Call
             viewModel.MaximumSewerDryWeatherFlowStorage = setValue;
