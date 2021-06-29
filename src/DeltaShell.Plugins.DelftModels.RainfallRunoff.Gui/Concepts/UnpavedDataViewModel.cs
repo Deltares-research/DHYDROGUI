@@ -142,20 +142,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         /// <summary>
         /// The unit for the storage.
         /// </summary>
-        public RainfallRunoffEnums.StorageUnit StorageUnit
-        {
-            get => Data.LandStorageUnit;
-            set => Data.LandStorageUnit = value;
-        }
+        public RainfallRunoffEnums.StorageUnit StorageUnit { get; set; }
 
         /// <summary>
         /// The unit for the infiltration capacity.
         /// </summary>
-        public RainfallRunoffEnums.RainfallCapacityUnit InfiltrationCapacityUnit
-        {
-            get => Data.InfiltrationCapacityUnit;
-            set => Data.InfiltrationCapacityUnit = value;
-        }
+        public RainfallRunoffEnums.RainfallCapacityUnit InfiltrationCapacityUnit { get; set; }
 
         /// <summary>
         /// The unit label for the area.
@@ -203,7 +195,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         /// </summary>
         public string AreaPerCropTypeLabel => "Area per crop type in " + AreaUnitLabel;
 
-        private bool LinkedToRunoffBoundary => Data.Catchment.Links.Any() && Data.Catchment.Links.First().Target is RunoffBoundary;
+        private bool LinkedToRunoffBoundary => Data.Catchment.Links.FirstOrDefault()?.Target is RunoffBoundary;
 
         private bool LinkedToFlowNode => Data.Catchment.Links.Any() && !LinkedToRunoffBoundary;
 
@@ -214,15 +206,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
 
         private double GetStorage(double value) =>
-            RainfallRunoffUnitConverter.ConvertStorage(RainfallRunoffEnums.StorageUnit.mm, StorageUnit, value, Data.TotalAreaForGroundWaterCalculations);
+            RainfallRunoffUnitConverter.ConvertStorage(UnpavedData.LandStorageUnit, StorageUnit, value, Data.TotalAreaForGroundWaterCalculations);
 
         private double GetConvertedStorage(double value) =>
-            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, RainfallRunoffEnums.StorageUnit.mm, value, Data.TotalAreaForGroundWaterCalculations);
+            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, UnpavedData.LandStorageUnit, value, Data.TotalAreaForGroundWaterCalculations);
 
         private double GetCapacity(double value) =>
-            RainfallRunoffUnitConverter.ConvertRainfall(RainfallRunoffEnums.RainfallCapacityUnit.mm_hr, InfiltrationCapacityUnit, value);
+            RainfallRunoffUnitConverter.ConvertRainfall(UnpavedData.InfiltrationCapacityUnit, InfiltrationCapacityUnit, value);
 
         private double GetConvertedCapacity(double value) =>
-            RainfallRunoffUnitConverter.ConvertRainfall(InfiltrationCapacityUnit, RainfallRunoffEnums.RainfallCapacityUnit.mm_hr, value);
+            RainfallRunoffUnitConverter.ConvertRainfall(InfiltrationCapacityUnit, UnpavedData.InfiltrationCapacityUnit, value);
     }
 }

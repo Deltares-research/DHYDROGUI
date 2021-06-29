@@ -13,6 +13,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
     [Entity(FireOnCollectionChange=false)]
     public class UnpavedData : CatchmentModelData
     {
+        /// <summary>
+        /// The land storage unit.
+        /// </summary>
+        public const RainfallRunoffEnums.StorageUnit LandStorageUnit = RainfallRunoffEnums.StorageUnit.mm;
+        
+        /// <summary>
+        /// The infiltration capacity unit.
+        /// </summary>
+        public const RainfallRunoffEnums.RainfallCapacityUnit InfiltrationCapacityUnit = RainfallRunoffEnums.RainfallCapacityUnit.mm_hr;
+        
         //nhib
         protected UnpavedData():base(null)
         {
@@ -145,22 +155,23 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         //[note: is a timeseries to pick the inital ground water level from (so only single value is used), remove?]
         public TimeSeries InitialGroundWaterLevelSeries { get; set; } //m below surface
 
-        [Description("Maximum land storage")]
+        /// <summary>
+        /// The maximum land storage (mm) of the area (m²).
+        /// </summary>
         public double MaximumLandStorage { get; set; }
-
-        //mm (x Area)
-
+        
+        /// <summary>
+        /// The initial land storage (mm) of the area (m²).
+        /// </summary>
         [Description("Initial land storage")]
         public double InitialLandStorage { get; set; }
-
-        //mm (x Area)
-        public RainfallRunoffEnums.StorageUnit LandStorageUnit { get; set; }
-
-        [Description("Infiltration capacity")] //mm per hr
+        
+        /// <summary>
+        /// The infiltration capacity (mm/hr) of the area (m²)
+        /// </summary>
+        [Description("Infiltration capacity")]
         public double InfiltrationCapacity { get; set; }
-
-        public RainfallRunoffEnums.RainfallCapacityUnit InfiltrationCapacityUnit { get; set; }
-
+        
         public IDrainageFormula DrainageFormula { get; set; } //De Zeeuw-Hellinga, Ernst, Krayenhoff van de Leur
 
         public UnpavedEnums.SeepageSourceType SeepageSource

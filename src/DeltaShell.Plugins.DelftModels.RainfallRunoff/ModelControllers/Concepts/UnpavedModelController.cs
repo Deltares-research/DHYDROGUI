@@ -24,13 +24,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
             var krayenhoff = unpavedData.DrainageFormula as KrayenhoffVanDeLeurDrainageFormula;
             var reservoirCoefficient = krayenhoff != null ? krayenhoff.ResevoirCoefficient : 0.0;
             
-            var initialLandStorageInMM = RainfallRunoffUnitConverter.ConvertStorage(
-                unpavedData.LandStorageUnit, RainfallRunoffEnums.StorageUnit.mm, 
-                unpavedData.InitialLandStorage, unpavedData.CalculationArea);
+            var initialLandStorageInMM = unpavedData.InitialLandStorage;
 
-            var maximumLandStorageInMM = RainfallRunoffUnitConverter.ConvertStorage(
-                unpavedData.LandStorageUnit, RainfallRunoffEnums.StorageUnit.mm,
-                unpavedData.MaximumLandStorage, unpavedData.CalculationArea);
+            var maximumLandStorageInMM = unpavedData.MaximumLandStorage;
 
             DrainageComputationOption drainageComputationOption = GetDrainageComputationOption(unpavedData);
 
@@ -49,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
             var iref = writer.AddUnpaved(unpavedId, cropAreas, unpavedData.TotalAreaForGroundWaterCalculations,
                                            unpavedData.SurfaceLevel, drainageComputationOption,
                                            reservoirCoefficient, initialLandStorageInMM, maximumLandStorageInMM,
-                                           GetInfiltrationCapacityInMillimeterPerHour(unpavedData),
+                                           unpavedData.InfiltrationCapacity,
                                            soilType,
                                            initialGroundwaterLevel,
                                            unpavedData.MaximumAllowedGroundWaterLevel,
@@ -172,13 +168,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-        }
-
-        private static double GetInfiltrationCapacityInMillimeterPerHour(UnpavedData unpavedData)
-        {
-            double capacity = unpavedData.InfiltrationCapacity;
-            return RainfallRunoffUnitConverter.ConvertRainfall(unpavedData.InfiltrationCapacityUnit,
-                                                               RainfallRunoffEnums.RainfallCapacityUnit.mm_hr, capacity);
         }
 
         private static int GetSoilType(UnpavedData unpavedData)

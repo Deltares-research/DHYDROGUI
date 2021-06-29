@@ -417,19 +417,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 var expected = 555.0;
 
                 var drainageFormula = new ErnstDrainageFormula();
-                unpavedData.InfiltrationCapacityUnit = RainfallRunoffEnums.RainfallCapacityUnit.mm_day;
                 unpavedData.InitialGroundWaterLevelSource = UnpavedEnums.GroundWaterSourceType.FromLinkedNode;
                 unpavedData.SeepageSource = UnpavedEnums.SeepageSourceType.H0Series;
-                unpavedData.LandStorageUnit = RainfallRunoffEnums.StorageUnit.m3;
                 unpavedData.SoilType = UnpavedEnums.SoilType.clay_minimum;
                 unpavedData.SoilTypeCapsim = UnpavedEnums.SoilTypeCapsim.soiltype_capsim_10;
 
                 ReflectionTestHelper.FillRandomValuesForValueTypeProperties(unpavedData, new[]
                 {
-                    nameof(unpavedData.InfiltrationCapacityUnit),
                     nameof(unpavedData.InitialGroundWaterLevelSource),
                     nameof(unpavedData.SeepageSource),
-                    nameof(unpavedData.LandStorageUnit),
                     nameof(unpavedData.SoilType),
                     nameof(unpavedData.DrainageFormula),
                     nameof(unpavedData.InitialGroundWaterLevelSeries),
@@ -477,9 +473,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                     retrievedUnpaved.InitialGroundWaterLevelConstant = unpavedData.InitialGroundWaterLevelConstant;
                     retrievedUnpaved.MaximumLandStorage = unpavedData.MaximumLandStorage;
                     retrievedUnpaved.InitialLandStorage = unpavedData.InitialLandStorage;
-                    retrievedUnpaved.LandStorageUnit = unpavedData.LandStorageUnit;
                     retrievedUnpaved.InfiltrationCapacity = unpavedData.InfiltrationCapacity;
-                    retrievedUnpaved.InfiltrationCapacityUnit = unpavedData.InfiltrationCapacityUnit;
                     retrievedUnpaved.SeepageConstant = unpavedData.SeepageConstant;
                     retrievedUnpaved.MeteoStationName = unpavedData.MeteoStationName;
                     retrievedUnpaved.TemperatureStationName = unpavedData.TemperatureStationName;
@@ -490,11 +484,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                     var retrievedDrainageFormula = retrievedUnpaved.DrainageFormula as ErnstDrainageFormula;
                     Assert.IsNotNull(retrievedDrainageFormula);
                     ReflectionTestHelper.AssertPublicPropertiesAreEqual(unpavedData, retrievedUnpaved);
-                    Assert.AreEqual(unpavedData.InfiltrationCapacityUnit, retrievedUnpaved.InfiltrationCapacityUnit);
                     Assert.AreEqual(unpavedData.InitialGroundWaterLevelSource,
                         retrievedUnpaved.InitialGroundWaterLevelSource);
                     Assert.AreEqual(unpavedData.SeepageSource, retrievedUnpaved.SeepageSource);
-                    Assert.AreEqual(unpavedData.LandStorageUnit, retrievedUnpaved.LandStorageUnit);
                     Assert.AreEqual(unpavedData.SoilType, retrievedUnpaved.SoilType);
                     Assert.AreEqual(unpavedData.SoilTypeCapsim, retrievedUnpaved.SoilTypeCapsim);
                     Assert.AreEqual(expected, unpavedData.AreaPerCrop[UnpavedEnums.CropType.Grass]);
