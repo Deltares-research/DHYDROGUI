@@ -75,10 +75,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
         public string AreaPerGreenhouseTypeLabel => "Area per greenhouse type in " + AreaUnitLabel;
 
         private double GetStorage(double value) =>
-            RainfallRunoffUnitConverter.ConvertStorage(GreenhouseData.StorageUnit, StorageUnit, value, Data.CalculationArea);
+            RainfallRunoffUnitConverter.ConvertStorage(GreenhouseData.StorageUnit, StorageUnit, value, Data.CalculationArea, AreaUnit);
 
         private double GetConvertedStorage(double value) =>
-            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, GreenhouseData.StorageUnit, value, Data.CalculationArea);
+            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, GreenhouseData.StorageUnit, value, Data.CalculationArea, AreaUnit);
 
         private double GetStorageArea(double value) =>
             RainfallRunoffUnitConverter.ConvertArea(RainfallRunoffEnums.AreaUnit.m2, AreaUnit, value);

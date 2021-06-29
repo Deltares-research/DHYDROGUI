@@ -60,26 +60,30 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         public static double ConvertStorage(RainfallRunoffEnums.StorageUnit unitFrom,
-                                            RainfallRunoffEnums.StorageUnit unitTo, double value, double area)
+                                            RainfallRunoffEnums.StorageUnit unitTo, double value, double area, RainfallRunoffEnums.AreaUnit areaUnit= RainfallRunoffEnums.AreaUnit.m2)
         {
             if (unitFrom == unitTo)
             {
                 return value;
             }
+
+            double m2Area = ConvertArea(areaUnit, RainfallRunoffEnums.AreaUnit.m2, area);
             if (unitFrom == RainfallRunoffEnums.StorageUnit.mm) //to = m3
             {
-                return value*area/1000;
+                return value*m2Area/1000;
             }
-            return value*1000/area;
+            return value*1000/m2Area;
         }
 
         public static double ConvertPumpCapacity(PavedEnums.SewerPumpCapacityUnit unitFrom,
-                                                 PavedEnums.SewerPumpCapacityUnit unitTo, double value, double area)
+                                                 PavedEnums.SewerPumpCapacityUnit unitTo, double value, double area, RainfallRunoffEnums.AreaUnit areaUnit = RainfallRunoffEnums.AreaUnit.m2)
         {
             if (unitFrom == unitTo)
             {
                 return value;
             }
+            
+            double m2Area = ConvertArea(areaUnit, RainfallRunoffEnums.AreaUnit.m2, area);
             if (unitFrom == PavedEnums.SewerPumpCapacityUnit.m3_s)
             {
                 switch (unitTo)
@@ -89,7 +93,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     case PavedEnums.SewerPumpCapacityUnit.m3_hr:
                         return value*3600;
                     case PavedEnums.SewerPumpCapacityUnit.mm_hr:
-                        return value*3600000/area;
+                        return value*3600000/m2Area;
                 }
             }
             if (unitFrom == PavedEnums.SewerPumpCapacityUnit.m3_hr)
@@ -99,7 +103,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     case PavedEnums.SewerPumpCapacityUnit.m3_min:
                         return value/60;
                     case PavedEnums.SewerPumpCapacityUnit.mm_hr:
-                        return value*1000/area;
+                        return value*1000/m2Area;
                     case PavedEnums.SewerPumpCapacityUnit.m3_s:
                         return value/3600;
                 }
@@ -111,7 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                     case PavedEnums.SewerPumpCapacityUnit.m3_hr:
                         return value*60;
                     case PavedEnums.SewerPumpCapacityUnit.mm_hr:
-                        return value*60000/area;
+                        return value*60000/m2Area;
                     case PavedEnums.SewerPumpCapacityUnit.m3_s:
                         return value/60;
                 }
@@ -121,11 +125,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 switch (unitTo)
                 {
                     case PavedEnums.SewerPumpCapacityUnit.m3_hr:
-                        return value*area/1000;
+                        return value*m2Area/1000;
                     case PavedEnums.SewerPumpCapacityUnit.m3_min:
-                        return value*area/60000;
+                        return value*m2Area/60000;
                     case PavedEnums.SewerPumpCapacityUnit.m3_s:
-                        return value*area/3600000;
+                        return value*m2Area/3600000;
                 }
             }
             return value;

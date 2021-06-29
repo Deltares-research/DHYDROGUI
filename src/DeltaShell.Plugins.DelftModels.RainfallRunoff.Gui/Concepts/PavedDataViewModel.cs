@@ -199,16 +199,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
 
         private double GetStorage(double value) =>
-            RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit, value, Data.CalculationArea);
+            RainfallRunoffUnitConverter.ConvertStorage(PavedData.StorageUnit, StorageUnit, value, Data.CalculationArea, AreaUnit);
 
         private double GetConvertedStorage(double value) =>
-            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, PavedData.StorageUnit, value, Data.CalculationArea);
+            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, PavedData.StorageUnit, value, Data.CalculationArea, AreaUnit);
 
         private double GetCapacity(double value) =>
-            RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedData.PumpCapacityUnit, PumpCapacityUnit, value, Data.CalculationArea);
+            RainfallRunoffUnitConverter.ConvertPumpCapacity(PavedData.PumpCapacityUnit, PumpCapacityUnit, value, Data.CalculationArea, AreaUnit);
 
         private double GetConvertedCapacity(double value) =>
-            RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit, PavedData.PumpCapacityUnit, value, Data.CalculationArea);
+            RainfallRunoffUnitConverter.ConvertPumpCapacity(PumpCapacityUnit, PavedData.PumpCapacityUnit, value, Data.CalculationArea, AreaUnit);
 
         private double GetWaterUse(double value) =>
             RainfallRunoffUnitConverter.ConvertWaterUse(PavedData.WaterUseUnit, WaterUseUnit, value);

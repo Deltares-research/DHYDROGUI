@@ -206,10 +206,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts
             RainfallRunoffUnitConverter.ConvertArea(AreaUnit, RainfallRunoffEnums.AreaUnit.m2, value);
 
         private double GetStorage(double value) =>
-            RainfallRunoffUnitConverter.ConvertStorage(UnpavedData.LandStorageUnit, StorageUnit, value, Data.TotalAreaForGroundWaterCalculations);
+            RainfallRunoffUnitConverter.ConvertStorage(UnpavedData.LandStorageUnit, StorageUnit, value, Data.TotalAreaForGroundWaterCalculations, AreaUnit);
 
         private double GetConvertedStorage(double value) =>
-            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, UnpavedData.LandStorageUnit, value, Data.TotalAreaForGroundWaterCalculations);
+            RainfallRunoffUnitConverter.ConvertStorage(StorageUnit, UnpavedData.LandStorageUnit, value, Data.TotalAreaForGroundWaterCalculations, AreaUnit);
 
         private double GetCapacity(double value) =>
             RainfallRunoffUnitConverter.ConvertRainfall(UnpavedData.InfiltrationCapacityUnit, InfiltrationCapacityUnit, value);
