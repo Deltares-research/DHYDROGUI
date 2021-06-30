@@ -635,8 +635,8 @@
   <data name="CapacityOfPumpInCubicMeterPerMinuteAndPerHour" xml:space="preserve">
     <value>(= {0:0.###} m³/min, {1:0.##} m³/h)</value>
   </data>
-  <data name="HydroRegionEditorMapTool_Overwriting_existing_later_source_flow_data" xml:space="preserve">
-    <value>Overwriting existing later source flow data</value>
+  <data name="HydroRegionEditorMapTool_Overwriting_existing_lateral_source_flow_data" xml:space="preserve">
+    <value>Overwriting existing lateral source flow data</value>
   </data>
   <data name="HydroRegionEditorMapTool_Connecting_hydro_link_removes_existing_data" xml:space="preserve">
     <value>Connecting a hydro link to this lateral source removes any existing flow data. </value>

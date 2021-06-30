@@ -726,11 +726,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Overwriting existing later source flow data.
+        ///   Looks up a localized string similar to Overwriting existing lateral source flow data.
         /// </summary>
-        public static string HydroRegionEditorMapTool_Overwriting_existing_later_source_flow_data {
+        public static string HydroRegionEditorMapTool_Overwriting_existing_lateral_source_flow_data {
             get {
-                return ResourceManager.GetString("HydroRegionEditorMapTool_Overwriting_existing_later_source_flow_data", resourceCulture);
+                return ResourceManager.GetString("HydroRegionEditorMapTool_Overwriting_existing_lateral_source_flow_data", resourceCulture);
             }
         }
         

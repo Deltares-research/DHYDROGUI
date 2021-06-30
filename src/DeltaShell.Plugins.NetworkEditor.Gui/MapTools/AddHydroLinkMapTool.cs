@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         private static bool UserCancels()
         {
             UserInput? userInput = userInputService.RequestUserInput(
-                Resources.HydroRegionEditorMapTool_Overwriting_existing_later_source_flow_data,
+                Resources.HydroRegionEditorMapTool_Overwriting_existing_lateral_source_flow_data,
                 Resources.HydroRegionEditorMapTool_Connecting_hydro_link_removes_existing_data + Environment.NewLine +
                 Resources.HydroRegionEditorMapTool_Do_you_want_to_continue);
 
