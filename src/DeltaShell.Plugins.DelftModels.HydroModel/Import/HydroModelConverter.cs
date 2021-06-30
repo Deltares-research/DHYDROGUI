@@ -268,11 +268,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     IDataItem sourceDataItem = sourceModel.GetDataItemsByItemString(couplerXml.sourceName, couplerXml.targetName)?.FirstOrDefault();
                     if (sourceDataItem != null)
                     {
-                        foreach (IDataItem targetDataItem in targetModel.GetDataItemsByItemString(couplerXml.targetName, couplerXml.sourceName))
+                        IEnumerable<IDataItem> targetDataItems = targetModel.GetDataItemsByItemString(couplerXml.targetName, couplerXml.sourceName);
+                        if (targetDataItems != null)
                         {
-                            targetDataItem.LinkTo(sourceDataItem);
+                            foreach (IDataItem targetDataItem in targetDataItems)
+                            {
+                                targetDataItem.LinkTo(sourceDataItem);
+                            }
+                            continue;
                         }
-                        continue;
                     }
 
                     // HydroObject linking
