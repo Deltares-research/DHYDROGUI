@@ -36682,6 +36682,7 @@ test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Editors/CompositeStructure
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Editors/CrossSectionEditorTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Editors/HydroLinkInteractorTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Editors/HydroNodeInteractorTest.cs -text
+test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Editors/Interactors/LateralSourceInteractorTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Editors/Snapping/HydroLinkSnapRuleTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Editors/StructureEditorTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/MapLayers/Editors/StructureToCompositeStructureTopologyTest.cs -text

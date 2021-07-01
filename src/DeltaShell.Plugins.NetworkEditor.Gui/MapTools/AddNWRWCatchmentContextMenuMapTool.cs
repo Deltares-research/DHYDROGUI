@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             basin.Catchments.Add(catchment); 
             var branchAndDir = manhole.IncomingBranches
                 .Select(b => new {branch = b, incoming = true})
-                .Concat(manhole.OutgoingBranches.Select(b => new { branch = b, incoming = true }))
+                .Concat(manhole.OutgoingBranches.Select(b => new { branch = b, incoming = false }))
                 .FirstOrDefault();
 
             if (branchAndDir == null) return;

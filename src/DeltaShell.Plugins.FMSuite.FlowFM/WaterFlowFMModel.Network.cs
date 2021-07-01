@@ -738,9 +738,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     };
                     if (lateralSource.Branch is IPipe pipe)
                     {
-                        model1DLateralSourceData.Compartment = pipe.SourceCompartmentName != null && pipe.SourceCompartmentName.Equals(lateralSource.Name)
-                            ? pipe.SourceCompartment
-                            : pipe.TargetCompartment;
+                        model1DLateralSourceData.Compartment = GetCompartment(pipe, lateralSource.Chainage);
                     }
                     
                     NamingHelper.MakeNamesUnique(Network.LateralSources);
@@ -750,6 +748,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     RemoveLateralSourceData(lateralSource);
                     break;
             }
+        }
+
+        private static ICompartment GetCompartment(ISewerConnection pipe, double chainage)
+        {
+            const double t = 0.000001;
+            if (Math.Abs(chainage - 0) < t)
+            {
+                return pipe.SourceCompartment;
+            }
+
+            if (Math.Abs(chainage - pipe.Length) < t)
+            {
+                return pipe.TargetCompartment;
+            }
+
+            return null;
         }
         private void RemoveLateralSourceData(LateralSource lateralSource)
         {
