@@ -11,6 +11,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -264,7 +265,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 GeneralRegion.BoundaryConditionsExternalForcingMajorVersion, GeneralRegion.BoundaryConditionsExternalForcingMinorVersion,
                 GeneralRegion.FileTypeName.BoundaryConditionExternalForcing);
 
-            if (!File.Exists(FilePath) || new DelftIniReader().ReadDelftIniFile(FilePath).All(c => !c.Name.Equals(GeneralRegion.IniHeader, StringComparison.InvariantCultureIgnoreCase)))
+            if (!File.Exists(FilePath) || new DelftIniReader().ReadDelftIniFile(FilePath).All(c => !c.Name.EqualsCaseInsensitive(GeneralRegion.IniHeader)))
             {
                 new IniFileWriter().WriteIniFile(new[] { generalRegion }, FilePath);
             }
@@ -432,7 +433,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var nodeId = generateModel1DNodeBoundaryDelftIniCategory.GetPropertyValue(BoundaryRegion.Name.Key);
                 var manHoleName = generateModel1DNodeBoundaryDelftIniCategory.ReadProperty<string>("manHoleName", true);
 
-                var m1dbnd = boundaryConditions1D.FirstOrDefault(bc => bc.Feature.Name.Equals(manHoleName ?? nodeId, StringComparison.InvariantCultureIgnoreCase));
+                var m1dbnd = boundaryConditions1D.FirstOrDefault(bc => bc.Feature.Name.EqualsCaseInsensitive(manHoleName ?? nodeId));
 
                 if (m1dbnd?.OutletCompartment != null)
                 {
@@ -828,7 +829,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (string.IsNullOrEmpty(quantityKey))
                 {
                     if (!containsAndParsedLateralExtForceFileDefinitions)
-                        containsAndParsedLateralExtForceFileDefinitions = CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.Equals(LateralHeaderKey, StringComparison.InvariantCultureIgnoreCase)));
+                        containsAndParsedLateralExtForceFileDefinitions = CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(LateralHeaderKey)));
                     if(!containsAndParsedLateralExtForceFileDefinitions)
                         Log.WarnFormat("Could not parse quantity {0} into a valid quantity data", quantityKey);
                     continue;
@@ -843,7 +844,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (!containsAndParsedModel1DBoundaryExtForceFileDefinitions && delftIniCategory.ReadProperty<string>(NodeIdKey, true) != null)
                 {
-                    containsAndParsedModel1DBoundaryExtForceFileDefinitions = CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(modelDefinition, network, boundaryConditions1D, bndBlocks.Where(b => b.Name.Equals(BoundaryHeaderKey, StringComparison.InvariantCultureIgnoreCase)));
+                    containsAndParsedModel1DBoundaryExtForceFileDefinitions = CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(modelDefinition, network, boundaryConditions1D, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(BoundaryHeaderKey)));
                 }
                 if (delftIniCategory.ReadProperty<string>(NodeIdKey, true) != null)
                     continue; // this delftIniCategory is 1d boundary, continue to check if you want to read a new delftIniCategory 2d boundary
@@ -955,11 +956,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 
                 if (isOnOutletCompartment)
                 {
-                    node = network.Manholes.FirstOrDefault(m => m.Compartments.Any(c => c.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase)));
+                    node = network.Manholes.FirstOrDefault(m => m.Compartments.Any(c => c.Name.EqualsCaseInsensitive(nodeId)));
                 }
                 else
                 {
-                    node = network.Nodes.FirstOrDefault(n => n.Name.Equals(nodeId, StringComparison.InvariantCultureIgnoreCase));
+                    node = network.Nodes.FirstOrDefault(n => n.Name.EqualsCaseInsensitive(nodeId));
                 }
 
                 if (node == null) continue;
@@ -1011,10 +1012,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 branch = network.Branches
                     .OfType<IPipe>()
                     .FirstOrDefault(p =>
-                        string.Equals(p.TargetCompartmentName, compartmentId,
-                            StringComparison.InvariantCultureIgnoreCase) ||
-                        string.Equals(p.SourceCompartmentName, compartmentId,
-                            StringComparison.InvariantCultureIgnoreCase));
+                        p.TargetCompartmentName.EqualsCaseInsensitive(compartmentId) ||
+                        p.SourceCompartmentName.EqualsCaseInsensitive(compartmentId));
                 if (branch is IPipe pipe)
                     compartment = string.Equals(pipe.SourceCompartmentName, compartmentId)
                         ? pipe.SourceCompartment
@@ -1047,7 +1046,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 var lateralSource = new LateralSource()
                     {Branch = branch, Chainage = chainage, Name = id, LongName = name};
-                if (branch is IPipe apipe && apipe.Target is IManhole manhole && manhole.Name.Equals(lateralSource.Name, StringComparison.InvariantCultureIgnoreCase))
+                if (branch is IPipe apipe && apipe.Target is IManhole manhole && manhole.Name.EqualsCaseInsensitive(lateralSource.Name))
                     lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
                 else
                     lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, chainage); 
@@ -1067,7 +1066,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     };
                 if (compartment != null)
                     model1DLateralSourceData.Compartment = compartment;
-                if (string.Equals(forcingFile, "realtime", StringComparison.InvariantCultureIgnoreCase))
+                if (forcingFile.EqualsCaseInsensitive("realtime"))
                     model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
                 if (lateralSourcesData.All(lsd => lsd.Feature != lateralSource))
                     lateralSourcesData.Add(model1DLateralSourceData);
