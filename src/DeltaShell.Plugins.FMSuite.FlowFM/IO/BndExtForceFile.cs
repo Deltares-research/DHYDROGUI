@@ -1050,7 +1050,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (branch is IPipe apipe && apipe.Target is IManhole manhole && manhole.Name.Equals(lateralSource.Name, StringComparison.InvariantCultureIgnoreCase))
                     lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
                 else
-                    lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, 0); 
+                    lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, chainage); 
                 
                 //var lengthIndexedLine = new LengthIndexedLine(lateralSource.Branch.Geometry);
                 //var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
