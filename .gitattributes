@@ -673,6 +673,7 @@ src/DeltaShell.NGHS.Common/DeltaShell.NGHS.Common.csproj -text
 src/DeltaShell.NGHS.Common/EnvironmentConstants.cs -text
 src/DeltaShell.NGHS.Common/Extensions/DisposableEditableObject.cs -text
 src/DeltaShell.NGHS.Common/Extensions/EditableObjectEditExtensions.cs -text
+src/DeltaShell.NGHS.Common/Extensions/StringExtensions.cs -text
 src/DeltaShell.NGHS.Common/FileBasedUtils.cs -text
 src/DeltaShell.NGHS.Common/IControllingModel.cs -text
 src/DeltaShell.NGHS.Common/ICoupledModel.cs -text
@@ -3571,6 +3572,7 @@ test/DeltaShell.NGHS.Common.Gui.Tests/packages.config -text
 test/DeltaShell.NGHS.Common.Tests/App.config -text
 test/DeltaShell.NGHS.Common.Tests/ApplicationPluginHelperTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/DeltaShell.NGHS.Common.Tests.csproj -text
+test/DeltaShell.NGHS.Common.Tests/Extensions/StringExtensionsTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/FileBasedUtilsTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/IO/CommonFileSystemActionsTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/IO/ModelFIleImporterBaseTest.cs -text

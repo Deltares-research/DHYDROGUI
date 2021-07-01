@@ -39,6 +39,7 @@
     <Compile Include="EnvironmentConstants.cs" />
     <Compile Include="Extensions\DisposableEditableObject.cs" />
     <Compile Include="Extensions\EditableObjectEditExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FileBasedUtils.cs" />
     <Compile Include="IControllingModel.cs" />
     <Compile Include="ICoupledModel.cs" />

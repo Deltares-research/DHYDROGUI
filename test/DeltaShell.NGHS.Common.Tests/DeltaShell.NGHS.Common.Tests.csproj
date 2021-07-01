@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationPluginHelperTest.cs" />
+    <Compile Include="Extensions\StringExtensionsTest.cs" />
     <Compile Include="FileBasedUtilsTest.cs" />
     <Compile Include="IO\CommonFileSystemActionsTest.cs" />
     <Compile Include="IO\ModelFIleImporterBaseTest.cs" />
