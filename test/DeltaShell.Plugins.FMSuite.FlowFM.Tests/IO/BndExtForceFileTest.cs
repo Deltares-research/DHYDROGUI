@@ -15,6 +15,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net.Core;
 using NetTopologySuite.Extensions.Features;
@@ -1376,6 +1377,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 AssertLine(polData[4], "1", "1");
                 AssertLine(polData[5], "0", "1");
                 AssertLine(polData[6], "0", "0");
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_LateralSourceWithChainageOnBranch_IsReadCorrectly()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                            " + Environment.NewLine +
+                    "    fileVersion = 2.0                " + Environment.NewLine +
+                    "    fileType    = extForce           " + Environment.NewLine +
+                    "                                     " + Environment.NewLine +
+                    "[Lateral]                            " + Environment.NewLine +
+                    "    id          = lateral_source_id  " + Environment.NewLine +
+                    "    name        = lateral_source_name" + Environment.NewLine +
+                    "    branchId    = branch_id          " + Environment.NewLine +
+                    "    chainage    = 12.34              " + Environment.NewLine +
+                    "    discharge   = realtime           ";
+                
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                var branch = Substitute.For<IBranch>();
+                branch.Name = "branch_id";
+                branch.BranchFeatures = new EventedList<IBranchFeature>();
+                branch.Geometry = new LineString(new[]
+                {
+                    new Coordinate(100, 0),
+                    new Coordinate(200, 0)
+                });
+                
+                var network = Substitute.For<IHydroNetwork>();
+                network.Branches = new EventedList<IBranch> {branch};
+                
+                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+                
+                // Call
+                bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
+                
+                // Assert
+                var lateralSource = (LateralSource) branch.BranchFeatures.Single();
+                Assert.That(lateralSource.Branch, Is.SameAs(branch));
+                Assert.That(lateralSource.Chainage, Is.EqualTo(12.34));
+                Assert.That(lateralSource.Name, Is.EqualTo("lateral_source_id"));
+                Assert.That(lateralSource.LongName, Is.EqualTo("lateral_source_name"));
+                Assert.That(lateralSource.Geometry, Is.TypeOf<Point>());
+                Assert.That(lateralSource.Geometry.InteriorPoint.X, Is.EqualTo(112.34));
+                Assert.That(lateralSource.Geometry.InteriorPoint.Y, Is.EqualTo(0));
+
+                Model1DLateralSourceData modeLateralSourceData = lateralSourcesData.Single();
+                Assert.That(modeLateralSourceData.Feature, Is.SameAs(lateralSource));
+                Assert.That(modeLateralSourceData.DataType, Is.EqualTo(Model1DLateralDataType.FlowRealTime));
             }
         }
         
