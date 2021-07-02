@@ -269,6 +269,11 @@ namespace DeltaShell.NGHS.IO.Helpers
             return defaultValue;
 
         }
+        public static bool ContainsProperty(this IDelftIniCategory category, string key)
+        {
+            return category.Properties.Any(property => string.Equals(property.Name, key, StringComparison.InvariantCultureIgnoreCase));
+        }
+
         public static T ReadProperty<T>(this IDelftIniCategory category, ConfigurationSetting setting, bool isOptional = false, T defaultValue = default(T), bool logError = true)
         {
             return category.ReadProperty(setting.Key, isOptional, defaultValue, logError);
@@ -344,6 +349,11 @@ namespace DeltaShell.NGHS.IO.Helpers
             Name = name;
             Value = value;
             Comment = comment;
+        }
+
+        public override string ToString()
+        {
+            return $"Line {LineNumber}: {Name}={Value}";
         }
     }
 

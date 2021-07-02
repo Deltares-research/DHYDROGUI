@@ -21,12 +21,16 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             var standardCrossSectionDefinition = definition as CrossSectionDefinitionStandard;
 
             var name = category.ReadProperty<string>(StructureRegion.Id.Key);
-            var bottomLevel = category.ReadProperty<double>(StructureRegion.Shift.Key, isOptional:true, defaultValue: -9999.0d);
-            if (bottomLevel.Equals(-9990.0d))
+            double bottomLevel;
+            if (category.ContainsProperty(StructureRegion.Shift.Key))
             {
-                // no 'shift', get the deprecated 'bedLevel'
+                bottomLevel = category.ReadProperty<double>(StructureRegion.Shift.Key);
+            } else
+            {
+                // no 'shift', get the deprecated 'bedLevel', or set to zero
                 bottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key, isOptional: true, defaultValue: 0.0d);
             }
+
             var tabulatedCrossSectionDefinition = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition();
             var width = tabulatedCrossSectionDefinition?.Width ?? 50;
             var height = tabulatedCrossSectionDefinition?.ZWDataTable.Max(t => t.Z) - tabulatedCrossSectionDefinition?.ZWDataTable.Min(t => t.Z) ?? 3;
