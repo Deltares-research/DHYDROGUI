@@ -301,7 +301,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
         [Test]
         [Category(TestCategory.Slow)]
-        [Category(TestCategory.WorkInProgress)] // TODO: Depends on SOBEK3-784
+        [Category("Quarantine")] // Check what to do with this test after the fix for FM1D2D-1629
+                                     // (No bound3b.3b and bound3b.tbl files written any more)
         public void RunModelForOpenWaterCatchmentsAndGetOutputCoverage()
         {
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
