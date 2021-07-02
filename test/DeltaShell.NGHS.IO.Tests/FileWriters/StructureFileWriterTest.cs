@@ -1091,8 +1091,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
             Assert.That((StructureFileWriterTestHelper.BRIDGE_FLOW_DIRECTION).ToString(), Is.EqualTo(idProperty.Value).IgnoreCase);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.BedLevel.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_BED_LEVEL.ToString(StructureRegion.BedLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Shift.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_BED_LEVEL.ToString(StructureRegion.Shift.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.CsDefId.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_ID.ToString(), idProperty.Value);
@@ -1164,8 +1164,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             idProperty = content.Properties.First(p => p.Name == StructureRegion.AllowedFlowDir.Key);
             Assert.That((StructureFileWriterTestHelper.BRIDGE_PILLAR_FLOW_DIRECTION).ToString(), Is.EqualTo(idProperty.Value).IgnoreCase);
 
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.BedLevel.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_BED_LEVEL.ToString(StructureRegion.BedLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            idProperty = content.Properties.First(p => p.Name == StructureRegion.Shift.Key);
+            Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_BED_LEVEL.ToString(StructureRegion.Shift.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.PillarWidth.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.BRIDGE_PILLAR_WIDTH.ToString(StructureRegion.PillarWidth.Format, CultureInfo.InvariantCulture), idProperty.Value);

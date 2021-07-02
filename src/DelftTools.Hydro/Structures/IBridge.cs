@@ -39,7 +39,7 @@ namespace DelftTools.Hydro.Structures
         BridgeType BridgeType { get; set; }
 
         /// <summary>
-        /// Bed level for rectangle geometry
+        /// Bed level for rectangle geometry (TODO: rename to Shift, see FM1D2D-1671) 
         /// </summary>
         double BottomLevel { get; set;}
 

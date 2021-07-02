@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.General
         public const int CrossSectionLocationsMajorVersion = 1;
         public const int CrossSectionLocationsMinorVersion = 1;
         
-        public const int StructureDefinitionsMajorVersion = 2;
+        public const int StructureDefinitionsMajorVersion = 3;
         public const int StructureDefinitionsMinorVersion = 0;
 
         public const int ModelDefinitionsMajorVersion = 1;

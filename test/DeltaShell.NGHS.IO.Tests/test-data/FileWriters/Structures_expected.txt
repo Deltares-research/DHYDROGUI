@@ -1,5 +1,5 @@
 [General]
-    fileVersion           = 2.00                
+    fileVersion           = 3.00                
     fileType              = structure           
 
 [Structure]
@@ -211,7 +211,7 @@
     chainage              = 5.500000            
     type                  = bridge              
     allowedFlowDir        = both                
-    bedLevel              = 0.300               
+    shift                 = 0.300               
     csDefId               = 11                  
     length                = 1.500               
     inletLossCoeff        = 0.400               
