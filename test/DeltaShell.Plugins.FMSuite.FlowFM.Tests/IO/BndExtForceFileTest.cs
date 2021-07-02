@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
@@ -1437,6 +1439,99 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
         
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [TestCaseSource(nameof(Read_LateralSourceWithNodeIdOfPipeCases))]
+        public void Read_LateralSourceWithCompartmentOfPipe_IsReadCorrectly(IPipe pipe1, IPipe pipe2, string nodeId,
+                                                                            IPipe expPipe, double expChainage, ICompartment expCompartment)
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                            " + Environment.NewLine +
+                    "    fileVersion = 2.0                " + Environment.NewLine +
+                    "    fileType    = extForce           " + Environment.NewLine +
+                    "                                     " + Environment.NewLine +
+                    "[Lateral]                            " + Environment.NewLine +
+                    "    id          = lateral_source_id  " + Environment.NewLine +
+                    "    name        = lateral_source_name" + Environment.NewLine +
+                    $"   nodeId      = {nodeId}           " + Environment.NewLine +
+                    "    discharge   = realtime           ";
+
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+
+                var network = new HydroNetwork();
+                network.Branches.Add(pipe1);
+                network.Branches.Add(pipe2);
+
+                var lateralSourcesData = new EventedList<Model1DLateralSourceData>();
+
+                // Call
+                bndExtForceFile.Read(extFile, modelDefinition, network, lateralSourcesData: lateralSourcesData);
+
+                // Assert
+                var lateralSource = (LateralSource) expPipe.BranchFeatures.Single();
+                Assert.That(lateralSource.Branch, Is.SameAs(expPipe));
+                Assert.That(lateralSource.Chainage, Is.EqualTo(expChainage));
+                Assert.That(lateralSource.Name, Is.EqualTo("lateral_source_id"));
+                Assert.That(lateralSource.LongName, Is.EqualTo("lateral_source_name"));
+                Assert.That(lateralSource.Geometry, Is.TypeOf<Point>());
+                Assert.That(lateralSource.Geometry.InteriorPoint.X, Is.EqualTo(expPipe.Geometry.InteriorPoint.X + expChainage));
+                Assert.That(lateralSource.Geometry.InteriorPoint.Y, Is.EqualTo(0));
+
+                Model1DLateralSourceData modeLateralSourceData = lateralSourcesData.Single();
+                Assert.That(modeLateralSourceData.Feature, Is.SameAs(lateralSource));
+                Assert.That(modeLateralSourceData.DataType, Is.EqualTo(Model1DLateralDataType.FlowRealTime));
+                Assert.That(modeLateralSourceData.Compartment, Is.SameAs(expCompartment));
+            }
+        }
+
+        private static IEnumerable<TestCaseData> Read_LateralSourceWithNodeIdOfPipeCases()
+        {
+            // first pipe, second pipe, referenced nodeId in file, exp. pipe of lateral source, exp. chainage of lateral source, exp. compartment of lateral source data
+            IPipe pipeA1 = CreatePipe(100, 0, 200, 0, "node_id_1", "node_id_2");
+            IPipe pipeA2 = CreatePipe(200, 0, 300, 0, "node_id_2", "node_id_3");
+            yield return new TestCaseData(pipeA1, pipeA2, "node_id_1", pipeA1, 0, pipeA1.SourceCompartment);
+            
+            IPipe pipeB1 = CreatePipe(100, 0, 200, 0, "node_id_1", "node_id_2");
+            IPipe pipeB2 = CreatePipe(200, 0, 300, 0, "node_id_2", "node_id_3");
+            yield return new TestCaseData(pipeB1, pipeB2, "node_id_2", pipeB1, 100, pipeB1.TargetCompartment);
+            
+            IPipe pipeC1 = CreatePipe(100, 0, 200, 0, "node_id_1", "node_id_2");
+            IPipe pipeC2 = CreatePipe(200, 0, 300, 0, "node_id_2", "node_id_3");
+            yield return new TestCaseData(pipeC1, pipeC2, "node_id_3", pipeC2, 100, pipeC2.TargetCompartment);
+        }
+
+        private static IPipe CreatePipe(double x1, double y1, double x2, double y2, string sourceCompartmentName, string targetCompartmentName)
+        {
+            var c1 = new Coordinate(x1, y1);
+            var c2 = new Coordinate(x2, y2);
+
+            var geometry = new LineString(new[]
+            {
+                c1,
+                c2
+            });
+
+            double length = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
+
+            var pipe = new Pipe
+            {
+                Length = length,
+                Geometry = geometry,
+                SourceCompartment = Substitute.For<ICompartment>(),
+                SourceCompartmentName = sourceCompartmentName,
+                TargetCompartment = Substitute.For<ICompartment>(),
+                TargetCompartmentName = targetCompartmentName
+            };
+
+            return pipe;
+        }
+
         private static IEnumerable<string[]> ReadData(string filePath)
         {
             foreach (string line in File.ReadAllLines(filePath))

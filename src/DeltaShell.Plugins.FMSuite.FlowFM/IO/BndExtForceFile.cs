@@ -1015,10 +1015,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         p.TargetCompartmentName.EqualsCaseInsensitive(compartmentId) ||
                         p.SourceCompartmentName.EqualsCaseInsensitive(compartmentId));
                 if (branch is IPipe pipe)
-                    compartment = string.Equals(pipe.SourceCompartmentName, compartmentId)
-                        ? pipe.SourceCompartment
-                        : pipe.TargetCompartment;
-
+                {
+                    if (string.Equals(pipe.SourceCompartmentName, compartmentId))
+                    {
+                        compartment = pipe.SourceCompartment;
+                        chainage = 0d;
+                    }
+                    else
+                    {
+                        compartment = pipe.TargetCompartment;
+                        chainage = pipe.Length;
+                    }
+                }
+                
                 var branchId = delftIniCategory.GetPropertyValue(BranchIdKey);
                 if (branchId != null)
                 {

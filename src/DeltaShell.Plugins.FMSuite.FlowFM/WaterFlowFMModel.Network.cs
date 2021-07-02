@@ -724,7 +724,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     throw new NotImplementedException();
 
                 case NotifyCollectionChangedAction.Add:
-                    Model1DLateralSourceData model1DLateralSourceData = CreateModel1DLateralSourceData(lateralSource);
+                    Model1DLateralSourceData model1DLateralSourceData = CreateLateralSourceData(lateralSource);
                     NamingHelper.MakeNamesUnique(Network.LateralSources);
                     AddLateralSourceData(model1DLateralSourceData);
                     break;
@@ -734,7 +734,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        private static Model1DLateralSourceData CreateModel1DLateralSourceData(LateralSource lateralSource)
+        private static Model1DLateralSourceData CreateLateralSourceData(LateralSource lateralSource)
         {
             var lateralSourceData = new Model1DLateralSourceData {Feature = lateralSource};
             if (lateralSource.Branch is IPipe pipe)
