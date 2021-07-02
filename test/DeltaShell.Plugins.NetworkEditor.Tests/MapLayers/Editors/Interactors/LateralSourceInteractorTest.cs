@@ -81,11 +81,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors.Interactors
 
             double length = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
 
-            var pipe = Substitute.For<IPipe>();
-            pipe.Length = length;
-            pipe.Geometry = geometry;
-
-            return pipe;
+            return new Pipe
+            {
+                Length = length,
+                Geometry = geometry
+            };
         }
     }
 }
