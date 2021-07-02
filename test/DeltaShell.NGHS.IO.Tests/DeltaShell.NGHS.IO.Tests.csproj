@@ -60,7 +60,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Deltares.UGrid, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Deltares.UGrid.1.0.69272\lib\net40\Deltares.UGrid.dll</HintPath>
+      <HintPath>..\..\packages\Deltares.UGrid.1.0.69328\lib\net40\Deltares.UGrid.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Core">
