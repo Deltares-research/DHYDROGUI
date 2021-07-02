@@ -41,6 +41,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
@@ -2536,6 +2537,89 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 // Assert
                 Assert.That(lateralSourceData.DataType, Is.EqualTo(Model1DLateralDataType.FlowRealTime));
             }
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(AddLateralSourceToNetworkBranchCases))]
+        [Category(TestCategory.Integration)]
+        public void AddLateralSourceToNetworkBranch_AddsCorrectLateralSourcesDataToModel(IPipe pipe1, IPipe pipe2, IPipe lateralSourcePipe, double chainage, ICompartment expCompartment)
+        {
+            using (var model = new WaterFlowFMModel())
+            {
+                // Setup
+                var network = new HydroNetwork();
+                network.Branches.Add(pipe1);
+                network.Branches.Add(pipe2);
+
+                model.Network = network;
+
+                var lateralSource = new LateralSource
+                {
+                    Branch = lateralSourcePipe,
+                    Chainage = chainage,
+                };
+
+                // Call
+                lateralSourcePipe.BranchFeatures.Add(lateralSource);
+
+                // Assert
+                Model1DLateralSourceData lateralSourceData = model.LateralSourcesData.Single();
+                Assert.That(lateralSourceData.Compartment, Is.SameAs(expCompartment));
+                Assert.That(lateralSourceData.Feature, Is.SameAs(lateralSource));
+                Assert.That(lateralSourceData.UseTemperature, Is.False);
+                Assert.That(lateralSourceData.UseSalt, Is.False);
+            }
+        }
+
+        private static IEnumerable<TestCaseData> AddLateralSourceToNetworkBranchCases()
+        {
+            IPipe pipeA1 = CreatePipe(100, 0, 200, 0);
+            IPipe pipeA2 = CreatePipe(200, 0, 300, 0);
+            yield return new TestCaseData(pipeA1, pipeA2, pipeA1, 0, pipeA1.SourceCompartment);
+
+            IPipe pipeB1 = CreatePipe(100, 0, 200, 0);
+            IPipe pipeB2 = CreatePipe(200, 0, 300, 0);
+            yield return new TestCaseData(pipeB1, pipeB2, pipeB1, 100, pipeB1.TargetCompartment);
+
+            IPipe pipeC1 = CreatePipe(100, 0, 200, 0);
+            IPipe pipeC2 = CreatePipe(200, 0, 300, 0);
+            yield return new TestCaseData(pipeC1, pipeC2, pipeC2, 0, pipeC2.SourceCompartment);
+
+            IPipe pipeD1 = CreatePipe(100, 0, 200, 0);
+            IPipe pipeD2 = CreatePipe(200, 0, 300, 0);
+            yield return new TestCaseData(pipeD1, pipeD2, pipeD2, 100, pipeD2.TargetCompartment);
+
+            IPipe pipeE1 = CreatePipe(100, 0, 200, 0);
+            IPipe pipeE2 = CreatePipe(200, 0, 300, 0);
+            yield return new TestCaseData(pipeE1, pipeE2, pipeE1, 50, null);
+
+            IPipe pipeF1 = CreatePipe(100, 0, 200, 0);
+            IPipe pipeF2 = CreatePipe(200, 0, 300, 0);
+            yield return new TestCaseData(pipeF1, pipeF2, pipeF2, 50, null);
+        }
+
+        private static IPipe CreatePipe(double x1, double y1, double x2, double y2)
+        {
+            var c1 = new Coordinate(x1, y1);
+            var c2 = new Coordinate(x2, y2);
+
+            var geometry = new LineString(new[]
+            {
+                c1,
+                c2
+            });
+
+            double length = Math.Sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)));
+
+            var pipe = new Pipe
+            {
+                Length = length,
+                Geometry = geometry,
+                SourceCompartment = Substitute.For<ICompartment>(),
+                TargetCompartment = Substitute.For<ICompartment>()
+            };
+
+            return pipe;
         }
     }
 
