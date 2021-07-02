@@ -724,16 +724,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     throw new NotImplementedException();
 
                 case NotifyCollectionChangedAction.Add:
-                    
-                    var model1DLateralSourceData = new Model1DLateralSourceData
-                    {
-                        Feature = lateralSource
-                    };
-                    if (lateralSource.Branch is IPipe pipe)
-                    {
-                        model1DLateralSourceData.Compartment = GetCompartment(pipe, lateralSource.Chainage);
-                    }
-                    
+                    Model1DLateralSourceData model1DLateralSourceData = CreateModel1DLateralSourceData(lateralSource);
                     NamingHelper.MakeNamesUnique(Network.LateralSources);
                     AddLateralSourceData(model1DLateralSourceData);
                     break;
@@ -741,6 +732,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     RemoveLateralSourceData(lateralSource);
                     break;
             }
+        }
+
+        private static Model1DLateralSourceData CreateModel1DLateralSourceData(LateralSource lateralSource)
+        {
+            var lateralSourceData = new Model1DLateralSourceData {Feature = lateralSource};
+            if (lateralSource.Branch is IPipe pipe)
+            {
+                lateralSourceData.Compartment = GetCompartment(pipe, lateralSource.Chainage);
+            }
+
+            return lateralSourceData;
         }
 
         private static ICompartment GetCompartment(ISewerConnection pipe, double chainage)
