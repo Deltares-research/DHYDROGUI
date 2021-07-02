@@ -270,9 +270,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     AddLateralSourceData(new Model1DLateralSourceData
                     {
-                        Feature = (LateralSource)lateralSource, 
-                        UseSalt = UseSalinity, 
-                        UseTemperature = UseTemperature
+                        Feature = (LateralSource)lateralSource
                     });
                 }
 
@@ -433,9 +431,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     {
                         AddLateralSourceData(new Model1DLateralSourceData
                         {
-                            Feature = lateralSource,
-                            UseSalt = UseSalinity,
-                            UseTemperature = UseTemperature
+                            Feature = lateralSource
                         });
                     }
 
@@ -710,9 +706,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        public void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
+        private void AddLateralSourceData(Model1DLateralSourceData lateralSourceData)
         {
-            if (lateralSourceData == null) return;
             lateralSourceData.UseSalt = false;
             lateralSourceData.UseTemperature = false;
 
@@ -732,9 +727,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     
                     var model1DLateralSourceData = new Model1DLateralSourceData
                     {
-                        Feature = lateralSource, 
-                        UseSalt = UseSalinity, 
-                        UseTemperature = UseTemperature
+                        Feature = lateralSource
                     };
                     if (lateralSource.Branch is IPipe pipe)
                     {
