@@ -44,20 +44,21 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     Name = "GWSW import",
                     Category = ProductCategories.ImportTemplateCategory,
                     Description = "Generate a model from GWSW files",
-                    ExecuteTemplate = (p, s) =>
+                    ExecuteTemplateOpenView = (project, s) =>
                     {
                         if (!(s is GwswFileImporter importer))
                         {
-                            return;
+                            return null;
                         }
 
-                        var fileImportActivity = new FileImportActivity(importer, p);
+                        var fileImportActivity = new FileImportActivity(importer, project);
                         fileImportActivity.OnImportFinished += (activity, importedObject, fileImporter) =>
                         {
-                            p.RootFolder.Add(importedObject);
+                            project.RootFolder.Add(importedObject);
                         };
 
                         Application.ActivityRunner.Enqueue(fileImportActivity);
+                        return fileImportActivity;
                     }
                 }  );
             }

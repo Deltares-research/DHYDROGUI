@@ -56,9 +56,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 Category = ProductCategories.ImportTemplateCategory,
                 Description = "Generate a model from an existing Sobek 2 model",
                 Id = Sobek2ImportTemplateId,
-                ExecuteTemplate = (p, m) =>
+                ExecuteTemplateOpenView = (project, m) =>
                 {
-                    p.RootFolder.Add(m);
+                    project.RootFolder.Add(m);
+                    return m;
                 }
             };
         }

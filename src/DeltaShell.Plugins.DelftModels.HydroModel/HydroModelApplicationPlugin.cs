@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 Category = ProductCategories.NewTemplateCategory,
                 Name = "Integrated model",
                 Description = "Creates a new Integrated Hydro model with RHU D-HYDRO models",
-                ExecuteTemplate = (p, settings) =>
+                ExecuteTemplateOpenView = (project, settings) =>
                 {
                     var model = new HydroModelBuilder().BuildModel(ModelGroup.RHUModels);
                     if (settings is HydroModelProjectTemplateSettings modelSettings)
@@ -162,8 +162,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         }
                     }
 
-                    p.RootFolder.Items.Add(model);
-
+                    project.RootFolder.Items.Add(model);
+                    return model;
                 }
             };
             yield return new ProjectTemplate
@@ -172,17 +172,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 Category = ProductCategories.ImportTemplateCategory,
                 Description = "Import DIMR .xml as model",
                 Name = "Dimr import",
-                ExecuteTemplate = (p, o) =>
+                ExecuteTemplateOpenView = (project, o) =>
                 {
                     if (!(o is string path) || !File.Exists(path))
                     {
-                        return;
+                        return null;
                     }
 
                     var importer = new DHydroConfigXmlImporter(() => Application.FileImporters.OfType<IDimrModelFileImporter>().ToList(),
                                                                () => Application.WorkDirectory);
 
-                    var fileImportActivity = new FileImportActivity(importer, p)
+                    var fileImportActivity = new FileImportActivity(importer, project)
                     {
                         Files = new[]
                         {
@@ -192,10 +192,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
                     fileImportActivity.OnImportFinished += (activity, importedObject, fileImporter) =>
                     {
-                        p.RootFolder.Add(importedObject);
+                        project.RootFolder.Add(importedObject);
                     };
 
                     Application.ActivityRunner.Enqueue(fileImportActivity);
+                    return fileImportActivity;
                 }
             };
         }
