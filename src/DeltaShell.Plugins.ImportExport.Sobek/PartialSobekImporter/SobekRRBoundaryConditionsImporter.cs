@@ -35,6 +35,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         protected override void PartialImport()
         {
             var rainfallRunoffModel = GetModel<RainfallRunoffModel>();
+            rainfallRunoffModel.LateralToCatchmentLookup.Clear();
 
             Dictionary<string, SobekRRLink[]> linksLookup = new SobekRRLinkReader()
                                                             .Read(GetFilePath(SobekFileNames.SobekRRLinkFileName))
