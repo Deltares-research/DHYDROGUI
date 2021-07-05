@@ -155,8 +155,10 @@
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="IO\ILateralSourceExtCategory.cs" />
     <Compile Include="IO\ImportSamplesOperationImportData.cs" />
     <Compile Include="IO\InitialFieldsFile.cs" />
+    <Compile Include="IO\LateralSourceExtCategory.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Spatial\SpatialOperationHelper.cs" />
     <Compile Include="WaterFlowFMModel.Synchronize.cs" />

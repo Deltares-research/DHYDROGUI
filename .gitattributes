@@ -2174,6 +2174,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FmMapFile1DOutputFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/FileCopyException.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/ICopyHandler.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/OverwriteCopyHandler.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ILateralSourceExtCategory.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/IUnsupportedFileBasedExtForceFileItem.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportRasterSamplesOperationImportData.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ImportRasterSamplesOperationImportData.hbm.xml -text
@@ -2214,6 +2215,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionInitialFieldsFileWriter
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionRegion.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialFieldsFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/KnownFeatureCategories.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/LateralSourceExtCategory.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/LdbFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/LinkCoveragesDoneReadingEventArgs.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Links1D2DHelper.cs -text
@@ -5176,6 +5178,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Importers/WaterFlowFMFileImporte
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/InitialConditionInitialFieldsFileReaderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/InitialConditionInitialFieldsFileWriterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/InitialFieldsFileTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/LateralSourceExtCategoryTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/LdbFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/MduFileHelperTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/MduFileTest.cs -text

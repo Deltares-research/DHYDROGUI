@@ -348,6 +348,7 @@
     <Compile Include="IO\InitialConditionInitialFieldsFileReaderTest.cs" />
     <Compile Include="IO\InitialConditionInitialFieldsFileWriterTest.cs" />
     <Compile Include="IO\InitialFieldsFileTest.cs" />
+    <Compile Include="IO\LateralSourceExtCategoryTest.cs" />
     <Compile Include="IO\MduFileHelperTest.cs" />
     <Compile Include="IO\MduFileTest.cs" />
     <Compile Include="IO\PlizFileImporterExporterTest.cs" />
