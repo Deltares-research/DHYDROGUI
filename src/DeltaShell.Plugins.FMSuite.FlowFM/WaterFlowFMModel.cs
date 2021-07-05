@@ -3173,26 +3173,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 throw new ArgumentException(string.Format("feature {0} in {1} cannot be found in the FM model.",
                                                           featureName, itemString));
             }
-
+            
+            string parameterName2 = itemString2.Split('/').LastOrDefault() ?? string.Empty;
             IDataItem dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
             {
                 var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
-                return parameterValueConverter?.ParameterName == parameterName;
+                return parameterValueConverter?.ParameterName == parameterName || 
+                       parameterValueConverter?.ParameterName == parameterName2;
             });
-
+            
             if (dataItem == null)
             {
-                string[] stringParts2 = itemString2.Split('/');
-                string parameterName2 = stringParts2.LastOrDefault()?? string.Empty;
-                dataItem = GetChildDataItems(feature).FirstOrDefault(di =>
-                {
-                    var parameterValueConverter = di.ValueConverter as ParameterValueConverter;
-                    return parameterValueConverter?.ParameterName == parameterName2;
-                });
-                if (dataItem == null)
-                {
-                    return null;
-                }
+                return null;
             }
 
             return new[]
