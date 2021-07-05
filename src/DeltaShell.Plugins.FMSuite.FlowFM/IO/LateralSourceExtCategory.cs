@@ -27,6 +27,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         /// Initializes a new instance of the <see cref="LateralSourceExtCategory"/> class.
         /// </summary>
         /// <param name="category"> The delft ini category to parse from. </param>
+        /// <param name="logHandler"> Optional parameter; the log handler to report errors. </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="category"/> is <c>null</c>.
         /// </exception>
