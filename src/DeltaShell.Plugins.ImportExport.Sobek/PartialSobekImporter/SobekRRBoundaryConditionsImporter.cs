@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             Dictionary<string, SobekRRLink[]> linksLookup = new SobekRRLinkReader()
                                                             .Read(GetFilePath(SobekFileNames.SobekRRLinkFileName))
                                                             .GroupBy(l => l.NodeToId)
-                                                            .ToDictionary(g => g.Key, g => g.ToArray());
+                                                            .ToDictionary(g => g.Key, g => g.ToArray(), StringComparer.InvariantCultureIgnoreCase);
 
             if (SetFilePath(GetFilePath(SobekFileNames.SobekCaseDescriptionFile)) ||
                 (File.Exists(GetFilePath("BOUND3B.3B")) && File.Exists(GetFilePath("BOUND3B.tbl"))))
