@@ -716,7 +716,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void UpdateLateralSource(NotifyCollectionChangedEventArgs e)
         {
             var lateralSource = (LateralSource)e.GetRemovedOrAddedItem();
-            if (lateralSource.IsBeingMoved()) return;
+            if (lateralSource.IsBeingMoved() || isLoading) return;
 
             switch (e.Action)
             {
