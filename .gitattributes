@@ -3615,6 +3615,7 @@ test/DeltaShell.NGHS.IO.Tests/DataObjects/InitialConditions/ConstantSpatialChann
 test/DeltaShell.NGHS.IO.Tests/DataObjects/InitialConditions/SpatialChannelInitialConditionDefinitionTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DelftIniMultiLineReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DeltaShell.NGHS.IO.Tests.csproj -text
+test/DeltaShell.NGHS.IO.Tests/FileReaders/BoundaryFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/CrossSectionDefinitionFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/LateralSourceBcCategoryTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/LocationFileReaderTest.cs -text

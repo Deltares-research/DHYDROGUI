@@ -6,7 +6,9 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
@@ -98,13 +100,23 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
         }
         
-        public static IEnumerable<ILateralSourceBcCategory> ReadLaterSourcesFromBcFile(string filePath)
+        /// <summary>
+        /// Parses each lateral sources category from the specified file to a <see cref="ILateralSourceBcCategory"/>.
+        /// </summary>
+        /// <param name="filePath">The full file path to the boundary conditions file.</param>
+        /// <param name="logHandler"> Optional parameter; the log handler to report errors. </param>
+        /// <returns> A collection of parsed <see cref="ILateralSourceBcCategory"/>.</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="filePath"/> is <c>null</c> or empty.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">
+        /// Thrown when the file at <paramref name="filePath"/> does not exist.
+        /// </exception>
+        public static IEnumerable<ILateralSourceBcCategory> ReadLaterSourcesFromBcFile(string filePath, ILogHandler logHandler = null)
         {
-            if (!File.Exists(filePath))
-            {
-                throw new FileNotFoundException("File does not exist", filePath);
-            }
-            
+            Ensure.NotNullOrEmpty(filePath, nameof(filePath));
+            EnsureFileExists(filePath);
+
             IList<IDelftBcCategory> categories = new DelftBcReader().ReadDelftBcFile(filePath);
             foreach (IDelftBcCategory category in categories)
             {
@@ -113,18 +125,25 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 {
                     continue;
                 }
-                
+
                 IEnumerable<IDelftBcQuantityData> salinity = category.Table.Where(bcq => bcq.Quantity.Value.EqualsCaseInsensitive(BoundaryRegion.QuantityStrings.WaterSalinity));
                 if (salinity.Any())
                 {
                     continue;
                 }
 
-
-                yield return new LateralSourceBcCategory(category);
+                yield return new LateralSourceBcCategory(category, logHandler);
             }
         }
-        
+
+        private static void EnsureFileExists(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("File not found", filePath);
+            }
+        }
+
         public static void ReadFile(string filename, IEnumerable<Model1DLateralSourceData> lateralSourcesData)
         {
             if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
