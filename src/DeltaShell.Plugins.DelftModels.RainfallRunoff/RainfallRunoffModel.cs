@@ -1319,19 +1319,26 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             switch (category)
             {
                 case "catchments":
-                    Catchment catchment = Basin.AllCatchments.SingleOrDefault(c => string.Equals(c.Name, featureName, StringComparison.InvariantCultureIgnoreCase));
-                    if (catchment == null)
+                    Catchment catchment = GetCatchmentByName(featureName);
+                    if (catchment != null)
                     {
-                        if (LateralToCatchmentLookup.TryGetValue(featureName, out string catchmentString))
-                        {
-                            catchment = Basin.AllCatchments.SingleOrDefault(c => string.Equals(c.Name, catchmentString, StringComparison.InvariantCultureIgnoreCase));
-                        }
+                        return catchment;
+                    }
+
+                    if (LateralToCatchmentLookup.TryGetValue(featureName, out string catchmentString))
+                    {
+                        catchment = GetCatchmentByName(catchmentString);
                     }
 
                     return catchment;
                 default:
                     return null;
             }
+        }
+        
+        private Catchment GetCatchmentByName(string name)
+        {
+            return Basin.AllCatchments.SingleOrDefault(c => string.Equals(c.Name, name, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 
