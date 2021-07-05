@@ -36,7 +36,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     var name = boundaryCategory.ReadProperty<string>(BoundaryRegion.Name.Key);
                     if (name == FunctionAttributes.StandardFeatureNames.ModelWide)
                     {
-                        ReadModelWideBoundaryCondition(wind, boundaryCategory);
+                        ReadModelWideBoundaryCondition(boundaryCategory);
                         continue;
                     }
 
@@ -130,7 +130,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
         }
 
-        private static void ReadModelWideBoundaryCondition(IFunction Wind, IDelftBcCategory boundaryCategory)
+        private static void ReadModelWideBoundaryCondition(IDelftBcCategory boundaryCategory)
         {
             var functionType = boundaryCategory.ReadProperty<string>(BoundaryRegion.Function.Key);
             switch (functionType)
@@ -165,20 +165,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         BoundaryRegion.Function.Key, Environment.NewLine);
                     throw new BoundaryConditionReadingException(errorMessage);
             }
-        }
-
-        private static void InitializeFunctionArguments(IDelftBcCategory boundaryCategory, IFunction function)
-        {
-            var argumentValues = GetDateTimesValues(boundaryCategory.Table[0]);
-            var dateTimes = argumentValues as IList<DateTime> ?? argumentValues.ToList();
-            for (var index = 0; index < dateTimes.Count() && function.Arguments[0].Values.Count != 0; index++)
-            {
-                if (function.Arguments[0].Values[index].Equals(dateTimes[index])) continue;
-                function.Clear();
-                break;
-            }
-            if (function.Arguments[0].Values.Count == 0)
-                function.Arguments[0].SetValues(dateTimes);
         }
 
         private static void ReadBoundaryCondition(Model1DBoundaryNodeData boundaryCondition, IDelftBcCategory boundaryCategory)
