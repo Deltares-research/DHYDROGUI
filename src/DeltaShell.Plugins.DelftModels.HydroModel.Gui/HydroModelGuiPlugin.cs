@@ -104,6 +104,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     Gui.AfterRun -= OnGuiAfterRun;
                     Gui.Application.ActivityRunner.ActivityStatusChanged -= ActivityRunnerActivityStatusChanged;
                     Gui.Application.ProjectClosing -= ApplicationOnProjectClosing;
+                    Gui.Application.ProjectOpened -= ApplicationOnProjectOpened;
                 }
 
                 base.Gui = value;
@@ -113,8 +114,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     Gui.AfterRun += OnGuiAfterRun;
                     Gui.Application.ActivityRunner.ActivityStatusChanged += ActivityRunnerActivityStatusChanged;
                     Gui.Application.ProjectClosing += ApplicationOnProjectClosing;
+                    Gui.Application.ProjectOpened += ApplicationOnProjectOpened;
                 }
             }
+        }
+
+        [InvokeRequired]
+        private void ApplicationOnProjectOpened(Project obj)
+        {
+            Gui.Selection = obj.RootFolder.Models.FirstOrDefault();
+            Gui.CommandHandler.OpenViewForSelection();
         }
 
         public override void OnViewRemoved(IView view)
