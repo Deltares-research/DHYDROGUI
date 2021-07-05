@@ -36,6 +36,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             var rainfallRunoffModel = GetModel<RainfallRunoffModel>();
 
+            Dictionary<string, SobekRRLink[]> linksLookup = new SobekRRLinkReader()
+                                                            .Read(GetFilePath(SobekFileNames.SobekRRLinkFileName))
+                                                            .GroupBy(l => l.NodeToId)
+                                                            .ToDictionary(g => g.Key, g => g.ToArray());
+
             if (SetFilePath(GetFilePath(SobekFileNames.SobekCaseDescriptionFile)) ||
                 (File.Exists(GetFilePath("BOUND3B.3B")) && File.Exists(GetFilePath("BOUND3B.tbl"))))
             {
@@ -43,22 +48,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 filePathBoundaryConditions = GetFilePath("BOUND3B.3B");
                 filePathBoundaryTableConditions = GetFilePath("BOUND3B.tbl");
 
-                ReadAndSetBoundaryConditions(rainfallRunoffModel);
+                ReadAndSetBoundaryConditions(rainfallRunoffModel, linksLookup);
             }
             if (File.Exists(GetFilePath("BoundaryConditions.bc")))
             {
-                ReadAndSetBoundaryConditionsViaBC(rainfallRunoffModel);
+                ReadAndSetBoundaryConditionsViaBC(rainfallRunoffModel, linksLookup);
             }
         }
 
-        private void ReadAndSetBoundaryConditionsViaBC(RainfallRunoffModel model)
+        private void ReadAndSetBoundaryConditionsViaBC(RainfallRunoffModel model, IReadOnlyDictionary<string, SobekRRLink[]> linksLookup)
         {
             var boundaryDatas = model.BoundaryData;
-
-            var linksLookup = new SobekRRLinkReader()
-                              .Read(GetFilePath(SobekFileNames.SobekRRLinkFileName))
-                              .GroupBy(l => l.NodeToId)
-                              .ToDictionary(g => g.Key, g => g.ToArray());
             
             var bcFileReader = new BcFile(){BlockKey = $"[{BoundaryRegion.BcBoundaryHeader}]" };
             var bcBlockDatas = bcFileReader.Read(GetFilePath("BoundaryConditions.bc"));
@@ -92,7 +92,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private void ReadAndSetBoundaryConditions(RainfallRunoffModel model)
+        private void ReadAndSetBoundaryConditions(RainfallRunoffModel model, IReadOnlyDictionary<string, SobekRRLink[]> linksLookup)
         {
             var formatBCTable = new DataTable();
             formatBCTable.Columns.Add(new DataColumn("DateTime", typeof(DateTime)));
@@ -101,10 +101,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             var rrNodesPath = GetFilePath(SobekFileNames.SobekRRNodeFileName);
             var nodes = new SobekRRNodeReader().Read(rrNodesPath).ToDictionaryWithErrorDetails(rrNodesPath, n => n.Id, n => n.ObjectTypeName);
-            var links = new SobekRRLinkReader().Read(GetFilePath(SobekFileNames.SobekRRLinkFileName))
-                                               .GroupBy(l => l.NodeToId)
-                                               .ToDictionary(g => g.Key, g => g.ToArray());
-
+            
             var importedBoundaryConditions = new SobekRRBoundaryReader().Read(filePathBoundaryConditions);
             var dicBCTable = new SobekRRTableReader("BN_T", formatBCTable).Read(filePathBoundaryTableConditions).ToDictionaryWithErrorDetails(filePathBoundaryTableConditions, item => item.TableName, item => item);
 
@@ -136,7 +133,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 else
                 {
                     //put condition on the linked unpaved catchments
-                    links.TryGetValue(bc.Id, out var incomingLinksToBoundary);
+                    linksLookup.TryGetValue(bc.Id, out var incomingLinksToBoundary);
                     if (incomingLinksToBoundary == null) continue;
 
                     foreach (var incomingLink in incomingLinksToBoundary)
