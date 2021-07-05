@@ -996,7 +996,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return true;
         }
 
-        private CheckAndParseLateralSourceInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DLateralSourceData> lateralSourcesData, IEnumerable<DelftIniCategory> lateralBlocksModel1D)
+        private void CheckAndParseLateralSourceInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DLateralSourceData> lateralSourcesData, IEnumerable<DelftIniCategory> lateralBlocksModel1D)
         {
             var forcingFiles = new HashSet<string>();
             foreach (var delftIniCategory in lateralBlocksModel1D)
