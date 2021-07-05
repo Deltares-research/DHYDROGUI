@@ -821,17 +821,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var correctionBlocks = dataBlocks.Where(db => correctionFunctionTypes.Contains(db.FunctionType)).ToList();
 
             var signalBlocks = dataBlocks.Except(correctionBlocks).ToList();
-            var containsAndParsedLateralExtForceFileDefinitions = false;
             var containsAndParsedModel1DBoundaryExtForceFileDefinitions = false;
             foreach (var delftIniCategory in bndBlocks)
             {
                 var quantityKey = delftIniCategory.GetPropertyValue(QuantityKey);
                 if (string.IsNullOrEmpty(quantityKey))
                 {
-                    if (!containsAndParsedLateralExtForceFileDefinitions)
-                        containsAndParsedLateralExtForceFileDefinitions = CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(LateralHeaderKey)));
-                    if(!containsAndParsedLateralExtForceFileDefinitions)
-                        Log.WarnFormat("Could not parse quantity {0} into a valid quantity data", quantityKey);
+                    CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(LateralHeaderKey)));
                     continue;
                 }
 
@@ -994,7 +990,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return true;
         }
 
-        private bool CheckAndParseLateralSourceInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DLateralSourceData> lateralSourcesData, IEnumerable<DelftIniCategory> lateralBlocksModel1D)
+        private void CheckAndParseLateralSourceInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DLateralSourceData> lateralSourcesData, IEnumerable<DelftIniCategory> lateralBlocksModel1D)
         {
             var forcingFiles = new HashSet<string>();
             foreach (var delftIniCategory in lateralBlocksModel1D)
@@ -1123,8 +1119,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     Log.Warn($"Can not read lateral sources data from : {fullPath}");
                 
             }
-            
-            return true;
         }
 
         private void ParseMeteoRainFallBoundaryExtForceCategory(WaterFlowFMModelDefinition modelDefinition, string quantityKey, List<BcBlockData> dataBlocks)
