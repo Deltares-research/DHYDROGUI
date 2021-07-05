@@ -155,7 +155,6 @@
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="FileConstants.cs" />
-    <Compile Include="IO\BndExtForceLateralSourceParser.cs" />
     <Compile Include="IO\ILateralSourceExtCategory.cs" />
     <Compile Include="IO\ImportSamplesOperationImportData.cs" />
     <Compile Include="IO\InitialFieldsFile.cs" />

@@ -2136,7 +2136,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcMeteoFileDataBuilder.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcmFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcmFileFlowBoundaryDataBuilder.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BndExtForceFile.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BndExtForceLateralSourceParser.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BoundaryConditionWpsImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/CacheFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ChannelFrictionDefinitionFileReader.cs -text
@@ -3616,7 +3615,6 @@ test/DeltaShell.NGHS.IO.Tests/DataObjects/InitialConditions/ConstantSpatialChann
 test/DeltaShell.NGHS.IO.Tests/DataObjects/InitialConditions/SpatialChannelInitialConditionDefinitionTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DelftIniMultiLineReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DeltaShell.NGHS.IO.Tests.csproj -text
-test/DeltaShell.NGHS.IO.Tests/FileReaders/BoundaryFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/CrossSectionDefinitionFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/LateralSourceBcCategoryTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/LocationFileReaderTest.cs -text
