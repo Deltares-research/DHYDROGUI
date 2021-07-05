@@ -2137,6 +2137,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcMeteoFileDataBuilder.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcmFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcmFileFlowBoundaryDataBuilder.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BndExtForceFile.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BndExtForceLateralSourceParser.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BoundaryConditionWpsImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/CacheFile.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/ChannelFrictionDefinitionFileReader.cs -text
@@ -5135,6 +5136,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BcmFileExportImportTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BcmFileFlowBoundaryDataBuilderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BcmFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BndExtForceFileTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/BndExtForceLateralSourceParserTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/CacheFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ChannelFrictionDefinitionFileReaderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/ChannelFrictionDefinitionFileWriterTest.cs -text

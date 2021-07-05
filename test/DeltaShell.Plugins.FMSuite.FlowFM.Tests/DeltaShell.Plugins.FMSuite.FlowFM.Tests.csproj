@@ -233,6 +233,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\BndExtForceLateralSourceParserTest.cs" />
     <Compile Include="IO\Importers\WaterFlowFMFileImporterTest.cs" />
     <Compile Include="IO\CacheFileTest.cs" />
     <Compile Include="IO\ChannelInitialConditionDefinitionFileReaderTest.cs" />
