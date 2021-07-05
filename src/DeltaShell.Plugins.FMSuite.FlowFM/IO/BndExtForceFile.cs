@@ -821,13 +821,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var correctionBlocks = dataBlocks.Where(db => correctionFunctionTypes.Contains(db.FunctionType)).ToList();
 
             var signalBlocks = dataBlocks.Except(correctionBlocks).ToList();
+            var containsAndParsedLateralExtForceFileDefinitions = false;
             var containsAndParsedModel1DBoundaryExtForceFileDefinitions = false;
             foreach (var delftIniCategory in bndBlocks)
             {
                 var quantityKey = delftIniCategory.GetPropertyValue(QuantityKey);
                 if (string.IsNullOrEmpty(quantityKey))
                 {
-                    CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(LateralHeaderKey)));
+                    if (!containsAndParsedLateralExtForceFileDefinitions)
+                    {
+                        CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(LateralHeaderKey)));
+                        containsAndParsedLateralExtForceFileDefinitions = true;
+                    }
+                    
                     continue;
                 }
 
@@ -990,7 +996,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return true;
         }
 
-        private void CheckAndParseLateralSourceInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DLateralSourceData> lateralSourcesData, IEnumerable<DelftIniCategory> lateralBlocksModel1D)
+        private CheckAndParseLateralSourceInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DLateralSourceData> lateralSourcesData, IEnumerable<DelftIniCategory> lateralBlocksModel1D)
         {
             var forcingFiles = new HashSet<string>();
             foreach (var delftIniCategory in lateralBlocksModel1D)
