@@ -766,6 +766,8 @@ src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/PumpDefinitionReader.cs
 src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/WeirDefinitionReader.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/DelftConfigXmlFileParser.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/FileReadingException.cs -text
+src/DeltaShell.NGHS.IO/FileReaders/ILateralSourceBcCategory.cs -text
+src/DeltaShell.NGHS.IO/FileReaders/LateralSourceBcCategory.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/Location/LocationFileReader.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/Network/NetworkAndGridReader.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/RetentionFileReader.cs -text
@@ -3612,6 +3614,7 @@ test/DeltaShell.NGHS.IO.Tests/DataObjects/InitialConditions/SpatialChannelInitia
 test/DeltaShell.NGHS.IO.Tests/DelftIniMultiLineReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DeltaShell.NGHS.IO.Tests.csproj -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/CrossSectionDefinitionFileReaderTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/FileReaders/LateralSourceBcCategoryTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/LocationFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/NetworkAndGridReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/RetentionFileReaderTest.cs -text

@@ -6,6 +6,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
@@ -96,6 +97,34 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 throw new FileReadingException(string.Format("While reading boundary conditions an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
             }
         }
+        
+        public static IEnumerable<ILateralSourceBcCategory> ReadLaterSourcesFromBcFile(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("File does not exist", filePath);
+            }
+            
+            IList<IDelftBcCategory> categories = new DelftBcReader().ReadDelftBcFile(filePath);
+            foreach (IDelftBcCategory category in categories)
+            {
+                if (!category.Name.EqualsCaseInsensitive(BoundaryRegion.BcLateralHeader) &&
+                    !category.Name.EqualsCaseInsensitive(BoundaryRegion.BcForcingHeader))
+                {
+                    continue;
+                }
+                
+                IEnumerable<IDelftBcQuantityData> salinity = category.Table.Where(bcq => bcq.Quantity.Value.EqualsCaseInsensitive(BoundaryRegion.QuantityStrings.WaterSalinity));
+                if (salinity.Any())
+                {
+                    continue;
+                }
+
+
+                yield return new LateralSourceBcCategory(category);
+            }
+        }
+        
         public static void ReadFile(string filename, IEnumerable<Model1DLateralSourceData> lateralSourcesData)
         {
             if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
