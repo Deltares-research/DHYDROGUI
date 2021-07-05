@@ -823,17 +823,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var signalBlocks = dataBlocks.Except(correctionBlocks).ToList();
             var containsAndParsedLateralExtForceFileDefinitions = false;
             var containsAndParsedModel1DBoundaryExtForceFileDefinitions = false;
+            var useSalt = (bool) modelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value;
+            var useTemperature = (HeatFluxModelType) modelDefinition.GetModelProperty(KnownProperties.Temperature).Value != HeatFluxModelType.None;
+            
+            var lateralSourceParser = new BndExtForceLateralSourceParser(FilePath, network, useSalt, useTemperature);
+            
             foreach (var delftIniCategory in bndBlocks)
             {
                 var quantityKey = delftIniCategory.GetPropertyValue(QuantityKey);
-                if (string.IsNullOrEmpty(quantityKey))
+                if (string.IsNullOrEmpty(quantityKey) && delftIniCategory.Name.EqualsCaseInsensitive(LateralHeaderKey))
                 {
-                    if (!containsAndParsedLateralExtForceFileDefinitions)
-                    {
-                        CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(LateralHeaderKey)));
-                        containsAndParsedLateralExtForceFileDefinitions = true;
-                    }
-                    
+                    lateralSourcesData.Add(lateralSourceParser.Parse(new LateralSourceExtCategory(delftIniCategory)));
                     continue;
                 }
 

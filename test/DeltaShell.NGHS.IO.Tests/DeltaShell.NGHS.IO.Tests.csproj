@@ -166,6 +166,7 @@
     <Compile Include="DataObjects\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionTest.cs" />
     <Compile Include="DataObjects\InitialConditions\SpatialChannelInitialConditionDefinitionTest.cs" />
     <Compile Include="DelftIniMultiLineReaderTest.cs" />
+    <Compile Include="FileReaders\BoundaryFileReaderTest.cs" />
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
     <Compile Include="FileReaders\LateralSourceBcCategoryTest.cs" />
     <Compile Include="FileReaders\LocationFileReaderTest.cs" />
