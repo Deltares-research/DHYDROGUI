@@ -20,8 +20,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [TestCase("")]
         public void ReadLateralSourcesFromBcFile_FilePathNullOrEmpty_ThrowsArgumentException(string filePath)
         {
+            // Setup
+            var reader = new BoundaryFileReader();
+
             // Call
-            void Call() => BoundaryFileReader.ReadLateralSourcesFromBcFile(filePath).ToArray();
+            void Call() => reader.ReadLateralSourcesFromBcFile(filePath).ToArray();
 
             // Assert
             var e = Assert.Throws<ArgumentException>(Call);
@@ -31,8 +34,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Test]
         public void ReadLateralSourcesFromBcFile_FileDoesNotExist_ThrowsFileNotFoundException()
         {
+            // Setup
+            var reader = new BoundaryFileReader();
+
             // Call
-            void Call() => BoundaryFileReader.ReadLateralSourcesFromBcFile("this/file/does/not.exist").ToArray();
+            void Call() => reader.ReadLateralSourcesFromBcFile("this/file/does/not.exist").ToArray();
 
             // Assert
             var e = Assert.Throws<FileNotFoundException>(Call);
@@ -86,8 +92,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 string file = temp.CreateFile("Flow_model_lateral_sources.bc", fileContent);
                 var logHandler = Substitute.For<ILogHandler>();
 
+                var reader = new BoundaryFileReader();
+
                 // Call
-                ILateralSourceBcCategory[] categories = BoundaryFileReader.ReadLateralSourcesFromBcFile(file, logHandler).ToArray();
+                ILateralSourceBcCategory[] categories = reader.ReadLateralSourcesFromBcFile(file, logHandler).ToArray();
 
                 // Assert
                 Assert.That(categories.Length, Is.EqualTo(3));

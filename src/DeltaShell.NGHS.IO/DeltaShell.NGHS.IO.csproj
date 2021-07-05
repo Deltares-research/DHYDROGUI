@@ -189,6 +189,7 @@
     <Compile Include="FileReaders\Definition\IDefinitionReader.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
+    <Compile Include="FileReaders\IBoundaryFileReader.cs" />
     <Compile Include="FileReaders\ILateralSourceBcCategory.cs" />
     <Compile Include="FileReaders\LateralSourceBcCategory.cs" />
     <Compile Include="FileReaders\Location\LocationFileReader.cs" />

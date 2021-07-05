@@ -21,9 +21,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
     // Note: In this class we do not create new BoundaryConditions, these are created when adding a node to the network
     //       Instead we retrieve the BoundaryCondition (based on feature name) and update the properties
     //       The same is true of LateralSources
-    public static class BoundaryFileReader
+    public class BoundaryFileReader : IBoundaryFileReader
     {
-        public static void ReadFile(string filename, IEnumerable<Model1DBoundaryNodeData> boundaryConditions, IFunction wind = null)
+        public static void ReadFile(string filename, IEnumerable<Model1DBoundaryNodeData> boundaryConditions)
         {
             if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
             var categories = new DelftBcReader().ReadDelftBcFile(filename);
@@ -112,7 +112,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// <exception cref="FileNotFoundException">
         /// Thrown when the file at <paramref name="filePath"/> does not exist.
         /// </exception>
-        public static IEnumerable<ILateralSourceBcCategory> ReadLateralSourcesFromBcFile(string filePath, ILogHandler logHandler = null)
+        public IEnumerable<ILateralSourceBcCategory> ReadLateralSourcesFromBcFile(string filePath, ILogHandler logHandler = null)
         {
             Ensure.NotNullOrEmpty(filePath, nameof(filePath));
             EnsureFileExists(filePath);

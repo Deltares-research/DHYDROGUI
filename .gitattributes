@@ -766,6 +766,7 @@ src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/PumpDefinitionReader.cs
 src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/WeirDefinitionReader.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/DelftConfigXmlFileParser.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/FileReadingException.cs -text
+src/DeltaShell.NGHS.IO/FileReaders/IBoundaryFileReader.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/ILateralSourceBcCategory.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/LateralSourceBcCategory.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/Location/LocationFileReader.cs -text
