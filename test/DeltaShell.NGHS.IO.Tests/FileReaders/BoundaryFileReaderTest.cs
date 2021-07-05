@@ -18,10 +18,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         [Test]
         [TestCase(null)]
         [TestCase("")]
-        public void ReadLaterSourcesFromBcFile_FilePathNullOrEmpty_ThrowsArgumentException(string filePath)
+        public void ReadLateralSourcesFromBcFile_FilePathNullOrEmpty_ThrowsArgumentException(string filePath)
         {
             // Call
-            void Call() => BoundaryFileReader.ReadLaterSourcesFromBcFile(filePath).ToArray();
+            void Call() => BoundaryFileReader.ReadLateralSourcesFromBcFile(filePath).ToArray();
 
             // Assert
             var e = Assert.Throws<ArgumentException>(Call);
@@ -29,10 +29,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
         }
 
         [Test]
-        public void ReadLaterSourcesFromBcFile_FileDoesNotExist_ThrowsFileNotFoundException()
+        public void ReadLateralSourcesFromBcFile_FileDoesNotExist_ThrowsFileNotFoundException()
         {
             // Call
-            void Call() => BoundaryFileReader.ReadLaterSourcesFromBcFile("this/file/does/not.exist").ToArray();
+            void Call() => BoundaryFileReader.ReadLateralSourcesFromBcFile("this/file/does/not.exist").ToArray();
 
             // Assert
             var e = Assert.Throws<FileNotFoundException>(Call);
@@ -41,7 +41,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
 
         [Test]
         [Category(TestCategory.DataAccess)]
-        public void ReadLaterSourcesFromBcFile_ReadsDataCorrectly()
+        public void ReadLateralSourcesFromBcFile_ReadsDataCorrectly()
         {
             using (var temp = new TemporaryDirectory())
             {
@@ -87,7 +87,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 var logHandler = Substitute.For<ILogHandler>();
 
                 // Call
-                ILateralSourceBcCategory[] categories = BoundaryFileReader.ReadLaterSourcesFromBcFile(file, logHandler).ToArray();
+                ILateralSourceBcCategory[] categories = BoundaryFileReader.ReadLateralSourcesFromBcFile(file, logHandler).ToArray();
 
                 // Assert
                 Assert.That(categories.Length, Is.EqualTo(3));

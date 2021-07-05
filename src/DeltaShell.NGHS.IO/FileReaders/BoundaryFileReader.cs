@@ -112,7 +112,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// <exception cref="FileNotFoundException">
         /// Thrown when the file at <paramref name="filePath"/> does not exist.
         /// </exception>
-        public static IEnumerable<ILateralSourceBcCategory> ReadLaterSourcesFromBcFile(string filePath, ILogHandler logHandler = null)
+        public static IEnumerable<ILateralSourceBcCategory> ReadLateralSourcesFromBcFile(string filePath, ILogHandler logHandler = null)
         {
             Ensure.NotNullOrEmpty(filePath, nameof(filePath));
             EnsureFileExists(filePath);
