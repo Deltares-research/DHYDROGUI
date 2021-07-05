@@ -2473,6 +2473,111 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         }
 
         [Test]
+        [TestCase("")]
+        [TestCase("a/b")]
+        [TestCase("a/b/c/d")]
+        [TestCase("randomString")]
+        public void GetDataItemsByItemString_InvalidItemString_ThrowsArgumentException(string invalidItemString)
+        {
+            // Setup
+            const string randomItemString = "a/random/item string";
+            
+            var model = new WaterFlowFMModel();
+
+            // Call
+            TestDelegate call = () => model.GetDataItemsByItemString(invalidItemString, randomItemString);
+
+            // Assert
+            Assert.That(call, Throws.ArgumentException
+                                    .With.Message.EqualTo($"{invalidItemString} should contain a category, feature name and a parameter name."));
+        }
+        
+        [Test]
+        public void GetDataItemsByItemString_UnknownFeature_ThrowsArgumentException()
+        {
+            // Setup
+            const string randomItemString = "a/random/item string";
+            
+            string unknownFeatureName = "unknownPump";
+            string unknownFeatureItemString = $"{KnownFeatureCategories.Pumps}/{unknownFeatureName}/capacity";
+
+            var model = new WaterFlowFMModel();
+
+            // Call
+            TestDelegate call = () => model.GetDataItemsByItemString(unknownFeatureItemString, randomItemString);
+
+            // Assert
+            Assert.That(call, Throws.ArgumentException
+                                    .With.Message.EqualTo($"feature {unknownFeatureName} in {unknownFeatureItemString} cannot be found in the FM model."));
+        }
+        
+        [Test]
+        public void GetDataItemsByItemString_UnknownParameterNames_ReturnsNull()
+        {
+            // Setup
+            const string unknownParameterName = "unknownParameter1";
+            const string unknownParameterName2 = "unknownParameter2";
+            
+            var model = new WaterFlowFMModel();
+
+            const string pumpName = "testPump";
+            var pump = new Pump2D(pumpName);
+            model.Area.Pumps.Add(pump);
+            
+            // Call
+            string unknownParameterItemString = $"{KnownFeatureCategories.Pumps}/{pumpName}/{unknownParameterName}";
+            string unknownParameterItemString2 = $"{KnownFeatureCategories.Pumps}/{pumpName}/{unknownParameterName2}";
+            IEnumerable<IDataItem> dataItems = model.GetDataItemsByItemString(unknownParameterItemString, unknownParameterItemString2);
+
+            // Assert
+            Assert.That(dataItems, Is.Null);
+        }
+
+        [Test]
+        public void GetDataItemsByItemString_ValidParameterName_ReturnsExpectedDataItem()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            
+            const string pumpName = "testPump";
+            var pump = new Pump2D(pumpName);
+            model.Area.Pumps.Add(pump);
+            
+            // Call
+            var itemString = $"{KnownFeatureCategories.Pumps}/{pumpName}/capacity";
+            string unknownParameterItemString = $"{KnownFeatureCategories.Pumps}/{pumpName}/unknownParameterName";
+            IEnumerable<IDataItem> dataItems = model.GetDataItemsByItemString(itemString, unknownParameterItemString);
+
+            // Assert
+            Assert.That(dataItems.Count(), Is.EqualTo(1));
+            IDataItem dataItem = dataItems.First();
+            
+            Assert.That(dataItem.Name, Is.EqualTo(pumpName));
+        }
+        
+        [Test]
+        public void GetDataItemsByItemString_ValidParameterName2_ReturnsExpectedDataItem()
+        {
+            // Setup
+            var model = new WaterFlowFMModel();
+            
+            const string pumpName = "testPump";
+            var pump = new Pump2D(pumpName);
+            model.Area.Pumps.Add(pump);
+            
+            // Call
+            string unknownParameterItemString = $"{KnownFeatureCategories.Pumps}/{pumpName}/unknownParameterName";
+            var itemString = $"{KnownFeatureCategories.Pumps}/{pumpName}/capacity";
+            IEnumerable<IDataItem> dataItems = model.GetDataItemsByItemString(unknownParameterItemString, itemString);
+
+            // Assert
+            Assert.That(dataItems.Count(), Is.EqualTo(1));
+            IDataItem dataItem = dataItems.First();
+            
+            Assert.That(dataItem.Name, Is.EqualTo(pumpName));
+        }
+        
+        [Test]
         public void GetDirectChildren_ReturnsCorrectObjects()
         {
             // Setup
