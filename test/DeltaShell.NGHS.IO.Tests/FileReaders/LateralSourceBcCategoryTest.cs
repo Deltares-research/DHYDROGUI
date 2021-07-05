@@ -81,7 +81,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             Assert.That(function.Name, Is.EqualTo("flow time series"));
             Assert.That(function.Arguments, Has.Count.EqualTo(1));
             Assert.That(function.Arguments[0].Name, Is.EqualTo("Time"));
-            Assert.That(function.Arguments[0].Unit.Symbol, Is.EqualTo("yyyy/MM/dd HH:mm:ss"));
             Assert.That(function.Components, Has.Count.EqualTo(1));
             Assert.That(function.Components[0].Name, Is.EqualTo("flow"));
             Assert.That(function.Components[0].Unit.Symbol, Is.EqualTo("m3/s"));
@@ -121,7 +120,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             Assert.That(function.Name, Is.EqualTo("flow time series"));
             Assert.That(function.Arguments, Has.Count.EqualTo(1));
             Assert.That(function.Arguments[0].Name, Is.EqualTo("Time"));
-            Assert.That(function.Arguments[0].Unit.Symbol, Is.EqualTo("yyyy/MM/dd HH:mm:ss"));
             Assert.That(function.Components, Has.Count.EqualTo(1));
             Assert.That(function.Components[0].Name, Is.EqualTo("flow"));
             Assert.That(function.Components[0].Unit.Symbol, Is.EqualTo("m3/s"));
@@ -161,7 +159,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             Assert.That(function.Name, Is.EqualTo("flow time series"));
             Assert.That(function.Arguments, Has.Count.EqualTo(1));
             Assert.That(function.Arguments[0].Name, Is.EqualTo("Time"));
-            Assert.That(function.Arguments[0].Unit.Symbol, Is.EqualTo("yyyy/MM/dd HH:mm:ss"));
             Assert.That(function.Components, Has.Count.EqualTo(1));
             Assert.That(function.Components[0].Name, Is.EqualTo("flow"));
             Assert.That(function.Components[0].Unit.Symbol, Is.EqualTo("m3/s"));
