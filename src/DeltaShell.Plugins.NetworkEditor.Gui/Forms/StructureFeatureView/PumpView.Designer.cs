@@ -342,7 +342,7 @@
             // 
             // textBoxCapacity
             // 
-            this.textBoxCapacity.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.ipumpBindingSource, "Capacity", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
+            this.textBoxCapacity.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.ipumpBindingSource, "Capacity", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "F4"));
             this.textBoxCapacity.Location = new System.Drawing.Point(66, 23);
             this.textBoxCapacity.Name = "textBoxCapacity";
             this.textBoxCapacity.Size = new System.Drawing.Size(100, 20);

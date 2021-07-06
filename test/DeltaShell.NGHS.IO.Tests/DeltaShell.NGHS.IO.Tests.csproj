@@ -183,6 +183,7 @@
     <Compile Include="FileWriters\SpatialDataFileWriterTests.cs" />
     <Compile Include="FileWriters\StructureFileWriterTest.cs" />
     <Compile Include="FileWriters\Structures\StructureFileWriterIntegrationTest.cs" />
+    <Compile Include="FileWriters\Structures\StructureRegionTest.cs" />
     <Compile Include="FileWriters\Structures\StructuresFileWriterTest.cs" />
     <Compile Include="FunctionStores\MapHisFileReaderTest.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStoreTest.cs" />

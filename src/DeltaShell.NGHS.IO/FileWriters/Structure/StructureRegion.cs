@@ -78,7 +78,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             "2: Delivery side control " +
             "3: Suction and Delivery side control");
         public static readonly ConfigurationSetting NrStages = new ConfigurationSetting(key: "numStages", description: "Number of stages in pump");
-        public static readonly ConfigurationSetting Capacity = new ConfigurationSetting(key: "capacity", description: "Pump capacity (m3/s)");
+        public static readonly ConfigurationSetting Capacity = new ConfigurationSetting(key: "capacity", description: "Pump capacity (m3/s)", format: "F4");
         public static readonly ConfigurationSetting StartLevelSuctionSide = new ConfigurationSetting(key: "startLevelSuctionSide", description: "Start level suction side (m AD)");
         public static readonly ConfigurationSetting StopLevelSuctionSide = new ConfigurationSetting(key: "stopLevelSuctionSide", description: "Stop level suction side (m AD)");
         public static readonly ConfigurationSetting StartLevelDeliverySide = new ConfigurationSetting(key: "startLevelDeliverySide", description: "Start level at delivery side (m AD)");

@@ -3634,6 +3634,7 @@ test/DeltaShell.NGHS.IO.Tests/FileWriters/RetentionFileWriterTests.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/SpatialDataFileWriterTests.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/StructureFileWriterTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/Structures/StructureFileWriterIntegrationTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/FileWriters/Structures/StructureRegionTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/Structures/StructuresFileWriterTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FunctionStores/MapHisFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FunctionStores/ReadOnlyMapHisFileFunctionStoreTest.cs -text
