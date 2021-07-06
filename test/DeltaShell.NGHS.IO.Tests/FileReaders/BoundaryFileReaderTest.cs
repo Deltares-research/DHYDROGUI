@@ -110,7 +110,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 Assert.That(timeSeries.Name, Is.EqualTo("flow time series"));
                 Assert.That(timeSeries.Arguments, Has.Count.EqualTo(1));
                 Assert.That(timeSeries.Arguments[0].Name, Is.EqualTo("Time"));
-                Assert.That(timeSeries.Arguments[0].Unit.Symbol, Is.EqualTo("yyyy/MM/dd HH:mm:ss"));
                 Assert.That(timeSeries.Components, Has.Count.EqualTo(1));
                 Assert.That(timeSeries.Components[0].Name, Is.EqualTo("flow"));
                 Assert.That(timeSeries.Components[0].Unit.Symbol, Is.EqualTo("m3/s"));
