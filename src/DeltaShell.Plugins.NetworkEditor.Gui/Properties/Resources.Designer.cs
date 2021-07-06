@@ -214,11 +214,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Composite structure.
+        ///   Looks up a localized string similar to Compound structure.
         /// </summary>
-        public static string CompositeStructureProperties_DisplayName {
+        public static string CompoundStructureProperties_DisplayName {
             get {
-                return ResourceManager.GetString("CompositeStructureProperties_DisplayName", resourceCulture);
+                return ResourceManager.GetString("CompoundStructureProperties_DisplayName", resourceCulture);
             }
         }
         

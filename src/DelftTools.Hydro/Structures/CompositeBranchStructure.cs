@@ -106,7 +106,7 @@ namespace DelftTools.Hydro.Structures
 
             if (structure.Structures.Count == 0)
             {
-                exceptions.Add(new ValidationException(string.Format("Composite structure {0} contains no structures", structure.Name)));
+                exceptions.Add(new ValidationException(string.Format("Compound structure {0} contains no structures", structure.Name)));
             }
 
             // Check for emptyness

@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string InsertManholeToolName = "insert new manhole";
         public const string AddWasteWaterTreatmentPlantToolName = "add waste water treatment plant";
         public const string AddRunoffBoundaryToolName = "add runoff boundary";
-        public const string AddCompositeStructureToolName = "add composite structure";
+        public const string AddCompositeStructureToolName = "add compound structure";
         public const string AddPumpToolName = "add pump";
         public const string AddLateralSourceToolName = "add lateral source";
         public const string AddDiffuseLateralSourceToolName = "add diffuse lateral source";

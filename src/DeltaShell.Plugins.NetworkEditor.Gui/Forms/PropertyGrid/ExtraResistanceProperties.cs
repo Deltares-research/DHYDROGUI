@@ -60,8 +60,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
-        [DisplayName("Composite structure")]
-        [Description("Composite structure in which the Extra Resistance is located.")]
+        [DisplayName("Compound structure")]
+        [Description("Compound structure in which the Extra Resistance is located.")]
         [PropertyOrder(2)]
         public string CompositeStructure
         {

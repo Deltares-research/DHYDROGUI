@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         
         public CompositeStructureView()
         {
-            Text = "Composite structure view";
+            Text = "Compound structure view";
             InitializeComponent();
             Load += delegate
                         {

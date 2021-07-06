@@ -753,7 +753,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             .OfType<ExtraResistance>().Any());
                 case IEnumerable<ICompositeBranchStructure> compositeBranchStructures:
                     return CreateNetworkVectorLayer<CompositeBranchStructure>(compositeBranchStructures,
-                        "Composite Structure",
+                        "Compound Structures",
                         hydroNetwork,
                         refreshForChangedItem: o =>
                             o is Channel channel &&

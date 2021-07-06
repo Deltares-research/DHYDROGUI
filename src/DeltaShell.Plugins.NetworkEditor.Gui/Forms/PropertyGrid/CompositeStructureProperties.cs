@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Number of Structures")]
-        [Description("Number of structures in the composite structure.")]
+        [Description("Number of structures in the compound structure.")]
         [PropertyOrder(10)]
         public float StructureCount
         {
@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [DisplayName("Branch")]
-        [Description("Channel in which the composite structure is located.")]
+        [Description("Channel in which the compound structure is located.")]
         [PropertyOrder(3)]
         public string Channel
         {
@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [DisplayName("Chainage (map)")]
-        [Description("Chainage of the composite structure in the channel on the map.")]
+        [Description("Chainage of the compound structure in the channel on the map.")]
         [PropertyOrder(4)]
         public double Chainage
         {
@@ -58,7 +58,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [DisplayName("Chainage")]
-        [Description("Chainage of the composite structure in the channel as used in the simulation.")]
+        [Description("Chainage of the compound structure in the channel as used in the simulation.")]
         [PropertyOrder(5)]
         public double CompuChainage
         {

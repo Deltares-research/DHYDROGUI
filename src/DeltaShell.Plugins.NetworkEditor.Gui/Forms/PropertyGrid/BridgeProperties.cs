@@ -221,7 +221,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         [DisplayName("Branch")]
-        [Description("Channel in which the composite structure is located.")]
+        [Description("Channel in which the compound structure is located.")]
         [PropertyOrder(9)]
         public string Channel
         {
@@ -229,8 +229,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
-        [DisplayName("Composite structure")]
-        [Description("Composite structure in which the structure is located.")]
+        [DisplayName("Compound structure")]
+        [Description("Compound structure in which the structure is located.")]
         [PropertyOrder(10)]
         public string CompositeStructure
         {

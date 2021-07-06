@@ -374,8 +374,8 @@
   <data name="ChannelProperties_DisplayName" xml:space="preserve">
     <value>Channel</value>
   </data>
-  <data name="CompositeStructureProperties_DisplayName" xml:space="preserve">
-    <value>Composite structure</value>
+  <data name="CompoundStructureProperties_DisplayName" xml:space="preserve">
+    <value>Compound structure</value>
   </data>
   <data name="CrossSectionDefinitionProperties_DisplayName" xml:space="preserve">
     <value>Cross section definition</value>

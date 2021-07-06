@@ -116,7 +116,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Channel in which the composite structure is located.")]
+        [Description("Channel in which the compound structure is located.")]
         [DisplayName("Branch")]
         [PropertyOrder(11)]
         [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
@@ -126,8 +126,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicVisible]
-        [Description("Channel in which the composite structure is located.")]
-        [DisplayName("Composite structure")]
+        [Description("Channel in which the compound structure is located.")]
+        [DisplayName("Compound structure")]
         [PropertyOrder(12)]
         [Category(PropertyWindowCategoryHelper.AdministrationCategory)]
         public string CompositeStructure

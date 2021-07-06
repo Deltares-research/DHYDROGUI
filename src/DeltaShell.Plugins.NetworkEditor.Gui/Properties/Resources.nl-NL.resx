@@ -219,7 +219,7 @@
   <data name="NetworkCoverageProperties_DisplayName" xml:space="preserve">
     <value>#Ruimtelijke gegevens van het netwerk</value>
   </data>
-  <data name="CompositeStructureProperties_DisplayName" xml:space="preserve">
+  <data name="CompoundStructureProperties_DisplayName" xml:space="preserve">
     <value>#Samengestelde structuur</value>
   </data>
   <data name="CatchmentProperties_DisplayName" xml:space="preserve">
