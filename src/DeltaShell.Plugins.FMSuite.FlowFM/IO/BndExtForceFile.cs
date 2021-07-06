@@ -703,7 +703,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         #region read logic
 
-        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network = null, HydroArea area = null, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D=null, IEventedList<Model1DLateralSourceData> lateralSourcesData=null)
+        public void Read(string bndExtForceFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, HydroArea area = null, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D=null, IEventedList<Model1DLateralSourceData> lateralSourcesData=null)
         {
             FilePath = bndExtForceFilePath;
 
@@ -821,17 +821,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var correctionBlocks = dataBlocks.Where(db => correctionFunctionTypes.Contains(db.FunctionType)).ToList();
 
             var signalBlocks = dataBlocks.Except(correctionBlocks).ToList();
-            var containsAndParsedLateralExtForceFileDefinitions = false;
             var containsAndParsedModel1DBoundaryExtForceFileDefinitions = false;
+
+            var useSalt = (bool) modelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value;
+            bool useTemperature = (HeatFluxModelType) modelDefinition.GetModelProperty(KnownProperties.Temperature).Value != HeatFluxModelType.None;
+            BndExtForceLateralSourceParser lateralSourceParser = new BndExtForceLateralSourceParser(FilePath, network, useSalt, useTemperature, new BoundaryFileReader());
+
             foreach (var delftIniCategory in bndBlocks)
             {
                 var quantityKey = delftIniCategory.GetPropertyValue(QuantityKey);
                 if (string.IsNullOrEmpty(quantityKey))
                 {
-                    if (!containsAndParsedLateralExtForceFileDefinitions)
+                    if (delftIniCategory.Name.EqualsCaseInsensitive(LateralHeaderKey))
                     {
-                        CheckAndParseLateralSourceInBoundaryExtForceFile(modelDefinition, network,  lateralSourcesData, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(LateralHeaderKey)));
-                        containsAndParsedLateralExtForceFileDefinitions = true;
+                        lateralSourcesData.Add(lateralSourceParser.Parse(new LateralSourceExtCategory(delftIniCategory)));
                     }
                     
                     continue;

@@ -402,7 +402,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -462,7 +462,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -542,7 +542,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -604,7 +604,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -700,7 +700,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var newModelDefinition = new WaterFlowFMModelDefinition();
 
             var reader = new BndExtForceFile();
-            reader.Read("testbnd.ext", newModelDefinition);
+            reader.Read("testbnd.ext", newModelDefinition, new HydroNetwork());
 
             Assert.AreEqual(2, newModelDefinition.Boundaries.Count);
             Assert.AreEqual(2, newModelDefinition.BoundaryConditionSets.Count);
@@ -728,7 +728,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var def = new WaterFlowFMModelDefinition();
             var extPath = TestHelper.GetTestFilePath(@"banks\flooding1d2d_bnd.ext");
 
-            new BndExtForceFile().Read(extPath, def);
+            new BndExtForceFile().Read(extPath, def, new HydroNetwork());
 
             Assert.AreEqual(0, def.Boundaries.Count);
             Assert.AreEqual(0, def.BoundaryConditionSets.Count);
@@ -738,7 +738,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             new BndExtForceFile().Write(newExtPath, def);
 
             var newDef = new WaterFlowFMModelDefinition();
-            new BndExtForceFile().Read(newExtPath, newDef);
+            new BndExtForceFile().Read(newExtPath, newDef, new HydroNetwork());
 
             Assert.AreEqual(0, newDef.Boundaries.Count);
             Assert.AreEqual(0, newDef.BoundaryConditionSets.Count);
@@ -868,7 +868,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             bndExtForceFile.Write(extFileName, model.ModelDefinition);
             var modelDefinition = new WaterFlowFMModelDefinition(Path.GetTempPath(),"myModel");
             bndExtForceFile = new BndExtForceFile();
-            bndExtForceFile.Read(extFileName, modelDefinition);
+            bndExtForceFile.Read(extFileName, modelDefinition, new HydroNetwork());
         }
 
         [Test]
@@ -977,7 +977,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var hydroArea = new HydroArea();
                 
                 // Call
-                bndExtForceFile.Read(extFile, modelDefinition, area: hydroArea);
+                bndExtForceFile.Read(extFile, modelDefinition, new HydroNetwork(), hydroArea);
 
                 // Assert
                 IFmMeteoField meteoData = modelDefinition.FmMeteoFields.Single();
@@ -1059,7 +1059,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var hydroArea = new HydroArea();
                 
                 // Call
-                bndExtForceFile.Read(extFile, modelDefinition, area: hydroArea);
+                bndExtForceFile.Read(extFile, modelDefinition, new HydroNetwork(), hydroArea);
 
                 // Assert
                 IFmMeteoField meteoData = modelDefinition.FmMeteoFields.Single();
@@ -1135,7 +1135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var hydroArea = new HydroArea();
                 
                 // Call
-                bndExtForceFile.Read(extFile, modelDefinition, area: hydroArea);
+                bndExtForceFile.Read(extFile, modelDefinition, new HydroNetwork(), hydroArea);
 
                 // Assert
                 Assert.That(modelDefinition.FmMeteoFields, Is.Empty);
@@ -1184,7 +1184,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var hydroArea = new HydroArea();
                 
                 // Call
-                void Call ()=> bndExtForceFile.Read(extFile, modelDefinition, area: hydroArea);
+                void Call ()=> bndExtForceFile.Read(extFile, modelDefinition, new HydroNetwork(), hydroArea);
 
                 // Assert
                 string[] warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToArray();
@@ -1499,7 +1499,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             
             IPipe pipeB1 = CreatePipe(100, 0, 200, 0, "node_id_1", "node_id_2");
             IPipe pipeB2 = CreatePipe(200, 0, 300, 0, "node_id_2", "node_id_3");
-            yield return new TestCaseData(pipeB1, pipeB2, "node_id_2", pipeB1, 100, pipeB1.TargetCompartment);
+            yield return new TestCaseData(pipeB1, pipeB2, "node_id_2", pipeB2, 0, pipeB2.SourceCompartment);
             
             IPipe pipeC1 = CreatePipe(100, 0, 200, 0, "node_id_1", "node_id_2");
             IPipe pipeC2 = CreatePipe(200, 0, 300, 0, "node_id_2", "node_id_3");
