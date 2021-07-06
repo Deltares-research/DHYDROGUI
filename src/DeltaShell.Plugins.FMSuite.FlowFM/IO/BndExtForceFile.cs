@@ -1,11 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
@@ -42,7 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string LateralHeaderKey = "Lateral";
         public const string QuantityKey = "quantity";
         public const string BranchIdKey = "branchId";
-        public const string ChainageIdKey = "chainageId";
         public const string IdKey = "id";
         public const string NameKey = "name";
         public const string TypeKey = "type";
@@ -773,14 +769,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private void ReadRoofAreas(HydroArea area, string relativeFilePath)
         {
-            string filePath = GetFullPath(relativeFilePath);
-            if (!File.Exists(filePath))
+            string roofFilePath = GetFullPath(relativeFilePath);
+            if (!File.Exists(roofFilePath))
             {
-                Log.Warn($"File does not exist: {filePath}");
+                Log.Warn($"File does not exist: {roofFilePath}");
                 return;
             }
 
-            IList<GroupableFeature2DPolygon> roofAreas = roofPolFile.Read(filePath);
+            IList<GroupableFeature2DPolygon> roofAreas = roofPolFile.Read(roofFilePath);
             area.RoofAreas.AddRange(roofAreas);
         }
 
@@ -1001,137 +997,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     Log.Warn($"Can not read boundary model data from : {fullPath}");
             }
             return true;
-        }
-
-        private void CheckAndParseLateralSourceInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DLateralSourceData> lateralSourcesData, IEnumerable<DelftIniCategory> lateralBlocksModel1D)
-        {
-            var forcingFiles = new HashSet<string>();
-            foreach (var delftIniCategory in lateralBlocksModel1D)
-            {
-                var id = delftIniCategory.GetPropertyValue(IdKey);
-                if (id == null) continue;
-                var name = delftIniCategory.GetPropertyValue(NameKey);
-                IBranch branch = null;
-                var chainage = 0.0d;
-                var forcingFile = delftIniCategory.GetPropertyValue(DischargeKey);
-                ICompartment compartment = null;
-
-                //node id could be a compartment id, we need to find the bijbehorende Manhole
-                var compartmentId = delftIniCategory.GetPropertyValue(NodeIdKey);
-                branch = network.Branches
-                    .OfType<IPipe>()
-                    .FirstOrDefault(p =>
-                        p.TargetCompartmentName.EqualsCaseInsensitive(compartmentId) ||
-                        p.SourceCompartmentName.EqualsCaseInsensitive(compartmentId));
-                if (branch is IPipe pipe)
-                {
-                    if (string.Equals(pipe.SourceCompartmentName, compartmentId))
-                    {
-                        compartment = pipe.SourceCompartment;
-                        chainage = 0d;
-                    }
-                    else
-                    {
-                        compartment = pipe.TargetCompartment;
-                        chainage = pipe.Length;
-                    }
-                }
-                
-                var branchId = delftIniCategory.GetPropertyValue(BranchIdKey);
-                if (branchId != null)
-                {
-                    branch = network.Branches.FirstOrDefault(b => b.Name == branchId);
-                    chainage = delftIniCategory.ReadProperty<double>(ChainageKey);
-                }
-
-                if (branch == null)
-                {
-                    var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
-                    if (nodeId != null)
-                    {
-                        var node = network.Nodes.FirstOrDefault(n => n.Name == nodeId);
-                        branch = network.Branches.FirstOrDefault(b => b.Source == node);
-
-                        if (branch == null)
-                        {
-                            branch = network.Branches.FirstOrDefault(b => b.Target == node);
-                            chainage = branch?.Length ?? 0;
-                        }
-                    }
-                }
-
-                if (branch == null) continue;
-
-                var lateralSource = new LateralSource()
-                    {Branch = branch, Chainage = chainage, Name = id, LongName = name};
-                if (branch is IPipe apipe && apipe.Target is IManhole manhole && manhole.Name.EqualsCaseInsensitive(lateralSource.Name))
-                    lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, branch.Length);
-                else
-                    lateralSource.Geometry = HydroNetworkHelper.GetStructureGeometry(branch, chainage); 
-                
-                //var lengthIndexedLine = new LengthIndexedLine(lateralSource.Branch.Geometry);
-                //var mapOffset = NetworkHelper.MapChainage(lateralSource.Branch, lateralSource.Chainage);
-                //lateralSource.Geometry = new Point((Coordinate) lengthIndexedLine.ExtractPoint(mapOffset).Clone());
-                branch.BranchFeatures.Add(lateralSource);
-                var model1DLateralSourceData =
-                    lateralSourcesData.FirstOrDefault(lsd => lsd.Feature == lateralSource);
-                if (model1DLateralSourceData == null)
-                    model1DLateralSourceData = new Model1DLateralSourceData
-                    {
-                        Feature = lateralSource, 
-                        UseSalt = (bool)modelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value, 
-                        UseTemperature = (HeatFluxModelType)modelDefinition.GetModelProperty(KnownProperties.Temperature).Value != HeatFluxModelType.None
-                    };
-                if (compartment != null)
-                    model1DLateralSourceData.Compartment = compartment;
-                if (forcingFile.EqualsCaseInsensitive("realtime"))
-                    model1DLateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
-                if (lateralSourcesData.All(lsd => lsd.Feature != lateralSource))
-                    lateralSourcesData.Add(model1DLateralSourceData);
-                if (forcingFile == null) continue;
-
-                var numberStyle = NumberStyles.AllowLeadingWhite |
-                                  NumberStyles.AllowTrailingWhite |
-                                  NumberStyles.AllowLeadingSign |
-                                  NumberStyles.AllowDecimalPoint |
-                                  NumberStyles.AllowThousands |
-                                  NumberStyles.AllowExponent;//Choose what you need
-                
-                if (double.TryParse(forcingFile, numberStyle, CultureInfo.InvariantCulture, out var dischargeScalar))
-                {
-                    //set constant in model1d lateral source data and continue
-                    model1DLateralSourceData.DataType = Model1DLateralDataType.FlowConstant;
-                    model1DLateralSourceData.Flow = dischargeScalar;
-                }
-                else
-                {
-                    forcingFiles.Add(forcingFile);
-                }
-            }
-
-            foreach (var fullPath in forcingFiles.Distinct().Select(GetFullPath))
-            {
-                if (!File.Exists(fullPath))
-                {
-                    if (!fullPath.ToLower().EndsWith("realtime"))
-                    {
-                        Log.Error($"Reading laterals source data failed because path to data does not exist {fullPath}");
-                    }
-                    continue;
-                }
-                var isValidBcFile = IoHelper.IsValidTextFile(fullPath) && new DelftBcReader()
-                    .ReadDelftBcFile(fullPath)
-                    .Any(c => 
-                        c.ValidGeneralRegion(
-                            GeneralRegion.BoundaryConditionsMajorVersion,
-                            GeneralRegion.BoundaryConditionsMinorVersion, 
-                            GeneralRegion.FileTypeName.BoundaryConditions));
-                if(isValidBcFile)
-                    BoundaryFileReader.ReadFile(fullPath, lateralSourcesData);
-                else
-                    Log.Warn($"Can not read lateral sources data from : {fullPath}");
-                
-            }
         }
 
         private void ParseMeteoRainFallBoundaryExtForceCategory(WaterFlowFMModelDefinition modelDefinition, string quantityKey, List<BcBlockData> dataBlocks)

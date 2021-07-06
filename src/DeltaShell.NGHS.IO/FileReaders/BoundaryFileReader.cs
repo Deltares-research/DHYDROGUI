@@ -144,40 +144,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
         }
 
-        public static void ReadFile(string filename, IEnumerable<Model1DLateralSourceData> lateralSourcesData)
-        {
-            if (!File.Exists(filename)) throw new FileReadingException(String.Format("Could not read file {0} properly, it doesn't exist.", filename));
-            var categories = new DelftBcReader().ReadDelftBcFile(filename);
-            if (categories.Count == 0) throw new FileReadingException(String.Format("Could not read file {0} properly, it seems empty", filename));
-
-            IList<FileReadingException> fileReadingExceptions = new List<FileReadingException>();
-            var model1DLateralSourceDatas = lateralSourcesData as Model1DLateralSourceData[] ?? lateralSourcesData.ToArray();
-            foreach (var lateralCategory in categories.Where(category =>
-                category.Name.Equals(BoundaryRegion.BcLateralHeader, StringComparison.InvariantCultureIgnoreCase) ||
-                category.Name.Equals(BoundaryRegion.BcForcingHeader, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                try
-                {
-                    var name = lateralCategory.ReadProperty<string>(BoundaryRegion.Name.Key);
-                    var waterFlowModel1DLateralSourceData = model1DLateralSourceDatas.FirstOrDefault<Model1DLateralSourceData>(ls => ls.Feature.Name == name);
-                    if (waterFlowModel1DLateralSourceData == null)
-                        continue;
-
-                    ReadLateralSource(waterFlowModel1DLateralSourceData, lateralCategory);
-                }
-                catch (FileReadingException fileReadingException)
-                {
-                    fileReadingExceptions.Add(new FileReadingException("Could not read lateral discharge", fileReadingException));
-                }
-            }
-
-            if (fileReadingExceptions.Count > 0)
-            {
-                var innerExceptionMessages = fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine);
-                throw new FileReadingException(string.Format("While reading lateral discharges an error occured :{0} {1}", Environment.NewLine, string.Join(Environment.NewLine, innerExceptionMessages)));
-            }
-        }
-
         private static void ReadModelWideBoundaryCondition(IDelftBcCategory boundaryCategory)
         {
             var functionType = boundaryCategory.ReadProperty<string>(BoundaryRegion.Function.Key);
@@ -281,35 +247,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
         }
 
-        private static void ReadLateralSource(Model1DLateralSourceData lateralSource, IDelftBcCategory lateralSourceCategory)
-        {
-            // TODO: the following 2 lines should be removed when we implement salt in the reader, currently we temporarily ignore Salt Boundaries
-            var saltBoundaryQuantity = lateralSourceCategory.Table.Where(bcq => bcq.Quantity.Value == BoundaryRegion.QuantityStrings.WaterSalinity);
-            if (saltBoundaryQuantity.Any()) return;
-
-            var function = lateralSourceCategory.ReadProperty<string>(BoundaryRegion.Function.Key).ToLower();
-            if (function.Equals(BoundaryRegion.FunctionStrings.Constant.ToLower()))
-            {
-                    lateralSource.DataType = Model1DLateralDataType.FlowConstant;
-                    lateralSource.Flow = ReadConstantValue(lateralSourceCategory.Table[0], lateralSourceCategory.Name);
-            }
-            else if (function.Equals(BoundaryRegion.FunctionStrings.QhTable.ToLower()))
-            {
-                lateralSource.DataType = Model1DLateralDataType.FlowWaterLevelTable;
-                SetCategoryValuesToFeatureData(lateralSource, lateralSourceCategory, ConvertStringsToDoubles, ConvertStringsToDoubles);
-            }
-            else if (function.Equals(BoundaryRegion.FunctionStrings.TimeSeries.ToLower()))
-            {
-                lateralSource.DataType = Model1DLateralDataType.FlowTimeSeries;
-                SetCategoryValuesToFeatureData(lateralSource, lateralSourceCategory, GetDateTimesValues, ConvertStringsToDoubles);
-            }
-            else
-            {
-                var errorMessage = string.Format("Unable to parse {0} property: {1}.{2}", lateralSourceCategory.Name, BoundaryRegion.Function.Key, Environment.NewLine);
-                throw new LateralDischargeReadingException(errorMessage);
-            }
-        }
-       
         private static void SetCategoryValuesToFeatureData<Targ>(IFeatureData featureData, IDelftBcCategory category, Func<IDelftBcQuantityData, IEnumerable<Targ>> parseArgumentValues, Func<IDelftBcQuantityData, IEnumerable<double>> parseFunctionValues)
         {
             // TODO: we should move the parsing of argument and function values outside of this function.
