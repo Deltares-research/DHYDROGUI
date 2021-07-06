@@ -162,6 +162,7 @@
     <Compile Include="IO\LateralSourceExtCategory.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Spatial\SpatialOperationHelper.cs" />
+    <Compile Include="Validation\WaterFlowFMHydroLinksValidator.cs" />
     <Compile Include="WaterFlowFMModel.Synchronize.cs" />
     <Compile Include="WaterFlowFMModelSyncExtensions.cs" />
     <Compile Include="Grid\UnstructuredGridExtensions.cs" />

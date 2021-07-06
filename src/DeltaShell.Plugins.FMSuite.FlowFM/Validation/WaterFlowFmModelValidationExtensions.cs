@@ -35,19 +35,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 WaterFlowFMArea2DValidator.Validate(model),
                 ValidateRestartInput(model),
                 WaterFlowFMEmbankmentValidator.Validate(model),
-                WaterFlowFMEnclosureValidator.Validate(model)
+                WaterFlowFMEnclosureValidator.Validate(model),
+                WaterFlowFMHydroLinksValidator.Validate(model)
             };
 
             var subReports = model.UseMorSed
-                ? validationReports.Plus(WaterFlowFMSedimentMorphologyValidator.ValidateWithMorphologyBetaWarning(model))
-                : validationReports;
+                                 ? validationReports.Plus(WaterFlowFMSedimentMorphologyValidator.ValidateWithMorphologyBetaWarning(model))
+                                 : validationReports;
 
             var validationReport = new ValidationReport(model.Name + " (Water Flow FM Model)",
                 subReports);
             
             return validationReport;
         }
-
+        
         private static ValidationReport ValidateLinks(IEnumerable<ILink1D2D> links)
         {
             var invalidLinkIssues = links
