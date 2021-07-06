@@ -11,7 +11,7 @@
     orientation           = positive            
     controlSide           = deliverySide        
     numStages             = 1                   
-    capacity              = 3.000               
+    capacity              = 3.0000              
     startLevelSuctionSide = 4.000               
     stopLevelSuctionSide  = 5.000               
     startLevelDeliverySide= 2.000               
