@@ -12,6 +12,7 @@ using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -825,7 +826,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var useSalt = (bool) modelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value;
             bool useTemperature = (HeatFluxModelType) modelDefinition.GetModelProperty(KnownProperties.Temperature).Value != HeatFluxModelType.None;
-            BndExtForceLateralSourceParser lateralSourceParser = new BndExtForceLateralSourceParser(FilePath, network, useSalt, useTemperature, new BoundaryFileReader());
+            var logHandler = new LogHandler("reading the lateral sources");
+            var lateralSourceParser = new BndExtForceLateralSourceParser(FilePath, network, useSalt, useTemperature, new BoundaryFileReader());
 
             foreach (var delftIniCategory in bndBlocks)
             {
@@ -936,6 +938,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     modelDefinition.BoundaryConditionSets[i].BoundaryConditions.AddRange(bcSets[i].BoundaryConditions);
                 }
             }
+            
+            logHandler.LogReport();
         }
         
         private static bool IsCorrespondingMeteoBlock(BcBlockData b, DelftIniCategory delftIniCategory)
