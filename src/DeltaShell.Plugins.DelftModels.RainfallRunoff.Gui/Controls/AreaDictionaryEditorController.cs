@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Utils.Globalization;
@@ -223,14 +224,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
             int row = index/2;
             bool isLeft = index%2 == 0;
 
-            int left = margin + (isLeft ? 0 : 200); //distance between lefts of columns
+            int left = isLeft ? 0 : 250; //distance between lefts of columns
             int top = margin + row*RowHeight;
 
             TypeConverter typeConverter = TypeDescriptor.GetConverter(item.GetType()); //use nice string if available
             string itemString = (typeConverter != null) ? typeConverter.ConvertToString(item) : item.ToString();
 
-            var label = new Label {Text = itemString, Left = left, Top = 3 + top};
-            var txtBox = new TextBox {Width = 70, Left = left + 100, Top = top, Text = value.ToString(), Tag = item};
+            var label = new Label {Text = itemString, Width = 130, Left = left, Top = 3 + top, TextAlign = ContentAlignment.MiddleRight};
+            var txtBox = new TextBox {Width = 100, Left = label.Right + margin, Top = top, Text = value.ToString(), Tag = item};
 
             editor.ItemPanel.Controls.Add(txtBox);
             editor.ItemPanel.Controls.Add(label);
