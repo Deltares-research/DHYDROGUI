@@ -144,7 +144,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                         // Per station or per catchment
                         for (int iStation = 0; iStation < meteoValues.Shape[1]; iStation++)
                         {
-                            sb.AppendFormat(CultureInfo.InvariantCulture, "{0:0.00} ", meteoValues[iTime, iStation]);
+                            sb.AppendFormat(CultureInfo.InvariantCulture, "{0:0.000} ", meteoValues[iTime, iStation]);
                         }
                     }
                     sb.Append("\n");
