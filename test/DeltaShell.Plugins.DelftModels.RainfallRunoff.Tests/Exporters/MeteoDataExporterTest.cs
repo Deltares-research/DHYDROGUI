@@ -37,12 +37,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 Assert.That(result, Is.True);
                 Assert.That(file, Does.Exist);
 
-                var lines = File.ReadLines(file);
-                var lines2 = lines.Select(x => x.Trim()).Where(x => ! x.StartsWith("*")).ToArray();
-                Assert.AreEqual(3, lines2.Count());
-                Assert.That(lines2[0].Contains("2014 01 01 1"));
-                Assert.That(lines2[1].Contains("2014 01 02 2"));
-                Assert.That(lines2[2].Contains("2014 01 03 3"));
+                string[][] lines = GetLastLines(file, 3);
+                AssertLineEqualTo(lines[0], "2014", "01", "01", "1.00");
+                AssertLineEqualTo(lines[1], "2014", "01", "02", "2.00");
+                AssertLineEqualTo(lines[2], "2014", "01", "03", "3.00");
             }
         }
 
@@ -71,12 +69,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 Assert.That(result, Is.True);
                 Assert.That(file, Does.Exist);
 
-                var lines = File.ReadLines(file);
-                var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*")).ToArray();
-                Assert.AreEqual(3, lines2.Count());
-                Assert.That(lines2[0].Contains("2014 01 01 1.00 2.00"));
-                Assert.That(lines2[1].Contains("2014 01 02 3.00 4.00"));
-                Assert.That(lines2[2].Contains("2014 01 03 5.00 6.00"));
+                string[][] lines = GetLastLines(file, 3);
+                AssertLineEqualTo(lines[0], "2014", "01", "01", "1.00", "2.00");
+                AssertLineEqualTo(lines[1], "2014", "01", "02", "3.00", "4.00");
+                AssertLineEqualTo(lines[2], "2014", "01", "03", "5.00", "6.00");
             }
         }
 
@@ -104,15 +100,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 Assert.That(result, Is.True);
                 Assert.That(file, Does.Exist);
 
-                var lines = File.ReadLines(file);
-                var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*") && x != "").ToArray();
-                Assert.AreEqual(5 + 3, lines2.Count());
-
-                Assert.That(lines2[3].Contains("1 7800"));
-                Assert.That(lines2[4].Contains("2014 01 01 00 00 00 00 04 20 00"));
-                Assert.That(lines2[5].Contains("1.00"));
-                Assert.That(lines2[6].Contains("2.00"));
-                Assert.That(lines2[7].Contains("3.00"));
+                string[][] lines = GetLastLines(file, 4);
+                AssertLineEqualTo(lines[0], "2014", "01", "01", "00", "00", "00", "00", "04", "20", "00");
+                AssertLineEqualTo(lines[1], "1.00");
+                AssertLineEqualTo(lines[2], "2.00");
+                AssertLineEqualTo(lines[3], "3.00");
             }
         }
 
@@ -139,16 +131,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 // Assert
                 Assert.That(result, Is.True);
                 Assert.That(file, Does.Exist);
-
-                var lines = File.ReadLines(file);
-                var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*") && x != "").ToArray();
-                Assert.AreEqual(5 + 3, lines2.Count());
-
-                Assert.That(lines2[3].Contains("1 7800"));
-                Assert.That(lines2[4].Contains("2014 01 01 00 00 00 00 04 20 00"));
-                Assert.That(lines2[5].Contains("1.00"));
-                Assert.That(lines2[6].Contains("2.00"));
-                Assert.That(lines2[7].Contains("3.00"));
+                
+                string[][] lines = GetLastLines(file, 4);
+                AssertLineEqualTo(lines[0], "2014", "01", "01", "00", "00", "00", "00", "04", "20", "00");
+                AssertLineEqualTo(lines[1], "1.00");
+                AssertLineEqualTo(lines[2], "2.00");
+                AssertLineEqualTo(lines[3], "3.00");
             }
         }
 
