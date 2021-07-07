@@ -24,100 +24,118 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         [Test]
         public void ExportEvaporation()
         {
-            var meteoData = new MeteoData
+            using (var temp = new TemporaryDirectory())
             {
-                Name = RainfallRunoffModelDataSet.EvaporationName,
-                DataDistributionType = MeteoDataDistributionType.Global
-            };
+                var meteoData = new MeteoData
+                {
+                    Name = RainfallRunoffModelDataSet.EvaporationName,
+                    DataDistributionType = MeteoDataDistributionType.Global
+                };
             
-            SetTimes(meteoData, new DateTime(2014,1,1), new DateTime(2014,1,2), new DateTime(2014,1,3));
-            SetValues(meteoData, 1.0, 2.0, 3.0);
+                SetTimes(meteoData, new DateTime(2014,1,1), new DateTime(2014,1,2), new DateTime(2014,1,3));
+                SetValues(meteoData, 1.0, 2.0, 3.0);
 
-            bool exportSuccessful = exporter.Export(meteoData, "test.evp");
-            Assert.IsTrue(exportSuccessful);
+                string file = Path.Combine(temp.Path, "some_file_name.bui");
+                bool exportSuccessful = exporter.Export(meteoData, file);
+                Assert.IsTrue(exportSuccessful);
 
-            var lines = File.ReadLines("test.evp");
-            var lines2 = lines.Select(x => x.Trim()).Where(x => ! x.StartsWith("*")).ToArray();
-            Assert.AreEqual(3, lines2.Count());
-            Assert.That(lines2[0].Contains("2014 01 01 1"));
-            Assert.That(lines2[1].Contains("2014 01 02 2"));
-            Assert.That(lines2[2].Contains("2014 01 03 3"));
+                var lines = File.ReadLines(file);
+                var lines2 = lines.Select(x => x.Trim()).Where(x => ! x.StartsWith("*")).ToArray();
+                Assert.AreEqual(3, lines2.Count());
+                Assert.That(lines2[0].Contains("2014 01 01 1"));
+                Assert.That(lines2[1].Contains("2014 01 02 2"));
+                Assert.That(lines2[2].Contains("2014 01 03 3"));
+            }
+
         }
 
         [Test]
         public void ExportEvaporationMultipleStations()
         {
-            var meteoData = new MeteoData
+            using (var temp = new TemporaryDirectory())
             {
-                Name = RainfallRunoffModelDataSet.EvaporationName,
-                DataDistributionType = MeteoDataDistributionType.PerStation
-            };
+                var meteoData = new MeteoData
+                {
+                    Name = RainfallRunoffModelDataSet.EvaporationName,
+                    DataDistributionType = MeteoDataDistributionType.PerStation
+                };
             
-            SetTimes(meteoData, new DateTime(2014, 1, 1), new DateTime(2014, 1, 2), new DateTime(2014, 1, 3));
-            SetNames(meteoData, "station1", "station2");
-            SetValues(meteoData, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+                SetTimes(meteoData, new DateTime(2014, 1, 1), new DateTime(2014, 1, 2), new DateTime(2014, 1, 3));
+                SetNames(meteoData, "station1", "station2");
+                SetValues(meteoData, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
 
-            bool exportSuccessful = exporter.Export(meteoData, "test.evp");
-            Assert.IsTrue(exportSuccessful);
+                string file = Path.Combine(temp.Path, "some_file_name.bui");
+                bool exportSuccessful = exporter.Export(meteoData, file);
+                Assert.IsTrue(exportSuccessful);
 
-            var lines = File.ReadLines("test.evp");
-            var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*")).ToArray();
-            Assert.AreEqual(3, lines2.Count());
-            Assert.That(lines2[0].Contains("2014 01 01 1.00 2.00"));
-            Assert.That(lines2[1].Contains("2014 01 02 3.00 4.00"));
-            Assert.That(lines2[2].Contains("2014 01 03 5.00 6.00"));
+                var lines = File.ReadLines(file);
+                var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*")).ToArray();
+                Assert.AreEqual(3, lines2.Count());
+                Assert.That(lines2[0].Contains("2014 01 01 1.00 2.00"));
+                Assert.That(lines2[1].Contains("2014 01 02 3.00 4.00"));
+                Assert.That(lines2[2].Contains("2014 01 03 5.00 6.00"));
+            }
+
         }
 
         [Test]
         public void ExportTemperatureData()
         {
-            var meteoData = new MeteoData
+            using (var temp = new TemporaryDirectory())
             {
-                Name = RainfallRunoffModelDataSet.TemperatureName,
-                DataDistributionType = MeteoDataDistributionType.Global
-            };
+                var meteoData = new MeteoData
+                {
+                    Name = RainfallRunoffModelDataSet.TemperatureName,
+                    DataDistributionType = MeteoDataDistributionType.Global
+                };
 
-            SetTimes(meteoData, new DateTime(2014, 1, 1, 0, 0, 0), new DateTime(2014, 1, 1, 2, 10, 0), new DateTime(2014, 1, 1, 4, 20, 0));
-            SetValues(meteoData, 1.0, 2.0, 3.0);
+                SetTimes(meteoData, new DateTime(2014, 1, 1, 0, 0, 0), new DateTime(2014, 1, 1, 2, 10, 0), new DateTime(2014, 1, 1, 4, 20, 0));
+                SetValues(meteoData, 1.0, 2.0, 3.0);
             
-            bool exportSuccessful = exporter.Export(meteoData, "test.tmp");
-            Assert.IsTrue(exportSuccessful);
+                string file = Path.Combine(temp.Path, "some_file_name.bui");
+                bool exportSuccessful = exporter.Export(meteoData, file);
+                Assert.IsTrue(exportSuccessful);
 
-            var lines = File.ReadLines("test.tmp");
-            var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*") && x != "").ToArray();
-            Assert.AreEqual(5 + 3, lines2.Count());
+                var lines = File.ReadLines(file);
+                var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*") && x != "").ToArray();
+                Assert.AreEqual(5 + 3, lines2.Count());
 
-            Assert.That(lines2[3].Contains("1 7800"));
-            Assert.That(lines2[4].Contains("2014 01 01 00 00 00 00 04 20 00"));
-            Assert.That(lines2[5].Contains("1.00"));
-            Assert.That(lines2[6].Contains("2.00"));
-            Assert.That(lines2[7].Contains("3.00"));
+                Assert.That(lines2[3].Contains("1 7800"));
+                Assert.That(lines2[4].Contains("2014 01 01 00 00 00 00 04 20 00"));
+                Assert.That(lines2[5].Contains("1.00"));
+                Assert.That(lines2[6].Contains("2.00"));
+                Assert.That(lines2[7].Contains("3.00"));
+            }
         }
 
         [Test]
         public void ExportPrecipitationData()
         {
-            var meteoData = new MeteoData
+            using (var temp = new TemporaryDirectory())
             {
-                Name = RainfallRunoffModelDataSet.PrecipitationName,
-                DataDistributionType = MeteoDataDistributionType.Global
-            };
+                var meteoData = new MeteoData
+                {
+                    Name = RainfallRunoffModelDataSet.PrecipitationName,
+                    DataDistributionType = MeteoDataDistributionType.Global
+                };
 
-            SetTimes(meteoData, new DateTime(2014, 1, 1, 0, 0, 0), new DateTime(2014, 1, 1, 2, 10, 0), new DateTime(2014, 1, 1, 4, 20, 0));
-            SetValues(meteoData, 1.0, 2.0, 3.0);
+                SetTimes(meteoData, new DateTime(2014, 1, 1, 0, 0, 0), new DateTime(2014, 1, 1, 2, 10, 0), new DateTime(2014, 1, 1, 4, 20, 0));
+                SetValues(meteoData, 1.0, 2.0, 3.0);
 
-            bool exportSuccessful = exporter.Export(meteoData, "test.bui");
-            Assert.IsTrue(exportSuccessful);
+                string file = Path.Combine(temp.Path, "some_file_name.bui");
+                bool exportSuccessful = exporter.Export(meteoData, file);
+                Assert.IsTrue(exportSuccessful);
 
-            var lines = File.ReadLines("test.bui");
-            var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*") && x != "").ToArray();
-            Assert.AreEqual(5 + 3, lines2.Count());
+                var lines = File.ReadLines(file);
+                var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*") && x != "").ToArray();
+                Assert.AreEqual(5 + 3, lines2.Count());
 
-            Assert.That(lines2[3].Contains("1 7800"));
-            Assert.That(lines2[4].Contains("2014 01 01 00 00 00 00 04 20 00"));
-            Assert.That(lines2[5].Contains("1.00"));
-            Assert.That(lines2[6].Contains("2.00"));
-            Assert.That(lines2[7].Contains("3.00"));
+                Assert.That(lines2[3].Contains("1 7800"));
+                Assert.That(lines2[4].Contains("2014 01 01 00 00 00 00 04 20 00"));
+                Assert.That(lines2[5].Contains("1.00"));
+                Assert.That(lines2[6].Contains("2.00"));
+                Assert.That(lines2[7].Contains("3.00"));
+            }
         }
 
         [Test]
