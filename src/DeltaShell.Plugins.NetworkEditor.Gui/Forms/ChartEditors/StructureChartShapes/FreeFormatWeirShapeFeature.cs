@@ -43,9 +43,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             UpdateGeometry();
             WaterShape = new RectangleShapeFeature(Chart,
                                                       weir.OffsetY + geometry.Coordinates[0].X,
-                                                      maxZValue,
+                                                      weir.CrestLevel + maxZValue,
                                                       weir.OffsetY + geometry.Coordinates[geometry.Coordinates.Length - 1].X,
-                                                      minZValue);
+                                                      weir.CrestLevel + minZValue);
             ShapeFeatures.Add(WaterShape);
         }
 
@@ -62,17 +62,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 return;
             }
             var offsetY = Weir.OffsetY;
+            var crestLevel = Weir.CrestLevel;
 
             var vertices = new List<Coordinate>
                                {
-                                   new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue), // right bottom
-                                   new Coordinate(offsetY + CrestShape[0].X, MinYValue) // left bottom
+                                   new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue + crestLevel), // right bottom
+                                   new Coordinate(offsetY + CrestShape[0].X, MinYValue + crestLevel)                     // left bottom
                                };
             for (int i = 0; i < CrestShape.Count; i++)
             {
-                vertices.Add(new Coordinate(offsetY + CrestShape[i].X, CrestShape[i].Y)); // top line
+                vertices.Add(new Coordinate(offsetY + CrestShape[i].X, crestLevel + CrestShape[i].Y)); // top line
             }
-            vertices.Add(new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue)); // close polygon
+            vertices.Add(new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue + crestLevel)); // close polygon
             ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
             IPolygon polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
             if (null != PolygonShapeFeature)
