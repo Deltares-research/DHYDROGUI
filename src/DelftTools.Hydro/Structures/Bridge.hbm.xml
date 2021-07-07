@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <subclass name="DelftTools.Hydro.Structures.Bridge, DelftTools.Hydro" discriminator-value="branch_structure_bridge"  extends="DelftTools.Hydro.IStructure1D, DelftTools.Hydro">
+    <meta attribute="anyType">IValueConverter.OriginalValue</meta>
+    <many-to-one name="TabulatedCrossSectionDefinition" cascade="all"/>
+    <property name="FlowDirection" />
+    <property name="Shift"/>
+    <property name="Width"/>
+    <property name="Height"/>    
+    <property name="BridgeType"/>
+    <property name="FrictionType"/>
+    <property name="Friction"/>    
+    <property name="AllowPositiveFlow"/>
+    <property name="AllowNegativeFlow"/>
+    <property name="GroundLayerEnabled"/>
+    <property name="GroundLayerRoughness"/>
+    <property name="GroundLayerThickness"/>
+    <property name="InletLossCoefficient"/>
+    <property name="OutletLossCoefficient"/>
+    <property name="PillarWidth"/>
+    <property name="ShapeFactor"/>
+  </subclass>
+</hibernate-mapping>
