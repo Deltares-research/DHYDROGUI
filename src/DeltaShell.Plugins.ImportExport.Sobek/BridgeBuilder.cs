@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                                 {
                                     InletLossCoefficient = sobekBridge.InletLossCoefficient,
                                     OutletLossCoefficient = sobekBridge.OutletLossCoefficient,
-                                    BottomLevel = sobekBridge.BedLevel,
+                                    Shift = sobekBridge.BedLevel,
                                     Length = sobekBridge.Length,
                                     FlowDirection = GetFlowDirection(sobekBridge.Direction),
                                     PillarWidth = sobekBridge.TotalPillarWidth,
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                         var hfswData =
                             sobekCrossSectionDefinition.TabulatedProfile.Select(
                                 t =>
-                                    new HeightFlowStorageWidth(t.Height + bridge.BottomLevel, t.TotalWidth, t.FlowWidth));
+                                    new HeightFlowStorageWidth(t.Height + bridge.Shift, t.TotalWidth, t.FlowWidth));
 
                         bridge.TabulatedCrossSectionDefinition.SetWithHfswData(hfswData);
                         bridge.YZCrossSectionDefinition.SetWithHfswData(hfswData);

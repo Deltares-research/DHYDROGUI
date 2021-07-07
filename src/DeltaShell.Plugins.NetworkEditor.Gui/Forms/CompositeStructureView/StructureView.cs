@@ -602,7 +602,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             IList<Coordinate> yzValues = bridge.BridgeType == BridgeType.YzProfile 
             ? bridge.YZCrossSectionDefinition.FlowProfile.ToList()
             : bridge.EffectiveCrossSectionDefinition.FlowProfile.ToList();
-            return GetEnvelope(yzValues, bridge.BottomLevel);
+            return GetEnvelope(yzValues, bridge.Shift);
         }
 
         private static Envelope GetEnvelope(IEnumerable<Coordinate> yzValues, double offSetY)

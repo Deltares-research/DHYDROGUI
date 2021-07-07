@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(2, count);
             Assert.AreEqual(5.0, actualBridge.Height, 1.0e-6);
             Assert.AreEqual(21.0, actualBridge.Width, 1.0e-6);
-            Assert.AreEqual(0.0, actualBridge.BottomLevel, 1.0e-6);
+            Assert.AreEqual(0.0, actualBridge.Shift, 1.0e-6);
 
             //check the bridge geometry
             Assert.AreEqual(2, count);

@@ -137,7 +137,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
                 }
                 if (!propertyMappingLevel.MappingColumn.IsNullValue)
                 {
-                    bridge.BottomLevel = Convert.ToDouble(feature.Attributes[propertyMappingLevel.MappingColumn.Alias]);
+                    bridge.Shift = Convert.ToDouble(feature.Attributes[propertyMappingLevel.MappingColumn.Alias]);
                 }
                 if(!propertyMappingWidth.MappingColumn.IsNullValue)
                 {

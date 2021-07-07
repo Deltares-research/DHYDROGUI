@@ -21,14 +21,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             var standardCrossSectionDefinition = definition as CrossSectionDefinitionStandard;
 
             var name = category.ReadProperty<string>(StructureRegion.Id.Key);
-            double bottomLevel;
+            double shift;
             if (category.ContainsProperty(StructureRegion.Shift.Key))
             {
-                bottomLevel = category.ReadProperty<double>(StructureRegion.Shift.Key);
+                shift = category.ReadProperty<double>(StructureRegion.Shift.Key);
             } else
             {
                 // no 'shift', get the deprecated 'bedLevel', or set to zero
-                bottomLevel = category.ReadProperty<double>(StructureRegion.BedLevel.Key, isOptional: true, defaultValue: 0.0d);
+                shift = category.ReadProperty<double>(StructureRegion.BedLevel.Key, isOptional: true, defaultValue: 0.0d);
             }
 
             var tabulatedCrossSectionDefinition = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition();
@@ -42,20 +42,20 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : definition?.CrossSectionType == CrossSectionType.YZ ? BridgeType.YzProfile : BridgeType.Rectangle,
                 FlowDirection = (FlowDirection)category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key).GetEnumValueFromDisplayName(typeof(FlowDirection)),
-                BottomLevel = bottomLevel,
+                Shift = shift,
                 Width = width,
                 Height = height,
                 TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW 
                     ? definition as CrossSectionDefinitionZW 
                     : tabulatedCrossSectionDefinition 
-                      ?? CrossSectionDefinitionZW.CreateDefault(crossSectionDefinitionId).SetAsRectangle(bottomLevel,width,height), 
+                      ?? CrossSectionDefinitionZW.CreateDefault(crossSectionDefinitionId).SetAsRectangle(shift,width,height), 
                 YZCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null 
                     ? definition.CrossSectionType == CrossSectionType.YZ  
                         ? definition as CrossSectionDefinitionYZ
                         : definition.CrossSectionType == CrossSectionType.ZW 
                             ? CrossSectionDefinitionYZ.CreateDefault(crossSectionDefinitionId).ConvertZWDataTableToYZ(((CrossSectionDefinitionZW)definition).ZWDataTable)
-                            : CrossSectionDefinitionYZ.CreateDefault(crossSectionDefinitionId).SetAsRectangle(bottomLevel, width, height)
-                    : CrossSectionDefinitionYZ.CreateDefault(crossSectionDefinitionId).SetAsRectangle(bottomLevel, width, height), 
+                            : CrossSectionDefinitionYZ.CreateDefault(crossSectionDefinitionId).SetAsRectangle(shift, width, height)
+                    : CrossSectionDefinitionYZ.CreateDefault(crossSectionDefinitionId).SetAsRectangle(shift, width, height), 
                 Length = category.ReadProperty<double>(StructureRegion.Length.Key, true),
                 InletLossCoefficient = category.ReadProperty<double>(StructureRegion.InletLossCoeff.Key, true),
                 OutletLossCoefficient = category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key, true),

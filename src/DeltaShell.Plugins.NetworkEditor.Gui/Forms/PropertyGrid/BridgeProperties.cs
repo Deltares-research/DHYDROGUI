@@ -153,14 +153,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
-        [DisplayName("Bed level")]
-        [Description("Bed level.")]
+        [DisplayName("Shift")]
+        [Description("Shift.")]
         [PropertyOrder(8)]
         [DynamicReadOnly]
-        public double BottomLevel
+        public double Shift
         {
-            get { return data.BottomLevel; }
-            set { data.BottomLevel = value; }
+            get { return data.Shift; }
+            set { data.Shift = value; }
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 return !data.IsPillar;
             }
 
-            if (propertyName == nameof(BottomLevel) || propertyName == nameof(Width) || propertyName == nameof(Height))
+            if (propertyName == nameof(Shift) || propertyName == nameof(Width) || propertyName == nameof(Height))
             {
                 return !data.IsRectangle;
             }

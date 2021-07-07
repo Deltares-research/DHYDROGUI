@@ -115,7 +115,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
                                                                  new HeightFlowStorageWidth(16, 100, 100)
                                                              });
             bridge.OffsetY = 100;
-            bridge.BottomLevel = 10;
+            bridge.Shift = 10;
             bridge.Width = 50;
             bridge.Height = 8;
             return bridge;

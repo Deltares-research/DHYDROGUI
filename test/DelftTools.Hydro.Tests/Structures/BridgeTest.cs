@@ -46,7 +46,7 @@ namespace DelftTools.Hydro.Tests.Structures
                                        GroundLayerRoughness = 4.2,
                                        GroundLayerThickness = 1.1,
                                        BridgeType = BridgeType.Tabulated,
-                                       BottomLevel = 4.2,
+                                       Shift = 4.2,
                                        Width = 4.2,
                                        Height = 4.2,
                                        OffsetY = 12.0,
@@ -62,7 +62,7 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(sourceBridge.GroundLayerEnabled, targetBridge.GroundLayerEnabled);
             Assert.AreEqual(sourceBridge.GroundLayerThickness, targetBridge.GroundLayerThickness);
             Assert.AreEqual(sourceBridge.GroundLayerRoughness, targetBridge.GroundLayerRoughness);
-            Assert.AreEqual(sourceBridge.BottomLevel, targetBridge.BottomLevel);
+            Assert.AreEqual(sourceBridge.Shift, targetBridge.Shift);
             Assert.AreEqual(sourceBridge.Width, targetBridge.Width);
             Assert.AreEqual(sourceBridge.Height, targetBridge.Height);
             Assert.AreEqual(sourceBridge.OffsetY, targetBridge.OffsetY);

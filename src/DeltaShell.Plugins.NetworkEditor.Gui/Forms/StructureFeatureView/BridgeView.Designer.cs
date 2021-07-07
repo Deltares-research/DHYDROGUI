@@ -37,7 +37,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.geometrySplitContainer = new System.Windows.Forms.SplitContainer();
             this.splitContainerGeometry = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.textBoxBedLevel = new System.Windows.Forms.TextBox();
+            this.textBoxShift = new System.Windows.Forms.TextBox();
             this.bindingSourceBridge = new System.Windows.Forms.BindingSource(this.components);
             this.textBoxHeight = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.labelHeight = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxWidth = new System.Windows.Forms.TextBox();
-            this.labelBedLevel = new System.Windows.Forms.Label();
+            this.labelShift = new System.Windows.Forms.Label();
             this.tableViewTabulatedData = new DelftTools.Controls.Swf.Table.TableView();
             this.label8 = new System.Windows.Forms.Label();
             this.lblPillarWidth = new System.Windows.Forms.Label();
@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 63F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 61F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.textBoxBedLevel, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.textBoxShift, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.textBoxHeight, 1, 2);
             this.tableLayoutPanel1.Controls.Add(this.label2, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.label4, 2, 2);
@@ -202,7 +202,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.tableLayoutPanel1.Controls.Add(this.labelHeight, 0, 2);
             this.tableLayoutPanel1.Controls.Add(this.label3, 2, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBoxWidth, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.labelBedLevel, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.labelShift, 0, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
@@ -214,15 +214,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.tableLayoutPanel1.Size = new System.Drawing.Size(192, 80);
             this.tableLayoutPanel1.TabIndex = 6;
             // 
-            // textBoxBedLevel
+            // textBoxShift
             // 
-            this.textBoxBedLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceBridge, "BottomLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, null, "N3"));
-            this.textBoxBedLevel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxBedLevel.Location = new System.Drawing.Point(79, 3);
-            this.textBoxBedLevel.Name = "textBoxBedLevel";
-            this.textBoxBedLevel.Size = new System.Drawing.Size(57, 20);
-            this.textBoxBedLevel.TabIndex = 1;
-            this.textBoxBedLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.textBoxShift.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceBridge, nameof(IBridge.Shift), true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, null, "N3"));
+            this.textBoxShift.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxShift.Location = new System.Drawing.Point(79, 3);
+            this.textBoxShift.Name = "textBoxShift";
+            this.textBoxShift.Size = new System.Drawing.Size(57, 20);
+            this.textBoxShift.TabIndex = 1;
+            this.textBoxShift.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // bindingSourceBridge
             // 
@@ -297,15 +297,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.textBoxWidth.TabIndex = 1;
             this.textBoxWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // labelBedLevel
+            // labelShift
             // 
-            this.labelBedLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelBedLevel.AutoSize = true;
-            this.labelBedLevel.Location = new System.Drawing.Point(3, 6);
-            this.labelBedLevel.Name = "labelBedLevel";
-            this.labelBedLevel.Size = new System.Drawing.Size(70, 13);
-            this.labelBedLevel.TabIndex = 0;
-            this.labelBedLevel.Text = "Bed level";
+            this.labelShift.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelShift.AutoSize = true;
+            this.labelShift.Location = new System.Drawing.Point(3, 6);
+            this.labelShift.Name = "labelShift";
+            this.labelShift.Size = new System.Drawing.Size(70, 13);
+            this.labelShift.TabIndex = 0;
+            this.labelShift.Text = "Shift";
             // 
             // tableViewTabulatedData
             // 
@@ -743,8 +743,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkBoxAllowPositiveFlow;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private System.Windows.Forms.Label labelBedLevel;
-        private System.Windows.Forms.TextBox textBoxBedLevel;
+        private System.Windows.Forms.Label labelShift;
+        private System.Windows.Forms.TextBox textBoxShift;
         private System.Windows.Forms.TextBox textBoxWidth;
         private System.Windows.Forms.Label labelWidth;
         private System.Windows.Forms.TextBox textBoxHeight;

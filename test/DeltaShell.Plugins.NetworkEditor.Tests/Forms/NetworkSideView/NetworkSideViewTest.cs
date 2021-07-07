@@ -229,7 +229,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             bridge.Length = 30;
             bridge.BridgeType = BridgeType.Rectangle;
             bridge.Height = 3;
-            bridge.BottomLevel = 20;
+            bridge.Shift = 20;
             NetworkSideViewTestHelper.ShowInSideView(bridge);
         }
 

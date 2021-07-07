@@ -25,7 +25,7 @@ namespace DelftTools.Hydro.Structures
             Width = 50;
             Height = 3;
             Length = 20;
-            BottomLevel = 0;
+            Shift = 0;
             PillarWidth = 3;
             ShapeFactor = 1.5;
             
@@ -173,7 +173,7 @@ namespace DelftTools.Hydro.Structures
             {
                 if (BridgeType == BridgeType.Tabulated)
                     return TabulatedCrossSectionDefinition;
-                return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromRectangle(Width, Height).AddLevel(BottomLevel);
+                return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromRectangle(Width, Height).AddLevel(Shift);
             }
         }
 
@@ -260,9 +260,9 @@ namespace DelftTools.Hydro.Structures
         }
 
         [DynamicReadOnly]
-        [DisplayName("Bed level")]
+        [DisplayName("Shift")]
         [FeatureAttribute(Order = 15)]
-        public virtual double BottomLevel { get; set; }
+        public virtual double Shift { get; set; }
 
         [DynamicReadOnly]
         [DisplayName("Width")]
@@ -345,7 +345,7 @@ namespace DelftTools.Hydro.Structures
                     YZCrossSectionDefinition.YZDataTable.AddCrossSectionYZRow(yzRow.Yq, yzRow.Z);
                 }
             }
-            BottomLevel = copyFrom.BottomLevel;
+            Shift = copyFrom.Shift;
             Width = copyFrom.Width;
             Height = copyFrom.Height;
             OffsetY = copyFrom.OffsetY;
@@ -363,25 +363,25 @@ namespace DelftTools.Hydro.Structures
         /// <summary>
         /// Set the bridge geometry to a tabulated profile with one single rectangular segment.
         /// </summary>
-        /// <param name="bedLevel"></param>
+        /// <param name="shift"></param>
         /// <param name="width"></param>
         /// <param name="height"></param>
-        public virtual void SetRectangleCrossSection(double bedLevel, double width, double height)
+        public virtual void SetRectangleCrossSection(double shift, double width, double height)
         {
-            BottomLevel = bedLevel;
+            Shift = shift;
             Width = width;
             Height = height;
             //create a single section. Reference level is not used since the crossection is defined absolute. (Ref = 0)
 
-            TabulatedCrossSectionDefinition.SetAsRectangle(bedLevel, width, height);
-            YZCrossSectionDefinition.SetAsRectangle(bedLevel, width, height);
+            TabulatedCrossSectionDefinition.SetAsRectangle(shift, width, height);
+            YZCrossSectionDefinition.SetAsRectangle(shift, width, height);
         }
 
 
         public static Bridge CreateDefault()
         {
             var bridge = new Bridge();
-            bridge.SetRectangleCrossSection(bridge.BottomLevel, bridge.Width, bridge.Height);
+            bridge.SetRectangleCrossSection(bridge.Shift, bridge.Width, bridge.Height);
             bridge.FrictionType = BridgeFrictionType.Chezy;
             bridge.Friction = 45.0; 
             return bridge;
@@ -408,7 +408,7 @@ namespace DelftTools.Hydro.Structures
                 return IsPillar || !GroundLayerEnabled;
             }
 
-            if (propertyName == nameof(BottomLevel) || propertyName == nameof(Width) || propertyName == nameof(Height))
+            if (propertyName == nameof(Shift) || propertyName == nameof(Width) || propertyName == nameof(Height))
             {
                 return !IsRectangle;
             }

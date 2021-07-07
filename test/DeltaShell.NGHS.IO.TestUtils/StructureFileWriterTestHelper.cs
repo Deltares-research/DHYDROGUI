@@ -507,7 +507,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             //       Also, this is not related to siphon_onoff, which is always zero (matches Api)
         }
 
-        private static IBridge AddBridge(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection, double bedLevel, long crossSectionId)
+        private static IBridge AddBridge(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection, double shift, long crossSectionId)
         {
             IBridge bridge = new Bridge
             {
@@ -516,7 +516,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 LongName = name,
                 Chainage = chainage,
                 FlowDirection = flowDirection,
-                BottomLevel = bedLevel
+                Shift = shift
             };
 
             bridge.TabulatedCrossSectionDefinition.Name = crossSectionId.ToString();

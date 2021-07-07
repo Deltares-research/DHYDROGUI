@@ -4,7 +4,7 @@
     <meta attribute="anyType">IValueConverter.OriginalValue</meta>
     <many-to-one name="TabulatedCrossSectionDefinition" cascade="all"/>
     <property name="FlowDirection" />
-    <property name="BottomLevel"/>
+    <property name="Shift"/>
     <property name="Width"/>
     <property name="Height"/>    
     <property name="BridgeType"/>

@@ -637,7 +637,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(BridgeType.Rectangle, rectangleBridge.BridgeType);
             Assert.AreEqual(21, rectangleBridge.Width);
             Assert.AreEqual(5, rectangleBridge.Height);
-            Assert.AreEqual(0, rectangleBridge.BottomLevel);
+            Assert.AreEqual(0, rectangleBridge.Shift);
             Assert.AreEqual(FlowDirection.Negative, rectangleBridge.FlowDirection);
 
             //check the other bridges' directions
