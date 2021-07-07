@@ -10,6 +10,7 @@ using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
@@ -107,8 +108,24 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var dicBCTable = new SobekRRTableReader("BN_T", formatBCTable).Read(filePathBoundaryTableConditions).ToDictionaryWithErrorDetails(filePathBoundaryTableConditions, item => item.TableName, item => item);
 
             var boundaryDatas = model.BoundaryData;
-            var unpavedDatas = model.GetAllModelData().OfType<UnpavedData>().ToList();
+            
+            IEnumerable<CatchmentModelData> modelData = model.GetAllModelData();
+            var unpavedCatchmentLookup = new Dictionary<string, UnpavedData>(StringComparer.InvariantCultureIgnoreCase);
+            var pavedCatchmentDataLookup = new Dictionary<string, PavedData>(StringComparer.InvariantCultureIgnoreCase);
 
+            foreach (CatchmentModelData catchmentModelData in modelData)
+            {
+                switch (catchmentModelData)
+                {
+                    case UnpavedData unpavedData:
+                        unpavedCatchmentLookup.Add(unpavedData.Catchment.Name, unpavedData);
+                        break;
+                    case PavedData pavedData:
+                        pavedCatchmentDataLookup.Add(pavedData.Catchment.Name, pavedData);
+                        break;
+                }
+            }
+            
             // If a standalone RR model is imported, also convert the 'Flow-RR Connections on Flow Channel' (type 35) to Runoff boundaries (TOOLS-20516). 
             bool rrStandalone = TargetObject is ICompositeActivity integratedModel && integratedModel.Activities.Count == 1;
             var unFoundNodes = new List<string>();
@@ -137,19 +154,30 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     linksLookup.TryGetValue(bc.Id, out var incomingLinksToBoundary);
                     if (incomingLinksToBoundary == null) continue;
 
-                    foreach (var incomingLink in incomingLinksToBoundary)
+                    foreach (SobekRRLink incomingLink in incomingLinksToBoundary)
                     {
-                        var unpaved = unpavedDatas.FirstOrDefault(u => u.Catchment.Name == incomingLink.NodeFromId);
-
-                        if (unpaved == null)
-                            continue;
-
-                        if (!String.IsNullOrEmpty(bc.VariableLevel))
+                        if (!string.IsNullOrEmpty(bc.VariableLevel))
                         {
                             continue; //implicitly handled: water level will be grabbed from Flow where possible.
                         }
+                        
+                        RainfallRunoffBoundaryData boundaryData = null;
+                        
+                        if (unpavedCatchmentLookup.TryGetValue(incomingLink.NodeFromId, out UnpavedData unpavedCatchmentData))
+                        {
+                            boundaryData = unpavedCatchmentData.BoundaryData;
+                        }
+                        else if (pavedCatchmentDataLookup.TryGetValue(incomingLink.NodeFromId, out PavedData pavedCatchmentData))
+                        {
+                            boundaryData = pavedCatchmentData.BoundaryData;
+                        }
 
-                        SetBoundaryCondition(unpaved.BoundaryData, bc, dicBCTable);
+                        if (boundaryData == null)
+                        {
+                            continue;
+                        }
+                        
+                        SetBoundaryCondition(boundaryData, bc, dicBCTable);
                     }
                 }
             }
@@ -160,8 +188,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
         }
 
-        private static void SetBoundaryCondition(RainfallRunoffBoundaryData boundaryData, SobekRRBoundary bc,
-                                                 Dictionary<string, DataTable> dicBCTable)
+        private static void SetBoundaryCondition(RainfallRunoffBoundaryData boundaryData, 
+                                                 SobekRRBoundary bc,
+                                                 IReadOnlyDictionary<string, DataTable> dicBCTable)
         {
             boundaryData.IsConstant = String.IsNullOrEmpty(bc.TableId);
             boundaryData.Data.Time.ExtrapolationType = ExtrapolationType.Constant;

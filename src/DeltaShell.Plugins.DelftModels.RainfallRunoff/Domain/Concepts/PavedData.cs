@@ -46,6 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             SurfaceLevel = 1.5;
             SewerType = PavedEnums.SewerType.MixedSystem;
             IsSewerPumpCapacityFixed = true;
+            BoundaryData = new RainfallRunoffBoundaryData();
             DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
             MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
         }
@@ -65,8 +66,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             clone.VariableWaterUseFunction = VariableWaterUseFunction != null
                                                  ? (Function) VariableWaterUseFunction.Clone()
                                                  : null;
+            clone.BoundaryData = BoundaryData != null ? (RainfallRunoffBoundaryData) BoundaryData.Clone() : null;
             return clone;
         }
+        
+        public RainfallRunoffBoundaryData BoundaryData { get; set; }
 
         private void CreateSewerPumpCapacityFunctionsIfNeeded()
         {
