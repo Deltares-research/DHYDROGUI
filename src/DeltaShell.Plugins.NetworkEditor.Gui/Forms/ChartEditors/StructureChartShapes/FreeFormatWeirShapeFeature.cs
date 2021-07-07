@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEditors;
@@ -61,27 +62,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             {
                 return;
             }
-            var offsetY = Weir.OffsetY;
-            var crestLevel = Weir.CrestLevel;
+            
+            IEnumerable<Coordinate> coordinates = GetChartCoordinates();
+            IPolygon polygon = CreatePolygon(coordinates);
 
-            var vertices = new List<Coordinate>
-                               {
-                                   new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue + crestLevel), // right bottom
-                                   new Coordinate(offsetY + CrestShape[0].X, MinYValue + crestLevel)                     // left bottom
-                               };
-            for (int i = 0; i < CrestShape.Count; i++)
-            {
-                vertices.Add(new Coordinate(offsetY + CrestShape[i].X, crestLevel + CrestShape[i].Y)); // top line
-            }
-            vertices.Add(new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue + crestLevel)); // close polygon
-            ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-            IPolygon polygon = GeometryFactory.CreatePolygon(newLinearRing, null);
             if (null != PolygonShapeFeature)
             {
                 ShapeFeatures.Remove(PolygonShapeFeature);
             }
             PolygonShapeFeature = new PolygonShapeFeature(Chart, polygon);
             ShapeFeatures.Add(PolygonShapeFeature);
+        }
+        
+        private IEnumerable<Coordinate> GetChartCoordinates()
+        {
+            double offsetY = Weir.OffsetY;
+            double crestLevel = Weir.CrestLevel;
+
+            // bottom right
+            var bottomRight = new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, crestLevel + MinYValue);
+            yield return bottomRight;
+            
+            // bottom left
+            yield return new Coordinate(offsetY + CrestShape[0].X, crestLevel + MinYValue);
+
+            // top line
+            foreach (Coordinate c in CrestShape)
+            {
+                yield return new Coordinate(offsetY + c.X, crestLevel + c.Y);
+            }
+
+            // bottom right
+            yield return bottomRight;
+        }
+        
+        private static IPolygon CreatePolygon(IEnumerable<Coordinate> coordinates)
+        {
+            ILinearRing newLinearRing = GeometryFactory.CreateLinearRing(coordinates.ToArray());
+            return GeometryFactory.CreatePolygon(newLinearRing, null);
         }
 
         public IList<Coordinate> GetCoordinates()
