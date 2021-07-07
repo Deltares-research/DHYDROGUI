@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="DeltaShell.NGHS.Common.Gui.MapLayers.WmtsGroupLayer" assembly="DeltaShell.NGHS.Common.Gui">
+    <subclass name="DeltaShell.NGHS.Common.Gui.MapLayers.WmtsGroupLayer, DeltaShell.NGHS.Common.Gui" discriminator-value="wmts_group_layer" extends="SharpMap.Api.Layers.ILayer, SharpMap.Api"
+              lazy="false">
+        <property name="Url"/>
+    </subclass>
+</hibernate-mapping>

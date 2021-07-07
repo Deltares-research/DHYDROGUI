@@ -38,6 +38,14 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BruTile">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\BruTile.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ControlzEx">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\ControlzEx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Controls">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
@@ -154,6 +162,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="ValidationAspects, Version=2.1.0.0, Culture=neutral, PublicKeyToken=cef13554f3ca1f2d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ValidationAspects.dll.2.2.0\lib\net461\ValidationAspects.dll</HintPath>
     </Reference>
@@ -714,6 +723,7 @@
     <Compile Include="GraphicsProviders\NetworkEditorGraphicsProvider.cs" />
     <Compile Include="NetworkEditorGuiPlugin.cs" />
     <Compile Include="NetworkEditorMapLayerProvider.cs" />
+    <Compile Include="NetworkEditorRibbonViewModel.cs" />
     <Compile Include="NetworkLayerStyleFactory.cs" />
     <Compile Include="ProjectExplorer\DrainageBasinProjectTreeViewNodePresenter.cs" />
     <Compile Include="ProjectExplorer\Feature2DPointTreeViewNodePresenter.cs" />

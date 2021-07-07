@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fluent="clr-namespace:Fluent;assembly=Fluent"
+             xmlns:gui="clr-namespace:DeltaShell.Plugins.NetworkEditor.Gui"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              Width="1004.574"
              Height="168"
@@ -13,6 +14,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Fluent;Component/Themes/generic.xaml" />
                 <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;Component/Brushes.xaml" />
+                <ResourceDictionary Source="/DelftTools.Controls.Wpf;Component/drawingbrushesdictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -64,11 +66,40 @@
                               Group="{Binding ElementName=geospatialContextualGroup}"
                               Header="Map"
                               ReduceOrder="HydroRegion,HydroNetwork,DrainageBasin,NetworkCoverage,Analysis">
+            <fluent:RibbonGroupBox Header="Background layers">
+                <fluent:DropDownButton Header="Add dutch layers">
+                    <fluent:DropDownButton.LargeIcon>
+                        <Rectangle Width="32"
+                                   Height="32"
+                                   Fill="{StaticResource AddMapTileLayer}" />
+                    </fluent:DropDownButton.LargeIcon>
+                    <fluent:Button Command="{x:Static gui:NetworkEditorRibbonCommands.AddWmtsLayerCommand}"
+                                   CommandParameter="https://service.pdok.nl/brt/achtergrondkaart/wmts/v2_0"
+                                   Header="Schematic layer"
+                                   Size="Middle">
+                        <fluent:Button.Icon>
+                            <Rectangle Width="16"
+                                       Height="16"
+                                       Fill="{StaticResource AddPolygonLayerBrush}" />
+                        </fluent:Button.Icon>
+                    </fluent:Button>
+                    <fluent:Button Command="{x:Static gui:NetworkEditorRibbonCommands.AddWmtsLayerCommand}"
+                                   CommandParameter="https://service.pdok.nl/hwh/luchtfotorgb/wmts/v1_0"
+                                   Header="Aerial photo"
+                                   Size="Middle">
+                        <fluent:Button.Icon>
+                            <Rectangle Width="16"
+                                       Height="16"
+                                       Fill="{StaticResource AddMapTileLayer}" />
+                        </fluent:Button.Icon>
+                    </fluent:Button>
+                </fluent:DropDownButton>
+            </fluent:RibbonGroupBox>
+
             <fluent:RibbonGroupBox x:Name="HydroNetwork"
                                    fluent:KeyTip.Keys="ZN"
                                    Header="Network"
                                    Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\NetworkGroup.png">
-
                 <!--  branches / nodes  -->
                 <fluent:ToggleButton x:Name="ButtonAddNewBranch"
                                      fluent:KeyTip.Keys="B"

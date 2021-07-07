@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BruTile">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\BruTile.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Controls">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
@@ -55,6 +59,15 @@
     </Reference>
     <Reference Include="DelftTools.Utils">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.IntegrationTestUtils, Version=2.0.0.682, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.682-development\lib\net40\DeltaShell.IntegrationTestUtils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DeltaShell.Plugins.Data.NHibernate">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
@@ -118,6 +131,7 @@
     <Compile Include="NodePresenters\ContextMenuFactoryTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestClassSetup.cs" />
+    <Compile Include="WmtsGroupLayerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

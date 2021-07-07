@@ -35,6 +35,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BruTile, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\BruTile.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Controls">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
@@ -60,6 +65,11 @@
     <Reference Include="DelftTools.Utils">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GeoAPI, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
@@ -95,6 +105,11 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="SharpMap.Extensions, Version=2.0.0.682, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -102,6 +117,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -112,7 +128,11 @@
     </Compile>
     <Compile Include="CoordinateSystemPickerViewModel.cs" />
     <Compile Include="LayerExtensions.cs" />
+    <Compile Include="MapLayers\DefaultRequestHandler.cs" />
+    <Compile Include="MapLayers\IRequestHandler.cs" />
     <Compile Include="MapLayers\LayerExtensions.cs" />
+    <Compile Include="MapLayers\WmtsGroupLayer.cs" />
+    <Compile Include="MapLayers\WmtsLayer.cs" />
     <Compile Include="Modals\Helpers\IRequestUserInputService.cs" />
     <Compile Include="Modals\Helpers\RequestUserInputService.cs" />
     <Compile Include="Modals\ViewModels\UserInputModalViewModel.cs" />
@@ -127,6 +147,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="PropertyGrid\WmtsLayerProperties.cs" />
+    <Compile Include="PropertyGrid\WtmsLayerSrsTypeEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -155,6 +177,7 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="MapLayers\WmtsGroupLayer.hbm.xml" />
     <Content Include="Resources\DeleteHS.png" />
     <Resource Include="Resources\image0.png" />
     <Content Include="Resources\import.png" />
@@ -162,6 +185,13 @@
     <Content Include="Resources\restart.png" />
     <Content Include="Resources\restart_empty.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj">
+      <Project>{0AE5102C-0560-4A9C-8197-A6D8CA99B5DE}</Project>
+      <Name>DeltaShell.NGHS.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

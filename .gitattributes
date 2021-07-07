@@ -649,7 +649,12 @@ src/DeltaShell.NGHS.Common.Gui/CoordinateSystemPickerViewModel.cs -text
 src/DeltaShell.NGHS.Common.Gui/DefaultControlTemplates.xaml -text
 src/DeltaShell.NGHS.Common.Gui/DeltaShell.NGHS.Common.Gui.csproj -text
 src/DeltaShell.NGHS.Common.Gui/LayerExtensions.cs -text
+src/DeltaShell.NGHS.Common.Gui/MapLayers/DefaultRequestHandler.cs -text
+src/DeltaShell.NGHS.Common.Gui/MapLayers/IRequestHandler.cs -text
 src/DeltaShell.NGHS.Common.Gui/MapLayers/LayerExtensions.cs -text
+src/DeltaShell.NGHS.Common.Gui/MapLayers/WmtsGroupLayer.cs -text
+src/DeltaShell.NGHS.Common.Gui/MapLayers/WmtsGroupLayer.hbm.xml -text
+src/DeltaShell.NGHS.Common.Gui/MapLayers/WmtsLayer.cs -text
 src/DeltaShell.NGHS.Common.Gui/Modals/Helpers/IRequestUserInputService.cs -text
 src/DeltaShell.NGHS.Common.Gui/Modals/Helpers/RequestUserInputService.cs -text
 src/DeltaShell.NGHS.Common.Gui/Modals/ViewModels/UserInputModalViewModel.cs -text
@@ -660,6 +665,8 @@ src/DeltaShell.NGHS.Common.Gui/NodePresenters/ContextMenuFactory.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/AssemblyInfo.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/Resources.Designer.cs -text
 src/DeltaShell.NGHS.Common.Gui/Properties/Resources.resx -text
+src/DeltaShell.NGHS.Common.Gui/PropertyGrid/WmtsLayerProperties.cs -text
+src/DeltaShell.NGHS.Common.Gui/PropertyGrid/WtmsLayerSrsTypeEditor.cs -text
 src/DeltaShell.NGHS.Common.Gui/Resources/DeleteHS.png -text
 src/DeltaShell.NGHS.Common.Gui/Resources/image0.png -text
 src/DeltaShell.NGHS.Common.Gui/Resources/import.png -text
@@ -2970,6 +2977,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/SelectBranchesAlongShortestPat
 src/DeltaShell.Plugins.NetworkEditor.Gui/MapTools/SingleFeature2DLineTool.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/NetworkEditorGuiPlugin.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/NetworkEditorMapLayerProvider.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/NetworkEditorRibbonViewModel.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/NetworkLayerStyleFactory.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/ProjectExplorer/DrainageBasinProjectTreeViewNodePresenter.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/ProjectExplorer/Feature2DPointTreeViewNodePresenter.cs -text
@@ -3575,7 +3583,9 @@ test/DeltaShell.NGHS.Common.Gui.Tests/Modals/ViewModels/UserInputModalViewModelT
 test/DeltaShell.NGHS.Common.Gui.Tests/NodePresenters/ContextMenuFactoryTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/Properties/AssemblyInfo.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/TestClassSetup.cs -text
+test/DeltaShell.NGHS.Common.Gui.Tests/WmtsGroupLayerTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/packages.config -text
+test/DeltaShell.NGHS.Common.Gui.Tests/test-data/Capabilities.xml -text
 test/DeltaShell.NGHS.Common.Tests/App.config -text
 test/DeltaShell.NGHS.Common.Tests/ApplicationPluginHelperTest.cs -text
 test/DeltaShell.NGHS.Common.Tests/DeltaShell.NGHS.Common.Tests.csproj -text

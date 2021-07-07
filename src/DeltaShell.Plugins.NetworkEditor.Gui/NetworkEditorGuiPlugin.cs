@@ -24,7 +24,8 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.Utils;
+using DeltaShell.NGHS.Common.Gui.MapLayers;
+using DeltaShell.NGHS.Common.Gui.PropertyGrid;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
@@ -161,6 +162,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
+            yield return new PropertyInfo<WmtsLayer, WmtsLayerProperties>();
             yield return new PropertyInfo<ICrossSection, CrossSectionProperties>();
             yield return new PropertyInfo<ICrossSectionDefinition, CrossSectionDefinitionProperties>();
             yield return new PropertyInfo<IHydroNode, HydroNodeProperties>();
@@ -935,6 +937,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {
+            yield return typeof(WmtsGroupLayer).Assembly;
             yield return GetType().Assembly;
         }
 
