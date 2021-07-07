@@ -13,14 +13,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
     [Category(TestCategory.DataAccess)]
     public class MeteoDataExporterTest
     {
-        private MeteoDataExporter exporter;
-
-        [OneTimeSetUp]
-        public void setup()
-        {
-            exporter = new MeteoDataExporter();
-        }
-
         [Test]
         public void ExportEvaporation()
         {
@@ -36,8 +28,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 1.0, 2.0, 3.0);
 
                 string file = Path.Combine(temp.Path, "some_file_name.bui");
-                bool exportSuccessful = exporter.Export(meteoData, file);
-                Assert.IsTrue(exportSuccessful);
+                var exporter = new MeteoDataExporter();
+                
+                // Call
+                bool result = exporter.Export(meteoData, file);
+                
+                // Assert
+                Assert.That(result, Is.True);
+                Assert.That(file, Does.Exist);
 
                 var lines = File.ReadLines(file);
                 var lines2 = lines.Select(x => x.Trim()).Where(x => ! x.StartsWith("*")).ToArray();
@@ -46,7 +44,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 Assert.That(lines2[1].Contains("2014 01 02 2"));
                 Assert.That(lines2[2].Contains("2014 01 03 3"));
             }
-
         }
 
         [Test]
@@ -65,8 +62,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
 
                 string file = Path.Combine(temp.Path, "some_file_name.bui");
-                bool exportSuccessful = exporter.Export(meteoData, file);
-                Assert.IsTrue(exportSuccessful);
+                var exporter = new MeteoDataExporter();
+                
+                // Call
+                bool result = exporter.Export(meteoData, file);
+                
+                // Assert
+                Assert.That(result, Is.True);
+                Assert.That(file, Does.Exist);
 
                 var lines = File.ReadLines(file);
                 var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*")).ToArray();
@@ -75,7 +78,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 Assert.That(lines2[1].Contains("2014 01 02 3.00 4.00"));
                 Assert.That(lines2[2].Contains("2014 01 03 5.00 6.00"));
             }
-
         }
 
         [Test]
@@ -93,8 +95,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 1.0, 2.0, 3.0);
             
                 string file = Path.Combine(temp.Path, "some_file_name.bui");
-                bool exportSuccessful = exporter.Export(meteoData, file);
-                Assert.IsTrue(exportSuccessful);
+                var exporter = new MeteoDataExporter();
+                
+                // Call
+                bool result = exporter.Export(meteoData, file);
+                
+                // Assert
+                Assert.That(result, Is.True);
+                Assert.That(file, Does.Exist);
 
                 var lines = File.ReadLines(file);
                 var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*") && x != "").ToArray();
@@ -123,8 +131,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetValues(meteoData, 1.0, 2.0, 3.0);
 
                 string file = Path.Combine(temp.Path, "some_file_name.bui");
-                bool exportSuccessful = exporter.Export(meteoData, file);
-                Assert.IsTrue(exportSuccessful);
+                var exporter = new MeteoDataExporter();
+                
+                // Call
+                bool result = exporter.Export(meteoData, file);
+                
+                // Assert
+                Assert.That(result, Is.True);
+                Assert.That(file, Does.Exist);
 
                 var lines = File.ReadLines(file);
                 var lines2 = lines.Select(x => x.Trim()).Where(x => !x.StartsWith("*") && x != "").ToArray();
@@ -149,13 +163,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                     Name = RainfallRunoffModelDataSet.PrecipitationName,
                     DataDistributionType = MeteoDataDistributionType.PerStation
                 };
-
-                string file = Path.Combine(temp.Path, "some_file_name.bui");
-
+                
                 SetTimes(meteoData, new DateTime(2021, 1, 1), new DateTime(2021, 1, 2), new DateTime(2021, 1, 3));
                 SetNames(meteoData, "some_meteo_station_1", "some_meteo_station_2");
                 SetValues(meteoData, 0.0123, 1.1234, 2.2345, 3.3456, 4.4567, 5.5678);
 
+                string file = Path.Combine(temp.Path, "some_file_name.bui");
+                var exporter = new MeteoDataExporter();
+                
                 // Call
                 bool result = exporter.Export(meteoData, file);
                 
