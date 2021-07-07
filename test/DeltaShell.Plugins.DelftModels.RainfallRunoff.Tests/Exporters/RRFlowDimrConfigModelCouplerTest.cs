@@ -97,7 +97,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             var catchmentsList = new List<Catchment>{catchment1};
             var catchments = mocks.Stub<IEventedList<Catchment>>();
 
-            //catchments.Expect(c => c.GetEnumerator()).Return(catchmentsList.GetEnumerator()).Repeat.Any(); 
             catchments.Stub(x => x.GetEnumerator())
                 // create new enumerator instance for each call
                 .WhenCalled(call => call.ReturnValue = catchmentsList.GetEnumerator())
@@ -153,13 +152,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             Assert.That(modelCoupler.CoupleInfos.Count(), Is.EqualTo(1));
             Assert.That(modelCoupler.CoupleInfos.First().Source, Is.EqualTo("catchments/Catchment1_boundary/water_discharge"));
             Assert.That(modelCoupler.CoupleInfos.First().Target, Is.EqualTo("boundaries/Node001/water_discharge")); //seems new functionality, NO MORE WATERLEVELS!
-            if (catchmentType == CatchmentType.Unpaved)
+            if (catchmentType == CatchmentType.Unpaved || Equals(catchmentType, CatchmentType.Paved))
             {
                 links.Clear();
                 links.Add(new HydroLink(targetObj, catchment1));;
             }
             modelCoupler = DimrConfigModelCouplerFactory.GetCouplerForModels(target, source, null, null);
-            if (Equals(catchmentType, CatchmentType.Unpaved))
+            if (Equals(catchmentType, CatchmentType.Unpaved) || Equals(catchmentType, CatchmentType.Paved))
             {
                 expectedCouperName = ((IDimrModel) target).ShortName +
                                      DimrConfigModelCouplerFactory.COUPLER_NAME_COMBINER +

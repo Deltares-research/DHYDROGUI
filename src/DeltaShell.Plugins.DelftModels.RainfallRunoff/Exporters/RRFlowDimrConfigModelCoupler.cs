@@ -32,12 +32,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             // create mapping for flow => rr
             if (target is IRainfallRunoffModel targetRainfallRunoffModel)
             {
-                var unpavedCatchments = targetRainfallRunoffModel.Basin.Catchments.Where(c => Equals(c.CatchmentType, CatchmentType.Unpaved)).ToList();
-                if (unpavedCatchments.Count == 0) return;
+                ICollection<Catchment> catchments = new List<Catchment>();
+                foreach (Catchment catchment in targetRainfallRunoffModel.Basin.Catchments)
+                {
+                    CatchmentType catchmentType = catchment.CatchmentType;
+                    if (Equals(catchmentType, CatchmentType.Unpaved) || Equals(catchmentType, CatchmentType.Paved))
+                    {
+                        catchments.Add(catchment);
+                    }
+                }
+                
+                if (!catchments.Any()) return;
 
                 if (!(source is IDimrModel sourceDimr)) return;
 
-                SetCouplingInformation(sourceDimr, targetRainfallRunoffModel, unpavedCatchments.SelectMany(c => c.Links), FunctionAttributes.StandardNames.WaterLevel, true);
+                IEnumerable<HydroLink> links = catchments.SelectMany(c => c.Links);
+                SetCouplingInformation(sourceDimr, targetRainfallRunoffModel, links, FunctionAttributes.StandardNames.WaterLevel, true);
             }
         }
 
