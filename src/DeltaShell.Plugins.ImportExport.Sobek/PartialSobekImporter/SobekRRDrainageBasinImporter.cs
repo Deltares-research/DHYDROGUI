@@ -25,6 +25,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private Dictionary<string, ILateralSource> dictionaryLateralSources;
         private Dictionary<LateralSource, Model1DLateralSourceData> dictionaryLateralSourcesData;
         private Dictionary<string, RunoffBoundary> dictionaryRRBoundaries;
+
+        private bool hasFmData = false;
         
         private const string displayName = "Rainfall Runoff elements";
 
@@ -41,6 +43,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             if (HydroNetwork != null) // importing RR and FLOW
             {
+                hasFmData = true;
+                
                 dictionaryBoundaries =
                     HydroNetwork.HydroNodes.Where(n => !n.IsConnectedToMultipleBranches).ToDictionary(n => n.Name,
                                                                                                       n => n);
@@ -329,6 +333,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 if (dictionaryBoundaries != null && dictionaryBoundaries.ContainsKey(link.NodeToId))
                 {
                     Link(linksource, dictionaryBoundaries[link.NodeToId], link.Id);
+                    continue;
+                }
+
+                if (!hasFmData)
+                {
                     continue;
                 }
                 
