@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                                       weir.OffsetY + geometry.Coordinates[0].X,
                                                       weir.CrestLevel + maxZValue,
                                                       weir.OffsetY + geometry.Coordinates[geometry.Coordinates.Length - 1].X,
-                                                      weir.CrestLevel + minZValue);
+                                                      minZValue);
             ShapeFeatures.Add(WaterShape);
         }
 
@@ -80,11 +80,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             double crestLevel = Weir.CrestLevel;
 
             // bottom right
-            var bottomRight = new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, crestLevel + MinYValue);
+            var bottomRight = new Coordinate(offsetY + CrestShape[CrestShape.Count - 1].X, MinYValue);
             yield return bottomRight;
             
             // bottom left
-            yield return new Coordinate(offsetY + CrestShape[0].X, crestLevel + MinYValue);
+            yield return new Coordinate(offsetY + CrestShape[0].X, MinYValue);
 
             // top line
             foreach (Coordinate c in CrestShape)
