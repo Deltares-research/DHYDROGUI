@@ -15,12 +15,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     // todo use ShapeFeatureBase
     public class FreeFormatWeirShapeFeature : CompositeShapeFeature
     {
-        public PolygonShapeFeature PolygonShapeFeature { get; set; }
-        public RectangleShapeFeature WaterShape { get; set; }
+        public PolygonShapeFeature PolygonShapeFeature { get; private set; }
+        public RectangleShapeFeature WaterShape { get; }
 
-        public IWeir Weir { get; set; }
+        public IWeir Weir { get; }
         public IList<Coordinate> CrestShape { get; set; }
-        private double MinYValue { get; set; }
+        private double MinYValue { get; }
 
         public VectorStyle WaterStyle
         {
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         public override bool Selected
         {
-            get { return base.Selected; }
+            get => base.Selected;
             set
             {
                 PolygonShapeFeature.Selected = value;
