@@ -480,7 +480,6 @@ src/DelftTools.Hydro/SewerFeatures/SewerImporterHelper.cs -text
 src/DelftTools.Hydro/Structure2DType.cs -text
 src/DelftTools.Hydro/StructureType.cs -text
 src/DelftTools.Hydro/Structures/Bridge.cs -text
-src/DelftTools.Hydro/Structures/Bridge.hbm.xml -text
 src/DelftTools.Hydro/Structures/BridgeFrictionType.cs -text
 src/DelftTools.Hydro/Structures/BridgePillar.cs -text
 src/DelftTools.Hydro/Structures/CompositeBranchStructure.cs -text

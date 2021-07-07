@@ -459,9 +459,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Structures\Bridge.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="CrossSections\CrossSectionSection.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
