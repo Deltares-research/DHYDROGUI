@@ -12,7 +12,6 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChartShapes
 {
-    // todo use ShapeFeatureBase
     public class FreeFormatWeirShapeFeature : CompositeShapeFeature
     {
         public PolygonShapeFeature PolygonShapeFeature { get; private set; }
