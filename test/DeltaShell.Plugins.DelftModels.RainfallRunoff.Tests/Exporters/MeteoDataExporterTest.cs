@@ -14,25 +14,27 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
     public class MeteoDataExporterTest
     {
         private MeteoDataExporter exporter;
-        private RainfallRunoffModel rainfallRunoffModel;
 
         [OneTimeSetUp]
         public void setup()
         {
             exporter = new MeteoDataExporter();
-            rainfallRunoffModel = new RainfallRunoffModel();
         }
 
         [Test]
         public void ExportEvaporation()
         {
-            rainfallRunoffModel.Evaporation.DataDistributionType = MeteoDataDistributionType.Global;
-            var data = rainfallRunoffModel.Evaporation.MeteoDataDistributed.Data;
+            var meteoData = new MeteoData
+            {
+                Name = RainfallRunoffModelDataSet.EvaporationName,
+                DataDistributionType = MeteoDataDistributionType.Global
+            };
+            var data = meteoData.MeteoDataDistributed.Data;
             data.Arguments[0].Clear(); // remove default values
             data.Arguments[0].SetValues(new[] { new DateTime(2014,1,1), new DateTime(2014,1,2), new DateTime(2014,1,3) });
             data.Components[0].SetValues(new[] {1.0, 2.0, 3.0});
 
-            bool exportSuccessful = exporter.Export(rainfallRunoffModel.Evaporation, "test.evp");
+            bool exportSuccessful = exporter.Export(meteoData, "test.evp");
             Assert.IsTrue(exportSuccessful);
 
             var lines = File.ReadLines("test.evp");
@@ -46,14 +48,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         [Test]
         public void ExportEvaporationMultipleStations()
         {
-            rainfallRunoffModel.Evaporation.DataDistributionType = MeteoDataDistributionType.PerStation;
-            var data = rainfallRunoffModel.Evaporation.MeteoDataDistributed.Data;
+            var meteoData = new MeteoData
+            {
+                Name = RainfallRunoffModelDataSet.EvaporationName,
+                DataDistributionType = MeteoDataDistributionType.PerStation
+            };
+            var data = meteoData.MeteoDataDistributed.Data;
             
             data.Arguments[0].SetValues(new[] { new DateTime(2014, 1, 1), new DateTime(2014, 1, 2), new DateTime(2014, 1, 3) });
             data.Arguments[1].SetValues(new[] {"station1", "station2"}); 
             data.Components[0].SetValues(new[] { 1.0, 2.0, 3.0, 4.0, 5.0, 6.0} );
             
-            bool exportSuccessful = exporter.Export(rainfallRunoffModel.Evaporation, "test.evp");
+            bool exportSuccessful = exporter.Export(meteoData, "test.evp");
             Assert.IsTrue(exportSuccessful);
 
             var lines = File.ReadLines("test.evp");
@@ -67,15 +73,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         [Test]
         public void ExportTemperatureData()
         {
-            rainfallRunoffModel.Temperature.DataDistributionType = MeteoDataDistributionType.Global;
-            var data = rainfallRunoffModel.Temperature.MeteoDataDistributed.Data;
+            var meteoData = new MeteoData
+            {
+                Name = RainfallRunoffModelDataSet.TemperatureName,
+                DataDistributionType = MeteoDataDistributionType.Global
+            };
+            var data = meteoData.MeteoDataDistributed.Data;
+
             data.Arguments[0].SetValues(new[] { 
                 new DateTime(2014, 1, 1, 0, 0, 0), 
                 new DateTime(2014, 1, 1, 2, 10, 0), 
                 new DateTime(2014, 1, 1, 4, 20, 0)});
             data.Components[0].SetValues(new[] { 1.0, 2.0, 3.0 });
 
-            bool exportSuccessful = exporter.Export(rainfallRunoffModel.Temperature, "test.tmp");
+            bool exportSuccessful = exporter.Export(meteoData, "test.tmp");
             Assert.IsTrue(exportSuccessful);
 
             var lines = File.ReadLines("test.tmp");
@@ -92,15 +103,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         [Test]
         public void ExportPrecipitationData()
         {
-            rainfallRunoffModel.Precipitation.DataDistributionType = MeteoDataDistributionType.Global;
-            var data = rainfallRunoffModel.Precipitation.MeteoDataDistributed.Data;
+            var meteoData = new MeteoData
+            {
+                Name = RainfallRunoffModelDataSet.PrecipitationName,
+                DataDistributionType = MeteoDataDistributionType.Global
+            };
+            var data = meteoData.MeteoDataDistributed.Data;
             data.Arguments[0].SetValues(new[] { 
                 new DateTime(2014, 1, 1, 0, 0, 0), 
                 new DateTime(2014, 1, 1, 2, 10, 0), 
                 new DateTime(2014, 1, 1, 4, 20, 0)});
             data.Components[0].SetValues(new[] { 1.0, 2.0, 3.0 });
 
-            bool exportSuccessful = exporter.Export(rainfallRunoffModel.Precipitation, "test.bui");
+            bool exportSuccessful = exporter.Export(meteoData, "test.bui");
             Assert.IsTrue(exportSuccessful);
 
             var lines = File.ReadLines("test.bui");
