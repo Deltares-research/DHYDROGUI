@@ -209,10 +209,18 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 var networkBranch = network.Branches[meshGeometry.BranchIDs[i]];
                 var meshGeometryBranchChainage = meshGeometry.BranchOffsets[i];
+
+                double chainage = networkBranch.Length - meshGeometryBranchChainage < 0.00001 ? networkBranch.Length : meshGeometryBranchChainage;
+                if (chainage < 0)
+                {
+                    Log.Error($"The chainage of a network location on branch '{networkBranch.Name}' is negative. Location will be skipped.");
+                    continue;
+                }
+                
                 networkLocations[i] = new NetworkLocation
                 {
                     Branch = networkBranch,
-                    Chainage = networkBranch.Length - meshGeometryBranchChainage < 0.00001 ? networkBranch.Length : meshGeometryBranchChainage,
+                    Chainage = chainage,
                     Name = meshGeometry.NodeIds[i],
                     LongName = meshGeometry.NodeLongNames[i],
                     Geometry = canUseXYForMesh1DNodeCoordinates 
