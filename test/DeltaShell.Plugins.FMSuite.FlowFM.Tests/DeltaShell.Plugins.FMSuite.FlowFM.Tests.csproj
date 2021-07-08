@@ -440,10 +440,12 @@
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
       <Project>{6f5b9016-2dd7-4148-ba0b-0167b9e57d78}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
       <Project>{1d52125e-f765-4d51-80c8-f9a67c6be3d1}</Project>
       <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj">
       <Project>{A2D91FEB-C4D5-401A-AF97-ED0072899423}</Project>
