@@ -57,8 +57,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             var crLocFile = modelDefinition.GetModelProperty(KnownProperties.CrossLocFile).GetValueAsString();
             crLocFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crLocFile);
-            if (!File.Exists(crLocFile))
-                Log.Warn("No cross section location file provided");
 
             var crDefFile = modelDefinition.GetModelProperty(KnownProperties.CrossDefFile).GetValueAsString();
             crDefFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, crDefFile);
