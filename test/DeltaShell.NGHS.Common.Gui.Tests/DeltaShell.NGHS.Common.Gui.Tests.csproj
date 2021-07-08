@@ -55,7 +55,7 @@
     <Reference Include="DelftTools.TestUtils">
       <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.690-development\lib\net40\DelftTools.TestUtils.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
@@ -67,6 +67,7 @@
     </Reference>
     <Reference Include="DeltaShell.Plugins.Data.NHibernate">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
