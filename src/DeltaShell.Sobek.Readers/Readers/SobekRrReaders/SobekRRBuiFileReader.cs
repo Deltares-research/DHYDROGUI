@@ -25,7 +25,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
             try
             {
-                buiFile.Open(buiFile.Path, false);
+                buiFile.Open(buiFile.Path);
                 if (buiFile.IsEmpty() || !ReadBuiHeader(buiFile))
                 {
                     log.ErrorFormat("Failed reading header from BUI file: {0}.", buiFile.Path);
@@ -50,7 +50,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
             try
             {
-                buiFile.Open(buiFile.Path, false);
+                buiFile.Open(buiFile.Path);
 
                 if (!ReadBuiHeader(buiFile)) yield break;
 

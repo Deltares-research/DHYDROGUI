@@ -6,7 +6,6 @@ namespace DeltaShell.Sobek.Readers.Readers
     public class ResultTextFile
     {
         private StreamReader reader;
-        private StreamWriter writer;
         private string currentLine;
         private List<string> comments = new List<string>();
         private List<int> commentBlocks = new List<int>();
@@ -26,22 +25,14 @@ namespace DeltaShell.Sobek.Readers.Readers
         }
         private int currentCommentIndex;
 
-        public void Open(string path, bool write)
+        public void Open(string path)
         {
             currentLineIndex = 0;
             currentCommentIndex = 0;
-            if (write)
-            {
-                reader = null;
-                writer = new StreamWriter(path);
-            }
-            else
-            {
-                reader = File.OpenText(path);
-                writer = null;
-                commentBlocks = new List<int>();
-                commentBlocks.Add(0);
-            }
+            
+            reader = File.OpenText(path);
+            commentBlocks = new List<int>();
+            commentBlocks.Add(0);
         }
 
         public bool IsEmpty()
@@ -58,26 +49,13 @@ namespace DeltaShell.Sobek.Readers.Readers
         {
             if (null != reader)
                 reader.Close();
-            if (null != writer)
-                writer.Close();
         }
         private string ReadLine()
         {
             currentLineIndex++;
             return reader.ReadLine();
         }
-        public void WriteLine(string line, bool pushComments)
-        {
-            if (pushComments)
-            {
-                for (int i = commentBlocks[currentCommentIndex]; i < commentBlocks[currentCommentIndex + 1]; i++)
-                {
-                    writer.WriteLine(comments[i]);
-                }
-                currentCommentIndex++;
-            }
-            writer.WriteLine(line);
-        }
+
         private void SkipComments()
         {
             while (currentLine != null && currentLine.StartsWith("*"))
