@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BruTile">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\BruTile.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\BruTile.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls">
