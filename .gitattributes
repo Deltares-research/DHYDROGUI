@@ -2480,6 +2480,7 @@ src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRDrainageBa
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRGreenhouseImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRMeteoDataImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRNwrwImporter.cs -text
+src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRROpenWaterImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRPavedImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRSacramentoImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRSettingsImporter.cs -text
@@ -9990,6 +9991,7 @@ test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekLinkage
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekMeasurementStationsImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRDrainageBasinImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRNwrwImporterTest.cs -text
+test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRROpenWaterImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRSacramentoImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRSettingsImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRetentionImporterTest.cs -text

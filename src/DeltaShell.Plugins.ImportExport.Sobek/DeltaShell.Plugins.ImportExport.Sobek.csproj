@@ -166,6 +166,7 @@
     <Compile Include="Builders\WeirBuilder.cs" />
     <Compile Include="PartialSobekImporter\SobekImporterCategories.cs" />
     <Compile Include="PartialSobekImporter\SobekRRNwrwImporter.cs" />
+    <Compile Include="PartialSobekImporter\SobekRROpenWaterImporter.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="SobekImportGraphicsProvider.cs" />
     <Compile Include="Wizard\SobekImportWizardControlViewModel.cs" />
