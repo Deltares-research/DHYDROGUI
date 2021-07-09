@@ -37,5 +37,16 @@ namespace DeltaShell.NGHS.IO.Helpers
 
         void SetProperty(string name, string value, string comment = null);
         void SetProperty(string name, double value, string comment = null, string format = null);
+
+        /// <summary>
+        /// Gets the property with the specified <paramref name="propertyName"/> from this category.
+        /// </summary>
+        /// <param name="propertyName"> The property name to search for. </param>
+        /// <param name="stringComparison"> Optional parameter; the type of comparison used to compare the name strings. </param>
+        /// <returns> If found, the property with the specified <paramref name="propertyName"/>; otherwise, <c>null</c>.</returns>
+        /// <exception cref="System.ComponentModel.InvalidEnumArgumentException">
+        /// Thrown when <paramref name="stringComparison"/> is not defined.
+        /// </exception>
+        IDelftIniProperty GetProperty(string propertyName, StringComparison stringComparison = StringComparison.InvariantCultureIgnoreCase);
     }
 }

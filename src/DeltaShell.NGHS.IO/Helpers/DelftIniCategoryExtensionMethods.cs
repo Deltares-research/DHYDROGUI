@@ -13,7 +13,7 @@ namespace DeltaShell.NGHS.IO.Helpers
         
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false, T defaultValue = default(T), bool logError = true)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => string.Equals(property.Name, key, StringComparison.InvariantCultureIgnoreCase));
+            var iniProperty = category.GetProperty(key);
 
             var typeConverter = TypeDescriptor.GetConverter(typeof(T));
             if (iniProperty != null && typeConverter.CanConvertFrom(typeof(string)) && typeConverter.IsValid(iniProperty.Value))
@@ -45,7 +45,7 @@ namespace DeltaShell.NGHS.IO.Helpers
 
         public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>), bool useStandardSeparators = true, bool logError = true)
         {
-            var iniProperty = category.Properties.FirstOrDefault(property => string.Equals(property.Name, key, StringComparison.InvariantCultureIgnoreCase));
+            var iniProperty = category.GetProperty(key);
 
             if (iniProperty != null)
             { 
