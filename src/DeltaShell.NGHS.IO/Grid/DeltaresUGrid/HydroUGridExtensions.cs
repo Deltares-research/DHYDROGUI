@@ -210,7 +210,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 var networkBranch = network.Branches[meshGeometry.BranchIDs[i]];
                 var meshGeometryBranchChainage = meshGeometry.BranchOffsets[i];
 
-                double chainage = networkBranch.Length - meshGeometryBranchChainage < 0.00001 ? networkBranch.Length : meshGeometryBranchChainage;
+                double chainage = Math.Abs(networkBranch.Length - meshGeometryBranchChainage) < 0.00001 ? networkBranch.Length : meshGeometryBranchChainage;
                 if (chainage < 0)
                 {
                     Log.Error($"The chainage of a network location on branch '{networkBranch.Name}' is negative. Location will be skipped.");
