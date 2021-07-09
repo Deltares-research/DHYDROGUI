@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
@@ -90,6 +91,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             if (!regionExchangeInfos.Any()) return;
 
+            HashSet<(IHydroObject, IHydroObject)> linkConnections = CreateLinkConnectionsHashSet();
+
             try
             {
                 Region.BeginEdit(new DefaultEditAction("Adding saved hydro links"));
@@ -149,8 +152,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                                 $"Could not restore link between {regionExchange.SourceName} ({regionExchangeInfo.SourceRegionName}) and {regionExchange.TargetName} ({regionExchangeInfo.TargetRegionName})");
                             continue;
                         }
-
-                        if (source.CanLinkTo(target) && !Region.Links.Any(l => l.Source.Equals(source) && l.Target.Equals(target)))
+                        
+                        if (source.CanLinkTo(target) && !linkConnections.Contains((source, target)))
                         {
                             var hydroLink = new HydroLink(source, target)
                             {
@@ -167,6 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                             }
                                 
                             Region.Links.Add(hydroLink);
+                            linkConnections.Add((hydroLink.Source, hydroLink.Target));
                         }
                     }
                 }
@@ -430,5 +434,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
 
         #endregion
+        
+        private HashSet<(IHydroObject, IHydroObject)> CreateLinkConnectionsHashSet()
+        {
+            var hashSet = new HashSet<(IHydroObject, IHydroObject)>();
+            foreach (HydroLink hydroLink in Region.Links)
+            {
+                hashSet.Add((hydroLink.Source, hydroLink.Target));
+            }
+
+            return hashSet;
+        }
     }
 }
