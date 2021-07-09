@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -12,6 +13,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.ComponentModel;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -77,12 +79,14 @@ namespace DeltaShell.NGHS.IO.DataObjects
                 if (null != base.Feature)
                 {
                     ((INotifyPropertyChanged)base.Feature).PropertyChanged -= FeatureDataPropertyChanged;
+                    ((INotifyCollectionChanged)base.Feature).CollectionChanged -= FeatureCollectionChanged;
                 }
                 base.Feature = value;
                 
                 if (null != base.Feature)
                 {
                     ((INotifyPropertyChanged)base.Feature).PropertyChanged += FeatureDataPropertyChanged;
+                    ((INotifyCollectionChanged)base.Feature).CollectionChanged += FeatureCollectionChanged;
                 }
             }
         }
@@ -541,5 +545,26 @@ namespace DeltaShell.NGHS.IO.DataObjects
         }
 
         # endregion
+        
+        private void FeatureCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            UpdateDataType(sender, e);
+        }
+
+        private void UpdateDataType(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (DataType == Model1DLateralDataType.FlowRealTime ||
+                !sender.Equals(Feature.Links) ||
+                e.Action != NotifyCollectionChangedAction.Add)
+            {
+                return;
+            }
+
+            var addedLink = (HydroLink) e.GetRemovedOrAddedItem();
+            if (addedLink.Source is Catchment)
+            {
+                DataType = Model1DLateralDataType.FlowRealTime;
+            }
+        }
     }
 }

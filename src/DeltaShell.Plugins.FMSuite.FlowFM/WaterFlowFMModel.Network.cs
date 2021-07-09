@@ -365,14 +365,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 AddSewerRoughnessIfNecessary();
             }
 
-            if (e.Action == NotifyCollectionChangedAction.Add && 
-                removedOrAddedItem is HydroLink hydroLink && 
-                hydroLink.Source is Catchment && 
-                hydroLink.Target is LateralSource lateralSource)
-            {
-                UpdateLateralSourceData(lateralSource);
-            }
-
             // check if removed item is used in the child data items
             if (!(removedOrAddedItem is HydroLink) && removedOrAddedItem is IFeature && e.Action == NotifyCollectionChangedAction.Remove)
             {
@@ -400,12 +392,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
         
-        private void UpdateLateralSourceData(LateralSource lateralSource)
-        {
-            Model1DLateralSourceData lateralSourceData = LateralSourcesData.First(d => d.Feature == lateralSource);
-            lateralSourceData.DataType = Model1DLateralDataType.FlowRealTime;
-        }
-
         private void HandleSewerConnectionsChanged(NotifyCollectionChangedAction action, ISewerConnection sewerConnection)
         {
             switch (action)

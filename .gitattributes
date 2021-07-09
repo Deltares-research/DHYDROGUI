@@ -3637,6 +3637,7 @@ test/DeltaShell.NGHS.IO.Tests/DataObjects/InitialConditions/ChannelInitialCondit
 test/DeltaShell.NGHS.IO.Tests/DataObjects/InitialConditions/ConstantChannelInitialConditionDefinitionTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DataObjects/InitialConditions/ConstantSpatialChannelInitialConditionDefinitionTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DataObjects/InitialConditions/SpatialChannelInitialConditionDefinitionTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/DataObjects/Model1DLateralSourceDataTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DelftIniMultiLineReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DeltaShell.NGHS.IO.Tests.csproj -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/BoundaryFileReaderTest.cs -text
