@@ -9,6 +9,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 {
     class LateralSourceTreeViewNodePresenter : BranchFeatureTreeViewNodePresenterBase<LateralSource>
     {
+        private readonly Image image = Properties.Resources.LateralSourceSmall;
+
         public LateralSourceTreeViewNodePresenter(GuiPlugin guiPlugin)
             : base(guiPlugin)
         {
@@ -21,10 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
             return true;
         }
 
-        protected override Image GetImage(LateralSource feature)
-        {
-            return Properties.Resources.LateralSourceSmall;
-        }
+        protected override Image GetImage(LateralSource feature) => image;
 
         protected override bool RemoveNodeData(object parentNodeData, LateralSource source)
         {
