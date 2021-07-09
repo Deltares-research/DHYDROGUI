@@ -238,16 +238,6 @@ namespace DeltaShell.NGHS.IO.Helpers
         private static readonly char[] StandardSeperators = new[] { ' ', '\t' };
         private static readonly ILog log = LogManager.GetLogger(typeof(DelftIniCategoryExtensionMethods));
         
-        public static T ReadProperty<T>(this IDelftIniCategory category, string key, ref string errorMessage)
-        {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
-
-            if (iniProperty != null)
-                return iniProperty.ReadValue<T>();
-
-            errorMessage += $"Unable to parse {category.Name} property: {key}{Environment.NewLine}";
-            return default(T);
-        }
         public static T ReadProperty<T>(this IDelftIniCategory category, string key, bool isOptional = false, T defaultValue = default(T), bool logError = true)
         {
             var iniProperty = category.Properties.FirstOrDefault(property => string.Equals(property.Name, key, StringComparison.InvariantCultureIgnoreCase));
@@ -279,18 +269,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             return category.ReadProperty(setting.Key, isOptional, defaultValue, logError);
 
         }
-        public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, ref string errorMessage)
-        {
-            var iniProperty = category.Properties.FirstOrDefault(property => property.Name.ToLowerInvariant() == key.ToLowerInvariant());
 
-            if (iniProperty != null)
-            {
-                return iniProperty.Value.Split(new []{' '},StringSplitOptions.RemoveEmptyEntries).Select(elementValue => (T) TypeDescriptor.GetConverter(typeof (T)).ConvertFromInvariantString(elementValue.Split(',')[0])).ToList();
-            }
-
-            errorMessage += string.Format("Unable to parse {0} property: {1}{2}", category.Name, key, Environment.NewLine);
-            return default(IList<T>);
-        }
         public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, string key, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>), bool useStandardSeparators = true, bool logError = true)
         {
             var iniProperty = category.Properties.FirstOrDefault(property => string.Equals(property.Name, key, StringComparison.InvariantCultureIgnoreCase));
