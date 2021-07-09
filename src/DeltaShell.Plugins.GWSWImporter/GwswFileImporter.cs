@@ -361,7 +361,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             RainfallRunoffModel rrModel, WaterFlowFMModel fmModel)
         {
             var featureElements = importedFeatureElements.ToArray();
-
+            var featureElementsByName = featureElements.GroupBy(e => e.Name).ToDictionary(g => g.Key);
             var network = fmModel.Network;
             
             var branchesGeometryDict = network.Branches.ToLookup(b => b.Name, b => b.Target?.Geometry);
@@ -408,7 +408,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
                 },"Add nwrw feature to rainfall runoff model");
                 ParallelHelper.RunActionInParallel(this, rrModel.GetAllModelData().OfType<NwrwData>().ToArray(), nwrwData => {
-                    featureElements.Where(fe => fe.Name.Equals(nwrwData.Name)).ForEach((featureElement, indexOf) =>
+                    featureElementsByName[nwrwData.Name].ForEach((featureElement, indexOf) =>
                     {
                         if (ShouldCancel)
                             return;
