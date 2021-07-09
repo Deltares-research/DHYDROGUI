@@ -101,14 +101,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     if (hydroRegion != null)
                     {
                         Dictionary<Type, Dictionary<string, IHydroObject>> dictionary = new Dictionary<Type, Dictionary<string, IHydroObject>>();
-                        foreach (var objects in hydroRegion.AllHydroObjects.GroupBy(ho => { return ((Object) TypeUtils.Unproxy(ho)).GetType(); }))
+                        foreach (var objects in hydroRegion.AllHydroObjects.GroupBy(ho => TypeUtils.Unproxy(ho).GetType()))
                         {
-                            Dictionary<string, IHydroObject> dictionary1 = new Dictionary<string, IHydroObject>(StringComparer.InvariantCultureIgnoreCase);
-                            foreach (var o in objects) dictionary1.Add(o.Name, o);
-                            dictionary.Add(objects.Key, dictionary1);
+                            dictionary[objects.Key] = objects.ToDictionary(o => o.Name, StringComparer.InvariantCultureIgnoreCase);
                         }
 
-                        regionObjectsLookup.Add(hydroRegion, dictionary);
+                        regionObjectsLookup[hydroRegion] = dictionary;
                     }
                 }
 
