@@ -260,7 +260,7 @@ namespace DeltaShell.NGHS.IO.Helpers
 
             if (!isOptional)
             {
-                string message = $"Property {key} is not found in the file";
+                string message = $"Property '{key}' is not found in the file for category '{category.Name}' on line {category.LineNumber}";
                 if (!logError)
                     throw new PropertyNotFoundInFileException(message);
                 

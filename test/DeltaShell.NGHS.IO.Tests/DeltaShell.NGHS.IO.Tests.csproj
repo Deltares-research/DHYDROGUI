@@ -188,6 +188,7 @@
     <Compile Include="FunctionStores\MapHisFileReaderTest.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStoreTest.cs" />
     <Compile Include="Grid\DeltaresUGrid\HydroUGridExtensionsTest.cs" />
+    <Compile Include="Helpers\DelftIniCategoryExtensionMethodsTest.cs" />
     <Compile Include="Helpers\DelftIniCategoryTest.cs" />
     <Compile Include="Helpers\DelftIniPropertyExtensionMethodsTest.cs" />
     <Compile Include="Helpers\StringArrayExtensionsTest.cs" />

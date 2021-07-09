@@ -3652,6 +3652,7 @@ test/DeltaShell.NGHS.IO.Tests/FunctionStores/MapHisFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FunctionStores/ReadOnlyMapHisFileFunctionStoreTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/Grid/DeltaresUGrid/HydroUGridExtensionsTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/Grid/UGridFileHelperTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/Helpers/DelftIniCategoryExtensionMethodsTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/Helpers/DelftIniCategoryTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/Helpers/DelftIniPropertyExtensionMethodsTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/Helpers/StringArrayExtensionsTest.cs -text
