@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
         public IEnumerable<IFeature> GetFeatures(IGeometry geometry, ILayer layer)
         {
-            return GetFeatures(geometry.EnvelopeInternal, layer).OfType<IFeature>().ToList();
+            return GetFeatures(geometry.EnvelopeInternal, layer);
         }
 
         public IEnumerable<IFeature> GetFeatures(Envelope box, ILayer layer)
