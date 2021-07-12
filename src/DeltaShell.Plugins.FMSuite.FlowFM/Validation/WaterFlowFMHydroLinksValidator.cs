@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 model.LateralSourcesData.Distinct().ToDictionary(ld => ld.Feature.Name, StringComparer.InvariantCultureIgnoreCase);
             
             issues.AddRange(ValidateThatRealtimeLateralsHaveCorrectHydroLinks(model.LateralSourcesData, linksTargetLookup));
-            issues.AddRange(ValidateThatHydroLinksBetweenCatchmentAndLateralAreRealtime(hydroRegion.Links, lateralSourceDataLookup));
+            issues.AddRange(ValidateThatHydroLinksBetweenCatchmentAndLateralHaveRealtimeLaterals(hydroRegion.Links, lateralSourceDataLookup));
             
             return report;
         }
@@ -91,9 +91,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         /// <param name="hydroLinks">The hydrolinks to validate.</param>
         /// <param name="lateralSourceDataLookup">Lateral source data lookup.</param>
         /// <returns>A collection of validation issues.</returns>
-        private static IEnumerable<ValidationIssue> ValidateThatHydroLinksBetweenCatchmentAndLateralAreRealtime(
+        private static IEnumerable<ValidationIssue> ValidateThatHydroLinksBetweenCatchmentAndLateralHaveRealtimeLaterals(
             IEnumerable<HydroLink> hydroLinks, 
-            Dictionary<string, Model1DLateralSourceData> lateralSourceDataLookup)
+            IReadOnlyDictionary<string, Model1DLateralSourceData> lateralSourceDataLookup)
         {
             foreach (HydroLink hydroLink in hydroLinks)
             {
