@@ -18,15 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             var mapView = SharpMapGisGuiPlugin.Instance.Gui.DocumentViews.ActiveView?.GetViewsOfType<MapView>().FirstOrDefault();
             if (mapView == null) return;
 
-            var wmtsGroupLayer = new WmtsGroupLayer { Url = url as string};
-            mapView.Map.Layers.Add(wmtsGroupLayer);
-            
-            var firstLayer = wmtsGroupLayer.Layers.FirstOrDefault();
-            if (firstLayer != null)
-            {
-                mapView.Map.ZoomToFit(firstLayer.Envelope);
-            }
-
+            mapView.Map.Layers.Add(new WmtsGroupLayer { Url = url as string});
         }, url => !string.IsNullOrEmpty(url as string));
     }
 }
