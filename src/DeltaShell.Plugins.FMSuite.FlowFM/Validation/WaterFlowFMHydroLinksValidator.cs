@@ -27,17 +27,33 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             {
                 return report;
             }
-            
-            Dictionary<string, HydroLink> linksTargetLookup = 
-                hydroRegion.Links.ToDictionary(l => l.Target.Name, StringComparer.InvariantCultureIgnoreCase);
 
+            Dictionary<string, HydroLink> linksTargetLookup = CreateLinksTargetLookup(hydroRegion.Links);
+            
             Dictionary<string, Model1DLateralSourceData> lateralSourceDataLookup = 
-                model.LateralSourcesData.ToDictionary(ld => ld.Feature.Name, StringComparer.InvariantCultureIgnoreCase);
+                model.LateralSourcesData.Distinct().ToDictionary(ld => ld.Feature.Name, StringComparer.InvariantCultureIgnoreCase);
             
             issues.AddRange(ValidateThatRealtimeLateralsHaveCorrectHydroLinks(model.LateralSourcesData, linksTargetLookup));
             issues.AddRange(ValidateThatHydroLinksBetweenCatchmentAndLateralAreRealtime(hydroRegion.Links, lateralSourceDataLookup));
             
             return report;
+        }
+
+        private static Dictionary<string, HydroLink> CreateLinksTargetLookup(IEnumerable<HydroLink> hydroRegionLinks)
+        {
+            var linksTargetLookup = new Dictionary<string, HydroLink>(StringComparer.InvariantCultureIgnoreCase);
+            
+            foreach (HydroLink hydroLink in hydroRegionLinks)
+            {
+                string targetName = hydroLink.Target.Name;
+                if (linksTargetLookup.ContainsKey(targetName))
+                {
+                    continue;
+                }
+                linksTargetLookup.Add(targetName, hydroLink);
+            }
+
+            return linksTargetLookup;
         }
 
         /// <summary>
