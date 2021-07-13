@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -61,8 +62,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             IBranch[] branches = network.Branches.ToArray();
             foreach (IPipe pipe in branches.OfType<IPipe>())
             {
-                pipesBySource[pipe.SourceCompartmentName] = pipe;
-                pipesByTarget[pipe.TargetCompartmentName] = pipe;
+                if (!String.IsNullOrEmpty(pipe.SourceCompartmentName))
+                {
+                    pipesBySource[pipe.SourceCompartmentName] = pipe;
+                }
+                if (!String.IsNullOrEmpty(pipe.TargetCompartmentName))
+                {
+                    pipesByTarget[pipe.TargetCompartmentName] = pipe;
+                }
             }
 
             foreach (IBranch branch in branches)
