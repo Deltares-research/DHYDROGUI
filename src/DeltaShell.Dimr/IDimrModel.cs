@@ -158,6 +158,11 @@ namespace DeltaShell.Dimr
         /// <param name="itemString">The item string.</param>
         /// <returns>A matching ihydro object.</returns>
         IHydroObject GetLinkHydroObjectByItemString(string itemString);
+
+        /// <summary>    
+        /// Prepares the instance before coupling.
+        /// </summary>   
+        void PrepareDimrCoupling();
     }
 
     public enum ModelType

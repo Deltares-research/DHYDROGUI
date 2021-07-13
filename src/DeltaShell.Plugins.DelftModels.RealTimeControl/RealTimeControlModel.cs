@@ -933,6 +933,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return null;
         }
 
+        public virtual void PrepareDimrCoupling()
+        {
+            // nothing to do
+        }
+
         /// <summary>
         /// Cleans up model after model coupling at the end of a
         /// DIMR import. All input and output points

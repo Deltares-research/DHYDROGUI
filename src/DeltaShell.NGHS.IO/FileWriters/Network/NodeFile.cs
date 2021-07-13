@@ -82,7 +82,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
 
         public static List<CompartmentProperties> Read(string filePath)
         {
-            var categories = new DelftIniReader().ReadDelftIniFile(filePath).ToList();
+            var categories = new DelftIniReader().ReadDelftIniFile(filePath);
 
             return categories
                 .Skip(1) // skip version info

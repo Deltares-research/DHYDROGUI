@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.Properties;
 using log4net;
 
@@ -12,21 +13,6 @@ namespace DeltaShell.NGHS.IO.Helpers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(DelftIniPropertyExtensionMethods));
         
-        public static double[] ParseDoublesFromPropertyValue(this IDelftIniProperty property)
-        {
-            var propertyStringValues = property.Value.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-            var propertyDoubleValues = new List<double>();
-            foreach (var propertyString in propertyStringValues)
-            {
-                double propertyDouble;
-                if (double.TryParse(propertyString, NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign | NumberStyles.AllowExponent, CultureInfo.InvariantCulture, out propertyDouble))
-                {
-                    propertyDoubleValues.Add(propertyDouble);
-                }
-            }
-            return propertyDoubleValues.ToArray();
-        }
-
         /// <summary>
         /// Reads the value of the property and converts it to type <typeparamref name="T"/>.
         /// </summary>
@@ -70,22 +56,24 @@ namespace DeltaShell.NGHS.IO.Helpers
         {
             Ensure.NotNull(property, nameof(property));
 
-            TypeConverter converter = TypeDescriptor.GetConverter(typeof(bool));
-            if (converter.IsValid(property.Value))
+            if (property.Value.EqualsCaseInsensitive("true"))
             {
-                return (bool) converter.ConvertFromInvariantString(property.Value);
+                return true;
             }
 
-            converter = TypeDescriptor.GetConverter(typeof(int));
-            if (converter.IsValid(property.Value))
+            if (property.Value.EqualsCaseInsensitive("false"))
             {
-                return Convert.ToBoolean(converter.ConvertFromInvariantString(property.Value));
+                return false;
+            }
+
+            if (int.TryParse(property.Value, out int intVal))
+            {
+                return intVal != 0;
             }
 
             log.Error(string.Format(Resources.DelftIniPropertyExtensionMethods_Cannot_parse_value_for_property, 
                                     property.Value, nameof(Boolean), property.Name, property.LineNumber));
             return false;
-
         }
     }
 }

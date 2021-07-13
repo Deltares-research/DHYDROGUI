@@ -578,7 +578,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
             }
         }
 
-        private void SeriesDataItemUnlinked(object sender, LinkedUnlinkedEventArgs<IDataItem> e)
+        private void SeriesDataItemUnlinked(object senderd, LinkedUnlinkedEventArgs<IDataItem> e)
         {
             // restore time series
             AfterSetDataType();

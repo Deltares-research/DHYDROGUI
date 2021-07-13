@@ -847,7 +847,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (!containsAndParsedModel1DBoundaryExtForceFileDefinitions && delftIniCategory.ReadProperty<string>(NodeIdKey, true) != null)
                 {
-                    containsAndParsedModel1DBoundaryExtForceFileDefinitions = CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(modelDefinition, network, boundaryConditions1D, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(BoundaryHeaderKey)));
+                    containsAndParsedModel1DBoundaryExtForceFileDefinitions = CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(network, boundaryConditions1D, bndBlocks.Where(b => b.Name.EqualsCaseInsensitive(BoundaryHeaderKey)));
                 }
                 if (delftIniCategory.ReadProperty<string>(NodeIdKey, true) != null)
                     continue; // this delftIniCategory is 1d boundary, continue to check if you want to read a new delftIniCategory 2d boundary
@@ -947,7 +947,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                    b.Quantities.Any(q => q.Quantity == quantity);
         }
 
-        private bool CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D,  IEnumerable<DelftIniCategory> modelBoundary1DBlocks)
+        private bool CheckAndParseModel1DBoundaryOnNodeInBoundaryExtForceFile(IHydroNetwork network, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D,  IEnumerable<DelftIniCategory> modelBoundary1DBlocks)
         {
             network.Nodes.Except(boundaryConditions1D.Select(bc1d => bc1d.Node)).ForEach(node => boundaryConditions1D.Add(Helper1D.CreateDefaultBoundaryCondition(node, false, false)));
             var forcingFiles = new HashSet<string>();

@@ -1336,9 +1336,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
         
+        private IDictionary<string, Catchment> catchmentsByName;
+
+        public void PrepareDimrCoupling()
+        {
+            catchmentsByName = Basin.AllCatchments.ToDictionary(c => c.Name, StringComparer.InvariantCultureIgnoreCase);
+        }
+
         private Catchment GetCatchmentByName(string name)
         {
-            return Basin.AllCatchments.SingleOrDefault(c => string.Equals(c.Name, name, StringComparison.InvariantCultureIgnoreCase));
+            catchmentsByName.TryGetValue(name, out Catchment catchment);
+            return catchment;
         }
     }
 

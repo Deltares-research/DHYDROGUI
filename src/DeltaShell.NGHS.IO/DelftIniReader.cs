@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
 using DeltaShell.NGHS.IO.Helpers;
 
@@ -8,6 +9,8 @@ namespace DeltaShell.NGHS.IO
 {
     public class DelftIniReader : NGHSFileBase
     {
+        private readonly Regex keyValueCommentRegex = new Regex(KeyValueCommentPattern);
+
         /// <summary>
         /// Regular expression for a key/value/comment line, where key is a string without white-spaces,
         /// value can be anything and an optional comment 
@@ -82,7 +85,7 @@ namespace DeltaShell.NGHS.IO
         {
             var result = new string[3];
 
-            var matches = RegularExpression.GetMatches(KeyValueCommentPattern, line);
+            var matches = keyValueCommentRegex.Matches(line);
             if(matches.Count == 0) throw new FormatException(String.Format("Invalid key-value-comment line on line {0} in file {1}", 
                                                                            LineNumber, InputFilePath));
 

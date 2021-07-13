@@ -9,6 +9,7 @@ using DelftTools.Utils.Editing;
 using DeltaShell.Dimr;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.Common.Logging;
 using GeoAPI.Geometries;
 using log4net;
@@ -228,8 +229,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         {
             foreach (dimrCouplerXML dimrCouplerXml in dimrObject.coupler)
             {
-                IDimrModel sourceModel = subModels.FirstOrDefault(m => string.Equals(m.Name, dimrCouplerXml.sourceComponent, StringComparison.InvariantCultureIgnoreCase));
-                IDimrModel targetModel = subModels.FirstOrDefault(m => string.Equals(m.Name, dimrCouplerXml.targetComponent, StringComparison.InvariantCultureIgnoreCase));
+                IDimrModel sourceModel = subModels.FirstOrDefault(m => m.Name.EqualsCaseInsensitive(dimrCouplerXml.sourceComponent));
+                IDimrModel targetModel = subModels.FirstOrDefault(m => m.Name.EqualsCaseInsensitive(dimrCouplerXml.targetComponent));
 
                 if (sourceModel == null || targetModel == null)
                 {
@@ -253,6 +254,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                                                   .GroupBy(l => l.Source)
                                                   .ToDictionary(l => l.Key, l => l.ToArray());
 
+            sourceModel.PrepareDimrCoupling();
+            targetModel.PrepareDimrCoupling();
+            
             foreach (dimrCoupledItemXML couplerXml in dimrCouplerXml)
             {
                 try

@@ -3232,12 +3232,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return hydroObject;
         }
 
+        private Dictionary<string, ILateralSource> lateralSourcesByName;
+
+        public void PrepareDimrCoupling()
+        {
+            lateralSourcesByName = Network.LateralSources.ToDictionary(l => l.Name, StringComparer.InvariantCultureIgnoreCase);
+        }
+
         private IHydroObject GetNetworkHydroObject(string category, string featureName)
         {
             switch (category)
             {
                 case "laterals":
-                    return Network.LateralSources.SingleOrDefault(ls => string.Equals(ls.Name, featureName, StringComparison.InvariantCultureIgnoreCase));
+                    lateralSourcesByName.TryGetValue(featureName, out ILateralSource lateralSource);
+                    return lateralSource;
                 default:
                     return null;
             }
