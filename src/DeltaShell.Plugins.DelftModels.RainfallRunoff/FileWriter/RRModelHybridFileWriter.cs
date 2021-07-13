@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var assembly = GetType().Assembly;
             var embeddedResources = assembly.GetManifestResourceNames();
 
-            var fixedResourcePrefix = String.Format("{0}.Fixed.", currentNamespace);
+            var fixedResourcePrefix = $"{currentNamespace}.Fixed.";
 
             foreach (var resourceName in embeddedResources.Where(n => n.StartsWith(fixedResourcePrefix)))
             {
@@ -148,9 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var startDateTime = ConvertFromSobekDateTime(startDateMeteoData, startTimeMeteoData);
             var diff = TimeSpan.FromSeconds(numTimeSteps * timeStepInSeconds);
 
-            sb.AppendLine(String.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}", startDateTime.Year, startDateTime.Month, startDateTime.Day,
-                startDateTime.Hour, startDateTime.Minute, startDateTime.Second,
-                (int)diff.TotalDays, diff.Hours, diff.Minutes, diff.Seconds));
+            sb.AppendLine($"{startDateTime.Year} {startDateTime.Month} {startDateTime.Day} {startDateTime.Hour} {startDateTime.Minute} {startDateTime.Second} {(int) diff.TotalDays} {diff.Hours} {diff.Minutes} {diff.Seconds}");
 
             for (int i = 0; i < valuesOfFirstStation.Length; i++)
             {
@@ -196,10 +194,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var currentDate = ConvertFromSobekDateTime(startDateMeteoData, startTimeMeteoData);
             for (int i = 0; i < valuesOfFirstStation.Length; i++)
             {
-                sb.Append(String.Format("{0}    {1}    {2}    ",
-                    currentDate.Year,
-                    currentDate.Month,
-                    currentDate.Day));
+                sb.Append($"{currentDate.Year}    {currentDate.Month}    {currentDate.Day}    ");
 
                 foreach (var station in evaporationPerStation.Keys)
                 {
@@ -252,9 +247,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var startDateTime = ConvertFromSobekDateTime(startDateMeteoData, startTimeMeteoData);
             var diff = TimeSpan.FromSeconds(numTimeSteps * timeStepInSeconds);
 
-            sb.AppendLine(String.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8} {9}", startDateTime.Year, startDateTime.Month, startDateTime.Day,
-                startDateTime.Hour, startDateTime.Minute, startDateTime.Second,
-                (int)diff.TotalDays, diff.Hours, diff.Minutes, diff.Seconds));
+            sb.AppendLine($"{startDateTime.Year} {startDateTime.Month} {startDateTime.Day} {startDateTime.Hour} {startDateTime.Minute} {startDateTime.Second} {(int) diff.TotalDays} {diff.Hours} {diff.Minutes} {diff.Seconds}");
 
             for (int i = 0; i < valuesOfFirstStation.Length; i++)
             {
@@ -325,17 +318,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             SwitchToInvariantCulture();
 
             //todo: outputtimestep
-
-            const string iniFileFormat = "TimestepSize={12}\r\n" +
-                                         "StartTime='{0:00}/{1:00}/{2:00};{3:00}:{4:00}:{5:00}'\r\n" +
-                                         "EndTime='{6:00}/{7:00}/{8:00};{9:00}:{10:00}:{11:00}'\r\n";
-
-            iniFile += String.Format(iniFileFormat,
-                startDateTime.Year, startDateTime.Month, startDateTime.Day,
-                startDateTime.Hour, startDateTime.Minute, startDateTime.Second,
-                endDateTime.Year, endDateTime.Month, endDateTime.Day,
-                endDateTime.Hour, endDateTime.Minute, endDateTime.Second,
-                timeStep);
+            
+            iniFile += $"TimestepSize={timeStep}\r\n" + 
+                       $"StartTime='{startDateTime.Year:00}/{startDateTime.Month:00}/{startDateTime.Day:00};{startDateTime.Hour:00}:{startDateTime.Minute:00}:{startDateTime.Second:00}'\r\n" + 
+                       $"EndTime='{endDateTime.Year:00}/{endDateTime.Month:00}/{endDateTime.Day:00};{endDateTime.Hour:00}:{endDateTime.Minute:00}:{endDateTime.Second:00}'\r\n";
      
             RestoreCulture();
 
@@ -365,24 +351,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             AddNodeInternal(id, NodeType.Paved, x, y);
 
             var capacityString = sewerCapacityIsFixed
-                ? String.Format("qc 0 {0} {1}", rainfallSewerCapacity, dwfSewerCapacity)
-                : String.Format("qc 1 '{0}_qc'", id);
+                ? $"qc 0 {rainfallSewerCapacity} {dwfSewerCapacity}"
+                : $"qc 1 '{id}_qc'";
 
             pavedData.Add(
-                String.Format(
-                    "PAVE id '{0}' ar {1} lv {2} sd '{3}' ss {4} {5} qo {9} {10} ms '{6}' {13}is 0 np {7} dw '{8}' ro {11} ru {12} pave",
-                    id, area, streetLevel, storageId, (int) sewerType, capacityString, meteoId,
-                    numberOfPeople, dryWaterId, (int) dwfSewerLink, (int) rainfallSewerLink,
-                    (Math.Abs(runoffCoefficient) < double.Epsilon) ? 0 : 1, runoffCoefficient, GetAreaAdjustmentFactorString(areaAdjustmentFactor)));
+                $"PAVE id '{id}' ar {area} lv {streetLevel} sd '{storageId}' ss {(int) sewerType} {capacityString} qo {(int) dwfSewerLink} {(int) rainfallSewerLink} ms '{meteoId}' {GetAreaAdjustmentFactorString(areaAdjustmentFactor)}is 0 np {numberOfPeople} dw '{dryWaterId}' ro {((Math.Abs(runoffCoefficient) < double.Epsilon) ? 0 : 1)} ru {runoffCoefficient} pave");
 
-            pavedStorage.Add(String.Format("STDF id '{0}' nm '{0}' ms {1} is {2} mr {3} {4} ir {5} {6} stdf", storageId,
-                maximumStreetStorage, initialStreetStorage, maximumRainfallSewerStorage,
-                maximumDwfSewerStorage, initialRainfallSewerStorage, initialDwfSewerStorage));
+            pavedStorage.Add($"STDF id '{storageId}' nm '{storageId}' ms {maximumStreetStorage} is {initialStreetStorage} mr {maximumRainfallSewerStorage} {maximumDwfSewerStorage} ir {initialRainfallSewerStorage} {initialDwfSewerStorage} stdf");
 
             var waterUseString = GetWaterUseString(dwfComputationOption, waterUsePerCapitaPerHourInDay);
 
-            pavedDwf.Add(String.Format("DWA id '{0}' nm '{0}' do {1} {2} dwa", dryWaterId,
-                (int) dwfComputationOption, waterUseString));
+            pavedDwf.Add($"DWA id '{dryWaterId}' nm '{dryWaterId}' do {(int) dwfComputationOption} {waterUseString} dwa");
 
             RestoreCulture();
 
@@ -403,20 +382,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var greenhouseAreaConnectedToSilo = (greenhouseUseSiloArea ? greenhouseSiloArea : 0.0);
             
             greenhouseData.Add(
-                String.Format(
-                    "GRHS id '{0}' na 10  ar {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} sl {11} as {12} si '{13}' sd '{14}' ms '{15}' {16}is 0.0 grhs",
-                    id, areasPerGreenhouseClass[0], areasPerGreenhouseClass[1], areasPerGreenhouseClass[2],
-                    areasPerGreenhouseClass[3], areasPerGreenhouseClass[4], areasPerGreenhouseClass[5],
-                    areasPerGreenhouseClass[6], areasPerGreenhouseClass[7], areasPerGreenhouseClass[8],
-                    areasPerGreenhouseClass[9], surfaceLevel, greenhouseAreaConnectedToSilo, id, id, meteoId,
-                    GetAreaAdjustmentFactorString(areaAdjustmentFactor))
+                $"GRHS id '{id}' na 10  ar {areasPerGreenhouseClass[0]} {areasPerGreenhouseClass[1]} {areasPerGreenhouseClass[2]} {areasPerGreenhouseClass[3]} {areasPerGreenhouseClass[4]} {areasPerGreenhouseClass[5]} {areasPerGreenhouseClass[6]} {areasPerGreenhouseClass[7]} {areasPerGreenhouseClass[8]} {areasPerGreenhouseClass[9]} sl {surfaceLevel} as {greenhouseAreaConnectedToSilo} si '{id}' sd '{id}' ms '{meteoId}' {GetAreaAdjustmentFactorString(areaAdjustmentFactor)}is 0.0 grhs"
             );
 
-            greenhouseSiloData.Add(String.Format("SILO id '{0}' nm '{0}' sc {1} pc {2} silo", id, siloCapacity,
-                                                 siloPumpCapacity));
+            greenhouseSiloData.Add($"SILO id '{id}' nm '{id}' sc {siloCapacity} pc {siloPumpCapacity} silo");
 
-            greenhouseRoofStorageData.Add(String.Format("STDF id '{0}' nm '{0}' mk {1} ik {2} stdf", id,
-                maximumRoofStorage, initialRoofStorage));
+            greenhouseRoofStorageData.Add($"STDF id '{id}' nm '{id}' mk {maximumRoofStorage} ik {initialRoofStorage} stdf");
 
             RestoreCulture();
 
@@ -430,8 +401,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             AddNodeInternal(id, NodeType.Openwater, x, y);
             
-            openWaterData.Add(String.Format("OWRR id '{0}' ar {1} ms '{2}'{3} owrr", id, area, meteoId,
-                GetAreaAdjustmentFactorString(areaAdjustmentFactor)));
+            openWaterData.Add($"OWRR id '{id}' ar {area} ms '{meteoId}'{GetAreaAdjustmentFactorString(areaAdjustmentFactor)} owrr");
 
             /*
             TODO: Openwater catchments are not fully / incorrectly implemented, see issue: SOBEK3-784
@@ -480,27 +450,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var uh_id = id + "_uh";
             var op_id = id + "_op";
 
-            sacramentoData.Add(String.Format("SACR id '{0}' ar {1} ms '{2}' ca '{3}' uh '{4}' op '{5}' sacr", id, area,
-                meteoId, ca_id, uh_id, op_id));
+            sacramentoData.Add($"SACR id '{id}' ar {area} ms '{meteoId}' ca '{ca_id}' uh '{uh_id}' op '{op_id}' sacr");
 
             // TODO: add checks on arrays
 
             sacramentoData.Add(
-                String.Format(
-                    "OPAR id '{0}' zperc {1} rexp {2} pfree {3} rserv {4} pctim {5} adimp {6} sarva {7} side {8} ssout {9} pm {10} pt1 {11} pt2 {12} opar",
-                    op_id, parameters[0], parameters[1], parameters[2], parameters[3], parameters[4], parameters[5],
-                    parameters[6], parameters[7], parameters[8], parameters[9], parameters[10], parameters[11]));
+                $"OPAR id '{op_id}' zperc {parameters[0]} rexp {parameters[1]} pfree {parameters[2]} rserv {parameters[3]} pctim {parameters[4]} adimp {parameters[5]} sarva {parameters[6]} side {parameters[7]} ssout {parameters[8]} pm {parameters[9]} pt1 {parameters[10]} pt2 {parameters[11]} opar");
 
             sacramentoData.Add(
-                String.Format(
-                    "CAPS id '{0}' uztwm {1} uztwc {2} uzfwm {3} uzfwc {4} lztwm {5} lztwc {6} lzfsm {7} lzfsc {8} lzfpm {9} lzfpc {10} uzk {11} lzsk {12} lzpk {13} caps",
-                    ca_id, capacities[0], capacities[1], capacities[2], capacities[3], capacities[4], capacities[5],
-                    capacities[6], capacities[7], capacities[8], capacities[9], capacities[10], capacities[11],
-                    capacities[12]));
+                $"CAPS id '{ca_id}' uztwm {capacities[0]} uztwc {capacities[1]} uzfwm {capacities[2]} uzfwc {capacities[3]} lztwm {capacities[4]} lztwc {capacities[5]} lzfsm {capacities[6]} lzfsc {capacities[7]} lzfpm {capacities[8]} lzfpc {capacities[9]} uzk {capacities[10]} lzsk {capacities[11]} lzpk {capacities[12]} caps");
 
-            sacramentoData.Add(String.Format("UNIH id '{0}' uh {1} dt {2} unih", uh_id,
-                String.Join(" ", hydroGraphValues),
-                hydrographStep));
+            sacramentoData.Add($"UNIH id '{uh_id}' uh {String.Join(" ", hydroGraphValues)} dt {hydrographStep} unih");
 
             
             RestoreCulture();
@@ -522,27 +482,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var hini_id = id + "_hini";
 
             sacramentoData.Add(
-                String.Format(
-                    "HBV id '{0}' ar {1} sl {2} snow '{3}' soil '{4}' flow '{5}' hini '{6}' ts '{7}' ms '{8}' {9} hbv",
-                    id, area, surfaceLevel, snow_id, soil_id, flow_id, hini_id, tempId, meteoId,
-                    GetAreaAdjustmentFactorString(areaAdjustmentFactor)));
+                $"HBV id '{id}' ar {area} sl {surfaceLevel} snow '{snow_id}' soil '{soil_id}' flow '{flow_id}' hini '{hini_id}' ts '{tempId}' ms '{meteoId}' {GetAreaAdjustmentFactorString(areaAdjustmentFactor)} hbv");
 
             // TODO: add checks on arrays
 
-            sacramentoData.Add(String.Format("SNOW id '{0}' nm '{1}' mc {2} sft {3} smt {4} tac {5} fe {6} fwf {7} snow",
-                snow_id, snow_id, snowParameters[0], snowParameters[1], snowParameters[2],
-                snowParameters[3], snowParameters[4], snowParameters[5]));
+            sacramentoData.Add($"SNOW id '{snow_id}' nm '{snow_id}' mc {snowParameters[0]} sft {snowParameters[1]} smt {snowParameters[2]} tac {snowParameters[3]} fe {snowParameters[4]} fwf {snowParameters[5]} snow");
 
-            sacramentoData.Add(String.Format("SOIL id '{0}' nm '{1}' be {2} fc {3} ef {4} soil", soil_id, soil_id,
-                soilParameters[0], soilParameters[1], soilParameters[2]));
+            sacramentoData.Add($"SOIL id '{soil_id}' nm '{soil_id}' be {soilParameters[0]} fc {soilParameters[1]} ef {soilParameters[2]} soil");
 
-            sacramentoData.Add(String.Format("FLOW id '{0}' nm '{1}' kb {2} ki {3} kq {4} qt {5} mp {6} flow", flow_id, flow_id,
-                flowParameters[0], flowParameters[1], flowParameters[2], flowParameters[3],
-                flowParameters[4]));
+            sacramentoData.Add($"FLOW id '{flow_id}' nm '{flow_id}' kb {flowParameters[0]} ki {flowParameters[1]} kq {flowParameters[2]} qt {flowParameters[3]} mp {flowParameters[4]} flow");
 
-            sacramentoData.Add(String.Format("HINI id '{0}' nm '{1}' ds {2} fw {3} sm {4} uz {5} lz {6} hini", hini_id, hini_id,
-                hiniParameters[0], hiniParameters[1], hiniParameters[2], hiniParameters[3],
-                hiniParameters[4]));
+            sacramentoData.Add($"HINI id '{hini_id}' nm '{hini_id}' ds {hiniParameters[0]} fw {hiniParameters[1]} sm {hiniParameters[2]} uz {hiniParameters[3]} lz {hiniParameters[4]} hini");
 
             RestoreCulture();
             
@@ -551,14 +501,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
         public int AddWasteWaterTreatmentPlant(string id, double x, double y)
         {
-            wwtp.Add(String.Format("WWTP id '{0}' tb 0 wwtp", id));
+            wwtp.Add($"WWTP id '{id}' tb 0 wwtp");
             return AddNodeInternal(id, NodeType.Wwtp, x, y);
         }
 
         public int AddBoundaryNode(string id, double initialWaterLevel, double x, double y)
         {
             //set initial water level (actual water level is passed during runtime)
-            boundaries.Add(String.Format("BOUN id '{0}' bl 0 {1} is 0 boun", id, initialWaterLevel));  //-99 m AD as default (outside)
+            boundaries.Add($"BOUN id '{id}' bl 0 {initialWaterLevel} is 0 boun");  //-99 m AD as default (outside)
             return AddNodeInternal(id, NodeType.BoundaryOrLateral, x, y);
         }
 
@@ -566,8 +516,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         {
             SwitchToInvariantCulture();
 
-            links.Add(String.Format("BRCH id '{0}' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn '{1}' en '{2}' brch",
-                linkId, from, to));
+            links.Add($"BRCH id '{linkId}' ri '-1' mt 1 '0' bt 17 ObID '3B_LINK' bn '{@from}' en '{to}' brch");
 
             RestoreCulture();
         }
@@ -591,7 +540,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             var waterUsePercentagesString = GetWaterUsePercentagesString(dwfComputationOption, waterUsePerCapitaPerHourInDay, totalWaterUsePerCapitaPerDay);
 
-            return String.Format("wc {0} wd {1} wh {2}", waterUsePerHourForConstant, waterUsePerDayForVariable, waterUsePercentagesString);
+            return $"wc {waterUsePerHourForConstant} wd {waterUsePerDayForVariable} wh {waterUsePercentagesString}";
         }
 
         private int AddNodeInternal(string id, NodeType nodeType, double x, double y)
@@ -599,8 +548,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             SwitchToInvariantCulture();
 
             string sobekNodeId = GetSobekNodeId(nodeType);
-            nodes.Add(String.Format(
-                "NODE id '{0}' nm '{0}' ri '-1' mt 1 {1} px {2} py {3} node", id, sobekNodeId, x, y));
+            nodes.Add($"NODE id '{id}' nm '{id}' ri '-1' mt 1 {sobekNodeId} px {x} py {y} node");
             typeForNodes.Add(nodeType);
 
             RestoreCulture();
@@ -612,7 +560,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         {
             var areaAdjustmentFactorString = Math.Abs(areaAdjustmentFactor - 1.0) < 0.000001 //if ~= 1.0
                 ? ""
-                : string.Format(" aaf {0} ", areaAdjustmentFactor);
+                : $" aaf {areaAdjustmentFactor} ";
             return areaAdjustmentFactorString;
         }
 
@@ -663,7 +611,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var capacityTableId = pavedId + "_qc";
 
             pavedPumpCapacitiesTable.Add(
-                String.Format("QC_T id '{0}' PDIN 1 1 '31536000' pdin\n{1}qc_t", capacityTableId, WriteTable(dates, times, mixedCapacity, dwfCapacity)));
+                $"QC_T id '{capacityTableId}' PDIN 1 1 '31536000' pdin\n{WriteTable(dates, times, mixedCapacity, dwfCapacity)}qc_t");
 
             RestoreCulture();
         }
@@ -672,7 +620,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         {
             if (dates.Length != values.Length || dates.Length != times.Length)
             {
-                throw new ArgumentException(String.Format("Number of datetimes {0} and number of values {1} do not match", dates.Length, values.Length));
+                throw new ArgumentException($"Number of datetimes {dates.Length} and number of values {values.Length} do not match");
             }
 
             var tableString = new StringBuilder();
@@ -681,10 +629,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             for (int i = 0; i < dates.Length; i++ )
             {
                 var time = ConvertFromSobekDateTime(dates[i], times[i]);
-                tableString.Append(String.Format("        '{0}/{1:00}/{2:00};{3:00}:{4:00}:{5:00}' {6}{7} <\n",
-                    time.Year, time.Month,
-                    time.Day, time.Hour, time.Minute, time.Second, values[i],
-                    values2 != null ? "    "+values2[i] : ""));
+                tableString.Append($"        '{time.Year}/{time.Month:00}/{time.Day:00};{time.Hour:00}:{time.Minute:00}:{time.Second:00}' {values[i]}{(values2 != null ? "    " + values2[i] : "")} <\n");
             }
 
             tableString.Append("    tble\n");
@@ -695,7 +640,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         {
             SwitchToInvariantCulture();
             var seepageId = unpavedIds[iref - 1] + "_seepage";
-            unpavedSeepage.Add(String.Format("SEEP id '{0}' nm '{0}' co {1} sp {2} ss 0 seep", seepageId, 1, seepage));
+            unpavedSeepage.Add($"SEEP id '{seepageId}' nm '{seepageId}' co {1} sp {seepage} ss 0 seep");
             RestoreCulture();
         }
 
@@ -705,8 +650,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var unpavedId = unpavedIds[iref - 1];
             var seepageId = unpavedId + "_seepage";
             var h0TableId = unpavedId + "_h0table";
-            unpavedSeepage.Add(String.Format("SEEP id '{0}' nm '{0}' co {1} cv {2} h0 '{3}' ss 0 seep", seepageId, (int)seepageComputationOption, resistanceC, h0TableId));
-            unpavedTable.Add(String.Format("H0_T id '{0}' PDIN 1 1 '31536000' pdin\n{1}h0_t", h0TableId, WriteTable(h0Dates, h0Times, h0Table)));
+            unpavedSeepage.Add($"SEEP id '{seepageId}' nm '{seepageId}' co {(int) seepageComputationOption} cv {resistanceC} h0 '{h0TableId}' ss 0 seep");
+            unpavedTable.Add($"H0_T id '{h0TableId}' PDIN 1 1 '31536000' pdin\n{WriteTable(h0Dates, h0Times, h0Table)}h0_t");
             RestoreCulture();
         }
 
@@ -735,16 +680,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             unpavedIds.Add(id);
             unpavedData.Add(
-                String.Format(
-                    "UNPV id '{0}' na 16 ar {1} lv {3} ga {2} co {4} su 0 sd '{5}' rc {6}{7} sp '{8}' ic '{9}' bt {10} ig 0 {11} mg {12} gl {14} ms '{13}' {15}is 0 unpv",
-                    id, String.Join(" ", areasForKnownCropTypes.Select(a => a.ToString(CultureInfo.InvariantCulture)).ToArray()),
-                    areaForGroundwaterCalculations, surfaceLevel, (int)drainageComputationOption, storageId,
-                    reservoirCoefficient, drainage, seepageId, infiltrationId, soilType, initialGroundwaterLevel,
-                    maximumAllowedGroundwater, meteoId, groundwaterLayerThickness, GetAreaAdjustmentFactorString(areaAdjustmentFactor)));
+                $"UNPV id '{id}' na 16 ar {String.Join(" ", areasForKnownCropTypes.Select(a => a.ToString(CultureInfo.InvariantCulture)).ToArray())} lv {surfaceLevel} ga {areaForGroundwaterCalculations} co {(int) drainageComputationOption} su 0 sd '{storageId}' rc {reservoirCoefficient}{drainage} sp '{seepageId}' ic '{infiltrationId}' bt {soilType} ig 0 {initialGroundwaterLevel} mg {maximumAllowedGroundwater} gl {groundwaterLayerThickness} ms '{meteoId}' {GetAreaAdjustmentFactorString(areaAdjustmentFactor)}is 0 unpv");
 
-            unpavedStorage.Add(String.Format("STDF id '{0}' nm '{0}' ml {1} il {2} stdf", storageId, maximumLandStorage, initialLandStorage));
+            unpavedStorage.Add($"STDF id '{storageId}' nm '{storageId}' ml {maximumLandStorage} il {initialLandStorage} stdf");
             
-            unpavedInfiltration.Add(String.Format("INFC id '{0}' nm '{0}' ic {1} infc", infiltrationId, infiltrationCapacity));
+            unpavedInfiltration.Add($"INFC id '{infiltrationId}' nm '{infiltrationId}' ic {infiltrationCapacity} infc");
 
             RestoreCulture();
 
@@ -757,10 +697,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             switch (drainageComputationOption)
             {
                 case DrainageComputationOption.DeZeeuwHellinga:
-                    drainage = String.Format(" ad '{0}'", id + "_hellinga");
+                    drainage = $" ad '{id + "_hellinga"}'";
                     break;
                 case DrainageComputationOption.Ernst:
-                    drainage = String.Format(" ed '{0}'", id + "_ernst");
+                    drainage = $" ed '{id + "_ernst"}'";
                     break;
                 case DrainageComputationOption.KrayenhoffVdLeur:
                     drainage = "";
@@ -781,10 +721,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var ernstId = unpavedIds[iref-1] + "_ernst";
 
             unpavedHellingaErnst.Add(
-                String.Format(
-                    "ERNS id '{0}' nm '{0}' cvs {1} cvo {2} {3} {4} {5} cvi {6} lv {7} {8} {9} erns", ernstId, surfaceRunoff,
-                    belowSurfaceDrainage[0], belowSurfaceDrainage[1], belowSurfaceDrainage[2], lastLayerRunoff, infiltration,
-                    belowSurfaceLevels[0], belowSurfaceLevels[1], belowSurfaceLevels[2]));
+                $"ERNS id '{ernstId}' nm '{ernstId}' cvs {surfaceRunoff} cvo {belowSurfaceDrainage[0]} {belowSurfaceDrainage[1]} {belowSurfaceDrainage[2]} {lastLayerRunoff} cvi {infiltration} lv {belowSurfaceLevels[0]} {belowSurfaceLevels[1]} {belowSurfaceLevels[2]} erns");
 
             RestoreCulture();
 
@@ -803,10 +740,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             var hellingaId = unpavedIds[iref-1] + "_hellinga";
 
             unpavedHellingaErnst.Add(
-                String.Format(
-                    "ALFA id '{0}' nm '{0}' af {1} {2} {3} {4} {5} {6} lv {7} {8} {9} alfa", hellingaId, surfaceRunoff,
-                    belowSurfaceDrainage[0], belowSurfaceDrainage[1], belowSurfaceDrainage[2], lastLayerRunoff, infiltration,
-                    belowSurfaceLevels[0], belowSurfaceLevels[1], belowSurfaceLevels[2]));
+                $"ALFA id '{hellingaId}' nm '{hellingaId}' af {surfaceRunoff} {belowSurfaceDrainage[0]} {belowSurfaceDrainage[1]} {belowSurfaceDrainage[2]} {lastLayerRunoff} {infiltration} lv {belowSurfaceLevels[0]} {belowSurfaceLevels[1]} {belowSurfaceLevels[2]} alfa");
 
             RestoreCulture();
 
