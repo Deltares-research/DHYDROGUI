@@ -400,7 +400,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             AddNodeInternal(id, NodeType.Greenhouse, x, y);
 
-            var siloId = (greenhouseUseSiloArea ? id : "-1");
             var greenhouseAreaConnectedToSilo = (greenhouseUseSiloArea ? greenhouseSiloArea : 0.0);
             
             greenhouseData.Add(
@@ -409,15 +408,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                     id, areasPerGreenhouseClass[0], areasPerGreenhouseClass[1], areasPerGreenhouseClass[2],
                     areasPerGreenhouseClass[3], areasPerGreenhouseClass[4], areasPerGreenhouseClass[5],
                     areasPerGreenhouseClass[6], areasPerGreenhouseClass[7], areasPerGreenhouseClass[8],
-                    areasPerGreenhouseClass[9], surfaceLevel, greenhouseAreaConnectedToSilo, siloId, id, meteoId,
+                    areasPerGreenhouseClass[9], surfaceLevel, greenhouseAreaConnectedToSilo, id, id, meteoId,
                     GetAreaAdjustmentFactorString(areaAdjustmentFactor))
             );
 
-            if (greenhouseUseSiloArea)
-            {
-                greenhouseSiloData.Add(String.Format("SILO id '{0}' nm '{0}' sc {1} pc {2} silo", id, siloCapacity,
-                    siloPumpCapacity));
-            }
+            greenhouseSiloData.Add(String.Format("SILO id '{0}' nm '{0}' sc {1} pc {2} silo", id, siloCapacity,
+                                                 siloPumpCapacity));
 
             greenhouseRoofStorageData.Add(String.Format("STDF id '{0}' nm '{0}' mk {1} ik {2} stdf", id,
                 maximumRoofStorage, initialRoofStorage));
