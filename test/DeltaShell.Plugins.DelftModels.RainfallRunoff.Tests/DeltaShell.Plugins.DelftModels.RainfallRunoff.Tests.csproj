@@ -55,6 +55,7 @@
     <Compile Include="Exporters\RainfallRunoffBoundaryDataFileWriterTest.cs" />
     <Compile Include="Exporters\RainfallRunoffModelExporterTest.cs" />
     <Compile Include="Exporters\RRFlowDimrConfigModelCouplerTest.cs" />
+    <Compile Include="FileWriter\RRModelHybridFileWriterTest.cs" />
     <Compile Include="Importers\EvaporationDataImporterTest.cs" />
     <Compile Include="MeteoDataIntegrationTest.cs" />
     <Compile Include="ModelApiControllers\Concepts\HbvModelControllerTest.cs" />

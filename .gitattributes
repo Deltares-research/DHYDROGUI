@@ -4292,6 +4292,7 @@ test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Exporters/RRFlowDimrCon
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Exporters/RainfallRunoffBoundaryDataFileWriterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Exporters/RainfallRunoffModelExporterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/FeatureCoverageProviders/CompositeFeatureCoverageProviderTest.cs -text
+test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/FileWriter/RRModelHybridFileWriterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Importers/EvaporationDataImporterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Importers/PrecipitationDataImporterTest.cs -text
 test/DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests/Importers/TemperatureDataImporterTest.cs -text
