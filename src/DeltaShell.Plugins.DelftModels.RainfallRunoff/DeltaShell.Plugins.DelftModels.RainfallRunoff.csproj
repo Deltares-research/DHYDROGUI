@@ -101,6 +101,7 @@
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="RainfallRunoffModel.FileBased.cs" />
     <Compile Include="RainfallRunoffModelDataSet.cs" />
+    <Compile Include="RainfallRunoffDimrCoupling.cs" />
     <Compile Include="rr_kernel\IRRModelEngineDll.cs" />
     <Compile Include="rr_kernel\RRModelEngineDll.cs" />
     <Compile Include="Validation\RainfallRunoffInWorkFlowTypeValidator.cs" />

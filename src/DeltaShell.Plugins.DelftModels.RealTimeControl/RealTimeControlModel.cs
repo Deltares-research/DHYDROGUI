@@ -928,15 +928,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             return dataItem;
         }
 
-        public virtual IHydroObject GetLinkHydroObjectByItemString(string itemString)
-        {
-            return null;
-        }
-
-        public virtual void PrepareDimrCoupling()
-        {
-            // nothing to do
-        }
+        /// <inheritdoc />
+        public virtual IDimrCoupling DimrCoupling { get; } = null;
 
         /// <summary>
         /// Cleans up model after model coupling at the end of a

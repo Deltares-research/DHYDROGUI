@@ -153,16 +153,9 @@ namespace DeltaShell.Dimr
         IEnumerable<IDataItem> GetDataItemsByItemString(string itemString, string otherItemString);
 
         /// <summary>
-        /// Gets the hydro object that match the given item string.
+        /// The dimr coupling for this <see cref="IDimrModel"/>.
         /// </summary>
-        /// <param name="itemString">The item string.</param>
-        /// <returns>A matching ihydro object.</returns>
-        IHydroObject GetLinkHydroObjectByItemString(string itemString);
-
-        /// <summary>    
-        /// Prepares the instance before coupling.
-        /// </summary>   
-        void PrepareDimrCoupling();
+        IDimrCoupling DimrCoupling { get; }
     }
 
     public enum ModelType

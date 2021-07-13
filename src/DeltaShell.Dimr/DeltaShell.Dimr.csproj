@@ -88,6 +88,7 @@
     <Compile Include="drtc_xsd\rtcRuntimeConfig.custom.cs" />
     <Compile Include="IDimrApi.cs" />
     <Compile Include="IDimrApiFactory.cs" />
+    <Compile Include="IDimrCoupling.cs" />
     <Compile Include="IDimrModel.cs" />
     <Compile Include="IDimrModelFileImporter.cs" />
     <Compile Include="LoggerToProtoConverter.cs" />

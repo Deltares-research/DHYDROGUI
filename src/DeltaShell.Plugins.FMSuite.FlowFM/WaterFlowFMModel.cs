@@ -89,6 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private WaterFlowFMModelDefinition modelDefinition;
         private bool disposing;
         private bool updatingGroupName;
+        private IDimrCoupling dimrCoupling;
 
         private IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties;
         private IEventedList<SourceAndSink> sourcesAndSinks;
@@ -3194,60 +3195,23 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         /// <summary>
-        /// Gets the hydro object item string.
+        /// The dimr coupling for this <see cref="RainfallRunoffModel"/>.
         /// </summary>
-        /// <param name="itemString"> The item string. </param>
-        /// <returns> The matching data item. </returns>
         /// <remarks>
-        /// <paramref name="itemString"/> cannot be null.
+        /// Always returns an up-to-date <see cref="IDimrCoupling"/>.
+        /// Does not return <c>null</c>.
         /// </remarks>
-        /// <exception cref="ArgumentException">
-        /// Thrown when
-        /// - <paramref name="itemString"/> does not contain 3 elements
-        /// - category in <paramref name="itemString"/> is unknown
-        /// - feature in <paramref name="itemString"/> is unknown
-        /// </exception>
-        public IHydroObject GetLinkHydroObjectByItemString(string itemString)
+        public IDimrCoupling DimrCoupling
         {
-            string[] stringParts = itemString.Split('/');
-
-            if (stringParts.Length != 3)
+            get
             {
-                throw new ArgumentException(string.Format("{0} should contain a category, feature name and a parameter name.",
-                                                          itemString));
-            }
+                if (dimrCoupling == null || dimrCoupling.HasEnded)
+                {
+                    dimrCoupling = new WaterFlowFmDimrCoupling(Network);
+                    return dimrCoupling;
+                }
 
-            string category = stringParts[0];
-            string featureName = stringParts[1];
-
-
-            IHydroObject hydroObject = GetNetworkHydroObject(category, featureName);
-
-            if (hydroObject == null)
-            {
-                throw new ArgumentException(string.Format("feature {0} in {1} cannot be found in the FM model.",
-                                                          featureName, itemString));
-            }
-
-            return hydroObject;
-        }
-
-        private Dictionary<string, ILateralSource> lateralSourcesByName;
-
-        public void PrepareDimrCoupling()
-        {
-            lateralSourcesByName = Network.LateralSources.ToDictionary(l => l.Name, StringComparer.InvariantCultureIgnoreCase);
-        }
-
-        private IHydroObject GetNetworkHydroObject(string category, string featureName)
-        {
-            switch (category)
-            {
-                case "laterals":
-                    lateralSourcesByName.TryGetValue(featureName, out ILateralSource lateralSource);
-                    return lateralSource;
-                default:
-                    return null;
+                return dimrCoupling;
             }
         }
 

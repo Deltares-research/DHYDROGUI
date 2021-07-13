@@ -612,6 +612,7 @@ src/DeltaShell.Dimr/DimrRunHelper.cs -text
 src/DeltaShell.Dimr/DimrRunner.cs -text
 src/DeltaShell.Dimr/IDimrApi.cs -text
 src/DeltaShell.Dimr/IDimrApiFactory.cs -text
+src/DeltaShell.Dimr/IDimrCoupling.cs -text
 src/DeltaShell.Dimr/IDimrModel.cs -text
 src/DeltaShell.Dimr/IDimrModelFileImporter.cs -text
 src/DeltaShell.Dimr/LoggerToProtoConverter.cs -text
@@ -1358,6 +1359,7 @@ src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffBoundaryData.hbm
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffChildDataItemProvider.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffDataAccessListener.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffDataCatchmentExtensions.cs -text
+src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffDimrCoupling.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffModel.FileBased.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffModel.cs -text
 src/DeltaShell.Plugins.DelftModels.RainfallRunoff/RainfallRunoffModel.hbm.xml -text
@@ -2352,6 +2354,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMModel.hbm.xml -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMModelCoordinateConversion.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMModelDataSet.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFMModelSyncExtensions.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/WaterFlowFmDimrCoupling.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/dflowfm-mor-properties.csv -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/dflowfm-properties.csv -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/mor-properties.csv -text

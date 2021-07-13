@@ -254,8 +254,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                                                   .GroupBy(l => l.Source)
                                                   .ToDictionary(l => l.Key, l => l.ToArray());
 
-            sourceModel.PrepareDimrCoupling();
-            targetModel.PrepareDimrCoupling();
+           sourceModel.DimrCoupling?.Prepare();
+           targetModel.DimrCoupling?.Prepare();
             
             foreach (dimrCoupledItemXML couplerXml in dimrCouplerXml)
             {
@@ -284,14 +284,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     }
 
                     // HydroObject linking
-                    IHydroObject sourceItem = sourceModel.GetLinkHydroObjectByItemString(couplerXml.sourceName);
+                    IHydroObject sourceItem = sourceModel.DimrCoupling?.GetLinkHydroObjectByItemString(couplerXml.sourceName);
                     if (sourceItem == null)
                     {
                         logHandler.ReportErrorFormat("Could not link {0} to {1}", couplerXml.sourceName, couplerXml.targetName);
                         continue;
                     }
 
-                    IHydroObject targetItem = targetModel.GetLinkHydroObjectByItemString(couplerXml.targetName);
+                    IHydroObject targetItem = targetModel.DimrCoupling?.GetLinkHydroObjectByItemString(couplerXml.targetName);
 
                     if (!sourceItem.CanLinkTo(targetItem) ||
                         linkBySourceIemLookup.TryGetValue(sourceItem, out var links) &&
@@ -316,6 +316,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     logHandler.ReportError($"Could not link {couplerXml.sourceName} to {couplerXml.targetName}: {e.Message}");
                 }
             }
+            
+            sourceModel.DimrCoupling?.End();
+            targetModel.DimrCoupling?.End();
         }
 
         private static Coordinate GetCoordinateForHydroObject(IHydroObject obj)

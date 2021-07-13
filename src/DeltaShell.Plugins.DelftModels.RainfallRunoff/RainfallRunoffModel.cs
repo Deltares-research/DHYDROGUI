@@ -56,6 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private IEventedList<CatchmentModelData> modelData;
         private IEventedList<NwrwDryWeatherFlowDefinition> nwrwDryWeatherFlowDefinitions;
         private IEventedList<NwrwDefinition> nwrwDefinitions;
+        private IDimrCoupling dimrCoupling;
         
         public RainfallRunoffModel() : base("Rainfall Runoff")
         {
@@ -1276,77 +1277,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         }
 
         /// <summary>
-        /// Gets the hydro object item string.
+        /// The dimr coupling for this <see cref="RainfallRunoffModel"/>.
         /// </summary>
-        /// <param name="itemString"> The item string. </param>
-        /// <returns> The matching data item. </returns>
         /// <remarks>
-        /// <paramref name="itemString"/> cannot be null.
+        /// Always returns an up-to-date <see cref="IDimrCoupling"/>.
+        /// Does not return <c>null</c>.
         /// </remarks>
-        /// <exception cref="ArgumentException">
-        /// Thrown when
-        /// - <paramref name="itemString"/> does not contain 3 elements
-        /// - category in <paramref name="itemString"/> is unknown
-        /// - feature in <paramref name="itemString"/> is unknown
-        /// </exception>
-        public IHydroObject GetLinkHydroObjectByItemString(string itemString)
+        public IDimrCoupling DimrCoupling
         {
-            string[] stringParts = itemString.Split('/');
-
-            if (stringParts.Length != 3)
+            get
             {
-                throw new ArgumentException(string.Format("{0} should contain a category, feature name and a parameter name.",
-                                                          itemString));
+                if (dimrCoupling == null || dimrCoupling.HasEnded)
+                {
+                    dimrCoupling = new RainfallRunoffDimrCoupling(Basin, LateralToCatchmentLookup);
+                    return dimrCoupling;
+                }
+
+                return dimrCoupling;
             }
-
-            string category = stringParts[0];
-            string featureName = stringParts[1].Replace("_boundary",String.Empty);
-            
-
-            IHydroObject hydroObject = GetBasinHydroObject(category, featureName);
-
-            if (hydroObject == null)
-            {
-                throw new ArgumentException(string.Format("feature {0} in {1} cannot be found in the Rainfall Runoff model.",
-                                                          featureName, itemString));
-            }
-
-            return hydroObject;
-        }
-
-        private IHydroObject GetBasinHydroObject(string category, string featureName)
-        {
-            switch (category)
-            {
-                case "catchments":
-                    Catchment catchment = GetCatchmentByName(featureName);
-                    if (catchment != null)
-                    {
-                        return catchment;
-                    }
-
-                    if (LateralToCatchmentLookup.TryGetValue(featureName, out string catchmentString))
-                    {
-                        catchment = GetCatchmentByName(catchmentString);
-                    }
-
-                    return catchment;
-                default:
-                    return null;
-            }
-        }
-        
-        private IDictionary<string, Catchment> catchmentsByName;
-
-        public void PrepareDimrCoupling()
-        {
-            catchmentsByName = Basin.AllCatchments.ToDictionary(c => c.Name, StringComparer.InvariantCultureIgnoreCase);
-        }
-
-        private Catchment GetCatchmentByName(string name)
-        {
-            catchmentsByName.TryGetValue(name, out Catchment catchment);
-            return catchment;
         }
     }
 
