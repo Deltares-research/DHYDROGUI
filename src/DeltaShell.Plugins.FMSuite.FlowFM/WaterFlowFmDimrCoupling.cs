@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM
@@ -23,6 +24,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// </exception>
         public WaterFlowFmDimrCoupling(IHydroNetwork network)
         {
+            Ensure.NotNull(network, nameof(network));
+
             this.network = network;
         }
 

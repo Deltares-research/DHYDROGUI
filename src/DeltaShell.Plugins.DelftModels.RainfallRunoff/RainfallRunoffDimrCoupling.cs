@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
@@ -26,11 +27,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// </exception>
         public RainfallRunoffDimrCoupling(IDrainageBasin basin, Dictionary<string, string> lateralToCatchmentLookup)
         {
+            Ensure.NotNull(basin, nameof(basin));
+            Ensure.NotNull(lateralToCatchmentLookup, nameof(lateralToCatchmentLookup));
+
             this.basin = basin;
             this.lateralToCatchmentLookup = lateralToCatchmentLookup;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public bool HasEnded { get; private set; } = false;
 
         /// <summary>
@@ -69,13 +73,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return hydroObject;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void Prepare()
         {
             catchmentsByName = basin.AllCatchments.ToDictionary(c => c.Name, StringComparer.InvariantCultureIgnoreCase);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc/>
         public void End()
         {
             HasEnded = true;
