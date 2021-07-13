@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <?define Description="D-FM Delta Shell" ?>
-  
+
   <?define checkForRegistration="true"?>
 
-  <?define splashScreenCopyright="© Deltares 2020"?>
+  <?define splashScreenCopyright="© Deltares 2021"?>
 
   <?define noDeltaShellFrameworkManual="true"?>
 
@@ -18,32 +18,32 @@
   <?define Delft3DPackageName="D-HYDRO"?>
   <?define registrationFeature="D-HYDRO"?>
   <?define registrationVersion="1.7"?>
-  <?define CheckOriginOfProject="False"?>  
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
+  <?define CheckOriginOfProject="False"?>
+  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>
   <?else?>
   <?ifdef var.NOWAQ?>
   <?define Delft3DPackageName="Delft3D FM HM"?>
   <?define registrationFeature="Delft3D_FM_Hyd-Mor"?>
   <?define registrationVersion="1.7"?>
-  <?define CheckOriginOfProject="False"?>  
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
+  <?define CheckOriginOfProject="False"?>
+  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>
   <?else?>
   <?ifdef var.NOKERNELS?>
   <?define Delft3DPackageName="Delft3D FM HMWQ"?>
   <?define registrationFeature="Delft3D_FM_OSS"?>
   <?define registrationVersion="1.7"?>
-  <?define CheckOriginOfProject="False"?>  
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
+  <?define CheckOriginOfProject="False"?>
+  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>
   <?else?>
   <?define Delft3DPackageName="Delft3D FM HMWQ"?>
   <?define registrationFeature="Delft3D_FM_Hyd-Mor_And_Waq"?>
   <?define registrationVersion="1.7"?>
-  <?define CheckOriginOfProject="False"?>  
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
+  <?define CheckOriginOfProject="False"?>
+  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>
   <?endif?>
   <?endif?>
   <?endif?>
-  
+
   <?define pluginicon="$(var.ProjectDir)\Resources\FM.ico"?>
   <?define licensefilepath="$(var.ProjectDir)\$(var.Delft3DPackageName)_Resources\"?>
   <?define windowlayoutpath="$(var.ProjectDir)\Resources\"?>
@@ -66,7 +66,7 @@
   <!-- optional splash screen -->
   <?define mainWindowTitle="$(var.ApplicationName)"?>
   <?define splashScreenLogoImageFilePath="splash_screen.jpg"?>
-  
+
   <?define splashScreenCompany="Rijkswaterstaat"?>
   <?define splashScreenLicense="NGHS project"?>
 
@@ -75,7 +75,7 @@
   <?else?>
   <?define splashScreenCompany="Deltares"?>
   <?endif?>
-  
+
   <?ifdef var.RWS?>
   <?define splashScreenLicense="NGHS project"?>
   <?else?>
@@ -84,7 +84,7 @@
 
   <?define plugin_wixUIDeltares="FM_WixUI_Deltares"?>
   <?define languages ="1033"?>
-  
+
   <!-- surpressed ICE57 in property window, which is related to per user and per machine installation, using e.g. HKMU instead of HKLM-->
   <?include ..\Framework\DeltaShell\Templates\PluginTemplate.wxi?>
 </Wix>

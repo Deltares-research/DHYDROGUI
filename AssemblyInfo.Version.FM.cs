@@ -1,7 +1,7 @@
 using System.Reflection;
 
 [assembly: AssemblyCompany("Deltares")]
-[assembly: AssemblyCopyright("Copyright © Deltares 2020")]
+[assembly: AssemblyCopyright("Copyright © Deltares 2021")]
 
 // Version information for an assembly consists of the following four values:
 //
