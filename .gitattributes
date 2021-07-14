@@ -867,18 +867,9 @@ src/DeltaShell.NGHS.IO/Grid/BranchType.cs -text
 src/DeltaShell.NGHS.IO/Grid/DeltaresUGrid/HydroUGridExtensions.cs -text
 src/DeltaShell.NGHS.IO/Grid/DeltaresUGrid/RemoteUGridApi.cs -text
 src/DeltaShell.NGHS.IO/Grid/DeltaresUGrid/UGridConstants.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/DisposableMeshGeometryGridGeom.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/Generate1D2DLinksHelper.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GeometriesData.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GridGeomApi.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GridGeomApiRemote.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/GridGeomWrapper.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/IGridGeomApi.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/LinkInformation.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/Mesh1DGeometry.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/Mesh1DGeometryNative.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/meshgeom.cs -text
-src/DeltaShell.NGHS.IO/Grid/GridGeomApi/meshgeomdim.cs -text
+src/DeltaShell.NGHS.IO/Grid/MeshKernel/Generate1D2DLinksHelper.cs -text
+src/DeltaShell.NGHS.IO/Grid/MeshKernel/LinkInformation.cs -text
+src/DeltaShell.NGHS.IO/Grid/MeshKernel/MeshKernelExtensions.cs -text
 src/DeltaShell.NGHS.IO/Grid/NetworkPropertiesHelper.cs -text
 src/DeltaShell.NGHS.IO/Grid/UGridFileHelper.cs -text
 src/DeltaShell.NGHS.IO/Helpers/BranchChainageExtensions.cs -text
@@ -928,6 +919,7 @@ src/DeltaShell.NGHS.Utils/ListExtensions.cs -text
 src/DeltaShell.NGHS.Utils/ObjectExtensions.cs -text
 src/DeltaShell.NGHS.Utils/Properties/AssemblyInfo.cs -text
 src/DeltaShell.NGHS.Utils/StringExtensions.cs -text
+src/DeltaShell.NGHS.Utils/TimedAction.cs -text
 src/DeltaShell.NGHS.Utils/ToDictionaryExtensions.cs -text
 src/DeltaShell.NGHS.Utils/packages.config -text
 src/DeltaShell.Plugins.DelftModels.HydroModel.Gui/DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj -text
@@ -3622,7 +3614,6 @@ test/DeltaShell.NGHS.IO.TestUtils/CrossSectionDefinitionFileWritersTestHelper.cs
 test/DeltaShell.NGHS.IO.TestUtils/DeltaShell.NGHS.IO.TestUtils.csproj -text
 test/DeltaShell.NGHS.IO.TestUtils/FileComparer.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/FileWriterTestHelper.cs -text
-test/DeltaShell.NGHS.IO.TestUtils/GridGeomLibWrapper.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/GridTestHelper.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/LocationFileReaderTestHelper.cs -text
 test/DeltaShell.NGHS.IO.TestUtils/ModelFileNames.cs -text

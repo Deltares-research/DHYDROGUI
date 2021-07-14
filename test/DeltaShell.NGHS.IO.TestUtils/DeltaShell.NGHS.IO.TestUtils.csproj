@@ -97,7 +97,6 @@
     <Compile Include="CrossSectionDefinitionFileWritersTestHelper.cs" />
     <Compile Include="FileComparer.cs" />
     <Compile Include="FileWriterTestHelper.cs" />
-    <Compile Include="GridGeomLibWrapper.cs" />
     <Compile Include="LocationFileReaderTestHelper.cs" />
     <Compile Include="ModelFileNames.cs" />
     <Compile Include="NetworkAndGridReaderTestHelper.cs" />

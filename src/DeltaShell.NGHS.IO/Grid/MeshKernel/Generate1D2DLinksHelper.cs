@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
+using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 using log4net;
+using MeshKernelNETCore.Api;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 
-namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
+namespace DeltaShell.NGHS.IO.Grid.MeshKernel
 {
     public static class Generate1D2DLinksHelper
     {
@@ -20,74 +22,108 @@ namespace DeltaShell.NGHS.IO.Grid.GridGeomApi
 
         public static IEnumerable<ILink1D2D> Generate1D2DLinks(IPolygon selectedArea, LinkGeneratingType linkType, UnstructuredGrid grid, IEventedList<Gully> gullies, IDiscretization discretization)
         {
-            var generate1D2DLinks = Enumerable.Empty<ILink1D2D>();
-
-            var mustHaveTwoPoints = linkType != LinkGeneratingType.GullySewer;
-            if (mustHaveTwoPoints && discretization.Locations.Values.Count < 2)
+            using (new TimedAction(ts => log.Debug($"Link generation took: {ts.TotalSeconds} sec")))
             {
-                return generate1D2DLinks;
-            }
-
-            var mask1DMesh = GetMesh1DFilter(discretization, linkType, selectedArea);
-            if (!mask1DMesh.Any(m => m.Equals(true)))
-            {
-                return generate1D2DLinks;
-            }
-
-            if (selectedArea == null)
-            {
-                var points = discretization.Locations.Values.Select(p => p.Geometry as IPoint).ToList();
-                selectedArea = GetSelectAllArea(points);
-            }
-
-            using (var disposableMeshGeometry = new DisposableMeshGeometryGridGeom(grid))
-            using (var mesh1D = new Mesh1DGeometry(discretization))
-            using (var selectedAreaGeometry = new GeometriesData(new List<IGeometry> { selectedArea }))
-            using (var gGeomApi = new GridGeomApi())
-            {
-                LinkInformation linkInformation = null;
-                if (linkType == LinkGeneratingType.GullySewer)
+                var mask1DMesh = GetValidMesh1DFilter(discretization, linkType, out var isValid, selectedArea);
+                if (!isValid)
                 {
-                    var geometryGullies = gullies
-                        .Where(r => r.Geometry.Intersects(selectedArea))
-                        .Select(r => r.Geometry).ToList();
-
-                    if (geometryGullies.Count == 0)
-                    {
-                        return generate1D2DLinks;
-                    }
-
-                    using (var gulliesData = new GeometriesData(geometryGullies))
-                    {
-                        linkInformation = gGeomApi.GetLinkInformation(disposableMeshGeometry, mesh1D, selectedAreaGeometry, mask1DMesh, linkType, gulliesData);
-                    }
-                }
-                else
-                {
-                    linkInformation = gGeomApi.GetLinkInformation(disposableMeshGeometry, mesh1D, selectedAreaGeometry, mask1DMesh, linkType);
+                    return Enumerable.Empty<ILink1D2D>();
                 }
 
-                if (gGeomApi.LastErrorCode != UGridConstants.NoErrorCode)
-                {
-                    var format =
-                        $"1D2D Links were not generated between the grid and the network of WaterFlowFMModel." +
-                        $" Please make sure the grid and network are correct.";
-                    log.ErrorFormat(format);
-                    return generate1D2DLinks;
-                }
+                selectedArea = selectedArea ?? GetSelectAllArea(discretization.Locations.Values.Select(p => p.Geometry as IPoint).ToArray());
 
-                return Creates1d2dLinks(linkInformation, grid, discretization, linkType);
+                using (var mesh2d = grid.CreateDisposableMesh2D())
+                using (var mesh1d = discretization.CreateDisposableMesh1D())
+                using (var api = new MeshKernelApi())
+                {
+                    var id = api.AllocateState(0);
+
+                    // setup 1d/2d meshes
+                    var success = api.Mesh1dSet(id, mesh1d);
+                    success = success && api.Mesh2dSet(id, mesh2d);
+
+                    // generate contacts (links)
+                    success = success && ComputeContacts(api, id, linkType, mask1DMesh, selectedArea, gullies);
+
+                    var contacts = success ? api.ContactsGetData(id) : new DisposableContacts(0);
+
+                    api.DeallocateState(id);
+
+                    return Creates1d2dLinks(contacts, grid, discretization, linkType);
+                }
             }
         }
 
-        private static IList<Link1D2D> Creates1d2dLinks(LinkInformation linkInformation, UnstructuredGrid grid, IDiscretization networkDiscretization, LinkGeneratingType linkType)
+        private static bool ComputeContacts(IMeshKernelApi api, int id, LinkGeneratingType linkType, bool[] mask1DMesh, IPolygon selectedArea, IEventedList<Gully> gullies)
+        {
+            var intMask1dMesh = mask1DMesh.Select(m => m ? 1 : 0).ToArray();
+            var maskHandle = GCHandle.Alloc(intMask1dMesh, GCHandleType.Pinned);
+            var mask1DMeshPtr = maskHandle.AddrOfPinnedObject();
+
+            var selectedAreaGeometry = selectedArea.CreateDisposableGeometryList();
+            DisposableGeometryList gulliesData = null;
+
+            try
+            {
+                switch (linkType)
+                {
+                    case LinkGeneratingType.EmbeddedOneToOne:
+                        return api.ContactsComputeSingle(id, ref mask1DMeshPtr, ref selectedAreaGeometry);
+                    case LinkGeneratingType.EmbeddedOneToMany:
+                        return api.ContactsComputeMultiple(id, ref mask1DMeshPtr);
+                    case LinkGeneratingType.Lateral:
+                        return api.ContactsComputeBoundary(id, ref mask1DMeshPtr, ref selectedAreaGeometry, 5000);
+                    case LinkGeneratingType.GullySewer:
+                        var geometryGullies = gullies
+                                              .Where(r => r.Geometry.Intersects(selectedArea))
+                                              .Select(r => r.Geometry).ToList();
+
+                        gulliesData = geometryGullies.CreateDisposableGeometryList();
+                        return api.ContactsComputeWithPoints(id, ref mask1DMeshPtr, ref gulliesData);
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(linkType), linkType, null);
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            finally
+            {
+                maskHandle.Free();
+                selectedAreaGeometry.Dispose();
+                gulliesData?.Dispose();
+            }
+        }
+
+        private static bool[] GetValidMesh1DFilter(IDiscretization discretization, LinkGeneratingType linkType, out bool isValid, IPolygon selectedArea = null)
+        {
+            isValid = true;
+            var mesh1DFilter = new bool[0];
+            if (linkType != LinkGeneratingType.GullySewer && discretization.Locations.Values.Count < 2)
+            {
+                isValid = false;
+                return mesh1DFilter;
+            }
+
+            mesh1DFilter = GetMesh1DFilter(discretization, linkType, selectedArea);
+
+            if (!mesh1DFilter.Any(m => m.Equals(true)))
+            {
+                isValid = false;
+            }
+            
+            return mesh1DFilter;
+        }
+
+        private static IList<Link1D2D> Creates1d2dLinks(DisposableContacts linkInformation, UnstructuredGrid grid, IDiscretization networkDiscretization, LinkGeneratingType linkType)
         {
             var lstNewLinks = new List<Link1D2D>();
-            for (int i = 0; i < linkInformation.FromIndices.Length; i++)
+            for (int i = 0; i < linkInformation.NumContacts; i++)
             {
                 //seems lists are swapt  
-                var pointIndex = linkInformation.ToIndices[i];
-                var cellIndex = linkInformation.FromIndices[i];
+                var pointIndex = linkInformation.Mesh1dIndices[i];
+                var cellIndex = linkInformation.Mesh2dIndices[i];
 
                 var cell = grid.Cells[cellIndex];
                 var node = networkDiscretization.Locations.Values[pointIndex];

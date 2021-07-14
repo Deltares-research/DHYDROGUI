@@ -5,7 +5,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.Grid.GridGeomApi;
+using DeltaShell.NGHS.IO.Grid.MeshKernel;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;

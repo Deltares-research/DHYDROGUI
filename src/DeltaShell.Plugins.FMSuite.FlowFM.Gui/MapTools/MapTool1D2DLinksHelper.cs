@@ -3,7 +3,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Utils.Collections.Generic;
-using DeltaShell.NGHS.IO.Grid.GridGeomApi;
+using DeltaShell.NGHS.IO.Grid.MeshKernel;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;

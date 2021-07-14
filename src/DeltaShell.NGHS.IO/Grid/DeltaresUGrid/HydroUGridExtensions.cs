@@ -333,7 +333,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             return mesh;
         }
 
-        private static int[] GetLocationIndices(IDiscretization discretization, INetworkSegment segment, IDictionary<INetworkLocation, int> locationIdLookup, out IList<INetworkSegment> doNotWriteTheseSegments)
+        internal static int[] GetLocationIndices(IDiscretization discretization, INetworkSegment segment, IDictionary<INetworkLocation, int> locationIdLookup, out IList<INetworkSegment> doNotWriteTheseSegments)
         {
             const double epsilonLocation = 1e-5;
             var branchLocations = discretization.GetLocationsForBranch(segment.Branch);

@@ -80,12 +80,19 @@
       <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="MeshKernelNETCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MeshKernelNET.1.0.0.32-Beta\lib\netstandard2.0\MeshKernelNETCore.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NetTopologySuite.CoordinateSystems, Version=1.15.0.0, Culture=neutral, PublicKeyToken=f580a05016ebada1, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\NetTopologySuite.CoordinateSystems.1.15.0\lib\net45\NetTopologySuite.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
@@ -281,20 +288,11 @@
     <Compile Include="FunctionStores\MapHisFileReader.cs" />
     <Compile Include="FunctionStores\ReadOnlyMapHisFileFunctionStore.cs" />
     <Compile Include="Grid\DeltaresUGrid\UGridConstants.cs" />
-    <Compile Include="Grid\GridGeomApi\DisposableMeshGeometryGridGeom.cs" />
-    <Compile Include="Grid\GridGeomApi\Generate1D2DLinksHelper.cs" />
-    <Compile Include="Grid\GridGeomApi\GeometriesData.cs" />
-    <Compile Include="Grid\GridGeomApi\GridGeomApi.cs" />
-    <Compile Include="Grid\GridGeomApi\GridGeomApiRemote.cs" />
-    <Compile Include="Grid\GridGeomApi\GridGeomWrapper.cs" />
-    <Compile Include="Grid\GridGeomApi\IGridGeomApi.cs" />
-    <Compile Include="Grid\GridGeomApi\Mesh1DGeometry.cs" />
-    <Compile Include="Grid\GridGeomApi\Mesh1DGeometryNative.cs" />
-    <Compile Include="Grid\GridGeomApi\LinkInformation.cs" />
+    <Compile Include="Grid\MeshKernel\Generate1D2DLinksHelper.cs" />
+    <Compile Include="Grid\MeshKernel\LinkInformation.cs" />
     <Compile Include="Grid\BranchType.cs" />
-    <Compile Include="Grid\GridGeomApi\meshgeom.cs" />
-    <Compile Include="Grid\GridGeomApi\meshgeomdim.cs" />
     <Compile Include="Grid\DeltaresUGrid\HydroUGridExtensions.cs" />
+    <Compile Include="Grid\MeshKernel\MeshKernelExtensions.cs" />
     <Compile Include="Grid\NetworkPropertiesHelper.cs" />
     <Compile Include="Grid\DeltaresUGrid\RemoteUGridApi.cs" />
     <Compile Include="Grid\UGridFileHelper.cs" />
@@ -408,8 +406,10 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets'))" />
     <Error Condition="!Exists('..\..\packages\Deltares.UGrid.1.0.69328\build\net40\Deltares.UGrid.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Deltares.UGrid.1.0.69328\build\net40\Deltares.UGrid.targets'))" />
+    <Error Condition="!Exists('..\..\packages\MeshKernelNET.1.0.0.32-Beta\build\net40\MeshKernelNET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MeshKernelNET.1.0.0.32-Beta\build\net40\MeshKernelNET.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets')" />
   <Import Project="..\..\packages\Deltares.UGrid.1.0.69328\build\net40\Deltares.UGrid.targets" Condition="Exists('..\..\packages\Deltares.UGrid.1.0.69328\build\net40\Deltares.UGrid.targets')" />
+  <Import Project="..\..\packages\MeshKernelNET.1.0.0.32-Beta\build\net40\MeshKernelNET.targets" Condition="Exists('..\..\packages\MeshKernelNET.1.0.0.32-Beta\build\net40\MeshKernelNET.targets')" />
 </Project>
