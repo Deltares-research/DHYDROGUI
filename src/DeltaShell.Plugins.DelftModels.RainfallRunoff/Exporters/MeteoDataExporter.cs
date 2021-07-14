@@ -111,15 +111,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                     return false;
                 }
 
-                sw.WriteLine("* Created: " + DateTime.Now.ToString());
+                sw.WriteLine("* Created: " + DateTime.Now);
                 DateTime first = timeValues[0];
                 TimeSpan span = timeValues[1] - first;
                 sw.WriteLine(HeaderFormatPrecipitation);
 
                 // Write the meteo stations. 
-                sw.WriteLine("*Aantal stations");
+                sw.WriteLine("*Number of stations");
                 sw.WriteLine(meteoStationNames.Count);
-                sw.WriteLine("*Namen van stations");
+                sw.WriteLine("*Station names");
                 foreach (string meteoStationName in meteoStationNames)
                     sw.WriteLine("'" + meteoStationName + "'");
                 
