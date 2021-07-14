@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
         private void SendMeteoToModel()
         {
 
-            MeteoDataModelController.AddMeteoData(Writer, model.Precipitation, model.Evaporation,
+            MeteoDataModelController.AddMeteoData(Writer, model.Evaporation,
                 model.ModelNeedsTemperatureData ? model.Temperature : null,
                 model.StartTime,
                 model.StopTime, model.TimeStep);
