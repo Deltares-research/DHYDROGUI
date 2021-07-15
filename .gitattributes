@@ -3637,6 +3637,7 @@ test/DeltaShell.NGHS.IO.Tests/DelftIniMultiLineReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/DeltaShell.NGHS.IO.Tests.csproj -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/BoundaryFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/CrossSectionDefinitionFileReaderTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/FileReaders/Definition/Structures/CulvertDefinitionReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/LateralSourceBcCategoryTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/LocationFileReaderTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileReaders/NetworkAndGridReaderTest.cs -text
@@ -3651,6 +3652,7 @@ test/DeltaShell.NGHS.IO.Tests/FileWriters/NetworkAndGridWriterTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/RetentionFileWriterTests.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/SpatialDataFileWriterTests.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/StructureFileWriterTest.cs -text
+test/DeltaShell.NGHS.IO.Tests/FileWriters/Structures/DefinitionGeneratorStructureInvertedSiphonTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/Structures/StructureFileWriterIntegrationTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/Structures/StructureRegionTest.cs -text
 test/DeltaShell.NGHS.IO.Tests/FileWriters/Structures/StructuresFileWriterTest.cs -text

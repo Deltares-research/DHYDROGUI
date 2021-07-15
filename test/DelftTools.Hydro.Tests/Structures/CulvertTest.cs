@@ -11,6 +11,52 @@ namespace DelftTools.Hydro.Tests.Structures
     public class CulvertTest
     {
         [Test]
+        public void Constructor_InitializesInstanceCorrectly()
+        {
+            // Call
+            var culvert = new Culvert();
+            
+            // Assert
+            Assert.That(culvert.Name, Is.EqualTo("Culvert"));
+            Assert.That(culvert.GateOpeningLossCoefficientFunction, Is.Not.Null);
+            Assert.That(culvert.Width, Is.EqualTo(1.0));
+            Assert.That(culvert.Height, Is.EqualTo(1.0));
+            Assert.That(culvert.TabulatedCrossSectionDefinition, Is.Not.Null);
+            Assert.That(culvert.GeometryType, Is.EqualTo(CulvertGeometryType.Round));
+            Assert.That(culvert.CulvertType, Is.EqualTo(CulvertType.Culvert));
+            Assert.That(culvert.BendLossCoefficient, Is.EqualTo(1.0));
+        }
+
+        [Test]
+        public void CreateDefault_CreatesCorrectInstance()
+        {
+            // Call
+            var culvert = Culvert.CreateDefault();
+            
+            // Assert
+            Assert.That(culvert.InletLevel, Is.EqualTo(-5.0));
+            Assert.That(culvert.OutletLevel, Is.EqualTo(-5.0));
+            Assert.That(culvert.SiphonOnLevel, Is.EqualTo(2));
+            Assert.That(culvert.SiphonOffLevel, Is.EqualTo(3));
+            Assert.That(culvert.Width, Is.EqualTo(1.0));
+            Assert.That(culvert.Height, Is.EqualTo(1.0));
+            Assert.That(culvert.Length, Is.EqualTo(10.0));
+            Assert.That(culvert.InletLossCoefficient, Is.EqualTo(0.1));
+            Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(0.1));
+            Assert.That(culvert.BendLossCoefficient, Is.EqualTo(1.0));
+            Assert.That(culvert.ArcHeight, Is.EqualTo(0.25));
+            Assert.That(culvert.Diameter, Is.EqualTo(4.0));
+            Assert.That(culvert.Radius, Is.EqualTo(0.5));
+            Assert.That(culvert.Radius1, Is.EqualTo(0.8));
+            Assert.That(culvert.Radius2, Is.EqualTo(0.2));
+            Assert.That(culvert.Radius3, Is.EqualTo(0));
+            Assert.That(culvert.Angle, Is.EqualTo(28));
+            Assert.That(culvert.Angle1, Is.EqualTo(0));
+            Assert.That(culvert.Friction, Is.EqualTo(45.0));
+            Assert.That(culvert.FrictionDataType, Is.EqualTo(Friction.Chezy));
+        }
+        
+        [Test]
         public void AbsoluteCrossSectionIncludesInletLevelForRectangle()
         {
             //set it up as rectangle

@@ -22,6 +22,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
         private static IEnumerable<TestCaseData> ConfigurationSettingsCases()
         {
             yield return new TestCaseData(StructureRegion.Capacity, "capacity", null, "Pump capacity (m3/s)", "F4");
+            yield return new TestCaseData(StructureRegion.SubType, "subType", null, "Defines the behaviour of the culvert", "F3");
+            yield return new TestCaseData(StructureRegion.BendLossCoef, "bendLossCoeff", null, "Bend loss coefficient of the inverted siphon (-)", "F3");
         }
     }
 }

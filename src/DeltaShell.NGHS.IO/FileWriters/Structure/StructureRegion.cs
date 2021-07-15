@@ -192,7 +192,8 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #endregion
 
         #region Siphon & Inverted Siphon Elements
-        public static readonly ConfigurationSetting BendLossCoef = new ConfigurationSetting(key: "bendLossCoeff", description: "Bend loss coefficient (-)");
+        public static readonly ConfigurationSetting SubType = new ConfigurationSetting(key: "subType", description: "Defines the behaviour of the culvert");
+        public static readonly ConfigurationSetting BendLossCoef = new ConfigurationSetting(key: "bendLossCoeff", description: "Bend loss coefficient of the inverted siphon (-)");
         #endregion
 
         #region Siphon Elements

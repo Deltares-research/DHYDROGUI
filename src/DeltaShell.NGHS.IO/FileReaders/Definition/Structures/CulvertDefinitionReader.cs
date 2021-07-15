@@ -12,7 +12,7 @@ using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 {
-    class CulvertDefinitionReader : IStructureDefinitionReader
+    public class CulvertDefinitionReader : IStructureDefinitionReader
     {
         public IStructure1D ReadDefinition(IDelftIniCategory category,
             IList<ICrossSectionDefinition> crossSectionDefinitions, IBranch branch)
@@ -58,13 +58,21 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                     culvert.GateOpeningLossCoefficientFunction.CreateFunctionFromArrays(relOpening, lossCoeff);
             }
 
-            culvert.CulvertType = category.Properties.All(p => p.Name != StructureRegion.BendLossCoef.Key)
-                ? CulvertType.Culvert
-                : category.Properties.Any(p => p.Name == StructureRegion.TurnOnLevel.Key)
-                    ? CulvertType.Siphon
-                    : CulvertType.InvertedSiphon;
+            culvert.CulvertType = GetCulvertType(category);
             
             return culvert;
+        }
+
+        private static CulvertType GetCulvertType(IDelftIniCategory category)
+        {
+            if (category.GetProperty(StructureRegion.SubType.Key)?.Value == "invertedSiphon")
+            {
+                return CulvertType.InvertedSiphon;
+            }
+
+            return category.GetProperty(StructureRegion.TurnOnLevel.Key) != null 
+                       ? CulvertType.Siphon 
+                       : CulvertType.Culvert;
         }
 
         private void SetCulvertDimensionsBasedOnProfile(ICulvert culvert, ICrossSectionDefinition definition)

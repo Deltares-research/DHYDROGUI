@@ -39,7 +39,7 @@ namespace DelftTools.Hydro.Structures
             TabulatedCrossSectionDefinition = new CrossSectionDefinitionZW {IsClosed = true};
             GeometryType = CulvertGeometryType.Round;
             CulvertType = CulvertType.Culvert;
-
+            BendLossCoefficient = 1.0;
         }
 
         [DisplayName("Flow direction")]
@@ -576,7 +576,7 @@ namespace DelftTools.Hydro.Structures
                                   Length = 10.0,
                                   InletLossCoefficient = 0.1,
                                   OutletLossCoefficient = 0.1,
-                                  BendLossCoefficient = 0.0,
+                                  BendLossCoefficient = 1.0,
                                   ArcHeight = 0.25,
                                   Diameter = 4.0, 
                                   Radius = 0.5,
@@ -614,40 +614,40 @@ namespace DelftTools.Hydro.Structures
                 return CulvertType.Equals(CulvertType.Siphon);
             }
 
-            if (propertyName == "GateInitialOpening")
+            if (propertyName == nameof(GateInitialOpening))
             {
                 return !IsGated;
             }
 
-            if (propertyName == "GroundLayerRoughness" || propertyName == "GroundLayerThickness")
+            if (propertyName == nameof(GroundLayerRoughness) || propertyName == nameof(GroundLayerThickness))
             {
                 return !GroundLayerEnabled;
             }
 
-            if (propertyName == "Width")
+            if (propertyName == nameof(Width))
             {
                 return GeometryType == CulvertGeometryType.SteelCunette ||
                          GeometryType == CulvertGeometryType.Tabulated ||
                          GeometryType == CulvertGeometryType.Round;
             }
 
-            if (propertyName == "Height")
+            if (propertyName == nameof(Height))
             {
                 return GeometryType == CulvertGeometryType.Tabulated || GeometryType == CulvertGeometryType.Round;
             }
 
-            if (propertyName == "ArcHeight")
+            if (propertyName == nameof(ArcHeight))
             {
                 return GeometryType != CulvertGeometryType.Arch;
             }
 
-            if (propertyName == "Diameter")
+            if (propertyName == nameof(Diameter))
             {
                 return GeometryType != CulvertGeometryType.Round;
             }
             
-            if (propertyName == "Radius" || propertyName == "Radius1" || propertyName == "Radius2" || propertyName == "Radius3" ||
-                propertyName == "Angle" || propertyName == "Angle1")
+            if (propertyName == nameof(Radius) || propertyName == nameof(Radius1) || propertyName == nameof(Radius2) || propertyName == nameof(Radius3) ||
+                propertyName == nameof(Angle) || propertyName == nameof(Angle1))
             {
                 return GeometryType != CulvertGeometryType.SteelCunette;
             }

@@ -169,6 +169,7 @@
     <Compile Include="DelftIniMultiLineReaderTest.cs" />
     <Compile Include="FileReaders\BoundaryFileReaderTest.cs" />
     <Compile Include="FileReaders\CrossSectionDefinitionFileReaderTest.cs" />
+    <Compile Include="FileReaders\Definition\Structures\CulvertDefinitionReaderTest.cs" />
     <Compile Include="FileReaders\LateralSourceBcCategoryTest.cs" />
     <Compile Include="FileReaders\LocationFileReaderTest.cs" />
     <Compile Include="FileReaders\NetworkAndGridReaderTest.cs" />
@@ -183,6 +184,7 @@
     <Compile Include="FileWriters\RetentionFileWriterTests.cs" />
     <Compile Include="FileWriters\SpatialDataFileWriterTests.cs" />
     <Compile Include="FileWriters\StructureFileWriterTest.cs" />
+    <Compile Include="FileWriters\Structures\DefinitionGeneratorStructureInvertedSiphonTest.cs" />
     <Compile Include="FileWriters\Structures\StructureFileWriterIntegrationTest.cs" />
     <Compile Include="FileWriters\Structures\StructureRegionTest.cs" />
     <Compile Include="FileWriters\Structures\StructuresFileWriterTest.cs" />
