@@ -289,7 +289,6 @@ namespace DelftTools.Hydro.Structures
         [DisplayName("Culvert type")]
         [EditAction]
         [FeatureAttribute(Order = 20)]
-        [ReadOnly(true)]
         public virtual CulvertType CulvertType {
             get { return culvertType; }
             set
@@ -351,9 +350,9 @@ namespace DelftTools.Hydro.Structures
             get { return (InletLevel + OutletLevel)/2; }
         }
 
+        [DynamicReadOnly]
         [DisplayName("Bend loss coefficient")]
-        //[FeatureAttribute(Order = 15, ExportName = "BendLosCoef")]
-        [Browsable(false)]
+        [FeatureAttribute(Order = 15, ExportName = "BendLosCoef")]
         public virtual double BendLossCoefficient { get; set; }
 
         [DisplayName("Shape")]
@@ -650,6 +649,11 @@ namespace DelftTools.Hydro.Structures
                 propertyName == nameof(Angle) || propertyName == nameof(Angle1))
             {
                 return GeometryType != CulvertGeometryType.SteelCunette;
+            }
+
+            if (propertyName == nameof(BendLossCoefficient))
+            {
+                return CulvertType != CulvertType.InvertedSiphon;
             }
 
             return false;
