@@ -211,6 +211,8 @@
 
         void AddEvaporationStation(string name, double[] evaporationInMMPerDay);
 
+        void AddPrecipitationStation(string name, double[] precipitation);
+
         void AddTemperatureStation(string name, double[] temperatures);
 
         #endregion

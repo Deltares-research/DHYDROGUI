@@ -33,6 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         private readonly List<string> boundaries = new List<string>();
         private readonly List<string> wwtp = new List<string>();
         private readonly List<string> openWaterData = new List<string>();
+        private readonly Dictionary<string, double[]> precipitationPerStation = new Dictionary<string, double[]>();
         private readonly Dictionary<string, double[]> evaporationPerStation = new Dictionary<string, double[]>();
         private readonly Dictionary<string, double[]> temperaturePerStation = new Dictionary<string, double[]>();
         private int startDateMeteoData;
@@ -53,6 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             WriteFixedFiles();
 
             File.WriteAllText("DELFT_3B.INI", iniFile);
+            File.WriteAllText("DEFAULT.BUI", FlushPrecipitationData());
             File.WriteAllText("DEFAULT.EVP", FlushEvaporationData());
             File.WriteAllText("DEFAULT.TMP", FlushTemperatureData());
 
@@ -109,6 +111,65 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
                     File.WriteAllText(fileName, streamReader.ReadToEnd());
                 }
             }
+        }
+
+        private string FlushPrecipitationData()
+        {
+            var sb = new StringBuilder();
+
+            var valuesOfFirstStation = precipitationPerStation.Values.FirstOrDefault();
+
+            if (valuesOfFirstStation == null)
+            {
+                return "";
+            }
+
+            if (startDateMeteoData == 0)
+            {
+                throw new InvalidOperationException("SetMeteoDataStartTimeAndInterval must be called before initialize");
+            }
+
+            SwitchToInvariantCulture();
+
+            sb.AppendLine("1");
+            sb.AppendLine("*Aantal stations");
+            sb.AppendLine(precipitationPerStation.Keys.Count.ToString());
+            sb.AppendLine("*Namen van stations");
+            foreach (var station in precipitationPerStation.Keys)
+            {
+                sb.AppendLine("'" + station + "'");
+            }
+            sb.AppendLine("*Aantal gebeurtenissen (omdat het 1 bui betreft is dit altijd 1)");
+            sb.AppendLine("*en het aantal seconden per waarnemingstijdstap");
+            sb.AppendLine("1 " + timeStepInSeconds);
+            sb.AppendLine("*Elke commentaarregel wordt begonnen met een * (asteriks).");
+
+            var numTimeSteps = valuesOfFirstStation.Length;
+            var startDateTime = ConvertFromSobekDateTime(startDateMeteoData, startTimeMeteoData);
+            var diff = TimeSpan.FromSeconds(numTimeSteps * timeStepInSeconds);
+
+            sb.AppendLine($"{startDateTime.Year} {startDateTime.Month} {startDateTime.Day} {startDateTime.Hour} {startDateTime.Minute} {startDateTime.Second} {(int) diff.TotalDays} {diff.Hours} {diff.Minutes} {diff.Seconds}");
+
+            for (int i = 0; i < valuesOfFirstStation.Length; i++)
+            {
+                foreach (var station in precipitationPerStation.Keys)
+                {
+                    sb.Append(precipitationPerStation[station][i] + " ");
+                }
+                sb.AppendLine();
+            }
+
+            //extra timestep
+            foreach (var station in precipitationPerStation.Keys)
+            {
+                sb.Append("0 ");
+            }
+
+            RestoreCulture();
+
+            precipitationPerStation.Clear();
+
+            return sb.ToString();
         }
 
         private string FlushEvaporationData()
@@ -691,6 +752,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
             startDateMeteoData = startDate;
             startTimeMeteoData = startTime;
             this.timeStepInSeconds = timeStepInSeconds;
+        }
+
+        public void AddPrecipitationStation(string name, double[] precipitation)
+        {
+            precipitationPerStation.Add(name, precipitation);
         }
 
         public void AddEvaporationStation(string name, double[] evaporationInMMPerDay)
