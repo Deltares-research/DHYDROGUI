@@ -33,8 +33,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                     continue;
                 }
 
-                string actualOutputFileName = actualOutputFileNames.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
-                string expectedOutputFileName = expectedOutputFileNames.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
+                string actualOutputFileName = actualOutputFileNames.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
+                string expectedOutputFileName = expectedOutputFileNames.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
 
                 if (!FileComparerHelper.FileNameIsEqual(fileName, expectedOutputFileName, actualOutputFileName, ref overallErrorMessage))
                 {

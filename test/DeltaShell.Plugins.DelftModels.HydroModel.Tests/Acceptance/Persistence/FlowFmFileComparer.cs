@@ -69,8 +69,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                     linesToIgnore.AddRange(linesInFileToIgnore);
                 }
 
-                string expectedFlowFmFile = expectedFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
-                string actualFlowFmFile = actualFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
+                string expectedFlowFmFile = expectedFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
+                string actualFlowFmFile = actualFlowFmFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
 
                 if (!FileComparerHelper.FileNameIsEqual(fileName, expectedFlowFmFile, actualFlowFmFile, ref overallErrorMessage))
                 {

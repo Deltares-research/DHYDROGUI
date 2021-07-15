@@ -38,8 +38,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                     linesToIgnore = linesInFileToIgnore.ToArray();
                 }
 
-                string expectedRainfallRunoffFile = expectedRainfallRunoffFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
-                string actualRainfallRunoffFile = actualRainfallRunoffFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName));
+                string expectedRainfallRunoffFile = expectedRainfallRunoffFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
+                string actualRainfallRunoffFile = actualRainfallRunoffFiles.FirstOrDefault(f => Path.GetFileName(f).Equals(fileName, StringComparison.InvariantCultureIgnoreCase));
                 
                 if (!FileComparerHelper.FileNameIsEqual(fileName, expectedRainfallRunoffFile, actualRainfallRunoffFile, ref overallErrorMessage))
                 {
