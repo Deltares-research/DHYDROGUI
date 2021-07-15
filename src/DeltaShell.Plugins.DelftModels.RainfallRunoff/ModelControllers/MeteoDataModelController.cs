@@ -14,19 +14,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof (MeteoDataModelController));
 
-        public static bool AddMeteoData(IRRModelHybridFileWriter writer, MeteoData precipitationData, MeteoData evaporationData, MeteoData tempData, DateTime startDate, DateTime endDate, TimeSpan timeStepModel)
+        public static bool AddMeteoData(IRRModelHybridFileWriter writer, MeteoData evaporationData, MeteoData tempData, DateTime startDate, DateTime endDate, TimeSpan timeStepModel)
         {
             bool returnValue = true;
 
             writer.SetMeteoDataStartTimeAndInterval(RRModelEngineHelper.DateToInt(startDate),
                                                       RRModelEngineHelper.TimeToInt(startDate),
                                                       (int) timeStepModel.TotalSeconds);
-
-            if (!AddPrecipitationData(writer, precipitationData, startDate, endDate, timeStepModel))
-            {
-                log.ErrorFormat("It's not possible to set the precipitation data. Check the validation report.");
-                returnValue = false;
-            }
 
             if (!AddEvaporationData(writer, evaporationData, startDate, endDate))
             {
@@ -40,45 +34,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             }
 
             return returnValue;
-        }
-
-        private static bool AddPrecipitationData(IRRModelHybridFileWriter writer, MeteoData precipitationData, DateTime startDate, DateTime endDate, TimeSpan timeStepModel)
-        {
-            if (!ValidateTimeRangeOfMeteoData(precipitationData, startDate, endDate))
-                return false;
-
-            switch (precipitationData.DataDistributionType)
-            {
-                case MeteoDataDistributionType.Global:
-                    writer.AddPrecipitationStation("Global", GetMeteoForPeriod(precipitationData, startDate, endDate, timeStepModel));
-                    return true;
-                case MeteoDataDistributionType.PerFeature:
-                    var featureCoverage = precipitationData.Data as IFeatureCoverage;
-                    if (featureCoverage != null)
-                    {
-                        foreach (IFeature feature in featureCoverage.Features)
-                        {
-                            writer.AddPrecipitationStation(((INameable) feature).Name,GetMeteoForPeriod(precipitationData, startDate, endDate, timeStepModel, feature));
-                        }
-                        return true;
-                    }
-                    return false;
-                case MeteoDataDistributionType.PerStation:
-                    var function = precipitationData.Data;
-                    if (function != null)
-                    {
-                        foreach (var id in function.Arguments[1].Values.Cast<string>())
-                        {
-                            writer.AddPrecipitationStation(id,
-                                                             GetMeteoForPeriod(precipitationData, startDate, endDate,
-                                                                               timeStepModel, id));
-                        }
-                        return true;
-                    }
-                    return false;
-                default:
-                    throw new NotSupportedException("Unknown precipitation data type");
-            }
         }
 
         private static bool AddEvaporationData(IRRModelHybridFileWriter writer, MeteoData evaporationData, DateTime startDate, DateTime endDate)

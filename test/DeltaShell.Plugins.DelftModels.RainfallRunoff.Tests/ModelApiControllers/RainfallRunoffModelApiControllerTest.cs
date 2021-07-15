@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             Directory.GetDirectories(TestHelper.GetTestWorkingDirectory(), nameof(RainfallRunoffModelApiControllerTest) + "*").ForEach(FileUtils.DeleteIfExists);
         }
         
-        private RainfallRunoffModel CreateModel()
+        private RainfallRunoffModel CreateModel(bool setMeteoData = false)
         {
             var model = new RainfallRunoffModel
             {
@@ -44,7 +44,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             };
             model.OutputTimeStep = model.TimeStep; // reset
             model.Basin.Catchments.Add(new Catchment());
-            SetGlobalMeteoDataForTesting(model);
+
+            if (setMeteoData)
+            {
+                SetGlobalMeteoDataForTesting(model);
+            }
 
             return model;
         }
@@ -497,7 +501,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         public void InitializeModelWritesUserCustomizedCropFile()
         {
             const string contents = "Test contents";
-            var model = CreateModel();
+            var model = CreateModel(true);
             model.FixedFiles.UnpavedCropFactorsFile.Content = contents;
 
             try
@@ -513,7 +517,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         [Category(TestCategory.Slow)]
         public void InitializeModelWritesCropFile()
         {
-            var model = CreateModel();
+            var model = CreateModel(true);
             try
             {
                 model.Initialize();

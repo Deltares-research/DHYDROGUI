@@ -73,12 +73,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                 meteoWriter.Export(model.Evaporation, evapFile);
             }
 
-            if (model.Precipitation.DataDistributionType != MeteoDataDistributionType.Global)
-            {
-                var precipitationFile = Path.Combine(Path.GetFullPath(path), "default.bui");
-                FileUtils.DeleteIfExists(precipitationFile);
-                meteoWriter.Export(model.Precipitation, precipitationFile);
-            }
+            var precipitationFile = Path.Combine(Path.GetFullPath(path), "default.bui");
+            FileUtils.DeleteIfExists(precipitationFile);
+            meteoWriter.Export(model.Precipitation, precipitationFile);
 
             if (model.Temperature.DataDistributionType != MeteoDataDistributionType.Global)
             {

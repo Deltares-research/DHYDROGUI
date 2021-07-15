@@ -113,19 +113,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
                 sw.WriteLine("* Created: " + DateTime.Now);
                 DateTime first = timeValues[0];
-                TimeSpan span = timeValues[1] - first;
+                TimeSpan timeStep = timeValues[1] - first;
                 sw.WriteLine(HeaderFormatPrecipitation);
 
                 // Write the meteo stations. 
-                sw.WriteLine("*Number of stations");
+                sw.WriteLine("*Aantal stations");
                 sw.WriteLine(meteoStationNames.Count);
-                sw.WriteLine("*Station names");
+                sw.WriteLine("*Namen van stations");
                 foreach (string meteoStationName in meteoStationNames)
                     sw.WriteLine("'" + meteoStationName + "'");
                 
-                sw.WriteLine(HeaderFormatPrecipitation2, Convert.ToInt32(span.TotalSeconds));
+                sw.WriteLine(HeaderFormatPrecipitation2, Convert.ToInt32(timeStep.TotalSeconds));
 
-                span = timeValues.Last() - first;
+                var span = timeValues.Last() - first;
                 string firstFormatted = first.ToString("yyyy MM dd HH mm ss");
                 string spanFormatted = span.ToString(@"dd\ hh\ mm\ ss");
                 sw.WriteLine(firstFormatted + " " + spanFormatted);
