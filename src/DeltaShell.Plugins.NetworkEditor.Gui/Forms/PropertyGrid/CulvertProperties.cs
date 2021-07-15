@@ -154,7 +154,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Culvert type")]
         [Description("The culvert can be siphon, inverted siphon or culvert.")]
-        [ReadOnly(true)]
         [PropertyOrder(11)]
         public CulvertType CulvertType
         {
@@ -215,7 +214,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DisplayName("Bendloss coefficient")]
         [Description("BendLoss coefficient of the culvert.")]
         [PropertyOrder(16)]
-        [Browsable(false)]
+        [DynamicReadOnly]
         public double BendLossCoefficient
         {
             get { return data.BendLossCoefficient; }
@@ -473,7 +472,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DynamicReadOnlyValidationMethod]
-        public bool DynamicReadOnlyValidationMethod(string propertyName)
+        public bool IsReadOnly(string propertyName)
         {
             if (propertyName == nameof(SiphonOnLevel) || propertyName == nameof(SiphonOffLevel))
             {
@@ -485,7 +484,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 return CulvertType.Equals(CulvertType.Siphon);
             }
 
-            if (propertyName == "GateInitialOpening")
+            if (propertyName == nameof(GateInitialOpening))
             {
                 return !IsGated;
             }
@@ -495,32 +494,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 return !data.GroundLayerEnabled;
             }
 
-            if (propertyName == "Width")
+            if (propertyName == nameof(Width))
             {
                 return GeometryType == CulvertGeometryType.SteelCunette ||
                          GeometryType == CulvertGeometryType.Tabulated ||
                          GeometryType == CulvertGeometryType.Round;
             }
 
-            if (propertyName == "Height")
+            if (propertyName == nameof(Height))
             {
                 return GeometryType == CulvertGeometryType.Tabulated || GeometryType == CulvertGeometryType.Round;
             }
 
-            if (propertyName == "ArcHeight")
+            if (propertyName == nameof(ArcHeight))
             {
                 return GeometryType != CulvertGeometryType.Arch;
             }
 
-            if (propertyName == "Diameter")
+            if (propertyName == nameof(Diameter))
             {
                 return GeometryType != CulvertGeometryType.Round;
             }
 
-            if (propertyName == "Radius" || propertyName == "Radius1" || propertyName == "Radius2" || propertyName == "Radius3" ||
-                propertyName == "Angle" || propertyName == "Angle1")
+            if (propertyName == nameof(Radius) || propertyName == nameof(Radius1) || propertyName == nameof(Radius2) || propertyName == nameof(Radius3) ||
+                propertyName == nameof(Angle) || propertyName == nameof(Angle1))
             {
                 return GeometryType != CulvertGeometryType.SteelCunette;
+            }
+
+            if (propertyName == nameof(BendLossCoefficient))
+            {
+                return CulvertType != CulvertType.InvertedSiphon;
             }
 
             return false;

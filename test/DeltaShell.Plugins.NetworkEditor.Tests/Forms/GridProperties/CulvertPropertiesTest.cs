@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
@@ -77,7 +78,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
 
         [TestCase(nameof(CulvertProperties.SiphonOnLevel))]
         [TestCase(nameof(CulvertProperties.SiphonOffLevel))]
-        [TestCase(nameof(CulvertProperties.BendLossCoefficient))]
         public void CulvertPropertiesWithoutSiphonProperties(string checkName)
         {
             var culvertProperties = new CulvertProperties { Data = new Culvert() };
@@ -130,6 +130,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             var displayNameAttribute = (DisplayNameAttribute)propertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false).SingleOrDefault();
             Assert.That(displayNameAttribute, Is.Not.Null);
             Assert.That(cats, Has.No.Member(displayNameAttribute.DisplayName));
+        }
+
+        [TestCase(CulvertType.Culvert, nameof(CulvertProperties.BendLossCoefficient), true)]
+        [TestCase(CulvertType.Siphon, nameof(CulvertProperties.BendLossCoefficient), true)]
+        [TestCase(CulvertType.InvertedSiphon, nameof(CulvertProperties.BendLossCoefficient), false)]
+        [TestCase(CulvertType.Culvert, nameof(CulvertProperties.AllowNegativeFlow), false)]
+        [TestCase(CulvertType.Siphon, nameof(CulvertProperties.AllowNegativeFlow), true)]
+        [TestCase(CulvertType.InvertedSiphon, nameof(CulvertProperties.AllowNegativeFlow), false)]
+        public void IsReadOnly_IsCorrect(CulvertType culvertType, string propertyName, bool expReadOnly)
+        {
+            // Setup
+            var properties = new CulvertProperties
+            {
+                Data = new Culvert(),
+                CulvertType = culvertType
+            };
+
+            // Call
+            bool isReadOnly = properties.IsReadOnly(propertyName);
+
+            // Assert
+            Assert.That(isReadOnly, Is.EqualTo(expReadOnly));
         }
     }
 }

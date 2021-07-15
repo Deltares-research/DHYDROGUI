@@ -36585,7 +36585,6 @@ test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/Properties/AssemblyInfo.c
 test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/TestClassSetup.cs -text
 test/DeltaShell.Plugins.NetworkEditor.IntegrationTests/packages.config -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/App.config -text
-test/DeltaShell.Plugins.NetworkEditor.Tests/CulvertPropertiesTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/DeltaShell.Plugins.NetworkEditor.Tests.csproj -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Export/CrossSectionXYZToCsvFileExporterTest.cs -text
 test/DeltaShell.Plugins.NetworkEditor.Tests/Export/CrossSectionYZToCsvFileExporterTest.cs -text
