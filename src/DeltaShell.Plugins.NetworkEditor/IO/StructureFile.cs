@@ -60,13 +60,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IO
             return structureCategory;
         }
 
-        private static void AddFrictionAndGroundLayerData(DelftIniCategory category, Friction frictionType, double friction, double groundLayerRoughness)
-        {
-            category.AddProperty(StructureRegion.BedFrictionType.Key, (int)frictionType, StructureRegion.BedFrictionType.Description);
-            category.AddProperty(StructureRegion.BedFriction.Key, friction, StructureRegion.BedFriction.Description, StructureRegion.BedFriction.Format);
-            category.AddProperty(StructureRegion.GroundFrictionType.Key, (int)frictionType, StructureRegion.GroundFrictionType.Description); // This may be removed, but for now just duplicate
-            category.AddProperty(StructureRegion.GroundFriction.Key, groundLayerRoughness, StructureRegion.GroundFriction.Description, StructureRegion.GroundFriction.Format);
-        }
         private static void AddBedFrictionData(DelftIniCategory category, Friction frictionType, double friction)
         {
             category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType.ToString().ToLower(), StructureRegion.BedFrictionType.Description);
