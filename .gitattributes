@@ -2809,6 +2809,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CompositeStructurePr
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CrossSectionDefinitionProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CrossSectionProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CrossSectionSectionTypeProperties.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CrossSectionVectorLayerProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/CulvertProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/DiscretizationProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/DrainageBasinProperties.cs -text

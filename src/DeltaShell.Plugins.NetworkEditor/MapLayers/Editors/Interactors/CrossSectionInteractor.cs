@@ -8,6 +8,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -16,6 +17,7 @@ using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 using SharpMap.Converters.Geometries;
+using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Editors;
 using SharpMap.Editors.Interactors;
 using SharpMap.Editors.Interactors.Network;
@@ -76,11 +78,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             var imageTracker = TrackerSymbolHelper.GenerateSimple(new Pen(Color.Lime), new SolidBrush(Color.Green), 6, 6);
 
-            var geometry = SourceFeature.Geometry;
+            var geometry = GetGeometry();
 
-            if (Layer != null && Layer.CoordinateTransformation != null)
+            if (Layer?.CoordinateTransformation != null)
             {
-                geometry = SharpMap.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(geometry, Layer.CoordinateTransformation.MathTransform);
+                geometry = GeometryTransform.TransformGeometry(geometry, Layer.CoordinateTransformation.MathTransform);
             }
 
             for (int i = 0; i < geometry.Coordinates.Length; i++)
@@ -90,6 +92,16 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 
                 Trackers.Add(new TrackerFeature(this, selectPoint, i, imageTracker));
             }
+        }
+
+        private IGeometry GetGeometry()
+        {
+            var csr= Layer.CustomRenderers.OfType<CrossSectionRenderer>().FirstOrDefault();
+            if (csr != null && csr.UseDefaultLength)
+            {
+                return csr.GetDefaultGeometry(SourceFeature as ICrossSection);
+            }
+            return SourceFeature.Geometry;
         }
 
         public override void Start()
@@ -281,6 +293,8 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 CreateTrackers();
                 return;
             }
+
+            geometry = GetGeometry();
 
             Trackers[0].Geometry.Coordinates[0].X = geometry.Coordinates[0].X;
             Trackers[0].Geometry.Coordinates[0].Y = geometry.Coordinates[0].Y;

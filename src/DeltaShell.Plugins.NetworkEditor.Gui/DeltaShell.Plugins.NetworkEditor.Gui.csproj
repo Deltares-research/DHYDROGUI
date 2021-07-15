@@ -214,6 +214,7 @@
     <Compile Include="Commands\ShowSideViewCommand.cs" />
     <Compile Include="Commands\SplitPipeCommand.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Forms\PropertyGrid\CrossSectionVectorLayerProperties.cs" />
     <Compile Include="DummyConverter.cs" />
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
     <Compile Include="Editors\FMPumpPropertiesRow.cs" />

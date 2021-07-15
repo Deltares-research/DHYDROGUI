@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Properties;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -12,7 +13,7 @@ using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using Point = NetTopologySuite.Geometries.Point;
+using Point = NetTopologySuite.Geometries.Point; 
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {
@@ -33,7 +34,18 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
     public class CrossSectionRenderer : BranchFeatureRenderer
     {
         private const double minimumPixelLength = 16.0;
-        
+
+        public override IGeometry GetRenderedFeatureGeometry(IFeature crossSection, ILayer layer)
+        {
+            var geometry = UseDefaultLength
+                               ? GetDefaultGeometry(crossSection as ICrossSection)
+                               : crossSection.Geometry;
+
+            return layer.CoordinateTransformation != null
+                       ? GeometryTransform.TransformGeometry(geometry, layer.CoordinateTransformation.MathTransform)
+                       : geometry;
+        }
+
         /// <summary>
         /// Called for each feature that needs to be rendered. CrossSectionRenderer assumes it is always 
         /// added to a vectorlayer.
@@ -62,9 +74,9 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
             var currentGeometry = GetRenderedFeatureGeometry(crossSection, vectorLayer);
             
-            if (currentGeometry is IPoint)
+            if (currentGeometry is IPoint point)
             {
-                VectorRenderingHelper.DrawPoint(g, (IPoint)currentGeometry, Resources.CrossSectionSmallWithExclamation, 1, new PointF(0, 0), 0, layer.Map);
+                VectorRenderingHelper.DrawPoint(g, point, Resources.CrossSectionSmallWithExclamation, 1, new PointF(0, 0), 0, layer.Map);
                 return true;
             }
 
@@ -138,6 +150,21 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
                 null, vectorLayer.ClippingEnabled);
             return true;
         }
+
+        internal IGeometry GetDefaultGeometry(ICrossSection crossSection)
+        {
+            if (crossSection.Branch == null || crossSection.GeometryBased)
+            {
+                return crossSection.Geometry;
+            }
+
+            var halfLength = DefaultLength / 2.0;
+            return CrossSectionHelper.CreatePerpendicularGeometry(crossSection.Branch.Geometry, crossSection.Chainage, halfLength * -1, halfLength, 0);
+        }
+
+        public bool UseDefaultLength { get; set; } = true;
+
+        public double DefaultLength { get; set; } = 10;
 
         private double GetPixelLength(IGeometry currentGeometry)
         {

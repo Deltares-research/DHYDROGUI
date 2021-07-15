@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         /// <returns></returns>
         public abstract bool Render(IFeature feature, Graphics g, ILayer layer);
 
-        public IGeometry GetRenderedFeatureGeometry(IFeature feature, ILayer layer)
+        public virtual IGeometry GetRenderedFeatureGeometry(IFeature feature, ILayer layer)
         {
             return layer.CoordinateTransformation != null
                 ? GeometryTransform.TransformGeometry(feature.Geometry, layer.CoordinateTransformation.MathTransform)

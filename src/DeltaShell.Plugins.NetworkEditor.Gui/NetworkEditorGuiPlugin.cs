@@ -46,6 +46,7 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Wizard;
 using DeltaShell.Plugins.NetworkEditor.Import;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
+using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
 using DeltaShell.Plugins.SharpMapGis.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
@@ -162,6 +163,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
+            yield return new PropertyInfo<VectorLayer, CrossSectionVectorLayerProperties>
+            {
+                AdditionalDataCheck = l => l.CustomRenderers.OfType<CrossSectionRenderer>().Any()
+            };
             yield return new PropertyInfo<WmtsLayer, WmtsLayerProperties>();
             yield return new PropertyInfo<ICrossSection, CrossSectionProperties>();
             yield return new PropertyInfo<ICrossSectionDefinition, CrossSectionDefinitionProperties>();
