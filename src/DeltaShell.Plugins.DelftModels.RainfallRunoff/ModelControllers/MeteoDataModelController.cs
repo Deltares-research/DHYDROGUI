@@ -5,7 +5,6 @@ using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Feature;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
@@ -14,26 +13,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
     {
         private static readonly ILog log = LogManager.GetLogger(typeof (MeteoDataModelController));
 
-        public static bool AddMeteoData(IRRModelHybridFileWriter writer, MeteoData evaporationData, MeteoData tempData, DateTime startDate, DateTime endDate, TimeSpan timeStepModel)
+        public static void AddMeteoData(IRRModelHybridFileWriter writer, MeteoData evaporationData, DateTime startDate, DateTime endDate, TimeSpan timeStepModel)
         {
-            bool returnValue = true;
-
             writer.SetMeteoDataStartTimeAndInterval(RRModelEngineHelper.DateToInt(startDate),
-                                                      RRModelEngineHelper.TimeToInt(startDate),
-                                                      (int) timeStepModel.TotalSeconds);
+                                                    RRModelEngineHelper.TimeToInt(startDate),
+                                                    (int) timeStepModel.TotalSeconds);
 
             if (!AddEvaporationData(writer, evaporationData, startDate, endDate))
             {
                 log.ErrorFormat("It's not possible to set the evaporation data. Check the validation report.");
-                returnValue = false;
             }
-            if (tempData != null && !AddTemperatureData(writer, tempData, startDate, endDate, timeStepModel))
-            {
-                log.ErrorFormat("It's not possible to set the temperature data. Check the validation report.");
-                returnValue = false;
-            }
-
-            return returnValue;
+            
         }
 
         private static bool AddEvaporationData(IRRModelHybridFileWriter writer, MeteoData evaporationData, DateTime startDate, DateTime endDate)
@@ -77,49 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                     throw new NotSupportedException("Unknown evaporation data type");
             }
         }
-
-        private static bool AddTemperatureData(IRRModelHybridFileWriter writer, MeteoData temperatureData, DateTime startDate, DateTime endDate, TimeSpan timeStep)
-        {
-            if (!ValidateTimeRangeOfMeteoData(temperatureData, startDate, endDate))
-                return false;
-
-            double[] temp;
-
-            switch (temperatureData.DataDistributionType)
-            {
-                case MeteoDataDistributionType.Global:
-                    temp = GetMeteoForPeriod(temperatureData, startDate, endDate, timeStep);
-                    writer.AddTemperatureStation("Global", temp);
-                    return true;
-                case MeteoDataDistributionType.PerFeature:
-                    var featureCoverage = temperatureData.Data as IFeatureCoverage;
-                    if (featureCoverage != null)
-                    {
-                        foreach (var feature in featureCoverage.Features)
-                        {
-                            temp = GetMeteoForPeriod(temperatureData, startDate, endDate, timeStep, feature);
-                            writer.AddTemperatureStation(((INameable)feature).Name, temp);
-                        }
-                        return true;
-                    }
-                    return false;
-                case MeteoDataDistributionType.PerStation:
-                    var function = temperatureData.Data;
-                    if (function != null)
-                    {
-                        foreach (var id in function.Arguments[1].Values.Cast<string>())
-                        {
-                            temp = GetMeteoForPeriod(temperatureData, startDate, endDate, timeStep, id);
-                            writer.AddTemperatureStation(id, temp);
-                        }
-                        return true;
-                    }
-                    return false;
-                default:
-                    throw new NotSupportedException("Unknown temperature data type");
-            }
-        }
-
+        
         private static bool ValidateTimeRangeOfMeteoData(MeteoData meteoData, DateTime modelStartDateTime, DateTime modelEndDateTime)
         {
             var timeArgument = (IVariable<DateTime>) meteoData.Data.Arguments.FirstOrDefault(a => a.ValueType == typeof (DateTime));

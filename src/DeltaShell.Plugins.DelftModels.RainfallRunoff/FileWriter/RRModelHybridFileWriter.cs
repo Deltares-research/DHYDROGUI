@@ -34,7 +34,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         private readonly List<string> wwtp = new List<string>();
         private readonly List<string> openWaterData = new List<string>();
         private readonly Dictionary<string, double[]> evaporationPerStation = new Dictionary<string, double[]>();
-        private readonly Dictionary<string, double[]> temperaturePerStation = new Dictionary<string, double[]>();
         private int startDateMeteoData;
         private int startTimeMeteoData;
         private int timeStepInSeconds;
@@ -54,7 +53,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             File.WriteAllText("DELFT_3B.INI", iniFile);
             File.WriteAllText("DEFAULT.EVP", FlushEvaporationData());
-            File.WriteAllText("DEFAULT.TMP", FlushTemperatureData());
 
             File.WriteAllText("Paved.3b", String.Join("\r\n", pavedData.ToArray()));
             File.WriteAllText("Paved.sto", String.Join("\r\n", pavedStorage.ToArray()));
@@ -150,60 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
 
             return sb.ToString();
         }
-
-        private string FlushTemperatureData()
-        {
-            var sb = new StringBuilder();
-
-            var valuesOfFirstStation = temperaturePerStation.Values.FirstOrDefault();
-
-            if (valuesOfFirstStation == null)
-            {
-                return "";
-            }
-
-            if (startDateMeteoData == 0)
-            {
-                throw new InvalidOperationException("SetMeteoDataStartTimeAndInterval must be called before initialize");
-            }
-
-            SwitchToInvariantCulture();
-
-            sb.AppendLine("1");
-            sb.AppendLine("*Aantal stations");
-            sb.AppendLine(temperaturePerStation.Keys.Count.ToString());
-            sb.AppendLine("*Namen van stations");
-            foreach (var station in temperaturePerStation.Keys)
-            {
-                sb.AppendLine("'" + station + "'");
-            }
-            sb.AppendLine("*Aantal gebeurtenissen (omdat het 1 bui betreft is dit altijd 1)");
-            sb.AppendLine("*en het aantal seconden per waarnemingstijdstap");
-            sb.AppendLine("1 " + timeStepInSeconds);
-            sb.AppendLine("*Elke commentaarregel wordt begonnen met een * (asteriks).");
-
-            var numTimeSteps = valuesOfFirstStation.Length;
-            var startDateTime = ConvertFromSobekDateTime(startDateMeteoData, startTimeMeteoData);
-            var diff = TimeSpan.FromSeconds(numTimeSteps * timeStepInSeconds);
-
-            sb.AppendLine($"{startDateTime.Year} {startDateTime.Month} {startDateTime.Day} {startDateTime.Hour} {startDateTime.Minute} {startDateTime.Second} {(int) diff.TotalDays} {diff.Hours} {diff.Minutes} {diff.Seconds}");
-
-            for (int i = 0; i < valuesOfFirstStation.Length; i++)
-            {
-                foreach (var station in temperaturePerStation.Keys)
-                {
-                    sb.Append(temperaturePerStation[station][i] + " ");
-                }
-                sb.AppendLine();
-            }
-
-            RestoreCulture();
-
-            temperaturePerStation.Clear();
-
-            return sb.ToString();
-        }
-
+        
         public void SwitchToInvariantCulture()
         {
             oldCulture = Thread.CurrentThread.CurrentCulture;
@@ -697,12 +642,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter
         {
             evaporationPerStation.Add(name, evaporationInMMPerDay);
         }
-
-        public void AddTemperatureStation(string name, double[] temperatures)
-        {
-            temperaturePerStation.Add(name, temperatures);
-        }
-
+        
         private void SetIniFile()
         {
             iniOptions = new Dictionary<string, List<DelftTools.Utils.Tuple<string, string>>>

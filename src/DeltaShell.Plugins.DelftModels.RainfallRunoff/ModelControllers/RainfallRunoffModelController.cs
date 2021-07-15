@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             OutputController = new RainfallRunoffModelOutputController();
         }
 
-        private RainfallRunoffModelOutputController OutputController { get; set; }
+        private RainfallRunoffModelOutputController OutputController { get; }
 
         //For use in tests only
         public string LastCrashReason { get; set; }
@@ -149,9 +149,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
         {
 
             MeteoDataModelController.AddMeteoData(Writer, model.Evaporation,
-                model.ModelNeedsTemperatureData ? model.Temperature : null,
-                model.StartTime,
-                model.StopTime, model.TimeStep);
+                                                  model.StartTime,
+                                                  model.StopTime, 
+                                                  model.TimeStep);
         }
 
         
