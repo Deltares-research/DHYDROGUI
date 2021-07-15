@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 IsInvertedSiphon = value == CulvertType.InvertedSiphon;
 
                 //Update visibilities
-                BendLossCoeffVisibility = !IsCulvert;
+                BendLossCoeffVisibility = IsInvertedSiphon;
                 NegativeFlowDirectionFlowVisibility = !IsSiphon;
             }
         }
