@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
             return CrossSectionHelper.CreatePerpendicularGeometry(crossSection.Branch.Geometry, crossSection.Chainage, halfLength * -1, halfLength, 0);
         }
 
-        public bool UseDefaultLength { get; set; } = true;
+        public bool UseDefaultLength { get; set; }
 
         public double DefaultLength { get; set; } = 10;
 
