@@ -937,7 +937,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
 
             var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(22, content.Properties.Count);
+            Assert.AreEqual(23, content.Properties.Count);
 
             var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.INV_SIPHON_ID.ToString(), idProperty.Value);
@@ -952,7 +952,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(StructureFileWriterTestHelper.INV_SIPHON_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
-            Assert.AreEqual(StructureRegion.StructureTypeName.InvertedSiphon, idProperty.Value);
+            Assert.AreEqual(StructureRegion.StructureTypeName.Culvert, idProperty.Value);
 
             // Many common properties tested by Culvert test (above)
 
