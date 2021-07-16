@@ -150,7 +150,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var operationName = Path.GetFileNameWithoutExtension(polFile);
             var value = parameterItem.ReadProperty<double>(InitialConditionRegion.Value.Key);
-            var operand = parameterItem.ReadProperty<string>(InitialConditionRegion.Operand.Key);
+            var operand = parameterItem.ReadProperty<string>(InitialConditionRegion.Operand.Key, true, "O");
             var operation = new SetValueOperation
             {
                 Value = value,
@@ -172,7 +172,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 FilePath = sampleFile
             };
 
-            var operand = parameterItem.ReadProperty<string>(InitialConditionRegion.Operand.Key, true);
+            var operand = parameterItem.ReadProperty<string>(InitialConditionRegion.Operand.Key, true, "O");
             if (operand != null)
             {
                 operation.Operand = ExtForceQuantNames.ParseOperationType(operand);
