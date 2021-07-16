@@ -1139,8 +1139,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         [NoNotifyPropertyChange]
         public new virtual DateTime CurrentTime
         {
-            get => base.CurrentTime;
-            set => base.CurrentTime = value;
+            get { return base.CurrentTime; }
+            set
+            {
+                base.CurrentTime = value;
+                base.OnProgressChanged();
+            }
         }
 
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)

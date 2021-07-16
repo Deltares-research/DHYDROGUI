@@ -1079,7 +1079,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public new virtual DateTime CurrentTime
         {
             get { return base.CurrentTime; }
-            set { base.CurrentTime = value; }
+            set
+            {
+                base.CurrentTime = value;
+                base.OnProgressChanged();
+            }
         }
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)
         {

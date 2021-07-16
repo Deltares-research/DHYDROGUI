@@ -2921,7 +2921,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public new virtual DateTime CurrentTime
         {
             get { return base.CurrentTime; }
-            set { base.CurrentTime = value; }
+            set
+            {
+                base.CurrentTime = value; 
+                OnProgressChanged();
+            }
         }
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)
         {
@@ -3042,6 +3046,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             runner.OnCleanup();
             
             ReportProgressText();
+            previousProgress = 0;
         }
 
 
