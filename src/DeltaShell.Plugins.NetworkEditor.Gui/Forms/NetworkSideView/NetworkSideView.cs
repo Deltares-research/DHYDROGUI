@@ -155,6 +155,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private ShapeModifyTool shapeModifyTool;
         private ISeriesBandTool pipeSeriesBandTool;
         private ISeriesBandTool waterLevelPipesSeriesBandTool;
+        private ISeriesBandTool waterLevelChannelsSeriesBandTool;
         private readonly IChart chart;
         private Dictionary<IChartSeries, bool> seriesActiveCache;
 
@@ -391,18 +392,32 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             renderedCoveragesChartData.Clear();
 
             // create chart data
-            CreateBedLevelChartData().ForEach(d =>
+            var bedLevelChartData = CreateBedLevelChartData().ToArray();
+            bedLevelChartData.ForEach(d =>
             {
                 chart.Series.Add(CreateSeries(d));
                 bottomProfileChartData.Add(d);
             });
 
+            chartView.Tools.Remove(waterLevelChannelsSeriesBandTool);
+
             var waterLevelChartData = CreateWaterLevelChartData();
             if (waterLevelChartData != null)
             {
-                chart.Series.Add(CreateSeries(waterLevelChartData));
+                var waterLevelChartSeries = CreateSeries(waterLevelChartData);
+                chart.Series.Add(waterLevelChartSeries);
                 bottomProfileChartData.Add(waterLevelChartData);
+
+                var bedLevelSeries = chart.Series.FirstOrDefault(s => s.Title.StartsWith(BedLevelNetworkCoverageBuilder.BedLevelCoverageName));
+                if (bedLevelSeries != null)
+                {
+                    waterLevelChannelsSeriesBandTool = chartView.NewSeriesBandTool(waterLevelChartSeries, bedLevelSeries,
+                                                                                   Color.FromArgb(72, Color.RoyalBlue));
+
+                    chartView.Tools.Add(waterLevelChannelsSeriesBandTool);
+                }
             }
+            
 
             if (NetworkRoute.Segments.Values.All(s => s.Branch is ISewerConnection))
             {
@@ -540,8 +555,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private IEnumerable<SideViewChartData> CreateBedLevelChartData()
         {
             var profileSideViewFunctions = networkSideViewDataController.ProfileSideViewFunctions.ToList();
-
-            var bottomLevelSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => psvf.Name == "Bed level");
+            
+            var bottomLevelSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => string.Equals(psvf.Name,BedLevelNetworkCoverageBuilder.BedLevelCoverageName));
             if (bottomLevelSideViewFunction != null)
             {
                 var bottomLevelChartData = new SideViewChartData(bottomLevelSideViewFunction,
@@ -552,7 +567,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 yield return bottomLevelChartData;
             }
 
-            var lowestEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psfv => psfv.Name == "Lowest embankment");
+            var lowestEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => string.Equals(psvf.Name, BedLevelNetworkCoverageBuilder.LowestEmbankmentCoverageName));
             if (lowestEmbankmentSideViewFunction != null)
             {
                 var lowestEmbankmentChartData = new SideViewChartData(lowestEmbankmentSideViewFunction,
@@ -563,7 +578,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 yield return lowestEmbankmentChartData;
             }
 
-            var leftEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psfv => psfv.Name == "Left embankment");
+            var leftEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => string.Equals(psvf.Name, BedLevelNetworkCoverageBuilder.LeftEmbankmentCoverageName));
             if (leftEmbankmentSideViewFunction != null)
             {
                 var leftEmbankmentChartData = new SideViewChartData(leftEmbankmentSideViewFunction,
@@ -574,7 +589,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 yield return leftEmbankmentChartData;
             }
 
-            var rightEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psfv => psfv.Name == "Right embankment");
+            var rightEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => string.Equals(psvf.Name, BedLevelNetworkCoverageBuilder.RightEmbankmentCoverageName));
             if (rightEmbankmentSideViewFunction != null)
             {
                 var rightEmbankmentChartData = new SideViewChartData(rightEmbankmentSideViewFunction,

@@ -14,6 +14,12 @@ namespace DelftTools.Hydro
     /// </summary>
     public static class BedLevelNetworkCoverageBuilder
     {
+        public const string BedLevelCoverageName = "Bed level";
+        public const string LeftEmbankmentCoverageName = "Left embankment";
+        public const string RightEmbankmentCoverageName = "Right embankment";
+        public const string LowestEmbankmentCoverageName = "Lowest embankment";
+        public const string HighestEmbankmentCoverageName = "Highest embankment";
+
         /// <summary>
         /// Builds a coverage based on the application of the CrossSectionProfileFunction upon a cross section definition.
         /// </summary>
@@ -95,52 +101,52 @@ namespace DelftTools.Hydro
 
         public static INetworkCoverage BuildBedLevelCoverage(IHydroNetwork hydroNetwork)
         {
-            return BuildCoverageFromNetwork(hydroNetwork, csd => csd.LowestPoint, "Bed level");
+            return BuildCoverageFromNetwork(hydroNetwork, csd => csd.LowestPoint, BedLevelCoverageName);
         }
 
         public static INetworkCoverage BuildBedLevelCoverage(INetworkCoverage route)
         {
-            return BuildCoverageFromRoute(route, csd => csd.LowestPoint, "Bed level");
+            return BuildCoverageFromRoute(route, csd => csd.LowestPoint, BedLevelCoverageName);
         }
         
         public static INetworkCoverage BuildLeftEmbankmentCoverage(IHydroNetwork hydroNetwork)
         {
-            return BuildCoverageFromNetwork(hydroNetwork, csd => csd.LeftEmbankment, "Left embankment");
+            return BuildCoverageFromNetwork(hydroNetwork, csd => csd.LeftEmbankment, LeftEmbankmentCoverageName);
         }
 
         public static INetworkCoverage BuildLeftEmbankmentCoverage(INetworkCoverage route)
         {
-            return BuildCoverageFromRoute(route, csd => csd.LeftEmbankment, "Left embankment");
+            return BuildCoverageFromRoute(route, csd => csd.LeftEmbankment, LeftEmbankmentCoverageName);
         }
 
         public static INetworkCoverage BuildRightEmbankmentCoverage(IHydroNetwork hydroNetwork)
         {
-            return BuildCoverageFromNetwork(hydroNetwork, csd => csd.RightEmbankment, "Right embankment");
+            return BuildCoverageFromNetwork(hydroNetwork, csd => csd.RightEmbankment, RightEmbankmentCoverageName);
         }
 
         public static INetworkCoverage BuildRightEmbankmentCoverage(INetworkCoverage route)
         {
-            return BuildCoverageFromRoute(route, csd => csd.RightEmbankment, "Right embankment");
+            return BuildCoverageFromRoute(route, csd => csd.RightEmbankment, RightEmbankmentCoverageName);
         }
 
         public static INetworkCoverage BuildLowestEmbankmentCoverage(IHydroNetwork hydroNetwork)
         {
-            return BuildCoverageFromNetwork(hydroNetwork, csd => Math.Min(csd.LeftEmbankment, csd.RightEmbankment), "Lowest embankment");
+            return BuildCoverageFromNetwork(hydroNetwork, csd => Math.Min(csd.LeftEmbankment, csd.RightEmbankment), LowestEmbankmentCoverageName);
         }
 
         public static INetworkCoverage BuildLowestEmbankmentCoverage(INetworkCoverage route)
         {
-            return BuildCoverageFromRoute(route, csd => Math.Min(csd.LeftEmbankment, csd.RightEmbankment), "Lowest embankment");
+            return BuildCoverageFromRoute(route, csd => Math.Min(csd.LeftEmbankment, csd.RightEmbankment), LowestEmbankmentCoverageName);
         }
 
         public static INetworkCoverage BuildHighestEmbankmentCoverage(IHydroNetwork hydroNetwork)
         {
-            return BuildCoverageFromNetwork(hydroNetwork, csd => Math.Max(csd.LeftEmbankment, csd.RightEmbankment), "Highest embankment");
+            return BuildCoverageFromNetwork(hydroNetwork, csd => Math.Max(csd.LeftEmbankment, csd.RightEmbankment), HighestEmbankmentCoverageName);
         }
 
         public static INetworkCoverage BuildHighestEmbankmentCoverage(INetworkCoverage route)
         {
-            return BuildCoverageFromRoute(route, csd => Math.Max(csd.LeftEmbankment, csd.RightEmbankment), "Highest embankment");
+            return BuildCoverageFromRoute(route, csd => Math.Max(csd.LeftEmbankment, csd.RightEmbankment), HighestEmbankmentCoverageName);
         }
     }
 }

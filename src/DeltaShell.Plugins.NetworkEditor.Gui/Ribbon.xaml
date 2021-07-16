@@ -249,16 +249,6 @@
                                      Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\Observation.png"
                                      SizeDefinition="Small,Small,Small"
                                      ToolTip="Add Observation Point" />
-                <Separator />
-
-                <!--  others  -->
-                <fluent:ToggleButton x:Name="ButtonAddNewRoute"
-                                     fluent:KeyTip.Keys="R"
-                                     Click="ButtonAddNewRoute_Click"
-                                     Header="Add Route"
-                                     Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\routes.png"
-                                     SizeDefinition="Small,Small,Small"
-                                     ToolTip="Add Route" />
             </fluent:RibbonGroupBox>
 
             <fluent:RibbonGroupBox x:Name="DrainageBasin"
@@ -461,11 +451,14 @@
                                          SizeDefinition="Small,Small,Small"
                                          ToolTip="Add location to network data" />
                 </WrapPanel>
-            </fluent:RibbonGroupBox>
-
-            <fluent:RibbonGroupBox x:Name="Analysis"
-                                   Header="Analysis"
-                                   Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\AnalysisGroup.png">
+                <Separator />
+                <fluent:ToggleButton x:Name="ButtonAddNewRoute"
+                                     fluent:KeyTip.Keys="R"
+                                     Click="ButtonAddNewRoute_Click"
+                                     Header="Add Route"
+                                     Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\routes.png"
+                                     SizeDefinition="Middle,Small,Small"
+                                     ToolTip="Add Route" />
                 <fluent:Button x:Name="ButtonShowSideView"
                                Click="ButtonShowSideView_Click"
                                Header="Show Side View"

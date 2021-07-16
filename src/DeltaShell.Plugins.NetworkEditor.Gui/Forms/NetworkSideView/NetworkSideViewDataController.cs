@@ -686,7 +686,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             if (!RenderedNetworkCoverages.Contains(networkCoverage))
             {
-                var filteredNetworkCoverage = RenderedNetworkCoverages.Where(nc => nc.Parent == networkCoverage).FirstOrDefault();
+                var filteredNetworkCoverage = RenderedNetworkCoverages.FirstOrDefault(nc => nc.Parent == networkCoverage);
                 if (filteredNetworkCoverage != null)
                 {
                     networkCoverageToRemove = filteredNetworkCoverage;
@@ -837,7 +837,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             double max = double.NaN;
             if (WaterLevelNetworkCoverage != null && WaterLevelNetworkCoverage.Parent != null)
             {
-                UpdateMinMaxFromFunctionValues(WaterLevelNetworkCoverage.Parent, ref min, ref max); 
+                UpdateMinMaxFromFunctionValues(WaterLevelNetworkCoverage, ref min, ref max);
             }
             foreach (var profileNetworkCoverage in ProfileNetworkCoverages)
             {
