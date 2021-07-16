@@ -245,16 +245,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BranchStructureBuilderBase.cs" />
     <Compile Include="BridgeBuilder.cs" />
     <Compile Include="ChannelStructureBuilder.cs" />
-    <Compile Include="CulvertBuilder.cs" />
     <Compile Include="DataTableHelper.cs" />
     <Compile Include="GeometryHelper.cs" />
     <Compile Include="HisData\HisFunctionStore.cs">
     </Compile>
     <Compile Include="HisData\NetworkLocationTypeConvertor.cs" />
-    <Compile Include="IBranchStructureBuilder.cs" />
     <Compile Include="InitialConditionsBuilder.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -2442,7 +2442,6 @@ src/DeltaShell.Plugins.GWSWImporter/Views/SeparatorTypeCharacterExtensions.cs -t
 src/DeltaShell.Plugins.GWSWImporter/WaterTypeConverter.cs -text
 src/DeltaShell.Plugins.GWSWImporter/app.config -text
 src/DeltaShell.Plugins.GWSWImporter/packages.config -text
-src/DeltaShell.Plugins.ImportExport.Sobek/BranchStructureBuilderBase.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/BridgeBuilder.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Builders/BranchStructureBuilderBase.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Builders/BridgeBuilder.cs -text
@@ -2453,7 +2452,6 @@ src/DeltaShell.Plugins.ImportExport.Sobek/Builders/PumpBuilder.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Builders/WeirBuilder.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/ChannelStructureBuilder.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/ControlGroupBuilder.cs -text
-src/DeltaShell.Plugins.ImportExport.Sobek/CulvertBuilder.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/DataTableHelper.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/DeltaShell.Plugins.ImportExport.Sobek.csproj -text
 src/DeltaShell.Plugins.ImportExport.Sobek/GenerateParserFiles.cmd -text
@@ -2462,7 +2460,6 @@ src/DeltaShell.Plugins.ImportExport.Sobek/HisData/HisFileReader.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/HisData/HisFunctionStore.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/HisData/HisFunctionStore.hbm.xml -text
 src/DeltaShell.Plugins.ImportExport.Sobek/HisData/NetworkLocationTypeConvertor.cs -text
-src/DeltaShell.Plugins.ImportExport.Sobek/IBranchStructureBuilder.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/InitialConditionsBuilder.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/Model1DBoundaryNodeDataBuilder.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/NumUtils.cs -text

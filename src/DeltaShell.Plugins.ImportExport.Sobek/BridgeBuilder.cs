@@ -2,6 +2,7 @@
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.ImportExport.Sobek.Builders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 using BridgeType = DelftTools.Hydro.Structures.BridgeType;

@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.ImportExport.Sobek.Builders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Geometries;
 using NUnit.Framework;
