@@ -736,7 +736,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             IHydroNetwork network = GetNetwork(path);
 
             List<ICulvert> culverts = network.Culverts.ToList();
-            Assert.AreEqual(14, culverts.Count); // siphon and inverted siphon are not yet implemented in the kernel
+            Assert.AreEqual(15, culverts.Count); // siphon and inverted siphon are not yet implemented in the kernel
 
             //first the 'normal culvert'
             ICulvert simpleCulvert = culverts[0];
@@ -786,13 +786,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(3.0, invertedSiphon.BendLossCoefficient);
             */
             // this should be an eggie
-            ICulvert eitje = culverts[3];
-            Assert.AreEqual(0.5, eitje.Width, 1.0e-6);
-            Assert.AreEqual(0.75, eitje.Height, 1.0e-6);
 
             //number 5..the inverted siphon
             //notice this is NOT a siphon
-            ICulvert circle = culverts[2];
+            ICulvert circle = culverts[3];
             Assert.AreEqual(0.1, circle.Diameter, 1.0e-6); // Diameter = 2 * 0.05
         }
 

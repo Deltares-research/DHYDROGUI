@@ -79,7 +79,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
         [TestCase(nameof(Culvert.GroundLayerEnabled))]
         [TestCase(nameof(Culvert.GroundLayerRoughness))]
         [TestCase(nameof(Culvert.GroundLayerThickness))]
-        [TestCase(nameof(Culvert.BendLossCoefficient))]
         public void CulvertWithout_Property_Check(string checkName)
         {
             var culvert = new Culvert() ;
