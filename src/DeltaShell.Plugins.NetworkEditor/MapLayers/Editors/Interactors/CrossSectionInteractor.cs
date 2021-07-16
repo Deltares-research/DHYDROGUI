@@ -96,7 +96,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         private IGeometry GetGeometry()
         {
-            var csr= Layer.CustomRenderers.OfType<CrossSectionRenderer>().FirstOrDefault();
+            var csr= Layer?.CustomRenderers.OfType<CrossSectionRenderer>().FirstOrDefault();
             if (csr != null && csr.UseDefaultLength)
             {
                 return csr.GetDefaultGeometry(SourceFeature as ICrossSection);
