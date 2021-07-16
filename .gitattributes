@@ -2798,6 +2798,7 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewDa
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewHelper.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewShapeHandler.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewStyles.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/SideViewChartData.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/SideViewCoveragesContextMenu.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/ProjectExplorer/RoughnessSectionNodePresenter.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/BridgeProperties.cs -text
