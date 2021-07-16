@@ -837,7 +837,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             double max = double.NaN;
             if (WaterLevelNetworkCoverage != null && WaterLevelNetworkCoverage.Parent != null)
             {
-                UpdateMinMaxFromFunctionValues(WaterLevelNetworkCoverage, ref min, ref max);
+                UpdateMinMaxFromFunctionValues(WaterLevelNetworkCoverage.Parent, ref min, ref max);
             }
             foreach (var profileNetworkCoverage in ProfileNetworkCoverages)
             {

@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private ISeriesBandTool waterLevelPipesSeriesBandTool;
         private ISeriesBandTool waterLevelChannelsSeriesBandTool;
         private readonly IChart chart;
-        private Dictionary<IChartSeries, bool> seriesActiveCache;
+        private Dictionary<string, bool> seriesActiveCache;
 
         private readonly IEventedList<IView> childViews = new EventedList<IView>();
 
@@ -173,7 +173,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             chartView.Chart.SurroundingBackGroundColor = SystemColors.ButtonFace;
             AllowFeatureVisibilityChanges = true;
 
-            seriesActiveCache = new Dictionary<IChartSeries, bool>();
+            seriesActiveCache = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
             childViews.Add(chartView);
         }
 
@@ -371,11 +371,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 UpdateMinMaxRightAxis();
             }
 
-            seriesActiveCache.Clear();
-            chart.Series.ForEach(s => seriesActiveCache.Add(s, s.Visible));
-            chart.Series.Clear();
-            shapeModifyTool.Clear();
-
             string errorMessage = "No route defined for network side view.";
             if (NetworkRoute == null || !IsRouteValid(out errorMessage))
             {
@@ -384,7 +379,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 chart.RightAxis.Visible = false;
                 return;
             }
-            
+
+            CreateChartSeries();
+
+            UpdateCrossSectionShapes();
+            UpdateStructureShapes();
+            UpdateCompartmentShapes();
+            UpdateTitle();
+            RefreshView();
+        }
+
+        private void CreateChartSeries()
+        {
+            seriesActiveCache.Clear();
+            chart.Series.ForEach(s => seriesActiveCache.Add(s.Title, s.Visible));
+            chart.Series.Clear();
+            shapeModifyTool.Clear();
+
             //clear the old binding lists
             bottomProfileChartData.ForEach(cd => cd.Dispose());
             bottomProfileChartData.Clear();
@@ -417,7 +428,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     chartView.Tools.Add(waterLevelChannelsSeriesBandTool);
                 }
             }
-            
 
             if (NetworkRoute.Segments.Values.All(s => s.Branch is ISewerConnection))
             {
@@ -439,7 +449,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     var waterLevelInPipeSeries = CreateSeries(waterLevelInPipeChartData);
                     chart.Series.Add(waterLevelInPipeSeries);
                     waterLevelPipesSeriesBandTool = chartView.NewSeriesBandTool(waterLevelInPipeSeries, pipeSeries[1],
-                        Color.FromArgb(72, Color.RoyalBlue));
+                                                                                Color.FromArgb(72, Color.RoyalBlue));
                     chartView.Tools.Add(waterLevelPipesSeriesBandTool);
                 }
             }
@@ -451,13 +461,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             });
 
             chart.Legend.ShowCheckBoxes = true;
-            chart.Series.ForEach(s => s.Visible = !seriesActiveCache.ContainsKey(s) || seriesActiveCache[s]);
-            
-            UpdateCrossSectionShapes();
-            UpdateStructureShapes();
-            UpdateCompartmentShapes();
-            UpdateTitle();
-            RefreshView();
+
+            chart.Series.ForEach(s => s.Visible = !seriesActiveCache.ContainsKey(s.Title) || seriesActiveCache[s.Title]);
         }
 
         [InvokeRequired]
