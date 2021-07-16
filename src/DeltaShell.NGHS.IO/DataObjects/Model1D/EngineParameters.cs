@@ -441,7 +441,9 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
             if (feature is IObservationPoint)
             {
                 if (engineParameter.QuantityType == QuantityType.WaterLevel ||
-                    engineParameter.QuantityType == QuantityType.WaterDepth)
+                    engineParameter.QuantityType == QuantityType.WaterDepth ||
+                    engineParameter.QuantityType == QuantityType.Discharge  ||
+                    engineParameter.QuantityType == QuantityType.Velocity)
                 {
                     isAllowed = true;
                 }
