@@ -1831,9 +1831,9 @@ src/DeltaShell.Plugins.FMSuite.Common/IO/DelftIniCategoryExtension.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/DiaFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/FMNetCdfFileFunctionStore.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/Feature2DImportExportBase.cs -text
+src/DeltaShell.Plugins.FMSuite.Common/IO/Feature2DPointFile.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/FunctionExtensions.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/ModelSchemaCsvFile.cs -text
-src/DeltaShell.Plugins.FMSuite.Common/IO/ObsFile.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/PlizFile.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/PolFile.cs -text
 src/DeltaShell.Plugins.FMSuite.Common/IO/Structure2D.cs -text
@@ -4895,10 +4895,10 @@ test/DeltaShell.Plugins.FMSuite.Common.Tests/Gui/SupportPointListBoxTest.cs -tex
 test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/ApwxwyFileReaderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/DiaFileReaderTest.cs -text
 test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/Feature2DAttributesTestHelper.cs -text
+test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/Feature2DPointFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/FeatureGroupExtensionsTest.cs -text
 test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/FunctionExtentionsTest.cs -text
 test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/LdbFileTest.cs -text
-test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/ObsFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/PliFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/PlizFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.Common.Tests/IO/PolFileTest.cs -text

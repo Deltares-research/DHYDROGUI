@@ -10,7 +10,7 @@ using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
-    public class ObsFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : Feature2DPoint, new()
+    public class Feature2DPointFile<T> : FMSuiteFileBase, IFeature2DFileBase<T> where T : Feature2DPoint, new()
     {
         public void Write(string path, IEnumerable<T> features)
         {
@@ -19,9 +19,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 OpenOutputFile(path);
                 try
                 {
-                    foreach (var observationPoint in features)
+                    foreach (var feature in features)
                     {
-                        WriteLine($"{observationPoint.X,24} {observationPoint.Y,24} '{observationPoint.Name}'");
+                        WriteLine($"{feature.X,24} {feature.Y,24} '{feature.Name}'");
                     }
                 }
                 finally
@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         public IList<T> Read(string path)
         {
-            IEventedList<T> observationPoints = new EventedList<T>();
+            IEventedList<T> features = new EventedList<T>();
 
             OpenInputFile(path);
             try
@@ -51,14 +51,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                         throw new FileReadingException($"Invalid point row on line {LineNumber} in file {path}");
                     }
 
-                    var observationPoint = new T
+                    var feature = new T
                     {
                         Geometry = new Point(GetDouble(lineFields[0], "x-coord"), GetDouble(lineFields[1], "y-coord")),
                         Name = lineFields[2]
                     };
 
-                    observationPoint.TrySetGroupName(path);
-                    observationPoints.Add(observationPoint);
+                    feature.TrySetGroupName(path);
+                    features.Add(feature);
 
                     line = GetNextLine();
                 }
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             {
                 CloseInputFile();
             }
-            return observationPoints;
+            return features;
         }
     }
 }

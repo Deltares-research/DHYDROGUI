@@ -131,7 +131,7 @@
     <Compile Include="IO\FeatureGroupExtensionsTest.cs" />
     <Compile Include="IO\FunctionExtentionsTest.cs" />
     <Compile Include="IO\LdbFileTest.cs" />
-    <Compile Include="IO\ObsFileTest.cs" />
+    <Compile Include="IO\Feature2DPointFileTest.cs" />
     <Compile Include="IO\PliFileTest.cs" />
     <Compile Include="IO\PlizFileTest.cs" />
     <Compile Include="IO\PolFileTest.cs" />

@@ -36,13 +36,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
         }
         protected override IEnumerable<T> Import(string path)
         {
-            var obsFile = new ObsFile<T>();
+            var obsFile = new Feature2DPointFile<T>();
             return obsFile.Read(path);
         }
 
         protected override void Export(IEnumerable<T> features, string path)
         {
-            var obsFile = new ObsFile<T>();
+            var obsFile = new Feature2DPointFile<T>();
             obsFile.Write(path, features);
         }
     }

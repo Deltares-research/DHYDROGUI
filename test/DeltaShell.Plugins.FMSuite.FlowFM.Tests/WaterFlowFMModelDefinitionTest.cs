@@ -271,7 +271,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 modelDefinition.GetModelProperty(KnownProperties.ObsFile);
             var obsFilePath = MduFileHelper.GetSubfilePath(mduFilePath, obsFileProperty);
             Assert.AreEqual(Path.Combine(mduDir, "fm_files_obs.xyn"), obsFilePath, "obs file path");
-            var obsFile = new ObsFile<GroupableFeature2DPoint>();
+            var obsFile = new Feature2DPointFile<GroupableFeature2DPoint>();
             var observationPoints = obsFile.Read(obsFilePath);
             Assert.AreEqual(51, observationPoints.Count, "#observationPoints");
             Assert.AreEqual("2241", observationPoints[11].Name, "name of 12th obs");

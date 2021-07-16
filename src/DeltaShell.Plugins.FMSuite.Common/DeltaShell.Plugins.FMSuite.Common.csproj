@@ -163,7 +163,7 @@
     <Compile Include="IO\Feature2DImportExportBase.cs" />
     <Compile Include="IO\FMNetCdfFileFunctionStore.cs" />
     <Compile Include="IO\FunctionExtensions.cs" />
-    <Compile Include="IO\ObsFile.cs" />
+    <Compile Include="IO\Feature2DPointFile.cs" />
     <Compile Include="IO\PlizFile.cs" />
     <Compile Include="IO\PolFile.cs" />
     <Compile Include="IO\Structure2D.cs" />

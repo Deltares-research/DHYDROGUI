@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private PlizFile<FixedWeir> fixedWeirFile;
         private PlizFile<BridgePillar> bridgePillarFile;
         private StructuresFile structuresFile;
-        private ObsFile<GroupableFeature2DPoint> obsFile;
+        private Feature2DPointFile<GroupableFeature2DPoint> obsFile;
         private PliFile<ObservationCrossSection2D> obsCrsFile;
         private PolFile<GroupableFeature2DPolygon> dryAreaFile;
         private PolFile<GroupableFeature2DPolygon> enclosureFile;

@@ -20,13 +20,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
         protected override IEnumerable<GroupableFeature2DPoint> Import(string path)
         {
-            var reader = new ObsFile<GroupableFeature2DPoint>();
+            var reader = new Feature2DPointFile<GroupableFeature2DPoint>();
             return reader.Read(path);
         }
 
         protected override void Export(IEnumerable<GroupableFeature2DPoint> features, string path)
         {
-            var writer = new ObsFile<GroupableFeature2DPoint>();
+            var writer = new Feature2DPointFile<GroupableFeature2DPoint>();
             writer.Write(path, features);
         }
 

@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
 {
-    public class ObsFileTest
+    public class Feature2DPointFileTest
     {
         [Test]
         [Category(TestCategory.DataAccess)]
@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             filePath = TestHelper.CreateLocalCopy(filePath);
             try
             {
-                var obsFile = new ObsFile<GroupableFeature2DPoint>();
+                var obsFile = new Feature2DPointFile<GroupableFeature2DPoint>();
                 var readObjects = obsFile.Read(filePath);
                 var groups = readObjects.GroupBy(g => g.GroupName).ToList();
                 Assert.That(groups.Count, Is.EqualTo(1));
