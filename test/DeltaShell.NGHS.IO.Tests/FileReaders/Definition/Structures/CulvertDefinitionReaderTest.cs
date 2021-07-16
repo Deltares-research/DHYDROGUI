@@ -62,8 +62,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
             Assert.That(culvert.OutletLossCoefficient, Is.EqualTo(6.78));
             Assert.That(culvert.IsGated, Is.EqualTo(false));
             Assert.That(culvert.BendLossCoefficient, Is.EqualTo(6.54));
-            Assert.That(culvert.SiphonOnLevel, Is.EqualTo(0));
-            Assert.That(culvert.SiphonOffLevel, Is.EqualTo(0));
             Assert.That(culvert.FrictionDataType, Is.EqualTo(Friction.Chezy));
             Assert.That(culvert.Friction, Is.EqualTo(5.43));
             Assert.That(culvert.GateInitialOpening, Is.EqualTo(7.89));

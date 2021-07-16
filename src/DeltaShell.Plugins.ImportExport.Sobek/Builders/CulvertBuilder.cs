@@ -6,7 +6,6 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
-using CulvertType = DelftTools.Hydro.CulvertType;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 {
@@ -46,11 +45,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
             {
                 UpdateGateOpeningLossCoefficientFunction(culvert.GateOpeningLossCoefficientFunction,sobekCulvert.TableOfLossCoefficientId);
             }
+
+            if (sobekCulvert.CulvertType == DeltaShell.Sobek.Readers.SobekDataObjects.CulvertType.Siphon)
+            {
+                Log.WarnFormat("Siphon culverts are not yet supported in the kernel, skipping this culvert with id : {0}", (string.IsNullOrEmpty(structure.Name) ? "<No id is set>" : structure.Name));
+                yield break; //not yet implemented in the kernel
+            }
+            
             culvert.CulvertType = (DelftTools.Hydro.CulvertType)sobekCulvert.CulvertType;
 
             culvert.GateInitialOpening = sobekCulvert.ValveInitialOpeningLevel;
-            culvert.SiphonOnLevel = sobekCulvert.SiphonOnLevel;
-            culvert.SiphonOffLevel = sobekCulvert.SiphonOffLevel;
             
             //TODO get the crosssection in here. See bridgebuilder
             if (sobekCulvert.CrossSectionId != null && sobekCrossSectionDefinitions.ContainsKey(sobekCulvert.CrossSectionId))
@@ -100,12 +104,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                     Log.WarnFormat(string.Format("Culvert profiles of type {0} are not supported.", sobekCrossSectionDefinition.Type));
                     break;
                 }
-            }
-            switch (culvert.CulvertType)
-            {
-                case CulvertType.Siphon:
-                    Log.WarnFormat("Siphon culverts are not yet supported in the kernel, skipping this culvert with id : {0}", (string.IsNullOrEmpty(structure.Name) ? "<No id is set>" : structure.Name));
-                    yield break; //not yet implemented in the kernel
             }
 
             yield return culvert;

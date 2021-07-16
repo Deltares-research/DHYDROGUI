@@ -120,27 +120,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             //max is outlet + 1
             NetworkSideViewDataTestHelper.AssertMinMaxIsUpdatedForStructure(-20,51,culvert);
         }
-
-        [Test]
-        public void MinMaxIsUpdatedForCulvertWithSiphon()
-        {
-            //action! add a culvert
-            var culvert = new Culvert
-                              {
-                                  GeometryType = CulvertGeometryType.Rectangle,
-                                  InletLevel = 10,
-                                  OutletLevel = 20,
-                                  Width = 2,
-                                  Height = 1,
-                                  CulvertType = CulvertType.Siphon,
-                                  SiphonOnLevel = 100,
-                                  SiphonOffLevel = -10
-                              };
-            //min and max defined by siphon levels
-            NetworkSideViewDataTestHelper.AssertMinMaxIsUpdatedForStructure(-10, 100, culvert);
-
-        }
-
+        
         [Test]
         public void MinMaxZTakesAllTimesIntoAccount()
         {

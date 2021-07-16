@@ -73,15 +73,5 @@
         ///dl = length of culvert, siphon or inverted siphon
         /// </summary>
         public float Length { get; set; }
-        
-        /// <summary>
-        ///hs = start level of operation of siphon
-        /// </summary>
-        public float SiphonOnLevel{get;set;}
-
-        /// <summary>
-        ///he = end level of operation of siphon
-        /// </summary>
-        public float SiphonOffLevel { get; set; }
     }
 }

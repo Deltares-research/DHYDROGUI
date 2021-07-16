@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Controls.Swf.Charting;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using GeoAPI.Geometries;
@@ -55,11 +54,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 features.Add(GetGroundLayerLine());
             }
 
-            if (Structure.CulvertType.Equals(CulvertType.Siphon))
-            {
-                features.Add(GetSiphonOnLevelFeature());
-                features.Add(GetSiphonOffLevelFeature());
-            }
             //set a disabled style to use in structureview when the culvert is not 'active'
             foreach (var feature in features)
             {
@@ -105,15 +99,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                                   SelectedStyle = CulvertStyling.SelectedInletStyle
                               };
             return feature;
-        }
-
-        private IShapeFeature GetSiphonOnLevelFeature()
-        {
-            return GetCenteredHorizontalLine(Structure.SiphonOnLevel, CulvertStyling.NormalSiphonOnLevelStyle, CulvertStyling.SelectedSiphonOnLevelStyle);
-        }
-        private IShapeFeature GetSiphonOffLevelFeature()
-        {
-            return GetCenteredHorizontalLine(Structure.SiphonOffLevel, CulvertStyling.NormalSiphonOffLevelStyle, CulvertStyling.SelectedSiphonOffLevelStyle);
         }
 
         /// <summary>

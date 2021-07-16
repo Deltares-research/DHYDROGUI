@@ -73,12 +73,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 //Update properties
                 culvert.CulvertType = value;
                 IsCulvert = value == CulvertType.Culvert;
-                IsSiphon = value == CulvertType.Siphon;
                 IsInvertedSiphon = value == CulvertType.InvertedSiphon;
 
                 //Update visibilities
                 BendLossCoeffVisibility = IsInvertedSiphon;
-                NegativeFlowDirectionFlowVisibility = !IsSiphon;
             }
         }
 
@@ -195,19 +193,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             get { return culvert.BendLossCoefficient; }
             set { culvert.BendLossCoefficient = value; }
         }
-
-        public double SiphonOnLevel
-        {
-            get { return culvert.SiphonOnLevel; }
-            set { culvert.SiphonOnLevel = value; }
-        }
-
-        public double SiphonOffLevel
-        {
-            get { return culvert.SiphonOffLevel; }
-            set { culvert.SiphonOffLevel = value; }
-        }
-
+        
         public double GateInitialGateOpening
         {
             get { return culvert.GateInitialOpening; }
@@ -302,8 +288,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         #endregion
 
         #region View properties
-
-        public bool IsSiphon { get; set; }
         public bool IsInvertedSiphon { get; set; }
         public bool IsCulvert { get; set; }
         public bool IsTabulated { get; set; }

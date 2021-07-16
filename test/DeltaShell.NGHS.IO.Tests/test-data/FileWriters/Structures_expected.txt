@@ -179,32 +179,6 @@
     groundFriction        = 0.350               
 
 [Structure]
-    id                    = 10                  
-    name                  = Culvert_1D_3        
-    branchId              = branch              
-    chainage              = 5.000000            
-    type                  = siphon              
-    allowedFlowDir        = positive            
-    leftLevel             = 0.500               
-    rightLevel            = 1.100               
-    csDefId               = 10                  
-    length                = 14.000              
-    inletLossCoeff        = 0.350               
-    outletLossCoeff       = 0.650               
-    valveOnOff            = 0                   
-    valveOpeningHeight    = 0.000               
-    numLossCoeff          = 11                  
-    relOpening            = 0.000 0.100 0.200 0.300 0.400 0.500 0.600 0.700 0.800 0.900 1.000
-    lossCoeff             = 1.000 1.100 1.200 1.300 1.400 1.500 1.600 1.700 1.800 1.900 2.000
-    bendLossCoeff         = 0.500               
-    turnOnLevel           = 0.200               
-    turnOffLevel          = 0.800               
-    bedFrictionType       = 1                   
-    bedFriction           = 0.65000             
-    groundFrictionType    = 1                   
-    groundFriction        = 0.650               
-
-[Structure]
     id                    = 11                  
     name                  = Bridge_1D_1         
     branchId              = branch              

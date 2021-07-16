@@ -83,10 +83,6 @@ namespace DelftTools.Hydro.Structures
         double Angle1 { get; set; }
 
         CulvertFrictionType FrictionType { get; set; }
-
-        double SiphonOnLevel { get; set; }
-
-        double SiphonOffLevel { get; set; }
         
         bool IsGated { get; set; }
         double GateInitialOpening { get; set; }

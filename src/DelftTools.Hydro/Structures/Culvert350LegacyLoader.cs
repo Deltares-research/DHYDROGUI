@@ -18,13 +18,10 @@ namespace DelftTools.Hydro.Structures
                 var isSiphon = command.ExecuteScalar();
                 if (isSiphon != null) // shouldn't happen, suggests corrupt database
                 {
-                    if ((bool) isSiphon) culvert.CulvertType = CulvertType.Siphon;
-                    else
-                    {
-                        culvert.CulvertType = culvert.BendLossCoefficient > 0
-                            ? CulvertType.InvertedSiphon
-                            : CulvertType.Culvert;
-                    }
+                    culvert.CulvertType = culvert.BendLossCoefficient > 0
+                                              ? CulvertType.InvertedSiphon
+                                              : CulvertType.Culvert;
+
                 }
             }
 

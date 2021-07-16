@@ -176,28 +176,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ENABLED,
                 StructureFileWriterTestHelper.INV_SIPHON_GROUNDLAYER_ROUGHNESS,
                 StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF);
-
-            branch.AddSiphon(
-                StructureFileWriterTestHelper.SIPHON_ID,
-                StructureFileWriterTestHelper.SIPHON_NAME,
-                StructureFileWriterTestHelper.SIPHON_CHAINAGE,
-                StructureFileWriterTestHelper.SIPHON_FLOW_DIRECTION,
-                StructureFileWriterTestHelper.SIPHON_INLET_LEVEL,
-                StructureFileWriterTestHelper.SIPHON_OUTLET_LEVEL,
-                StructureFileWriterTestHelper.SIPHON_LENGTH,
-                StructureFileWriterTestHelper.SIPHON_INLET_LOSS_COEFF,
-                StructureFileWriterTestHelper.SIPHON_OUTLET_LOSS_COEFF,
-                StructureFileWriterTestHelper.SIPHON_IS_GATED,
-                StructureFileWriterTestHelper.SIPHON_GATE_INITIAL_OPENING,
-                StructureFileWriterTestHelper.SIPHON_REL_OPENING.ToArray(),
-                StructureFileWriterTestHelper.SIPHON_LOSS_COEFF.ToArray(),
-                StructureFileWriterTestHelper.SIPHON_FRICTION,
-                StructureFileWriterTestHelper.SIPHON_GROUNDLAYER_ENABLED,
-                StructureFileWriterTestHelper.SIPHON_GROUNDLAYER_ROUGHNESS,
-                StructureFileWriterTestHelper.SIPHON_BEND_LOSS_COEFF,
-                StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL,
-                StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
-
+            
             branch.AddBridgeStandard(
                 StructureFileWriterTestHelper.BRIDGE_ID,
                 StructureFileWriterTestHelper.BRIDGE_NAME,
@@ -980,67 +959,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             idProperty = content.Properties.First(p => p.Name == StructureRegion.BendLossCoef.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.INV_SIPHON_BEND_LOSS_COEFF.ToString(StructureRegion.BendLossCoef.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
-        }
-        
-        [Test]
-        public void TestStructureFileWriterGivesExpectedResults_Siphon()
-        {
-            var branch = network.Branches.First();
-            Assert.NotNull(branch, "No branched added to the network");
-
-            branch.AddSiphon(
-                StructureFileWriterTestHelper.SIPHON_ID,
-                StructureFileWriterTestHelper.SIPHON_NAME,
-                StructureFileWriterTestHelper.SIPHON_CHAINAGE,
-                StructureFileWriterTestHelper.SIPHON_FLOW_DIRECTION,
-                StructureFileWriterTestHelper.SIPHON_INLET_LEVEL,
-                StructureFileWriterTestHelper.SIPHON_OUTLET_LEVEL,
-                StructureFileWriterTestHelper.SIPHON_LENGTH,
-                StructureFileWriterTestHelper.SIPHON_INLET_LOSS_COEFF,
-                StructureFileWriterTestHelper.SIPHON_OUTLET_LOSS_COEFF,
-                StructureFileWriterTestHelper.SIPHON_IS_GATED,
-                StructureFileWriterTestHelper.SIPHON_GATE_INITIAL_OPENING,
-                StructureFileWriterTestHelper.SIPHON_REL_OPENING.ToArray(),
-                StructureFileWriterTestHelper.SIPHON_LOSS_COEFF.ToArray(),
-                StructureFileWriterTestHelper.SIPHON_FRICTION,
-                StructureFileWriterTestHelper.SIPHON_GROUNDLAYER_ENABLED,
-                StructureFileWriterTestHelper.SIPHON_GROUNDLAYER_ROUGHNESS,
-                StructureFileWriterTestHelper.SIPHON_BEND_LOSS_COEFF,
-                StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL,
-                StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL);
-
-            StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);
-
-            var categories = new DelftIniReader().ReadDelftIniFile(FileWriterTestHelper.ModelFileNames.Structures);
-
-            Assert.AreEqual(1, categories.Count(g => g.Name == GeneralRegion.IniHeader));
-            Assert.AreEqual(1, categories.Count(op => op.Name == StructureRegion.Header));
-
-            var content = categories.Where(c => c.Name == StructureRegion.Header).ToList().First();
-            Assert.AreEqual(24, content.Properties.Count);
-
-            var idProperty = content.Properties.First(p => p.Name == StructureRegion.Id.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_ID.ToString(), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Name.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_NAME, idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.BranchId.Key);
-            Assert.AreEqual(branch.Name, idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.Chainage.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_CHAINAGE.ToString(StructureRegion.Chainage.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.DefinitionType.Key);
-            Assert.AreEqual(StructureRegion.StructureTypeName.Siphon, idProperty.Value);
-
-            // Many common properties tested by Inv Siphon & Culvert tests (above)
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.TurnOnLevel.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_TURNON_LEVEL.ToString(StructureRegion.TurnOnLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
-
-            idProperty = content.Properties.First(p => p.Name == StructureRegion.TurnOffLevel.Key);
-            Assert.AreEqual(StructureFileWriterTestHelper.SIPHON_TURNOFF_LEVEL.ToString(StructureRegion.TurnOffLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
         }
 
         [Test]

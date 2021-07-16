@@ -13,31 +13,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     {
         static CulvertStyling()
         {
-            NormalSiphonOffLevelStyle = new VectorStyle
-            {
-                Fill = new SolidBrush(Color.FromArgb(alpha, SiphonOffLevelColor)),
-                Line = new Pen(Color.FromArgb(alpha, SiphonOffLevelColor))
-            };
-
-            SelectedSiphonOffLevelStyle = new VectorStyle
-            {
-                Fill = new SolidBrush(SiphonOffLevelColor),
-                Line = new Pen(SiphonOffLevelColor)
-            };
-
-
-            NormalSiphonOnLevelStyle = new VectorStyle
-            {
-                Fill = new SolidBrush(Color.FromArgb(alpha, SiphonOnLevelColor)),
-                Line = new Pen(Color.FromArgb(alpha, SiphonOnLevelColor))
-            };
-
-            SelectedSiphonOnLevelStyle = new VectorStyle
-            {
-                Fill = new SolidBrush(SiphonOnLevelColor),
-                Line = new Pen(SiphonOnLevelColor)
-            };
-
             SelectedStyle = new VectorStyle
             {
                 Fill = new SolidBrush(Color.LightBlue),
@@ -74,21 +49,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         private const int alpha = 40;
 
-        public static Color SiphonOffLevelColor = Color.Red;
-        public static Color SiphonOnLevelColor = Color.Black;
-
         public static Color OutletColor = Color.CornflowerBlue;
         public static Color InletColor = Color.MidnightBlue;
 
         //styles are shared between shapes in structureview and sideview..
         public static VectorStyle SelectedStyle { get; private set; }
         public static VectorStyle NormalStyle { get; private set; }
-
-        public static VectorStyle NormalSiphonOffLevelStyle{ get;private set;}
-        public static VectorStyle NormalSiphonOnLevelStyle { get; private set; }
-        public static VectorStyle SelectedSiphonOffLevelStyle { get; private set; }
-        public static VectorStyle SelectedSiphonOnLevelStyle { get; private set; }
-
         public static VectorStyle NormalInletStyle { get; private set; }
         public static VectorStyle SelectedInletStyle { get; private set; }
 

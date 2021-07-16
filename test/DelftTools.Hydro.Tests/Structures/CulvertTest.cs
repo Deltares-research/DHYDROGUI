@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -36,8 +35,6 @@ namespace DelftTools.Hydro.Tests.Structures
             // Assert
             Assert.That(culvert.InletLevel, Is.EqualTo(-5.0));
             Assert.That(culvert.OutletLevel, Is.EqualTo(-5.0));
-            Assert.That(culvert.SiphonOnLevel, Is.EqualTo(2));
-            Assert.That(culvert.SiphonOffLevel, Is.EqualTo(3));
             Assert.That(culvert.Width, Is.EqualTo(1.0));
             Assert.That(culvert.Height, Is.EqualTo(1.0));
             Assert.That(culvert.Length, Is.EqualTo(10.0));
@@ -140,16 +137,11 @@ namespace DelftTools.Hydro.Tests.Structures
         [Test]
         public void CopyInto()
         {
-            var siphon = new Culvert {CulvertType = CulvertType.Siphon, FlowDirection = FlowDirection.Positive};
             var culvert = new Culvert {CulvertType = CulvertType.Culvert, FlowDirection = FlowDirection.Both};
             var invertedSiphon = new Culvert { CulvertType = CulvertType.InvertedSiphon, FlowDirection = FlowDirection.Negative };
 
             var target = new Culvert();
-
-            target.CopyFrom(siphon);
-            Assert.AreEqual(siphon.CulvertType, target.CulvertType);
-            Assert.AreEqual(siphon.FlowDirection, target.FlowDirection);
-
+            
             target.CopyFrom(culvert);
             Assert.AreEqual(culvert.CulvertType, target.CulvertType);
             Assert.AreEqual(culvert.FlowDirection, target.FlowDirection);
@@ -177,15 +169,13 @@ namespace DelftTools.Hydro.Tests.Structures
                                         InletLevel = 3.11,
                                         InletLossCoefficient = 0.42,
                                         IsGated = true,
-                                        CulvertType = CulvertType.Siphon,
+                                        CulvertType = CulvertType.InvertedSiphon,
                                         OutletLevel = 0.42,
                                         OutletLossCoefficient = 0.42,
                                         Radius = 42.0,
                                         Radius1 = 42.1,
                                         Radius2 = 42.3,
                                         Radius3 = 42.4,
-                                        SiphonOffLevel = 1.2,
-                                        SiphonOnLevel = 1.2,
                                         TabulatedCrossSectionDefinition =
                                             new CrossSectionDefinitionZW(),
                                         Width = 14.0,
@@ -203,46 +193,11 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(sourceCulvert.InletLevel, targetCulvert.InletLevel);
             Assert.AreEqual(sourceCulvert.OutletLossCoefficient, targetCulvert.OutletLossCoefficient);
             Assert.AreEqual(sourceCulvert.Radius, targetCulvert.Radius);
-            Assert.AreEqual(sourceCulvert.SiphonOffLevel, targetCulvert.SiphonOffLevel);
             Assert.AreEqual(sourceCulvert.TabulatedCrossSectionDefinition.CrossSectionType, targetCulvert.TabulatedCrossSectionDefinition.CrossSectionType);
             Assert.AreEqual(sourceCulvert.Width, targetCulvert.Width);
             Assert.AreEqual(sourceCulvert.GroundLayerThickness, targetCulvert.GroundLayerThickness);
             Assert.AreEqual(sourceCulvert.GroundLayerRoughness, targetCulvert.GroundLayerRoughness);
             Assert.AreNotEqual(sourceCulvert.Name, targetCulvert.Name);
         }
-        [Test]
-        public void NoNegativeFlowForSiphon()
-        {
-            var culvert = new Culvert();
-            Assert.IsTrue(culvert.AllowNegativeFlow);
-            culvert.CulvertType = CulvertType.Siphon;
-            Assert.IsFalse(culvert.AllowNegativeFlow);
-            
-        }
-
-        [Test]
-        public void ValidFlowForSiphon()
-        {
-            var culvert = new Culvert();
-            Assert.IsTrue(culvert.AllowNegativeFlow);
-            culvert.CulvertType = CulvertType.Siphon;
-            Assert.IsFalse(culvert.AllowNegativeFlow);
-            culvert.FlowDirection = FlowDirection.Positive;
-            culvert.FlowDirection = FlowDirection.None;
-        }
-
-        [Test]
-        public void InValidFlowForSiphonThrowsException()
-        {
-            var culvert = new Culvert();
-            Assert.IsTrue(culvert.AllowNegativeFlow);
-            culvert.CulvertType = CulvertType.Siphon;
-            Assert.IsFalse(culvert.AllowNegativeFlow);
-
-            var error = Assert.Throws<ArgumentException>(() => culvert.FlowDirection = FlowDirection.Both);
-            Assert.AreEqual("Negative flow is not allowed for siphons", error.Message);
-        }
     }
-
-    
 }

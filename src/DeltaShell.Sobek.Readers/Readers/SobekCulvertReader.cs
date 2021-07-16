@@ -77,8 +77,6 @@ namespace DeltaShell.Sobek.Readers.Readers
                 culvert.UseTableOffLossCoefficient = RegularExpression.ParseInt(match, "tv", culvert.UseTableOffLossCoefficient);
                 culvert.TableOfLossCoefficientId = RegularExpression.ParseString(match, "tableID", culvert.TableOfLossCoefficientId);
                 culvert.BendLossCoefficient = RegularExpression.ParseSingle(match, "lb", culvert.BendLossCoefficient);
-                culvert.SiphonOnLevel = RegularExpression.ParseSingle(match, "hs", culvert.SiphonOnLevel);
-                culvert.SiphonOffLevel = RegularExpression.ParseSingle(match, "he", culvert.SiphonOffLevel);
                 culvert.Direction = RegularExpression.ParseInt(match, "rt", culvert.Direction);
             }
             return culvert;

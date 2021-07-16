@@ -73,30 +73,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             });
 
         }
-        [Test]
-        [Category(TestCategory.WindowsForms)]
-        public void ShowCulvertViewWpfAndCheckIfSiphonPropertiesAreHidden()
-        {
-            var culvert = new Culvert();
-            culvert.GeometryType = CulvertGeometryType.Rectangle;
-            culvert.FrictionType = CulvertFrictionType.WhiteColebrook;
-            culvert.Friction = 10.0;
-            culvert.Length = 10.0;
-            culvert.CulvertType = CulvertType.Siphon;
-
-            var culvertViewWpf = new CulvertViewWpf();
-            culvertViewWpf.Data = culvert;
-            WpfTestHelper.ShowModal(culvertViewWpf, () =>
-            {
-                //Assert.That(culvertViewWpf.GroundLayerBox.Visibility, Is.EqualTo(Visibility.Visible));// not yet implemented in the kernel
-                
-                Assert.That(((ICulvert)culvertViewWpf.Data).CulvertType, Is.EqualTo(CulvertType.Siphon));
-                Assert.That((CulvertType)culvertViewWpf.comboBoxCulvertType.SelectedValue, Is.EqualTo(CulvertType.Siphon));
-                Assert.That(culvertViewWpf.SiphonLevels.Visibility, Is.EqualTo(Visibility.Collapsed));
-                Assert.That(culvertViewWpf.TextboxBendLossCoeffInlet.Visibility, Is.EqualTo(Visibility.Collapsed));
-            });
-
-        }
 
         [Test]
         [Category(TestCategory.WindowsForms)]
@@ -136,8 +112,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             
             #region structure culvert
                 Assert.That(culvert.CulvertType, Is.EqualTo(model.SelectedCulvertStructureType));
-                culvert.CulvertType = CulvertType.Siphon;
-                Assert.That(culvert.CulvertType, Is.EqualTo(model.SelectedCulvertStructureType));
 
                 culvert.CulvertLength = 2.0;
                 Assert.That(culvert.CulvertLength, Is.EqualTo(model.CulvertLength));
@@ -173,17 +147,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 Assert.That(model.BendLossCoeffVisibility, Is.True);
                 culvert.CulvertType = CulvertType.Culvert;
                 Assert.That(model.BendLossCoeffVisibility, Is.False);
-
-                culvert.SiphonOnLevel = 2.0;
-                Assert.That(culvert.SiphonOnLevel, Is.EqualTo(model.SiphonOnLevel));
-                culvert.SiphonOnLevel = 1.0;
-                Assert.That(culvert.SiphonOnLevel, Is.EqualTo(model.SiphonOnLevel));
-
-                culvert.SiphonOffLevel = 2.0;
-                Assert.That(culvert.SiphonOffLevel, Is.EqualTo(model.SiphonOffLevel));
-                culvert.SiphonOffLevel = 1.0;
-                Assert.That(culvert.SiphonOffLevel, Is.EqualTo(model.SiphonOffLevel));
-
+            
                 culvert.FlowDirection = FlowDirection.None;
                 Assert.That(model.FlowIsPositive, Is.False);
                 Assert.That(model.FlowIsNegative, Is.False);
@@ -203,8 +167,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
                 
                 Assert.That(model.NegativeFlowDirectionFlowVisibility, Is.True);
-                culvert.CulvertType = CulvertType.Siphon;
-                Assert.That(model.NegativeFlowDirectionFlowVisibility, Is.False);
 
                 culvert.IsGated = false;
                 Assert.That(culvert.IsGated, Is.EqualTo(model.IsGated));

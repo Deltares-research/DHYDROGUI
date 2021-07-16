@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
@@ -69,13 +68,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             var zValues = culvert.CrossSectionDefinitionAtInletAbsolute.ZWDataTable.
                 Concat(culvert.CrossSectionDefinitionAtOutletAbsolute.ZWDataTable).
                 Select(hfsw => hfsw.Z).Where(v => !double.IsNaN(v)).ToList();
-
-            //siphon levels
-            if (culvert.CulvertType.Equals(CulvertType.Siphon))
-            {
-                zValues.Add(culvert.SiphonOnLevel);
-                zValues.Add(culvert.SiphonOffLevel);
-            }
             
             if (zValues.Any())
             {

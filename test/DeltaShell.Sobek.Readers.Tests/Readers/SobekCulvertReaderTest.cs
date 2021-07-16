@@ -48,19 +48,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual(1, culvert.UseTableOffLossCoefficient);
             Assert.AreEqual("5", culvert.TableOfLossCoefficientId);
         }
-
-        [Test]
-        public void ReadWithSiphon()
-        {
-            const string source = "tc 2 ll 0 rl 0 dl 10 si '1' li 0.1 lo 0.2 lb 0.3 ov 0 tv 0 hs 1 he 1.2 rt 0";
-
-            var culvert = (SobekCulvert)Reader.GetStructure(source);
-
-            Assert.AreEqual(1.0f, culvert.SiphonOnLevel);
-            Assert.AreEqual(1.2f, culvert.SiphonOffLevel);
-            Assert.AreEqual(0.3f, culvert.BendLossCoefficient);
-        }
-
+        
         [Test]
         public void MixedSequence()
         {

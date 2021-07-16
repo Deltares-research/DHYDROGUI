@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Controls.Swf.Charting;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 using GeoAPI.Geometries;
@@ -110,11 +109,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                     ShapeFeatures.Add(gate);
                 }
             }
-            if (culvert.CulvertType.Equals(CulvertType.Siphon))
-            {
-                ShapeFeatures.Add(GetSiphonOffLevelFeature());
-                ShapeFeatures.Add(GetSiphonOnLevelFeature());
-            }
 
             Selected = oldStatus;
         }
@@ -135,37 +129,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 SelectedStyle = selectedStyle
             };
             
-            return feature;
-        }
-
-        private IShapeFeature GetSiphonOnLevelFeature()
-        {
-            return GetCenteredHorizontalLine(culvert.SiphonOnLevel, CulvertStyling.NormalSiphonOnLevelStyle, CulvertStyling.SelectedSiphonOnLevelStyle);
-        }
-        private IShapeFeature GetSiphonOffLevelFeature()
-        {
-            return GetCenteredHorizontalLine(culvert.SiphonOffLevel, CulvertStyling.NormalSiphonOffLevelStyle, CulvertStyling.SelectedSiphonOffLevelStyle);
-        }
-
-        private IShapeFeature GetCenteredHorizontalLine(double level, VectorStyle normalStyle, VectorStyle selectedStyle)
-        {
-            if (!culvert.CulvertType.Equals(CulvertType.Siphon))
-                throw new ArgumentException("No siphon defined.");
-            //pixel width and height
-            const int height = 3;
-            const int width = 10;
-
-            //lower level line at YOffset of 6 pixels wide
-            var x = culvert.OffsetY - (GetWorldWidth(width)/2);
-            
-            
-
-            var feature = new FixedRectangleShapeFeature(Chart,x,level,width,height,false, false)
-                              {
-                                  NormalStyle = normalStyle,
-                                  SelectedStyle = selectedStyle
-                              };
-
             return feature;
         }
 

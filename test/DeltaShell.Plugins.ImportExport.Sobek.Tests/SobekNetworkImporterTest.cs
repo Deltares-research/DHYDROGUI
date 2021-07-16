@@ -744,7 +744,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             Assert.AreEqual(10, simpleCulvert.OutletLevel);
             Assert.AreEqual(10, simpleCulvert.Length);
             Assert.IsFalse(simpleCulvert.IsGated);
-            Assert.IsFalse(simpleCulvert.CulvertType.Equals(CulvertType.Siphon));
+            Assert.IsTrue(simpleCulvert.CulvertType.Equals(CulvertType.Culvert));
             Assert.AreEqual(0.7f, simpleCulvert.InletLossCoefficient);
             Assert.AreEqual(1.0, simpleCulvert.OutletLossCoefficient);
             Assert.AreEqual(FlowDirection.Both, simpleCulvert.FlowDirection);

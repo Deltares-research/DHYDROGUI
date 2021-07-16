@@ -148,8 +148,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     return new DefinitionGeneratorStructureCulvert();
                 case StructureType.InvertedSiphon:
                     return new DefinitionGeneratorStructureInvertedSiphon();
-                case StructureType.Siphon:
-                    return new DefinitionGeneratorStructureSiphon();
                 case StructureType.Bridge:
                     return new DefinitionGeneratorStructureBridgeStandard();
                 case StructureType.BridgePillar:
@@ -182,11 +180,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     return new OrificeDefinitionReader();
                 case StructureType.CompositeBranchStructure:
                     return new CompositeBranchStructureDefinitionReader();
-                case StructureType.BridgePillar: // exists in BridgeDefinitionReader but not implemented in kernel
+                case StructureType.BridgePillar:   // exists in BridgeDefinitionReader but not implemented in kernel
                 case StructureType.InvertedSiphon: // exists in CulvertDefinitionReader but not implemented in kernel
-                case StructureType.Siphon:// exists in CulvertDefinitionReader but not implemented in kernel
-                case StructureType.AdvancedWeir:// exists in WeirDefinitionReader but not implemented in kernel
-                case StructureType.RiverWeir:// exists in WeirDefinitionReader but not implemented in kernel
+                case StructureType.AdvancedWeir:   // exists in WeirDefinitionReader but not implemented in kernel
                 case StructureType.Unknown:
                 case StructureType.Gate://Why is this not implemented in WeirDefinitionReader???
                     return null;

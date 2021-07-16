@@ -19,7 +19,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             public const string LeveeBreach = "dambreak";
             public const string Culvert = "culvert";
             public const string InvertedSiphon = "invertedSiphon";
-            public const string Siphon = "siphon";
             public const string Bridge = "bridge";
             public const string BridgePillar = "bridgePillar";
             public const string ExtraResistanceStructure = "extraresistance";
@@ -191,14 +190,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting LossCoefficient = new ConfigurationSetting(key: "lossCoeff", description: "Loss coefficients (-)");
         #endregion
 
-        #region Siphon & Inverted Siphon Elements
+        #region Inverted Siphon Elements
         public static readonly ConfigurationSetting SubType = new ConfigurationSetting(key: "subType", description: "Defines the behaviour of the culvert");
         public static readonly ConfigurationSetting BendLossCoef = new ConfigurationSetting(key: "bendLossCoeff", description: "Bend loss coefficient of the inverted siphon (-)");
-        #endregion
-
-        #region Siphon Elements
-        public static readonly ConfigurationSetting TurnOnLevel = new ConfigurationSetting(key: "turnOnLevel", description: "Start level of operation of siphon (m AD)");
-        public static readonly ConfigurationSetting TurnOffLevel = new ConfigurationSetting(key: "turnOffLevel", description: "Stop level of operation of siphon (m AD)");
         #endregion
 
         #region Common Bridge Elements

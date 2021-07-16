@@ -852,7 +852,6 @@ src/DeltaShell.NGHS.IO/FileWriters/Structure/DefinitionGeneratorStructureOrifice
 src/DeltaShell.NGHS.IO/FileWriters/Structure/DefinitionGeneratorStructurePump.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Structure/DefinitionGeneratorStructurePump2D.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Structure/DefinitionGeneratorStructureRiverWeir.cs -text
-src/DeltaShell.NGHS.IO/FileWriters/Structure/DefinitionGeneratorStructureSiphon.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Structure/DefinitionGeneratorStructureUniversalWeir.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Structure/DefinitionGeneratorStructureWeir.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Structure/DefinitionGeneratorStructureWeir2D.cs -text

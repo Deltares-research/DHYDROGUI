@@ -40,7 +40,6 @@ namespace DelftTools.Hydro
     public enum CulvertType
     {
         Culvert = 1,
-        Siphon = 2,
         InvertedSiphon = 3
     }
 }

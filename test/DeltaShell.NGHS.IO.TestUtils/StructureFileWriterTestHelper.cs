@@ -174,28 +174,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const bool INV_SIPHON_GROUNDLAYER_ENABLED = false;
         public const double INV_SIPHON_GROUNDLAYER_ROUGHNESS = 0.0;
         public const double INV_SIPHON_BEND_LOSS_COEFF = 0.6;
-
-        public const int SIPHON_ID = 10;
-        public const string SIPHON_NAME = "Culvert_1D_3";
-        public const double SIPHON_CHAINAGE = 5.0;
-        public const FlowDirection SIPHON_FLOW_DIRECTION = FlowDirection.Both;
-        public const double SIPHON_INLET_LEVEL = 0.5;
-        public const double SIPHON_OUTLET_LEVEL = 1.1;
-        public const int SIPHON_CSDEF_ID = 1;
-        public const double SIPHON_LENGTH = 14.0;
-        public const double SIPHON_INLET_LOSS_COEFF = 0.35;
-        public const double SIPHON_OUTLET_LOSS_COEFF = 0.65;
-        public const bool SIPHON_IS_GATED = false;
-        public const double SIPHON_GATE_INITIAL_OPENING = 0.0;
-        public static readonly List<double> SIPHON_REL_OPENING = new List<double> { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 };
-        public static readonly List<double> SIPHON_LOSS_COEFF = new List<double> { 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0 };
-        public const double SIPHON_FRICTION = 0.65;
-        public const bool SIPHON_GROUNDLAYER_ENABLED = false;
-        public const double SIPHON_GROUNDLAYER_ROUGHNESS = 0.0;
-        public const double SIPHON_BEND_LOSS_COEFF = 0.5;
-        public const double SIPHON_TURNON_LEVEL = 0.2;
-        public const double SIPHON_TURNOFF_LEVEL = 0.8;
-
+        
         public const int BRIDGE_ID = 11;
         public const string BRIDGE_NAME = "Bridge_1D_1";
         public const double BRIDGE_CHAINAGE = 5.5;
@@ -490,23 +469,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             culvert.BendLossCoefficient = bendLossCoefficient; // this value should not be zero, otherwise you're actually creating a culvert
             return culvert;
         }
-
-        public static void AddSiphon(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection, double inletLevel, double outletLevel,
-                                          double length, double inletLossCoefficient, double outletLossCoefficient, bool isGated, double gateInitialOpening,
-                                          double[] relOpening, double[] lossCoeff, double friction, bool groundLayerEnabled, double groundLayerRoughness, double bendLossCoefficient,
-                                          double siphonOnLevel, double siphonOffLevel)
-        {
-            ICulvert culvert = AddInvertedSiphon(branch, id, name, chainage, flowDirection, inletLevel, outletLevel,
-                                                 length, inletLossCoefficient, outletLossCoefficient, isGated, gateInitialOpening,
-                                                 relOpening, lossCoeff, friction, groundLayerEnabled, groundLayerRoughness, bendLossCoefficient);
-
-            culvert.SiphonOnLevel = siphonOnLevel;
-            culvert.SiphonOffLevel = siphonOffLevel;
-            culvert.CulvertType = CulvertType.Siphon;
-            // Note: flow direction gets over-written when this is set to true
-            //       Also, this is not related to siphon_onoff, which is always zero (matches Api)
-        }
-
+        
         private static IBridge AddBridge(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection, double shift, long crossSectionId)
         {
             IBridge bridge = new Bridge
@@ -594,7 +557,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
                     {
                         case StructureType.Culvert:
                         case StructureType.InvertedSiphon:
-                        case StructureType.Siphon:
                             var culvert = structure as Culvert;
                             if (culvert != null)
                             {

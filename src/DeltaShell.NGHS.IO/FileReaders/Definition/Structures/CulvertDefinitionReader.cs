@@ -40,8 +40,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 OutletLossCoefficient = category.ReadProperty<double>(StructureRegion.OutletLossCoeff.Key),
                 IsGated = category.ReadProperty<string>(StructureRegion.ValveOnOff.Key) != "0",
                 BendLossCoefficient = category.ReadProperty<double>(StructureRegion.BendLossCoef.Key, true),
-                SiphonOnLevel = category.ReadProperty<double>(StructureRegion.TurnOnLevel.Key, true),
-                SiphonOffLevel = category.ReadProperty<double>(StructureRegion.TurnOffLevel.Key, true),
                 FrictionDataType = (Friction) Enum.Parse(typeof(Friction), category.ReadProperty<string>(StructureRegion.BedFrictionType.Key), true),
                 Friction = category.ReadProperty<double>(StructureRegion.BedFriction.Key)
             };
@@ -70,9 +68,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 return CulvertType.InvertedSiphon;
             }
 
-            return category.GetProperty(StructureRegion.TurnOnLevel.Key) != null 
-                       ? CulvertType.Siphon 
-                       : CulvertType.Culvert;
+            return CulvertType.Culvert;
         }
 
         private void SetCulvertDimensionsBasedOnProfile(ICulvert culvert, ICrossSectionDefinition definition)

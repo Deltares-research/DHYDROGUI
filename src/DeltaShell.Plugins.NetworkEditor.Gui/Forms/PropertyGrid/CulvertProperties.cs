@@ -153,7 +153,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
         [DisplayName("Culvert type")]
-        [Description("The culvert can be siphon, inverted siphon or culvert.")]
+        [Description("The culvert can be inverted siphon or culvert.")]
         [PropertyOrder(11)]
         public CulvertType CulvertType
         {
@@ -296,28 +296,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         {
             get { return data.GateLowerEdgeLevel; }
         }
-
-        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
-        [DisplayName("Siphon on level")]
-        [PropertyOrder(25)]
-        [Browsable(false)]
-        public double SiphonOnLevel
-        {
-            get { return data.SiphonOnLevel; }
-            set { data.SiphonOnLevel = value; }
-        }
-
-        [Category(PropertyWindowCategoryHelper.CalculationCategory)]
-        [DynamicReadOnly]
-        [DisplayName("Siphon off level")]
-        [PropertyOrder(25)]
-        [Browsable(false)]
-        public double SiphonOffLevel
-        {
-            get { return data.SiphonOffLevel; }
-            set { data.SiphonOffLevel = value; }
-        }
-
+        
         [DisplayName("Shape")]
         [Category(PropertyWindowCategoryHelper.ShapeCategory)]
         [PropertyOrder(1)]
@@ -474,16 +453,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         [DynamicReadOnlyValidationMethod]
         public bool IsReadOnly(string propertyName)
         {
-            if (propertyName == nameof(SiphonOnLevel) || propertyName == nameof(SiphonOffLevel))
-            {
-                return !CulvertType.Equals(CulvertType.Siphon);
-            }
-
-            if (propertyName == nameof(AllowNegativeFlow))
-            {
-                return CulvertType.Equals(CulvertType.Siphon);
-            }
-
             if (propertyName == nameof(GateInitialOpening))
             {
                 return !IsGated;

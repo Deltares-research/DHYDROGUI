@@ -75,39 +75,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
             Assert.That(fieldInfo, Is.Not.Null);
             Assert.That(fieldInfo.GetValue(attribute), Is.True);
         }
-
-        [TestCase(nameof(CulvertProperties.SiphonOnLevel))]
-        [TestCase(nameof(CulvertProperties.SiphonOffLevel))]
-        public void CulvertPropertiesWithoutSiphonProperties(string checkName)
-        {
-            var culvertProperties = new CulvertProperties { Data = new Culvert() };
-            var grid = new PropertyGrid()
-            {
-                SelectedObject = culvertProperties
-            };
-            GridItemCollection categories;
-            if (grid.SelectedGridItem.GridItemType == GridItemType.Category)
-            {
-                categories = grid.SelectedGridItem.Parent.GridItems;
-            }
-            else
-            {
-                categories = grid.SelectedGridItem.Parent.Parent.GridItems;
-            }
-            
-            var cats = categories.Cast<GridItem>().Where(gi => gi.GridItemType == GridItemType.Category).SelectMany(gi => gi.GridItems.Cast<GridItem>()).Select(ge => ge.Label);
-            var propertyInfo = TypeUtils.GetPropertyInfo(culvertProperties.GetType(), checkName);
-            var displayNameAttribute = (DisplayNameAttribute)propertyInfo.GetCustomAttributes(typeof(DisplayNameAttribute), false).SingleOrDefault();
-            Assert.That(displayNameAttribute, Is.Not.Null);
-            Assert.That(cats, Has.No.Member(displayNameAttribute.DisplayName));
-        }
-
+        
         [TestCase(nameof(Culvert.GroundLayerEnabled))]
         [TestCase(nameof(Culvert.GroundLayerRoughness))]
         [TestCase(nameof(Culvert.GroundLayerThickness))]
         [TestCase(nameof(Culvert.BendLossCoefficient))]
-        [TestCase(nameof(Culvert.SiphonOnLevel))]
-        [TestCase(nameof(Culvert.SiphonOffLevel))]
         public void CulvertWithout_Property_Check(string checkName)
         {
             var culvert = new Culvert() ;
@@ -133,10 +105,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.GridProperties
         }
 
         [TestCase(CulvertType.Culvert, nameof(CulvertProperties.BendLossCoefficient), true)]
-        [TestCase(CulvertType.Siphon, nameof(CulvertProperties.BendLossCoefficient), true)]
         [TestCase(CulvertType.InvertedSiphon, nameof(CulvertProperties.BendLossCoefficient), false)]
         [TestCase(CulvertType.Culvert, nameof(CulvertProperties.AllowNegativeFlow), false)]
-        [TestCase(CulvertType.Siphon, nameof(CulvertProperties.AllowNegativeFlow), true)]
         [TestCase(CulvertType.InvertedSiphon, nameof(CulvertProperties.AllowNegativeFlow), false)]
         public void IsReadOnly_IsCorrect(CulvertType culvertType, string propertyName, bool expReadOnly)
         {

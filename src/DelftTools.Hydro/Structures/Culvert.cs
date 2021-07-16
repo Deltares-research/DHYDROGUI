@@ -46,23 +46,10 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 16,ExportName = "FlowDir")]
         public virtual FlowDirection FlowDirection
         {
-            get { return flowDirection; }
-            set
-            {
-                BeforeFlowDirectionSet(value);
-                flowDirection = value;
-            }
+            get => flowDirection;
+            set => flowDirection = value;
         }
-
-        [EditAction]
-        private void BeforeFlowDirectionSet(FlowDirection value)
-        {
-            if ((CulvertType.Equals(CulvertType.Siphon)) && !(value == FlowDirection.Positive || value == FlowDirection.None))
-            {
-                throw new ArgumentException("Negative flow is not allowed for siphons");
-            }
-        }
-
+        
         /// <summary>
         /// Calculates the cross-section as defined at the inlet
         /// </summary>
@@ -291,27 +278,11 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 20)]
         public virtual CulvertType CulvertType {
             get { return culvertType; }
-            set
-            {
-                culvertType = value;
-                if (value == CulvertType.Siphon) AllowNegativeFlow = false;
-            }
+            set => culvertType = value;
         }
 
         public virtual bool Closed { get; set; }
-
-        [DynamicReadOnly]
-        [DisplayName("Siphon on level")]
-        //[FeatureAttribute(Order = 21, ExportName = "SiphOnLvl")]
-        [Browsable(false)]
-        public virtual double SiphonOnLevel { get; set; }
-
-        [DynamicReadOnly]
-        [DisplayName("Siphon off level")]
-        //[FeatureAttribute(Order = 22, ExportName = "SiphOffLvl")]
-        [Browsable(false)]
-        public virtual double SiphonOffLevel { get; set; }
-
+        
         [DisplayName("Gated")]
         [FeatureAttribute(Order = 17, ExportName = "Gated")]
         public virtual bool IsGated { get; set; }
@@ -523,8 +494,6 @@ namespace DelftTools.Hydro.Structures
             Radius1 = sourceCulvert.Radius1;
             Radius2 = sourceCulvert.Radius2;
             Radius3 = sourceCulvert.Radius3;
-            SiphonOffLevel = sourceCulvert.SiphonOffLevel;
-            SiphonOnLevel = sourceCulvert.SiphonOnLevel;
             TabulatedCrossSectionDefinition = (CrossSectionDefinitionZW)sourceCulvert.TabulatedCrossSectionDefinition.Clone();
             Width = sourceCulvert.Width;
         }
@@ -568,8 +537,6 @@ namespace DelftTools.Hydro.Structures
                               {
                                   InletLevel = -5.0,
                                   OutletLevel = -5.0,
-                                  SiphonOnLevel = 2,
-                                  SiphonOffLevel = 3,
                                   Width = 1.0,
                                   Height = 1.0,
                                   Length = 10.0,
@@ -603,16 +570,6 @@ namespace DelftTools.Hydro.Structures
         [DynamicReadOnlyValidationMethod]
         public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
         {
-            if (propertyName == nameof(SiphonOnLevel) || propertyName == nameof(SiphonOffLevel))
-            {
-                return !CulvertType.Equals(CulvertType.Siphon);
-            }
-
-            if (propertyName == nameof(AllowNegativeFlow))
-            {
-                return CulvertType.Equals(CulvertType.Siphon);
-            }
-
             if (propertyName == nameof(GateInitialOpening))
             {
                 return !IsGated;
@@ -665,8 +622,6 @@ namespace DelftTools.Hydro.Structures
             {
                 case CulvertType.Culvert:
                     return StructureType.Culvert;
-                case CulvertType.Siphon:
-                    return StructureType.Siphon;
                 case CulvertType.InvertedSiphon:
                     return StructureType.InvertedSiphon;
                 default:

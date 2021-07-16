@@ -19,8 +19,6 @@
     <property name="GroundLayerEnabled"/>
     <property name="GroundLayerThickness"/>
     <property name="GroundLayerRoughness"/>
-    <property name="SiphonOnLevel"/>
-    <property name="SiphonOffLevel"/>
     <property name="IsGated"/>
     <property name="GateInitialOpening"/>
     <property name="InletLevel"/>
