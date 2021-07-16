@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             var meteoDataDistributed = meteoData.MeteoDataDistributed.Data;
             if (meteoDataDistributed == null)
             {
-                throw new ArgumentException("Meteo data appears to be corrupt. Export of meteo data has been aborted.");
+                throw new ArgumentException($"{meteoData.Name}: Meteo data appears to be corrupt. Export has been aborted.");
             }
 
             using (var sw = new StreamWriter(path))
@@ -105,9 +105,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                     meteoStationNames = meteoDataDistributed.Arguments[1].Values.Cast<object>().Select(v => v.ToString()).ToList();  
                 }
 
-                if (timeValues.Count() < 2)
+                if (timeValues.Count < 2)
                 {
-                    log.Error("Can not find period, because not enough data points have been defined. Export of meteo data has been aborted.");
+                    log.Error($"{meteoData.Name}: cannot determine period, because only one value has been defined. Export has been aborted.");
                     return false;
                 }
 
