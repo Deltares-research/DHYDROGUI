@@ -107,9 +107,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 case CulvertType.Siphon:
                     Log.WarnFormat("Siphon culverts are not yet supported in the kernel, skipping this culvert with id : {0}", (string.IsNullOrEmpty(structure.Name) ? "<No id is set>" : structure.Name));
                     yield break; //not yet implemented in the kernel
-                case CulvertType.InvertedSiphon:
-                    Log.WarnFormat("Inverted siphon culverts are not yet supported in the kernel, skipping this culvert with id : {0}", (string.IsNullOrEmpty(structure.Name) ? "<No id is set>" : structure.Name));
-                    yield break; //not yet implemented in the kernel
             }
 
             yield return culvert;
