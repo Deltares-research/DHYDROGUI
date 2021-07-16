@@ -2792,9 +2792,12 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/ManHoleSideViewSh
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideView.Designer.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideView.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideView.resx -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewChartSeriesController.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewCoverageManager.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewDataController.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewHelper.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewShapeHandler.cs -text
+src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/NetworkSideViewStyles.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/NetworkSideView/SideViewCoveragesContextMenu.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/ProjectExplorer/RoughnessSectionNodePresenter.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/BridgeProperties.cs -text

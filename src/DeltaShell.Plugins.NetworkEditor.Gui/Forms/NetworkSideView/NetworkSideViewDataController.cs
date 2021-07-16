@@ -957,7 +957,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void FirePropertyChanged(object sender, PropertyChangedEventArgs args)
+        private void FirePropertyChanged(object sender, PropertyChangedEventArgs args)
         {
             var handler = PropertyChanged;
             if (handler != null)

@@ -29,9 +29,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return CompositeBranchStructure!= null ?
-                                                           (HydroNetwork) CompositeBranchStructure.Network:
-                                                                                                              null;
+                return (HydroNetwork) CompositeBranchStructure?.Network;
             }
             
         }

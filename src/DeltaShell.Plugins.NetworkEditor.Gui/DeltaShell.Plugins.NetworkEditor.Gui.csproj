@@ -214,6 +214,10 @@
     <Compile Include="Commands\ShowSideViewCommand.cs" />
     <Compile Include="Commands\SplitPipeCommand.cs" />
     <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Forms\NetworkSideView\NetworkSideViewChartSeriesController.cs" />
+    <Compile Include="Forms\NetworkSideView\NetworkSideViewShapeHandler.cs" />
+    <Compile Include="Forms\NetworkSideView\NetworkSideViewStyles.cs" />
+    <Compile Include="Forms\NetworkSideView\SideViewChartData.cs" />
     <Compile Include="Forms\PropertyGrid\CrossSectionVectorLayerProperties.cs" />
     <Compile Include="DummyConverter.cs" />
     <Compile Include="Editors\FMGatePropertiesRow.cs" />
