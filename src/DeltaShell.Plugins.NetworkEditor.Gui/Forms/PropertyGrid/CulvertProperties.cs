@@ -152,7 +152,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Category(PropertyWindowCategoryHelper.GeneralCategory)]
-        [DisplayName("Culvert type")]
+        [DisplayName("Sub type")]
         [Description("The culvert can be inverted siphon or culvert.")]
         [PropertyOrder(11)]
         public CulvertType CulvertType
@@ -211,7 +211,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [Category(PropertyWindowCategoryHelper.CalculationCategory)]
-        [DisplayName("Bendloss coefficient")]
+        [DisplayName("Bend loss coefficient")]
         [Description("BendLoss coefficient of the culvert.")]
         [PropertyOrder(16)]
         [DynamicReadOnly]

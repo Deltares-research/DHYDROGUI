@@ -273,7 +273,7 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 33)]
         public virtual double Angle1 { get; set; }
         
-        [DisplayName("Culvert type")]
+        [DisplayName("Sub type")]
         [EditAction]
         [FeatureAttribute(Order = 20)]
         public virtual CulvertType CulvertType {
