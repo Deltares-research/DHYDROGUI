@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.DataObjects.Friction;
+using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -14,7 +19,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
-using log4net.Core;
+using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
@@ -772,6 +777,108 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             finally
             {
                 FileUtils.DeleteIfExists(mduDir);
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_Gullies_ReadsCorrectGullies()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                var mduFile = new MduFile();
+                string mduFilePath = temp.CreateFile("some_name.mdu");
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                var area = new HydroArea();
+
+                string gulliesFileContent =
+                    "1.2 3.4 'some_gully_1'" + Environment.NewLine +
+                    "5.6 7.8 'some_gully_2'";
+
+                temp.CreateFile("gullies.gui", gulliesFileContent);
+
+                // Call
+                mduFile.Read(mduFilePath, modelDefinition, area, 
+                             new HydroNetwork(), 
+                             new Discretization(), 
+                             new EventedList<Model1DBoundaryNodeData>(), 
+                             new EventedList<Model1DLateralSourceData>(), 
+                             new List<ModelFeatureCoordinateData<FixedWeir>>());
+
+                // Assert
+                IEventedList<Gully> gullies = area.Gullies;
+                Assert.That(gullies, Has.Count.EqualTo(2));
+
+                Assert.That(gullies[0].Name, Is.EqualTo("some_gully_1"));
+                Assert.That(gullies[0].X, Is.EqualTo(1.2));
+                Assert.That(gullies[0].Y, Is.EqualTo(3.4));
+
+                Assert.That(gullies[1].Name, Is.EqualTo("some_gully_2"));
+                Assert.That(gullies[1].X, Is.EqualTo(5.6));
+                Assert.That(gullies[1].Y, Is.EqualTo(7.8));
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_Gullies_WritesCorrectFile()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                var mduFile = new MduFile();
+                string mduFilePath = Path.Combine(temp.Path, "some_name.mdu");
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                var area = new HydroArea();
+
+                var point1 = new Point(1.2, 3.4);
+                var point2 = new Point(5.6, 7.8);
+
+                var gully1 = new Gully {Name = "some_gully_1", Geometry = point1};
+                var gully2 = new Gully {Name = "some_gully_2", Geometry = point2};
+
+                area.Gullies.Add(gully1);
+                area.Gullies.Add(gully2);
+
+                // Call
+                mduFile.Write(mduFilePath, modelDefinition, area,
+                              new HydroNetwork(),
+                              new RoughnessSection[0],
+                              new ChannelFrictionDefinition[0],
+                              new ChannelInitialConditionDefinition[0],
+                              new Model1DBoundaryNodeData[0],
+                              new Model1DLateralSourceData[0],
+                              new List<ModelFeatureCoordinateData<FixedWeir>>());
+
+                // Assert
+                string gulliesFilePath = Path.Combine(temp.Path, "gullies.gui");
+                Assert.That(gulliesFilePath, Does.Exist);
+                
+                string[][] data = ReadData(gulliesFilePath).ToArray();
+                AssertLine(data[0], "1.2", "3.4", "'some_gully_1'");
+                AssertLine(data[1], "5.6", "7.8", "'some_gully_2'");
+            }
+        }
+
+        private static IEnumerable<string[]> ReadData(string filePath)
+        {
+            foreach (string line in File.ReadAllLines(filePath))
+            {
+                string[] split = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                if (!split.Any())
+                {
+                    continue;
+                }
+                yield return split.Select(s => s.Trim()).ToArray();
+            }
+        }
+
+        private static void AssertLine(string[] data, params string[] values)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                Assert.That(data[i], Is.EqualTo(values[i]));
             }
         }
     }
