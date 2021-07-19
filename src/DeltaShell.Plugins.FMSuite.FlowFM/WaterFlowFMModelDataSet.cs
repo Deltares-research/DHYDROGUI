@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 {Model1DParameterNames.ObservationPointWaterLevel, "water_level"},
                 {Model1DParameterNames.ObservationPointWaterDepth, "water_depth"},
-                {Model1DParameterNames.ObservationPointWaterDepth, "discharge"},
+                {Model1DParameterNames.ObservationPointDischarge, "discharge"},
                 {Model1DParameterNames.ObservationPointVelocity, "velocity"},
                 {Model1DParameterNames.ObservationPointSaltConcentration, "salinity"},
                 {Model1DParameterNames.ObservationPointSaltDispersion, "salinity"},
