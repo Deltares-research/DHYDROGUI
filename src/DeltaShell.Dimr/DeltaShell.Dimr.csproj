@@ -146,7 +146,7 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Dimr.Libs.3.0.1.3538-1D2Dspecial\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.3.0.1.3538-1D2Dspecial\build\net40\Dimr.Libs.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Dimr.Libs.3.0.1.3620-1D2Dspecial\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.3.0.1.3620-1D2Dspecial\build\net40\Dimr.Libs.targets'))" />
   </Target>
   <PropertyGroup>
     <PreBuildEvent>cd "$(ProjectDir)\drtc_xsd"
@@ -162,5 +162,5 @@ cd "$(ProjectDir)\dimr_xsd"
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\Dimr.Libs.3.0.1.3538-1D2Dspecial\build\net40\Dimr.Libs.targets" Condition="Exists('..\..\packages\Dimr.Libs.3.0.1.3538-1D2Dspecial\build\net40\Dimr.Libs.targets')" />
+  <Import Project="..\..\packages\Dimr.Libs.3.0.1.3620-1D2Dspecial\build\net40\Dimr.Libs.targets" Condition="Exists('..\..\packages\Dimr.Libs.3.0.1.3620-1D2Dspecial\build\net40\Dimr.Libs.targets')" />
 </Project>
