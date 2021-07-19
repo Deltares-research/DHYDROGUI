@@ -34,13 +34,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.713-development\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.713-development\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
@@ -67,11 +67,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets')" />
+  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.713-development\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.713-development\build\net461\DeltaShell.Framework.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.690-development\build\net461\DeltaShell.Framework.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.713-development\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.713-development\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
 </Project>
