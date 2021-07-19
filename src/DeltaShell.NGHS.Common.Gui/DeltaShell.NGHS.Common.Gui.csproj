@@ -37,7 +37,7 @@
   <ItemGroup>
     <Reference Include="BruTile, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\BruTile.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\BruTile.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls">
@@ -69,7 +69,7 @@
     </Reference>
     <Reference Include="GeoAPI, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems, Version=1.7.5.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
@@ -105,9 +105,9 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SharpMap.Extensions, Version=2.0.0.682, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpMap.Extensions">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.682-development\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
