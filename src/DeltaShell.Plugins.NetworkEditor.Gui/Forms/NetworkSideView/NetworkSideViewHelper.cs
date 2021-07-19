@@ -566,7 +566,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return (ratio * newPipeLength) + Math.Min(sourceLevel, targetLevel);
         }
 
-        private static IFunction CreateFunction(IUnit yUnit, List<double> xValues, List<double> yValues, string name)
+        internal static IFunction CreateFunction(IUnit yUnit, List<double> xValues, List<double> yValues, string name)
         {
             var chainages = new Variable<double>("Chainage") {Unit = new Unit("Chainage", "m")};
             var yVar = new Variable<double>(name) {Unit = yUnit};

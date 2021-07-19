@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
@@ -42,6 +44,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private readonly IList<INetworkCoverage> renderedNetworkCoverages = new List<INetworkCoverage>();
         private readonly IDictionary<string, IFunction> createdRoutes = new Dictionary<string, IFunction>();
         private NetworkSideViewCoverageManager networkSideViewCoverageManager;
+        private static readonly IUnit WaterLevelUnit = new Unit("Water level", "m AD");
+        private IFunction maxWaterLevelFunction;
 
         public NetworkSideViewDataController(Route route, NetworkSideViewCoverageManager coverageManager, ModelNameForCoverageDelegate modelNameForCoverageDelegate = null)
         {
@@ -57,7 +61,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             NetworkRoute = route;
             NetworkSideViewCoverageManager = coverageManager;
             
-            BuildProfileNetworkCoverages();        
+            BuildProfileNetworkCoverages();
         }
 
         public void OnSideViewHandleCreated()
@@ -99,10 +103,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             ResetMinMaxZ();
 
-            if (OnDataChanged != null)
-            {
-                OnDataChanged();
-            }
+            OnDataChanged?.Invoke();
         }
 
         #endregion
@@ -125,29 +126,41 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void AddCoverageDelegated(ICoverage coverage)
         {
-            if (coverage is INetworkCoverage)
+            switch (coverage)
             {
-                //todo: validate!!
-                var networkCoverage = (coverage as INetworkCoverage);
-
-                if (!Equals(networkCoverage.Network, route.Network))
+                case INetworkCoverage networkCoverage when !Equals(networkCoverage.Network, route.Network):
                     return;
-
                 //special case:
-                if (coverage.Name.ToLower().Equals(WaterLevelCoverageNameInMapFile) && coverage.IsTimeDependent) 
-                {
-                    WaterLevelNetworkCoverage = FilterWithTime((INetworkCoverage)coverage, null);
-                }
-                else
-                {
-                    AllNetworkCoverages.Add(FilterWithTime((INetworkCoverage)coverage, null));
-                }
+                case INetworkCoverage networkCoverage when string.Equals(networkCoverage.Name,WaterLevelCoverageNameInMapFile, StringComparison.CurrentCultureIgnoreCase) 
+                                                           && networkCoverage.IsTimeDependent:
+
+                    WaterLevelNetworkCoverage = FilterWithTime(networkCoverage, null);
+                    break;
+                case INetworkCoverage networkCoverage:
+                    AllNetworkCoverages.Add(FilterWithTime(networkCoverage, null));
+                    break;
+                case IFeatureCoverage featureCoverage:
+                    //todo: validate!!
+                    AllFeatureCoverages.Add(FilterWithTime(featureCoverage, null));
+                    break;
             }
-            else if (coverage is IFeatureCoverage)
-            {
-                //todo: validate!!
-                AllFeatureCoverages.Add(FilterWithTime((IFeatureCoverage)coverage, null));
-            }
+        }
+
+        private IFunction CreateMaxLevelFunction(INetworkCoverage networkCoverage)
+        {
+            var locations = RouteHelper.GetLocationsInRoute(networkCoverage, route);
+            
+            var chainagesValues = locations.Select(loc => RouteHelper.GetRouteChainage(route, loc)).ToList();
+
+            var values = locations
+                         .Select(l =>
+                         {
+                             var multiDimensionalArray = networkCoverage.GetValues<double>(new VariableValueFilter<INetworkLocation>(networkCoverage.Locations, l));
+                             return multiDimensionalArray != null && multiDimensionalArray.Count > 0 ? multiDimensionalArray.Max() : double.NaN;
+                         })
+                         .ToList();
+
+            return NetworkSideViewHelper.CreateFunction(WaterLevelUnit, chainagesValues, values, $"Max {networkCoverage.Name}");
         }
 
         private static INetworkCoverage FilterWithTime(INetworkCoverage coverage, DateTime? time)
@@ -384,6 +397,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 UnsubscribeToRouteNetwork();
                 UnsubscribeToRoute();
+                maxWaterLevelFunction = null;
+
                 route = value;
                 SubscribeToRoute();
                 SubscribeToRouteNetwork();
@@ -478,6 +493,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 if (waterLevelNetworkCoverage != null)
                 {
                     UnsubscribeFromCoverage(waterLevelNetworkCoverage);
+                    maxWaterLevelFunction = null;
                 }
 
                 waterLevelNetworkCoverage = value;
@@ -486,6 +502,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 {
                     SubscribeToCoverage(waterLevelNetworkCoverage);
                 }
+            }
+        }
+
+        public IFunction MaxWaterLevelFunction
+        {
+            get
+            {
+                return CreateMaxLevelFunction((INetworkCoverage) waterLevelNetworkCoverage.Parent);
             }
         }
 
@@ -554,7 +578,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                var function = CreateRouteFunctionFromNetworkCoverage(route, WaterLevelNetworkCoverage, new Unit("Water level", "m AD"));
+                var function = CreateRouteFunctionFromNetworkCoverage(route, WaterLevelNetworkCoverage, WaterLevelUnit);
 
                 if (function == null)
                 {

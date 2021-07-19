@@ -5,7 +5,6 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Charting.Series;
-using DelftTools.Controls.Swf.Charting.Tools;
 using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
@@ -20,14 +19,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
     internal class NetworkSideViewChartSeriesController : IDisposable
     {
         private readonly ChartView chartView;
-        private readonly IList<SideViewChartData> bottomProfileChartData = new List<SideViewChartData>();
-        private readonly IList<SideViewChartData> renderedCoveragesChartData = new List<SideViewChartData>();
+        private readonly IList<SideViewChartData> createdChartData = new List<SideViewChartData>();
+        private readonly IList<IChartViewTool> addedTools = new List<IChartViewTool>();
         private Dictionary<string, bool> seriesActiveCache = new Dictionary<string, bool>(StringComparer.InvariantCultureIgnoreCase);
 
-        private ISeriesBandTool pipeSeriesBandTool;
-        private ISeriesBandTool waterLevelPipesSeriesBandTool;
-        private ISeriesBandTool waterLevelChannelsSeriesBandTool;
-        
         private NetworkSideViewDataController networkSideViewDataController;
 
         public NetworkSideViewChartSeriesController(ChartView chartView)
@@ -52,92 +47,98 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             seriesActiveCache.Clear();
             seriesActiveCache = Chart.Series.ToDictionaryWithDuplicateLogging("Series",s => s.Title, s => s.Visible, Level.Debug);
-            Chart.Series.Clear();
-
-            //clear the old binding lists
-            bottomProfileChartData.ForEach(cd => cd.Dispose());
-            bottomProfileChartData.Clear();
-            renderedCoveragesChartData.ForEach(cd => cd.Dispose());
-            renderedCoveragesChartData.Clear();
+            
+            CleanSeriesAndTools();
 
             // create chart data
-            var bedLevelChartData = CreateBedLevelChartData().ToArray();
-            bedLevelChartData.ForEach(d =>
-            {
-                Chart.Series.Add(CreateSeries(d));
-                bottomProfileChartData.Add(d);
-            });
-
-            chartView.Tools.Remove(waterLevelChannelsSeriesBandTool);
-
+            var bedLevelChartDatas = CreateBedLevelChartData().ToArray();
             var waterLevelChartData = CreateWaterLevelChartData();
-            if (waterLevelChartData != null)
+            var renderedCoveragesChartDatas = CreateRenderedCoverageChartData();
+
+            var allSewerConnections = Route.Segments.Values.All(s => s.Branch is ISewerConnection);
+            var pipeChartData = allSewerConnections
+                                    ? CreatePipeChartData().ToArray()
+                                    : new SideViewChartData[0];
+
+            var waterLevelInPipeChartData = allSewerConnections
+                                                ? CreateWaterLevelInPipeChartData()
+                                                : null;
+            var maxWaterLevelChartData = CreateMaxWaterLevelChartData();
+
+            var lookup = new Dictionary<SideViewChartData, IChartSeries>();
+            var all = bedLevelChartDatas
+                                            .Plus(waterLevelChartData)
+                                            .Plus(maxWaterLevelChartData)
+                                            .Concat(pipeChartData)
+                                            .Plus(waterLevelInPipeChartData)
+                                            .Concat(renderedCoveragesChartDatas);
+
+            foreach (var chartData in all)
             {
-                var waterLevelChartSeries = CreateSeries(waterLevelChartData);
-                Chart.Series.Add(waterLevelChartSeries);
-                bottomProfileChartData.Add(waterLevelChartData);
+                if (chartData == null) continue;
 
-                var bedLevelSeries = Chart.Series.FirstOrDefault(s => s.Title.StartsWith(BedLevelNetworkCoverageBuilder.BedLevelCoverageName));
-                if (bedLevelSeries != null)
-                {
-                    waterLevelChannelsSeriesBandTool = chartView.NewSeriesBandTool(waterLevelChartSeries, bedLevelSeries,
-                                                                                   Color.FromArgb(72, Color.RoyalBlue));
-
-                    chartView.Tools.Add(waterLevelChannelsSeriesBandTool);
-                }
+                var chartSeries = CreateSeries(chartData);
+                
+                Chart.Series.Add(chartSeries);
+                createdChartData.Add(chartData);
+                lookup.Add(chartData, chartSeries);
             }
 
-            if (Route.Segments.Values.All(s => s.Branch is ISewerConnection))
-            {
-                var pipeSeries = CreatePipeChartData().Select(CreateSeries).ToList();
-                Chart.Series.AddRange(pipeSeries);
+            CreateTools(bedLevelChartDatas, lookup, waterLevelChartData, pipeChartData, waterLevelInPipeChartData);
 
-                if (pipeSeries.Count > 1)
-                {
-                    chartView.Tools.Remove(pipeSeriesBandTool);
-                    pipeSeriesBandTool = chartView.NewSeriesBandTool(pipeSeries[0], pipeSeries[1], NetworkSideViewStyles.PipeColor);
-                    chartView.Tools.Add(pipeSeriesBandTool);
-                }
-
-                chartView.Tools.Remove(waterLevelPipesSeriesBandTool);
-
-                var waterLevelInPipeChartData = CreateWaterLevelInPipeChartData();
-                if (waterLevelInPipeChartData != null)
-                {
-                    var waterLevelInPipeSeries = CreateSeries(waterLevelInPipeChartData);
-                    Chart.Series.Add(waterLevelInPipeSeries);
-                    waterLevelPipesSeriesBandTool = chartView.NewSeriesBandTool(waterLevelInPipeSeries, pipeSeries[1],
-                                                                                Color.FromArgb(72, Color.RoyalBlue));
-                    chartView.Tools.Add(waterLevelPipesSeriesBandTool);
-                }
-            }
-
-            CreateRenderedCoverageChartData().ForEach(d =>
-            {
-                Chart.Series.Add(CreateSeries(d));
-                renderedCoveragesChartData.Add(d);
-            });
+            chartView.Tools.AddRange(addedTools);
 
             Chart.Legend.ShowCheckBoxes = true;
 
+            // restore visibility of serie
             Chart.Series.ForEach(s => s.Visible = !seriesActiveCache.ContainsKey(s.Title) || seriesActiveCache[s.Title]);
         }
-        
+
+        private void CreateTools(SideViewChartData[] bedLevelChartDatas, Dictionary<SideViewChartData, IChartSeries> lookup, SideViewChartData waterLevelChartData, SideViewChartData[] pipeChartData, SideViewChartData waterLevelInPipeChartData)
+        {
+            var bedLevelChartData = bedLevelChartDatas.FirstOrDefault(cd => string.Equals(cd.Function.Name, BedLevelNetworkCoverageBuilder.BedLevelCoverageName));
+            if (bedLevelChartData != null && lookup.TryGetValue(bedLevelChartData, out var bedLevelSeries) && lookup.TryGetValue(waterLevelChartData, out var waterLevelChartSeries))
+            {
+                addedTools.Add(chartView.NewSeriesBandTool(waterLevelChartSeries, bedLevelSeries, Color.FromArgb(72, NetworkSideViewStyles.WaterLevelColor)));
+            }
+
+            if (pipeChartData.Length <= 1) 
+            {
+                return;
+            }
+
+            var pipeSeries = pipeChartData.Select(cd => lookup[cd]).ToArray();
+            addedTools.Add(chartView.NewSeriesBandTool(pipeSeries[0], pipeSeries[1], NetworkSideViewStyles.PipeColor));
+
+            if (waterLevelInPipeChartData != null && lookup.TryGetValue(waterLevelInPipeChartData, out var waterLevelInPipeSeries))
+            {
+                addedTools.Add(chartView.NewSeriesBandTool(waterLevelInPipeSeries, pipeSeries[1], Color.FromArgb(72, NetworkSideViewStyles.WaterLevelColor)));
+            }
+        }
+
+        private void CleanSeriesAndTools()
+        {
+            Chart.Series.Clear();
+
+            //clear the old binding lists
+            createdChartData.ForEach(cd => cd.Dispose());
+            createdChartData.Clear();
+
+            addedTools.ForEach(t => chartView.Tools.Remove(t));
+            addedTools.Clear();
+        }
+
         private SideViewChartData CreateWaterLevelInPipeChartData()
         {
             var waterLevelInSideView = networkSideViewDataController.WaterLevelSideViewFunction;
 
             if (waterLevelInSideView == null) return null;
-
             var waterLevelInPipeFunction = NetworkSideViewHelper.GetWaterLevelInPipeFunction(Route, waterLevelInSideView);
-            return new SideViewChartData(waterLevelInPipeFunction, Color.RoyalBlue, ChartSeriesType.LineSeries)
+            
+            return CreateLineChartDataForFunction(waterLevelInPipeFunction, NetworkSideViewStyles.WaterLevelColor, (ls) =>
             {
-                FunctionBindingList = { SynchronizeInvoke = chartView },
-                LineStyleCustomizer = (ls) =>
-                {
-                    ls.DashStyle = DashStyle.Dot;
-                }
-            };
+                ls.DashStyle = DashStyle.Dot;
+            });
         }
 
         private IEnumerable<SideViewChartData> CreatePipeChartData()
@@ -148,15 +149,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             foreach (var function in functions)
             {
-                yield return new SideViewChartData(function, Color.Black, ChartSeriesType.LineSeries)
+                yield return CreateLineChartDataForFunction(function, Color.Black, (ls) =>
                 {
-                    FunctionBindingList = { SynchronizeInvoke = chartView },
-                    LineStyleCustomizer = (ls) =>
-                    {
-                        ls.DashStyle = DashStyle.Solid;
-                        ls.Width = 2;
-                    }
-                };
+                    ls.DashStyle = DashStyle.Solid;
+                    ls.Width = 2;
+                });
             }
         }
 
@@ -164,101 +161,95 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             foreach (var sideViewFunction in networkSideViewDataController.RenderedNetworkSideViewFunctions)
             {
-                var renderedNetworkCoverageChartData = new SideViewChartData(sideViewFunction,
-                                                                             ColorHelper.GetIndexedColor(chartView.Chart.Series.Count),
-                                                                             ChartSeriesType.LineSeries);
-                renderedNetworkCoverageChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                renderedNetworkCoverageChartData.LineStyleCustomizer = (lcs) =>
+                yield return CreateLineChartDataForFunction(sideViewFunction, ColorHelper.GetIndexedColor(chartView.Chart.Series.Count), lcs =>
                 {
                     lcs.DashStyle = DashStyle.Solid;
                     lcs.Width = 2;
-                };
-                yield return renderedNetworkCoverageChartData;
+                });
             }
-
+            
             foreach (var coverage in networkSideViewDataController.RenderedFeatureViewFunctions)
             {
-                var renderedFeatureCoverageChartData = new SideViewChartData(coverage,
-                                                                             ColorHelper.GetIndexedColor(chartView.Chart.Series.Count),
-                                                                             ChartSeriesType.PointSeries);
-                renderedFeatureCoverageChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                renderedFeatureCoverageChartData.PointStyleCustomizer = (pcs) => { };
-                yield return renderedFeatureCoverageChartData;
+                yield return CreatePointChartDataForFunction(coverage, ColorHelper.GetIndexedColor(chartView.Chart.Series.Count));
             }
         }
 
         private SideViewChartData CreateWaterLevelChartData()
         {
             var waterLevelSideViewFunction = networkSideViewDataController.WaterLevelSideViewFunction;
-            if (waterLevelSideViewFunction != null)
-            {
-                var waterLevelChartData = new SideViewChartData(waterLevelSideViewFunction,
-                                                                Color.RoyalBlue,
-                                                                ChartSeriesType.LineSeries);
-                waterLevelChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                waterLevelChartData.LineStyleCustomizer = (lcs) =>
-                {
-                    lcs.Color = Color.RoyalBlue;
-                    lcs.DashStyle = DashStyle.Solid;
-                    lcs.Width = 2;
-                };
+            
+            return waterLevelSideViewFunction != null
+                       ? CreateLineChartDataForFunction(waterLevelSideViewFunction, NetworkSideViewStyles.WaterLevelColor, (lcs) =>
+                       {
+                           lcs.Color = NetworkSideViewStyles.WaterLevelColor;
+                           lcs.DashStyle = DashStyle.Solid;
+                           lcs.Width = 2;
+                       })
+                       : null;
+        }
 
-                return waterLevelChartData;
-            }
-
-            return null;
+        private SideViewChartData CreateMaxWaterLevelChartData()
+        {
+            return networkSideViewDataController.MaxWaterLevelFunction != null
+                       ? CreateLineChartDataForFunction(networkSideViewDataController.MaxWaterLevelFunction, NetworkSideViewStyles.MaxWaterLevelColor, (lcs) =>
+                       {
+                           lcs.Color = NetworkSideViewStyles.MaxWaterLevelColor;
+                           lcs.DashStyle = DashStyle.Solid;
+                           lcs.Width = 2;
+                       })
+                       : null;
         }
 
         private IEnumerable<SideViewChartData> CreateBedLevelChartData()
         {
-            var profileSideViewFunctions = networkSideViewDataController.ProfileSideViewFunctions.ToList();
+            var profileFunctions = networkSideViewDataController.ProfileSideViewFunctions.ToDictionary(f => f.Name, StringComparer.CurrentCultureIgnoreCase);
 
-            var bottomLevelSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => string.Equals(psvf.Name, BedLevelNetworkCoverageBuilder.BedLevelCoverageName));
-            if (bottomLevelSideViewFunction != null)
+            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.BedLevelCoverageName, out var bottomLevelSideViewFunction))
             {
-                var bottomLevelChartData = new SideViewChartData(bottomLevelSideViewFunction,
-                                                                 Color.FromArgb(72, Color.YellowGreen),
-                                                                 ChartSeriesType.AreaSeries);
-                bottomLevelChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                bottomLevelChartData.AreaStyleCustomizer = (acs) => acs.LineVisible = false;
-                yield return bottomLevelChartData;
+                yield return CreateAreaChartDataForFunction(bottomLevelSideViewFunction, Color.FromArgb(72, Color.YellowGreen), (acs) => acs.LineVisible = false);
             }
 
-            var lowestEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => string.Equals(psvf.Name, BedLevelNetworkCoverageBuilder.LowestEmbankmentCoverageName));
-            if (lowestEmbankmentSideViewFunction != null)
+            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.LowestEmbankmentCoverageName, out var lowestEmbankmentSideViewFunction))
             {
-                var lowestEmbankmentChartData = new SideViewChartData(lowestEmbankmentSideViewFunction,
-                                                                      Color.SaddleBrown,
-                                                                      ChartSeriesType.LineSeries);
-                lowestEmbankmentChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                lowestEmbankmentChartData.LineStyleCustomizer = (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; };
-                yield return lowestEmbankmentChartData;
+                yield return CreateLineChartDataForFunction(lowestEmbankmentSideViewFunction, Color.SaddleBrown, (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; });
             }
 
-            var leftEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => string.Equals(psvf.Name, BedLevelNetworkCoverageBuilder.LeftEmbankmentCoverageName));
-            if (leftEmbankmentSideViewFunction != null)
+            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.LeftEmbankmentCoverageName, out var leftEmbankmentSideViewFunction))
             {
-                var leftEmbankmentChartData = new SideViewChartData(leftEmbankmentSideViewFunction,
-                                                                    Color.Goldenrod,
-                                                                    ChartSeriesType.LineSeries);
-                leftEmbankmentChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                leftEmbankmentChartData.LineStyleCustomizer = (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; };
-                yield return leftEmbankmentChartData;
+                yield return CreateLineChartDataForFunction(leftEmbankmentSideViewFunction, Color.Goldenrod, (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; });
             }
 
-            var rightEmbankmentSideViewFunction = profileSideViewFunctions.FirstOrDefault(psvf => string.Equals(psvf.Name, BedLevelNetworkCoverageBuilder.RightEmbankmentCoverageName));
-            if (rightEmbankmentSideViewFunction != null)
+            if (profileFunctions.TryGetValue(BedLevelNetworkCoverageBuilder.RightEmbankmentCoverageName, out var rightEmbankmentSideViewFunction))
             {
-                var rightEmbankmentChartData = new SideViewChartData(rightEmbankmentSideViewFunction,
-                                                                     Color.RosyBrown,
-                                                                     ChartSeriesType.LineSeries);
-                rightEmbankmentChartData.FunctionBindingList.SynchronizeInvoke = chartView;
-                rightEmbankmentChartData.LineStyleCustomizer = (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; };
-                yield return rightEmbankmentChartData;
+                yield return CreateLineChartDataForFunction(rightEmbankmentSideViewFunction, Color.RosyBrown, (lcs) => { lcs.DashStyle = DashStyle.Dot; lcs.Width = 3; });
             }
         }
 
-        private IChartSeries CreateSeries(SideViewChartData sideViewChartData)
+        private SideViewChartData CreateLineChartDataForFunction(IFunction sideViewFunction, Color color, Action<ILineChartSeries> lineStyleCustomizer = null)
+        {
+            var renderedNetworkCoverageChartData = new SideViewChartData(sideViewFunction, color, ChartSeriesType.LineSeries);
+            renderedNetworkCoverageChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+            renderedNetworkCoverageChartData.LineStyleCustomizer = lineStyleCustomizer;
+            return renderedNetworkCoverageChartData;
+        }
+
+        private SideViewChartData CreatePointChartDataForFunction(IFunction sideViewFunction, Color color, Action<IPointChartSeries> pointStyleCustomizer = null)
+        {
+            var renderedNetworkCoverageChartData = new SideViewChartData(sideViewFunction, color, ChartSeriesType.LineSeries);
+            renderedNetworkCoverageChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+            renderedNetworkCoverageChartData.PointStyleCustomizer = pointStyleCustomizer;
+            return renderedNetworkCoverageChartData;
+        }
+
+        private SideViewChartData CreateAreaChartDataForFunction(IFunction sideViewFunction, Color color, Action<IAreaChartSeries> areaStyleCustomizer=null)
+        {
+            var renderedNetworkCoverageChartData = new SideViewChartData(sideViewFunction, color, ChartSeriesType.AreaSeries);
+            renderedNetworkCoverageChartData.FunctionBindingList.SynchronizeInvoke = chartView;
+            renderedNetworkCoverageChartData.AreaStyleCustomizer = areaStyleCustomizer;
+            return renderedNetworkCoverageChartData;
+        }
+
+        private static IChartSeries CreateSeries(SideViewChartData sideViewChartData)
         {
             var function = sideViewChartData.Function;
             NetworkSideViewHelper.ValidateFunction(function);
@@ -299,11 +290,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         public void Dispose()
         {
             // dispose function binding lists:
-            foreach (var chartData in bottomProfileChartData)
-            {
-                chartData.Dispose();
-            }
-            foreach (var chartData in renderedCoveragesChartData)
+            foreach (var chartData in createdChartData)
             {
                 chartData.Dispose();
             }

@@ -31,5 +31,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         };
 
         internal static readonly Color PipeColor = Color.Beige;
+
+        internal static readonly Color WaterLevelColor = Color.RoyalBlue;
+
+        internal static readonly Color MaxWaterLevelColor = Color.DarkBlue;
     }
 }
