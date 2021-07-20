@@ -161,6 +161,20 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
                                                      sewerConnection.WaterType == SewerConnectionWaterType.None ||
                                                      sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
                                                      sewerConnection.WaterType == SewerConnectionWaterType.StormWater;
+                            
+                            if (!(sewerConnection is null) && isAvailableMesh1DPoint)
+                            {
+                                if (discretisationPoint.Chainage == 0)
+                                {
+                                    isAvailableMesh1DPoint &= !(sewerConnection.SourceCompartment is OutletCompartment);
+                                }
+
+                                if (Math.Abs(discretisationPoint.Chainage - sewerConnection.Length) < 1e-10)
+                                {
+                                    isAvailableMesh1DPoint &= !(sewerConnection.TargetCompartment is OutletCompartment);
+                                }
+                            }
+                            
                             break;
                         case LinkGeneratingType.GullySewer:
                             if (sewerConnection != null)

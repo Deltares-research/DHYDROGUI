@@ -81,7 +81,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="MeshKernelNETCore, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MeshKernelNET.1.0.0.32-Beta\lib\netstandard2.0\MeshKernelNETCore.dll</HintPath>
+      <HintPath>..\..\packages\MeshKernelNET.1.0.0.41-Beta\lib\netstandard2.0\MeshKernelNETCore.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
@@ -405,10 +405,10 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.719-development\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.719-development\build\net461\DeltaShell.Framework.targets'))" />
     <Error Condition="!Exists('..\..\packages\Deltares.UGrid.1.0.69328\build\net40\Deltares.UGrid.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Deltares.UGrid.1.0.69328\build\net40\Deltares.UGrid.targets'))" />
-    <Error Condition="!Exists('..\..\packages\MeshKernelNET.1.0.0.32-Beta\build\net40\MeshKernelNET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MeshKernelNET.1.0.0.32-Beta\build\net40\MeshKernelNET.targets'))" />
+    <Error Condition="!Exists('..\..\packages\MeshKernelNET.1.0.0.41-Beta\build\net40\MeshKernelNET.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\MeshKernelNET.1.0.0.41-Beta\build\net40\MeshKernelNET.targets'))" />
   </Target>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.719-development\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.719-development\build\net461\DeltaShell.Framework.targets')" />
   <Import Project="..\..\packages\Deltares.UGrid.1.0.69328\build\net40\Deltares.UGrid.targets" Condition="Exists('..\..\packages\Deltares.UGrid.1.0.69328\build\net40\Deltares.UGrid.targets')" />
-  <Import Project="..\..\packages\MeshKernelNET.1.0.0.32-Beta\build\net40\MeshKernelNET.targets" Condition="Exists('..\..\packages\MeshKernelNET.1.0.0.32-Beta\build\net40\MeshKernelNET.targets')" />
+  <Import Project="..\..\packages\MeshKernelNET.1.0.0.41-Beta\build\net40\MeshKernelNET.targets" Condition="Exists('..\..\packages\MeshKernelNET.1.0.0.41-Beta\build\net40\MeshKernelNET.targets')" />
 </Project>
