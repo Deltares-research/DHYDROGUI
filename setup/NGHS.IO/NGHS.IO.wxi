@@ -4,18 +4,126 @@
   <Directory Id='NGHS.IO' Name='DeltaShell.NGHS.IO'>
     <!-- Same as SharpMapGisPlugin DeltaShell.Plugins.SharpMapGis to control the sequence of loading -->
     <Component Id='NGHS.IO' Guid="BB9754C7-4C87-4CF7-9E48-38156880994A">
-     <File Id="DeltaShell.NGHS.IO.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.dll' />
-     <File Id="Deltares.UGrid.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\Deltares.UGrid.dll' />
-     <File Id="NGHS_IO_hdf5.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\hdf5.dll' />
-     <File Id="NGHS_IO_hdf5_hl.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\hdf5_hl.dll' />
-     <File Id="NGHS_IO_io_netcdf.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\io_netcdf.dll' />
-     <File Id="NGHS_IO_libifcoremd.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\libifcoremd.dll' />
-     <File Id="NGHS_IO_libmmd.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\libmmd.dll' />
-     <File Id="NGHS_IO_netcdf.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\netcdf.dll' />
-     <File Id="NGHS_IO_ucrtbase.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\ucrtbase.dll' />
-     <File Id="NGHS_IO_vcruntime140.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\vcruntime140.dll' />
-     <File Id="NGHS_IO_zlib1.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\zlib1.dll' />     
+        <File Id="NGHS_IO_Deltares.UGrid.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\Deltares.UGrid.dll' />
+        <File Id="NGHS_IO_Deltares.UGrid.xml" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\Deltares.UGrid.xml' />
+        <File Id="NGHS_IO_DeltaShell.NGHS.IO.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.dll' />
+        <File Id="NGHS_IO_DeltaShell.NGHS.IO.pdb" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.pdb' />
+        <File Id="NGHS_IO_DeltaShell.NGHS.IO.pssym" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.pssym' />
+        <File Id="NGHS_IO_hdf5.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\hdf5.dll' />
+        <File Id="NGHS_IO_hdf5_hl.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\hdf5_hl.dll' />
+        <File Id="NGHS_IO_io_netcdf.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\io_netcdf.dll' />
+        <File Id="NGHS_IO_libifcoremd.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\libifcoremd.dll' />
+        <File Id="NGHS_IO_libmmd.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\libmmd.dll' />
+        <File Id="NGHS_IO_MeshKernelNETCore.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\MeshKernelNETCore.dll' />
+        <File Id="NGHS_IO_Microsoft.Win32.Primitives.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\Microsoft.Win32.Primitives.dll' />
+        <File Id="NGHS_IO_netcdf.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\netcdf.dll' />
+        <File Id="NGHS_IO_netstandard.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\netstandard.dll' />
+        <File Id="NGHS_IO_System.AppContext.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.AppContext.dll' />
+        <File Id="NGHS_IO_System.Collections.Concurrent.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Collections.Concurrent.dll' />
+        <File Id="NGHS_IO_System.Collections.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Collections.dll' />
+        <File Id="NGHS_IO_System.Collections.NonGeneric.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Collections.NonGeneric.dll' />
+        <File Id="NGHS_IO_System.Collections.Specialized.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Collections.Specialized.dll' />
+        <File Id="NGHS_IO_System.ComponentModel.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.ComponentModel.dll' />
+        <File Id="NGHS_IO_System.ComponentModel.EventBasedAsync.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.ComponentModel.EventBasedAsync.dll' />
+        <File Id="NGHS_IO_System.ComponentModel.Primitives.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.ComponentModel.Primitives.dll' />
+        <File Id="NGHS_IO_System.ComponentModel.TypeConverter.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.ComponentModel.TypeConverter.dll' />
+        <File Id="NGHS_IO_System.Console.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Console.dll' />
+        <File Id="NGHS_IO_System.Data.Common.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Data.Common.dll' />
+        <File Id="NGHS_IO_System.Diagnostics.Contracts.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Diagnostics.Contracts.dll' />
+        <File Id="NGHS_IO_System.Diagnostics.Debug.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Diagnostics.Debug.dll' />
+        <File Id="NGHS_IO_System.Diagnostics.FileVersionInfo.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Diagnostics.FileVersionInfo.dll' />
+        <File Id="NGHS_IO_System.Diagnostics.Process.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Diagnostics.Process.dll' />
+        <File Id="NGHS_IO_System.Diagnostics.StackTrace.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Diagnostics.StackTrace.dll' />
+        <File Id="NGHS_IO_System.Diagnostics.TextWriterTraceListener.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Diagnostics.TextWriterTraceListener.dll' />
+        <File Id="NGHS_IO_System.Diagnostics.Tools.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Diagnostics.Tools.dll' />
+        <File Id="NGHS_IO_System.Diagnostics.TraceSource.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Diagnostics.TraceSource.dll' />
+        <File Id="NGHS_IO_System.Diagnostics.Tracing.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Diagnostics.Tracing.dll' />
+        <File Id="NGHS_IO_System.Drawing.Primitives.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Drawing.Primitives.dll' />
+        <File Id="NGHS_IO_System.Dynamic.Runtime.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Dynamic.Runtime.dll' />
+        <File Id="NGHS_IO_System.Globalization.Calendars.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Globalization.Calendars.dll' />
+        <File Id="NGHS_IO_System.Globalization.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Globalization.dll' />
+        <File Id="NGHS_IO_System.Globalization.Extensions.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Globalization.Extensions.dll' />
+        <File Id="NGHS_IO_System.IO.Compression.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.Compression.dll' />
+        <File Id="NGHS_IO_System.IO.Compression.ZipFile.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.Compression.ZipFile.dll' />
+        <File Id="NGHS_IO_System.IO.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.dll' />
+        <File Id="NGHS_IO_System.IO.FileSystem.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.FileSystem.dll' />
+        <File Id="NGHS_IO_System.IO.FileSystem.DriveInfo.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.FileSystem.DriveInfo.dll' />
+        <File Id="NGHS_IO_System.IO.FileSystem.Primitives.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.FileSystem.Primitives.dll' />
+        <File Id="NGHS_IO_System.IO.FileSystem.Watcher.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.FileSystem.Watcher.dll' />
+        <File Id="NGHS_IO_System.IO.IsolatedStorage.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.IsolatedStorage.dll' />
+        <File Id="NGHS_IO_System.IO.MemoryMappedFiles.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.MemoryMappedFiles.dll' />
+        <File Id="NGHS_IO_System.IO.Pipes.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.Pipes.dll' />
+        <File Id="NGHS_IO_System.IO.UnmanagedMemoryStream.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.IO.UnmanagedMemoryStream.dll' />
+        <File Id="NGHS_IO_System.Linq.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Linq.dll' />
+        <File Id="NGHS_IO_System.Linq.Expressions.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Linq.Expressions.dll' />
+        <File Id="NGHS_IO_System.Linq.Parallel.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Linq.Parallel.dll' />
+        <File Id="NGHS_IO_System.Linq.Queryable.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Linq.Queryable.dll' />
+        <File Id="NGHS_IO_System.Net.Http.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.Http.dll' />
+        <File Id="NGHS_IO_System.Net.NameResolution.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.NameResolution.dll' />
+        <File Id="NGHS_IO_System.Net.NetworkInformation.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.NetworkInformation.dll' />
+        <File Id="NGHS_IO_System.Net.Ping.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.Ping.dll' />
+        <File Id="NGHS_IO_System.Net.Primitives.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.Primitives.dll' />
+        <File Id="NGHS_IO_System.Net.Requests.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.Requests.dll' />
+        <File Id="NGHS_IO_System.Net.Security.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.Security.dll' />
+        <File Id="NGHS_IO_System.Net.Sockets.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.Sockets.dll' />
+        <File Id="NGHS_IO_System.Net.WebHeaderCollection.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.WebHeaderCollection.dll' />
+        <File Id="NGHS_IO_System.Net.WebSockets.Client.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.WebSockets.Client.dll' />
+        <File Id="NGHS_IO_System.Net.WebSockets.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Net.WebSockets.dll' />
+        <File Id="NGHS_IO_System.ObjectModel.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.ObjectModel.dll' />
+        <File Id="NGHS_IO_System.Reflection.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Reflection.dll' />
+        <File Id="NGHS_IO_System.Reflection.Extensions.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Reflection.Extensions.dll' />
+        <File Id="NGHS_IO_System.Reflection.Primitives.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Reflection.Primitives.dll' />
+        <File Id="NGHS_IO_System.Resources.Reader.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Resources.Reader.dll' />
+        <File Id="NGHS_IO_System.Resources.ResourceManager.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Resources.ResourceManager.dll' />
+        <File Id="NGHS_IO_System.Resources.Writer.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Resources.Writer.dll' />
+        <File Id="NGHS_IO_System.Runtime.CompilerServices.VisualC.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.CompilerServices.VisualC.dll' />
+        <File Id="NGHS_IO_System.Runtime.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.dll' />
+        <File Id="NGHS_IO_System.Runtime.Extensions.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.Extensions.dll' />
+        <File Id="NGHS_IO_System.Runtime.Handles.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.Handles.dll' />
+        <File Id="NGHS_IO_System.Runtime.InteropServices.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.InteropServices.dll' />
+        <File Id="NGHS_IO_System.Runtime.InteropServices.RuntimeInformation.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.InteropServices.RuntimeInformation.dll' />
+        <File Id="NGHS_IO_System.Runtime.Numerics.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.Numerics.dll' />
+        <File Id="NGHS_IO_System.Runtime.Serialization.Formatters.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.Serialization.Formatters.dll' />
+        <File Id="NGHS_IO_System.Runtime.Serialization.Json.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.Serialization.Json.dll' />
+        <File Id="NGHS_IO_System.Runtime.Serialization.Primitives.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.Serialization.Primitives.dll' />
+        <File Id="NGHS_IO_System.Runtime.Serialization.Xml.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Runtime.Serialization.Xml.dll' />
+        <File Id="NGHS_IO_System.Security.Claims.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Security.Claims.dll' />
+        <File Id="NGHS_IO_System.Security.Cryptography.Algorithms.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Security.Cryptography.Algorithms.dll' />
+        <File Id="NGHS_IO_System.Security.Cryptography.Csp.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Security.Cryptography.Csp.dll' />
+        <File Id="NGHS_IO_System.Security.Cryptography.Encoding.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Security.Cryptography.Encoding.dll' />
+        <File Id="NGHS_IO_System.Security.Cryptography.Primitives.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Security.Cryptography.Primitives.dll' />
+        <File Id="NGHS_IO_System.Security.Cryptography.X509Certificates.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Security.Cryptography.X509Certificates.dll' />
+        <File Id="NGHS_IO_System.Security.Principal.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Security.Principal.dll' />
+        <File Id="NGHS_IO_System.Security.SecureString.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Security.SecureString.dll' />
+        <File Id="NGHS_IO_System.Text.Encoding.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Text.Encoding.dll' />
+        <File Id="NGHS_IO_System.Text.Encoding.Extensions.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Text.Encoding.Extensions.dll' />
+        <File Id="NGHS_IO_System.Text.RegularExpressions.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Text.RegularExpressions.dll' />
+        <File Id="NGHS_IO_System.Threading.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Threading.dll' />
+        <File Id="NGHS_IO_System.Threading.Overlapped.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Threading.Overlapped.dll' />
+        <File Id="NGHS_IO_System.Threading.Tasks.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Threading.Tasks.dll' />
+        <File Id="NGHS_IO_System.Threading.Tasks.Parallel.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Threading.Tasks.Parallel.dll' />
+        <File Id="NGHS_IO_System.Threading.Thread.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Threading.Thread.dll' />
+        <File Id="NGHS_IO_System.Threading.ThreadPool.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Threading.ThreadPool.dll' />
+        <File Id="NGHS_IO_System.Threading.Timer.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Threading.Timer.dll' />
+        <File Id="NGHS_IO_System.ValueTuple.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.ValueTuple.dll' />
+        <File Id="NGHS_IO_System.Xml.ReaderWriter.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Xml.ReaderWriter.dll' />
+        <File Id="NGHS_IO_System.Xml.XDocument.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Xml.XDocument.dll' />
+        <File Id="NGHS_IO_System.Xml.XmlDocument.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Xml.XmlDocument.dll' />
+        <File Id="NGHS_IO_System.Xml.XmlSerializer.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Xml.XmlSerializer.dll' />
+        <File Id="NGHS_IO_System.Xml.XPath.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Xml.XPath.dll' />
+        <File Id="NGHS_IO_System.Xml.XPath.XDocument.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Xml.XPath.XDocument.dll' />
+        <File Id="NGHS_IO_ucrtbase.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\ucrtbase.dll' />
+        <File Id="NGHS_IO_vcruntime140.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\vcruntime140.dll' />     
     </Component>
+    <Directory Id="NGHS_IO_WinX64" Name="win-x64">
+        <Directory Id="NGHS_IO_native" Name="native">
+            <Component Id='NGHS_IO_WinX64_native' Guid="B47DD2EC-8AFF-487F-9ADB-1527C85D0A57">
+                <File Id="NGHS_IO_MeshKernelApi.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\win-x64\native\MeshKernelApi.dll' />
+                <File Id="NGHS_IO_MeshKernelApi.exp" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\win-x64\native\MeshKernelApi.exp' />
+                <File Id="NGHS_IO_MeshKernelApi.lib" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\win-x64\native\MeshKernelApi.lib' />
+            </Component>
+        </Directory>
+    </Directory>
   </Directory>
   <?undef nghs_io_plugin_bin ?>
 </Include>

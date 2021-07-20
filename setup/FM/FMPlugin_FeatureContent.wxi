@@ -12,7 +12,8 @@
   <ComponentRef Id="ImportSobek2NetworkPlugin"/>
   
   <ComponentRef Id="NGHS.IO"/>
-
+  <ComponentRef Id="NGHS_IO_WinX64_native"/>
+  
   <ComponentRef Id="Dimr"/>
 
   <ComponentRef Id="FMPlugin"/>
