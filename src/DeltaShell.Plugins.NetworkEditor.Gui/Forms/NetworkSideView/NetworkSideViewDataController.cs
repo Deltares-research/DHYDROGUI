@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
@@ -44,8 +42,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private readonly IList<INetworkCoverage> renderedNetworkCoverages = new List<INetworkCoverage>();
         private readonly IDictionary<string, IFunction> createdRoutes = new Dictionary<string, IFunction>();
         private NetworkSideViewCoverageManager networkSideViewCoverageManager;
-        private static readonly IUnit WaterLevelUnit = new Unit("Water level", "m AD");
-        private IFunction maxWaterLevelFunction;
+        private static readonly IUnit waterLevelUnit = new Unit("Water level", "m AD");
+        private List<DelftTools.Utils.Tuple<double, double>> maxWaterLevelValues;
 
         public NetworkSideViewDataController(Route route, NetworkSideViewCoverageManager coverageManager, ModelNameForCoverageDelegate modelNameForCoverageDelegate = null)
         {
@@ -148,11 +146,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private IFunction CreateMaxLevelFunction(INetworkCoverage networkCoverage)
         {
-            var locations = RouteHelper.GetLocationsInRoute(networkCoverage, route);
-            
-            var chainagesValues = locations.Select(loc => RouteHelper.GetRouteChainage(route, loc)).ToList();
+            var chainagesValues = new List<double>();
+            var values = new List<double>();
 
-            var values = locations
+            if (maxWaterLevelValues == null)
+            {
+                var locations = RouteHelper.GetLocationsInRoute(networkCoverage, route);
+                chainagesValues = locations.Select(loc => RouteHelper.GetRouteChainage(route, loc)).ToList();
+
+                values = locations
                          .Select(l =>
                          {
                              var multiDimensionalArray = networkCoverage.GetValues<double>(new VariableValueFilter<INetworkLocation>(networkCoverage.Locations, l));
@@ -160,7 +162,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                          })
                          .ToList();
 
-            return NetworkSideViewHelper.CreateFunction(WaterLevelUnit, chainagesValues, values, $"Max {networkCoverage.Name}");
+                // cache values because they do not change when using time navigator
+                maxWaterLevelValues = chainagesValues.Zip(values).ToList();
+            }
+            else
+            {
+                chainagesValues = maxWaterLevelValues.Select(kvp => kvp.First).ToList();
+                values = maxWaterLevelValues.Select(kvp => kvp.Second).ToList();
+            }
+
+            return NetworkSideViewHelper.CreateFunction(waterLevelUnit, chainagesValues, values, $"Max {networkCoverage.Name}");
         }
 
         private static INetworkCoverage FilterWithTime(INetworkCoverage coverage, DateTime? time)
@@ -397,7 +408,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 UnsubscribeToRouteNetwork();
                 UnsubscribeToRoute();
-                maxWaterLevelFunction = null;
+                maxWaterLevelValues = null;
 
                 route = value;
                 SubscribeToRoute();
@@ -426,6 +437,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void RouteSegmentsUpdated(object sender, EventArgs e)
         {
+            maxWaterLevelValues = null;
             if (OnDataChanged != null)
             {
                 OnDataChanged();
@@ -493,7 +505,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 if (waterLevelNetworkCoverage != null)
                 {
                     UnsubscribeFromCoverage(waterLevelNetworkCoverage);
-                    maxWaterLevelFunction = null;
                 }
 
                 waterLevelNetworkCoverage = value;
@@ -578,7 +589,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                var function = CreateRouteFunctionFromNetworkCoverage(route, WaterLevelNetworkCoverage, WaterLevelUnit);
+                var function = CreateRouteFunctionFromNetworkCoverage(route, WaterLevelNetworkCoverage, waterLevelUnit);
 
                 if (function == null)
                 {
