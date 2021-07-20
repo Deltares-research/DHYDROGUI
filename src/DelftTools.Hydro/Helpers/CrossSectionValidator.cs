@@ -111,7 +111,12 @@ namespace DelftTools.Hydro.Helpers
                         var crossSectionDefinition = crossSection.Definition.IsProxy
                                                  ? (CrossSectionDefinitionStandard) ((CrossSectionDefinitionProxy)crossSection.Definition).InnerDefinition
                                                  : (CrossSectionDefinitionStandard) crossSection.Definition;
-                        return crossSectionDefinition.ShapeType == CrossSectionStandardShapeType.Trapezium;
+                        CrossSectionStandardShapeType crossSectionDefinitionShapeType = crossSectionDefinition.ShapeType;
+                        return crossSectionDefinitionShapeType == CrossSectionStandardShapeType.Trapezium
+                               || crossSectionDefinitionShapeType == CrossSectionStandardShapeType.Circle
+                               || crossSectionDefinitionShapeType == CrossSectionStandardShapeType.Egg
+                               || crossSectionDefinitionShapeType == CrossSectionStandardShapeType.InvertedEgg
+                               || crossSectionDefinitionShapeType == CrossSectionStandardShapeType.UShape;
                 }
             }
 
