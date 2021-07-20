@@ -7,8 +7,6 @@
         <File Id="NGHS_IO_Deltares.UGrid.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\Deltares.UGrid.dll' />
         <File Id="NGHS_IO_Deltares.UGrid.xml" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\Deltares.UGrid.xml' />
         <File Id="NGHS_IO_DeltaShell.NGHS.IO.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.dll' />
-        <File Id="NGHS_IO_DeltaShell.NGHS.IO.pdb" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.pdb' />
-        <File Id="NGHS_IO_DeltaShell.NGHS.IO.pssym" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.pssym' />
         <File Id="NGHS_IO_hdf5.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\hdf5.dll' />
         <File Id="NGHS_IO_hdf5_hl.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\hdf5_hl.dll' />
         <File Id="NGHS_IO_io_netcdf.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\io_netcdf.dll' />
