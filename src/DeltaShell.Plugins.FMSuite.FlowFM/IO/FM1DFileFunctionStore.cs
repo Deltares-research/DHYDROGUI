@@ -403,6 +403,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             ClearCaches();
             UpdateNetworkAndDiscretisationAfterPathSet();
+            if (outputNetwork.Branches.Count != inputNetwork.Branches.Count)
+            {
+                log.ErrorFormat($"Could not load output from \"{Path}\", output network differs from input network");
+                return;
+            }
+
             if (CoordinateSystem == null) CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(Path);
             // clear caches for argument variables and networkLocations
             Functions.Clear();
