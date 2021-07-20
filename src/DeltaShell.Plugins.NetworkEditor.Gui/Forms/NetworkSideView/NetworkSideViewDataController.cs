@@ -146,6 +146,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private IFunction CreateMaxLevelFunction(INetworkCoverage networkCoverage)
         {
+            if (networkCoverage == null) 
+                return null;
+
             var chainagesValues = new List<double>();
             var values = new List<double>();
 
@@ -520,7 +523,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return CreateMaxLevelFunction((INetworkCoverage) waterLevelNetworkCoverage.Parent);
+                return CreateMaxLevelFunction((INetworkCoverage) waterLevelNetworkCoverage?.Parent);
             }
         }
 
