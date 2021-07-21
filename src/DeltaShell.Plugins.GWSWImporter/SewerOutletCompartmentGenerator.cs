@@ -41,7 +41,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             {
                 compartment.ManholeLength = 0.8d;
                 compartment.ManholeWidth = 0.8d;
-                compartment.FloodableArea = 100;
+                compartment.FloodableArea = 500;
 
                 return;
             }
