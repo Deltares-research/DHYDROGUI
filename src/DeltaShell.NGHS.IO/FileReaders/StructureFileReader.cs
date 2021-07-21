@@ -56,19 +56,16 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             foreach (var group in grouping)
             {
+                var key = group.Key;
                 group.ForEach(s =>
                 {
-                    if (@group.Key is ISewerConnection sewerConnection && sewerConnection.IsInternalConnection())
+                    if (key is ISewerConnection sewerConnection && sewerConnection.IsInternalConnection())
                     {
                         sewerConnection.AddStructureToBranch(s);
-                        foreach (var pointFeature in sewerConnection.BranchFeatures.OfType<IPointFeature>())
-                        {
-                            pointFeature.ParentPointFeature = sewerConnection.Source as IManhole;
-                        }
                     }
                     else
                     {
-                        HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(s, @group.Key);
+                        HydroNetworkHelper.AddStructureToExistingCompositeStructureOrToANewOne(s, key);
                     }
 
                 });
@@ -79,18 +76,10 @@ namespace DeltaShell.NGHS.IO.FileReaders
         {
             compoundStructures.ForEach(c =>
             {
-                var compositeBranchStructure = new CompositeBranchStructure
-                {
-                    Branch = c.Branch,
-                    Network = c.Branch.Network,
-                    Chainage = c.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(c.Chainage),
-                };
-                compositeBranchStructure.Name = c.Name;
-                compositeBranchStructure.LongName = c.LongName;
-                compositeBranchStructure.Geometry = HydroNetworkHelper.GetStructureGeometry(c.Branch, compositeBranchStructure.Chainage);
-                c.Branch.BranchFeatures.Add(compositeBranchStructure);
+                c.Chainage = c.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(c.Chainage);
+                c.Geometry = HydroNetworkHelper.GetStructureGeometry(c.Branch, c.Chainage);
+                c.Branch.BranchFeatures.Add(c);
             });
-
         }
 
         private static IList<DelftIniCategory> ReadStructureDelftIniCategories(string structureFilename)

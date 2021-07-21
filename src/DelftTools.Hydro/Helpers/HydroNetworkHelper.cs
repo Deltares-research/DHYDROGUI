@@ -620,7 +620,16 @@ namespace DelftTools.Hydro.Helpers
 
         private static ICompositeBranchStructure GetCompositeBranchStructure(IStructure1D structure, IBranch branch)
         {
-            return branch.BranchFeatures.OfType<ICompositeBranchStructure>().FirstOrDefault(f => Math.Abs(f.Chainage - structure.Chainage) < 0.01);
+            var compositeBranchStructures = branch.BranchFeatures
+                                                  .OfType<ICompositeBranchStructure>()
+                                                  .ToArray();
+
+            // first try to find composite structure by using the tag
+            // see CompositeBranchStructureDefinitionReader.ReadDefinition
+            var composite = compositeBranchStructures.FirstOrDefault(f => f.Tag is string tagString 
+                                                                          && tagString.IndexOf(structure.Name, StringComparison.CurrentCultureIgnoreCase) >= 0);
+
+            return composite ?? compositeBranchStructures.FirstOrDefault(f => Math.Abs(f.Chainage - structure.Chainage) < 0.01);
         }
 
         ///<summary>

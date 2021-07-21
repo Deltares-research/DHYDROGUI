@@ -104,36 +104,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             return containsCompartment && hasMoreThanOneCompartment;
         }
 
-        private IFeature AddCompartment()
-        {
-            var newCompartment = SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole);
-            return newCompartment;
-        }
-
-        private IFeature AddPump()
-        {
-            return AddNewSewerConnectionWithStructure<Pump>();
-        }
-
-        private IFeature AddOrifice()
-        {
-            return AddNewSewerConnectionWithStructure<Orifice>();
-        }
-
-        private IFeature AddWeir()
-        {
-            return AddNewSewerConnectionWithStructure<Weir>();
-        }
-
         private IFeature AddNewSewerConnectionWithStructure<T>()
         {
             var connection = SewerFactory.CreateConnectionWithStructure<T>(manhole);
             if (connection == null) return null;
 
-            foreach (var pointFeature in connection.BranchFeatures.OfType<IPointFeature>())
-            {
-                pointFeature.ParentPointFeature = manhole;
-            }
             network.Branches.Add(connection);
             NamingHelper.MakeNamesUnique(network.Structures);
             return connection.GetStructuresFromBranchFeatures().FirstOrDefault();
@@ -146,13 +121,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             switch (item)
             {
                 case ShapeType.Compartment:
-                    return AddCompartment();
+                    return SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole);
                 case ShapeType.Pump:
-                    return AddPump();                    
+                    return AddNewSewerConnectionWithStructure<Pump>();
                 case ShapeType.Weir:
-                    return AddWeir();
+                    return AddNewSewerConnectionWithStructure<Weir>();
                 case ShapeType.Orifice:
-                    return AddOrifice();
+                    return AddNewSewerConnectionWithStructure<Orifice>();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(item), item, null);
             }
