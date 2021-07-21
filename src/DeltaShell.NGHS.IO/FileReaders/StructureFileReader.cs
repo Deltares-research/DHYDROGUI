@@ -8,6 +8,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -111,7 +112,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
                         continue;
                     }
 
-                    var structure1D = ReadStructureDefinition(structureDefinitionCategory, crossSectionDefinitions, branch);
+                    var type = structureDefinitionCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
+                    var structure1D = structureDefinitionCategory.ReadStructure(crossSectionDefinitions, branch, type);
                     if (structure1D == null)
                     {
                         continue;
@@ -135,31 +137,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
 
             return structure1Ds;
-        }
-
-        private static IStructure1D ReadStructureDefinition(DelftIniCategory definitionCategory, IList<ICrossSectionDefinition> crossSectionDefinitions, IBranch branch)
-        {
-            var type = definitionCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
-
-            if (!Enum.TryParse(type, true, out StructureType structureType))
-            {
-                if (type == "compound")
-                {
-                    structureType = StructureType.CompositeBranchStructure;
-                }
-                else
-                {
-                    throw new FileReadingException(string.Format("Couldn't parse this type '{0}' to an element of the structure type enum", type));
-                }
-            }
-
-            var definitionReader = DefinitionGeneratorFactory.GetDefinitionReaderStructure(structureType);
-            if (definitionReader == null)
-            {
-                throw new FileReadingException(string.Format("No definition reader available for this structure definition: {0}.{1} This structure is not yet supported in the kernel", type, Environment.NewLine));
-            }
-
-            return definitionReader.ReadDefinition(definitionCategory, crossSectionDefinitions, branch);
         }
     }
 }

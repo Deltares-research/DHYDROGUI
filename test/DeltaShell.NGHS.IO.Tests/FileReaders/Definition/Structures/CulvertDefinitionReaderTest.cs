@@ -40,13 +40,11 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
             AddProperty(category, "bedFrictionType", "chezy");
             AddProperty(category, "bedFriction", "5.43");
 
-            var reader = new CulvertDefinitionReader();
-
             var branch = Substitute.For<IBranch>();
             branch.Length = 123;
 
             // Call
-            var culvert = (ICulvert) reader.ReadDefinition(category, new List<ICrossSectionDefinition>(), branch);
+            var culvert = (ICulvert) category.ReadStructure(new List<ICrossSectionDefinition>(), branch, "Culvert");
 
             // Assert
             Assert.That(culvert.Name, Is.EqualTo("some_culvert_name"));

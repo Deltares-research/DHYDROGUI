@@ -186,13 +186,8 @@
     <Compile Include="FileReaders\Definition\CrossSectionDefinitions\CSDXYZDefinitionReader.cs" />
     <Compile Include="FileReaders\Definition\CrossSectionDefinitions\CSDYZDefinitionReader.cs" />
     <Compile Include="FileReaders\Definition\CrossSectionDefinitions\CSDZWDefinitionReader.cs" />
-    <Compile Include="FileReaders\Definition\IStructureDefinitionReader.cs" />
-    <Compile Include="FileReaders\Definition\Structures\BridgeDefinitionReader.cs" />
-    <Compile Include="FileReaders\Definition\Structures\CulvertDefinitionReader.cs" />
     <Compile Include="FileReaders\Definition\Structures\DefinitionReaderHelper.cs" />
-    <Compile Include="FileReaders\Definition\Structures\ExtraResistanceDefinitionReader.cs" />
-    <Compile Include="FileReaders\Definition\Structures\PumpDefinitionReader.cs" />
-    <Compile Include="FileReaders\Definition\Structures\WeirDefinitionReader.cs" />
+    <Compile Include="FileReaders\Definition\Structures\StructureDefinitionParser.cs" />
     <Compile Include="FileReaders\Definition\IDefinitionReader.cs" />
     <Compile Include="FileReaders\DelftConfigXmlFileParser.cs" />
     <Compile Include="FileReaders\FileReadingException.cs" />
@@ -207,7 +202,6 @@
     <Compile Include="FileWriters\Boundary\BoundaryFileWriterHelper.cs" />
     <Compile Include="FileWriters\Boundary\BoundaryRegion.cs" />
     <Compile Include="FileWriters\Boundary\DefinitionGeneratorLateral.cs" />
-    <Compile Include="FileReaders\Definition\Structures\CompositeBranchStructureDefinitionReader.cs" />
     <Compile Include="FileWriters\Boundary\Model1DBoundaryFileWriter.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\CrossSectionDefinitionFileWriter.cs" />
     <Compile Include="FileWriters\CrossSectionDefinition\DefinitionGeneratorCrossSectionDefinitionInvertedEgg.cs" />

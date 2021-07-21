@@ -4,7 +4,6 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.NGHS.IO.FileReaders.Definition;
 using DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions;
-using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using GeoAPI.Extensions.Networks;
@@ -154,39 +153,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                     return new DefinitionGeneratorStructureBridgePillar();
                 case StructureType.ExtraResistance:
                     return new DefinitionGeneratorStructureExtraResistance();
-                default:
-                    return null;
-            }
-        }
-
-        public static IStructureDefinitionReader GetDefinitionReaderStructure(StructureType structureType)
-        {
-            switch (structureType)
-            {
-                case StructureType.Bridge:
-                    return new BridgeDefinitionReader();
-                case StructureType.Culvert:
-                    return new CulvertDefinitionReader();
-                case StructureType.ExtraResistance:
-                    return new ExtraResistanceDefinitionReader();
-                case StructureType.Pump:
-                    return new PumpDefinitionReader();
-                case StructureType.Weir:
-                case StructureType.UniversalWeir:
-                
-                case StructureType.GeneralStructure:
-                    return new WeirDefinitionReader();
-                case StructureType.Orifice:
-                    return new OrificeDefinitionReader();
-                case StructureType.CompositeBranchStructure:
-                    return new CompositeBranchStructureDefinitionReader();
-                case StructureType.BridgePillar:   // exists in BridgeDefinitionReader but not implemented in kernel
-                case StructureType.InvertedSiphon: // exists in CulvertDefinitionReader but not implemented in kernel
-                case StructureType.AdvancedWeir:   // exists in WeirDefinitionReader but not implemented in kernel
-                case StructureType.RiverWeir: // exists in WeirDefinitionReader but not implemented in kernel  
-                case StructureType.Unknown:
-                case StructureType.Gate://Why is this not implemented in WeirDefinitionReader???
-                    return null;
                 default:
                     return null;
             }

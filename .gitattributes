@@ -764,14 +764,8 @@ src/DeltaShell.NGHS.IO/FileReaders/Definition/CrossSectionDefinitions/CSDYZDefin
 src/DeltaShell.NGHS.IO/FileReaders/Definition/CrossSectionDefinitions/CSDZWDefinitionReader.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/Definition/CrossSectionDefinitions/CrossSectionDefinitionReaderBase.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/Definition/IDefinitionReader.cs -text
-src/DeltaShell.NGHS.IO/FileReaders/Definition/IStructureDefinitionReader.cs -text
-src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/BridgeDefinitionReader.cs -text
-src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/CompositeBranchStructureDefinitionReader.cs -text
-src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/CulvertDefinitionReader.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/DefinitionReaderHelper.cs -text
-src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/ExtraResistanceDefinitionReader.cs -text
-src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/PumpDefinitionReader.cs -text
-src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/WeirDefinitionReader.cs -text
+src/DeltaShell.NGHS.IO/FileReaders/Definition/Structures/StructureDefinitionParser.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/DelftConfigXmlFileParser.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/FileReadingException.cs -text
 src/DeltaShell.NGHS.IO/FileReaders/IBoundaryFileReader.cs -text
