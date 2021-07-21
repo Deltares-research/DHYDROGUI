@@ -1983,6 +1983,10 @@ src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/InitialConditions/ChannelInitial
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/InitialConditions/ConstantSpatialChannelInitialConditionDefinitionsForm.Designer.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/InitialConditions/ConstantSpatialChannelInitialConditionDefinitionsForm.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/InitialConditions/ConstantSpatialChannelInitialConditionDefinitionsForm.resx -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/ModelMerge/ModelMergeView.xaml -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/ModelMerge/ModelMergeView.xaml.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/ModelMerge/ModelMergeViewLogAppender.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/ModelMerge/ModelMergeViewModel.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialog.xaml -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialog.xaml.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM.Gui/Forms/RefreshMainSectionWidthsDialogViewModel.cs -text
@@ -2222,6 +2226,7 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/SourceAndSinkImportExtensions
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/StructuresListImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/TimFileImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/WaterFlowFMFileImporter.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Importers/WaterFlowFMIntoWaterFlowFMFileImporter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionInitialFieldsFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionInitialFieldsFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/InitialConditionRegion.cs -text
@@ -2283,6 +2288,8 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/ModelDefinition/WaterFlowFMFileBasedItemFa
 src/DeltaShell.Plugins.FMSuite.FlowFM/ModelDefinition/WaterFlowFMModelDefinition.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/ModelDefinition/WaterFlowFMProperty.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/ModelDefinition/WaterFlowFMPropertyDefinition.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/ModelMerge/ModelMergeValidator.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/ModelMerge/ModelMerger.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Properties/AssemblyInfo.cs.svn -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Properties/PluginInfo.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Properties/Resources.Designer.cs -text
@@ -5229,6 +5236,8 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Layers/UnstructuredGridVertexCovera
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Layers/UnstructuredGridVertexFillCoverageLayerTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/MapFileImporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/ModelDefinition/ISedimentFractionExtensionsTests.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/ModelMerge/ModelMergeValidatorTest.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/ModelMerge/ModelMergerTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Nini.dll -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/Properties/AssemblyInfo.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/ScriptingTest/FlowFlexibleMeshFunctionsScriptTest.cs -text

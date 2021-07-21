@@ -155,12 +155,15 @@
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="IO\Importers\WaterFlowFMIntoWaterFlowFMFileImporter.cs" />
     <Compile Include="WaterFlowFmDimrCoupling.cs" />
     <Compile Include="IO\BndExtForceLateralSourceParser.cs" />
     <Compile Include="IO\ILateralSourceExtCategory.cs" />
     <Compile Include="IO\ImportSamplesOperationImportData.cs" />
     <Compile Include="IO\InitialFieldsFile.cs" />
     <Compile Include="IO\LateralSourceExtCategory.cs" />
+    <Compile Include="ModelMerge\ModelMerger.cs" />
+    <Compile Include="ModelMerge\ModelMergeValidator.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Spatial\SpatialOperationHelper.cs" />
     <Compile Include="Validation\WaterFlowFMHydroLinksValidator.cs" />

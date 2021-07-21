@@ -39,6 +39,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEd
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
@@ -428,6 +429,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             };
 
             // Importers and exporters
+            yield return new ViewInfo<WaterFlowFMIntoWaterFlowFMFileImporter, ModelMergeView>()
+            {
+                AfterCreate = (v, o) =>
+                {
+                    v.OriginalModel = Gui.SelectedModel as WaterFlowFMModel;
+                }
+            };
             yield return new ViewInfo<BcmFileImporter, BcmFileImportDialog>();
             yield return new ViewInfo<BcmFileExporter, BcmFileExportDialog>();
             yield return new ViewInfo<BcFileImporter, BcFileImportDialog>();

@@ -55,6 +55,10 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.719-development\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Controls.Wpf">
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.690-development\lib\net461\DeltaShell\DelftTools.Controls.Wpf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Functions">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.719-development\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
@@ -366,6 +370,11 @@
     <Compile Include="Forms\InitialConditions\ConstantSpatialChannelInitialConditionDefinitionsForm.Designer.cs">
       <DependentUpon>ConstantSpatialChannelInitialConditionDefinitionsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ModelMerge\ModelMergeView.xaml.cs">
+      <DependentUpon>ModelMergeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ModelMerge\ModelMergeViewLogAppender.cs" />
+    <Compile Include="Forms\ModelMerge\ModelMergeViewModel.cs" />
     <Compile Include="Forms\RemoveDuplicateCalculationPointsDialog.xaml.cs">
       <DependentUpon>RemoveDuplicateCalculationPointsDialog.xaml</DependentUpon>
     </Compile>
@@ -467,6 +476,11 @@
     <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
       <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
       <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
+      <Project>{6f5b9016-2dd7-4148-ba0b-0167b9e57d78}</Project>
+      <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
@@ -690,6 +704,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Forms\ModelMerge\ModelMergeView.xaml" />
     <Page Include="Forms\RemoveDuplicateCalculationPointsDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -711,7 +726,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
