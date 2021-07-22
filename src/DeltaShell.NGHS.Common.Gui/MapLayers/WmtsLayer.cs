@@ -7,6 +7,7 @@ using BruTile.Cache;
 using BruTile.Web;
 using BruTile.Wmts;
 using DelftTools.Utils;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using SharpMap.Extensions.Layers;
 
@@ -25,6 +26,7 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
         /// <param name="resourceUrl">Describes the resource information (template etc.)</param>
         public WmtsLayer(IList<ITileSource> tileSources, ResourceUrl resourceUrl)
         {
+            Ensure.NotNull(resourceUrl, nameof(resourceUrl));
             TransparentColor = Color.White;
             NameIsReadOnly = true;
             ReadOnly = true;

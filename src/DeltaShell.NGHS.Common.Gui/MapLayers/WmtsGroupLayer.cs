@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Xml.Serialization;
 using BruTile;
 using BruTile.Wmts;
@@ -73,7 +74,7 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
         /// <returns></returns>
         private IEnumerable<ILayer> CreateChildLayers()
         {
-            if (url == null)
+            if (Url == null)
             {
                 yield break;
             }
@@ -92,10 +93,13 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
 
                 layerResourceUrlLookup = GetLayerResourceUrlLookup(capabilities, url);
 
-                var tileSources = WmtsParser.Parse(GenerateStreamFromString(capabilitiesText));
-                groupedTileSources = tileSources.GroupBy(s => ((WmtsTileSchema)s.Schema).Layer);
+                using (var stream = GenerateStreamFromString(capabilitiesText))
+                {
+                    var tileSources = WmtsParser.Parse(stream);
+                    groupedTileSources = tileSources.GroupBy(s => ((WmtsTileSchema)s.Schema).Layer);
+                }
             }
-            catch (Exception exception)
+            catch (WebException exception)
             {
                 log.Error($"Could not load tiles from \"{url}\"", exception);
                 yield break;
