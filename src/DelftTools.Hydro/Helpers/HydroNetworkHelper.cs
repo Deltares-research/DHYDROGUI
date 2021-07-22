@@ -627,7 +627,8 @@ namespace DelftTools.Hydro.Helpers
             // first try to find composite structure by using the tag
             // see CompositeBranchStructureDefinitionReader.ReadDefinition
             var composite = compositeBranchStructures.FirstOrDefault(f => f.Tag is string tagString 
-                                                                          && tagString.IndexOf(structure.Name, StringComparison.CurrentCultureIgnoreCase) >= 0);
+                                                                          && tagString.Split(';')
+                                                                                      .Any(i => string.Equals(i, structure.Name, StringComparison.CurrentCultureIgnoreCase)));
 
             return composite ?? compositeBranchStructures.FirstOrDefault(f => Math.Abs(f.Chainage - structure.Chainage) < 0.01);
         }
