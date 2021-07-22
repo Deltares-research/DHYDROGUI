@@ -192,19 +192,10 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             return grid;
         }
 
-        /// <summary>
-        /// Sets the <paramref name="meshGeometry"/> to the <paramref name="discretization"/>
-        /// </summary>
-        /// <param name="discretization">Discretization to set</param>
-        /// <param name="meshGeometry">Mesh geometry to set</param>
-        /// <param name="network">Network that the <paramref name="meshGeometry"/> is based on</param>
-        public static void SetMesh1DGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates = true)
+
+        private static IEnumerable<INetworkLocation> GetNetworkLocations(Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates = true)
         {
-            discretization.Network = network;
-
             var numberOfNodes = meshGeometry.NodeIds.Length;
-
-            var networkLocations = new NetworkLocation[numberOfNodes];
             for (int i = 0; i < numberOfNodes; i++)
             {
                 var networkBranch = network.Branches[meshGeometry.BranchIDs[i]];
@@ -217,17 +208,29 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     continue;
                 }
                 
-                networkLocations[i] = new NetworkLocation
+                yield return new NetworkLocation
                 {
                     Branch = networkBranch,
                     Chainage = chainage,
                     Name = meshGeometry.NodeIds[i],
                     LongName = meshGeometry.NodeLongNames[i],
                     Geometry = canUseXYForMesh1DNodeCoordinates 
-                        ? new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
-                        : HydroNetworkHelper.GetStructureGeometry(networkBranch, networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage) 
+                                   ? new Point(meshGeometry.NodesX[i], meshGeometry.NodesY[i])
+                                   : HydroNetworkHelper.GetStructureGeometry(networkBranch, networkBranch.Length - meshGeometryBranchChainage < 0.000001 ? networkBranch.Length : meshGeometryBranchChainage) 
                 };
             }
+        }
+        /// <summary>
+        /// Sets the <paramref name="meshGeometry"/> to the <paramref name="discretization"/>
+        /// </summary>
+        /// <param name="discretization">Discretization to set</param>
+        /// <param name="meshGeometry">Mesh geometry to set</param>
+        /// <param name="network">Network that the <paramref name="meshGeometry"/> is based on</param>
+        public static void SetMesh1DGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates = true)
+        {
+            discretization.Network = network;
+            
+            IEnumerable<INetworkLocation> networkLocations = GetNetworkLocations(meshGeometry, network, canUseXYForMesh1DNodeCoordinates);
 
             discretization.UpdateNetworkLocations(networkLocations);
 
