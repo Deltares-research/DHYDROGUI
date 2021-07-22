@@ -1396,7 +1396,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     .FirstOrDefault(c => c.Name.Equals("cmp76", StringComparison.InvariantCultureIgnoreCase));
                 Assert.IsNotNull(cmp76);
                 Assert.IsNotNull(cmp76.Geometry);
-                Assert.That(cmp76.FloodableArea, Is.EqualTo(100));
+                Assert.That(cmp76.FloodableArea, Is.EqualTo(500));
                 Assert.That(cmp76.ManholeLength, Is.EqualTo(2));
                 Assert.That(cmp76.ManholeWidth, Is.EqualTo(2));
                 Assert.That(cmp76.Name, Is.EqualTo("cmp76"));
