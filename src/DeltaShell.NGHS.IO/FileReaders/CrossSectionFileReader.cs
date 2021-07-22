@@ -277,7 +277,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     if (frictionId != null)
                     {
                         // Handle scenario of a zw profile (tabulated) that doesn't contain a template
-                        readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, flowWidths.Max());
+                        CrossSectionSectionType crossSectionSectionType = GetCrossSectionSectionType(frictionId, network);
+                        readCrossSectionDefinition.AddSection(crossSectionSectionType, flowWidths.Max());
                         return;
                     }
 
