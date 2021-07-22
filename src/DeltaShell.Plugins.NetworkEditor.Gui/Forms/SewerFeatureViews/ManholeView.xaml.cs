@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     /// <summary>
     /// Interaction logic for ManholeView.xaml
     /// </summary>
-    public partial class ManholeView : UserControl, IReusableView
+    public partial class ManholeView : IReusableView
     {
         private Point startPoint;
         private Cursor customCursor;

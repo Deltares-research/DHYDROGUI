@@ -7,7 +7,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:sewerFeatures="clr-namespace:DelftTools.Hydro.SewerFeatures;assembly=DelftTools.Hydro"
              xmlns:structures="clr-namespace:DelftTools.Hydro.Structures;assembly=DelftTools.Hydro"
-             x:Name="UserControl"
              d:DesignHeight="1020"
              d:DesignWidth="1000"
              Background="White"
@@ -82,18 +81,18 @@
                     </Grid.ColumnDefinitions>
 
                     <!--  Row 0  -->
-                    <Label Grid.Row="0"
-                           Grid.Column="0"
-                           Content="Name" />
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Text="Name" />
                     <TextBox Grid.Row="0"
                              Grid.Column="1"
                              Text="{Binding Manhole.Name}" />
 
                     <!--  Row 1  -->
-                    <Label Grid.Row="1"
-                           Grid.Column="0"
-                           VerticalAlignment="Center"
-                           Content="Coordinate" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Text="Coordinate" />
                     <StackPanel Grid.Row="1"
                                 Grid.Column="1"
                                 Orientation="Vertical">

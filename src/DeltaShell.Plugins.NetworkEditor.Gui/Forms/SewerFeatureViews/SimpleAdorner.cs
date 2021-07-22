@@ -12,7 +12,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             child = new Rectangle();
             child.Width = adornedElement.RenderSize.Width;
             child.Height = adornedElement.RenderSize.Height;
-            //child.Fill = new SolidColorBrush(Colors.Transparent);
 
             IsClipEnabled = false;
         }

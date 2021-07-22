@@ -7,7 +7,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     [Entity]
     public abstract class InternalConnectionShape : DrawingShape
     {
-        public virtual ISewerConnection SewerConnection { get; set; }
+        public ISewerConnection SewerConnection { get; set; }
 
         public override double Height
         {
