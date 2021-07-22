@@ -6,13 +6,10 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
-using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using GeoAPI.Extensions.Networks;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders
@@ -102,7 +99,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
             var branchLookup = network.Branches.Where(b => !string.IsNullOrEmpty(b.Name)).ToDictionary(b => b.Name);
             var structureNameLookup = new HashSet<string>();
 
-            foreach (var structureDefinitionCategory in structuresCategories.Where(category => category.Name == StructureRegion.Header))
+            foreach (var structureDefinitionCategory in structuresCategories.Where(category => string.Equals(category.Name, StructureRegion.Header, StringComparison.InvariantCultureIgnoreCase)))
             {
                 try
                 {
