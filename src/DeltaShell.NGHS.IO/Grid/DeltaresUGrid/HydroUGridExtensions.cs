@@ -193,7 +193,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         }
 
 
-        private static IEnumerable<INetworkLocation> GetNetworkLocations(Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates = true)
+        private static IEnumerable<INetworkLocation> GetNetworkLocations(Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates)
         {
             var numberOfNodes = meshGeometry.NodeIds.Length;
             for (int i = 0; i < numberOfNodes; i++)
