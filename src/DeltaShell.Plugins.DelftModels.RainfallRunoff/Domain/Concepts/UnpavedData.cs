@@ -158,6 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         /// <summary>
         /// The maximum land storage (mm) of the area (m²).
         /// </summary>
+        [Description("Maximum land storage")]
         public double MaximumLandStorage { get; set; }
         
         /// <summary>
