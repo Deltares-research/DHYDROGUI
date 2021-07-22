@@ -16,6 +16,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 {
     public static class StructureDefinitionParser
     {
+        private const string invertedSiphonTypeName = "invertedSiphon";
+
         public static IStructure1D ReadStructure(this IDelftIniCategory category, IList<ICrossSectionDefinition> crossSectionDefinitions, IBranch branch, string type)
         {
             if (!Enum.TryParse(type, true, out StructureType structureType))
@@ -409,7 +411,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                     culvert.GateOpeningLossCoefficientFunction.CreateFunctionFromArrays(relOpening, lossCoeff);
             }
 
-            culvert.CulvertType = category.GetProperty(StructureRegion.SubType.Key)?.Value == "invertedSiphon"
+            culvert.CulvertType = string.Equals(category.GetProperty(StructureRegion.SubType.Key)?.Value, invertedSiphonTypeName, StringComparison.InvariantCultureIgnoreCase)
                                       ? CulvertType.InvertedSiphon
                                       : CulvertType.Culvert;
 
