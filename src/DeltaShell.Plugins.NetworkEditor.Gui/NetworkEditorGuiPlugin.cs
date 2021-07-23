@@ -15,10 +15,12 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
+using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -1193,12 +1195,39 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void OnDocumentViewAdded(IView view)
         {
-            var coverageView = view as CoverageView;
-            if ((coverageView == null) && (view is ICompositeView))
+            if (view is ValidationView validationView)
             {
-                coverageView = (view as ICompositeView).ChildViews.OfType<CoverageView>().FirstOrDefault();
+                var validationControl = validationView.Controls.OfType<ValidationReportControl>().FirstOrDefault();
+                if (validationControl != null)
+                {
+                    var orgFunc = validationControl.OnOpenViewForIssue;
+                    validationControl.OnOpenViewForIssue = (i) =>
+                    {
+                        if (i.ViewData is RegionFeatureSelection viewItem)
+                        {
+                            var model = GetRootModel(viewItem.Region);
+                            Gui.DocumentViewsResolver.OpenViewForData(model);
+                            
+                            var mapView = Gui.DocumentViewsResolver.GetViewsForData(model).GetViewsOfType<MapView>().FirstOrDefault();
+                            if (mapView != null)
+                            {
+                                mapView.MapControl.SelectTool.Select(viewItem.Features);
+                                var env = new Envelope();
+                                viewItem.Features.ForEach(f => env.ExpandToInclude(f.Geometry.EnvelopeInternal));
+                                env.ExpandBy((env.Width /100.0) * 5.0);
+                                mapView.Map.ZoomToFit(env);
+                            }
+                        }
+                        orgFunc.Invoke(i);
+                    };
+                }
             }
 
+            var coverageView = view as CoverageView;
+            if (coverageView == null && (view is ICompositeView compositeView))
+            {
+                coverageView = compositeView.ChildViews.OfType<CoverageView>().FirstOrDefault();
+            }
 
             if (coverageView != null)
             {
@@ -1233,8 +1262,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 }
             }
 
-            var sideView = view as NetworkSideView;
-            if (sideView != null)
+            if (view is NetworkSideView sideView)
             {
                 sideView.SelectionChanged += NetworkSideViewSelectionChanged;
             }
@@ -1484,6 +1512,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             var model = models.FirstOrDefault();
             return model != null ? model.Name : "";
+        }
+
+        private IModel GetRootModel(IHydroRegion region)
+        {
+            var model = gui.Application.GetAllModelsInProject()
+                           .OfType<IHydroModel>()
+                           .FirstOrDefault(m => m.Region == region 
+                                                || m.Region is HydroRegion hydroRegion && hydroRegion.SubRegions.Contains(region));
+
+            return model != null ? GetRootModel(model) : null;
+        }
+
+        private static IModel GetRootModel(IModel model)
+        {
+            IModel parentModel = model.ParentModel();
+
+            return parentModel == null || parentModel == model
+                       ? model 
+                       : GetRootModel(parentModel);
         }
     }
 }

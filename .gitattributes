@@ -436,6 +436,7 @@ src/DelftTools.Hydro/ObservationPoint.hbm.xml -text
 src/DelftTools.Hydro/Properties/AssemblyInfo.cs.svn -text
 src/DelftTools.Hydro/Properties/Resources.Designer.cs -text
 src/DelftTools.Hydro/Properties/Resources.resx -text
+src/DelftTools.Hydro/RegionFeatureSelection.cs -text
 src/DelftTools.Hydro/Resources/greenhouse.png -text
 src/DelftTools.Hydro/Resources/hbv.png -text
 src/DelftTools.Hydro/Resources/nwrw.png -text

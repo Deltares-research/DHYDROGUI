@@ -136,13 +136,15 @@ namespace DelftTools.Hydro.Validators
 
         private static ValidationReport ValidateBranches(IHydroNetwork network)
         {
-            var issues = network == null
-                             ? Enumerable.Empty<ValidationIssue>()
-                             : network.Channels.SelectMany(b => GetBranchValidationIssues(b, network)).ToList();
+            var issues = network?.Channels
+                                .SelectMany(b => GetBranchValidationIssues(b, network))
+                                .ToList() 
+                         ?? Enumerable.Empty<ValidationIssue>();
 
-            var nodeIssues = network == null
-                 ? Enumerable.Empty<ValidationIssue>()
-                 : network.Nodes.SelectMany(n => GetBranchOrderNumbersAtNode(n, network)).ToList();
+            var nodeIssues = network?.Nodes
+                                    .SelectMany(n => GetBranchOrderNumbersAtNode(n, network))
+                                    .ToList() 
+                             ?? Enumerable.Empty<ValidationIssue>();
 
             return new ValidationReport("Branches", issues.Concat(nodeIssues));
         }
@@ -165,14 +167,13 @@ namespace DelftTools.Hydro.Validators
         {
             if (channel.Source.Name == channel.Target.Name)
             {
-                var message = string.Format("Target and source node of branch '{0}' have the same id, '{1}'. Circular branch?", channel.Name, channel.Source.Name);
+                var message = $"Target and source node of branch '{channel.Name}' have the same id, '{channel.Source.Name}'. Circular branch?";
                 yield return new ValidationIssue(channel, ValidationSeverity.Error, message, network);
             }
 
             if (channel.OrderNumber != -1 && channel.OrderNumber < 0)
             {
-                var message = string.Format("Branch '{0}' has an order number of '{1}'. Ordernumber can be -1 (no interpolation over node) or greater than or equal to 0 ",
-                        channel.Name, channel.OrderNumber);
+                var message = $"Branch '{channel.Name}' has an order number of '{channel.OrderNumber}'. Ordernumber can be -1 (no interpolation over node) or greater than or equal to 0 ";
                 yield return new ValidationIssue(channel, ValidationSeverity.Error, message, network);
             }
         }
@@ -269,19 +270,19 @@ namespace DelftTools.Hydro.Validators
         private static IEnumerable<ValidationIssue> GetCorrectCrossSectionsOnChannelIssue(IEnumerable<IChannel> chainOfChannels, IHydroNetwork network)
         {
             var crossSections = chainOfChannels.SelectMany(c => c.CrossSections);
-            var crossSectionTypes = crossSections.Select(cs => cs.CrossSectionType).Distinct();
+            var crossSectionTypes = crossSections.Select(cs => cs.CrossSectionType).Distinct().ToArray();
             
             if (!crossSectionTypes.Any())
             {
-                var message = string.Format("No cross sections on channel(s) {0}; can not start calculation.", string.Join(",", chainOfChannels.Select(c => c.Name).ToArray()));
-                yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, message, network);
+                var message = $"No cross sections on channel(s) {string.Join(",", chainOfChannels.Select(c => c.Name).ToArray())}; can not start calculation.";
+                yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, message, new RegionFeatureSelection(network, chainOfChannels));
             }
 
             // Standard CS are sent as ZW to the modelApi at the moment, so we can consider them as the same
             if ((crossSectionTypes.Contains(CrossSectionType.GeometryBased) || crossSectionTypes.Contains(CrossSectionType.YZ)) &&
                 (crossSectionTypes.Contains(CrossSectionType.Standard) || crossSectionTypes.Contains(CrossSectionType.ZW)))
             {
-                var msg = string.Format("Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({0})", string.Join(",",chainOfChannels.Select(c => c.Name).ToArray()));
+                var msg = $"Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({string.Join(",", chainOfChannels.Select(c => c.Name).ToArray())})";
                 yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, msg, network);
             }
         }

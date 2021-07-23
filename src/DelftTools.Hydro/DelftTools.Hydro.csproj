@@ -377,6 +377,7 @@
     <Compile Include="Validators\DiscretizationValidator.cs" />
     <Compile Include="Validators\ExtraResistanceValidator.cs" />
     <Compile Include="Validators\HydroNetworkValidator.cs" />
+    <Compile Include="RegionFeatureSelection.cs" />
     <Compile Include="Validators\StructuresValidator.cs" />
     <Compile Include="WasteWaterTreatmentPlant.cs" />
   </ItemGroup>
