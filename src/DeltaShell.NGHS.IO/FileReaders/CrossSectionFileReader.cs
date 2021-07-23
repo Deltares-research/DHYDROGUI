@@ -270,42 +270,46 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 }
                 case CrossSectionType.ZW:
                 {
-                    var mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network);
-                    var flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths);
+                    IList<double> flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths);
 
-                    var frictionId = csdDefinitionCategory.ReadProperty<string>(DefinitionPropertySettings.FrictionId, true);
-                    if (frictionId != null)
+                    string frictionId = csdDefinitionCategory.ReadProperty<string>(DefinitionPropertySettings.FrictionId, true);
+                    IList<string> frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds, true, ';');
+                    
+                    if (frictionId != null || (frictionIds != null && frictionIds.Any(id => !IsDefaultSectionId(id))))
                     {
-                        // Handle scenario of a zw profile (tabulated) that doesn't contain a template
-                        CrossSectionSectionType crossSectionSectionType = GetCrossSectionSectionType(frictionId, network);
+                        // read definition as zw definition
+                        string sectionName = frictionId ?? frictionIds.First();
+                        CrossSectionSectionType crossSectionSectionType = GetCrossSectionSectionType(sectionName, network);
                         readCrossSectionDefinition.AddSection(crossSectionSectionType, flowWidths.Max());
                         return;
                     }
-
-                    var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds, true, ';');
+                    
+                    // read definition as zwRiver definition
+                    CrossSectionSectionType mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network);
+                    
                     if (frictionIds != null && frictionIds.Count == 3 && frictionIds.All(fi => fi.Equals(RoughnessDataRegion.SectionId.DefaultValue)))
                     {
                         readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, readCrossSectionDefinition.Width);
                         return;
                     }
 
-                    var mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.Main);
-                    var floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.FloodPlain1, true);
+                    double mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.Main);
+                    double floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.FloodPlain1, true);
 
-                    var floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
+                    double floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
 
                     readCrossSectionDefinition.Sections.Clear();
                     readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
 
                     if (Math.Abs(floodPlain1Width) > 1e-6)
                     {
-                        var floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
+                        CrossSectionSectionType floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
                         readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
                     }
 
                     if (Math.Abs(floodPlain2Width) > 1e-6)
                     {
-                        var floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
+                        CrossSectionSectionType floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
                         readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
                     }
 
@@ -346,6 +350,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 default:
                     return;
             }
+        }
+
+        private static bool IsDefaultSectionId(string sectionId)
+        {
+            return string.Equals(sectionId, RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase)
+                   || string.Equals(sectionId, RoughnessDataSet.Floodplain1SectionTypeName, StringComparison.InvariantCultureIgnoreCase)
+                   || string.Equals(sectionId, RoughnessDataSet.Floodplain2SectionTypeName, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private static CrossSectionSectionType GetCrossSectionSectionType(string sectionTypeName, IHydroNetwork network)

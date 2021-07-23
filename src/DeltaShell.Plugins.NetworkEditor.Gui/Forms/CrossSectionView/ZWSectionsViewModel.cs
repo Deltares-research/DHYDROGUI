@@ -95,7 +95,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         private void SetSectionWidths(string lastUpdated)
         {
             var totalWidth = TotalWidth;
-
+            
+            if (!HasDefaultMainSection())
+            {
+                SetSection(crossSectionDefinition.Name, 0, sectionSettings[mainSectionName].Width);
+                return;
+            }
+            
             var mainWidth = sectionSettings[mainSectionName].Width;
             var fp1Width = sectionSettings[floodplain1SectionTypeName].Width;
             var fp2Width = sectionSettings[floodplain2SectionTypeName].Width;
@@ -127,6 +133,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             SetSection(floodplain2SectionTypeName, (mainWidth + fp1Width) / 2, (mainWidth + fp1Width + fp2Width) / 2);
         }
 
+        private bool HasDefaultMainSection()
+        {
+            return crossSectionDefinition.Sections.Any(s => s.SectionType != null 
+                                                            && s.SectionType.Name != null
+                                                            && s.SectionType.Name.Equals(mainSectionName, StringComparison.InvariantCultureIgnoreCase));
+        }
+        
         private void ForceRecalculationOfSectionWidths()
         {
             SetSectionWidths(mainSectionName);
@@ -159,7 +172,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             set { sectionSettings[floodplain2SectionTypeName].Enabled = value; }
         }
 
-        public bool MainCanAdd { get; set; }
+        public bool MainCanAdd { get; set; } = true;
         public bool FloodPlain1CanAdd { get; set; }
         public bool FloodPlain2CanAdd { get; set; }
 
@@ -182,7 +195,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
             UpdateSectionWidths();
 
-            MainExist = GetSectionExists(mainSectionName);
+            MainExist = GetSectionExists(mainSectionName)
+                        && crossSectionDefinition != null
+                        && HasDefaultMainSection();
             FloodPlain1Exist = GetSectionExists(floodplain1SectionTypeName);
             FloodPlain2Exist = GetSectionExists(floodplain2SectionTypeName);
 
@@ -191,7 +206,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             FloodPlain2Enabled = false;
 
             MainCanAdd = !MainExist;
-            FloodPlain1CanAdd = !FloodPlain1Exist && !FloodPlain1CanAdd;
+            FloodPlain1CanAdd = MainExist && !FloodPlain1Exist && !FloodPlain1CanAdd;
             FloodPlain2CanAdd = !FloodPlain2Exist && FloodPlain1Exist;
         }       
 
@@ -263,8 +278,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         public void AddMainSectionType()
         {
             AddSectionType(mainSectionName);
+            crossSectionDefinition.Sections.First().SectionType = crossSectionSectionTypes.First(c => c.Name.Equals(mainSectionName));
+            UpdateViewModelFromCrossSection();
         }
-
+        
         public void AddFp1SectionType()
         {
             AddSectionType(floodplain1SectionTypeName);

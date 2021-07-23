@@ -49,6 +49,17 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         {
             if (crossSectionDefinitionZw.Sections.Count > 0)
             {
+                if (crossSectionDefinitionZw.Sections.Count == 1
+                    && !crossSectionDefinitionZw.Sections.First().SectionType.Name.Equals(RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    IniCategory.AddProperty(DefinitionPropertySettings.Main, crossSectionDefinitionZw.GetSectionWidth(crossSectionDefinitionZw.Sections.First().SectionType.Name));
+                    IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain1, 0);
+                    IniCategory.AddProperty(DefinitionPropertySettings.FloodPlain2, 0);
+                    var frictionId = crossSectionDefinitionZw.Sections.First().SectionType.Name;
+                    IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, $"{frictionId};{frictionId};{frictionId}");
+                    return;
+                }
+                
                 if (!writeFrictionFromDefinition)
                 {
                     IniCategory.AddProperty(DefinitionPropertySettings.FrictionIds, $"{defaultFrictionId};{defaultFrictionId};{defaultFrictionId}");
