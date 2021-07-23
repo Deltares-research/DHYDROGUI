@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge
         {
             buttonText = "Cancel";
             
-            ImportModelCommand = new RelayCommand(ImportModel);
+            ImportModelCommand = new RelayCommand(async (o) => await ImportModel());
             MergeModelsCommand = new RelayCommand(MergeModels);
             CopyConflictsCommand = new RelayCommand(CopyConflictsToClipboard, o => DuplicateNames.Any());
             
@@ -200,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge
             }
         }
 
-        private async void ImportModel(object o)
+        private async Task ImportModel()
         {
             IFileDialogService fileDialogService = new FileDialogService();
             string filePath = fileDialogService.SelectFile("Mdu file (*.mdu)|*.mdu");
