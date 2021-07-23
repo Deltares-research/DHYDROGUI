@@ -57,7 +57,7 @@
                         <GroupBox Header="Flow direction">
                             <StackPanel Orientation="Horizontal">
                                 <CheckBox Name="FlowDirectionPositive" Margin="10,5,5,5" IsChecked="{Binding FlowIsPositive}">Positive</CheckBox>
-                                <CheckBox Name="FlowDirectionNegative" Margin="5,5,5,5"  IsChecked="{Binding FlowIsNegative}" Visibility="{Binding NegativeFlowDirectionFlowVisibility, Converter={StaticResource BooleanToVisibilityConverter}}">Negative</CheckBox>
+                                <CheckBox Name="FlowDirectionNegative" Margin="5,5,5,5"  IsChecked="{Binding FlowIsNegative}">Negative</CheckBox>
                             </StackPanel>
                         </GroupBox>
                         <GroupBox>

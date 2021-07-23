@@ -303,7 +303,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         public bool GeometryWidthVisibility { get; set; }
         public bool GeometryHeightVisibility { get; set; }
         public bool BendLossCoeffVisibility { get; set; }
-        public bool NegativeFlowDirectionFlowVisibility { get; set; }
         public string GroundLayerRoughnessUnit { get; set; }
         public string GroundLayerThicknessUnit { get; set; }
 

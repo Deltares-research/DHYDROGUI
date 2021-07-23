@@ -112,6 +112,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
             
             #region structure culvert
                 Assert.That(culvert.CulvertType, Is.EqualTo(model.SelectedCulvertStructureType));
+                culvert.CulvertType = CulvertType.InvertedSiphon;
 
                 culvert.CulvertLength = 2.0;
                 Assert.That(culvert.CulvertLength, Is.EqualTo(model.CulvertLength));
@@ -164,9 +165,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
                 culvert.FlowDirection = FlowDirection.Both;
                 Assert.That(model.FlowIsPositive, Is.True);
                 Assert.That(model.FlowIsNegative, Is.True);
-
-                
-                Assert.That(model.NegativeFlowDirectionFlowVisibility, Is.True);
 
                 culvert.IsGated = false;
                 Assert.That(culvert.IsGated, Is.EqualTo(model.IsGated));
