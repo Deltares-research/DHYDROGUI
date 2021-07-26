@@ -154,23 +154,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
             Assert.IsTrue(crossSectionZWSectionsViewModel.MainEnabled);
             Assert.AreEqual(0,crossSectionZWSectionsViewModel.MainWidth);
         }
-
-        [Test]
-        public void SettingWidthCanAddASection()
-        {
-            //remove main
-            var main = crossSectionDefinition.Sections.First(s => s.SectionType.Name == "Main");
-            crossSectionDefinition.Sections.Remove(main);
-
-            crossSectionZWSectionsViewModel.UpdateViewModelFromCrossSection();
-
-            //now set a value for main..this should re-add the section. 
-            crossSectionZWSectionsViewModel.MainWidth = 1.0;
-
-            var newMain = crossSectionDefinition.Sections.FirstOrDefault(s => s.SectionType.Name == "Main");
-            Assert.IsNotNull(newMain,"Main section should be re-added");
-        }
-
+        
         [Test]
         public void RemovingSectionTypeCanResultInDisablingOfTextBox()
         {
