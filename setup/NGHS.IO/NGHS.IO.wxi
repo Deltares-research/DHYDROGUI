@@ -111,7 +111,8 @@
         <File Id="NGHS_IO_System.Xml.XPath.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Xml.XPath.dll' />
         <File Id="NGHS_IO_System.Xml.XPath.XDocument.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\System.Xml.XPath.XDocument.dll' />
         <File Id="NGHS_IO_ucrtbase.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\ucrtbase.dll' />
-        <File Id="NGHS_IO_vcruntime140.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\vcruntime140.dll' />     
+        <File Id="NGHS_IO_vcruntime140.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\vcruntime140.dll' />
+        <File Id="NGHS_IO_zlib1.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\zlib1.dll' />
     </Component>
     <Directory Id="NGHS_IO_WinX64" Name="win-x64">
         <Directory Id="NGHS_IO_native" Name="native">
