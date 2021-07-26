@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -284,30 +285,41 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                     }
 
                     // HydroObject linking
-                    IHydroObject sourceItem = sourceModel.DimrCoupling?.GetLinkHydroObjectByItemString(couplerXml.sourceName);
-                    if (sourceItem == null)
+                    IList<IHydroObject> sourceItems = sourceModel.DimrCoupling?.GetLinkHydroObjectsByItemString(couplerXml.sourceName);
+                    if (sourceItems == null || !sourceItems.Any())
                     {
-                        logHandler.ReportErrorFormat("Could not link {0} to {1}", couplerXml.sourceName, couplerXml.targetName);
+                        logHandler.ReportErrorFormat($"Model {sourceModel.ShortName} does not contain source item {couplerXml.sourceName} (to be linked to {couplerXml.targetName})");
                         continue;
                     }
 
-                    IHydroObject targetItem = targetModel.DimrCoupling?.GetLinkHydroObjectByItemString(couplerXml.targetName);
-
-                    if (!sourceItem.CanLinkTo(targetItem) ||
-                        linkBySourceIemLookup.TryGetValue(sourceItem, out var links) &&
-                        links.Any(l => l.Target == targetItem))
+                    IList<IHydroObject> targetItems = targetModel.DimrCoupling?.GetLinkHydroObjectsByItemString(couplerXml.targetName);
+                    if (targetItems == null || !targetItems.Any())
                     {
+                        logHandler.ReportErrorFormat($"Model {targetModel.ShortName} does not contain target item {couplerXml.targetName} (to be linked from {couplerXml.sourceName})");
                         continue;
                     }
 
-                    var link = sourceItem.LinkTo(targetItem);
-                    if (link.Geometry == null)
+
+                    foreach (IHydroObject sourceItem in sourceItems)
                     {
-                        link.Geometry = new LineString(new[]
+                        foreach (IHydroObject targetItem in targetItems)
                         {
-                            GetCoordinateForHydroObject(sourceItem),
-                            GetCoordinateForHydroObject(targetItem)
-                        });
+                            var linkAlreadyPresent = linkBySourceIemLookup.TryGetValue(sourceItem, out var links) &&
+                                              links.Any(l => l.Target == targetItem);
+
+                            if (!linkAlreadyPresent && sourceItem.CanLinkTo(targetItem))
+                            {
+                                var link = sourceItem.LinkTo(targetItem);
+                                if (link.Geometry == null)
+                                {
+                                    link.Geometry = new LineString(new[]
+                                    {
+                                        GetCoordinateForHydroObject(sourceItem),
+                                        GetCoordinateForHydroObject(targetItem)
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
                 catch (Exception e) when (e is NotSupportedException ||

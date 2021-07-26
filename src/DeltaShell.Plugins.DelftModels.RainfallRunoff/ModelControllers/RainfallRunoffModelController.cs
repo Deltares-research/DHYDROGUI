@@ -257,7 +257,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
         {
             foreach (var link in links)
             {
-                if (link.ToFeature == null || link.ToFeature is RunoffBoundary)
+                if (link.ToFeature == null || link.ToFeature is RunoffBoundary || link.ToFeature is ILateralSource)
                     //only fake features & explicit boundaries
                 {
                     //if no target feature; fallback to source (catchment) as fake boundary
@@ -339,6 +339,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             if (runoffBoundary != null)
             {
                 return GetBoundaryData(runoffBoundary).Series.Evaluate(currentTime);
+            }
+
+            var lateral = feature as ILateralSource;
+            if (lateral != null)
+            {
+                return 0d;
             }
 
             var wwtp = feature as WasteWaterTreatmentPlant;
@@ -577,7 +583,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             var link = explicitWwtpLink ?? hydroObject.Links.FirstOrDefault(l => !(l.Target is WasteWaterTreatmentPlant));
             
             //link inside rr domain (wwtp or runoff boundary)
-            if (link != null && (link.Target is WasteWaterTreatmentPlant || link.Target is RunoffBoundary))
+            if (link != null && (link.Target is WasteWaterTreatmentPlant || link.Target is RunoffBoundary || link.Target is ILateralSource))
             {
                 links.Add(new ModelLink(link.Name, hydroObject, link, link.Target));
             }

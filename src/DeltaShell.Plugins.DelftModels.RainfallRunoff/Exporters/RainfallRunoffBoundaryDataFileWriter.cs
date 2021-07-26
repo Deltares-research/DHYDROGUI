@@ -45,8 +45,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 
                 foreach (var link in linksFound)
                 {
-                    if (link.ToFeature != null && !(link.ToFeature is RunoffBoundary)) continue;
-                    var boundary = link.ToFeature ?? link.FromFeature;
+                    if (link.ToFeature != null && !(link.ToFeature is RunoffBoundary || link.ToFeature is ILateralSource)) continue;
+
+                    var boundary = link.ToFeature;
+                    if (boundary == null)
+                    {
+                        boundary = link.FromFeature;
+                    }
 
                     if (rrBoundaries.Contains(boundary))
                         continue; //already added

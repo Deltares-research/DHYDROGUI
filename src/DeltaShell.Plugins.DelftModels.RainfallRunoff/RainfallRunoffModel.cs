@@ -35,6 +35,7 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.rr_kernel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using DeltaShell.Plugins.NetCDF;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
@@ -275,7 +276,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
         
-        public Dictionary<string, string> LateralToCatchmentLookup { get; } = new Dictionary<string, string>();
+        public Dictionary<string, SobekRRLink[]> LateralToCatchmentLookup { get; set; } = new Dictionary<string, SobekRRLink[]>();
 
         public bool InputWaterLevelIsLinked
         {
