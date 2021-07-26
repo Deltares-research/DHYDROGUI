@@ -275,7 +275,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     string frictionId = csdDefinitionCategory.ReadProperty<string>(DefinitionPropertySettings.FrictionId, true);
                     IList<string> frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds, true, ';');
                     
-                    if (frictionId != null || (frictionIds != null && frictionIds.Any(id => !IsDefaultSectionId(id))))
+                    if (frictionId != null || (frictionIds != null && frictionIds.Any(id => !IsDefaultSectionId(id) && !IsDefaultChannelsSectionId(id))))
                     {
                         // read definition as zw definition
                         string sectionName = frictionId ?? frictionIds.First();
@@ -357,6 +357,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
             return string.Equals(sectionId, RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase)
                    || string.Equals(sectionId, RoughnessDataSet.Floodplain1SectionTypeName, StringComparison.InvariantCultureIgnoreCase)
                    || string.Equals(sectionId, RoughnessDataSet.Floodplain2SectionTypeName, StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private static bool IsDefaultChannelsSectionId(string sectionId)
+        {
+            return string.Equals(sectionId, RoughnessDataRegion.SectionId.DefaultValue, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private static CrossSectionSectionType GetCrossSectionSectionType(string sectionTypeName, IHydroNetwork network)
