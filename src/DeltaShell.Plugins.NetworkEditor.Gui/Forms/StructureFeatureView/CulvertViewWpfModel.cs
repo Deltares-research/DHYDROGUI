@@ -1,13 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 {
-    [Entity]
-    public class CulvertViewWpfViewModel
+    public class CulvertViewWpfViewModel : INotifyPropertyChanged, IDisposable
     {
         private ICulvert culvert = new Culvert();
 
@@ -16,12 +16,73 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             get { return culvert; }
             set
             {
+                if (culvert != null)
+                {
+                    ((INotifyPropertyChanged) culvert).PropertyChanged -= UpdateAllProperties;
+                }
+
                 culvert = value;
+
+                if (culvert == null)
+                {
+                    return;
+                }
+
+                ((INotifyPropertyChanged) culvert).PropertyChanged += UpdateAllProperties;
+                
                 SelectedCulvertGeometryType = culvert.GeometryType;
                 SelectedCulvertFrictionType = culvert.FrictionType;
                 SelectedCulvertStructureType = culvert.CulvertType;
                 GeometryTabulated = culvert.TabulatedCrossSectionDefinition.ZWDataTable;
+                
             }
+        }
+
+        private void UpdateAllProperties(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(FlowIsNegative));
+            OnPropertyChanged(nameof(FlowIsPositive));
+            OnPropertyChanged(nameof(SelectedCulvertStructureType));
+            OnPropertyChanged(nameof(SelectedCulvertGeometryType));
+            OnPropertyChanged(nameof(SelectedCulvertFrictionType));
+            OnPropertyChanged(nameof(IsGated));
+            OnPropertyChanged(nameof(CulvertLength));
+            OnPropertyChanged(nameof(CulvertOffsetY));
+            OnPropertyChanged(nameof(InletLevel));
+            OnPropertyChanged(nameof(OutletLevel));
+            OnPropertyChanged(nameof(InletLossCoeff));
+            OnPropertyChanged(nameof(OutletLossCoeff));
+            OnPropertyChanged(nameof(GateInitialGateOpening));
+            OnPropertyChanged(nameof(GateLowEdgeLevel));
+            OnPropertyChanged(nameof(FrictionValue));
+            OnPropertyChanged(nameof(GeometryDiameter));
+            OnPropertyChanged(nameof(GeometryTabulated));
+            OnPropertyChanged(nameof(GeometryWidth));
+            OnPropertyChanged(nameof(GeometryHeight));
+            OnPropertyChanged(nameof(GeometryArcHeight));
+            OnPropertyChanged(nameof(GeometryRadiusR));
+            OnPropertyChanged(nameof(GeometryRadiusR1));
+            OnPropertyChanged(nameof(GeometryRadiusR2));
+            OnPropertyChanged(nameof(GeometryRadiusR3));
+            OnPropertyChanged(nameof(GeometryAngleA));
+            OnPropertyChanged(nameof(GeometryAngleA1));
+            OnPropertyChanged(nameof(IsInvertedSiphon));
+            OnPropertyChanged(nameof(IsCulvert));
+            OnPropertyChanged(nameof(IsTabulated));
+            OnPropertyChanged(nameof(IsRound));
+            OnPropertyChanged(nameof(IsSteelCunette));
+            OnPropertyChanged(nameof(IsArch));
+            OnPropertyChanged(nameof(IsCunette));
+            OnPropertyChanged(nameof(IsArch));
+            OnPropertyChanged(nameof(IsEllipse));
+            OnPropertyChanged(nameof(IsRectangle));
+            OnPropertyChanged(nameof(IsEgg));
+            OnPropertyChanged(nameof(IsInvertedEgg));
+            OnPropertyChanged(nameof(IsUShape));
+            OnPropertyChanged(nameof(GeometryWidthVisibility));
+            OnPropertyChanged(nameof(GeometryHeightVisibility));
+            OnPropertyChanged(nameof(BendLossCoeffVisibility));
+            OnPropertyChanged(nameof(HasArcHeight));
         }
 
         private void UpdateFlow(bool positive, bool negative)
@@ -309,7 +370,33 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         public bool HasArcHeight { get; set; }
 
         #endregion
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            if (culvert == null)
+            {
+                return;
+            }
+            
+            ((INotifyPropertyChanged) culvert).PropertyChanged -= UpdateAllProperties;
+        }
     }
-
-
 }
