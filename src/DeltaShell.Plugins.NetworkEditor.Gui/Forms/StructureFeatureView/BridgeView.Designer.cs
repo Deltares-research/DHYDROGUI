@@ -84,13 +84,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.checkBoxAllowPositiveFlow = new System.Windows.Forms.CheckBox();
             this.textBoxInletLoss = new System.Windows.Forms.TextBox();
             this.lblInlet = new System.Windows.Forms.Label();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pageSplitContainer)).BeginInit();
             this.pageSplitContainer.Panel1.SuspendLayout();
             this.pageSplitContainer.Panel2.SuspendLayout();
             this.pageSplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.geometrySplitContainer)).BeginInit();
             this.geometrySplitContainer.Panel1.SuspendLayout();
             this.geometrySplitContainer.Panel2.SuspendLayout();
             this.geometrySplitContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerGeometry)).BeginInit();
             this.splitContainerGeometry.Panel1.SuspendLayout();
             this.splitContainerGeometry.Panel2.SuspendLayout();
             this.splitContainerGeometry.SuspendLayout();
@@ -101,6 +105,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.yOffsetPanel.SuspendLayout();
             this.roughnessGroupBox.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -147,7 +152,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // 
             this.geometrySplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.geometrySplitContainer.IsSplitterFixed = true;
-            this.geometrySplitContainer.Location = new System.Drawing.Point(0, 81);
+            this.geometrySplitContainer.Location = new System.Drawing.Point(0, 111);
             this.geometrySplitContainer.Name = "geometrySplitContainer";
             // 
             // geometrySplitContainer.Panel1
@@ -163,7 +168,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.geometrySplitContainer.Panel2.Controls.Add(this.textBoxPillarWidth);
             this.geometrySplitContainer.Panel2.Controls.Add(this.lblShapeFactor);
             this.geometrySplitContainer.Panel2MinSize = 0;
-            this.geometrySplitContainer.Size = new System.Drawing.Size(314, 368);
+            this.geometrySplitContainer.Size = new System.Drawing.Size(314, 338);
             this.geometrySplitContainer.SplitterDistance = 175;
             this.geometrySplitContainer.TabIndex = 37;
             // 
@@ -183,7 +188,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // 
             this.splitContainerGeometry.Panel2.Controls.Add(this.tableViewTabulatedData);
             this.splitContainerGeometry.Panel2MinSize = 0;
-            this.splitContainerGeometry.Size = new System.Drawing.Size(175, 368);
+            this.splitContainerGeometry.Size = new System.Drawing.Size(175, 338);
             this.splitContainerGeometry.SplitterDistance = 82;
             this.splitContainerGeometry.TabIndex = 21;
             // 
@@ -194,18 +199,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 63F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 61F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Controls.Add(this.textBoxShift, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.textBoxHeight, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.textBoxHeight, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.label2, 2, 0);
             this.tableLayoutPanel1.Controls.Add(this.label4, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.labelWidth, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.labelHeight, 0, 2);
+            this.tableLayoutPanel1.Controls.Add(this.labelWidth, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.labelHeight, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.label3, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.textBoxWidth, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.labelShift, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.textBoxWidth, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
@@ -213,26 +216,26 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(192, 80);
             this.tableLayoutPanel1.TabIndex = 6;
-            // 
-            // textBoxShift
-            // 
-            this.textBoxShift.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceBridge, nameof(IBridge.Shift), true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, null, "N3"));
-            this.textBoxShift.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxShift.Location = new System.Drawing.Point(79, 3);
-            this.textBoxShift.Name = "textBoxShift";
-            this.textBoxShift.Size = new System.Drawing.Size(57, 20);
-            this.textBoxShift.TabIndex = 1;
-            this.textBoxShift.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
             // bindingSourceBridge
             // 
             this.bindingSourceBridge.DataSource = typeof(DelftTools.Hydro.Structures.IBridge);
+            // 
+            // 
+            // textBoxShift
+            // 
+            this.textBoxShift.Location = new System.Drawing.Point(93, 26);
+            this.textBoxShift.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceBridge, nameof(IBridge.Shift), true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, null, "N3"));
+            this.textBoxShift.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxShift.Name = "textBoxShift";
+            this.textBoxShift.Size = new System.Drawing.Size(85, 20);
+            this.textBoxShift.TabIndex = 1;
+            this.textBoxShift.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // textBoxHeight
             // 
             this.textBoxHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxHeight.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceBridge, "Height", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, null, "N3"));
-            this.textBoxHeight.Location = new System.Drawing.Point(79, 55);
+            this.textBoxHeight.Location = new System.Drawing.Point(79, 28);
             this.textBoxHeight.Name = "textBoxHeight";
             this.textBoxHeight.Size = new System.Drawing.Size(57, 20);
             this.textBoxHeight.TabIndex = 1;
@@ -262,7 +265,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // 
             this.labelWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.labelWidth.AutoSize = true;
-            this.labelWidth.Location = new System.Drawing.Point(3, 31);
+            this.labelWidth.Location = new System.Drawing.Point(3, 6);
             this.labelWidth.Name = "labelWidth";
             this.labelWidth.Size = new System.Drawing.Size(70, 13);
             this.labelWidth.TabIndex = 0;
@@ -272,7 +275,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // 
             this.labelHeight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.labelHeight.AutoSize = true;
-            this.labelHeight.Location = new System.Drawing.Point(3, 58);
+            this.labelHeight.Location = new System.Drawing.Point(3, 31);
             this.labelHeight.Name = "labelHeight";
             this.labelHeight.Size = new System.Drawing.Size(70, 13);
             this.labelHeight.TabIndex = 0;
@@ -291,7 +294,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // textBoxWidth
             // 
             this.textBoxWidth.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceBridge, "Width", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged, null, "N3"));
-            this.textBoxWidth.Location = new System.Drawing.Point(79, 28);
+            this.textBoxWidth.Location = new System.Drawing.Point(79, 3);
             this.textBoxWidth.Name = "textBoxWidth";
             this.textBoxWidth.Size = new System.Drawing.Size(57, 20);
             this.textBoxWidth.TabIndex = 1;
@@ -301,9 +304,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // 
             this.labelShift.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.labelShift.AutoSize = true;
-            this.labelShift.Location = new System.Drawing.Point(3, 6);
+            this.labelShift.Location = new System.Drawing.Point(3, 28);
             this.labelShift.Name = "labelShift";
-            this.labelShift.Size = new System.Drawing.Size(70, 13);
+            this.labelShift.Size = new System.Drawing.Size(84, 13);
             this.labelShift.TabIndex = 0;
             this.labelShift.Text = "Shift";
             // 
@@ -330,7 +333,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.tableViewTabulatedData.RowSelect = false;
             this.tableViewTabulatedData.RowValidator = null;
             this.tableViewTabulatedData.ShowRowNumbers = false;
-            this.tableViewTabulatedData.Size = new System.Drawing.Size(89, 368);
+            this.tableViewTabulatedData.Size = new System.Drawing.Size(89, 338);
             this.tableViewTabulatedData.TabIndex = 10;
             this.tableViewTabulatedData.UseCenteredHeaderText = false;
             // 
@@ -387,24 +390,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             // 
             // groupBoxGeometry
             // 
-            this.groupBoxGeometry.Controls.Add(this.bridgeTypeCombobox);
+            this.groupBoxGeometry.Controls.Add(this.tableLayoutPanel2);
             this.groupBoxGeometry.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxGeometry.Location = new System.Drawing.Point(0, 29);
             this.groupBoxGeometry.Name = "groupBoxGeometry";
-            this.groupBoxGeometry.Size = new System.Drawing.Size(314, 52);
+            this.groupBoxGeometry.Size = new System.Drawing.Size(314, 82);
             this.groupBoxGeometry.TabIndex = 22;
             this.groupBoxGeometry.TabStop = false;
             this.groupBoxGeometry.Text = "Geometry of (cross-sectional) flow-area";
             // 
             // bridgeTypeCombobox
             // 
+            this.tableLayoutPanel2.SetColumnSpan(this.bridgeTypeCombobox, 2);
             this.bridgeTypeCombobox.DataBindings.Add(new System.Windows.Forms.Binding("SelectedValue", this.bindingSourceBridge, "BridgeType", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.bridgeTypeCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.bridgeTypeCombobox.DataSource = Enum.GetValues(typeof(BridgeType));
             this.bridgeTypeCombobox.FormattingEnabled = true;
-            this.bridgeTypeCombobox.Location = new System.Drawing.Point(6, 19);
+            this.bridgeTypeCombobox.Location = new System.Drawing.Point(3, 3);
             this.bridgeTypeCombobox.Name = "bridgeTypeCombobox";
-            this.bridgeTypeCombobox.Size = new System.Drawing.Size(186, 21);
+            this.bridgeTypeCombobox.Size = new System.Drawing.Size(175, 21);
             this.bridgeTypeCombobox.TabIndex = 21;
             // 
             // yOffsetPanel
@@ -477,8 +481,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.groupBox2.TabIndex = 33;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Ground layer";
-            this.groupBox2.Visible = false;// disabled because not yet implemented in the kernel
-            
+            this.groupBox2.Visible = false;
             // 
             // label56
             // 
@@ -572,7 +575,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(6, 53);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(26, 13);
+            this.label12.Size = new System.Drawing.Size(34, 13);
             this.label12.TabIndex = 21;
             this.label12.Text = "Value";
             // 
@@ -704,6 +707,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.lblInlet.TabIndex = 1;
             this.lblInlet.Text = "Inlet loss";
             // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.textBoxShift, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.bridgeTypeCombobox, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.labelShift, 0, 1);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 24);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(181, 47);
+            this.tableLayoutPanel2.TabIndex = 22;
+            // 
             // BridgeView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -715,13 +735,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.pageSplitContainer.Panel1.ResumeLayout(false);
             this.pageSplitContainer.Panel2.ResumeLayout(false);
             this.pageSplitContainer.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pageSplitContainer)).EndInit();
             this.pageSplitContainer.ResumeLayout(false);
             this.geometrySplitContainer.Panel1.ResumeLayout(false);
             this.geometrySplitContainer.Panel2.ResumeLayout(false);
             this.geometrySplitContainer.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.geometrySplitContainer)).EndInit();
             this.geometrySplitContainer.ResumeLayout(false);
             this.splitContainerGeometry.Panel1.ResumeLayout(false);
             this.splitContainerGeometry.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerGeometry)).EndInit();
             this.splitContainerGeometry.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
@@ -734,6 +757,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             this.roughnessGroupBox.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -792,7 +817,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         private System.Windows.Forms.TextBox textBoxGroundLayerThickness;
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.Label label12;
-
-
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
     }
 }

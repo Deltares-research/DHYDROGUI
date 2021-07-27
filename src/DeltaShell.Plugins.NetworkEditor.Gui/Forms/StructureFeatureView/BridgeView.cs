@@ -227,10 +227,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                                                               : 0;
             }
 
-            labelShift.Enabled = isRectangle;
+            labelShift.Enabled = true;
             labelWidth.Enabled = isRectangle;
             labelHeight.Enabled = isRectangle;
-            textBoxShift.Enabled = isRectangle;
+            textBoxShift.Enabled = true;
             textBoxWidth.Enabled = isRectangle;
             textBoxHeight.Enabled = isRectangle;
             textBoxPillarWidth.Enabled = isPillar;

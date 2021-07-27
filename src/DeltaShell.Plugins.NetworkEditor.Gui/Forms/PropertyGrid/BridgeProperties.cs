@@ -275,7 +275,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 return !data.IsPillar;
             }
 
-            if (propertyName == nameof(Shift) || propertyName == nameof(Width) || propertyName == nameof(Height))
+            if (propertyName == nameof(Width) || propertyName == nameof(Height))
             {
                 return !data.IsRectangle;
             }

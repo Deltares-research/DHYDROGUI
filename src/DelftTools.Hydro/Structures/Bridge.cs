@@ -408,7 +408,7 @@ namespace DelftTools.Hydro.Structures
                 return IsPillar || !GroundLayerEnabled;
             }
 
-            if (propertyName == nameof(Shift) || propertyName == nameof(Width) || propertyName == nameof(Height))
+            if (propertyName == nameof(Width) || propertyName == nameof(Height))
             {
                 return !IsRectangle;
             }
