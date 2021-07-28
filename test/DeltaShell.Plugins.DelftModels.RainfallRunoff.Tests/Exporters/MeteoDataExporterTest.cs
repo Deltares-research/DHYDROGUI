@@ -38,9 +38,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 Assert.That(file, Does.Exist);
 
                 string[][] lines = GetLastLines(file, 3);
-                AssertLineEqualTo(lines[0], "2014", "01", "01", "1.00");
-                AssertLineEqualTo(lines[1], "2014", "01", "02", "2.00");
-                AssertLineEqualTo(lines[2], "2014", "01", "03", "3.00");
+                AssertLineEqualTo(lines[0], "2014", "01", "01", "1.000");
+                AssertLineEqualTo(lines[1], "2014", "01", "02", "2.000");
+                AssertLineEqualTo(lines[2], "2014", "01", "03", "3.000");
             }
         }
 
@@ -70,9 +70,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 Assert.That(file, Does.Exist);
 
                 string[][] lines = GetLastLines(file, 3);
-                AssertLineEqualTo(lines[0], "2014", "01", "01", "1.00", "2.00");
-                AssertLineEqualTo(lines[1], "2014", "01", "02", "3.00", "4.00");
-                AssertLineEqualTo(lines[2], "2014", "01", "03", "5.00", "6.00");
+                AssertLineEqualTo(lines[0], "2014", "01", "01", "1.000", "2.000");
+                AssertLineEqualTo(lines[1], "2014", "01", "02", "3.000", "4.000");
+                AssertLineEqualTo(lines[2], "2014", "01", "03", "5.000", "6.000");
             }
         }
 
