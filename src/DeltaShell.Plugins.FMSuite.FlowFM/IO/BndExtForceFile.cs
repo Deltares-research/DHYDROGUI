@@ -313,14 +313,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     {
                         WriteLine(BoundaryBlockKey);
                         WriteLine(QuantityKey + "=" + quantity);
-                        var locationFile = bndExtForceFileItem.GetPropertyValue(LocationFileKey);
-                        if (locationFile != null)
-                            WriteLine(LocationFileKey + "=" + locationFile);
-
-                        var nodeid = bndExtForceFileItem.GetPropertyValue(NodeIdKey);
-                        if (nodeid != null)
-                            WriteLine(NodeIdKey + "=" + nodeid);
-
+                        WriteProperty(bndExtForceFileItem, LocationFileKey);
+                        WriteProperty(bndExtForceFileItem, NodeIdKey);
                         string openBoundaryTolerance = bndExtForceFileItem.GetPropertyValues(OpenBoundaryToleranceKey)
                             .FirstOrDefault();
                         if (openBoundaryTolerance != null)
@@ -333,34 +327,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             WriteLine(ForcingFileKey + "=" + propertyValue);
                         }
 
-                        var timelag = bndExtForceFileItem.GetPropertyValue(ThatcherHarlemanTimeLagKey);
-                        if (timelag != null)
-                        {
-                            WriteLine(ThatcherHarlemanTimeLagKey + "=" + timelag);
-                        }
-
-                        var area = bndExtForceFileItem.GetPropertyValue(AreaKey);
-                        if (area != null)
-                        {
-                            WriteLine(AreaKey + "=" + area);
-                        }
-
-                        var isOnOutletCompartment = bndExtForceFileItem.GetPropertyValue("isOnOutletCompartment");
-                        if (isOnOutletCompartment != null)
-                        {
-                            WriteLine("isOnOutletCompartment=" + isOnOutletCompartment);
-                        }
-
-                        var boundaryWidth = bndExtForceFileItem.GetPropertyValue(BoundaryWidth);
-                        if (boundaryWidth != null)
-                        {
-                            WriteLine(BoundaryWidth + "=" + boundaryWidth);
-                        }
-                        var boundaryDepth = bndExtForceFileItem.GetPropertyValue(BoundaryDepth);
-                        if (boundaryDepth != null)
-                        {
-                            WriteLine(BoundaryDepth + "=" + boundaryDepth);
-                        }
+                        WriteProperty(bndExtForceFileItem, ThatcherHarlemanTimeLagKey);
+                        WriteProperty(bndExtForceFileItem, AreaKey);
+                        WriteProperty(bndExtForceFileItem, "isOnOutletCompartment");
+                        WriteProperty(bndExtForceFileItem, BoundaryWidth);
+                        WriteProperty(bndExtForceFileItem, BoundaryDepth);
                     }
 
                     string id = bndExtForceFileItem.GetPropertyValue(IdKey);
@@ -375,23 +346,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                             WriteLine(BranchIdKey + "=" + branchId);
                             WriteLine(ChainageKey + "=" + bndExtForceFileItem.GetPropertyValue(ChainageKey));
                         }
-
-                        var nodeId = bndExtForceFileItem.GetPropertyValue(NodeIdKey);
-                        if (nodeId != null)
-                            WriteLine(NodeIdKey + "=" + nodeId);
-
-                        var type = bndExtForceFileItem.GetPropertyValue(TypeKey);
-                        if (type != null)
-                            WriteLine(TypeKey + "=" + type);
-
-                        var locationType = bndExtForceFileItem.GetPropertyValue(LocationTypeKey);
-                        if (locationType != null)
-                            WriteLine(LocationTypeKey + "=" + locationType);
-
-                        var discharge = bndExtForceFileItem.GetPropertyValue(DischargeKey);
-                        if (discharge != null)
-                            WriteLine(DischargeKey + "=" + discharge);
-
+                        
+                        WriteProperty(bndExtForceFileItem, NodeIdKey);
+                        WriteProperty(bndExtForceFileItem, TypeKey);
+                        WriteProperty(bndExtForceFileItem, LocationTypeKey);
+                        WriteProperty(bndExtForceFileItem, DischargeKey);
                     }
                 }
             }
@@ -399,6 +358,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             {
                 CloseOutputFile();
+            }
+        }
+
+        private void WriteProperty(IDelftIniCategory category, string key)
+        {
+            string value = category.GetPropertyValue(key);
+            if (value != null)
+            {
+                WriteLine(key + "=" + value);
             }
         }
 
