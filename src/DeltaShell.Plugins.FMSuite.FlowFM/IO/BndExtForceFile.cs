@@ -56,8 +56,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string ThatcherHarlemanTimeLagKey = "return_time";
         private const string OpenBoundaryToleranceKey = "OpenBoundaryTolerance";
         public static double OpenBoundaryTolerance = 0.5; // made public static while this value still needs to be tweaked *run away run away*
+        private const string BoundaryWidth = "bndWidth1D";
+        private const string BoundaryDepth = "bndBLDepth";
 
-        private static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath, string nodeid, string forcingFilePath, TimeSpan thatcherHarlemanTimeLag, bool isOnOutletCompartment = false, bool isEmbankment = false, LateralSourceForcingDefinition lateralSourceForcingDefinition = null)
+        private static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath, string nodeid, string forcingFilePath, TimeSpan thatcherHarlemanTimeLag, bool isOnOutletCompartment = false, bool isEmbankment = false, LateralSourceForcingDefinition lateralSourceForcingDefinition = null, 
+                                                            double? boundaryWidth = null, double? boundaryDepth = null)
         {
             var block = new DelftIniCategory(BoundaryBlockKey);
             if (quantity != null)
@@ -89,6 +92,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (isOnOutletCompartment)
             {
                 block.AddProperty("isOnOutletCompartment", "true");
+            }
+
+            if (boundaryWidth != null && boundaryDepth != null)
+            {
+                block.AddProperty(BoundaryWidth, (double) boundaryWidth);
+                block.AddProperty(BoundaryDepth, (double) boundaryDepth);
             }
 
             if (lateralSourceForcingDefinition != null)
@@ -341,6 +350,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         {
                             WriteLine("isOnOutletCompartment=" + isOnOutletCompartment);
                         }
+
+                        var boundaryWidth = bndExtForceFileItem.GetPropertyValue(BoundaryWidth);
+                        if (boundaryWidth != null)
+                        {
+                            WriteLine(BoundaryWidth + "=" + boundaryWidth);
+                        }
+                        var boundaryDepth = bndExtForceFileItem.GetPropertyValue(BoundaryDepth);
+                        if (boundaryDepth != null)
+                        {
+                            WriteLine(BoundaryDepth + "=" + boundaryDepth);
+                        }
                     }
 
                     string id = bndExtForceFileItem.GetPropertyValue(IdKey);
@@ -437,7 +457,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     nodeId = m1dbnd.OutletCompartment.Name;
                 }
                 var thatcherHarlemanTimeLag =  m1dbnd != null && m1dbnd.UseSalt ? new TimeSpan(0,0, (int)m1dbnd.ThatcherHarlemannCoefficient) : TimeSpan.Zero;
-                yield return CreateBoundaryBlock(quantityName, null, nodeId, filename, thatcherHarlemanTimeLag, isOnOutletCompartment: m1dbnd?.OutletCompartment != null);
+                yield return CreateBoundaryBlock(quantityName, null, nodeId, filename, thatcherHarlemanTimeLag, isOnOutletCompartment: m1dbnd?.OutletCompartment != null, 
+                                                 boundaryWidth: m1dbnd?.BoundaryWidth, boundaryDepth: m1dbnd?.BoundaryDepth);
             }
             var bcFile = new BcFile() { MultiFileMode = BcFile.WriteMode.SingleFile };//single file want ff niet anders
             bcFile.Write(model1DNodeBoundaryDelftIniCategories, filename, Path.GetDirectoryName(FilePath));
@@ -951,6 +972,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             network.Nodes.Except(boundaryConditions1D.Select(bc1d => bc1d.Node)).ForEach(node => boundaryConditions1D.Add(Helper1D.CreateDefaultBoundaryCondition(node, false, false)));
             var forcingFiles = new HashSet<string>();
+
+            var bndByNodeName = boundaryConditions1D.ToDictionary(bc => bc.Node.Name);
+
             foreach (var delftIniCategory in modelBoundary1DBlocks)
             {
                 var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
@@ -966,6 +990,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 else
                 {
                     node = network.Nodes.FirstOrDefault(n => n.Name.EqualsCaseInsensitive(nodeId));
+                }
+
+                if (bndByNodeName.TryGetValue(nodeId, out Model1DBoundaryNodeData boundaryData))
+                {
+                    double boundaryWidth = delftIniCategory.ReadProperty(BoundaryWidth, true, double.NaN);
+                    if (!double.IsNaN(boundaryWidth))
+                    {
+                        boundaryData.BoundaryWidth = boundaryWidth;
+                    }
+                
+                    double boundaryDepth = delftIniCategory.ReadProperty(BoundaryDepth, true, double.NaN);
+                    if (!double.IsNaN(boundaryDepth))
+                    {
+                        boundaryData.BoundaryDepth = boundaryDepth;
+                    }
                 }
 
                 if (node == null) continue;

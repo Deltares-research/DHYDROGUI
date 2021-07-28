@@ -215,6 +215,14 @@ namespace DeltaShell.NGHS.IO.DataObjects
         [ReadOnly(true)]
         public virtual OutletCompartment OutletCompartment { get; set; }
 
+        [FeatureAttribute]
+        [DisplayName("Boundary width (m)")]
+        public virtual double BoundaryWidth { get; set; } = 10;
+
+        [FeatureAttribute]
+        [DisplayName("Boundary depth (m)")]
+        public virtual double BoundaryDepth { get; set; } = 10;
+
         [DynamicReadOnlyValidationMethod]
         public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
         {
