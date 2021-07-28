@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
                 case PavedEnums.SewerPumpDischargeTarget.WWTP:
                     return Catchment.Links.Select(l => l.Target).OfType<WasteWaterTreatmentPlant>().FirstOrDefault();
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    return null;
             }
         }
 

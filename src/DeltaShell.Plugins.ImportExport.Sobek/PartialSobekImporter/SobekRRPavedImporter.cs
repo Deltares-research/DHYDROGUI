@@ -104,18 +104,18 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     switch (sobekPaved.SewerDischarge)
                     {
                         case SewerDischargeType.BothSewerPumpsToOpenWater:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
-                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
+                            pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.OpenWater;
+                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.OpenWater;
                             break;
                         case SewerDischargeType.RainfallOrMixedToOpenWaterDWAToBoundary:
                             pavedData.MixedAndOrRainfallSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
+                                PavedEnums.SewerPumpDischargeTarget.OpenWater;
                             pavedData.DryWeatherFlowSewerPumpDischarge =
                                 PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
                             break;
                         case SewerDischargeType.RainfallOrMixedToOpenWaterDWAToWWTP:
                             pavedData.MixedAndOrRainfallSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
+                                PavedEnums.SewerPumpDischargeTarget.OpenWater;
                             pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
                             break;
                         case SewerDischargeType.BothSewerPumpsToBoundary:
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         case SewerDischargeType.RainfallOrMixedToBoundaryDWAToOpenWater:
                             pavedData.MixedAndOrRainfallSewerPumpDischarge =
                                 PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
-                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
+                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.OpenWater;
                             break;
                         case SewerDischargeType.RainfallOrMixedToBoundaryDWAToWWTP:
                             pavedData.MixedAndOrRainfallSewerPumpDischarge =
@@ -140,7 +140,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                             break;
                         case SewerDischargeType.RainfallOrMixedToWWTPDWAToOpenWater:
                             pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
-                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
+                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.OpenWater;
                             break;
                         case SewerDischargeType.RainfallOrMixedToWWTPDWAToBoundary:
                             pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;

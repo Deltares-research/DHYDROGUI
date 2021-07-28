@@ -30,6 +30,7 @@
     public enum LinkType
     {
         Boundary=0,
+        OpenWater = 1,
         WasteWaterTreatmentPlant=2
     }
 

@@ -37,7 +37,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         public enum SewerPumpDischargeTarget
         {
             [Description("Lateral source or boundary node")]
-            BoundaryNode=1,
+            BoundaryNode=0,
+            [Description("Open water")]
+            OpenWater = 1,
             [Description("Wastewater treatment plant")] 
             WWTP=2
         }
