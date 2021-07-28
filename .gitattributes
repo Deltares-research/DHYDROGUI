@@ -2481,6 +2481,7 @@ src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekMeteoDataImp
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRBoundaryConditionsImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRDrainageBasinImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRGreenhouseImporter.cs -text
+src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRKasInitImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRMeteoDataImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRRNwrwImporter.cs -text
 src/DeltaShell.Plugins.ImportExport.Sobek/PartialSobekImporter/SobekRROpenWaterImporter.cs -text

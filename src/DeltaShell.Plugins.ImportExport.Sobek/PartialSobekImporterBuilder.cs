@@ -211,7 +211,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 new SobekRRSacramentoImporter(),
                 new SobekRRBoundaryConditionsImporter(),
                 new SobekRRNwrwImporter(),
-                new SobekRROpenWaterImporter()
+                new SobekRROpenWaterImporter(),
+                new SobekRRKasInitImporter()
             };
         }
     }

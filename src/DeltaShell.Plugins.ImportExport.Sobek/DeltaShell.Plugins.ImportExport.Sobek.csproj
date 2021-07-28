@@ -165,6 +165,7 @@
     <Compile Include="Builders\PumpBuilder.cs" />
     <Compile Include="Builders\WeirBuilder.cs" />
     <Compile Include="PartialSobekImporter\SobekImporterCategories.cs" />
+    <Compile Include="PartialSobekImporter\SobekRRKasInitImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekRRNwrwImporter.cs" />
     <Compile Include="PartialSobekImporter\SobekRROpenWaterImporter.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
