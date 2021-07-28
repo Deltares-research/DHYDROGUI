@@ -187,6 +187,7 @@
     <Compile Include="PartialSobekImport\SobekBoundaryConditionsImporterTest.cs" />
     <Compile Include="PartialSobekImport\SobekLinkageNodeImporterTest.cs" />
     <Compile Include="PartialSobekImport\SobekRRDrainageBasinImporterTest.cs" />
+    <Compile Include="PartialSobekImport\SobekRRKasInitImporterTest.cs" />
     <Compile Include="PartialSobekImport\SobekRRNwrwImporterTest.cs" />
     <Compile Include="PartialSobekImport\SobekRROpenWaterImporterTest.cs" />
     <Compile Include="PartialSobekImport\SobekRRSacramentoImporterTest.cs" />

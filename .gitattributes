@@ -10005,6 +10005,7 @@ test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekLateral
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekLinkageNodeImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekMeasurementStationsImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRDrainageBasinImporterTest.cs -text
+test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRKasInitImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRNwrwImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRROpenWaterImporterTest.cs -text
 test/DeltaShell.Plugins.ImportExport.Sobek.Tests/PartialSobekImport/SobekRRSacramentoImporterTest.cs -text
