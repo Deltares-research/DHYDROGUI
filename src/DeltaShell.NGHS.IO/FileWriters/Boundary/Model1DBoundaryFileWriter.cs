@@ -14,24 +14,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
 {
     public class Model1DBoundaryFileWriter: BoundaryFileWriter
     {
-        public void WriteFile(string targetFile, DateTime startTime, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, IEnumerable<Model1DLateralSourceData> lateralSourcesData, bool useSalt, bool useTemperature, IFunction windFunction, IFunction meteoFunction)
-        {
-            var categories = new List<IDelftIniCategory>()
-            {
-                GeneralRegionGenerator.GenerateGeneralRegion(
-                    GeneralRegion.BoundaryConditionsMajorVersion, GeneralRegion.BoundaryConditionsMinorVersion,
-                    GeneralRegion.FileTypeName.BoundaryConditions)
-            };
-
-            categories.AddRange(GenerateModel1DNodeBoundaryDelftIniCategories(startTime, boundaryConditions1D, useSalt, useTemperature, BoundaryRegion.BcBoundaryHeader));
-            categories.AddRange(GenerateModel1DLateralSourceDataDelftIniCategories(startTime, lateralSourcesData, useSalt, useTemperature, BoundaryRegion.BcLateralHeader));
-            categories.AddRange(GenerateWindDefinitions(startTime, windFunction));
-            categories.AddRange(GenerateMeteoDataDefinitions(startTime, meteoFunction));
-
-            if (File.Exists(targetFile)) File.Delete(targetFile);
-            new DelftBcWriter().WriteBcFile(categories, targetFile);
-        }
-
         public IEnumerable<IDelftIniCategory> GenerateModel1DLateralSourceDataDelftIniCategories(DateTime startTime,
             IEnumerable<Model1DLateralSourceData> lateralSourcesData, bool useSalt, bool useTemperature,
             string bcForcingHeader)
@@ -286,92 +268,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Boundary
             }
             return lateralDefinition;
         }
-
-        private static IEnumerable<IDelftIniCategory> GenerateWindDefinitions(DateTime startTime, IFunction wind)
-        {
-            var interpolationType = GetTimeSeriesInterpolationTypeProperty(wind);
-
-            var definitions = new List<IDelftIniCategory>();
-
-            if (wind.Arguments.Count > 0)
-            {
-                DefinitionGeneratorBoundary windSpeedBound = new DefinitionGeneratorBoundary(BoundaryRegion.BcBoundaryHeader);
-                var windSpeedDefinition = windSpeedBound.CreateRegion(FunctionAttributes.StandardFeatureNames.ModelWide,
-                    BoundaryRegion.FunctionStrings.TimeSeries, interpolationType);
-
-                // For historical reasons we split Wind into 2 separate functions in the BcFile
-                var windSpeedFunction = (IFunction)wind.Clone(true);
-                CollectionExtensions.RemoveAllWhere<IVariable>(windSpeedFunction.Components, c => !c.Name.ToLower().Contains("velocity"));
-
-                var windSpeedData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.WindSpeed, BoundaryRegion.UnitStrings.WindSpeed } };
-                windSpeedDefinition.Table = GenerateTableForTimeSeriesData(windSpeedData, windSpeedFunction, startTime);
-                definitions.Add(windSpeedDefinition);
-
-                DefinitionGeneratorBoundary windDirBound = new DefinitionGeneratorBoundary(BoundaryRegion.BcBoundaryHeader);
-                var windDirDefinition = windDirBound.CreateRegion(FunctionAttributes.StandardFeatureNames.ModelWide,
-                    BoundaryRegion.FunctionStrings.TimeSeries, interpolationType);
-
-                // For historical reasons we split Wind into 2 separate functions in the BcFile
-                var windDirectionFunction = (IFunction)wind.Clone(true);
-                CollectionExtensions.RemoveAllWhere<IVariable>(windDirectionFunction.Components, c => !c.Name.ToLower().Contains("direction"));
-
-                var windDirectionData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.WindDirection, BoundaryRegion.UnitStrings.WindDirection } };
-                windDirDefinition.Table = GenerateTableForTimeSeriesData(windDirectionData, windDirectionFunction, startTime);
-                definitions.Add(windDirDefinition);
-            }
-            return definitions;
-        }
-
-        private static IEnumerable<IDelftIniCategory> GenerateMeteoDataDefinitions(DateTime startTime, IFunction meteoData)
-        {
-            if (meteoData.Arguments.Count > 0)
-            {
-                var interpolationType = GetTimeSeriesInterpolationTypeProperty(meteoData);
-
-                // Currently, the EC module isn't able to handle timeSeries data with multiple components
-                // Split Temperature into 3 separate functions
-                
-                // air temperature
-                var airTemperatureBoundary = new DefinitionGeneratorBoundary(BoundaryRegion.BcBoundaryHeader);
-                var airTemperatureDefinition = airTemperatureBoundary.CreateRegion(FunctionAttributes.StandardFeatureNames.ModelWide,
-                    BoundaryRegion.FunctionStrings.TimeSeries, interpolationType);
-
-                var airTemperatureData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.MeteoDataAirTemperature, BoundaryRegion.UnitStrings.MeteoDataAirTemperature } };
-
-                var airTemperatureFunction = (IFunction)meteoData.Clone(true);
-                CollectionExtensions.RemoveAllWhere<IVariable>(airTemperatureFunction.Components, c => c.Name != "Air temperature");
-
-                airTemperatureDefinition.Table = GenerateTableForTimeSeriesData(airTemperatureData, airTemperatureFunction, startTime);
-                yield return airTemperatureDefinition;
-
-                // humidity
-                var humidityBoundary = new DefinitionGeneratorBoundary(BoundaryRegion.BcBoundaryHeader);
-                var humidityDefinition = humidityBoundary.CreateRegion(FunctionAttributes.StandardFeatureNames.ModelWide,
-                    BoundaryRegion.FunctionStrings.TimeSeries, interpolationType);
-
-                var humidityData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.MeteoDataHumidity, BoundaryRegion.UnitStrings.MeteoDataHumidity } };
-
-                var humidityFunction = (IFunction)meteoData.Clone(true);
-                CollectionExtensions.RemoveAllWhere<IVariable>(humidityFunction.Components, c => c.Name != "Relative humidity");
-
-                humidityDefinition.Table = GenerateTableForTimeSeriesData(humidityData, humidityFunction, startTime);
-                yield return humidityDefinition;
-
-                // cloudiness
-                var cloudinessBoundary = new DefinitionGeneratorBoundary(BoundaryRegion.BcBoundaryHeader);
-                var cloudinessDefinition = cloudinessBoundary.CreateRegion(FunctionAttributes.StandardFeatureNames.ModelWide,
-                    BoundaryRegion.FunctionStrings.TimeSeries, interpolationType);
-
-                var cloudinessData = new Dictionary<string, string> { { BoundaryRegion.QuantityStrings.MeteoDataCloudiness, BoundaryRegion.UnitStrings.MeteoDataCloudiness } };
-
-                var cloudinessFunction = (IFunction)meteoData.Clone(true);
-                CollectionExtensions.RemoveAllWhere<IVariable>(cloudinessFunction.Components, c => c.Name != "Cloudiness");
-
-                cloudinessDefinition.Table = GenerateTableForTimeSeriesData(cloudinessData, cloudinessFunction, startTime);
-                yield return cloudinessDefinition;
-            }
-        }
-
+        
         private static string GetTimeSeriesInterpolationTypeProperty(IFunction timeSeries)
         {
             string periodic = null;
