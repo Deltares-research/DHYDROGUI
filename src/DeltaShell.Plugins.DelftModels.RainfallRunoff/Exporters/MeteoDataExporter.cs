@@ -177,14 +177,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
                     if (evaporationValues.Shape.Count() == 1)
                     {
                         // Global evaporation definition
-                        sb.AppendFormat(CultureInfo.InvariantCulture, " {0:0.00}", evaporationValues[iTime]);
+                        sb.AppendFormat(CultureInfo.InvariantCulture, " {0:0.000}", evaporationValues[iTime]);
                     }
                     else
                     {
                         // Per station or per catchment
                         for (int iStation = 0; iStation < evaporationValues.Shape[1]; iStation++)
                         {
-                            sb.AppendFormat(CultureInfo.InvariantCulture, " {0:0.00}", evaporationValues[iTime, iStation]);
+                            sb.AppendFormat(CultureInfo.InvariantCulture, " {0:0.000}", evaporationValues[iTime, iStation]);
                         }
                     }
                     sb.Append("\n");
