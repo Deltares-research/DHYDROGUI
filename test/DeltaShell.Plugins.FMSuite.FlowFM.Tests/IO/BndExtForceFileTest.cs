@@ -1551,6 +1551,57 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_WithBoundary1D_WritesCorrectFiles()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                string extFilePath = Path.Combine(temp.Path, "FlowFM_bnd.ext");
+                string bcFilePath = Path.Combine(temp.Path, "FlowFM_boundaryconditions1d.bc");
+                
+                var modelDefinition = new WaterFlowFMModelDefinition {ModelName = "FlowFM"};
+                
+                INode node = Substitute.For<INode, INotifyPropertyChange>();
+                node.Name = "some_node_id";
+                var boundaryData = new Model1DBoundaryNodeData
+                {
+                    DataType = Model1DBoundaryNodeDataType.WaterLevelConstant,
+                    BoundaryWidth = 1.234,
+                    BoundaryDepth = 2.345,
+                    WaterLevel = 3.456,
+                    Feature = node
+                };
+                var modelBoundaryData = new List<Model1DBoundaryNodeData> {boundaryData};
+
+                var bndExtForceFile = new BndExtForceFile();
+
+                // Call
+                bndExtForceFile.Write(extFilePath, modelDefinition, modelBoundaryData);
+
+                // Assert
+                Assert.That(extFilePath, Does.Exist);
+                Assert.That(bcFilePath, Does.Exist);
+
+                string[][] extData = ReadData(extFilePath).ToArray();
+                AssertLine(extData[3], "[Boundary]");
+                AssertLine(extData[4], "quantity", "waterlevelbnd");
+                AssertLine(extData[5], "nodeId", "some_node_id");
+                AssertLine(extData[6], "forcingfile", "FlowFM_boundaryconditions1d.bc");
+                AssertLine(extData[7], "bndWidth1D", "1.2340000e+000");
+                AssertLine(extData[8], "bndBLDepth", "2.3450000e+000");
+
+                string[][] bcData = ReadData(bcFilePath).ToArray();
+                AssertLine(bcData[3], "[forcing]");
+                AssertLine(bcData[4], "name", "some_node_id");
+                AssertLine(bcData[5], "function", "constant");
+                AssertLine(bcData[6], "timeInterpolation", "linear");
+                AssertLine(bcData[7], "quantity", "waterlevelbnd");
+                AssertLine(bcData[8], "unit", "m");
+                AssertLine(bcData[9], "3.456");
+            }
+        }
+
         private static IEnumerable<TestCaseData> Read_LateralSourceWithNodeIdOfPipeCases()
         {
             // first pipe, second pipe, referenced nodeId in file, exp. pipe of lateral source, exp. chainage of lateral source, exp. compartment of lateral source data
