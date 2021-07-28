@@ -9,6 +9,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
@@ -1487,6 +1488,66 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Assert.That(modeLateralSourceData.Feature, Is.SameAs(lateralSource));
                 Assert.That(modeLateralSourceData.DataType, Is.EqualTo(Model1DLateralDataType.FlowRealTime));
                 Assert.That(modeLateralSourceData.Compartment, Is.SameAs(expCompartment));
+            }
+        }
+        
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Read_Boundary1D_IsReadCorrectly()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                string extFileContent =
+                    "[general]                      " + Environment.NewLine +
+                    "    fileVersion = 2.0          " + Environment.NewLine +
+                    "    fileType    = extForce     " + Environment.NewLine +
+                    "                               " + Environment.NewLine +
+                    "[Boundary]                     " + Environment.NewLine +
+                    "    quantity    = waterlevelbnd" + Environment.NewLine +
+                    "    nodeId      = some_node_id " + Environment.NewLine +
+                    $"   forcingfile = some_file.bc " + Environment.NewLine +
+                    $"   bndWidth1D  = 1.234        " + Environment.NewLine +
+                    "    bndBLDepth  = 2.345        ";
+
+                string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
+
+                string bcFileContent =
+                    "[General]                        " + Environment.NewLine +
+                    "    fileVersion   = 1.01         " + Environment.NewLine +
+                    "    fileType      = boundConds   " + Environment.NewLine +
+                    "                                 " + Environment.NewLine +
+                    "[forcing]                        " + Environment.NewLine +
+                    "Name              = some_node_id " + Environment.NewLine +
+                    "function          = constant     " + Environment.NewLine +
+                    "timeInterpolation = linear       " + Environment.NewLine +
+                    "quantity          = waterlevelbnd" + Environment.NewLine +
+                    "unit              = m            " + Environment.NewLine +
+                    "3.456                            ";
+                
+                temp.CreateFile("some_file.bc", bcFileContent);
+                
+                var bndExtForceFile = new BndExtForceFile();
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                
+                INode node = Substitute.For<INode, INotifyPropertyChange>();
+                node.Name = "some_node_id";
+                
+                var network = Substitute.For<IHydroNetwork>();
+                network.Nodes = new EventedList<INode> {node};
+
+                var boundaryData = new EventedList<Model1DBoundaryNodeData>();
+
+                // Call
+                bndExtForceFile.Read(extFile, modelDefinition, network, boundaryConditions1D: boundaryData);
+
+                // Assert
+                Model1DBoundaryNodeData modelBoundaryData = boundaryData.Single();
+                Assert.That(modelBoundaryData.BoundaryWidth, Is.EqualTo(1.234));
+                Assert.That(modelBoundaryData.BoundaryDepth, Is.EqualTo(2.345));
+                Assert.That(modelBoundaryData.Node, Is.SameAs(node));
+                Assert.That(modelBoundaryData.DataType, Is.EqualTo(Model1DBoundaryNodeDataType.WaterLevelConstant));
+                Assert.That(modelBoundaryData.WaterLevel, Is.EqualTo(3.456));
             }
         }
 
