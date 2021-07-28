@@ -412,7 +412,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         }
         public IEnumerable<DelftIniCategory> Write1DBndExtForceFileSubFiles(string modelDefinitionModelName, IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D, DateTime refDate)
         {
-            var bndByFeatureName = boundaryConditions1D.ToDictionary(bc => bc.Feature.Name, StringComparer.InvariantCultureIgnoreCase);
             var generateModel1DNodeBoundaryDelftIniCategories = new Model1DBoundaryFileWriter().GenerateModel1DNodeBoundaryDelftIniCategories(refDate, boundaryConditions1D, false, false, BoundaryRegion.BcForcingHeader);
             var filename = AddExtension(modelDefinitionModelName+"_boundaryconditions1d", BcFile.Extension);
             // now generate bc files with the data
@@ -431,7 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var nodeId = generateModel1DNodeBoundaryDelftIniCategory.GetPropertyValue(BoundaryRegion.Name.Key);
                 var manHoleName = generateModel1DNodeBoundaryDelftIniCategory.ReadProperty<string>("manHoleName", true);
 
-                bndByFeatureName.TryGetValue(manHoleName ?? nodeId, out Model1DBoundaryNodeData m1dbnd);
+                var m1dbnd = boundaryConditions1D.FirstOrDefault(bc => bc.Feature.Name.EqualsCaseInsensitive(manHoleName ?? nodeId));
 
                 if (m1dbnd?.OutletCompartment != null)
                 {
