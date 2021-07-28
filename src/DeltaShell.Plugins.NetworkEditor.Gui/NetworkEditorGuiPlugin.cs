@@ -449,24 +449,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 AdditionalDataCheck = pipe =>
                 {
-                    var defaultSewerCrossSectionSectionType = pipe.CrossSectionDefinition?.Sections?.FirstOrDefault()?.SectionType;
+                    var defaultSewerCrossSectionSectionType = pipe.CrossSection?.Definition?.Sections?.FirstOrDefault()?.SectionType;
                     var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
                     var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
 
                     return sewerRoughnessSection != null;
                 },
-                GetViewData = pipe =>
-                {
-                    pipe.EditSharedDefinitionClicked = (s, e) => Gui.CommandHandler.OpenView((e as SelectedItemChangedEventArgs)?.Item);
-                    return pipe;
-                },
                 AfterCreate = (view, pipe) =>
                 {
-                    var defaultSewerCrossSectionSectionType = pipe.CrossSectionDefinition.Sections.FirstOrDefault()?.SectionType;
+                    var defaultSewerCrossSectionSectionType = pipe.CrossSection?.Definition.Sections.FirstOrDefault()?.SectionType;
                     var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
                     var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
 
                     view.PipeRoughnessSection = sewerRoughnessSection;
+                    view.OpenView = o => Gui.CommandHandler.OpenView(o);
                 }
             };
 

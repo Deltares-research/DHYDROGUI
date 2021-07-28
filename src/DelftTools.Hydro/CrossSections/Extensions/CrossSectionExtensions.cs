@@ -4,11 +4,14 @@
     {
         public static ICrossSectionDefinition GetCrossSectionDefinition(this ICrossSection crossSection)
         {
-            var crossSectionDefinition = crossSection.Definition;
+            return crossSection.Definition.GetBaseDefinition();
+        }
 
+        public static ICrossSectionDefinition GetBaseDefinition(this ICrossSectionDefinition crossSectionDefinition)
+        {
             return crossSectionDefinition.IsProxy
-                ? ((CrossSectionDefinitionProxy) crossSectionDefinition).InnerDefinition
-                : crossSectionDefinition;
+                       ? ((CrossSectionDefinitionProxy) crossSectionDefinition).InnerDefinition
+                       : crossSectionDefinition;
         }
     }
 }

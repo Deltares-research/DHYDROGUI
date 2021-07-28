@@ -8,6 +8,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Binding;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Units;
 using GeoAPI.Extensions.Coverages;
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     
                     if (Pipe != null)
                     {
-                        PipeTopLevel = pipeBottomLevel + Pipe.CrossSectionDefinition.HighestPoint;
+                        PipeTopLevel = pipeBottomLevel + Pipe.CrossSection.Definition.HighestPoint;
                     }
                 }
             }
@@ -308,7 +309,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                         : pipeLength - segment.EndChainage;
                 }
 
-                var crossSectionHeight = connection is Pipe pipe ? pipe.CrossSectionDefinition.HighestPoint : 0;
+                var crossSectionHeight = connection is Pipe pipe ? (pipe.CrossSection?.Definition).HighestPoint : 0;
 
                 xValues.Add(currentChainage);
                 yValuesTop.Add(levelSource + crossSectionHeight);

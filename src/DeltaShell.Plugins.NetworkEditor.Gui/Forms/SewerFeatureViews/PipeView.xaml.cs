@@ -1,7 +1,9 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Shell.Gui;
 using Image = System.Drawing.Image;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
@@ -16,11 +18,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             InitializeComponent();
             
         }
-        
+
+        public Action<object> OpenView
+        {
+            set
+            {
+                CrossSectionPipeView.EditClickedAction = (o, e) =>
+                {
+                    value?.Invoke((e as SelectedItemChangedEventArgs)?.Item);
+                };
+            }
+        }
+
         #region IView implementation
 
         public void Dispose()
         {
+            OpenView = null;
         }
 
         public void EnsureVisible(object item)

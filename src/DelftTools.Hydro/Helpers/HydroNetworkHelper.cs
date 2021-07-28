@@ -187,7 +187,7 @@ namespace DelftTools.Hydro.Helpers
         /// <returns></returns>
         public static IEnumerable<CrossSection> GeneratePipeCrossSections(IHydroNetwork network)
         {
-            return network.Pipes.Select(pipe => new CrossSection(pipe.CrossSectionDefinition) { Branch = pipe });
+            return network.Pipes.Select(pipe => new CrossSection(pipe.CrossSection?.Definition) { Branch = pipe });
         }
 
         ///<summary>

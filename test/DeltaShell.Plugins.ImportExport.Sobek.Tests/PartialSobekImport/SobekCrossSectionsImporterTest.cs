@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             foreach (var pipe in hydroNetwork.Pipes)
             {
                 Assert.IsFalse(string.IsNullOrEmpty(pipe.CrossSectionDefinitionName));
-                Assert.IsNotNull(pipe.CrossSectionDefinition);
+                Assert.IsNotNull(pipe.CrossSection?.Definition);
             }
 
             //CRDS id 'Round 1000 mm' nm 'Round 1000 mm' ty 4 bl 0 rd  .5 crds//
@@ -217,7 +217,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var pipeToCheck = hydroNetwork.Pipes.FirstOrDefault(p => p.Name.Equals("1"));
             Assert.IsNotNull(pipeToCheck);
             Assert.True(pipeToCheck.CrossSectionDefinitionName.Equals("Round 1000 mm"));
-            Assert.True(pipeToCheck.CrossSectionDefinition.CrossSectionType  == CrossSectionType.Standard);
+            Assert.True(pipeToCheck.CrossSection?.Definition.CrossSectionType  == CrossSectionType.Standard);
             Assert.AreEqual(26.23, pipeToCheck.LevelSource, 0.001);
             Assert.AreEqual(26.25, pipeToCheck.LevelTarget, 0.001);
             Assert.AreEqual(pipeToCheck.Material,SewerProfileMapping.SewerProfileMaterial.Unknown);

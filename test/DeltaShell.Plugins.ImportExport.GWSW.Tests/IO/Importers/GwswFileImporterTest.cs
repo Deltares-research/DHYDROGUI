@@ -1030,7 +1030,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             
             var pipes = network.Branches.OfType<Pipe>().ToList();
             Assert.IsTrue(pipes.Any());
-            pipes.ForEach(p => Assert.NotNull(p.CrossSectionDefinition));
+            pipes.ForEach(p => Assert.NotNull(p.CrossSection?.Definition));
 
             // Check for each pipe that its CrossSectionDefinition is equal to one of the sewer profiles in
             // the SharedCrossSectionDefinitions of the network

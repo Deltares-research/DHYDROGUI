@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             FileUtils.DeleteIfExists(crossSectionLocationFilePath);
 
             
-            if (network.CrossSections.Any() || network.Pipes.Any(p => p.CrossSectionDefinition != null))
+            if (network.CrossSections.Any() || network.Pipes.Any(p => p.CrossSection?.Definition != null))
             {
                 modelDefinition.SetModelProperty(KnownProperties.CrossLocFile, CROSS_SECTION_LOCATION_FILE_NAME);
 

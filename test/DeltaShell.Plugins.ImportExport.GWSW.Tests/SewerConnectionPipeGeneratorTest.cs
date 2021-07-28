@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.IsNull(createdPipe.TargetCompartment);
             Assert.IsNull(createdPipe.Source);
             Assert.IsNull(createdPipe.Target);
-            Assert.IsNull(createdPipe.CrossSectionDefinition);
+            Assert.IsNull(createdPipe.CrossSection?.Definition);
 
             //Defined
             Assert.That(createdPipe.LevelSource, Is.EqualTo(sourceLevel));
@@ -123,7 +123,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var createdPipe = new SewerConnectionPipeGenerator().Generate(pipeGwswElement) as IPipe;
             Assert.IsNotNull(createdPipe);
             Assert.That(createdPipe.CrossSectionDefinitionName, Is.EqualTo(crossSectionDefinitionName));
-            Assert.IsNull(createdPipe.CrossSectionDefinition);
+            Assert.IsNull(createdPipe.CrossSection?.Definition);
         }
 
         #endregion

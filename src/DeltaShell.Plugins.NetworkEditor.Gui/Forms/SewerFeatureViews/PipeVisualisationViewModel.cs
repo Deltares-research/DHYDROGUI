@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
@@ -77,7 +78,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private void DetermineRanges()
         {
             var dx = pipe.Length;
-            var pipeDiameter = pipe.CrossSectionDefinition?.HighestPoint - pipe.CrossSectionDefinition?.LowestPoint ?? 0.1 * dx;
+            var pipeDiameter = pipe.CrossSection?.Definition?.HighestPoint - pipe.CrossSection?.Definition?.LowestPoint ?? 0.1 * dx;
 
             var x0 = 0;
             var xL = x0 + dx;

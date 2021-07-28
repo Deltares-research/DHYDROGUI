@@ -170,7 +170,8 @@ namespace DelftTools.Hydro
 
         private static IEnumerable<ICrossSectionDefinition> PipeCrossSectionDefinitions(this IHydroNetwork network)
         {
-            return network.Pipes.Where(p => p.CrossSectionDefinition != null).Select(p => p.CrossSectionDefinition.IsProxy ? ((CrossSectionDefinitionProxy)p.CrossSectionDefinition).InnerDefinition : p.CrossSectionDefinition);
+            return network.Pipes.Where(p => p.CrossSection?.Definition != null).
+                           Select(p => p.CrossSection?.Definition.GetBaseDefinition());
         }
 
         public static bool ContainsAnyCrossSectionDefinitions(this IHydroNetwork network)

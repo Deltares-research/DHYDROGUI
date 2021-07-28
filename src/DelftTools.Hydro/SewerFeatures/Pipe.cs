@@ -71,10 +71,10 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             var sewerCrossSectionSectionType = hydroNetwork?.CrossSectionSectionTypes?.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
             if (sewerCrossSectionSectionType != null && 
-                CrossSectionDefinition != null && 
-                CrossSectionDefinition.Sections.All(css => css.SectionType != sewerCrossSectionSectionType))
+                CrossSection?.Definition != null && 
+                (CrossSection?.Definition).Sections.All(css => css.SectionType != sewerCrossSectionSectionType))
             {
-                CrossSectionDefinition?.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
+                CrossSection?.Definition?.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
             }
         }
 
@@ -116,21 +116,16 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        public ICrossSectionDefinition CrossSectionDefinition
-        {
-            get { return CrossSection?.Definition; }
-        }
-
         public CrossSectionDefinitionStandard Profile
         {
             get
             {
-                if (CrossSectionDefinition is CrossSectionDefinitionProxy crossSectionDefinitionProxy)
+                if (CrossSection?.Definition is CrossSectionDefinitionProxy crossSectionDefinitionProxy)
                 {
                     return crossSectionDefinitionProxy.InnerDefinition as CrossSectionDefinitionStandard;
                 }
 
-                return CrossSectionDefinition as CrossSectionDefinitionStandard;
+                return CrossSection?.Definition as CrossSectionDefinitionStandard;
             }
         }
 

@@ -363,7 +363,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var pipeInNetwork = Enumerable.FirstOrDefault<IPipe>(network.Pipes);
             var sharedDefinitionInNetwork = Enumerable.FirstOrDefault<ICrossSectionDefinition>(network.SharedCrossSectionDefinitions);
             Assert.IsNotNull(pipeInNetwork);
-            Assert.That(((CrossSectionDefinitionProxy) pipeInNetwork.CrossSectionDefinition).InnerDefinition, Is.EqualTo(sharedDefinitionInNetwork));
+            Assert.That(((CrossSectionDefinitionProxy) pipeInNetwork.CrossSection.Definition).InnerDefinition, Is.EqualTo(sharedDefinitionInNetwork));
             Assert.That(pipeInNetwork.Material, Is.EqualTo(SewerProfileMapping.SewerProfileMaterial.Concrete));
         }
 
@@ -381,7 +381,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var pipeInNetwork = Enumerable.FirstOrDefault<IPipe>(network.Pipes);
             Assert.IsNotNull(pipeInNetwork);
 
-            var pipeCrossSectionDefinition = pipeInNetwork.CrossSectionDefinition;
+            var pipeCrossSectionDefinition = pipeInNetwork.CrossSection?.Definition;
             var expectedCrossSectionDefinition = (CrossSectionDefinitionStandard) CrossSectionDefinitionStandard.CreateDefault();
             Assert.That(pipeCrossSectionDefinition.CrossSectionType, Is.EqualTo(expectedCrossSectionDefinition.CrossSectionType));
             Assert.That(pipeCrossSectionDefinition, Is.TypeOf<CrossSectionDefinitionStandard>());
@@ -1280,10 +1280,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             Assert.That(pipe1.Material, Is.EqualTo(materialType));
 
             Assert.That(pipe2.Profile.Shape, Is.EqualTo(roundShape));
-            Assert.That(pipe2.CrossSectionDefinition.Name, Is.EqualTo(crossSectionDefinitionName));
+            Assert.That((pipe2.CrossSection?.Definition).Name, Is.EqualTo(crossSectionDefinitionName));
             Assert.That(pipe2.Material, Is.EqualTo(materialType));
 
-            Assert.IsNull(pipe3.CrossSectionDefinition);
+            Assert.IsNull(pipe3.CrossSection?.Definition);
         }
 
         [Test]
