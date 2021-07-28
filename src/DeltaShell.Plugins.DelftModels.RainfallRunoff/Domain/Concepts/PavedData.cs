@@ -181,35 +181,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         public PavedEnums.SewerPumpDischargeTarget MixedAndOrRainfallSewerPumpDischarge { get; set; }
         public PavedEnums.SewerPumpDischargeTarget DryWeatherFlowSewerPumpDischarge { get; set; }
 
-        public IHydroObject MixedSewerTarget
-        {
-            get
-            {
-                switch (MixedAndOrRainfallSewerPumpDischarge)
-                {
-                    case PavedEnums.SewerPumpDischargeTarget.BoundaryNode:
-                        return Catchment.Links.Select(l => l.Target).FirstOrDefault(f => !(f is WasteWaterTreatmentPlant));
-                    case PavedEnums.SewerPumpDischargeTarget.WWTP:
-                        return Catchment.Links.Select(l => l.Target).OfType<WasteWaterTreatmentPlant>().FirstOrDefault();
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-        }
+        public IHydroObject MixedSewerTarget => GetTargetHydroObject(MixedAndOrRainfallSewerPumpDischarge);
 
-        public IHydroObject DwfSewerTarget
+        public IHydroObject DwfSewerTarget => GetTargetHydroObject(DryWeatherFlowSewerPumpDischarge);
+
+        private IHydroObject GetTargetHydroObject(PavedEnums.SewerPumpDischargeTarget dischargeTarget)
         {
-            get
+            switch (dischargeTarget)
             {
-                switch (DryWeatherFlowSewerPumpDischarge)
-                {
-                    case PavedEnums.SewerPumpDischargeTarget.BoundaryNode:
-                        return Catchment.Links.Select(l => l.Target).FirstOrDefault(f => !(f is WasteWaterTreatmentPlant));
-                    case PavedEnums.SewerPumpDischargeTarget.WWTP:
-                        return Catchment.Links.Select(l => l.Target).OfType<WasteWaterTreatmentPlant>().FirstOrDefault();
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                case PavedEnums.SewerPumpDischargeTarget.BoundaryNode:
+                    return Catchment.Links.Select(l => l.Target).FirstOrDefault(f => !(f is WasteWaterTreatmentPlant));
+                case PavedEnums.SewerPumpDischargeTarget.WWTP:
+                    return Catchment.Links.Select(l => l.Target).OfType<WasteWaterTreatmentPlant>().FirstOrDefault();
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
