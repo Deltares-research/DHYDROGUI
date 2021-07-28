@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.SewerFeatures
@@ -44,7 +45,22 @@ namespace DelftTools.Hydro.SewerFeatures
         /// Name of the <see cref="TargetCompartment"/>
         /// </summary>
         string TargetCompartmentName { get; set; }
-        
+
+        /// <summary>
+        /// Name of crossSection definition
+        /// </summary>
+        string CrossSectionDefinitionName { get; set; }
+
+        /// <summary>
+        /// CrossSection of the pipe
+        /// </summary>
+        ICrossSection CrossSection { get; set; }
+
+        /// <summary>
+        /// Profile of the pipe
+        /// </summary>
+        CrossSectionDefinitionStandard Profile { get; }
+
         /// <summary>
         /// Updates the geometries of the branch features
         /// </summary>

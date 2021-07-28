@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using DelftTools.Hydro.CrossSections;
+using DelftTools.Hydro.CrossSections.Extensions;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Properties;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -30,6 +34,7 @@ namespace DelftTools.Hydro.SewerFeatures
         private ICompartment targetCompartment;
         private string sourceCompartmentName;
         private string targetCompartmentName;
+        private ICrossSection crossSection;
 
         public SewerConnection() : this("SewerConnection")
         {
@@ -516,10 +521,37 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        protected virtual void AddCrossSectionDefinition(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
+        private void AddCrossSectionDefinition(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
+            if (CrossSectionDefinitionName == null)
+            {
+                CrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
+            }
+            else
+            {
+                lock (hydroNetwork.SharedCrossSectionDefinitions)
+                {
+                    var crossSectionDefinition = hydroNetwork.SharedCrossSectionDefinitions.FirstOrDefault(cs => cs.Name == CrossSectionDefinitionName) as CrossSectionDefinitionStandard;
+                    if (crossSectionDefinition != null)
+                    {
+                        var pipeCrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
+                        pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections.Concat(hydroNetwork.Pipes.Select(p => p.CrossSection)), typeof(ICrossSection), true);
+                        pipeCrossSection.UseSharedDefinition(crossSectionDefinition);
+                        helper?.PipeCrossSections?.Enqueue(pipeCrossSection);
+                        CrossSection = pipeCrossSection;
+                        CrossSectionDefinitionName = CrossSection.Definition.Name;
+
+                        OnAddCrossSectionDefinition(crossSectionDefinition);
+                    }
+                }
+            }
         }
-        
+
+        protected virtual void OnAddCrossSectionDefinition(CrossSectionDefinitionStandard crossSectionDefinitionStandard)
+        {
+
+        }
+
         private void ConnectSourceCompartment(IManhole manhole)
         {
             if(manhole == null) return;
@@ -576,6 +608,77 @@ namespace DelftTools.Hydro.SewerFeatures
 
         public string CrossSectionDefinitionName { get; set; }
 
+        [DisplayName("Definition")]
+        [FeatureAttribute(Order = 32, ExportName = "DefName")]
+        public virtual string DefinitionName
+        {
+            get { return CrossSection.Definition.Name; }
+            set
+            {
+                if (value == null || DefinitionName == value) return;
+                var newDefinition = HydroNetwork?.SharedCrossSectionDefinitions.SingleOrDefault(scd => scd.Name.Equals(value, StringComparison.InvariantCultureIgnoreCase));
+                if(newDefinition == null) return;
+                crossSection?.UseSharedDefinition(newDefinition);
+            }
+        }
+
+        public ICrossSection CrossSection
+        {
+            get { return crossSection; }
+            set
+            {
+                crossSection = value;
+                if (crossSection?.Definition != null)
+                    CrossSectionDefinitionName = crossSection?.Definition?.Name;
+
+                if (crossSection != null)
+                {
+                    crossSection.Branch = this;
+                    crossSection.Chainage = Length / 2;
+                    if (HydroNetwork != null)
+                    {
+                        ICrossSectionDefinition sharedCrossSectionDefinition;
+                        lock (HydroNetwork.SharedCrossSectionDefinitions)
+                        {
+                            sharedCrossSectionDefinition = HydroNetwork?.SharedCrossSectionDefinitions?.FirstOrDefault(scsd => scsd.Name.Equals(crossSection.Definition.Name, StringComparison.InvariantCultureIgnoreCase));
+                        }
+                        if (sharedCrossSectionDefinition != null)
+                        {
+                            crossSection?.UseSharedDefinition(sharedCrossSectionDefinition);
+                        }
+                        else
+                        {
+                            lock (HydroNetwork.SharedCrossSectionDefinitions)
+                            {
+                                crossSection?.ShareDefinitionAndChangeToProxy();
+                            }
+                        }
+
+                        AddCrossSectionSectionToDefinition(HydroNetwork);
+                    }
+                }
+            }
+        }
+
+        public CrossSectionDefinitionStandard Profile
+        {
+            get { return CrossSection?.Definition.GetBaseDefinition() as CrossSectionDefinitionStandard; }
+        }
+
         #endregion
+
+        [EditAction]
+        protected void AddCrossSectionSectionToDefinition(IHydroNetwork hydroNetwork)
+        {
+            var sewerCrossSectionSectionType = hydroNetwork?.CrossSectionSectionTypes?.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
+            var crossSectionDefinition = CrossSection?.Definition;
+
+            if (sewerCrossSectionSectionType != null && 
+                crossSectionDefinition != null && 
+                crossSectionDefinition.Sections.All(css => css.SectionType != sewerCrossSectionSectionType))
+            {
+                crossSectionDefinition.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
+            }
+        }
     }
 }
