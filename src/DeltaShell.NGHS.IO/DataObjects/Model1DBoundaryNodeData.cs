@@ -8,6 +8,7 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Units;
 using DelftTools.Utils;
@@ -216,16 +217,23 @@ namespace DeltaShell.NGHS.IO.DataObjects
         public virtual OutletCompartment OutletCompartment { get; set; }
 
         [FeatureAttribute]
+        [DynamicReadOnly]
         [DisplayName("Boundary width (m)")]
         public virtual double BoundaryWidth { get; set; } = 10;
 
         [FeatureAttribute]
+        [DynamicReadOnly]
         [DisplayName("Boundary depth (m)")]
         public virtual double BoundaryDepth { get; set; } = 10;
 
         [DynamicReadOnlyValidationMethod]
         public virtual bool DynamicReadOnlyValidationMethod(string propertyName)
         {
+            if (propertyName == nameof(BoundaryWidth) || propertyName == nameof(BoundaryDepth))
+            {
+                return OutletCompartment == null;
+            }
+
             return propertyName != nameof(DataType) ||
                    ((!(Node is Manhole manhole) || !manhole.Compartments.OfType<OutletCompartment>().Any()) &&
                     Node is Manhole);
@@ -516,7 +524,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
         [EditAction]
         private void AfterSetDataType()
         {
-            if (Node is Manhole manhole)
+            if (Node is IManhole manhole)
                 OutletCompartment = manhole.Compartments.OfType<OutletCompartment>().FirstOrDefault();
 
             switch (dataType)

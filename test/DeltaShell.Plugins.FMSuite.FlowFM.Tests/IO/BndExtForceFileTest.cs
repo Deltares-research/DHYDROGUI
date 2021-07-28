@@ -1499,42 +1499,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             {
                 // Setup
                 string extFileContent =
-                    "[general]                      " + Environment.NewLine +
-                    "    fileVersion = 2.0          " + Environment.NewLine +
-                    "    fileType    = extForce     " + Environment.NewLine +
-                    "                               " + Environment.NewLine +
-                    "[Boundary]                     " + Environment.NewLine +
-                    "    quantity    = waterlevelbnd" + Environment.NewLine +
-                    "    nodeId      = some_node_id " + Environment.NewLine +
-                    $"   forcingfile = some_file.bc " + Environment.NewLine +
-                    $"   bndWidth1D  = 1.234        " + Environment.NewLine +
-                    "    bndBLDepth  = 2.345        ";
+                    "[general]                                   " + Environment.NewLine +
+                    "    fileVersion           = 2.0             " + Environment.NewLine +
+                    "    fileType              = extForce        " + Environment.NewLine +
+                    "                                            " + Environment.NewLine +
+                    "[Boundary]                                  " + Environment.NewLine +
+                    "    quantity              = waterlevelbnd   " + Environment.NewLine +
+                    "    nodeId                = some_compartment" + Environment.NewLine +
+                    "    forcingfile           = some_file.bc    " + Environment.NewLine +
+                    "    isOnOutletCompartment = true            " + Environment.NewLine +
+                    "    bndWidth1D            = 1.234           " + Environment.NewLine +
+                    "    bndBLDepth            = 2.345           ";
 
                 string extFile = temp.CreateFile("FlowFM_bnd.ext", extFileContent);
 
                 string bcFileContent =
-                    "[General]                        " + Environment.NewLine +
-                    "    fileVersion   = 1.01         " + Environment.NewLine +
-                    "    fileType      = boundConds   " + Environment.NewLine +
-                    "                                 " + Environment.NewLine +
-                    "[forcing]                        " + Environment.NewLine +
-                    "Name              = some_node_id " + Environment.NewLine +
-                    "function          = constant     " + Environment.NewLine +
-                    "timeInterpolation = linear       " + Environment.NewLine +
-                    "quantity          = waterlevelbnd" + Environment.NewLine +
-                    "unit              = m            " + Environment.NewLine +
-                    "3.456                            ";
+                    "[General]                           " + Environment.NewLine +
+                    "    fileVersion   = 1.01            " + Environment.NewLine +
+                    "    fileType      = boundConds      " + Environment.NewLine +
+                    "                                    " + Environment.NewLine +
+                    "[forcing]                           " + Environment.NewLine +
+                    "Name              = some_compartment" + Environment.NewLine +
+                    "function          = constant        " + Environment.NewLine +
+                    "timeInterpolation = linear          " + Environment.NewLine +
+                    "manHoleName       = some_manhole    " + Environment.NewLine +
+                    "quantity          = waterlevelbnd   " + Environment.NewLine +
+                    "unit              = m               " + Environment.NewLine +
+                    "3.456                               ";
                 
                 temp.CreateFile("some_file.bc", bcFileContent);
                 
                 var bndExtForceFile = new BndExtForceFile();
                 var modelDefinition = new WaterFlowFMModelDefinition();
                 
-                INode node = Substitute.For<INode, INotifyPropertyChange>();
-                node.Name = "some_node_id";
-                
+                var compartment = Substitute.For<ICompartment>();
+                compartment.Name = "some_compartment";
+                var manHole = new Manhole {Name = "some_manhole"};
+                manHole.Compartments.Add(compartment);
+
                 var network = Substitute.For<IHydroNetwork>();
-                network.Nodes = new EventedList<INode> {node};
+                network.Nodes = new EventedList<INode> {manHole};
 
                 var boundaryData = new EventedList<Model1DBoundaryNodeData>();
 
@@ -1545,7 +1549,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 Model1DBoundaryNodeData modelBoundaryData = boundaryData.Single();
                 Assert.That(modelBoundaryData.BoundaryWidth, Is.EqualTo(1.234));
                 Assert.That(modelBoundaryData.BoundaryDepth, Is.EqualTo(2.345));
-                Assert.That(modelBoundaryData.Node, Is.SameAs(node));
+                Assert.That(modelBoundaryData.Node, Is.SameAs(manHole));
                 Assert.That(modelBoundaryData.DataType, Is.EqualTo(Model1DBoundaryNodeDataType.WaterLevelConstant));
                 Assert.That(modelBoundaryData.WaterLevel, Is.EqualTo(3.456));
             }
@@ -1570,7 +1574,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     BoundaryWidth = 1.234,
                     BoundaryDepth = 2.345,
                     WaterLevel = 3.456,
-                    Feature = node
+                    Feature = node,
+                    OutletCompartment = new OutletCompartment {Name = "some_node_id"}
                 };
                 var modelBoundaryData = new List<Model1DBoundaryNodeData> {boundaryData};
 
@@ -1588,8 +1593,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 AssertLine(extData[4], "quantity", "waterlevelbnd");
                 AssertLine(extData[5], "nodeId", "some_node_id");
                 AssertLine(extData[6], "forcingfile", "FlowFM_boundaryconditions1d.bc");
-                AssertLine(extData[7], "bndWidth1D", "1.2340000e+000");
-                AssertLine(extData[8], "bndBLDepth", "2.3450000e+000");
+                AssertLine(extData[7], "isOnOutletCompartment", "true");
+                AssertLine(extData[8], "bndWidth1D", "1.2340000e+000");
+                AssertLine(extData[9], "bndBLDepth", "2.3450000e+000");
 
                 string[][] bcData = ReadData(bcFilePath).ToArray();
                 AssertLine(bcData[3], "[forcing]");

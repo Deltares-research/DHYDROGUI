@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 block.AddProperty("isOnOutletCompartment", "true");
             }
 
-            if (boundaryWidth != null && boundaryDepth != null)
+            if (isOnOutletCompartment && boundaryWidth != null && boundaryDepth != null)
             {
                 block.AddProperty(BoundaryWidth, (double) boundaryWidth);
                 block.AddProperty(BoundaryDepth, (double) boundaryDepth);
@@ -941,41 +941,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             network.Nodes.Except(boundaryConditions1D.Select(bc1d => bc1d.Node)).ForEach(node => boundaryConditions1D.Add(Helper1D.CreateDefaultBoundaryCondition(node, false, false)));
             var forcingFiles = new HashSet<string>();
 
-            var bndByNodeName = boundaryConditions1D.ToDictionary(bc => bc.Node.Name);
+            Dictionary<string, Model1DBoundaryNodeData> bndByNodeName = ToNodeNameDictionary(boundaryConditions1D);
 
             foreach (var delftIniCategory in modelBoundary1DBlocks)
             {
                 var nodeId = delftIniCategory.GetPropertyValue(NodeIdKey);
                 if (nodeId == null) continue;
-                var isOnOutletCompartment = delftIniCategory.ReadProperty<bool>("isOnOutletCompartment", true);
-
-                INode node = null;
                 
-                if (isOnOutletCompartment)
+                if (!bndByNodeName.TryGetValue(nodeId, out Model1DBoundaryNodeData boundaryData))
                 {
-                    node = network.Manholes.FirstOrDefault(m => m.Compartments.Any(c => c.Name.EqualsCaseInsensitive(nodeId)));
+                    continue; 
                 }
-                else
-                {
-                    node = network.Nodes.FirstOrDefault(n => n.Name.EqualsCaseInsensitive(nodeId));
-                }
-
-                if (bndByNodeName.TryGetValue(nodeId, out Model1DBoundaryNodeData boundaryData))
-                {
-                    double boundaryWidth = delftIniCategory.ReadProperty(BoundaryWidth, true, double.NaN);
-                    if (!double.IsNaN(boundaryWidth))
-                    {
-                        boundaryData.BoundaryWidth = boundaryWidth;
-                    }
                 
-                    double boundaryDepth = delftIniCategory.ReadProperty(BoundaryDepth, true, double.NaN);
-                    if (!double.IsNaN(boundaryDepth))
-                    {
-                        boundaryData.BoundaryDepth = boundaryDepth;
-                    }
+                double boundaryWidth = delftIniCategory.ReadProperty(BoundaryWidth, true, double.NaN);
+                if (!double.IsNaN(boundaryWidth))
+                {
+                    boundaryData.BoundaryWidth = boundaryWidth;
                 }
-
-                if (node == null) continue;
+                
+                double boundaryDepth = delftIniCategory.ReadProperty(BoundaryDepth, true, double.NaN);
+                if (!double.IsNaN(boundaryDepth))
+                {
+                    boundaryData.BoundaryDepth = boundaryDepth;
+                }
+                
                 var id = delftIniCategory.GetPropertyValue(IdKey);
                 if (id != null) continue; // make sure we are nog reading a lateral
                 var forcingFile = delftIniCategory.GetPropertyValue(ForcingFileKey);
@@ -1004,6 +993,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     Log.Warn($"Can not read boundary model data from : {fullPath}");
             }
             return true;
+        }
+
+        private static Dictionary<string, Model1DBoundaryNodeData> ToNodeNameDictionary(IEnumerable<Model1DBoundaryNodeData> boundaryConditions1D)
+        {
+            var bndByNodeName = new Dictionary<string, Model1DBoundaryNodeData>();
+            foreach (Model1DBoundaryNodeData boundary in boundaryConditions1D)
+            {
+                if (boundary.Node is IManhole manhole)
+                {
+                    foreach (ICompartment compartment in manhole.Compartments)
+                    {
+                        bndByNodeName[compartment.Name] = boundary;
+                    }
+                }
+
+                else
+                {
+                    bndByNodeName[boundary.Node.Name] = boundary;
+                }
+            }
+
+            return bndByNodeName;
         }
 
         private void ParseMeteoRainFallBoundaryExtForceCategory(WaterFlowFMModelDefinition modelDefinition, string quantityKey, List<BcBlockData> dataBlocks)
