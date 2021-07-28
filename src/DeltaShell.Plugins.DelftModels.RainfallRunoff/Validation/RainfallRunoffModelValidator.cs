@@ -32,6 +32,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             var runoffs = conceptData.Catchment.Links;
             var runoff = runoffs.FirstOrDefault();
 
+            if (runoff?.Target == conceptData.Catchment)
+            {
+                return;
+            }
+
             if (runoffs.Count == 0)
             {
                 // TODO: check if this validation still is correct after the fix for FM1D2D-1629

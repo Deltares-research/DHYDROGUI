@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
@@ -187,14 +188,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 
         private IHydroObject GetTargetHydroObject(PavedEnums.SewerPumpDischargeTarget dischargeTarget)
         {
+            IEnumerable<IHydroObject> targets = Catchment.Links.Select(l => l.Target);
+
             switch (dischargeTarget)
             {
                 case PavedEnums.SewerPumpDischargeTarget.BoundaryNode:
-                    return Catchment.Links.Select(l => l.Target).FirstOrDefault(f => !(f is WasteWaterTreatmentPlant));
+                    return targets.FirstOrDefault(f => !(f is WasteWaterTreatmentPlant));
+                case PavedEnums.SewerPumpDischargeTarget.OpenWater:
+                    return targets.OfType<Catchment>().FirstOrDefault(c => c.CatchmentType.Equals(CatchmentType.OpenWater));
                 case PavedEnums.SewerPumpDischargeTarget.WWTP:
-                    return Catchment.Links.Select(l => l.Target).OfType<WasteWaterTreatmentPlant>().FirstOrDefault();
+                    return targets.OfType<WasteWaterTreatmentPlant>().FirstOrDefault();
                 default:
-                    return null;
+                    throw new ArgumentOutOfRangeException();
             }
         }
 

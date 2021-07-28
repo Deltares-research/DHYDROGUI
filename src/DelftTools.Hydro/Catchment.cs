@@ -155,6 +155,13 @@ namespace DelftTools.Hydro
 
         public virtual bool CanLinkTo(IHydroObject target)
         {
+            if (CatchmentType.Equals(CatchmentType.Paved)
+                && target is Catchment targetCatchment 
+                && targetCatchment.CatchmentType.Equals(CatchmentType.OpenWater))
+            {
+                return true;
+            }
+
             return Region.CanLinkTo(this, target);
         }
 
