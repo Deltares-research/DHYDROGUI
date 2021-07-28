@@ -58,8 +58,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             var hydroModel = new HydroModel();
 
             hydroModel.BeginEdit(new DefaultEditAction("Importing full Dimr model"));
+            var suspendClearOutput = false;
             try
             {
+                suspendClearOutput = hydroModel.SuspendClearOutputOnInputChange;
+                hydroModel.SuspendClearOutputOnInputChange = true;
                 AddModels(hydroModel, fileImporters, dimrObject, rootFolder);
 
                 List<IDimrModel> subModels = hydroModel.Activities.OfType<IDimrModel>().ToList();
@@ -71,6 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             finally
             {
                 hydroModel.EndEdit();
+                hydroModel.SuspendClearOutputOnInputChange = suspendClearOutput;
             }
 
             return hydroModel;
