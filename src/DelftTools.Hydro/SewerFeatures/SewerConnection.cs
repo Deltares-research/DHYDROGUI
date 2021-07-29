@@ -27,11 +27,10 @@ namespace DelftTools.Hydro.SewerFeatures
     public class SewerConnection : Branch, ISewerConnection
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SewerConnection));
-        internal static readonly string defaultSewerConnectionProfileName = "Default sewer connection profile";
 
-        internal static ICrossSectionDefinition defaultCrossSectionDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle {Diameter = 0.1})
+        private ICrossSectionDefinition defaultCrossSectionDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle {Diameter = 0.1})
         {
-            Name = defaultSewerConnectionProfileName
+            Name = "Default sewer connection profile"
         };
 
         private INode source;

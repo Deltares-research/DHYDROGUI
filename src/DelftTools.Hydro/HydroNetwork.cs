@@ -97,16 +97,6 @@ namespace DelftTools.Hydro
                 }
 
                 sharedCrossSectionDefinitions.CollectionChanging += SharedCrossSectionDefinitionsCollectionChanging;
-                
-                var crossSectionDefinition = sharedCrossSectionDefinitions.FirstOrDefault(d => string.Equals(d.Name, SewerConnection.defaultSewerConnectionProfileName));
-                if (crossSectionDefinition == null)
-                {
-                    sharedCrossSectionDefinitions.Add(SewerConnection.defaultCrossSectionDefinition);
-                }
-                else
-                {
-                    SewerConnection.defaultCrossSectionDefinition = crossSectionDefinition;
-                }
             }
         }
 
@@ -219,7 +209,7 @@ namespace DelftTools.Hydro
         {
             Name = "network1";
             CrossSectionSectionTypes = new EventedList<CrossSectionSectionType>();
-            SharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition>{SewerConnection.defaultCrossSectionDefinition};
+            SharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition>();
             Routes = new EventedList<Route>();
 
             var section = new CrossSectionSectionType
