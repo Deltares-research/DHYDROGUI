@@ -401,10 +401,11 @@ namespace DelftTools.Hydro.SewerFeatures
             if (e.Action != NotifyCollectionChangeAction.Add) return;
             if (!BranchFeatures.Any() || e.Item is HydroLink || e.Item is LateralSource|| e.Item is CompositeBranchStructure) return;
 
-            var compositeStructures = BranchFeatures.Where(bf => !(bf is LateralSource)).OfType<CompositeBranchStructure>().ToList();
-            if (!compositeStructures.Any() ||
-                (compositeStructures.First().Structures.Any() &&
-                 !compositeStructures.First().Structures.Contains(e.Item)))
+            var firstStructure = BranchFeatures.OfType<CompositeBranchStructure>()
+                                               .FirstOrDefault()?.Structures
+                                               .FirstOrDefault();
+
+            if (firstStructure != null)
             {
                 log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
                 e.Cancel = true;
