@@ -20,8 +20,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         public void GivenAddNWRWCatchmentContextMenuMapTool_GettingContextMenu_ShouldGiveOptionToCreateNwrwCatchment()
         {
             //Arrange
-            var manhole = new Manhole();
-            manhole.Compartments.Add(new Compartment());
+            var manhole = new Manhole("Manhole1");
+            manhole.Compartments.Add(new Compartment("Compartment1"));
 
             var pipe = new Pipe();
             manhole.IncomingBranches.Add(pipe);
@@ -55,9 +55,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             Assert.NotNull(mainMenu);
 
             var menu = mainMenu.MenuItem;
-            Assert.AreEqual(1, menu.DropDownItems.Count);
+            Assert.AreEqual(3, menu.DropDownItems.Count);
+            Assert.AreEqual("Manhole1 (Compartment1)", menu.DropDownItems[2].Text);
 
-            menu.DropDownItems[0].PerformClick();
+            menu.DropDownItems[2].PerformClick();
 
             // Assert
             Assert.AreEqual(1, catchments.Count(c => c.CatchmentType == CatchmentType.NWRW));

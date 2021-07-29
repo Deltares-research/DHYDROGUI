@@ -40,7 +40,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                 upgradeMenu.DropDownItems.Add(allCatchments);
                 upgradeMenu.DropDownItems.Add("-");
                 upgradeMenu.DropDownItems.AddRange(upgradeCompartmentToolStripItems);
-                upgradeMenu.DropDownItems.Add("...");
+                if (selectedManholes.Length > 10)
+                {
+                    upgradeMenu.DropDownItems.Add("...");
+                }
                 mapToolContextMenuItems = mapToolContextMenuItems.Plus(new MapToolContextMenuItem
                 {
                     Priority = 3,
@@ -65,7 +68,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
 
             var firstCompartment = m.Compartments[0];
-            return new ToolStripMenuItem($"{firstCompartment.Name} ({firstCompartment.ParentManhole?.Name})", null, (s, e) => AddNwrwCatchment(firstCompartment));
+            return new ToolStripMenuItem($"{firstCompartment.ParentManhole?.Name} ({firstCompartment.Name})", null, (s, e) => AddNwrwCatchment(firstCompartment));
         }
 
         private void AddNwrwCatchment(ICompartment compartment)
