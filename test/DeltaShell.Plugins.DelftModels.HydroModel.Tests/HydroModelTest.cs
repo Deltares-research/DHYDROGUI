@@ -420,15 +420,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                         
                         Assert.That(targetHydroNode1.IncomingBranches, Has.Member(pipe1));
                         Assert.That(targetHydroNode2.IncomingBranches, Has.Member(pipe2));
-                        Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(0));
+                        Assert.That(gui.DocumentViews.OfType<SewerConnectionView>().Count(), Is.EqualTo(0));
 
                         //Opening view does not crash now. (JIRA: FM1D2D-720)
                         Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(pipe1), "Could not open PipeView for pipe1");
                         Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(pipe2), "Could not open PipeView for pipe2");
-                        Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(2));
+                        Assert.That(gui.DocumentViews.OfType<SewerConnectionView>().Count(), Is.EqualTo(2));
                         app.SaveProject();
                         app.CloseProject();
-                        Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(0));
+                        Assert.That(gui.DocumentViews.OfType<SewerConnectionView>().Count(), Is.EqualTo(0));
                     }
                     
                     app.OpenProject(path);
@@ -441,19 +441,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                     var retrievedPipe1 = retrievedModel.Network.Pipes.FirstOrDefault();
                     Assert.That(retrievedPipe1, Is.Not.Null);
                     Assert.That(retrievedTargetHydroNodeOfPipe1.IncomingBranches, Has.Member(retrievedPipe1));
-                    Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(0));
+                    Assert.That(gui.DocumentViews.OfType<SewerConnectionView>().Count(), Is.EqualTo(0));
 
                     //Opening view crashes now. (JIRA: FM1D2D-720)
                     Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(retrievedPipe1), "Could not open PipeView for pipe1 after save load");
-                    Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(1));
+                    Assert.That(gui.DocumentViews.OfType<SewerConnectionView>().Count(), Is.EqualTo(1));
                     var retrievedTargetHydroNodeOfPipe2 = retrievedModel.Network.Nodes.ElementAtOrDefault(2);
                     Assert.That(retrievedTargetHydroNodeOfPipe2, Is.Not.Null);
                     var retrievedPipe2 = retrievedModel.Network.Pipes.LastOrDefault();
                     Assert.That(retrievedPipe2, Is.Not.Null);
                     Assert.That(retrievedTargetHydroNodeOfPipe2.IncomingBranches, Has.Member(retrievedPipe2));
-                    Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(1));
+                    Assert.That(gui.DocumentViews.OfType<SewerConnectionView>().Count(), Is.EqualTo(1));
                     Assert.DoesNotThrow(() => gui.DocumentViewsResolver.OpenViewForData(retrievedPipe2), "Could not open PipeView for pipe2 after save load");
-                    Assert.That(gui.DocumentViews.OfType<PipeView>().Count(), Is.EqualTo(2));
+                    Assert.That(gui.DocumentViews.OfType<SewerConnectionView>().Count(), Is.EqualTo(2));
                 };
                 WpfTestHelper.ShowModal((Control)gui.MainWindow, mainWindowShown);
             }

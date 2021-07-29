@@ -88,10 +88,24 @@ namespace DelftTools.Hydro
                 {
                     sharedCrossSectionDefinitions.CollectionChanging -= SharedCrossSectionDefinitionsCollectionChanging;
                 }
+                
                 sharedCrossSectionDefinitions = value;
-                if (sharedCrossSectionDefinitions != null)
+                
+                if (sharedCrossSectionDefinitions == null)
                 {
-                    sharedCrossSectionDefinitions.CollectionChanging += SharedCrossSectionDefinitionsCollectionChanging;
+                    return;
+                }
+
+                sharedCrossSectionDefinitions.CollectionChanging += SharedCrossSectionDefinitionsCollectionChanging;
+                
+                var crossSectionDefinition = sharedCrossSectionDefinitions.FirstOrDefault(d => string.Equals(d.Name, SewerConnection.defaultSewerConnectionProfileName));
+                if (crossSectionDefinition == null)
+                {
+                    sharedCrossSectionDefinitions.Add(SewerConnection.defaultCrossSectionDefinition);
+                }
+                else
+                {
+                    SewerConnection.defaultCrossSectionDefinition = crossSectionDefinition;
                 }
             }
         }
@@ -205,7 +219,7 @@ namespace DelftTools.Hydro
         {
             Name = "network1";
             CrossSectionSectionTypes = new EventedList<CrossSectionSectionType>();
-            SharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition>();
+            SharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition>{SewerConnection.defaultCrossSectionDefinition};
             Routes = new EventedList<Route>();
 
             var section = new CrossSectionSectionType
@@ -284,10 +298,7 @@ namespace DelftTools.Hydro
 
         public virtual IEnumerable<IPipe> Pipes { get; protected set; }
         public virtual IEnumerable<ISewerConnection> SewerConnections { get; protected set; }
-        public virtual IEnumerable<IChannel> Channels
-        {
-            get; protected set;
-        }
+        public virtual IEnumerable<IChannel> Channels { get; protected set; }
 
         public virtual IEnumerable<IManhole> Manholes { get; protected set; }
         public virtual IEnumerable<OutletCompartment> OutletCompartments { get; protected set; }

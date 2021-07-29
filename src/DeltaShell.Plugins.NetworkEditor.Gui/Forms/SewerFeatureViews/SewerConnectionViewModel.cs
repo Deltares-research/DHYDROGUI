@@ -10,10 +10,9 @@ using NetTopologySuite.Extensions.Coverages;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
-    //[Entity]
-    public class PipeViewModel : INotifyPropertyChanged
+    public class SewerConnectionViewModel : INotifyPropertyChanged
     {
-        private IPipe pipe;
+        private ISewerConnection sewerConnection;
         private RoughnessSection pipeRoughnessSection;
 
         public RoughnessSection PipeRoughnessSection
@@ -45,9 +44,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 if (PipeRoughnessSection == null)
                     return default(RoughnessType);
 
-                var roughnessFunctionType = PipeRoughnessSection.GetRoughnessFunctionType(Pipe);
+                var roughnessFunctionType = PipeRoughnessSection.GetRoughnessFunctionType(SewerConnection);
                 return roughnessFunctionType == RoughnessFunction.Constant 
-                    ? PipeRoughnessSection.EvaluateRoughnessType(new NetworkLocation(pipe, 0)) 
+                    ? PipeRoughnessSection.EvaluateRoughnessType(new NetworkLocation(sewerConnection, 0)) 
                     : PipeRoughnessSection.GetDefaultRoughnessType();
             }
         }
@@ -59,10 +58,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 if (PipeRoughnessSection == null)
                     return default(double);
                 var variableValueFilter = new VariableValueFilter<INetworkLocation>(
-                    PipeRoughnessSection.RoughnessNetworkCoverage.Locations, new NetworkLocation(pipe,0));
+                    PipeRoughnessSection.RoughnessNetworkCoverage.Locations, new NetworkLocation(sewerConnection,0));
 
                 var roughnessValues = PipeRoughnessSection.RoughnessNetworkCoverage.GetValues<double>(variableValueFilter);
-                var roughnessFunctionType = PipeRoughnessSection.GetRoughnessFunctionType(Pipe);
+                var roughnessFunctionType = PipeRoughnessSection.GetRoughnessFunctionType(SewerConnection);
 
                 return roughnessValues.Count == 0 || roughnessFunctionType != RoughnessFunction.Constant 
                     ? PipeRoughnessSection.GetDefaultRoughnessValue() 
@@ -70,20 +69,21 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
         }
 
-        public IPipe Pipe
+        public ISewerConnection SewerConnection
         {
-            get { return pipe; }
+            get { return sewerConnection; }
             set
             {
-                if (pipe != null)
+                if (sewerConnection != null)
                 {
-                    ((INotifyPropertyChanged)pipe).PropertyChanged -= OnPropertyChanged;
+                    sewerConnection.PropertyChanged -= OnPropertyChanged;
                 }
-                pipe = value;
+
+                sewerConnection = value;
                 
-                if (pipe != null)
+                if (sewerConnection != null)
                 {
-                    ((INotifyPropertyChanged)pipe).PropertyChanged += OnPropertyChanged;
+                    sewerConnection.PropertyChanged += OnPropertyChanged;
                 }
 
                 OnPropertyChanged();
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public double PipeSlope
         {
-            get { return pipe?.Slope() ?? 0; }
+            get { return sewerConnection?.Slope() ?? 0; }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
         [Category(TestCategory.WindowsForms)]
         public void Test()
         {
-            var view = new PipeView();
+            var view = new SewerConnectionView();
 
             var manhole1 = new Manhole("1");
             var compartment1 = new Compartment("cmp1") {SurfaceLevel = 2.12345, BottomLevel = 1.23456};

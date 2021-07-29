@@ -3,13 +3,13 @@ using DelftTools.Hydro.SewerFeatures;
 
 namespace DelftTools.Hydro.Structures
 {
-    public static class PipeExtensions
+    public static class SewerConnectionExtensions
     {
-        public static double Slope(this IPipe pipe)
+        public static double Slope(this ISewerConnection sewerConnection)
         {
-            if (pipe == null) return double.NaN;
-            var length = pipe.Length;
-            var dy = pipe.LevelTarget - pipe.LevelSource;
+            if (sewerConnection == null) return double.NaN;
+            var length = sewerConnection.Length;
+            var dy = sewerConnection.LevelTarget - sewerConnection.LevelSource;
 
             var angle = Math.Asin(dy / length);
 

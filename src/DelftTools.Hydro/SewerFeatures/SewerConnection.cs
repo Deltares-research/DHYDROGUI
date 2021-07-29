@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.Extensions;
+using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Properties;
-using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
@@ -26,7 +26,13 @@ namespace DelftTools.Hydro.SewerFeatures
     [Entity]
     public class SewerConnection : Branch, ISewerConnection
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SewerConnection));
+        private static readonly ILog log = LogManager.GetLogger(typeof(SewerConnection));
+        internal static readonly string defaultSewerConnectionProfileName = "Default sewer connection profile";
+
+        internal static ICrossSectionDefinition defaultCrossSectionDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle {Diameter = 0.1})
+        {
+            Name = defaultSewerConnectionProfileName
+        };
 
         private INode source;
         private INode target;
@@ -40,9 +46,13 @@ namespace DelftTools.Hydro.SewerFeatures
         {
         }
 
-        public SewerConnection(string name)
+        public SewerConnection(string name, bool useDefaultCrossSection = true)
             : base(name, null, null, 0)
         {
+            if (useDefaultCrossSection)
+            {
+                CrossSection = new CrossSection(new CrossSectionDefinitionProxy(defaultCrossSectionDefinition));
+            }
         }
 
         [DisplayName("Invert level from")]
@@ -245,7 +255,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
                 if (value.ParentManhole == null)
                 {
-                    Log.WarnFormat(Resources.SewerConnection_TargetCompartment_We_cannot_add_compartment_as_source
+                    log.WarnFormat(Resources.SewerConnection_TargetCompartment_We_cannot_add_compartment_as_source
                         , value.Name, Name);
                     return;
                 }
@@ -273,7 +283,7 @@ namespace DelftTools.Hydro.SewerFeatures
 
                 if (value.ParentManhole == null)
                 {
-                    Log.WarnFormat(Resources.SewerConnection_TargetCompartment_We_cannot_add_compartment_as_target
+                    log.WarnFormat(Resources.SewerConnection_TargetCompartment_We_cannot_add_compartment_as_target
                         , value.Name, Name);
                     return;
                 }
@@ -346,7 +356,7 @@ namespace DelftTools.Hydro.SewerFeatures
             }
             else
             {
-                Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, Name);
+                log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, Name);
             }
         }
         
@@ -406,7 +416,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 (compositeStructures.First().Structures.Any() &&
                  !compositeStructures.First().Structures.Contains(e.Item)))
             {
-                Log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
+                log.ErrorFormat(Resources.SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_, this.Name);
                 e.Cancel = true;
             }
         }
@@ -436,7 +446,11 @@ namespace DelftTools.Hydro.SewerFeatures
             return false; // no linking to/from pipe yet
         }
 
-        public virtual IHydroNetwork HydroNetwork { get { return (IHydroNetwork) Network; } }
+        public virtual IHydroNetwork HydroNetwork
+        {
+            get { return (IHydroNetwork) Network; }
+        }
+
         public virtual string LongName { get; set; }
 
         #endregion
@@ -450,7 +464,7 @@ namespace DelftTools.Hydro.SewerFeatures
             AddCrossSectionDefinition(hydroNetwork, helper);
             if (helper != null && helper.SewerConnectionsByName.ContainsKey(Name))
             {
-                Log.Warn($"SewerConnection {Name} already created");
+                log.Warn($"SewerConnection {Name} already created");
                 return;
             }
             lock (hydroNetwork.Branches)
@@ -622,39 +636,45 @@ namespace DelftTools.Hydro.SewerFeatures
             }
         }
 
-        public ICrossSection CrossSection
+        public virtual ICrossSection CrossSection
         {
             get { return crossSection; }
             set
             {
                 crossSection = value;
+                
                 if (crossSection?.Definition != null)
                     CrossSectionDefinitionName = crossSection?.Definition?.Name;
 
-                if (crossSection != null)
+                if (crossSection == null)
                 {
-                    crossSection.Branch = this;
-                    crossSection.Chainage = Length / 2;
-                    if (HydroNetwork != null)
-                    {
-                        ICrossSectionDefinition sharedCrossSectionDefinition;
-                        lock (HydroNetwork.SharedCrossSectionDefinitions)
-                        {
-                            sharedCrossSectionDefinition = HydroNetwork?.SharedCrossSectionDefinitions?.FirstOrDefault(scsd => scsd.Name.Equals(crossSection.Definition.Name, StringComparison.InvariantCultureIgnoreCase));
-                        }
-                        if (sharedCrossSectionDefinition != null)
-                        {
-                            crossSection?.UseSharedDefinition(sharedCrossSectionDefinition);
-                        }
-                        else
-                        {
-                            lock (HydroNetwork.SharedCrossSectionDefinitions)
-                            {
-                                crossSection?.ShareDefinitionAndChangeToProxy();
-                            }
-                        }
+                    return;
+                }
 
-                        AddCrossSectionSectionToDefinition(HydroNetwork);
+                crossSection.Branch = this;
+                crossSection.Chainage = Length / 2;
+
+                if (HydroNetwork == null)
+                {
+                    return;
+                }
+
+                ICrossSectionDefinition sharedCrossSectionDefinition;
+                lock (HydroNetwork.SharedCrossSectionDefinitions)
+                {
+                    sharedCrossSectionDefinition = HydroNetwork?.SharedCrossSectionDefinitions?
+                        .FirstOrDefault(scsd => string.Equals(scsd.Name, crossSection.Definition.Name, StringComparison.InvariantCultureIgnoreCase));
+                }
+
+                if (sharedCrossSectionDefinition != null)
+                {
+                    crossSection?.UseSharedDefinition(sharedCrossSectionDefinition);
+                }
+                else
+                {
+                    lock (HydroNetwork.SharedCrossSectionDefinitions)
+                    {
+                        crossSection?.ShareDefinitionAndChangeToProxy();
                     }
                 }
             }
@@ -666,19 +686,5 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         #endregion
-
-        [EditAction]
-        protected void AddCrossSectionSectionToDefinition(IHydroNetwork hydroNetwork)
-        {
-            var sewerCrossSectionSectionType = hydroNetwork?.CrossSectionSectionTypes?.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
-            var crossSectionDefinition = CrossSection?.Definition;
-
-            if (sewerCrossSectionSectionType != null && 
-                crossSectionDefinition != null && 
-                crossSectionDefinition.Sections.All(css => css.SectionType != sewerCrossSectionSectionType))
-            {
-                crossSectionDefinition.Sections?.Add(new CrossSectionSection {SectionType = sewerCrossSectionSectionType});
-            }
-        }
     }
 }

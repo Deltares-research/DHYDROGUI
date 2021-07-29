@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
@@ -12,26 +11,26 @@ using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 {
     [Entity]
-    public class PipeVisualisationViewModel
+    public class SewerConnectionVisualizationViewModel
     {
-        public Pipe Pipe
+        public ISewerConnection SewerConnection
         {
-            get { return pipe; }
+            get { return sewerConnection; }
             set
             {
-                if (pipe != null)
+                if (sewerConnection != null)
                 {
-                    pipe.PropertyChanged -= PipeOnPropertyChanged;
+                    sewerConnection.PropertyChanged -= PipeOnPropertyChanged;
                 }
 
-                pipe = value;
+                sewerConnection = value;
 
-                if (pipe != null)
+                if (sewerConnection != null)
                 {
-                    pipe.PropertyChanged += PipeOnPropertyChanged;
+                    sewerConnection.PropertyChanged += PipeOnPropertyChanged;
                 }
 
-                if (pipe == null) return;
+                if (sewerConnection == null) return;
                 Update();
             }
         }
@@ -64,11 +63,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
         private double maxY;
         private double widthMargin;
         private double heightMargin;
-        private Pipe pipe;
+        private ISewerConnection sewerConnection;
 
         public void Update()
         {
-            if (pipe == null) return;
+            if (sewerConnection == null) return;
 
             DetermineRanges();
             CreatePointCollections();
@@ -77,14 +76,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         private void DetermineRanges()
         {
-            var dx = pipe.Length;
-            var pipeDiameter = pipe.CrossSection?.Definition?.HighestPoint - pipe.CrossSection?.Definition?.LowestPoint ?? 0.1 * dx;
+            var dx = sewerConnection.Length;
+            var pipeDiameter = sewerConnection.CrossSection?.Definition?.HighestPoint - sewerConnection.CrossSection?.Definition?.LowestPoint ?? 0.1 * dx;
 
             var x0 = 0;
             var xL = x0 + dx;
 
-            var y0 = Pipe.LevelSource;
-            var yL = Pipe.LevelTarget;
+            var y0 = SewerConnection.LevelSource;
+            var yL = SewerConnection.LevelTarget;
 
             var heightLineLength = 0.25 * dx;
 
@@ -92,10 +91,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             
             var targetRight = xL + heightLineLength;
 
-            var sourceBottomLevel = Pipe.SourceCompartment.BottomLevel;
-            var sourceSurfaceLevel = Pipe.SourceCompartment.SurfaceLevel;
-            var targetBottomLevel = Pipe.TargetCompartment?.BottomLevel ?? 0d;
-            var targetSurfaceLevel = Pipe.TargetCompartment?.SurfaceLevel ?? 0d;
+            var sourceBottomLevel = SewerConnection.SourceCompartment.BottomLevel;
+            var sourceSurfaceLevel = SewerConnection.SourceCompartment.SurfaceLevel;
+            var targetBottomLevel = SewerConnection.TargetCompartment?.BottomLevel ?? 0d;
+            var targetSurfaceLevel = SewerConnection.TargetCompartment?.SurfaceLevel ?? 0d;
 
             widthMargin = 0.03 * (targetRight - sourceLeft);
             minX = sourceLeft - widthMargin;

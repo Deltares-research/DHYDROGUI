@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Properties;
+using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -19,11 +19,11 @@ namespace DelftTools.Hydro.SewerFeatures
     [Entity]
     public class Pipe : SewerConnection, IPipe
     {
-        private static ILog Log = LogManager.GetLogger(typeof(Pipe));
+        private static ILog log = LogManager.GetLogger(typeof(Pipe));
         
         public string PipeId { get; set; }
 
-        public Pipe()
+        public Pipe():base("Pipe",false)
         {
             PropertyChanged += OnPipePropertyChanged;
         }
@@ -41,10 +41,19 @@ namespace DelftTools.Hydro.SewerFeatures
             get { return CrossSection.Definition.Width; }
         }
 
+        public override ICrossSection CrossSection
+        {
+            get { return base.CrossSection; }
+            set
+            {
+                base.CrossSection = value;
+                AddCrossSectionSectionToDefinition(HydroNetwork);
+            }
+        }
+
         private void OnPipePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var pipe = sender as IPipe;
-            if (pipe != null && e.PropertyName == nameof(Network))
+            if (sender is IPipe && e.PropertyName == nameof(Network))
             {
                 AddCrossSectionSectionToDefinition((IHydroNetwork) Network);
             }
@@ -67,7 +76,7 @@ namespace DelftTools.Hydro.SewerFeatures
                 {
                     if (value.Count > 0)
                     {
-                        Log.WarnFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
+                        log.WarnFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
                     }
                     else
                     {
@@ -90,13 +99,26 @@ namespace DelftTools.Hydro.SewerFeatures
         }
 
         [EditAction]
-        private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs NotifyCollectionChangedEventArgs)
+        private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs args)
         {
-            if (NotifyCollectionChangedEventArgs.Action != NotifyCollectionChangeAction.Add) return;
-            if (!(NotifyCollectionChangedEventArgs.Item is LateralSource) && !(NotifyCollectionChangedEventArgs.Item is HydroLink))
+            if (args.Action != NotifyCollectionChangeAction.Add || args.Item is LateralSource || args.Item is HydroLink)
             {
-                NotifyCollectionChangedEventArgs.Cancel = true;
-                Log.WarnFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
+                return;
+            }
+
+            args.Cancel = true;
+            log.WarnFormat(Resources.Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_, Name);
+        }
+        private void AddCrossSectionSectionToDefinition(IHydroNetwork hydroNetwork)
+        {
+            var sewerCrossSectionSectionType = hydroNetwork?.CrossSectionSectionTypes?.FirstOrDefault(csst => string.Equals(csst.Name, RoughnessDataSet.SewerSectionTypeName, StringComparison.InvariantCultureIgnoreCase));
+            var crossSectionDefinition = CrossSection?.Definition;
+
+            if (sewerCrossSectionSectionType != null &&
+                crossSectionDefinition != null &&
+                crossSectionDefinition.Sections.All(css => css.SectionType != sewerCrossSectionSectionType))
+            {
+                crossSectionDefinition.Sections?.Add(new CrossSectionSection { SectionType = sewerCrossSectionSectionType });
             }
         }
 
@@ -104,7 +126,7 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             base.UpdateGeometryBasedOnSourceAndTargetCompartments();
             if (TargetCompartment?.Geometry?.Coordinate != null && SourceCompartment?.Geometry?.Coordinate?.Distance(TargetCompartment?.Geometry?.Coordinate) == 0)
-                Log.Error($"This pipe {Name} has a geometry with distance of 0 but a 'custom length' (read from GWSW) of {Length}, the source {SourceCompartment?.Name} has a coordinate on {SourceCompartment?.Geometry?.Coordinate}; the target {TargetCompartment?.Name} has a coordinate on {TargetCompartment?.Geometry?.Coordinate} ");
+                log.Error($"This pipe {Name} has a geometry with distance of 0 but a 'custom length' (read from GWSW) of {Length}, the source {SourceCompartment?.Name} has a coordinate on {SourceCompartment?.Geometry?.Coordinate}; the target {TargetCompartment?.Name} has a coordinate on {TargetCompartment?.Geometry?.Coordinate} ");
 
         }
     }

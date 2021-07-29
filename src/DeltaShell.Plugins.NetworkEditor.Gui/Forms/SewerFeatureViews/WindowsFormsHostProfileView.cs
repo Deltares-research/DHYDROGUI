@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Windows;
 using System.Windows.Forms.Integration;
 using DelftTools.Hydro;
@@ -43,32 +42,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     }
    public static class WindowsFormsHostCrossSectionView
     {
-        public static readonly DependencyProperty PipeProperty = DependencyProperty.RegisterAttached("Pipe", typeof(IPipe), typeof(WindowsFormsHostCrossSectionView), new PropertyMetadata(PipePropertyChanged));
-        public static void SetPipe(DependencyObject element, IPipe value)
+        public static readonly DependencyProperty SewerConnectionProperty = DependencyProperty.RegisterAttached("SewerConnection", typeof(ISewerConnection), typeof(WindowsFormsHostCrossSectionView), new PropertyMetadata(SewerConnectionPropertyChanged));
+        public static void SetSewerConnection(DependencyObject element, ISewerConnection value)
         {
-            element.SetValue(PipeProperty, value);
+            element.SetValue(SewerConnectionProperty, value);
         }
 
-        public static IPipe GetPipe(DependencyObject element)
+        public static ISewerConnection GetSewerConnection(DependencyObject element)
         {
-            return (IPipe)element.GetValue(PipeProperty);
+            return (ISewerConnection)element.GetValue(SewerConnectionProperty);
         }
 
         [InvokeRequired]
-        private static void PipePropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private static void SewerConnectionPropertyChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var windowsFormsHost = sender as WindowsFormsHost;
-            var crossSectionView = windowsFormsHost?.Child as CrossSectionPipeView;
-            if (crossSectionView == null) return;
-            if (e.Property != PipeProperty) return;
-            var pipe = e.NewValue as IPipe;
-            if (pipe == null)
+            if (!((sender as WindowsFormsHost)?.Child is CrossSectionPipeView crossSectionView))
             {
-                crossSectionView.Data = null;
                 return;
             }
-            
-            crossSectionView.Data = pipe.CrossSection;
+
+            if (e.Property != SewerConnectionProperty) return;
+
+            crossSectionView.Data = (e.NewValue as ISewerConnection)?.CrossSection;
         }
     }
 }

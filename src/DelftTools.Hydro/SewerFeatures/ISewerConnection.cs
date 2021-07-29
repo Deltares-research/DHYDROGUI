@@ -1,10 +1,11 @@
-﻿using DelftTools.Hydro.CrossSections;
+﻿using System.ComponentModel;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
 using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.SewerFeatures
 {
-    public interface ISewerConnection : IBranch, IHydroNetworkFeature, ISewerFeature
+    public interface ISewerConnection : IBranch, IHydroNetworkFeature, ISewerFeature, INotifyPropertyChanged
     {
         /// <summary>
         /// Length of the connection

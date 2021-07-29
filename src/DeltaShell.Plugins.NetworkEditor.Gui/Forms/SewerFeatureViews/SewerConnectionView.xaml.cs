@@ -11,9 +11,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     /// <summary>
     /// Interaction logic for PipeView.xaml
     /// </summary>
-    public partial class PipeView : UserControl, IView
+    public partial class SewerConnectionView : UserControl, IView
     {
-        public PipeView()
+        public SewerConnectionView()
         {
             InitializeComponent();
             
@@ -43,10 +43,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
 
         public object Data
         {
-            get { return ViewModel.Pipe; }
+            get { return ViewModel.SewerConnection; }
             set
             {
-                ViewModel.Pipe = (IPipe)value;
+                ViewModel.SewerConnection = (ISewerConnection)value;
             }
         }
 

@@ -7,15 +7,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
     /// <summary>
     /// Interaction logic for PipeVisualisationControl.xaml
     /// </summary>
-    public partial class PipeVisualisation : UserControl
+    public partial class SewerConnectionVisualization : UserControl
     {
-        public static readonly DependencyProperty PipeProperty = DependencyProperty.Register(
-            nameof(Pipe), 
-            typeof(Pipe), 
-            typeof(PipeVisualisation), 
+        public static readonly DependencyProperty SewerConnectionProperty = DependencyProperty.Register(
+            nameof(SewerConnection), 
+            typeof(ISewerConnection), 
+            typeof(SewerConnectionVisualization), 
             new PropertyMetadata(default(Pipe), PropertyChangedCallback));
 
-        public PipeVisualisation()
+        public SewerConnectionVisualization()
         {
             InitializeComponent();
             ViewModel.GetActualWidth = () => ViewGrid.ActualWidth;
@@ -23,25 +23,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             ViewModel.DrawingCanvas = () => DrawingCanvas;
         }
 
-        public Pipe Pipe
+        public ISewerConnection SewerConnection
         {
-            get { return (Pipe)GetValue(PipeProperty); }
-            set { SetValue(PipeProperty, value); }
+            get { return (Pipe)GetValue(SewerConnectionProperty); }
+            set { SetValue(SewerConnectionProperty, value); }
         }
 
         private static void PropertyChangedCallback(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs dependencyPropertyChangedEventArgs)
         {
-            var view = dependencyObject as PipeVisualisation;
+            var view = dependencyObject as SewerConnectionVisualization;
             if (view == null) return;
 
-            view.ViewModel.Pipe = dependencyPropertyChangedEventArgs.NewValue as Pipe;
+            view.ViewModel.SewerConnection = dependencyPropertyChangedEventArgs.NewValue as ISewerConnection;
         }
 
         private void ViewGrid_OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             ViewModel?.Update();
         }
-
-
     }
 }

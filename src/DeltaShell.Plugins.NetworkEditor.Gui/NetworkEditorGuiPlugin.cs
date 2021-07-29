@@ -445,20 +445,25 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     v.EnsureVisible(compartment);
                 },
             };
-            yield return new ViewInfo<IPipe, PipeView>
+            yield return new ViewInfo<ISewerConnection, SewerConnectionView>
             {
-                AdditionalDataCheck = pipe =>
+                AdditionalDataCheck = sewerConnection =>
                 {
-                    var defaultSewerCrossSectionSectionType = pipe.CrossSection?.Definition?.Sections?.FirstOrDefault()?.SectionType;
-                    var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
-                    var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
+                    if (sewerConnection is IPipe pipe)
+                    {
+                        var defaultSewerCrossSectionSectionType = pipe.CrossSection?.Definition?.Sections?.FirstOrDefault()?.SectionType;
+                        var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
+                        var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
 
-                    return sewerRoughnessSection != null;
+                        return sewerRoughnessSection != null;
+                    }
+
+                    return true;
                 },
-                AfterCreate = (view, pipe) =>
+                AfterCreate = (view, sewerConnection) =>
                 {
-                    var defaultSewerCrossSectionSectionType = pipe.CrossSection?.Definition.Sections.FirstOrDefault()?.SectionType;
-                    var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(pipe)) as IModelWithRoughnessSections;
+                    var defaultSewerCrossSectionSectionType = sewerConnection.CrossSection?.Definition.Sections.FirstOrDefault()?.SectionType;
+                    var roughnessSectionModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Contains(sewerConnection)) as IModelWithRoughnessSections;
                     var sewerRoughnessSection = roughnessSectionModel?.RoughnessSections?.FirstOrDefault(rs => rs.Name == defaultSewerCrossSectionSectionType?.ToString());
 
                     view.PipeRoughnessSection = sewerRoughnessSection;

@@ -289,14 +289,14 @@
     <Compile Include="Forms\SewerFeatureViews\OrificeShape.cs" />
     <Compile Include="Forms\SewerFeatureViews\PipeShape.cs" />
     <Compile Include="Forms\SewerFeatureViews\PipeShapeDragAndDropStrategy.cs" />
-    <Compile Include="Forms\SewerFeatureViews\PipeView.xaml.cs">
-      <DependentUpon>PipeView.xaml</DependentUpon>
+    <Compile Include="Forms\SewerFeatureViews\SewerConnectionView.xaml.cs">
+      <DependentUpon>SewerConnectionView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SewerFeatureViews\PipeViewModel.cs" />
-    <Compile Include="Forms\SewerFeatureViews\PipeVisualisation.xaml.cs">
-      <DependentUpon>PipeVisualisation.xaml</DependentUpon>
+    <Compile Include="Forms\SewerFeatureViews\SewerConnectionViewModel.cs" />
+    <Compile Include="Forms\SewerFeatureViews\SewerConnectionVisualization.xaml.cs">
+      <DependentUpon>SewerConnectionVisualization.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SewerFeatureViews\PipeVisualisationViewModel.cs" />
+    <Compile Include="Forms\SewerFeatureViews\SewerConnectionVisualizationViewModel.cs" />
     <Compile Include="Forms\SewerFeatureViews\ProfileToGeometryConverter.cs" />
     <Compile Include="Forms\SewerFeatureViews\PumpShape.cs" />
     <Compile Include="Forms\SewerFeatureViews\PumpShapeControl.xaml.cs">
@@ -1229,11 +1229,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\SewerFeatureViews\PipeView.xaml">
+    <Page Include="Forms\SewerFeatureViews\SewerConnectionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\SewerFeatureViews\PipeVisualisation.xaml">
+    <Page Include="Forms\SewerFeatureViews\SewerConnectionVisualization.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

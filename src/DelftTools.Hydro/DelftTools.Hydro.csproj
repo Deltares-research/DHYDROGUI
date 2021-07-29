@@ -352,7 +352,7 @@
     <Compile Include="Structures\KnownStructureProperties\KnownGeneralStructureProperties.cs" />
     <Compile Include="Structures\KnownStructureProperties\KnownStructureProperties.cs" />
     <Compile Include="Structures\MonitoringStation.cs" />
-    <Compile Include="Structures\PipeExtensions.cs" />
+    <Compile Include="Structures\SewerConnectionExtensions.cs" />
     <Compile Include="Structures\Pump.cs" />
     <Compile Include="Structures\Pump2D.cs" />
     <Compile Include="Structures\PumpControlDirection.cs" />
