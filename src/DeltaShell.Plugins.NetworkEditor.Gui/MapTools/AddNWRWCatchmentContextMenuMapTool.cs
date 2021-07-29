@@ -5,6 +5,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
+using Fluent.Localization.Languages;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap.UI.Tools;
@@ -22,18 +23,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         {
             var mapToolContextMenuItems = base.GetContextMenuItems(worldPosition);
 
-            var selectedManhole = MapControl.SelectedFeatures.OfType<Manhole>().FirstOrDefault();
             var upgradeMenu = new ToolStripMenuItem("Add NWRW catchment");
 
-            ToolStripItem[] upgradeCompartmentToolStripItems = selectedManhole?.Compartments
-                .Select(c => new ToolStripMenuItem(c.Name, null, (s, e) => AddNwrwCatchment(c)))
-                .ToArray();
-
-            if (upgradeCompartmentToolStripItems != null && 
-                upgradeCompartmentToolStripItems.Any() && 
-                (selectedManhole.Network as IHydroRegion)?.Parent != null)
+            var selectedManholes = MapControl.SelectedFeatures.OfType<Manhole>().ToArray();
+            
+            ToolStripMenuItem allCatchments = new ToolStripMenuItem("Selected manholes", null, (s, e) => selectedManholes.ForEach(m => AddNwrwCatchment(m.Compartments.FirstOrDefault())))
             {
+                ToolTipText = "Add NWRW catchment for all selected manholes using the first compartment"
+            };
+
+            ToolStripItem[] upgradeCompartmentToolStripItems = selectedManholes.Select(CreateManholeToolStripMenuItem).Take(10).ToArray();
+
+            if (upgradeCompartmentToolStripItems.Any() && 
+                (selectedManholes?.FirstOrDefault()?.Network as IHydroRegion)?.Parent != null)
+            {
+                upgradeMenu.DropDownItems.Add(allCatchments);
+                upgradeMenu.DropDownItems.Add("-");
                 upgradeMenu.DropDownItems.AddRange(upgradeCompartmentToolStripItems);
+                upgradeMenu.DropDownItems.Add("...");
                 mapToolContextMenuItems = mapToolContextMenuItems.Plus(new MapToolContextMenuItem
                 {
                     Priority = 3,
@@ -42,6 +49,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             }
 
             return mapToolContextMenuItems;
+        }
+
+        private ToolStripMenuItem CreateManholeToolStripMenuItem(Manhole m)
+        {
+            if (m.Compartments.Count > 1)
+            {
+                var menuItem = new ToolStripMenuItem($"{m.Name}");
+                ToolStripItem[] toolStripItems = m.Compartments
+                                                  .Select(c => new ToolStripMenuItem($"{c.Name}", null, (s, e) => AddNwrwCatchment(c)))
+                                                  .ToArray();
+
+                menuItem.DropDownItems.AddRange(toolStripItems);
+                return menuItem;
+            }
+
+            var firstCompartment = m.Compartments[0];
+            return new ToolStripMenuItem($"{firstCompartment.Name} ({firstCompartment.ParentManhole?.Name})", null, (s, e) => AddNwrwCatchment(firstCompartment));
         }
 
         private void AddNwrwCatchment(ICompartment compartment)
