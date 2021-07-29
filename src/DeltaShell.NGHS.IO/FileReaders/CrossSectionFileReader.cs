@@ -111,17 +111,17 @@ namespace DeltaShell.NGHS.IO.FileReaders
         {
             switch (branch)
             {
-                case IPipe pipe:
+                case ISewerConnection sewerConnection:
                 {
                     if (Math.Abs(crossSection.Chainage) < 0.001) // chainage = 0, so set source
                     {
-                        pipe.LevelSource = shift;
+                        sewerConnection.LevelSource = shift;
                     }
                     else
                     {
-                        pipe.LevelTarget = shift;
+                        sewerConnection.LevelTarget = shift;
                     }
-                    pipe.CrossSection = crossSection;
+                    sewerConnection.CrossSection = crossSection;
                     break;
                 }
 

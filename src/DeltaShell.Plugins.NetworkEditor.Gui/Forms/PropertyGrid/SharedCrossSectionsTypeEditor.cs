@@ -36,9 +36,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
                 propertyBag = (context?.Instance as object[])?[0] as DelftTools.Utils.PropertyBag.Dynamic.DynamicPropertyBag;
             if (propertyBag == null) return value;
             // have no clue how to do this better...
-            var pipeProperties = TypeUtils.GetField(propertyBag, "propertyObject") as PipeProperties;
-            var pipe = pipeProperties?.Data as Pipe;
-            var sharedCrossSectionNames = pipe?.HydroNetwork?.SharedCrossSectionDefinitions?.Select(scsd => scsd.Name);
+            var sewerConnectionProperties = TypeUtils.GetField(propertyBag, "propertyObject") as SewerConnectionProperties;
+            var sewerConnection = sewerConnectionProperties?.Data as ISewerConnection;
+            var sharedCrossSectionNames = sewerConnection?.HydroNetwork?.SharedCrossSectionDefinitions?.Select(scsd => scsd.Name);
             if (sharedCrossSectionNames == null) return value;
 
             foreach (var scsdName in sharedCrossSectionNames)

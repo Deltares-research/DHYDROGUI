@@ -23,7 +23,7 @@ namespace DelftTools.Hydro.SewerFeatures
         
         public string PipeId { get; set; }
 
-        public Pipe():base("Pipe",false)
+        public Pipe():base("Pipe")
         {
             PropertyChanged += OnPipePropertyChanged;
         }

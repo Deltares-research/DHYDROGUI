@@ -808,6 +808,7 @@ src/DeltaShell.NGHS.IO/FileWriters/General/GeneralRegionGenerator.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/IniFileWriter.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Location/DefinitionGeneratorCrossSectionLocationForChannel.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Location/DefinitionGeneratorCrossSectionLocationForPipe.cs -text
+src/DeltaShell.NGHS.IO/FileWriters/Location/DefinitionGeneratorCrossSectionLocationForSewerConnection.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Location/DefinitionGeneratorLateralSourceLocation.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Location/DefinitionGeneratorLocation.cs -text
 src/DeltaShell.NGHS.IO/FileWriters/Location/LocationFileWriter.cs -text
@@ -2836,7 +2837,6 @@ src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/NetworkLocationPrope
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/NetworkSegmentProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/ObservationPointProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/PierWeirFormulaProperties.cs -text
-src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/PipeProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/PumpProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/RetentionProperties.cs -text
 src/DeltaShell.Plugins.NetworkEditor.Gui/Forms/PropertyGrid/ReverseRoughnessSectionProperties.cs -text

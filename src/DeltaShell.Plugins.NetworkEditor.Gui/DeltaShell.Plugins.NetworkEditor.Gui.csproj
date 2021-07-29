@@ -238,10 +238,9 @@
     <Compile Include="Forms\PropertyGrid\LeveeBreachProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ManholeProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ModelRoughnessProperties.cs" />
-    <Compile Include="Forms\PropertyGrid\PipeProperties.cs" />
+    <Compile Include="Forms\PropertyGrid\SewerConnectionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\ReverseRoughnessSectionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\RoughnessSectionPropertiesBase.cs" />
-    <Compile Include="Forms\PropertyGrid\SewerConnectionProperties.cs" />
     <Compile Include="Forms\PropertyGrid\SharedCrossSectionsTypeEditor.cs" />
     <Compile Include="Forms\Roughness\RoughnessAsFunctionOfView.cs">
       <SubType>Form</SubType>

@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 modelDefinition.SetModelProperty(KnownProperties.CrossLocFile, CROSS_SECTION_LOCATION_FILE_NAME);
 
-                var crossSections = network.CrossSections.Concat(network.Pipes.Select(p=>p.CrossSection));
+                var crossSections = network.CrossSections.Concat(network.SewerConnections.Select(p=>p.CrossSection));
                 LocationFileWriter.WriteFileCrossSectionLocations(crossSectionLocationFilePath, crossSections);
             }
             else

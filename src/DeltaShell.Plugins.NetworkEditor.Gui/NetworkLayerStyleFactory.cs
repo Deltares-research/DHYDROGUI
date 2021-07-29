@@ -173,13 +173,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 return new VectorStyle
                 {
                     GeometryType = typeof(ILineString),
-                    Line = new Pen(Color.CadetBlue, 3)
-                    {
-                        CustomEndCap = new AdjustableArrowCap(5, 5, true)
-                        {
-                            BaseCap = LineCap.Triangle
-                        }
-                    },
+                    Line = new Pen(Color.CadetBlue, 3),
                     EnableOutline = false
                 };
             }

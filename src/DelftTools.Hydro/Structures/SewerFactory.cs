@@ -16,11 +16,17 @@ namespace DelftTools.Hydro.Structures
     public static class SewerFactory
     {
         private const string DefaultProfileDefinitionName = "Default Sewer Profile";
+        private const string DefaultSewerConnectionProfileDefinitionName = "Default Sewer Connection Profile";
         private static readonly CrossSectionDefinitionStandard DefaultSewerProfile = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle { Diameter = 0.4 })
         {
             Name = DefaultProfileDefinitionName
         };
-        
+
+        private static readonly CrossSectionDefinitionStandard DefaultSewerConnectionProfile = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle { Diameter = 0.1 })
+        {
+            Name = DefaultSewerConnectionProfileDefinitionName
+        };
+
         private static readonly Dictionary<Type, Func<ISewerConnection, ISewerConnection>> SewerConnectionStructureCreators = new Dictionary<Type, Func<ISewerConnection, ISewerConnection>>
         {
             { typeof(Orifice), CreateOrificeConnection},
@@ -85,14 +91,7 @@ namespace DelftTools.Hydro.Structures
         private static void SetPipeDefaultValues(IPipe pipe)
         {
             SetSewerConnectionDefaultProperties(pipe);
-
             pipe.Material = SewerProfileMapping.SewerProfileMaterial.Concrete;
-            var pipeCrossSection = CrossSection.CreateDefault(CrossSectionType.Standard, pipe, pipe.Length / 2);
-            if(pipe.Network is IHydroNetwork hydroNetwork)
-                pipeCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections, typeof(ICrossSection), true);
-            pipeCrossSection.UseSharedDefinition(DefaultSewerProfile);
-            pipe.CrossSection = pipeCrossSection;
-            
         }
 
         private static void SetSewerConnectionDefaultProperties(ISewerConnection sewerConnection)
@@ -100,6 +99,12 @@ namespace DelftTools.Hydro.Structures
             sewerConnection.LevelSource = -2.0;
             sewerConnection.LevelTarget = -2.0;
             sewerConnection.WaterType = SewerConnectionWaterType.Combined;
+
+            var sewerConnectionCrossSection = CrossSection.CreateDefault(CrossSectionType.Standard, sewerConnection, sewerConnection.Length / 2);
+            if (sewerConnection.Network is IHydroNetwork hydroNetwork)
+                sewerConnectionCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections, typeof(ICrossSection), true);
+            sewerConnectionCrossSection.UseSharedDefinition(sewerConnection is IPipe ? DefaultSewerProfile : DefaultSewerConnectionProfile);
+            sewerConnection.CrossSection = sewerConnectionCrossSection;
         }
 
         private static INode GetExistingOrNewManholeFromNetwork(IHydroNetwork network, Coordinate coordinate)
@@ -223,6 +228,12 @@ namespace DelftTools.Hydro.Structures
             var hydroNetwork = network as HydroNetwork;
             if (hydroNetwork == null) return;
             sewerConnection.Network = network;
+
+            if (hydroNetwork.SharedCrossSectionDefinitions.All(d => d.Name != DefaultSewerConnectionProfileDefinitionName))
+            {
+                hydroNetwork.SharedCrossSectionDefinitions.Add(DefaultSewerConnectionProfile);
+            }
+
             SetSewerConnectionProperties(sewerConnection, hydroNetwork);
 
             lock (network.Branches)

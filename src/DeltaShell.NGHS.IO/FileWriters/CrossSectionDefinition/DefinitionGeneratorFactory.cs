@@ -90,9 +90,9 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
                 {
                     return new DefinitionGeneratorCrossSectionLocationForChannel(CrossSectionRegion.IniHeader);
                 }
-                if(branchFeatureBranch is Pipe)
+                if(branchFeatureBranch is ISewerConnection)
                 {
-                    return new DefinitionGeneratorCrossSectionLocationForPipe(CrossSectionRegion.IniHeader);
+                    return new DefinitionGeneratorCrossSectionLocationForSewerConnection(CrossSectionRegion.IniHeader);
                 }
             }
             if (branchFeature is IObservationPoint)

@@ -28,11 +28,6 @@ namespace DelftTools.Hydro.SewerFeatures
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(SewerConnection));
 
-        private ICrossSectionDefinition defaultCrossSectionDefinition = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle {Diameter = 0.1})
-        {
-            Name = "Default sewer connection profile"
-        };
-
         private INode source;
         private INode target;
         private ICompartment sourceCompartment;
@@ -45,13 +40,9 @@ namespace DelftTools.Hydro.SewerFeatures
         {
         }
 
-        public SewerConnection(string name, bool useDefaultCrossSection = true)
+        public SewerConnection(string name)
             : base(name, null, null, 0)
         {
-            if (useDefaultCrossSection)
-            {
-                CrossSection = new CrossSection(new CrossSectionDefinitionProxy(defaultCrossSectionDefinition));
-            }
         }
 
         [DisplayName("Invert level from")]

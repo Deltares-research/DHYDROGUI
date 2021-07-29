@@ -175,7 +175,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<IHydroNode, HydroNodeProperties>();
             yield return new PropertyInfo<Manhole, ManholeProperties>();
             yield return new PropertyInfo<IChannel, ChannelProperties>();
-            yield return new PropertyInfo<Pipe, PipeProperties>();
             yield return new PropertyInfo<IHydroNetwork, HydroNetworkProperties>();
             yield return new PropertyInfo<IDrainageBasin, DrainageBasinProperties>();
             yield return new PropertyInfo<HydroRegion, HydroRegionProperties>();
@@ -237,23 +236,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     CompositeViewType = typeof(CompositeStructureView),
                     GetCompositeViewData = o => o.ParentStructure,
                 };
-            yield return new ViewInfo<ISewerConnection, PumpView>
-            {
-                AdditionalDataCheck = o => o != null && o.BranchFeatures.OfType<IPump>().Any() && o.BranchFeatures.OfType<IPump>().FirstOrDefault()?.ParentStructure != null,
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.BranchFeatures.OfType<IPump>().FirstOrDefault()?.ParentStructure,
-            };
             yield return new ViewInfo<IWeir, WeirView>
             {
                 AdditionalDataCheck = o => o != null && o.Branch != null,
                 CompositeViewType = typeof(CompositeStructureView),
                 GetCompositeViewData = o => o.ParentStructure,
-            };
-            yield return new ViewInfo<ISewerConnection, WeirView>
-            {
-                AdditionalDataCheck = o => o != null && o.BranchFeatures.OfType<IWeir>().Any() && o.BranchFeatures.OfType<IWeir>().FirstOrDefault()?.ParentStructure != null,
-                CompositeViewType = typeof(CompositeStructureView),
-                GetCompositeViewData = o => o.BranchFeatures.OfType<IWeir>().FirstOrDefault()?.ParentStructure,
             };
             yield return new ViewInfo<IBridge, BridgeView>
             {
