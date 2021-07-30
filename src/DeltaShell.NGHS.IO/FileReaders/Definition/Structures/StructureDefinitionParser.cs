@@ -7,15 +7,19 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Networks;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 {
     public static class StructureDefinitionParser
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(StructureDefinitionParser));
+
         private const string invertedSiphonTypeName = "invertedSiphon";
 
         public static IStructure1D ReadStructure(this IDelftIniCategory category, IList<ICrossSectionDefinition> crossSectionDefinitions, IBranch branch, string type)
@@ -75,15 +79,17 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
             var standardCrossSectionDefinition = definition as CrossSectionDefinitionStandard;
 
             var name = category.ReadProperty<string>(StructureRegion.Id.Key);
-            double shift;
+            double shift = 0d;
             if (category.ContainsProperty(StructureRegion.Shift.Key))
             {
                 shift = category.ReadProperty<double>(StructureRegion.Shift.Key);
             }
             else
             {
-                // no 'shift', get the deprecated 'bedLevel', or set to zero
-                shift = category.ReadProperty<double>(StructureRegion.BedLevel.Key, isOptional: true, defaultValue: 0.0d);
+                if (category.ContainsProperty("bedLevel"))
+                {
+                    log.Warn($"Bridge {name}: \"bedLevel\" is not supported any more. Please provide the proper shift value (which has been set to 0)");
+                }
             }
 
             var tabulatedCrossSectionDefinition = standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition();

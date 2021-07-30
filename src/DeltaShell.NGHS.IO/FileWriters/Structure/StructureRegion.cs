@@ -196,8 +196,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         #endregion
 
         #region Common Bridge Elements
-        // TODO: remove BedLeve (see FM1D2D-1671)
-        public static readonly ConfigurationSetting BedLevel = new ConfigurationSetting(key: "bedLevel", description: "Depricated: Original name for vertical shift of a bridge (rectangle) (m)");
         public static readonly ConfigurationSetting Shift = new ConfigurationSetting(key: "shift", description: "Vertical shift for lowest point of bridge (rectangle) (m)");
         #endregion
 
