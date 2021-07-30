@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             }
 
             var crossSectionDefinition = pipe.CrossSection?.Definition.GetBaseDefinition();
-            var crossSectionSections = new SectionsBindingList(SynchronizationContext.Current, crossSectionDefinition.Sections);
+            var crossSectionSections = new SectionsBindingList(SynchronizationContext.Current, crossSectionDefinition?.Sections);
             var network = pipe.Network as IHydroNetwork;
             var viewModel = CrossSectionDefinitionViewModelProvider.GetViewModel(crossSectionDefinition, network);
             profileChartView?.SetData(crossSectionDefinition, crossSectionSections, viewModel);
