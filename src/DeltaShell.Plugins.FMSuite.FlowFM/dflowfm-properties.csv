@@ -336,3 +336,18 @@ volumeTables,useVolumeTables,geometry,Volume Tables,Use Volume Tables,0|1,1,,,FA
 volumeTables,increment,geometry,Volume Tables,Increment(m),Double,0.1,0,,FALSE,useVolumeTables,useVolumeTables,,,,"Desired increment for volume tables (m)",
 volumeTables,useVolumeTablesFile,geometry,Volume Tables,Use Volume Table File,0|1,1,,,FALSE,useVolumeTables,useVolumeTables,,,,"Use volume table file (1:yes, 0: no)",
 hydrology,InterceptionModel,,Processes,Interception Model:None|on via layer thickness,0|1,0,0,1,FALSE,,,,,,"Interception model (0: none, 1: on, via layer thickness)"
+
+GUIOnly,WriteFouFile,output,Fourier analysis,Write Fou File,0|1,0,,,FALSE,,,,,,"Apply fourier analysis input to model simulation",
+output,FouFile,output,Fourier analysis,,FileName,,,,TRUE,,WriteFouFile,,,,"Fourier analysis input file *.fou",
+output,FouUpdateStep,output,Fourier analysis,Fourier update step:0|1,0|1,0,,,FALSE,,WriteFouFile,,,,"Fourier update step type: 0=every user time step, 1=every computational timestep",
+GUIOnly,WriteWlAverage,output,Fourier analysis,Write Water level average,0|1,0,,,FALSE,,WriteFouFile,,,,"Select variables on which the statistical analysis is to be performed",
+GUIOnly,WriteWlMaximum,output,Fourier analysis,Write Water level and water depth maximum,0|1,1,,,FALSE,,WriteFouFile,,,,"Select variables on which the statistical analysis is to be performed",
+GUIOnly,WriteWlMinimum,output,Fourier analysis,Write Water level and water depth minimum,0|1,0,,,FALSE,,WriteFouFile,,,,"Select variables on which the statistical analysis is to be performed",
+GUIOnly,WriteUcAverage,output,Fourier analysis,Write Velocity magnitude average,0|1,0,,,FALSE,,WriteFouFile,,,,"Select variables on which the statistical analysis is to be performed",
+GUIOnly,WriteUcMaximum,output,Fourier analysis,Write Velocity magnitude maximum,0|1,1,,,FALSE,,WriteFouFile,,,,"Select variables on which the statistical analysis is to be performed",
+GUIOnly,WriteUcMinimum,output,Fourier analysis,Write Velocity magnitude minimum,0|1,0,,,FALSE,,WriteFouFile,,,,"Select variables on which the statistical analysis is to be performed",
+
+
+
+
+

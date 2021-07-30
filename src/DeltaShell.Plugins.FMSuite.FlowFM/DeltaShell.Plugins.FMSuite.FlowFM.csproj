@@ -155,6 +155,12 @@
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="IO\FouFile\FouFileHeader.cs" />
+    <Compile Include="IO\FouFile\FouFileProperties.cs" />
+    <Compile Include="IO\FouFile\FouFileReader.cs" />
+    <Compile Include="IO\FouFile\FouFileRow.cs" />
+    <Compile Include="IO\FouFile\FouFileWriter.cs" />
+    <Compile Include="IO\FouFile\RowFactory.cs" />
     <Compile Include="IO\Importers\WaterFlowFMIntoWaterFlowFMFileImporter.cs" />
     <Compile Include="WaterFlowFmDimrCoupling.cs" />
     <Compile Include="IO\BndExtForceLateralSourceParser.cs" />
