@@ -705,7 +705,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             Assert.That((object) network.Manholes.Count(), Is.EqualTo(76));
             Assert.That((object) network.OutletCompartments.Count(), Is.EqualTo(4));
             Assert.That((object) network.SewerConnections.Count(), Is.EqualTo(97));
-            Assert.That((object) network.SharedCrossSectionDefinitions.Count, Is.EqualTo(41));
+            Assert.That((object) network.SharedCrossSectionDefinitions.Count, Is.EqualTo(42));
 
             Assert.That((object) network.Pumps.Count(), Is.EqualTo(8));
             Assert.That((object) network.Weirs.Count(), Is.EqualTo(8));
@@ -732,7 +732,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             var expectedNumberOfPipes = 81;
             var expectedNumberOfPumps = 8;
             var expectedNumberOfOrifices = 2;
-            var expectedNumberOfCrossSections = 41;
+            var expectedNumberOfCrossSections = 42;
 
             Assert.That(network.Pipes.Count(), Is.EqualTo(expectedNumberOfPipes)
                 , "Not all pipes have been imported correctly.");
@@ -1085,7 +1085,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             gwswImporter.ImportItem(sewerProfilesPath, model);
 
             //Check that sewer profiles have been put into the network
-            var numberOfLinesInFile = File.ReadAllLines(sewerProfilesPath).Length - 1;
+            var numberOfLinesInFile = File.ReadAllLines(sewerProfilesPath).Length;
             Assert.That((object) network.SharedCrossSectionDefinitions.Count, Is.EqualTo(numberOfLinesInFile));
 
             // Check the sewer profiles in the network
