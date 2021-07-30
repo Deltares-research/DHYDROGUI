@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                         var hfswData =
                             sobekCrossSectionDefinition.TabulatedProfile.Select(
                                 t =>
-                                    new HeightFlowStorageWidth(t.Height + bridge.Shift, t.TotalWidth, t.FlowWidth));
+                                    new HeightFlowStorageWidth(t.Height, t.TotalWidth, t.FlowWidth));
 
                         bridge.TabulatedCrossSectionDefinition.SetWithHfswData(hfswData);
                         bridge.YZCrossSectionDefinition.SetWithHfswData(hfswData);
