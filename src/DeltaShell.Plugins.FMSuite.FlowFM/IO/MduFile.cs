@@ -20,7 +20,6 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
@@ -59,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public const string MorphologyExtension = ".mor";
         public const string SedimentExtension = ".sed";
         public const string GullyFileName = "gullies.gui";
-        
+
         private readonly Dictionary<string, string> mduComments = new Dictionary<string, string>();
 
         private LdbFile landBoundariesFile;
@@ -168,11 +167,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             if (writeExtForcings)
             {
                 WriteExternalForcings(targetMduFilePath, modelDefinition, hydroArea, boundaryConditions1D, lateralSourcesData);
-            }
-
-            if(FouFileWriter.UseFouFile(modelDefinition))
-            {
-                FouFileWriter.Process(targetDir, modelDefinition);
             }
 
             if (modelDefinition.UseMorphologySediment)
@@ -816,7 +810,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         public void Read(string filePath, WaterFlowFMModelDefinition modelDefinition, HydroArea hydroArea, IHydroNetwork network, IDiscretization discretization, IEventedList<Model1DBoundaryNodeData> boundaryConditions1D, IEventedList<Model1DLateralSourceData> lateralSourcesData, IList<ModelFeatureCoordinateData<FixedWeir>> allFixedWeirsAndCorrespondingProperties, Action<string, int, int> reportProgress = null, IList<ModelFeatureCoordinateData<BridgePillar>> allBridgePillarsAndCorrespondingProperties = null)
         {
             if (reportProgress == null) reportProgress = (name, current, total) => { };
-            var totalSteps = 7;
+            var totalSteps = 6;
 
             reportProgress("Reading properties", 1, totalSteps);
             ReadProperties(filePath, modelDefinition);
@@ -943,11 +937,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             }
 
             reportProgress("Reading fm meteo external forcings file", 6, totalSteps);
-
-            reportProgress("Reading FouFile is used", 7, totalSteps);
-            string targetDir = System.IO.Path.GetDirectoryName(filePath);
-            FouFileReader.ReadFouFile(targetDir, modelDefinition);
             
+
             hydroArea.Embankments.AddRange(modelDefinition.Embankments);
         }
         

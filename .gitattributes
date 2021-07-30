@@ -2183,12 +2183,6 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FMMapFileFunctionStore.hbm.xml -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FeatureFile1D2DReader.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FeatureFile1D2DWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FmMapFile1DOutputFileReader.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FouFile/FouFileHeader.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FouFile/FouFileProperties.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FouFile/FouFileReader.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FouFile/FouFileRow.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FouFile/FouFileWriter.cs -text
-src/DeltaShell.Plugins.FMSuite.FlowFM/IO/FouFile/RowFactory.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/FileCopyException.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/ICopyHandler.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/Helpers/CopyHandlers/OverwriteCopyHandler.cs -text
@@ -5195,8 +5189,6 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMMapFileFunctionStoreTest.cs -t
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMModelSchemaCsvFileTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMPartitionExporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FeatureFile1D2DWriterTest.cs -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FouFile/FouFileHeaderTests.cs -text
-test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FouFile/FouFileRowTests.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/GroupablePointCloudImporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Helpers/FileCopyExceptionTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Helpers/OverwriteCopyHandlerTest.cs -text
