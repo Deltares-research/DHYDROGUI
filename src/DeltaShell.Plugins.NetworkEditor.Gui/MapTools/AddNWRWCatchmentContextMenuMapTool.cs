@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -5,8 +6,8 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
-using Fluent.Localization.Languages;
 using GeoAPI.Geometries;
+using log4net;
 using NetTopologySuite.Geometries;
 using SharpMap.UI.Tools;
 
@@ -14,6 +15,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 {
     internal class AddNWRWCatchmentContextMenuMapTool : MapTool
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(AddNWRWCatchmentContextMenuMapTool));
+
         public override bool AlwaysActive
         {
             get { return true; }
@@ -90,7 +93,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var width = Map.PixelSize * 30;
             catchment.SetAreaSize(width* width);
 
-            basin.Catchments.Add(catchment); 
             var branchAndDir = manhole.IncomingBranches
                 .Select(b => new {branch = b, incoming = true})
                 .Concat(manhole.OutgoingBranches.Select(b => new { branch = b, incoming = false }))
@@ -99,12 +101,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             if (branchAndDir == null) return;
 
             var branch = branchAndDir.branch;
+            var chainage = branchAndDir.incoming ? branch.Length : 0;
+
+            var existingLateral = branch.BranchFeatures.OfType<ILateralSource>().FirstOrDefault(l => Math.Abs(l.Chainage - chainage) < 1e-8);
+            if (existingLateral != null)
+            {
+                log.Error($"An lateral ({existingLateral.Name}) already exists at branch {branch.Name} ({chainage})");
+                return;
+            }
+                
             var lateral = new LateralSource
             {
                 Branch = branch, 
-                Chainage = branchAndDir.incoming ? branch.Length : 0,
+                Chainage = chainage,
                 Geometry = compartment.Geometry
             };
+
+            basin.Catchments.Add(catchment);
             branch.BranchFeatures.Add(lateral);
 
             parentRegion.Links.Add(new HydroLink(catchment, lateral){Geometry = new LineString(new []{catchment.Geometry.Coordinate, lateral.Geometry.Coordinate})});
