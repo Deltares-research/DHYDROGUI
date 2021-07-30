@@ -538,7 +538,7 @@ namespace DelftTools.Hydro.SewerFeatures
         {
             if (CrossSectionDefinitionName == null)
             {
-                CrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2);
+                CrossSection = CrossSections.CrossSection.CreateDefault(CrossSectionType.Standard, this, Length / 2, true, hydroNetwork);
             }
             else
             {

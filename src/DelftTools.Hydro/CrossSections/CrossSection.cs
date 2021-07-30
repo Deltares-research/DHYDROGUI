@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -189,7 +191,7 @@ namespace DelftTools.Hydro.CrossSections
             return CreateDefault(CrossSectionType.YZ, null, 0);
         }
 
-        public static ICrossSection CreateDefault(CrossSectionType definitionType, IBranch branch, double chainage=0.0, bool uniqueName = true)
+        public static ICrossSection CreateDefault(CrossSectionType definitionType, IBranch branch, double chainage=0.0, bool uniqueName = true, IHydroNetwork hydroNetwork = null)
         {
             var definition = GetDefaultDefinition(definitionType);
             var crossSection = new CrossSection(definition) {Branch = branch, Chainage = chainage};
@@ -198,7 +200,13 @@ namespace DelftTools.Hydro.CrossSections
             {
                 crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(crossSection.Network as HydroNetwork, crossSection);    
             }
-            
+
+            if (!(branch is IPipe))
+            {
+                var defaultDefinition = SewerFactory.GetDefaultSewerConnectionDefinition(hydroNetwork ?? branch.Network as IHydroNetwork);
+                crossSection.UseSharedDefinition(defaultDefinition);
+            }
+
             return crossSection;
         }
 

@@ -229,16 +229,27 @@ namespace DelftTools.Hydro.Structures
             if (hydroNetwork == null) return;
             sewerConnection.Network = network;
 
-            if (hydroNetwork.SharedCrossSectionDefinitions.All(d => d.Name != DefaultSewerConnectionProfileDefinitionName))
-            {
-                hydroNetwork.SharedCrossSectionDefinitions.Add(DefaultSewerConnectionProfile);
-            }
+            AddIfMissing(hydroNetwork, DefaultSewerConnectionProfile);
 
             SetSewerConnectionProperties(sewerConnection, hydroNetwork);
 
             lock (network.Branches)
                 network.Branches.Add(sewerConnection);
             BranchOrderHelper.SetOrderForBranch(network, sewerConnection);
+        }
+
+        public static ICrossSectionDefinition GetDefaultSewerConnectionDefinition(IHydroNetwork network)
+        {
+            AddIfMissing(network, DefaultSewerConnectionProfile);
+            return DefaultSewerConnectionProfile;
+        }
+
+        private static void AddIfMissing(IHydroNetwork network, ICrossSectionDefinition definition)
+        {
+            if (network.SharedCrossSectionDefinitions.All(d => d.Name != definition.Name))
+            {
+                network.SharedCrossSectionDefinitions.Add(definition);
+            }
         }
 
         private static void SetSewerConnectionProperties(SewerConnection sewerConnection, HydroNetwork hydroNetwork)
