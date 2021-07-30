@@ -19,6 +19,11 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
         private ITileSource selectedTileSource;
         private ResourceUrl resourceUrl;
 
+        private WmtsLayer() // used for cloning/saving
+        {
+
+        }
+
         /// <summary>
         /// Creates a WMTS layer based on the <paramref name="tileSources"/> and <paramref name="resourceUrl"/>
         /// </summary>

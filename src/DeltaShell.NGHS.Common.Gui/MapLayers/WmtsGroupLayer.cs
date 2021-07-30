@@ -68,6 +68,13 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
             }
         }
 
+        public override object Clone()
+        {
+            var clone = (WmtsGroupLayer) base.Clone();
+            clone.Url = url;
+            return clone;
+        }
+
         /// <summary>
         /// Generates child layers from WMTS capabilities
         /// </summary>
