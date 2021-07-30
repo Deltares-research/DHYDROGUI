@@ -201,9 +201,9 @@ namespace DelftTools.Hydro.CrossSections
                 crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(crossSection.Network as HydroNetwork, crossSection);    
             }
 
-            if (!(branch is IPipe))
+            if (branch is ISewerConnection && !(branch is IPipe))
             {
-                var defaultDefinition = SewerFactory.GetDefaultSewerConnectionDefinition(hydroNetwork ?? branch.Network as IHydroNetwork);
+                var defaultDefinition = SewerFactory.GetDefaultSewerConnectionDefinition(hydroNetwork ?? branch?.Network as IHydroNetwork);
                 crossSection.UseSharedDefinition(defaultDefinition);
             }
 

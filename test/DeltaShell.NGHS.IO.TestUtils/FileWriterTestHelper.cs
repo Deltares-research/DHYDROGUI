@@ -56,7 +56,11 @@ namespace DeltaShell.NGHS.IO.TestUtils
             var crossSection = CrossSection.CreateDefault(csType, branch, chainage);
             var name = HydroNetworkHelper.GetUniqueFeatureName((IHydroRegion)branch.Network, crossSection);
             crossSection.Name = name;
-            crossSection.Definition.Name = name;
+            if (!crossSection.Definition.IsProxy)
+            {
+                crossSection.Definition.Name = name;
+            }
+
             branch.BranchFeatures.Add(crossSection);
 
             if (makeProxy)

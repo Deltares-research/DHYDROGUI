@@ -246,7 +246,7 @@ namespace DelftTools.Hydro.Structures
 
         private static void AddIfMissing(IHydroNetwork network, ICrossSectionDefinition definition)
         {
-            if (network.SharedCrossSectionDefinitions.All(d => d.Name != definition.Name))
+            if (network != null && network.SharedCrossSectionDefinitions.All(d => d.Name != definition.Name))
             {
                 network.SharedCrossSectionDefinitions.Add(definition);
             }
