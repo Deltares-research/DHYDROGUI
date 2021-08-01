@@ -437,9 +437,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                             {
                                 Branch = branch,
                                 Chainage = branch.Length,
-                                Name = nwrwDischargeData.Name,
-                                LongName = nwrwDischargeData.Name,
-
+                                Name = "lat_"+ nwrwDischargeData.Name,
+                                LongName = Name
                             };
 
                             AddLateralSourceToBranch(branch, lateralSource);
