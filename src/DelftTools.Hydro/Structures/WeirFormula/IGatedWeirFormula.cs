@@ -6,5 +6,9 @@
     public interface IGatedWeirFormula : IWeirFormula
     {
         double GateOpening { get; set; }
+
+        double GateHeight { get; set; }
+
+        double LowerEdgeLevel { get; set; }
     }
 }

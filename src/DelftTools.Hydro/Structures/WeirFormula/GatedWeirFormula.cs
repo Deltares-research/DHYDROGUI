@@ -18,6 +18,8 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         public GatedWeirFormula(bool canBeTimeDependent)
         {
             GateOpening = 1.0;
+            LowerEdgeLevel = 11.0;
+            GateHeight = 0.0;
             ContractionCoefficient = 0.63;
             LateralContraction = 1.0;
             CanBeTimedependent = canBeTimeDependent;
@@ -97,7 +99,17 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// Gate opening (openlevel)
         /// </summary>
         public virtual double GateOpening { get; set; }
-        
+
+        /// <summary>
+        /// GateHeight
+        /// </summary>
+        public virtual double GateHeight { get; set; }
+
+        /// <summary>
+        /// LowerEdgeLevel
+        /// </summary>
+        public virtual double LowerEdgeLevel { get; set; }
+
         /// <summary>
         /// Time dependent Lower edge level
         /// </summary>
@@ -136,7 +148,9 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                     MaxFlowPos = MaxFlowPos, 
                     UseMaxFlowNeg = UseMaxFlowNeg, 
                     UseMaxFlowPos = UseMaxFlowPos,
-                    UseVelocityHeight = UseVelocityHeight
+                    UseVelocityHeight = UseVelocityHeight,
+                    GateHeight = GateHeight,
+                    LowerEdgeLevel = LowerEdgeLevel
             };
             if (gatedWeirFormula.CanBeTimedependent)
             {

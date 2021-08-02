@@ -219,7 +219,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 }
                 if (Formula == FormulaEnum.GeneralStructure)
                 {
-                    return (GeneralStructureWeirFormula.GateOpening + Weir.CrestLevel).ToString(CultureInfo.CurrentCulture);
+                    return (GeneralStructureWeirFormula.LowerEdgeLevel).ToString(CultureInfo.CurrentCulture);
                 }
                 return "0";
             }
@@ -238,7 +238,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                     }
                     if (Formula == FormulaEnum.GeneralStructure)
                     {
-                        GeneralStructureWeirFormula.GateOpening = newValue - Weir.CrestLevel;
+                        GeneralStructureWeirFormula.LowerEdgeLevel = newValue;
                     }
                 }
             }
@@ -260,7 +260,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 }
                 if (Formula == FormulaEnum.GeneralStructure)
                 {
-                    return GeneralStructureWeirFormula.GateOpening.ToString("0.00", CultureInfo.CurrentCulture);
+                    return (GeneralStructureWeirFormula.LowerEdgeLevel - weir.CrestLevel).ToString("0.00", CultureInfo.CurrentCulture);
                 }
                 return "0";
             }
@@ -277,6 +277,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
                 if (Formula == FormulaEnum.GeneralStructure)
                 {
                     GeneralStructureWeirFormula.GateOpening = double.Parse(value, CultureInfo.CurrentCulture);
+                }
+            }
+        }
+
+        [DynamicReadOnly]
+        [DisplayName("Gate height")]
+        public string GGateHeight
+        {
+            get
+            {
+                if (Formula == FormulaEnum.GeneralStructure)
+                {
+                    return GeneralStructureWeirFormula.GateHeight.ToString("0.00", CultureInfo.CurrentCulture);
+                }
+                return "0";
+            }
+            set
+            {
+                if (Formula == FormulaEnum.GeneralStructure)
+                {
+                    GeneralStructureWeirFormula.GateHeight = double.Parse(value, CultureInfo.CurrentCulture);
                 }
             }
         }
@@ -362,7 +383,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 return Formula != FormulaEnum.FreeFormWeir;
             }
-            if (propertyName == nameof(GLowerEdge) || propertyName == nameof(GGateOpening))
+
+            if (propertyName == nameof(GGateOpening))
+            {
+                return true;
+            }
+            if (propertyName == nameof(GLowerEdge) || propertyName == nameof(GGateHeight))
             {
                 if (Weir is IOrifice)
                 {

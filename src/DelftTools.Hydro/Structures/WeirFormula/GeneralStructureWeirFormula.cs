@@ -33,8 +33,8 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             { KnownGeneralStructureProperties.NegDrownWeirFlowCoeff, (f, v) => f.NegativeDrownedWeirFlow = v },
             { KnownGeneralStructureProperties.NegContrCoefFreeGate, (f, v) => f.NegativeContractionCoefficient = v },
             { KnownGeneralStructureProperties.ExtraResistance, (f, v) => { f.ExtraResistance = v; if (v == 0.0) f.UseExtraResistance = false; }},
-            { KnownGeneralStructureProperties.GateHeight, (f, v) => f.GateOpening = v },
-            { KnownGeneralStructureProperties.GateLowerEdgeLevel, (f, v) => {/* do nothing */} },
+            { KnownGeneralStructureProperties.GateHeight, (f, v) => f.GateHeight = v },
+            { KnownGeneralStructureProperties.GateLowerEdgeLevel, (f, v) => f.LowerEdgeLevel = v },
             { KnownGeneralStructureProperties.GateOpeningWidth, (f, v) => f.GateOpeningWidth = v },
             { KnownGeneralStructureProperties.CrestLength, (f, v) => f.CrestLength = v },
             { KnownGeneralStructureProperties.UseVelocityHeight, (f, v) => f.UseVelocityHeight = Convert.ToBoolean(v) },
@@ -63,6 +63,8 @@ namespace DelftTools.Hydro.Structures.WeirFormula
             ExtraResistance = 0.0;
 
             GateOpening = 1.0;
+            GateHeight = 1.0;
+            LowerEdgeLevel = 11;
             GateOpeningWidth = 0.0;
             CrestLength = 0.0;
             GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric;
@@ -234,9 +236,19 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         public virtual double ExtraResistance { get; set; }
 
         /// <summary>
-        /// Gateopening = GateHeight (gle) - level at crest
+        /// Gateopening = Gate lower edge level - crest level. This should be a readonly property, or even be removed FM1D2D-1694.
         /// </summary>
         public virtual double GateOpening { get; set; }
+
+        /// <summary>
+        /// Gate height
+        /// </summary>
+        public virtual double GateHeight { get; set; }
+
+        /// <summary>
+        /// LowerEdgeLevel
+        /// </summary>
+        public virtual double LowerEdgeLevel { get; set; }
 
         public virtual double GateOpeningWidth { get; set; }
 

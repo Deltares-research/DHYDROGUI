@@ -45,6 +45,9 @@
             this.LowerEdgeLevelLabel = new System.Windows.Forms.Label();
             this.GateOpeningUnitLabel = new System.Windows.Forms.Label();
             this.textBoxGateOpening = new System.Windows.Forms.TextBox();
+            this.GateHeightLabel = new System.Windows.Forms.Label();
+            this.textBoxGateHeight = new System.Windows.Forms.TextBox();
+            this.GateHeightUnitLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxWeirFormula = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -109,7 +112,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(568, 225);
+            this.groupBox1.Size = new System.Drawing.Size(568, 254);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Weir Properties";
@@ -179,7 +182,7 @@
             this.groupBoxGate.Controls.Add(this.tableLayoutPanel2);
             this.groupBoxGate.Location = new System.Drawing.Point(6, 148);
             this.groupBoxGate.Name = "groupBoxGate";
-            this.groupBoxGate.Size = new System.Drawing.Size(322, 71);
+            this.groupBoxGate.Size = new System.Drawing.Size(322, 99);
             this.groupBoxGate.TabIndex = 1;
             this.groupBoxGate.TabStop = false;
             this.groupBoxGate.Text = "Gate";
@@ -190,20 +193,24 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.tableLayoutPanel2.Controls.Add(this.labelLowerEdgeLevel, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.textBoxLowerEdgeLevel, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.labelGateOpening, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this.LowerEdgeLevelLabel, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.GateOpeningUnitLabel, 2, 1);
             this.tableLayoutPanel2.Controls.Add(this.textBoxGateOpening, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.GateHeightLabel, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.textBoxGateHeight, 1, 2);
+            this.tableLayoutPanel2.Controls.Add(this.GateHeightUnitLabel, 2, 2);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(316, 52);
+            this.tableLayoutPanel2.RowCount = 3;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(316, 80);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // labelLowerEdgeLevel
@@ -212,17 +219,17 @@
             this.labelLowerEdgeLevel.AutoSize = true;
             this.labelLowerEdgeLevel.Location = new System.Drawing.Point(3, 6);
             this.labelLowerEdgeLevel.Name = "labelLowerEdgeLevel";
-            this.labelLowerEdgeLevel.Size = new System.Drawing.Size(146, 13);
+            this.labelLowerEdgeLevel.Size = new System.Drawing.Size(144, 13);
             this.labelLowerEdgeLevel.TabIndex = 0;
             this.labelLowerEdgeLevel.Text = "Lower edge level";
             // 
             // textBoxLowerEdgeLevel
             // 
             this.textBoxLowerEdgeLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxLowerEdgeLevel.Location = new System.Drawing.Point(155, 3);
+            this.textBoxLowerEdgeLevel.Location = new System.Drawing.Point(153, 3);
             this.textBoxLowerEdgeLevel.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxLowerEdgeLevel.Name = "textBoxLowerEdgeLevel";
-            this.textBoxLowerEdgeLevel.Size = new System.Drawing.Size(78, 20);
+            this.textBoxLowerEdgeLevel.Size = new System.Drawing.Size(77, 20);
             this.textBoxLowerEdgeLevel.TabIndex = 1;
             this.textBoxLowerEdgeLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBoxLowerEdgeLevel.Validated += new System.EventHandler(this.TextBoxLowerEdgeLevelValidated);
@@ -233,7 +240,7 @@
             this.labelGateOpening.AutoSize = true;
             this.labelGateOpening.Location = new System.Drawing.Point(3, 32);
             this.labelGateOpening.Name = "labelGateOpening";
-            this.labelGateOpening.Size = new System.Drawing.Size(146, 13);
+            this.labelGateOpening.Size = new System.Drawing.Size(144, 13);
             this.labelGateOpening.TabIndex = 2;
             this.labelGateOpening.Text = "Gate opening";
             // 
@@ -241,7 +248,7 @@
             // 
             this.LowerEdgeLevelLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.LowerEdgeLevelLabel.AutoSize = true;
-            this.LowerEdgeLevelLabel.Location = new System.Drawing.Point(256, 6);
+            this.LowerEdgeLevelLabel.Location = new System.Drawing.Point(253, 6);
             this.LowerEdgeLevelLabel.Name = "LowerEdgeLevelLabel";
             this.LowerEdgeLevelLabel.Size = new System.Drawing.Size(15, 13);
             this.LowerEdgeLevelLabel.TabIndex = 9;
@@ -251,7 +258,7 @@
             // 
             this.GateOpeningUnitLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.GateOpeningUnitLabel.AutoSize = true;
-            this.GateOpeningUnitLabel.Location = new System.Drawing.Point(256, 32);
+            this.GateOpeningUnitLabel.Location = new System.Drawing.Point(253, 32);
             this.GateOpeningUnitLabel.Name = "GateOpeningUnitLabel";
             this.GateOpeningUnitLabel.Size = new System.Drawing.Size(15, 13);
             this.GateOpeningUnitLabel.TabIndex = 10;
@@ -260,13 +267,45 @@
             // textBoxGateOpening
             // 
             this.textBoxGateOpening.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxGateOpening.Location = new System.Drawing.Point(155, 29);
+            this.textBoxGateOpening.ReadOnly = true;
+            this.textBoxGateOpening.Location = new System.Drawing.Point(153, 29);
             this.textBoxGateOpening.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxGateOpening.Name = "textBoxGateOpening";
-            this.textBoxGateOpening.Size = new System.Drawing.Size(78, 20);
+            this.textBoxGateOpening.Size = new System.Drawing.Size(77, 20);
             this.textBoxGateOpening.TabIndex = 1;
             this.textBoxGateOpening.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.textBoxGateOpening.Validated += new System.EventHandler(this.TextBoxGateOpeningValidated);
+            // 
+            // GateHeightLabel
+            // 
+            this.GateHeightLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.GateHeightLabel.AutoSize = true;
+            this.GateHeightLabel.Location = new System.Drawing.Point(3, 59);
+            this.GateHeightLabel.Name = "GateHeightLabel";
+            this.GateHeightLabel.Size = new System.Drawing.Size(62, 13);
+            this.GateHeightLabel.TabIndex = 11;
+            this.GateHeightLabel.Text = "Gate height";
+            // 
+            // textBoxGateHeight
+            // 
+            this.textBoxGateHeight.Location = new System.Drawing.Point(153, 55);
+            this.textBoxGateHeight.Name = "textBoxGateHeight";
+            this.textBoxGateHeight.Size = new System.Drawing.Size(78, 20);
+            this.textBoxGateHeight.TabIndex = 12;
+            this.textBoxGateHeight.Validated += new System.EventHandler(this.TextBoxGateHeightValidated);
+            this.textBoxGateHeight.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // GateHeightUnitLabel
+            // 
+            this.GateHeightUnitLabel.AutoSize = true;
+            this.GateHeightUnitLabel.Dock = System.Windows.Forms.DockStyle.Left;
+            this.GateHeightUnitLabel.Location = new System.Drawing.Point(253, 52);
+            this.GateHeightUnitLabel.Name = "GateHeightUnitLabel";
+            this.GateHeightUnitLabel.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.GateHeightUnitLabel.Size = new System.Drawing.Size(15, 28);
+            this.GateHeightUnitLabel.TabIndex = 13;
+            this.GateHeightUnitLabel.Text = "m";
+            this.GateHeightUnitLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label1
             // 
@@ -295,7 +334,7 @@
             this.panel1.BackColor = System.Drawing.SystemColors.InactiveBorder;
             this.panel1.Location = new System.Drawing.Point(380, 48);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(4, 170);
+            this.panel1.Size = new System.Drawing.Size(4, 199);
             this.panel1.TabIndex = 35;
             // 
             // textBoxMaxNeg
@@ -384,7 +423,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 22F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.tableLayoutPanel1.Controls.Add(this.labelCrestLevel, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBoxCrestLevel, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.textBoxCrestWidth, 1, 2);
@@ -413,7 +452,7 @@
             this.labelCrestLevel.AutoSize = true;
             this.labelCrestLevel.Location = new System.Drawing.Point(3, 29);
             this.labelCrestLevel.Name = "labelCrestLevel";
-            this.labelCrestLevel.Size = new System.Drawing.Size(146, 13);
+            this.labelCrestLevel.Size = new System.Drawing.Size(144, 13);
             this.labelCrestLevel.TabIndex = 0;
             this.labelCrestLevel.Text = "Crest level";
             // 
@@ -422,10 +461,10 @@
             this.textBoxCrestLevel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCrestLevel.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceWeir, "CrestLevel", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
             this.textBoxCrestLevel.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceWeir, "SpecifyCrestLevelOnWeir", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBoxCrestLevel.Location = new System.Drawing.Point(155, 27);
+            this.textBoxCrestLevel.Location = new System.Drawing.Point(153, 27);
             this.textBoxCrestLevel.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxCrestLevel.Name = "textBoxCrestLevel";
-            this.textBoxCrestLevel.Size = new System.Drawing.Size(78, 20);
+            this.textBoxCrestLevel.Size = new System.Drawing.Size(77, 20);
             this.textBoxCrestLevel.TabIndex = 1;
             this.textBoxCrestLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -434,10 +473,10 @@
             this.textBoxCrestWidth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCrestWidth.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceWeir, "CrestWidth", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
             this.textBoxCrestWidth.DataBindings.Add(new System.Windows.Forms.Binding("Enabled", this.bindingSourceWeir, "SpecifyCrestWidthOnWeir", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.textBoxCrestWidth.Location = new System.Drawing.Point(155, 51);
+            this.textBoxCrestWidth.Location = new System.Drawing.Point(153, 51);
             this.textBoxCrestWidth.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxCrestWidth.Name = "textBoxCrestWidth";
-            this.textBoxCrestWidth.Size = new System.Drawing.Size(78, 20);
+            this.textBoxCrestWidth.Size = new System.Drawing.Size(77, 20);
             this.textBoxCrestWidth.TabIndex = 1;
             this.textBoxCrestWidth.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -447,7 +486,7 @@
             this.labelCrestWidth.AutoSize = true;
             this.labelCrestWidth.Location = new System.Drawing.Point(3, 53);
             this.labelCrestWidth.Name = "labelCrestWidth";
-            this.labelCrestWidth.Size = new System.Drawing.Size(146, 13);
+            this.labelCrestWidth.Size = new System.Drawing.Size(144, 13);
             this.labelCrestWidth.TabIndex = 0;
             this.labelCrestWidth.Text = "Crest width";
             // 
@@ -455,11 +494,11 @@
             // 
             this.textBoxOffsetY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxOffsetY.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.bindingSourceWeir, "OffsetY", true, System.Windows.Forms.DataSourceUpdateMode.OnValidation, null, "N3"));
-            this.textBoxOffsetY.Location = new System.Drawing.Point(155, 75);
+            this.textBoxOffsetY.Location = new System.Drawing.Point(153, 75);
             this.textBoxOffsetY.Margin = new System.Windows.Forms.Padding(3, 3, 20, 3);
             this.textBoxOffsetY.Name = "textBoxOffsetY";
             this.textBoxOffsetY.ReadOnly = true;
-            this.textBoxOffsetY.Size = new System.Drawing.Size(78, 20);
+            this.textBoxOffsetY.Size = new System.Drawing.Size(77, 20);
             this.textBoxOffsetY.TabIndex = 1;
             this.textBoxOffsetY.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -469,7 +508,7 @@
             this.labelOffsetY.AutoSize = true;
             this.labelOffsetY.Location = new System.Drawing.Point(3, 79);
             this.labelOffsetY.Name = "labelOffsetY";
-            this.labelOffsetY.Size = new System.Drawing.Size(146, 13);
+            this.labelOffsetY.Size = new System.Drawing.Size(144, 13);
             this.labelOffsetY.TabIndex = 0;
             this.labelOffsetY.Text = "Y offset";
             // 
@@ -479,7 +518,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(3, 5);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(146, 13);
+            this.label9.Size = new System.Drawing.Size(144, 13);
             this.label9.TabIndex = 3;
             this.label9.Text = "Crest shape (Cross-sectional)";
             // 
@@ -487,7 +526,7 @@
             // 
             this.CrestLevelUnitLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CrestLevelUnitLabel.AutoSize = true;
-            this.CrestLevelUnitLabel.Location = new System.Drawing.Point(256, 29);
+            this.CrestLevelUnitLabel.Location = new System.Drawing.Point(253, 29);
             this.CrestLevelUnitLabel.Name = "CrestLevelUnitLabel";
             this.CrestLevelUnitLabel.Size = new System.Drawing.Size(33, 13);
             this.CrestLevelUnitLabel.TabIndex = 6;
@@ -497,7 +536,7 @@
             // 
             this.CrestWidthUnitLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CrestWidthUnitLabel.AutoSize = true;
-            this.CrestWidthUnitLabel.Location = new System.Drawing.Point(256, 53);
+            this.CrestWidthUnitLabel.Location = new System.Drawing.Point(253, 53);
             this.CrestWidthUnitLabel.Name = "CrestWidthUnitLabel";
             this.CrestWidthUnitLabel.Size = new System.Drawing.Size(15, 13);
             this.CrestWidthUnitLabel.TabIndex = 7;
@@ -507,7 +546,7 @@
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(256, 79);
+            this.label4.Location = new System.Drawing.Point(253, 79);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(15, 13);
             this.label4.TabIndex = 8;
@@ -518,7 +557,7 @@
             this.labelGeometry.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.labelGeometry.AutoSize = true;
             this.labelGeometry.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelGeometry.Location = new System.Drawing.Point(155, 5);
+            this.labelGeometry.Location = new System.Drawing.Point(153, 5);
             this.labelGeometry.Name = "labelGeometry";
             this.labelGeometry.Size = new System.Drawing.Size(65, 13);
             this.labelGeometry.TabIndex = 9;
@@ -527,7 +566,7 @@
             // CrestLevelTimeDependentCheckBox
             // 
             this.CrestLevelTimeDependentCheckBox.AutoSize = true;
-            this.CrestLevelTimeDependentCheckBox.Location = new System.Drawing.Point(296, 27);
+            this.CrestLevelTimeDependentCheckBox.Location = new System.Drawing.Point(293, 27);
             this.CrestLevelTimeDependentCheckBox.Name = "CrestLevelTimeDependentCheckBox";
             this.CrestLevelTimeDependentCheckBox.Size = new System.Drawing.Size(15, 14);
             this.CrestLevelTimeDependentCheckBox.TabIndex = 10;
@@ -568,9 +607,9 @@
             this.groupBoxFormula.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBoxFormula.Controls.Add(this.panelFormula);
             this.groupBoxFormula.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxFormula.Location = new System.Drawing.Point(0, 225);
+            this.groupBoxFormula.Location = new System.Drawing.Point(0, 254);
             this.groupBoxFormula.Name = "groupBoxFormula";
-            this.groupBoxFormula.Size = new System.Drawing.Size(568, 246);
+            this.groupBoxFormula.Size = new System.Drawing.Size(568, 217);
             this.groupBoxFormula.TabIndex = 0;
             this.groupBoxFormula.TabStop = false;
             this.groupBoxFormula.Text = "Specific weir properties";
@@ -582,7 +621,7 @@
             this.panelFormula.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelFormula.Location = new System.Drawing.Point(3, 16);
             this.panelFormula.Name = "panelFormula";
-            this.panelFormula.Size = new System.Drawing.Size(562, 227);
+            this.panelFormula.Size = new System.Drawing.Size(562, 198);
             this.panelFormula.TabIndex = 5;
             // 
             // WeirView
@@ -655,5 +694,8 @@
         private System.Windows.Forms.Button OpenLowerEdgeLevelTimeSeriesButton;
         private System.Windows.Forms.Button OpenGateOpeningTimeSeriesButton;
         private System.Windows.Forms.CheckBox useVelocityHeightCheckBox;
+        private System.Windows.Forms.Label GateHeightLabel;
+        private System.Windows.Forms.TextBox textBoxGateHeight;
+        private System.Windows.Forms.Label GateHeightUnitLabel;
     }
 }

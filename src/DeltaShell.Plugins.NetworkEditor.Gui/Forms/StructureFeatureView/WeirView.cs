@@ -200,8 +200,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
             if (igatedWeirFormula != null)
             {
-                textBoxLowerEdgeLevel.Text = string.Format(NumberFormat, igatedWeirFormula.GateOpening + data.CrestLevel);
-                textBoxGateOpening.Text = string.Format(NumberFormat, igatedWeirFormula.GateOpening);
+                textBoxLowerEdgeLevel.Text = string.Format(NumberFormat, igatedWeirFormula.LowerEdgeLevel);
+                textBoxGateOpening.Text = string.Format(NumberFormat, igatedWeirFormula.LowerEdgeLevel - data.CrestLevel);
+                textBoxGateHeight.Text = string.Format(NumberFormat, igatedWeirFormula.GateHeight);
             }
 
             var gatedWeirFormula = data.WeirFormula as GatedWeirFormula;
@@ -421,6 +422,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
+        private void TextBoxGateHeightValidated(object sender, EventArgs e)
+        {
+            var gatedWeirFormula = data.WeirFormula as IGatedWeirFormula;
+            if (gatedWeirFormula == null)
+            {
+                return;
+            }
+
+            double gateHeight;
+            if (double.TryParse(textBoxGateHeight.Text, out gateHeight))
+            {
+                if (gateHeight < 0)
+                {
+                    gatedWeirFormula.GateHeight = 0;
+                    Log.WarnFormat("Gate height can not be negative and is set to 0");
+                }
+                else
+                {
+                    gatedWeirFormula.GateHeight = gateHeight;
+                }
+            }
+        }
+
         private void TextBoxLowerEdgeLevelValidated(object sender, EventArgs e)
         {
             var gatedWeirFormula = data.WeirFormula as IGatedWeirFormula;
@@ -429,17 +453,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 return;
             }
             double lowerEdge;
-            if (Double.TryParse(textBoxLowerEdgeLevel.Text, out lowerEdge))
+            if (double.TryParse(textBoxLowerEdgeLevel.Text, out lowerEdge))
             {
                 if (lowerEdge < data.CrestLevel)
                 {
                     lowerEdge = data.CrestLevel;
                     Log.WarnFormat("Gate lower edge can not be smaller than crest level, lower edge is set to crest level");
                 }
+                else
+                {
+                    gatedWeirFormula.LowerEdgeLevel = lowerEdge;
+                }
+
                 gatedWeirFormula.GateOpening = lowerEdge - data.CrestLevel;
             }
         }
-
+        
         private static void SetCorrectionCoefficientAndSubmergeLimit(RiverWeirFormula weirFormula, CrestShape crestShape)
         {
             double correctionCoefficient = 0.0;

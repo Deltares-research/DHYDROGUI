@@ -98,6 +98,36 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
             }
         }
 
+        public double GateHeight
+        {
+            get
+            {
+                if (!HasWeir) return 0;
+                var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
+                if (gatedWeirFormula == null)
+                {
+                    return 0;
+                }
+                return gatedWeirFormula.GateHeight;
+            }
+            set
+            {
+                if (!HasWeir) return;
+                var gatedWeirFormula = Weir.WeirFormula as GeneralStructureWeirFormula;
+                if (gatedWeirFormula == null)
+                {
+                    return;
+                }
+
+                if (gatedWeirFormula.GateHeight != value)
+                {
+                    gatedWeirFormula.GateHeight = value;
+
+                    OnPropertyChanged(nameof(GateHeight));
+                }
+            }
+        }
+
         public double GateOpeningWidth
         {
             get

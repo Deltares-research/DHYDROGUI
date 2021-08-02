@@ -332,7 +332,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                         PositiveDrownedWeirFlow = category.ReadProperty<double>(StructureRegion.PosDrownWeirFlowCoeff.Key, true, 1.0),
                         PositiveContractionCoefficient = category.ReadProperty<double>(StructureRegion.PosContrCoefFreeGate.Key, true, 1.0),
 
-
                         NegativeFreeGateFlow = category.ReadProperty<double>(StructureRegion.NegFreeGateFlowCoeff.Key, true, 1.0),
                         NegativeDrownedGateFlow = category.ReadProperty<double>(StructureRegion.NegDrownGateFlowCoeff.Key, true, 1.0),
                         NegativeFreeWeirFlow = category.ReadProperty<double>(StructureRegion.NegFreeWeirFlowCoeff.Key, true, 1.0),
@@ -342,10 +341,10 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                         ExtraResistance = extraResistance,
                         UseExtraResistance = Math.Abs(extraResistance) > tolerance,
 
-                        GateOpening = category.ReadProperty<double>(StructureRegion.GateHeight.Key, true, 1E10d),
+                        GateHeight = category.ReadProperty<double>(StructureRegion.GateHeight.Key, true, 1E10d),
                         CrestLength = category.ReadProperty<double>(StructureRegion.CrestLength.Key, true, 0.0),
                         GateOpeningWidth = category.ReadProperty<double>(StructureRegion.GateOpeningWidth.Key, true, 0.0),
-
+                        LowerEdgeLevel = category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel.Key, true, 11.0)
                     };
 
                     var gateOpeningDirection = category.ReadProperty<string>(StructureRegion.GateHorizontalOpeningDirection.Key, true, "symmetric");
@@ -362,11 +361,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                             break;
                         default:
                             throw new ArgumentException("Could not parse horizontal_opening_direction of type: " + gateOpeningDirection);
-                    }
-
-                    if (Math.Abs(generalStructureWeirFormula.GateOpening) < tolerance)
-                    {
-                        generalStructureWeirFormula.GateOpening = category.ReadProperty<double>(StructureRegion.GateLowerEdgeLevel.Key, true, 11.0) - weir.CrestLevel;
                     }
 
                     return generalStructureWeirFormula;

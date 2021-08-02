@@ -175,7 +175,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         public static readonly ConfigurationSetting NegDrownWeirFlowCoeff = new ConfigurationSetting(key: "negDrownWeirFlowCoeff", description: "Negative drowned weir flow (-)");
         public static readonly ConfigurationSetting NegContrCoefFreeGate = new ConfigurationSetting(key: "negContrCoefFreeGate", description: "Negative flow contraction coefficient (-)");
         public static readonly ConfigurationSetting ExtraResistance = new ConfigurationSetting(key: "extraResistance", description: "Extra resistance (-)");
-        public static readonly ConfigurationSetting GateHeight = new ConfigurationSetting(key: "gateHeight", description: "Gate opening height (m)");
+        public static readonly ConfigurationSetting GateHeight = new ConfigurationSetting(key: "gateHeight", description: "Gate height (m)");
         public static readonly ConfigurationSetting UseVelocityHeight = new ConfigurationSetting(key: "useVelocityHeight", description: "");
         public static readonly ConfigurationSetting CrestLength = new ConfigurationSetting(key: "crestLength", description: "");
         #endregion

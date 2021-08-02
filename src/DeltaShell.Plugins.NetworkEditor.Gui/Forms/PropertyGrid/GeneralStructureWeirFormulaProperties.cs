@@ -16,10 +16,24 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
         }
 
         [DisplayName("Gate opening")]
+        [ReadOnly(true)]
         public double GateOpening
         {
-            get { return GeneralStructureWeirFormula.GateOpening; }
-            set { GeneralStructureWeirFormula.GateOpening = value; }
+            get { return GeneralStructureWeirFormula.LowerEdgeLevel - weir.CrestLevel; }
+        }
+
+        [DisplayName("Gate height")]
+        public double GateHeight
+        {
+            get { return GeneralStructureWeirFormula.GateHeight; }
+            set { GeneralStructureWeirFormula.GateHeight = value; }
+        }
+
+        [DisplayName("Gate lower edge level")]
+        public double LowerEdgeLevel
+        {
+            get { return GeneralStructureWeirFormula.LowerEdgeLevel; }
+            set { GeneralStructureWeirFormula.LowerEdgeLevel = value; }
         }
 
         [DisplayName("Positive free gate flow")]

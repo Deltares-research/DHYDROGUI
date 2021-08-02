@@ -30,7 +30,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             IniCategory.AddProperty(StructureRegion.Downstream1Level.Key, formula.BedLevelRightSideStructure, StructureRegion.Downstream1Level.Description, StructureRegion.Downstream1Level.Format);
             IniCategory.AddProperty(StructureRegion.Downstream2Level.Key, formula.BedLevelRightSideOfStructure, StructureRegion.Downstream2Level.Description, StructureRegion.Downstream2Level.Format);
 
-            IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, (weir.CrestLevel + formula.GateOpening), StructureRegion.GateLowerEdgeLevel.Description, StructureRegion.GateLowerEdgeLevel.Format);
+            IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, formula.LowerEdgeLevel, StructureRegion.GateLowerEdgeLevel.Description, StructureRegion.GateLowerEdgeLevel.Format);
 
             IniCategory.AddProperty(StructureRegion.PosFreeGateFlowCoeff.Key, formula.PositiveFreeGateFlow, StructureRegion.PosFreeGateFlowCoeff.Description, StructureRegion.PosFreeGateFlowCoeff.Format);
             IniCategory.AddProperty(StructureRegion.PosDrownGateFlowCoeff.Key, formula.PositiveDrownedGateFlow, StructureRegion.PosDrownGateFlowCoeff.Description, StructureRegion.PosDrownGateFlowCoeff.Format);
@@ -50,7 +50,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var extraResistance = formula.UseExtraResistance ? formula.ExtraResistance : 0.0;
             IniCategory.AddProperty(StructureRegion.ExtraResistance.Key, extraResistance, StructureRegion.ExtraResistance.Description, StructureRegion.ExtraResistance.Format);
             
-            IniCategory.AddProperty(StructureRegion.GateHeight.Key, formula.GateOpening, StructureRegion.GateHeight.Description , StructureRegion.GateHeight.Format);
+            IniCategory.AddProperty(StructureRegion.GateHeight.Key, formula.GateHeight, StructureRegion.GateHeight.Description , StructureRegion.GateHeight.Format);
             IniCategory.AddProperty(StructureRegion.GateOpeningWidth.Key, formula.GateOpeningWidth, StructureRegion.GateOpeningWidth.Description , StructureRegion.GateOpeningWidth.Format);
 
             // switch the horizontal direction, because enums aren't used very nicely in the csv file (structure definition).
