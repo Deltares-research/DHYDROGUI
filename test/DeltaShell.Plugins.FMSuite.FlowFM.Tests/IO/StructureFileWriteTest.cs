@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     BedLevelRightSideStructure = 9.0,
                     BedLevelRightSideOfStructure = 10.0,
 
-                    GateOpening = 11.0,
+                    GateHeight = 11.0,
 
                     PositiveFreeGateFlow = 12.0,
                     PositiveDrownedGateFlow = 13.0,

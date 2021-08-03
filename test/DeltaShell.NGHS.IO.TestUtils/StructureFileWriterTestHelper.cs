@@ -126,6 +126,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
         public const double GENERAL_STRUCTURE_LEVEL_CENTER = 1.1;
         public const double GENERAL_STRUCTURE_LEVEL_RIGHT_ZBSR = 0.6;
         public const double GENERAL_STRUCTURE_LEVEL_RIGHT_ZB2 = 1.1;
+        public const double GENERAL_STRUCTURE_LOWER_EDGE_LEVEL = 11.0;
         public const double GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_POS = 1.2;
         public const double GENERAL_STRUCTURE_DROWN_GATE_FLOW_COEFF_POS = 0.7;
         public const double GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_POS = 1.2;
@@ -376,11 +377,12 @@ namespace DeltaShell.NGHS.IO.TestUtils
             };
         }
 
-        public static void AddGeneralStructure(this IBranch branch, long id, string name, double chainage, double gateOpening, double extraResistance,
+        public static void AddGeneralStructure(this IBranch branch, long id, string name, double chainage, double gateHeight, double extraResistance,
                                                 double widthLeftW1, double widthLeftWsdl, double widthCenter, double widthRightWsdr, double widthRightW2,
                                                 double levelLeftZb1, double levelLeftZbsl, double levelCenter, double levelRightZbsr, double levelRightZb2,
                                                 double posFreeGateFlowCoeff, double posDrownGateFlowCoeff, double posFreeWeirFlowCoeff, double posDrownWeirFlowCoeff, double posContrCoefFreeGate,
                                                 double negFreeGateFlowCoeff, double negDrownGateFlowCoeff, double negFreeWeirFlowCoeff, double negDrownWeirFlowCoeff, double negContrCoefFreeGate,
+                                                double lowerEdgeLevel,
                                                 bool useVelocityHeight,
                                                 bool useExtraResistance = true)
         {
@@ -401,7 +403,8 @@ namespace DeltaShell.NGHS.IO.TestUtils
                 BedLevelRightSideStructure = levelRightZbsr,
                 BedLevelRightSideOfStructure = levelRightZb2,
 
-                GateOpening = gateOpening, // gateHeight = CrestLevel(BedLevelStructureCentre) + GateOpening
+                GateHeight = gateHeight,
+                LowerEdgeLevel = lowerEdgeLevel,
 
                 PositiveFreeGateFlow = posFreeGateFlowCoeff,
                 PositiveDrownedGateFlow = posDrownGateFlowCoeff,

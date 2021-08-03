@@ -64,7 +64,7 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
             GateOpening = 1.0;
             GateHeight = 1.0;
-            LowerEdgeLevel = 11;
+            LowerEdgeLevel = 11.0;
             GateOpeningWidth = 0.0;
             CrestLength = 0.0;
             GateOpeningHorizontalDirection = GateOpeningDirection.Symmetric;
@@ -105,7 +105,9 @@ namespace DelftTools.Hydro.Structures.WeirFormula
                     GateOpeningWidth = GateOpeningWidth,
                     CrestLength = CrestLength,
                     GateOpeningHorizontalDirection = GateOpeningHorizontalDirection,
-                    UseVelocityHeight = UseVelocityHeight
+                    UseVelocityHeight = UseVelocityHeight,
+                    LowerEdgeLevel = LowerEdgeLevel,
+                    GateHeight = GateHeight
                 };
             return clone;
         }

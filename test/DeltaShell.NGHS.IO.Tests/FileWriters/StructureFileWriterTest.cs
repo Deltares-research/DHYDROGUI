@@ -138,6 +138,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LOWER_EDGE_LEVEL,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_USE_VELOCITY_HEIGHT);
 
             branch.AddCulvert(
@@ -658,6 +659,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LOWER_EDGE_LEVEL,
                 !StructureFileWriterTestHelper.GENERAL_STRUCTURE_USE_VELOCITY_HEIGHT
                 );
 
@@ -717,8 +719,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
             Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_RIGHT_ZB2.ToString(StructureRegion.Downstream2Level.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.GateLowerEdgeLevel.Key);
-            Assert.AreEqual((StructureFileWriterTestHelper.GENERAL_STRUCTURE_GATE_OPENING + StructureFileWriterTestHelper.GENERAL_STRUCTURE_LEVEL_CENTER)
-                .ToString(StructureRegion.GateLowerEdgeLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
+            Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_LOWER_EDGE_LEVEL.ToString(StructureRegion.GateLowerEdgeLevel.Format, CultureInfo.InvariantCulture), idProperty.Value);
 
             idProperty = content.Properties.First(p => p.Name == StructureRegion.PosFreeGateFlowCoeff.Key);
             Assert.AreEqual(StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_GATE_FLOW_COEFF_POS.ToString(StructureRegion.PosFreeGateFlowCoeff.Format, CultureInfo.InvariantCulture), idProperty.Value);
@@ -789,6 +790,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_FREE_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_DROWN_WEIR_FLOW_COEFF_NEG,
                 StructureFileWriterTestHelper.GENERAL_STRUCTURE_CONTROL_COEFF_FREE_GATE_NEG,
+                StructureFileWriterTestHelper.GENERAL_STRUCTURE_LOWER_EDGE_LEVEL,
                 false);
 
             StructureFileWriterTestHelper.WriteCrossSectionsToIni(network.Structures);

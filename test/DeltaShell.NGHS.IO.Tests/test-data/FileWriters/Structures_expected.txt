@@ -113,7 +113,7 @@
     crestLevel            = 1.100               
     downstream1Level      = 0.600               
     downstream2Level      = 1.100               
-    gateLowerEdgeLevel    = 2.600               
+    gateLowerEdgeLevel    = 11.000              
     posFreeGateFlowCoeff  = 1.200               
     posDrownGateFlowCoeff = 0.700               
     posFreeWeirFlowCoeff  = 1.200               

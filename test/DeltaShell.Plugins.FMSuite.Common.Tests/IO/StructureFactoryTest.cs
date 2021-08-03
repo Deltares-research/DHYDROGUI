@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
             foreach (var knownProperty in knownProperties)
             {
                 var property = (KnownGeneralStructureProperties) knownProperty;
-                if (property == KnownGeneralStructureProperties.GateLowerEdgeLevel || property == KnownGeneralStructureProperties.GateOpeningHorizontalDirection) continue;
+                if (property == KnownGeneralStructureProperties.GateOpeningHorizontalDirection) continue;
 
                 var generalStructure = new Structure2D(StructureRegion.StructureTypeName.GeneralStructure);
                 generalStructure.AddProperty(property.GetDescription(), typeof(double), "12.34");
@@ -169,7 +169,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {KnownGeneralStructureProperties.CrestLevel, weirFormula.BedLevelStructureCentre },
                 {KnownGeneralStructureProperties.Downstream1Level, weirFormula.BedLevelRightSideStructure },
                 {KnownGeneralStructureProperties.Downstream2Level, weirFormula.BedLevelRightSideOfStructure },
-                {KnownGeneralStructureProperties.GateHeight, weirFormula.GateOpening},
+                {KnownGeneralStructureProperties.GateHeight, weirFormula.GateHeight},
                 {KnownGeneralStructureProperties.PosFreeGateFlowCoeff, weirFormula.PositiveFreeGateFlow},
                 {KnownGeneralStructureProperties.PosDrownGateFlowCoeff, weirFormula.PositiveDrownedGateFlow},
                 {KnownGeneralStructureProperties.PosFreeWeirFlowCoeff, weirFormula.PositiveFreeWeirFlow},
@@ -180,7 +180,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.IO
                 {KnownGeneralStructureProperties.NegFreeWeirFlowCoeff, weirFormula.NegativeFreeWeirFlow},
                 {KnownGeneralStructureProperties.NegDrownWeirFlowCoeff, weirFormula.NegativeDrownedWeirFlow},
                 {KnownGeneralStructureProperties.NegContrCoefFreeGate, weirFormula.NegativeContractionCoefficient},
-                {KnownGeneralStructureProperties.ExtraResistance, weirFormula.ExtraResistance}
+                {KnownGeneralStructureProperties.ExtraResistance, weirFormula.ExtraResistance},
+                {KnownGeneralStructureProperties.GateLowerEdgeLevel, weirFormula.LowerEdgeLevel},
             };
             return dictionary;
         }
