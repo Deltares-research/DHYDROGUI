@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     BedLevelRightSideOfStructure = 10.0,
 
                     GateHeight = 11.0,
-
+                    
                     PositiveFreeGateFlow = 12.0,
                     PositiveDrownedGateFlow = 13.0,
                     PositiveFreeWeirFlow = 14.0,
@@ -60,6 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     NegativeDrownedWeirFlow = 20.0,
                     NegativeContractionCoefficient = 21.0,
                     ExtraResistance = 22.0,
+                    LowerEdgeLevel = 19.0
                 }
             };
             structs.Add(generalStructureWeir);
@@ -117,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 "    crestLength           = 0.000               " + Environment.NewLine +
                 "    useVelocityHeight     = true                " + Environment.NewLine +
                 "    extraResistance       = 22.000              # Extra resistance (-)" + Environment.NewLine +
-                "    gateHeight            = 11.000              # Gate opening height (m)" + Environment.NewLine +
+                "    gateHeight            = 11.000              # Gate height (m)" + Environment.NewLine +
                 "    gateOpeningWidth      = 0.000               " + Environment.NewLine +
                 "    gateOpeningHorizontalDirection= symmetric           " + Environment.NewLine +
                 Environment.NewLine +
