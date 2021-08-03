@@ -84,7 +84,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
             var catchment = new Catchment
             {
-                Name = $"{compartment.Name}_catchment",
+                Name = $"{compartment.Name}",
                 CatchmentType = CatchmentType.NWRW,
                 IsGeometryDerivedFromAreaSize = true,
                 Geometry = compartment?.Geometry?.Centroid
@@ -114,6 +114,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 Branch = branch, 
                 Chainage = chainage,
+                Name = $"{compartment.Name}",
                 Geometry = compartment.Geometry
             };
 
