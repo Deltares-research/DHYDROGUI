@@ -337,7 +337,7 @@ output,NcNoForcedFlush,output,Others,Apply NcNoForcedFlush?,0|1,0,,,FALSE,,,,,,"
 output,Wrimap_wet_waterdepth_threshold,output,Map,Write map wet waterdepth threshold?,Double,0.01,,,FALSE,,,,,,Waterdepth threshold above which a grid point counts as wet. Used for Wrimap_time_water_on_ground.,,,
 GUIOnly,UnifFrictCoefChannels,physics,Roughness (1D),Uniform friction coefficient,Double, 2.3d-2,0,,FALSE,,,,,,Uniform friction coefficient 1D channels,,,
 GUIOnly,UnifFrictTypeChannels,physics,Roughness (1D),Uniform friction type:Chezy|Manning|Strickler kn|Strickler ks|White & Colebrook|Bos & Bijkerk|Wall Law Nikuradse,0|1|2|3|4|7|8,1,0,8,FALSE,,,,,,Uniform friction type (0:Chezy 1:Manning 2:Strickler kn 3:Strickler ks 4:White & Colebrook 7:Bos & Bijkerk 8:Wall Law Nikuradse),,,
-geometry,UseCaching,geometry,Others,Use caching,0|1,1,,,FALSE,,,,,,"Use caching of flow model geometry input (1: yes, 0: no)",,,
+geometry,UseCaching,geometry,Others,Use caching,0|1,0,,,FALSE,,,,,,"Use caching of flow model geometry input (1: yes, 0: no)",,,
 volumeTables,useVolumeTables,geometry,Volume Tables,Use Volume Tables,0|1,1,,,FALSE,,,,,,"Use 1D volume tables (1: yes, 0: no)",,,
 volumeTables,increment,geometry,Volume Tables,Increment(m),Double,0.1,0,,FALSE,useVolumeTables,useVolumeTables,,,,Desired increment for volume tables (m),,,
 volumeTables,useVolumeTablesFile,geometry,Volume Tables,Use Volume Table File,0|1,1,,,FALSE,useVolumeTables,useVolumeTables,,,,"Use volume table file (1:yes, 0: no)",,,
