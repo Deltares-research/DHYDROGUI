@@ -857,7 +857,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 Visible = false,
                 Selectable = true,
                 NameIsReadOnly = true,
-                DataSource = new ComplexFeatureCollection(fmModel.Network, (IList)lateralSourceDataList, typeof(Model1DBoundaryNodeData)),
+                DataSource = new ComplexFeatureCollection(fmModel.Network, (IList)lateralSourceDataList, typeof(Model1DLateralSourceData)),
                 Theme = new CategorialTheme
                 {
                     AttributeName = nameof(Model1DLateralSourceData.DataType),
