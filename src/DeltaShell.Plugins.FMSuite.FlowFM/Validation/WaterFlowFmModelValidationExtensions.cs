@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
 using DelftTools.Hydro.Validators;
 using DelftTools.Shell.Core.Workflow;
@@ -33,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 WaterFlowFMModelDefinitionValidator.Validate(model),
                 WaterFlowFMBoundaryConditionValidator.Validate(model),
                 WaterFlowFMArea2DValidator.Validate(model),
-                ValidateRestartInput(model),
+                ValidateInitialConditions(model),
                 WaterFlowFMEmbankmentValidator.Validate(model),
                 WaterFlowFMEnclosureValidator.Validate(model),
                 WaterFlowFMHydroLinksValidator.Validate(model)
@@ -149,24 +150,31 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             }
             return new ValidationReport("Model Coordinate System", issues);
         }
-
-        private static ValidationReport ValidateRestartInput(WaterFlowFMModel model)
+        private static ValidationReport ValidateInitialConditions(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();
 
             var initCondCategory = model.ModelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalValue1D).PropertyDefinition.Category;
             string restartFileName = model.ModelDefinition.GetModelProperty(KnownProperties.RestartFile).GetValueAsString();
 
-            if (string.IsNullOrWhiteSpace(restartFileName))
-            {
-                return new ValidationReport("Initial Conditions", issues);
-            }
-
             var validationShortcut = new FmValidationShortcut
             {
                 FlowFmModel = model,
                 TabName = "Initial conditions"
             };
+
+            if (string.IsNullOrWhiteSpace(restartFileName))
+            {
+                // no restart file used. check global 2D water depth initial condition (not stored in mdu, spatial definition required)
+                var initialWaterCondition2DQuantity = (InitialConditionQuantity)(int)model.ModelDefinition.GetModelProperty(GuiProperties.InitialConditionGlobalQuantity2D).Value;
+                var waterDepthSpatialOperations = model.ModelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterDepthDataItemName);
+                if (initialWaterCondition2DQuantity == InitialConditionQuantity.WaterDepth && (waterDepthSpatialOperations == null || !waterDepthSpatialOperations.Any()))
+                {
+                    issues.Add(new ValidationIssue(model, ValidationSeverity.Error,
+                                                   "Initial 2D water depth selected, but no spatial operations defined for water depth. (Global water depth value currently not supported.) Add operations and re-validate saving model.)", validationShortcut));
+                }
+                return new ValidationReport("Initial Conditions", issues);
+            }
 
             var splitFileName = restartFileName.Split(new[] { '_', '.' }, StringSplitOptions.RemoveEmptyEntries);
             var length = splitFileName.Length;
