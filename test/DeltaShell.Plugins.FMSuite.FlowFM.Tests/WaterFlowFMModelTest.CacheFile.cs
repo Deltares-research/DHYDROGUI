@@ -344,8 +344,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             using (var model = new WaterFlowFMModel())
             {
                 // Call
+                model.ModelDefinition.SetModelProperty(KnownProperties.UseCaching, true);
+                
                 model.OnFinishIntegratedModelRun(workingDirectoryIntegratedModel);
-
+                
                 string expectedPath = Path.Combine(workingDirectoryIntegratedModel, model.DirectoryName,
                                                    Path.ChangeExtension(model.Name,
                                                                         FileConstants.CachingFileExtension));
