@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         /// - category in <paramref name="itemString"/> is unknown
         /// - feature in <paramref name="itemString"/> is unknown
         /// </exception>
-        public IList<IHydroObject> GetLinkHydroObjectsByItemString(string itemString)
+        public IHydroObject GetLinkHydroObjectByItemString(string itemString)
         {
             string[] stringParts = itemString.Split('/');
 
@@ -67,7 +67,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                                                           featureName, itemString));
             }
 
-            return new List<IHydroObject> {hydroObject};
+            return hydroObject;
         }
 
         /// <inheritdoc/>

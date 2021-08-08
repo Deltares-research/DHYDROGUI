@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using DelftTools.Hydro;
 
 namespace DeltaShell.Dimr
@@ -18,7 +17,7 @@ namespace DeltaShell.Dimr
         /// </summary>
         /// <param name="itemString"> The item string.</param>
         /// <returns> The corresponding hydro object. </returns>
-        IList<IHydroObject> GetLinkHydroObjectsByItemString(string itemString);
+        IHydroObject GetLinkHydroObjectByItemString(string itemString);
 
         /// <summary>
         /// Prepares the instance before coupling.

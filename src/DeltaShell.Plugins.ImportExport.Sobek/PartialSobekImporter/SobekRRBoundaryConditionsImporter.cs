@@ -38,10 +38,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var rainfallRunoffModel = GetModel<RainfallRunoffModel>();
             rainfallRunoffModel.LateralToCatchmentLookup.Clear();
 
-            rainfallRunoffModel.LateralToCatchmentLookup = new SobekRRLinkReader()
-                .Read(GetFilePath(SobekFileNames.SobekRRLinkFileName))
-                .GroupBy(l => l.NodeToId)
-                .ToDictionary(g => g.Key, g => g.ToArray(), StringComparer.InvariantCultureIgnoreCase);
+            Dictionary<string, SobekRRLink[]> linksLookup = new SobekRRLinkReader()
+                                                            .Read(GetFilePath(SobekFileNames.SobekRRLinkFileName))
+                                                            .GroupBy(l => l.NodeToId)
+                                                            .ToDictionary(g => g.Key, g => g.ToArray(), StringComparer.InvariantCultureIgnoreCase);
 
             if (SetFilePath(GetFilePath(SobekFileNames.SobekCaseDescriptionFile)) ||
                 (File.Exists(GetFilePath("BOUND3B.3B")) && File.Exists(GetFilePath("BOUND3B.tbl"))))
@@ -50,15 +50,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 filePathBoundaryConditions = GetFilePath("BOUND3B.3B");
                 filePathBoundaryTableConditions = GetFilePath("BOUND3B.tbl");
 
-                ReadAndSetBoundaryConditions(rainfallRunoffModel);
+                ReadAndSetBoundaryConditions(rainfallRunoffModel, linksLookup);
             }
             if (File.Exists(GetFilePath("BoundaryConditions.bc")))
             {
-                ReadAndSetBoundaryConditionsViaBC(rainfallRunoffModel);
+                ReadAndSetBoundaryConditionsViaBC(rainfallRunoffModel, linksLookup);
             }
         }
 
-        private void ReadAndSetBoundaryConditionsViaBC(RainfallRunoffModel model)
+        private void ReadAndSetBoundaryConditionsViaBC(RainfallRunoffModel model, IReadOnlyDictionary<string, SobekRRLink[]> linksLookup)
         {
             var boundaryDatas = model.BoundaryData;
             
@@ -75,10 +75,26 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     boundaryData.IsConstant = bcBlockData.FunctionType.Equals("constant", StringComparison.InvariantCultureIgnoreCase);
                     boundaryData.Data.Time.ExtrapolationType = ExtrapolationType.Constant;
                 }
+                else
+                {
+                    string locationId = bcBlockData.SupportPoint;
+                    if (linksLookup.TryGetValue(locationId, out SobekRRLink[] links))
+                    {
+                        SobekRRLink link = links[0];
+
+                        if (links.Length > 1)
+                        {
+                            string linksToSkip = string.Join(", ", links.Skip(1).Select(l => $"'{l.Id}'"));
+                            log.Warn($"Multiple links to '{locationId}' have been found. Only one link is currently supported. Using the first link '{link.Id}'. Skipping: {linksToSkip}.");
+                        }
+
+                        model.LateralToCatchmentLookup.Add(locationId, link.NodeFromId);
+                    }
+                }
             }
         }
 
-        private void ReadAndSetBoundaryConditions(RainfallRunoffModel model)
+        private void ReadAndSetBoundaryConditions(RainfallRunoffModel model, IReadOnlyDictionary<string, SobekRRLink[]> linksLookup)
         {
             var formatBCTable = new DataTable();
             formatBCTable.Columns.Add(new DataColumn("DateTime", typeof(DateTime)));
@@ -135,7 +151,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 else
                 {
                     //put condition on the linked unpaved catchments
-                    model.LateralToCatchmentLookup.TryGetValue(bc.Id, out var incomingLinksToBoundary);
+                    linksLookup.TryGetValue(bc.Id, out var incomingLinksToBoundary);
                     if (incomingLinksToBoundary == null) continue;
 
                     foreach (SobekRRLink incomingLink in incomingLinksToBoundary)
