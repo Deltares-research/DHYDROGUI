@@ -326,6 +326,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
                 model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
                 model.WorkingDirectoryPathFunc = () => testTempDirectory;
                 model.CacheFile.UpdatePathToMduLocation(mduFilePath);
+                model.ModelDefinition.SetModelProperty(KnownProperties.UseCaching, true);
 
                 // When 
                 model.Initialize();
