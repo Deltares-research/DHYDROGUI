@@ -51,7 +51,7 @@ namespace DeltaShell.NGHS.IO.DataObjects
                                        };
 
             Data = HydroTimeSeriesFactory.CreateFlowTimeSeries();
-            DataType = Model1DLateralDataType.FlowTimeSeries;
+            DataType = Model1DLateralDataType.FlowConstant;
         }
 
         public override IFunction Data
