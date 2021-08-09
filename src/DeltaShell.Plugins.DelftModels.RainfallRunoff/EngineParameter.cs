@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public EngineParameter()
         {
         }
-
         /// <summary>
         /// EngineParameter is used to communicate parameter settings with Model. 
         /// </summary>
@@ -46,6 +45,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         [NoNotifyPropertyChange]
         public virtual DataItemRole Role { get; protected set; }
+        
+        [NoNotifyPropertyChange]
+        public virtual bool IsEnabled { get; set; }
 
         public virtual Unit Unit
         {
@@ -69,7 +71,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             return new EngineParameter(QuantityType, ElementSet, Role, Name, Unit)
                 {
-                    AggregationOptions = AggregationOptions
+                    AggregationOptions = AggregationOptions,
+                    IsEnabled = IsEnabled
                 };
         }
 

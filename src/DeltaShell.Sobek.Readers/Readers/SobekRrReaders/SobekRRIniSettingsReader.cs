@@ -148,11 +148,17 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
         private void getOutputSettings()
         {
-            var outputOptions = iniReader.Configs["OutputOptions"];
+            IConfig outputOptions = iniReader.Configs["OutputOptions"];
+            if (outputOptions != null)
+            {
+                int aggregationOptions = outputOptions.GetInt("OutputAtTimestepOption");
+                settings.AggregationOptions = aggregationOptions;
+            }
+
             var actionDict = new Dictionary<string, Action<bool>>()
                 {
                     {"OutputRRPaved", (bool b) => settings.OutputRRPaved = b},
-                    {"OutputRRUnPaved", (bool b) => settings.OutputRRUnpaved = b},
+                    {"OutputRRUnpaved", (bool b) => settings.OutputRRUnpaved = b},
                     {"OutputRRGreenhouse", (bool b) => settings.OutputRRGreenhouse = b},
                     {"OutputRROpenWater", (bool b) => settings.OutputRROpenWater = b},
                     {"OutputRRStructure", (bool b) => settings.OutputRRStructure = b},

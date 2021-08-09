@@ -15,7 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         Current,
         Average,
         Maximum,
-        Minimum,
     }
 
     public static class RainfallRunoffModelParameterNames
@@ -480,37 +479,45 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
     public class RainfallRunoffOutputSettingData : EditableObjectUnique<long>, ICopyFrom, ICloneable
     {
         private IEventedList<EngineParameter> engineParameters;
-
+        private AggregationOptions aggregationOption;
+        
         public RainfallRunoffOutputSettingData()
         {
             engineParameters = RainfallRunoff.EngineParameters.EngineMapping();
             var defaultTimeStep = new TimeSpan(0, 1, 0, 0);
 
             OutputTimeStep = defaultTimeStep;
+            aggregationOption = AggregationOptions.None;
         }
 
+        public AggregationOptions AggregationOption
+        {
+            get
+            {
+                return aggregationOption;
+            }
+            set
+            {
+                aggregationOption = value;
+                UpdateEngineParameters();
+            }
+        }
+
+        private void UpdateEngineParameters()
+        {
+            foreach (EngineParameter engineParameter in EngineParameters)
+            {
+                engineParameter.AggregationOptions = aggregationOption;
+            }
+        }
+        
         public virtual IEventedList<EngineParameter> EngineParameters
         {
             get { return engineParameters; }
             private set // mapped to NHibernate storage!. 
             { engineParameters = value; }
         }
-
-        public void SetAggregationOptionForElementSet(AggregationOptions? value, ElementSet elementSet)
-        {
-            if (value == null) return;
-            foreach (var parameter in EngineParameters.Where(ep => ep.ElementSet == elementSet))
-            {
-                parameter.AggregationOptions = value.Value;
-            }
-        }
-
-        public AggregationOptions? GetCommonAggregationOption(ElementSet elementSet)
-        {
-            var items = EngineParameters.Where(ep => ep.ElementSet == elementSet).Select(ep => ep.AggregationOptions).Distinct().ToList();
-            return items.Count == 1 ? (AggregationOptions?)items[0] : null;
-        }
-
+        
         public virtual TimeSpan OutputTimeStep { get; set; } //todo: move this to parameter in model
 
         [NoNotifyPropertyChange]
@@ -545,7 +552,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public bool IsOutputEnabledForElementSet(ElementSet elementSet)
         {
-            return EngineParameters.Any(ep => ep.ElementSet == elementSet && ep.AggregationOptions != AggregationOptions.None);
+            return EngineParameters.Any(ep => ep.ElementSet == elementSet && ep.IsEnabled);
+        }
+
+        public void ToggleEngineParametersForElementSet(ElementSet elementSet, bool enable)
+        {
+            foreach (var parameter in EngineParameters.Where(ep => ep.ElementSet == elementSet))
+            {
+                parameter.IsEnabled = enable;
+            }
         }
         
         public object Clone()

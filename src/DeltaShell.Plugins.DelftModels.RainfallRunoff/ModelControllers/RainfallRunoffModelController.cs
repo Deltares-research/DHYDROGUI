@@ -477,6 +477,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
         private void SetOutputOptions(RainfallRunoffOutputSettingData outputSettings)
         {
+            AggregationOptions aggregationOption = outputSettings.AggregationOption;
+            Writer.AddIniOption("OutputOptions", "OutputAtTimestepOption", ((int)aggregationOption).ToString());
+            
             Writer.AddIniOption("OutputOptions", "OutputRRPaved", outputSettings.IsOutputEnabledForElementSet(ElementSet.PavedElmSet) ? "-1" : "0");
             Writer.AddIniOption("OutputOptions", "OutputRRUnpaved", outputSettings.IsOutputEnabledForElementSet(ElementSet.UnpavedElmSet) ? "-1" : "0");
             Writer.AddIniOption("OutputOptions", "OutputRRGreenhouse", outputSettings.IsOutputEnabledForElementSet(ElementSet.GreenhouseElmSet) ? "-1" : "0");

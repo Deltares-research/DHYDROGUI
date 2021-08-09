@@ -16,6 +16,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         public int CapsimPerCropArea { get; set; }
 
         // Output settings
+        public int AggregationOptions { get; set; }
         public bool OutputRRPaved { get; set; }
         public bool OutputRRUnpaved { get; set; }
         public bool OutputRRGreenhouse { get; set; }

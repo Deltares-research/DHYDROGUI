@@ -273,7 +273,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
         [Test]
         [TestCase(AggregationOptions.Average)]
-        [TestCase(AggregationOptions.Minimum)]
         [TestCase(AggregationOptions.Maximum)]
         [TestCase(AggregationOptions.Current)]
         public void RestoreOutputSettings_AggregationOptionsNotNone_AddsFeaturesToFeatureCoverage(AggregationOptions aggregationOptions)

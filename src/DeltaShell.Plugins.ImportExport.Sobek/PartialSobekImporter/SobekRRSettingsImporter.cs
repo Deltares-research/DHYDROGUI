@@ -46,25 +46,43 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void readModelOutputSettings()
         {
-            conditionalActivateOutput(settings.OutputRRPaved, ElementSet.PavedElmSet); 
-            conditionalActivateOutput(settings.OutputRRUnpaved, ElementSet.UnpavedElmSet); 
-            conditionalActivateOutput(settings.OutputRRGreenhouse, ElementSet.GreenhouseElmSet); 
-            conditionalActivateOutput(settings.OutputRROpenWater, ElementSet.OpenWaterElmSet); 
-            conditionalActivateOutput(settings.OutputRRBoundary, ElementSet.BoundaryElmSet); 
-            conditionalActivateOutput(settings.OutputRRNWRW, ElementSet.NWRWElmSet); 
-            conditionalActivateOutput(settings.OutputRRWWTP, ElementSet.WWTPElmSet); 
-            conditionalActivateOutput(settings.OutputRRSacramento, ElementSet.SacramentoElmSet); 
-            conditionalActivateOutput(settings.OutputRRLinkFlows, ElementSet.LinkElmSet); 
-            conditionalActivateOutput(settings.OutputRRBalance, ElementSet.BalanceModelElmSet); 
-            conditionalActivateOutput(settings.OutputRRBalance, ElementSet.BalanceNodeElmSet); 
+            ToggleOutputSetting(settings.OutputRRPaved, ElementSet.PavedElmSet); 
+            ToggleOutputSetting(settings.OutputRRUnpaved, ElementSet.UnpavedElmSet); 
+            ToggleOutputSetting(settings.OutputRRGreenhouse, ElementSet.GreenhouseElmSet); 
+            ToggleOutputSetting(settings.OutputRROpenWater, ElementSet.OpenWaterElmSet); 
+            ToggleOutputSetting(settings.OutputRRBoundary, ElementSet.BoundaryElmSet); 
+            ToggleOutputSetting(settings.OutputRRNWRW, ElementSet.NWRWElmSet); 
+            ToggleOutputSetting(settings.OutputRRWWTP, ElementSet.WWTPElmSet); 
+            ToggleOutputSetting(settings.OutputRRSacramento, ElementSet.SacramentoElmSet); 
+            ToggleOutputSetting(settings.OutputRRLinkFlows, ElementSet.LinkElmSet); 
+            ToggleOutputSetting(settings.OutputRRBalance, ElementSet.BalanceModelElmSet); 
+            ToggleOutputSetting(settings.OutputRRBalance, ElementSet.BalanceNodeElmSet);
+
+            SetAggregationOptions();
         }
 
-        private void conditionalActivateOutput(bool add, ElementSet e)
+        private void SetAggregationOptions()
         {
-            if (add)
+            switch (settings.AggregationOptions)
             {
-                model.OutputSettings.SetAggregationOptionForElementSet(AggregationOptions.Current, e);
+                case 1:
+                    model.OutputSettings.AggregationOption = AggregationOptions.Current;
+                    break;
+                case 2:
+                    model.OutputSettings.AggregationOption = AggregationOptions.Average;
+                    break;
+                case 3:
+                    model.OutputSettings.AggregationOption = AggregationOptions.Maximum;
+                    break;
+                default:
+                    model.OutputSettings.AggregationOption = AggregationOptions.None;
+                    break;
             }
+        }
+
+        private void ToggleOutputSetting(bool add, ElementSet e)
+        {
+            model.OutputSettings.ToggleEngineParametersForElementSet(e, add);
         }
 
         private void readModelGeneralSettings() 

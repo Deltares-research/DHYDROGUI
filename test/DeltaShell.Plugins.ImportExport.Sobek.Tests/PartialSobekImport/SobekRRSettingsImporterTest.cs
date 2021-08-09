@@ -19,17 +19,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.PavedElmSet), AggregationOptions.None));
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.UnpavedElmSet), AggregationOptions.Current));
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.GreenhouseElmSet), AggregationOptions.None));
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.OpenWaterElmSet), AggregationOptions.None));
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.BoundaryElmSet), AggregationOptions.Current));
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.WWTPElmSet), AggregationOptions.None));
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.SacramentoElmSet), AggregationOptions.None));
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.LinkElmSet), AggregationOptions.Current));
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.BalanceModelElmSet), AggregationOptions.Current));
-            Assert.That(Equals(model.OutputSettings.GetCommonAggregationOption(ElementSet.BalanceNodeElmSet), AggregationOptions.Current)); 
-
+            Assert.That(model.OutputSettings.AggregationOption, Is.EqualTo(AggregationOptions.None));
         }
     }
 }
