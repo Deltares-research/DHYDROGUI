@@ -722,6 +722,7 @@ src/DeltaShell.NGHS.IO/DataObjects/InitialConditions/SpatialChannelInitialCondit
 src/DeltaShell.NGHS.IO/DataObjects/Model1D/AggregationOptions.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1D/ElementSet.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1D/EngineParameter.cs -text
+src/DeltaShell.NGHS.IO/DataObjects/Model1D/EngineParameter.hbm.xml -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1D/EngineParameters.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1D/Model1DBranchFeatureValueConverter.cs -text
 src/DeltaShell.NGHS.IO/DataObjects/Model1D/Model1DBranchFeatureValueConverter.hbm.xml -text
