@@ -38,45 +38,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             Assert.AreEqual(numCoverages + 1, model.OutputCoverages.Count());
         }
-
-        [Test]
-        [Category(TestCategory.Slow)]
-        public void GivenRainfallRunoffModelWithOutputEnabled_WhenSavingAndLoadingModel_ThenOutputDataItemsAreCorrectlyAdded()
-        {
-            // Given
-            using (DeltaShellGui gui = RainfallRunoffIntegrationTestHelper.GetRunningGuiWithRRPlugins())
-            {
-                var model = new RainfallRunoffModel();
-
-                RainfallRunoffOutputSettingData outputSettings = model.OutputSettings;
-                foreach (EngineParameter engineParameter in outputSettings.EngineParameters)
-                {
-                    engineParameter.IsEnabled = true;
-                }
-
-                string tempDir = Path.Combine(Path.GetTempPath(), TestHelper.GetCurrentMethodName());
-                string path = Path.Combine(tempDir, "test.dsproj");
-                
-                gui.Application.Project.RootFolder.Add(model);
-                
-                gui.Application.SaveProjectAs(path);
-                gui.Application.CloseProject();
-                
-                // When
-                gui.Application.OpenProject(path);
-                
-                // Then
-                RainfallRunoffModel loadedModel = (RainfallRunoffModel) gui.Application.Project.RootFolder.Models.First();
-
-                IEnumerable<IDataItem> loadedOutputDataItems = loadedModel.OutputDataItems;
-                IEventedList<EngineParameter> loadedEngineParameters = loadedModel.OutputSettings.EngineParameters;
-                foreach (EngineParameter loadedEngineParameter in loadedEngineParameters)
-                {
-                    Assert.That(loadedEngineParameter.IsEnabled, Is.True);
-                    Assert.That(loadedOutputDataItems.Any(di => di.Name.Equals(loadedEngineParameter.Name)));
-                }
-            }
-        }
         
     [Test]
         public void LinkCoverageIsAdded()
