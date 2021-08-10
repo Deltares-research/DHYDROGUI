@@ -752,9 +752,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                     {
                         model.AreaUnit = RainfallRunoffEnums.AreaUnit.ha;
                         model.OutputTimeStep = new TimeSpan(0, 0, 1, 0);
-                        model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet)
-                                .AggregationOptions
-                            = AggregationOptions.Current;
+                        model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet).IsEnabled = true;
                         model.StartTime = new DateTime(2000, 1, 1);
                         model.StopTime = new DateTime(2000, 3, 1);
                         model.CapSim = true;
@@ -788,9 +786,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                         Assert.AreEqual(model.CapSim, retrievedModel.CapSim);
                         Assert.AreEqual(model.CapSimInitOption, retrievedModel.CapSimInitOption);
                         Assert.AreEqual(model.CapSimCropAreaOption, retrievedModel.CapSimCropAreaOption);
-                        Assert.AreEqual(AggregationOptions.Current,
+                        Assert.AreEqual(true,
                             retrievedModel.OutputSettings.GetEngineParameter(QuantityType.Rainfall,
-                                ElementSet.UnpavedElmSet).AggregationOptions);
+                                ElementSet.UnpavedElmSet).IsEnabled);
 
                         Assert.AreEqual(model.UseSaveStateTimeRange, retrievedModel.UseSaveStateTimeRange);
                         Assert.AreEqual(model.SaveStateStartTime, retrievedModel.SaveStateStartTime);

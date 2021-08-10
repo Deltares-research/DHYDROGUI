@@ -75,7 +75,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     model.OutputSettings.AggregationOption = AggregationOptions.Maximum;
                     break;
                 default:
-                    model.OutputSettings.AggregationOption = AggregationOptions.None;
+                    model.OutputSettings.AggregationOption = AggregationOptions.Current;
                     break;
             }
         }

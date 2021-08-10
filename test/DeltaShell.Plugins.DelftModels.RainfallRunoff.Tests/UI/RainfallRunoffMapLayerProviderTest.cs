@@ -13,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
         public void CreatesCustomLayerForCatchments()
         {
             var model = new RainfallRunoffModel();
-            model.OutputSettings.GetEngineParameter(QuantityType.GroundwaterLevel, ElementSet.UnpavedElmSet).AggregationOptions = AggregationOptions.Current;
+            model.OutputSettings.GetEngineParameter(QuantityType.GroundwaterLevel, ElementSet.UnpavedElmSet).IsEnabled = true;
 
             var layerProvider = new RainfallRunoffMapLayerProvider();
 

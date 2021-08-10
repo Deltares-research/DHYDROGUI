@@ -9,7 +9,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
     {
 
         [Test]
-        public void FireAggregationChangeEvent()
+        public void FireIsEnabledEvent()
         {
             var count = 0;
             var outputSettings = new RainfallRunoffOutputSettingData();
@@ -19,12 +19,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                                                                                  count++;
                                                                              };
 
-            var firstParameterOnNone =
-                outputSettings.EngineParameters.FirstOrDefault(ep => ep.AggregationOptions == AggregationOptions.None);
+            var firstParameterOnNone = outputSettings.EngineParameters.FirstOrDefault(ep => !ep.IsEnabled);
 
             Assert.IsNotNull(firstParameterOnNone);
 
-            firstParameterOnNone.AggregationOptions = AggregationOptions.Current;
+            firstParameterOnNone.IsEnabled = true;
 
             Assert.AreEqual(1,count);
 

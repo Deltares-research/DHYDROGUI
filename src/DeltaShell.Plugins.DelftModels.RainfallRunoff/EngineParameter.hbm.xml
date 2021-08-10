@@ -10,7 +10,7 @@
     <property name="QuantityType" access="property" column="quantityType" />
     <property name="Name" access="property" column="name" />
     <property name="ElementSet" access="property" column="elementSet" />
-    <property name="AggregationOptions" access="property" column="aggregationOptions" />
+    <property name="IsEnabled" access="property" column="isEnabled" />
     <property name="Unit" access="property" column="unit" />
     <property name="Role" column="role" />
   </class>

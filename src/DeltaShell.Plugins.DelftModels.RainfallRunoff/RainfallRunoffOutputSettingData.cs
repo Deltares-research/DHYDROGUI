@@ -11,10 +11,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
     public enum AggregationOptions
     {
-        None,
-        Current,
-        Average,
-        Maximum,
+        Current = 1,
+        Average = 2,
+        Maximum = 3,
     }
 
     public static class RainfallRunoffModelParameterNames
@@ -479,38 +478,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
     public class RainfallRunoffOutputSettingData : EditableObjectUnique<long>, ICopyFrom, ICloneable
     {
         private IEventedList<EngineParameter> engineParameters;
-        private AggregationOptions aggregationOption;
-        
+
         public RainfallRunoffOutputSettingData()
         {
             engineParameters = RainfallRunoff.EngineParameters.EngineMapping();
             var defaultTimeStep = new TimeSpan(0, 1, 0, 0);
 
             OutputTimeStep = defaultTimeStep;
-            aggregationOption = AggregationOptions.None;
+            AggregationOption = AggregationOptions.Current;
         }
 
-        public AggregationOptions AggregationOption
-        {
-            get
-            {
-                return aggregationOption;
-            }
-            set
-            {
-                aggregationOption = value;
-                UpdateEngineParameters();
-            }
-        }
+        public AggregationOptions AggregationOption { get; set; }
 
-        private void UpdateEngineParameters()
-        {
-            foreach (EngineParameter engineParameter in EngineParameters)
-            {
-                engineParameter.AggregationOptions = aggregationOption;
-            }
-        }
-        
         public virtual IEventedList<EngineParameter> EngineParameters
         {
             get { return engineParameters; }
@@ -521,10 +500,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public virtual TimeSpan OutputTimeStep { get; set; } //todo: move this to parameter in model
 
         [NoNotifyPropertyChange]
-        public virtual AggregationOptions BoundaryDischarge
+        public virtual EngineParameter BoundaryDischarge
         {
-            get { return GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet).AggregationOptions; }
-            set { GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet).AggregationOptions = value; }
+            get { return GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet); }
         }
 
         #region ICopyFrom Members

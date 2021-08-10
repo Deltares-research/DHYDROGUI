@@ -375,11 +375,6 @@
     <EmbeddedResource Include="DataObjects\FlowWaterLevelTable.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="DataObjects\Model1D\EngineParameter.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="DataObjects\Model1D\Model1DBranchFeatureValueConverter.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>

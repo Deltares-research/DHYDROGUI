@@ -86,25 +86,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         }
         
         [PropertyOrder(50)]
-        [DisplayName("Sacramento output")]
-        [Description("Enables/disables sacramento output")]
+        [DisplayName("Sacramento/HBV output")]
+        [Description("Enables/disables sacramento and HBV output")]
         public bool Sacramento
         {
-            get => data.OutputSettings.IsOutputEnabledForElementSet(ElementSet.SacramentoElmSet);
+            get => data.OutputSettings.IsOutputEnabledForElementSet(ElementSet.SacramentoElmSet) && data.OutputSettings.IsOutputEnabledForElementSet(ElementSet.HbvElmSet);
             set
             {
                 data.OutputSettings.ToggleEngineParametersForElementSet(ElementSet.SacramentoElmSet, value);
-            }
-        }
-        
-        [PropertyOrder(60)]
-        [DisplayName("HBV output")]
-        [Description("Enables/disables HBV output")]
-        public bool Hbv
-        {
-            get => data.OutputSettings.IsOutputEnabledForElementSet(ElementSet.HbvElmSet);
-            set
-            {
                 data.OutputSettings.ToggleEngineParametersForElementSet(ElementSet.HbvElmSet, value);
             }
         }

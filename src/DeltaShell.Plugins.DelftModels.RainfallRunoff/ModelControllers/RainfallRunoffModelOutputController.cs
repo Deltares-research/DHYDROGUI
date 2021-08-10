@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
         private void ForEachEngineParameter(Action<EngineParameter, ITimeBasedFunction> action)
         {
-            var engineParameters = model.OutputSettings.EngineParameters.Where(ep => ep.AggregationOptions != AggregationOptions.None).ToList();
+            var engineParameters = model.OutputSettings.EngineParameters.Where(ep => ep.IsEnabled).ToList();
 
             foreach (var engineParameter in engineParameters)
             {

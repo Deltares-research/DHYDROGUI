@@ -183,7 +183,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             //rrModel.StopTime = rrModel.StartTime.AddSeconds(duration.TotalSeconds/16.0); // 1/32th 
 
             // enable all output
-            rrModel.OutputSettings.EngineParameters.ForEach(ep => ep.AggregationOptions = AggregationOptions.Current);
+            rrModel.OutputSettings.AggregationOption = AggregationOptions.Current;
+            rrModel.OutputSettings.EngineParameters.ForEach(ep => ep.IsEnabled = true);
 
             ReplaceStoreForOutputCoverages(rrModel);
 

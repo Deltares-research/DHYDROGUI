@@ -63,12 +63,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             {
                 var model = CreateModel();
                 // no ground water level
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
                 model.OutputSettings.GetEngineParameter(QuantityType.Storage_mm, ElementSet.UnpavedElmSet).
-                    AggregationOptions = AggregationOptions.Current;
+                    IsEnabled = true;
                 model.OutputSettings.GetEngineParameter(QuantityType.StorageStreet_mm, ElementSet.PavedElmSet).
-                      AggregationOptions = AggregationOptions.Current;
+                      IsEnabled = true;
                 model.OutputSettings.GetEngineParameter(QuantityType.Storage_m3, ElementSet.GreenhouseElmSet).
-                      AggregationOptions = AggregationOptions.Current;
+                      IsEnabled = true;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
@@ -123,7 +124,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
                 var model = CreateModel();
-                model.OutputSettings.BoundaryDischarge = AggregationOptions.Current;
+                model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet).IsEnabled = true;
+                model.OutputSettings.GetEngineParameter(QuantityType.CumInNonLinks_m3, ElementSet.BalanceNodeElmSet).IsEnabled = true;
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
@@ -163,9 +166,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
                 var model = CreateModel();
-                model.OutputSettings.BoundaryDischarge = AggregationOptions.Current;
-                model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.LinkElmSet).
-                    AggregationOptions = AggregationOptions.Current;
+                model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet).IsEnabled = true;
+                model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.LinkElmSet).IsEnabled = true;
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
@@ -314,10 +317,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
                 var model = CreateModel();
-                model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.OpenWaterElmSet).
-                    AggregationOptions = AggregationOptions.Current;
-                model.OutputSettings.GetEngineParameter(QuantityType.EvaporationSurface, ElementSet.OpenWaterElmSet).
-                    AggregationOptions = AggregationOptions.Current;
+                model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.OpenWaterElmSet).IsEnabled = true;
+                model.OutputSettings.GetEngineParameter(QuantityType.EvaporationSurface, ElementSet.OpenWaterElmSet).IsEnabled = true;
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
                 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
@@ -460,8 +462,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())            
             {
                 var model = CreateModel();
-                model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet).
-                    AggregationOptions = AggregationOptions.Average;
+                model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet).IsEnabled = true;
+                model.OutputSettings.AggregationOption = AggregationOptions.Average;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
@@ -643,8 +645,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
                 var model = CreateModel();
-                model.OutputSettings.GetEngineParameter(QuantityType.CumInNonLinks_m3, ElementSet.BalanceNodeElmSet).
-                    AggregationOptions = AggregationOptions.Current;
+
+                model.OutputSettings.GetEngineParameter(QuantityType.CumInNonLinks_m3, ElementSet.BalanceNodeElmSet).IsEnabled = true;
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);

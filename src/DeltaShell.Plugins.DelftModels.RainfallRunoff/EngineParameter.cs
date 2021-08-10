@@ -30,8 +30,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             QuantityType = quantityType;
             ElementSet = elementSet;
             Role = role;
-            AggregationOptions = AggregationOptions.None;
             Unit = unit;
+            IsEnabled = false;
         }
 
         [NoNotifyPropertyChange]
@@ -46,7 +46,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         [NoNotifyPropertyChange]
         public virtual DataItemRole Role { get; protected set; }
         
-        [NoNotifyPropertyChange]
         public virtual bool IsEnabled { get; set; }
 
         public virtual Unit Unit
@@ -54,26 +53,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             get { return unit; }
             protected set { unit = value; }
         }
-
-        /// <summary>
-        /// Unlike the other properties AggregationOptions can be modified by the user
-        /// AggregationOptions is used by Model to calculate the values that are retrieved by
-        /// ModelApi GetValues. Unlike Model ??? that always retrieves the AggregationOptions.Current
-        /// value.
-        ///  - ModelApi GetValues is used to fill the output coverages.
-        ///  - Model ??? is used to facilitate online communication like RealTimeControlModel.
-        /// </summary>
-        public virtual AggregationOptions AggregationOptions { get; set; }
-
+        
         #region ICloneable Members
 
         public virtual object Clone()
         {
             return new EngineParameter(QuantityType, ElementSet, Role, Name, Unit)
-                {
-                    AggregationOptions = AggregationOptions,
-                    IsEnabled = IsEnabled
-                };
+            {
+                IsEnabled = IsEnabled
+            };
         }
 
         #endregion

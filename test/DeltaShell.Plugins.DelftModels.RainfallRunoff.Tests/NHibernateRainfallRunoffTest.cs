@@ -169,13 +169,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
                 var nOutputCoverage = retrievedModel.OutputCoverages.Count();
 
-                Assert.AreEqual(AggregationOptions.None,
+                Assert.AreEqual(false,
                                 retrievedModel.OutputSettings.GetEngineParameter(QuantityType.Rainfall,
                                                                                  ElementSet.UnpavedElmSet)
-                                              .AggregationOptions);
+                                              .IsEnabled);
+                Assert.AreEqual(AggregationOptions.Current, retrievedModel.OutputSettings.AggregationOption);
 
                 retrievedModel.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet).
-                               AggregationOptions = AggregationOptions.Current;
+                               IsEnabled = true;
 
                 Assert.AreEqual(nOutputCoverage + 1, retrievedModel.OutputCoverages.Count());
             }

@@ -367,7 +367,6 @@
     <EmbeddedResource Include="RainfallRunoffBoundaryData.hbm.xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="EngineParameter.hbm.xml" />
     <EmbeddedResource Include="RainfallRunoffOutputSettingData.hbm.xml" />
   </ItemGroup>
   <PropertyGroup>

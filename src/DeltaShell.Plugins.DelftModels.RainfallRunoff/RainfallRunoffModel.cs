@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             AddDataItem(evaporationStartActivePeriod, DataItemRole.Input, RainfallRunoffModelDataSet.EvaporationStartActivePeriodTag);
             AddDataItem(evaporationEndActivePeriod, DataItemRole.Input, RainfallRunoffModelDataSet.EvaporationEndActivePeriodTag);
 
-            OutputSettings.BoundaryDischarge = AggregationOptions.Current;
+            OutputSettings.BoundaryDischarge.IsEnabled = true;
 
             FixedFiles = new RainfallRunoffModelFixedFiles(this, AddDataItem);
 
@@ -524,7 +524,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         
         private void AddOutputCoverage(EngineParameter modelParameter)
         {
-            if (modelParameter.AggregationOptions == AggregationOptions.None)
+            if (!modelParameter.IsEnabled)
             {
                 return;
             }
@@ -778,7 +778,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         [EditAction]
         private void OutputSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is EngineParameter && e.PropertyName == "AggregationOptions")
+            if (sender is EngineParameter && e.PropertyName.Equals(nameof(EngineParameter.IsEnabled)))
             {
                 var engineParameter = (EngineParameter) sender;
 
@@ -788,7 +788,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private void SynchronizeOutputSettings(EngineParameter engineParameter)
         {
-            if (engineParameter.AggregationOptions == AggregationOptions.None)
+            if (!engineParameter.IsEnabled)
             {
                 DataItems.RemoveAllWhere(
                     di =>
@@ -1135,7 +1135,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private ElementSet? GetElementSetForCoverage(IFunction function)
         {
-            var engineParameters = OutputSettings.EngineParameters.Where(ep => ep.AggregationOptions != AggregationOptions.None).ToList();
+            var engineParameters = OutputSettings.EngineParameters.Where(ep => ep.IsEnabled).ToList();
             var parameter = engineParameters.FirstOrDefault(p => p.Name == function.Components[0].Name);
 
             return parameter == null ? (ElementSet?) null : parameter.ElementSet;
@@ -1191,7 +1191,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             var functionLookup = OutputFunctions.ToDictionary(f => f.Name);
 
-            OutputSettings.EngineParameters.Where(ep => ep.AggregationOptions != AggregationOptions.None).ForEach(parameter =>
+            OutputSettings.EngineParameters.Where(ep => ep.IsEnabled).ForEach(parameter =>
             {
                 if (functionLookup.ContainsKey(parameter.Name))
                 {

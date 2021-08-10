@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         public static void EnableAllRainfallRunoffOutputSettings(RainfallRunoffModel rrModel)
         {
             IEventedList<EngineParameter> engineParameters = rrModel.OutputSettings.EngineParameters;
-            engineParameters.ForEach(ep => ep.AggregationOptions = AggregationOptions.Current);
+            engineParameters.ForEach(ep => ep.IsEnabled = true);
         }
     }
 }

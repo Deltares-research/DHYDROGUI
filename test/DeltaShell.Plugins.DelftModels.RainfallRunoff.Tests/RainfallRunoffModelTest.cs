@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
     public class RainfallRunoffModelTest
     {
         [Test]
-        public void SettingAggregationOptionAddsOutputCoverages()
+        public void EnablingParameterAddsOutputCoverages()
         {
             var model = new RainfallRunoffModel();
 
@@ -30,11 +30,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 ep => ep.ElementSet == ElementSet.UnpavedElmSet && ep.QuantityType == QuantityType.Rainfall);
 
             //precondition:
-            Assert.AreEqual(AggregationOptions.None, unpavedRainfallParameter.AggregationOptions);
+            Assert.AreEqual(false, unpavedRainfallParameter.IsEnabled);
 
             var numCoverages = model.OutputCoverages.Count();
 
-            unpavedRainfallParameter.AggregationOptions = AggregationOptions.Current;
+            unpavedRainfallParameter.IsEnabled = true;
 
             Assert.AreEqual(numCoverages + 1, model.OutputCoverages.Count());
         }
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 RainfallRunoffOutputSettingData outputSettings = model.OutputSettings;
                 foreach (EngineParameter engineParameter in outputSettings.EngineParameters)
                 {
-                    engineParameter.AggregationOptions = AggregationOptions.Current;
+                    engineParameter.IsEnabled = true;
                 }
 
                 string tempDir = Path.Combine(Path.GetTempPath(), TestHelper.GetCurrentMethodName());
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 IEventedList<EngineParameter> loadedEngineParameters = loadedModel.OutputSettings.EngineParameters;
                 foreach (EngineParameter loadedEngineParameter in loadedEngineParameters)
                 {
-                    Assert.That(loadedEngineParameter.AggregationOptions, Is.EqualTo(AggregationOptions.Current));
+                    Assert.That(loadedEngineParameter.IsEnabled, Is.True);
                     Assert.That(loadedOutputDataItems.Any(di => di.Name.Equals(loadedEngineParameter.Name)));
                 }
             }
@@ -87,11 +87,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 ep => ep.ElementSet == ElementSet.LinkElmSet && ep.QuantityType == QuantityType.Flow);
 
             //precondition:
-            Assert.AreEqual(AggregationOptions.None, linkParameter.AggregationOptions);
+            Assert.AreEqual(false, linkParameter.IsEnabled);
 
             var numCoverages = model.OutputCoverages.Count();
 
-            linkParameter.AggregationOptions = AggregationOptions.Current;
+            linkParameter.IsEnabled = true;
 
             Assert.AreEqual(numCoverages + 1, model.OutputCoverages.Count());
         }
@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             // create model and add catchments to its basin
             var model = new RainfallRunoffModel();
             var outputTimeStep = new TimeSpan(8, 0, 0);
-            model.OutputSettings.EngineParameters.First(ep => ep.QuantityType == QuantityType.SurfRunoff).AggregationOptions = AggregationOptions.Maximum;
+            model.OutputSettings.AggregationOption = AggregationOptions.Maximum;
             
             model.OutputSettings.OutputTimeStep = outputTimeStep;
 
@@ -231,9 +231,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             Assert.AreNotSame(model.OutputSettings, clonedModel.OutputSettings);
             Assert.AreEqual(outputTimeStep, clonedModel.OutputSettings.OutputTimeStep);
-            Assert.AreEqual(AggregationOptions.Maximum,
-                            clonedModel.OutputSettings.EngineParameters.First(
-                                ep => ep.QuantityType == QuantityType.SurfRunoff).AggregationOptions);
+            Assert.AreEqual(AggregationOptions.Maximum, model.OutputSettings.AggregationOption);
         }
 
         [Test]
@@ -269,31 +267,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             // assert that the component is set to 0 for each date
             Assert.That(actualEvaporationValues.Count, Is.EqualTo(expectedDates.Count));
             Assert.That(actualEvaporationValues, Is.All.EqualTo(0));
-        }
-
-        [Test]
-        [TestCase(AggregationOptions.Average)]
-        [TestCase(AggregationOptions.Maximum)]
-        [TestCase(AggregationOptions.Current)]
-        public void RestoreOutputSettings_AggregationOptionsNotNone_AddsFeaturesToFeatureCoverage(AggregationOptions aggregationOptions)
-        {
-            // Setup
-            var rrModel = new RainfallRunoffModel();
-            var catchment = new Catchment();
-            rrModel.Basin.Catchments.Add(catchment);
-
-            string nwrwParameterName = RainfallRunoffModelParameterNames.NwrwRainfall;
-            EngineParameter engineParameter = rrModel.OutputSettings.EngineParameters.First(ep => ep.Name.Equals(nwrwParameterName));
-            engineParameter.AggregationOptions = aggregationOptions;
-            
-            // Call
-            rrModel.RestoreOutputSettings();
-            
-            // Assert
-            FeatureCoverage coverage = rrModel.OutputCoverages.First(c => c.Name.Equals(nwrwParameterName)) as FeatureCoverage;
-            Assert.That(coverage, Is.Not.Null);
-            Assert.That(coverage.Features, Has.Count.EqualTo(1));
-            Assert.That(coverage.Features[0], Is.EqualTo(catchment));
         }
     }
 }
