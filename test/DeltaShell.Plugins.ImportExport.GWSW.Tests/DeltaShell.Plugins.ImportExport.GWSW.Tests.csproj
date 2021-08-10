@@ -203,6 +203,10 @@
       <Name>DeltaShell.Plugins.ImportExport.GWSW</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\..\src\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj">
+      <Project>{5ea08b58-6125-4d81-8767-8152d1ca2fbd}</Project>
+      <Name>DeltaShell.Sobek.Readers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj">
       <Project>{49CD81DC-63D2-4A23-818E-ADE790E1D9D8}</Project>
       <Name>DelftTools.Hydro.Tests</Name>

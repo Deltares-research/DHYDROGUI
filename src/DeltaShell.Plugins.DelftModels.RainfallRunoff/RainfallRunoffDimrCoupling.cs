@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
 using DeltaShell.Dimr;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
@@ -12,7 +13,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
     /// </summary>
     public class RainfallRunoffDimrCoupling : IDimrCoupling
     {
-        private readonly Dictionary<string, string> lateralToCatchmentLookup;
+        private readonly Dictionary<string, SobekRRLink[]> lateralToCatchmentLookup;
         private readonly IDrainageBasin basin;
 
         private IDictionary<string, Catchment> catchmentsByName;
@@ -25,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="basin"/> or <see cref="lateralToCatchmentLookup"/> is <c>null</c>.
         /// </exception>
-        public RainfallRunoffDimrCoupling(IDrainageBasin basin, Dictionary<string, string> lateralToCatchmentLookup)
+        public RainfallRunoffDimrCoupling(IDrainageBasin basin, Dictionary<string, SobekRRLink[]> lateralToCatchmentLookup)
         {
             Ensure.NotNull(basin, nameof(basin));
             Ensure.NotNull(lateralToCatchmentLookup, nameof(lateralToCatchmentLookup));
@@ -51,7 +52,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// - category in <paramref name="itemString"/> is unknown
         /// - feature in <paramref name="itemString"/> is unknown
         /// </exception>
-        public IHydroObject GetLinkHydroObjectByItemString(string itemString)
+        public IList<IHydroObject> GetLinkHydroObjectsByItemString(string itemString)
         {
             string[] stringParts = itemString.Split('/');
 
@@ -63,7 +64,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             string category = stringParts[0];
             string featureName = stringParts[1].Replace("_boundary", string.Empty);
 
-            IHydroObject hydroObject = GetBasinHydroObject(category, featureName);
+            IList<IHydroObject> hydroObject = GetBasinHydroObjects(category, featureName);
 
             if (hydroObject == null)
             {
@@ -85,26 +86,35 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             HasEnded = true;
         }
 
-        private IHydroObject GetBasinHydroObject(string category, string featureName)
+        private IList<IHydroObject> GetBasinHydroObjects(string category, string featureName)
         {
+            var basinHydroObjects = new List<IHydroObject>();
             switch (category)
             {
                 case "catchments":
                     Catchment catchment = GetCatchmentByName(featureName);
                     if (catchment != null)
                     {
-                        return catchment;
+                        basinHydroObjects.Add(catchment);
                     }
-
-                    if (lateralToCatchmentLookup.TryGetValue(featureName, out string catchmentString))
+                    else
                     {
-                        catchment = GetCatchmentByName(catchmentString);
+                        if (lateralToCatchmentLookup.TryGetValue(featureName, out var catchmentLinks))
+                        {
+                            foreach (SobekRRLink catchmentLink in catchmentLinks)
+                            {
+                                catchment = GetCatchmentByName(catchmentLink.NodeFromId);
+                                if (catchment != null)
+                                {
+                                    basinHydroObjects.Add(catchment);
+                                }
+                            }
+                        }
                     }
-
-                    return catchment;
-                default:
-                    return null;
+                    break;
             }
+
+            return basinHydroObjects;
         }
 
         private Catchment GetCatchmentByName(string name)
