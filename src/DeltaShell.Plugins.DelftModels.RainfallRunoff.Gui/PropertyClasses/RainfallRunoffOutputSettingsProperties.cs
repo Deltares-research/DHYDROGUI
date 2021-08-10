@@ -11,6 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
     {
         [PropertyOrder(0)]
         [DisplayName("Output timestep")]
+        [Description("Sets the output timestep")]
         [TypeConverter(typeof (DeltaShellTimeSpanConverter))]
         public TimeSpan OutputTimestep
         {
@@ -20,6 +21,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         
         [PropertyOrder(0)]
         [DisplayName("Aggregation options")]
+        [Description("Sets the aggregation option for the output parameters")]
         [DefaultValue(typeof (AggregationOptions), "None")]
         public AggregationOptions AggregationOption
         {
@@ -36,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         }
         
         [PropertyOrder(10)]
-        [DisplayName("Unpaved Output")]
+        [DisplayName("Unpaved output")]
         [Description("Enables/disables unpaved output")]
         public bool Unpaved
         {
@@ -48,7 +50,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         }
         
         [PropertyOrder(20)]
-        [DisplayName("Paved Output")]
+        [DisplayName("Paved output")]
         [Description("Enables/disables paved output")]
         public bool Paved
         {
@@ -60,7 +62,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         }
         
         [PropertyOrder(30)]
-        [DisplayName("Greenhouse Output")]
+        [DisplayName("Greenhouse output")]
         [Description("Enables/disables greenhouse output")]
         public bool Greenhouse
         {
@@ -72,7 +74,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         }
         
         [PropertyOrder(40)]
-        [DisplayName("Open water Output")]
+        [DisplayName("Open water output")]
         [Description("Enables/disables open water output")]
         public bool OpenWater
         {
@@ -84,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         }
         
         [PropertyOrder(50)]
-        [DisplayName("Sacramento Output")]
+        [DisplayName("Sacramento output")]
         [Description("Enables/disables sacramento output")]
         public bool Sacramento
         {
@@ -96,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         }
         
         [PropertyOrder(60)]
-        [DisplayName("HBV Output")]
+        [DisplayName("HBV output")]
         [Description("Enables/disables HBV output")]
         public bool Hbv
         {
