@@ -279,7 +279,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             {
                 var model = CreateModel();
                 model.OutputSettings.GetEngineParameter(QuantityType.Rainfall, ElementSet.UnpavedElmSet).
-                    AggregationOptions = AggregationOptions.Current;
+                    IsEnabled = true;
+
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
@@ -353,10 +355,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
                 var model = CreateModel();
-                model.OutputSettings.GetEngineParameter(QuantityType.FlowIn, ElementSet.WWTPElmSet).
-                    AggregationOptions = AggregationOptions.Current;
-                model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.WWTPElmSet).
-                      AggregationOptions = AggregationOptions.Current;
+                
+                model.OutputSettings.GetEngineParameter(QuantityType.FlowIn, ElementSet.WWTPElmSet).IsEnabled = true;
+                model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.WWTPElmSet).IsEnabled = true;
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
@@ -395,10 +397,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
                 var model = CreateModel();
-                model.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceModelElmSet).
-                    AggregationOptions = AggregationOptions.Current;
-                model.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceNodeElmSet).
-                    AggregationOptions = AggregationOptions.Current;
+                
+                model.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceModelElmSet).IsEnabled = true;
+                model.OutputSettings.GetEngineParameter(QuantityType.BalanceError_m3, ElementSet.BalanceNodeElmSet).IsEnabled = true;
+
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
@@ -429,6 +432,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
                 ConfigureSimpleModel(model);
                 var boundary = model.Basin.Boundaries.First();
+                
+                model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.BoundaryElmSet).IsEnabled = true;
+
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
                 ActivityRunner.RunActivity(model);
                 System.Threading.Thread.Sleep(15); // Give kernel a chance to die and release file handles
@@ -602,13 +609,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             using (var app = RainfallRunoffIntegrationTestHelper.GetDeltaShellApplicationWithRRPlugins())
             {
                 var model = CreateModel();
-                model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.LinkElmSet).
-                    AggregationOptions = AggregationOptions.Current;
 
                 app.SaveProjectAs("test.dsproj"); // save to initialize file repository..
                 app.Project.RootFolder.Add(model);
                 
                 ConfigureSimpleModel(model);
+                
+                model.OutputSettings.GetEngineParameter(QuantityType.Flow, ElementSet.LinkElmSet).IsEnabled = true;
+                model.OutputSettings.AggregationOption = AggregationOptions.Current;
 
                 ActivityRunner.RunActivity(model);
                 System.Threading.Thread.Sleep(15); // Give kernel a chance to die and release file handles

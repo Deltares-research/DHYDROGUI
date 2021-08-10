@@ -19,7 +19,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importer.Import();
 
-            Assert.That(model.OutputSettings.AggregationOption, Is.EqualTo(AggregationOptions.None));
+            Assert.That(model.OutputSettings.AggregationOption, Is.EqualTo(AggregationOptions.Current));
         }
     }
 }
