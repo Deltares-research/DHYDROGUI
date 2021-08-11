@@ -53,7 +53,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             ToggleOutputSetting(settings.OutputRRBoundary, ElementSet.BoundaryElmSet); 
             ToggleOutputSetting(settings.OutputRRNWRW, ElementSet.NWRWElmSet); 
             ToggleOutputSetting(settings.OutputRRWWTP, ElementSet.WWTPElmSet); 
-            ToggleOutputSetting(settings.OutputRRSacramento, ElementSet.SacramentoElmSet); 
+            ToggleOutputSetting(settings.OutputRRSacramento, ElementSet.SacramentoElmSet);
+            ToggleOutputSetting(settings.OutputRRSacramento, ElementSet.HbvElmSet); // HBV should be enabled if Sacramento is enabled.
             ToggleOutputSetting(settings.OutputRRLinkFlows, ElementSet.LinkElmSet); 
             ToggleOutputSetting(settings.OutputRRBalance, ElementSet.BalanceModelElmSet); 
             ToggleOutputSetting(settings.OutputRRBalance, ElementSet.BalanceNodeElmSet);
