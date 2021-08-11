@@ -111,25 +111,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         }
         
         [PropertyOrder(80)]
-        [DisplayName("Balance per node output")]
-        [Description("Enables/disables balance per node output")]
+        [DisplayName("Balances output")]
+        [Description("Enables/disables balances output")]
         public bool BalancePerNode
         {
-            get => data.OutputSettings.IsOutputEnabledForElementSet(ElementSet.BalanceNodeElmSet);
+            get => data.OutputSettings.IsOutputEnabledForElementSet(ElementSet.BalanceNodeElmSet) 
+                   && data.OutputSettings.IsOutputEnabledForElementSet(ElementSet.BalanceModelElmSet) ;
             set
             {
                 data.OutputSettings.ToggleEngineParametersForElementSet(ElementSet.BalanceNodeElmSet, value);
-            }
-        }
-        
-        [PropertyOrder(90)]
-        [DisplayName("Model balance output")]
-        [Description("Enables/disables model balance output")]
-        public bool ModelBalance
-        {
-            get => data.OutputSettings.IsOutputEnabledForElementSet(ElementSet.BalanceModelElmSet);
-            set
-            {
                 data.OutputSettings.ToggleEngineParametersForElementSet(ElementSet.BalanceModelElmSet, value);
             }
         }
