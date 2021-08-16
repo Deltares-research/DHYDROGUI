@@ -150,6 +150,13 @@ namespace DelftTools.Hydro.CrossSections
             HydroNetwork.SharedCrossSectionDefinitions.CollectionChanging -= LocalDefinitionAddingToSharedDefinitions;
         }
 
+        public virtual void SetNameWithoutUpdatingDefinition(string name)
+        {
+            BeginEdit(new DefaultEditAction(string.Format("Change CrossSection Name from \"{0}\" to \"{1}\"", base.Name, name)));
+            base.Name = name;
+            EndEdit();
+        }
+
         void LocalDefinitionAddingToSharedDefinitions(object sender, NotifyCollectionChangingEventArgs e)
         {
             if (e.Action != NotifyCollectionChangeAction.Add)

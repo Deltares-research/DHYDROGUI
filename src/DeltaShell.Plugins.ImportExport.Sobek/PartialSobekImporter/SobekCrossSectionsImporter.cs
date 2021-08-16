@@ -85,10 +85,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var crossSectionDefinitionReader = new CrossSectionDefinitionReader();
 
             //profile.dat: ref level and geometry of cross section at locaton
-            var mappings = new SobekProfileDatFileReader().Read(GetFilePath(SobekFileNames.SobekProfileDataFileName)).ToList();
+            List<SobekCrossSectionMapping> mappings = new SobekProfileDatFileReader().Read(GetFilePath(SobekFileNames.SobekProfileDataFileName)).ToList();
 
             //create lookup dictionaries
-            var locationLookup = locations.ToDictionaryWithErrorDetails(locationsPath, l => l.ID);
+            Dictionary<string, SobekBranchLocation> locationLookup = locations.ToDictionaryWithErrorDetails(locationsPath, l => l.ID);
             // cleanup locations to preserve space
             locations.Clear();
             var crossSectionLookup = HydroNetwork.CrossSections.ToDictionary(cs => cs.Name);
@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 branches = HydroNetwork.Branches.ToDictionary(b => b.Name);
             }
 
-            var definitionIDToDefinition = GetDefinitionIDToDefinitionDictionary(mappings, crossSectionDefinitionsLookup, HydroNetwork);
+            Dictionary<string, ICrossSectionDefinition> definitionIDToDefinition = GetDefinitionIDToDefinitionDictionary(mappings, crossSectionDefinitionsLookup, HydroNetwork);
 
             var initiatedEditing = false;
             var errorList = new Dictionary<string, IList<string>>();
@@ -206,7 +206,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         ICrossSection crossSection = new CrossSection(definitionToUse);
                         NetworkHelper.AddBranchFeatureToBranch(crossSection, branch, offset);
 
-                        crossSection.Name = location.ID;
+                        crossSection.SetNameWithoutUpdatingDefinition(location.ID);
                         crossSection.LongName = location.Name;
                         crossSection2Definition[crossSection] =
                             crossSectionDefinitionsLookup[sobekCrossSectionMapping.DefinitionId];
@@ -278,17 +278,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             var definitionIDToDefinition = new Dictionary<string, ICrossSectionDefinition>();
 
-            var definitionCount = mappings.GroupBy(m => m.DefinitionId).ToDictionaryWithErrorDetails("sobek cross section mapping", m => m.Key, m => m.Count());
-            var locationIdByDefinitionId = mappings
-                                                .GroupBy(m => m.DefinitionId)
-                                                .Where(m => m.Count() == 1)
-                                                .ToDictionaryWithDuplicateLogging("sobek shared cross section mapping shared once", 
-                                                    m => m.Key, m => m.First().LocationId);
+            Dictionary<string, int> definitionCount = mappings.GroupBy(m => m.DefinitionId)
+                                                              .ToDictionaryWithErrorDetails("sobek cross section mapping", m => m.Key, m => m.Count());
 
-
-            foreach (var definitionMapping in sobekCrossSectionDefinitionsLookup)
+            foreach (KeyValuePair<string, SobekCrossSectionDefinition> definitionMapping in sobekCrossSectionDefinitionsLookup)
             {
-                var definitionID = definitionMapping.Key;
+                string definitionID = definitionMapping.Key;
 
                 int usageCount;
                 if (!definitionCount.TryGetValue(definitionID, out usageCount)) //unused definition, don't import
@@ -296,7 +291,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     continue; //unused definition, don't import
                 }
 
-                var crossSectionDefinition = CreateDefinition(definitionMapping.Value);
+                ICrossSectionDefinition crossSectionDefinition = CreateDefinition(definitionMapping.Value);
 
                 if (crossSectionDefinition != null)
                 {
@@ -306,19 +301,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     usageCount = 1;
                 }
-                /////////////////////////////////////////
-                /// make it a global / shared def if:
-                /// location id     | definition id
-                /// location1       | definition1
-                /// location2       | location1
-                ///
-                /// location1 IS JUST A NAME NOT REFERING
-                /// HERE TO the location location1 but
-                /// its own definition
-                /// ////////////////////////////////////////
-
-                string locationIdIsEqualToADefinitionId = null;
-                if (usageCount == 1 && !(locationIdByDefinitionId.TryGetValue(definitionID, out locationIdIsEqualToADefinitionId) && !string.IsNullOrEmpty(locationIdIsEqualToADefinitionId) && definitionCount.TryGetValue(locationIdIsEqualToADefinitionId, out usageCount) && usageCount > 1))
+                
+                if (usageCount == 1)
                 {
                     //make local definition
                     definitionIDToDefinition.Add(definitionMapping.Key, crossSectionDefinition);

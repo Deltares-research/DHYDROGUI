@@ -83,10 +83,12 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 }
                 var crossSection = new CrossSection(definition)
                 {
-                    Name = name,
                     LongName = crossSectionLongName,
                     Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(chainage)
                 };
+
+                crossSection.SetNameWithoutUpdatingDefinition(name);
+                
                 var shift = crossSectionCategory.ReadProperty<double>(LocationRegion.Shift);
 
                 if (AddCrossSectionToNetwork(branch, crossSection, shift, frictionDefinitions))
