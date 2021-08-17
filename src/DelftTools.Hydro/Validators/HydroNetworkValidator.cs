@@ -180,7 +180,8 @@ namespace DelftTools.Hydro.Validators
 
         private static ValidationReport ValidateIds(IHydroNetwork network)
         {
-            IEnumerable<ICrossSectionDefinition> crossSectionDefinitions = network.CrossSections.Select(c => c.Definition);
+            IEnumerable<ICrossSectionDefinition> crossSectionDefinitions = GetCrossSectionDefinitions(network.CrossSections.Select(cs => cs.Definition),
+                                                                                                      network.SharedCrossSectionDefinitions);
             
             var issuesAsArray = new[]
                                     {
@@ -223,7 +224,25 @@ namespace DelftTools.Hydro.Validators
 
             return new ValidationReport("General", issues);
         }
-        
+
+        private static IEnumerable<ICrossSectionDefinition> GetCrossSectionDefinitions(IEnumerable<ICrossSectionDefinition> crossSectionDefinitions, 
+                                                                                       IEnumerable<ICrossSectionDefinition> sharedDefinitions)
+        {
+            // We have to validate whether there are any duplicate ids for cross-section definitions.
+            // This can, for example, occur whenever two cross-sections both have a definition with the same name,
+            // but the two definitions are not the same instance.
+            // In order to validate this we have to construct a list of ICrossSectionDefinitions where each shared definitions
+            // is added only once and all non-shared definitions are added.
+            
+            Dictionary<string, ICrossSectionDefinition> sharedDefinitionsLookup = sharedDefinitions.ToDictionary(def => def.Name, StringComparer.InvariantCultureIgnoreCase);
+
+            IEnumerable<ICrossSectionDefinition> nonSharedCrossSections = crossSectionDefinitions.Where(csd => csd is CrossSectionDefinitionProxy == false
+                                                                                                               && (!sharedDefinitionsLookup.ContainsKey(csd.Name)
+                                                                                                                   || !sharedDefinitionsLookup[csd.Name].Equals(csd)));
+
+            return sharedDefinitions.Concat(nonSharedCrossSections);
+        }
+
         private static ValidationReport ValidateCrossSections(IHydroNetwork network)
         {
             var channelsCheckedOnInterpolationBranches = new HashSet<string>();
