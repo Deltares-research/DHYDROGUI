@@ -186,6 +186,7 @@ namespace DelftTools.Hydro.Validators
                                         ValidationHelper.ValidateDuplicateNames(network.Bridges.Cast<INameable>(), "bridges", network),
                                         ValidationHelper.ValidateDuplicateNames(network.Culverts.Cast<INameable>(), "culverts", network),
                                         ValidationHelper.ValidateDuplicateNames(network.CrossSections.Cast<INameable>(), "cross sections", network),
+                                        ValidationHelper.ValidateDuplicateNames(network.CrossSections.Select(c => c.Definition).Cast<INameable>(), "cross section definitions", network),
                                         ValidationHelper.ValidateDuplicateNames(network.ExtraResistances.Cast<INameable>(), "extra resistances", network),
                                         ValidationHelper.ValidateDuplicateNames(network.Gullies.Cast<INameable>(), "gullies", network),
                                         ValidationHelper.ValidateDuplicateNames(network.HydroNodes.Cast<INameable>(), "nodes", network),
