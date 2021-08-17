@@ -61,11 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge
             originalNetwork.Compartments.ForEach(c => lookup.Add(c.Name));
             originalNetwork.CompositeBranchStructures.ForEach(cbs => lookup.Add(cbs.Name));
             originalNetwork.CrossSectionSectionTypes.ForEach(csst => lookup.Add(csst.Name));
-            originalNetwork.CrossSections.ForEach(cs =>
-            {
-                lookup.Add(cs.Name);
-                lookup.Add(cs.Definition.Name);
-            });
+            originalNetwork.CrossSections.ForEach(cs => lookup.Add(cs.Name));
             originalNetwork.Culverts.ForEach(c => lookup.Add(c.Name));
             originalNetwork.ExtraResistances.ForEach(er => lookup.Add(er.Name));
             originalNetwork.Gates.ForEach(g => lookup.Add(g.Name));
@@ -94,12 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge
             newModelNetwork.Bridges.ForEach(b => CheckIfItemIsUnique(b.Name, "bridge"));
             newModelNetwork.Compartments.ForEach(c => CheckIfItemIsUnique(c.Name, "compartment"));
             newModelNetwork.CompositeBranchStructures.ForEach(cbs => CheckIfItemIsUnique(cbs.Name, "composite structure"));
-            newModelNetwork.CrossSections.ForEach(cs =>
-            {
-                
-                CheckIfItemIsUnique(cs.Name, "cross-section");
-                CheckIfItemIsUnique(cs.Definition.Name, "cross-section definition");
-            });
+            newModelNetwork.CrossSections.ForEach(cs => CheckIfItemIsUnique(cs.Name, "cross-section"));
             newModelNetwork.Culverts.ForEach(c => CheckIfItemIsUnique(c.Name, "culvert"));
             newModelNetwork.ExtraResistances.ForEach(er => CheckIfItemIsUnique(er.Name, "extra resistance"));
             newModelNetwork.Gates.ForEach(g => CheckIfItemIsUnique(g.Name, "gate"));
