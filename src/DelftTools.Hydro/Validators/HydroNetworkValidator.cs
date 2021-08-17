@@ -180,13 +180,15 @@ namespace DelftTools.Hydro.Validators
 
         private static ValidationReport ValidateIds(IHydroNetwork network)
         {
+            IEnumerable<ICrossSectionDefinition> crossSectionDefinitions = network.CrossSections.Select(c => c.Definition);
+            
             var issuesAsArray = new[]
                                     {
                                         ValidationHelper.ValidateDuplicateNames(network.Branches.Cast<INameable>(), "branches", network),
                                         ValidationHelper.ValidateDuplicateNames(network.Bridges.Cast<INameable>(), "bridges", network),
                                         ValidationHelper.ValidateDuplicateNames(network.Culverts.Cast<INameable>(), "culverts", network),
                                         ValidationHelper.ValidateDuplicateNames(network.CrossSections.Cast<INameable>(), "cross sections", network),
-                                        ValidationHelper.ValidateDuplicateNames(network.CrossSections.Select(c => c.Definition).Cast<INameable>(), "cross section definitions", network),
+                                        ValidationHelper.ValidateDuplicateNames(crossSectionDefinitions.Cast<INameable>(), "cross section definitions", network),
                                         ValidationHelper.ValidateDuplicateNames(network.ExtraResistances.Cast<INameable>(), "extra resistances", network),
                                         ValidationHelper.ValidateDuplicateNames(network.Gullies.Cast<INameable>(), "gullies", network),
                                         ValidationHelper.ValidateDuplicateNames(network.HydroNodes.Cast<INameable>(), "nodes", network),
@@ -203,6 +205,7 @@ namespace DelftTools.Hydro.Validators
                                         ValidationHelper.ValidateNoEmptyNames(network.Bridges.Cast<INameable>(), "bridge", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.Culverts.Cast<INameable>(), "culvert", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.CrossSections.Cast<INameable>(), "cross section", network),
+                                        ValidationHelper.ValidateNoEmptyNames(crossSectionDefinitions.Cast<INameable>(), "cross section definition", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.ExtraResistances.Cast<INameable>(), "extra resistance", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.Gullies.Cast<INameable>(), "gully", network),
                                         ValidationHelper.ValidateNoEmptyNames(network.HydroNodes.Cast<INameable>(), "node", network),
