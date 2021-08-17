@@ -124,9 +124,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelMerge
                 var channel = new Channel();
                 ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, channel);
                 crossSection.Name = nameToDuplicate;
+                crossSection.Definition.Name = "RandomName";
                 channel.BranchFeatures.Add(crossSection);
                 network.Branches.Add(channel);
             }), $"{nameToDuplicate} (cross-section)").SetName("Duplicate CrossSection");
+            
+            yield return new TestCaseData(new Action<IHydroNetwork, string>((network, name) =>
+            {
+                var channel = new Channel();
+                ICrossSection crossSection = CrossSection.CreateDefault(CrossSectionType.Standard, channel);
+                ICrossSection crossSection2 = CrossSection.CreateDefault(CrossSectionType.Standard, channel);
+                crossSection.Definition.Name = nameToDuplicate;
+                crossSection2.Definition.Name = nameToDuplicate;
+                channel.BranchFeatures.Add(crossSection);
+                channel.BranchFeatures.Add(crossSection2);
+                network.Branches.Add(channel);
+            }), $"{nameToDuplicate} (cross-section definition)").SetName("Duplicate CrossSection Definition");
             
             yield return new TestCaseData(new Action<IHydroNetwork, string>((network, name) =>
             {
