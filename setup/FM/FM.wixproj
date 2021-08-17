@@ -6,9 +6,9 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <ReleaseVersion>0.9.9</ReleaseVersion>
+    <ReleaseVersion>1.0.0</ReleaseVersion>
     <!-- This is the product name -->
-    <ProductName>Delft3D FM Suite 1D2D (Beta)</ProductName>
+    <ProductName>Delft3D FM Suite 1D2D</ProductName>
     <ProjectGuid>{1dd62dbb-f7d3-40be-8063-b7b80cec8b9f}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
