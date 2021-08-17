@@ -57,6 +57,7 @@ setup/Dimr/Manuals/DIMRManualShortcuts.wxi -text
 setup/Dimr/Manuals/DIMRManuals.wxi -text
 setup/FM/D-Hydro_Manuals/D-Flow_FM_Technical_Reference_Manual.pdf -text
 setup/FM/D-Hydro_Manuals/D-Flow_FM_User_Manual.pdf -text
+setup/FM/D-Hydro_Manuals/Installation_manual_D-HYDRO-1D2D_1.0.0.pdf -text
 setup/FM/D-Hydro_Manuals/RGFGRID_User_Manual.pdf -text
 setup/FM/D-Hydro_Resources/License.rtf -text
 setup/FM/D-Hydro_Resources/Welcome.htm -text
@@ -66,6 +67,7 @@ setup/FM/D-Hydro_Resources/splash_screen.jpg -text
 setup/FM/D-Hydro_Resources/start_page_background.jpg -text
 setup/FM/Delft3D[!!-~]FM[!!-~]HMWQ_Manuals/D-Flow_FM_Technical_Reference_Manual.pdf -text svneol=unset#unset
 setup/FM/Delft3D[!!-~]FM[!!-~]HMWQ_Manuals/D-Flow_FM_User_Manual.pdf -text
+setup/FM/Delft3D[!!-~]FM[!!-~]HMWQ_Manuals/Installation_manual_D-HYDRO-1D2D_1.0.0.pdf -text
 setup/FM/Delft3D[!!-~]FM[!!-~]HMWQ_Manuals/RGFGRID_User_Manual.pdf -text
 setup/FM/Delft3D[!!-~]FM[!!-~]HMWQ_Resources/License.rtf -text
 setup/FM/Delft3D[!!-~]FM[!!-~]HMWQ_Resources/Welcome.htm -text
@@ -75,6 +77,7 @@ setup/FM/Delft3D[!!-~]FM[!!-~]HMWQ_Resources/splash_screen.jpg -text
 setup/FM/Delft3D[!!-~]FM[!!-~]HMWQ_Resources/start_page_background.jpg -text
 setup/FM/Delft3D[!!-~]FM[!!-~]HM_Manuals/D-Flow_FM_Technical_Reference_Manual.pdf -text svneol=unset#unset
 setup/FM/Delft3D[!!-~]FM[!!-~]HM_Manuals/D-Flow_FM_User_Manual.pdf -text
+setup/FM/Delft3D[!!-~]FM[!!-~]HM_Manuals/Installation_manual_D-HYDRO-1D2D_1.0.0.pdf -text
 setup/FM/Delft3D[!!-~]FM[!!-~]HM_Manuals/RGFGRID_User_Manual.pdf -text
 setup/FM/Delft3D[!!-~]FM[!!-~]HM_Resources/License.rtf -text
 setup/FM/Delft3D[!!-~]FM[!!-~]HM_Resources/Welcome.htm -text
