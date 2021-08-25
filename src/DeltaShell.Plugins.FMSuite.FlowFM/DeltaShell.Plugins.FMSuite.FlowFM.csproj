@@ -128,6 +128,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
@@ -155,6 +157,9 @@
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="FunctionStores\FouFileFunctionStore.cs" />
+    <Compile Include="FunctionStores\FouFileMetaData.cs" />
+    <Compile Include="FunctionStores\FouFileReader.cs" />
     <Compile Include="IO\FouFile\FouFileHeader.cs" />
     <Compile Include="IO\FouFile\FouFileProperties.cs" />
     <Compile Include="IO\FouFile\FouFileReader.cs" />
@@ -360,6 +365,10 @@
       <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
       <Name>DeltaShell.NGHS.IO</Name>
       <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj">
+      <Project>{0AE5102C-0560-4A9C-8197-A6D8CA99B5DE}</Project>
+      <Name>DeltaShell.NGHS.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
       <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>

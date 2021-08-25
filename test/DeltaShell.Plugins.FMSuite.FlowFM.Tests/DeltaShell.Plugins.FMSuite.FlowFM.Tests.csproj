@@ -234,6 +234,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IO\BndExtForceLateralSourceParserTest.cs" />
+    <Compile Include="IO\FouFileFunctionStoreTest.cs" />
     <Compile Include="IO\FouFile\FouFileHeaderTests.cs" />
     <Compile Include="IO\FouFile\FouFileRowTests.cs" />
     <Compile Include="IO\Importers\WaterFlowFMFileImporterTest.cs" />

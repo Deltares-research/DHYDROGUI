@@ -2139,6 +2139,9 @@ src/DeltaShell.Plugins.FMSuite.FlowFM/FileConstants.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FixedWeirSchemes.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FlowFMApplicationPlugin.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/FunctionStores/FMClassMapFileFunctionStore.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/FunctionStores/FouFileFunctionStore.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/FunctionStores/FouFileMetaData.cs -text
+src/DeltaShell.Plugins.FMSuite.FlowFM/FunctionStores/FouFileReader.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/Grid/UnstructuredGridExtensions.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BathymetryFileWriter.cs -text
 src/DeltaShell.Plugins.FMSuite.FlowFM/IO/BcFile.cs -text
@@ -5197,6 +5200,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FMPartitionExporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FeatureFile1D2DWriterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FouFile/FouFileHeaderTests.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FouFile/FouFileRowTests.cs -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/FouFileFunctionStoreTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/GroupablePointCloudImporterTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Helpers/FileCopyExceptionTest.cs -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/IO/Helpers/OverwriteCopyHandlerTest.cs -text
@@ -9400,6 +9404,7 @@ test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/out
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/outputSnappedFeatures/outputSnappedFeatures.dsproj_data/FlowFM_output/dflowfm/DFM_OUTPUT_FlowFM/SNAPPED/FlowFM_snapped_weir.shx -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_clmfiles/FlowFM_clm.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_clmfiles/T2_FlowFM_clm.nc -text
+test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_foufiles/moergestels_broek_fou.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/culvert_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/flume_his.nc -text
 test/DeltaShell.Plugins.FMSuite.FlowFM.Tests/test-data/output_hisfiles/generalStructure_his.nc -text
