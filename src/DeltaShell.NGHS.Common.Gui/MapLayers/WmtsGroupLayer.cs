@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
     public class WmtsGroupLayer : GroupLayer
     {
         private string url;
-        private IRequestHandler handler;
+        private readonly IRequestHandler handler;
         private static readonly ILog log = LogManager.GetLogger(typeof(WmtsGroupLayer));
 
         public WmtsGroupLayer(): this(new DefaultRequestHandler())

@@ -186,11 +186,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             {
                 return base.OnImportItem(path, target);
             }
-            if (target is IList<TParent>)
+            if (target is IList<TParent> list)
             {
                 var featureList = new List<TFeat>();
                 base.OnImportItem(path, featureList);
-                AddOrReplace((IList<TParent>) target, featureList.Select(CreateParentFromFeature),
+                AddOrReplace(list, featureList.Select(CreateParentFromFeature),
                     EqualityComparer);
             }
             return target;
@@ -217,9 +217,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             if (typeof(TFeat).IsAssignableFrom(typeof(TParent)))
             {
-                if (item is IList<TParent>)
+                if (item is IList<TParent> list)
                 {
-                    itemsToExport = ((IList<TParent>) item).Cast<TFeat>();
+                    itemsToExport = list.Cast<TFeat>();
                 }
                 else if (item is TParent)
                 {
@@ -228,13 +228,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             }
             else
             {
-                if (item is IList<TParent>)
+                if (item is IList<TParent> list)
                 {
-                    itemsToExport = ((IList<TParent>) item).Select(GetFeatureFromParent);
+                    itemsToExport = list.Select(GetFeatureFromParent);
                 }
-                else if (item is TParent)
+                else if (item is TParent parent)
                 {
-                    itemsToExport = new List<TFeat>(new[] {GetFeatureFromParent((TParent) item)});
+                    itemsToExport = new List<TFeat>(new[] {GetFeatureFromParent(parent)});
                 }
             }
             Export(itemsToExport, file);

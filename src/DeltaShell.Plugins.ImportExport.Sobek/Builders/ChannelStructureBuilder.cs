@@ -306,25 +306,28 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 
                 var structureFriction = sobekStructureFriction.FirstOrDefault(c => c.StructureDefinitionID == definitionMapping.DefinitionId);
 
-                if (structure is IWeir)
+                switch (structure)
                 {
-                    var channel = branch as Channel;
-                    if (channel != null)
+                    case IWeir weir:
                     {
-                        SetWeirOffSetY((IWeir)structure, channel, location);
+                        var channel = branch as Channel;
+                        if (channel != null)
+                        {
+                            SetWeirOffSetY(weir, channel, location);
+                        }
+                        else
+                        {
+                            log.WarnFormat("Couldn't set the offset of weir {0} because its not a channel.", structure.Name);
+                        }
+
+                        break;
                     }
-                    else
-                    {
-                        log.WarnFormat("Couldn't set the offset of weir {0} because its not a channel.", structure.Name);
-                    }
-                }
-                if (structure is IBridge)
-                {
-                    SetBridgeFriction((IBridge)structure, structureFriction);
-                }
-                if (structure is ICulvert)
-                {
-                    SetCulvertFriction((ICulvert)structure, structureFriction);
+                    case IBridge bridge:
+                        SetBridgeFriction(bridge, structureFriction);
+                        break;
+                    case ICulvert culvert:
+                        SetCulvertFriction(culvert, structureFriction);
+                        break;
                 }
 
                 AddOrReplaceStructure(structure, compositeStructure, existingStructures);

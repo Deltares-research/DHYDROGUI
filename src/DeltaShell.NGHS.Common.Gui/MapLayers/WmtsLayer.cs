@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -74,7 +75,10 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
             {
                 return SelectedTileSource?.Name;
             }
-            set{}
+            set
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         private string CacheLocation

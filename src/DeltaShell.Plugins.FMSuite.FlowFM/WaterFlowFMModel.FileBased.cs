@@ -412,10 +412,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     continue;
                 IEnumerable<double> valuesToSet;
                 var coverage = (UnstructuredGridCoverage)dataItem.Value;
-                if (spatialOperationList[0] is ImportRasterSamplesOperationImportData)
+                if (spatialOperationList[0] is ImportRasterSamplesOperationImportData samplesOperation)
                 {
-                    var samplesOperation = (ImportRasterSamplesOperationImportData)spatialOperationList[0];
-
                     var rasterFile = RasterFile.ReadPointValues(samplesOperation.FilePath).ToList();
 
                     var componentValueCount = coverage.Arguments.Aggregate(0,
@@ -427,8 +425,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
                 else
                 {
-                    var samplesOperation = (ImportSamplesOperation)spatialOperationList[0];
-                    var xyzFile = XyzFile.Read(samplesOperation.FilePath).ToList();
+                    var importSamplesOperation = (ImportSamplesOperation)spatialOperationList[0];
+                    var xyzFile = XyzFile.Read(importSamplesOperation.FilePath).ToList();
 
                     var componentValueCount = coverage.Arguments.Aggregate(0,
                         (totaal, arguments) => totaal == 0 ? arguments.Values.Count : totaal * arguments.Values.Count);

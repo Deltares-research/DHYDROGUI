@@ -437,10 +437,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.HisData
         {
             var hisFileHeader = hisFileReader.GetHisFileHeader;
 
-            var argumentFilters = filters.Where(f => f.Variable.IsIndependent);
+            var argumentFilters = filters.Where(f => f.Variable.IsIndependent).ToArray();
 
 
-            if (argumentFilters.Count() == 0)
+            if (argumentFilters.Length == 0)
             {
                 var rows = hisFileReader.ReadAllData(variable.Name);
                 var values = GetValuesOrderByNetworkLocations(rows);
@@ -449,47 +449,45 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.HisData
                 return new MultiDimensionalArray<double>(values, shape);
             }
 
-            if (argumentFilters.Count() >= 1)
+            if (argumentFilters.Length >= 1)
             {
 
                 foreach (var argumentFilter in argumentFilters)
                 {
-                    //timestep
-                    if (argumentFilter is VariableValueFilter<DateTime>)
+                    switch (argumentFilter)
                     {
-                        var filter = (VariableValueFilter<DateTime>)argumentFilter;
-                        var rows = hisFileReader.ReadTimeStep(filter.Values[0], variable.Name);
-                        var values = GetValuesOrderByNetworkLocations(rows);
-                        var shape = new[] {1, hisFileHeader.Locations.Count};
+                        //timestep
+                        case VariableValueFilter<DateTime> valueFilter:
+                        {
+                            var rows = hisFileReader.ReadTimeStep(valueFilter.Values[0], variable.Name);
+                            var values = GetValuesOrderByNetworkLocations(rows);
+                            var shape = new[] {1, hisFileHeader.Locations.Count};
 
-                        return new MultiDimensionalArray<double>(values, shape);
+                            return new MultiDimensionalArray<double>(values, shape);
+                        }
+                        //location by name
+                        case VariableValueFilter<string> filter:
+                        {
+                            var rows = hisFileReader.ReadLocation(filter.Values[0], variable.Name);
+                            var values = rows.Select(r => r.Value).ToArray();
+                            var shape = new[] {1, hisFileHeader.TimeSteps.Count};
+
+                            return new MultiDimensionalArray<double>(values, shape);
+                        }
+                        //location by NetworkLocation
+                        case VariableValueFilter<INetworkLocation> filter:
+                        {
+                            var locationName = networkLocationTypeConvertor.ConvertToStore(filter.Values[0]).First().ToString();
+                            var rows = hisFileReader.ReadLocation(locationName, variable.Name);
+                            var values = GetValuesOrderByNetworkLocations(rows);
+                            var shape = new[] {1, hisFileHeader.TimeSteps.Count};
+
+                            return new MultiDimensionalArray<double>(values, shape);
+                        }
+                        default:
+                            Log.ErrorFormat("Only one filter of type VariableValueFilter<DateTime/string/NetworkLoaction> is supporterd yet. Filter {0} has been skipped", argumentFilter.GetType().FullName);
+                            break;
                     }
-
-                    //location by name
-                    if (argumentFilter is VariableValueFilter<string>)
-                    {
-                        var filter = (VariableValueFilter<string>)argumentFilter;
-                        var rows = hisFileReader.ReadLocation(filter.Values[0], variable.Name);
-                        var values = rows.Select(r => r.Value).ToArray();
-                        var shape = new[] {1, hisFileHeader.TimeSteps.Count};
-
-                        return new MultiDimensionalArray<double>(values, shape);
-                    }
-
-                    //location by NetworkLocation
-                    if (argumentFilter is VariableValueFilter<INetworkLocation>)
-                    {
-                        var filter = (VariableValueFilter<INetworkLocation>)argumentFilter;
-                        var locationName =
-                            networkLocationTypeConvertor.ConvertToStore(filter.Values[0]).First().ToString();
-                        var rows = hisFileReader.ReadLocation(locationName, variable.Name);
-                        var values = GetValuesOrderByNetworkLocations(rows);
-                        var shape = new[] {1, hisFileHeader.TimeSteps.Count};
-
-                        return new MultiDimensionalArray<double>(values, shape);
-                    }
-
-                    Log.ErrorFormat("Only one filter of type VariableValueFilter<DateTime/string/NetworkLoaction> is supporterd yet. Filter {0} has been skipped", argumentFilter.GetType().FullName);
                 }
             }
 

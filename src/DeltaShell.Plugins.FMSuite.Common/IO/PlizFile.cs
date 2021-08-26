@@ -86,7 +86,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             if (fixedWeir != null)
             {
                 boolSwitch = 0;
-                fixedWeir.SetupAttributeToPropertyLinks();
             }
 
             if (bridgePillar != null)

@@ -667,21 +667,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             var fixedWeirFile = fileWriter as PlizFile<FixedWeir>;
             if (fixedWeirFile != null)
             {
-                fixedWeirFile.CreateDelegate = delegate (List<Coordinate> points, string name)
+                fixedWeirFile.CreateDelegate = (points, name) => new FixedWeir
                 {
-                    var feature = new FixedWeir { Name = name, Geometry = PlizFile<FixedWeir>.CreatePolyLineGeometry(points) };
-                    feature.InitializeAttributes();
-                    return feature;
+                    Name = name,
+                    Geometry = PlizFile<FixedWeir>.CreatePolyLineGeometry(points)
                 };
             }
 
             var bridgePillarFile = fileWriter as PlizFile<BridgePillar>;
             if (bridgePillarFile != null)
             {
-                bridgePillarFile.CreateDelegate = delegate (List<Coordinate> points, string name)
-                {
-                    return CreateDelegateBridgePillar(name, points);
-                };
+                bridgePillarFile.CreateDelegate = (points, name) => CreateDelegateBridgePillar(name, points);
             }
 
             var structuresFileWriter = fileWriter as StructuresFile;
@@ -1199,33 +1195,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsFile, hydroArea.ObservationPoints, ref obsFile, ObsExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.ObsCrsFile, hydroArea.ObservationCrossSections, ref obsCrsFile, ObsCrossExtension);
             ReadFeatures(filePath, modelDefinition, KnownProperties.BridgePillarFile, hydroArea.BridgePillars, ref bridgePillarFile, BridgePillarExtension);
-
-
+            
             var structures = new List<IStructure>();
 
             ReadFeatures(filePath, modelDefinition, KnownProperties.StructuresFile, structures, ref structuresFile, StructuresExtension);
 
             foreach (var structure in structures)
             {
-                if (structure is Pump2D)
+                switch (structure)
                 {
-                    hydroArea.Pumps.Add((Pump2D)structure);
-                }
-                else if (structure is Weir2D)
-                {
-                    hydroArea.Weirs.Add((Weir2D)structure);
-                }
-                else if (structure is Gate2D)
-                {
-                    hydroArea.Gates.Add((Gate2D)structure);
-                }
-                else if(structure is LeveeBreach)
-                {
-                    hydroArea.LeveeBreaches.Add((LeveeBreach)structure);
-                }
-                else
-                {
-                    throw new NotImplementedException();
+                    case Pump2D pump2D:
+                        hydroArea.Pumps.Add(pump2D);
+                        break;
+                    case Weir2D weir2D:
+                        hydroArea.Weirs.Add(weir2D);
+                        break;
+                    case Gate2D gate2D:
+                        hydroArea.Gates.Add(gate2D);
+                        break;
+                    case LeveeBreach breach:
+                        hydroArea.LeveeBreaches.Add(breach);
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
             }
 

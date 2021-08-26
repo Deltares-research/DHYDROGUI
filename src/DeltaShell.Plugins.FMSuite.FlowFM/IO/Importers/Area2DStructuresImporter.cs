@@ -117,24 +117,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             int pumpCount = 0, weirCount = 0, gateCount = 0;
             foreach (var structure in structures)
             {
-                if (structure is Pump2D)
+                switch (structure)
                 {
-                    targetHydroArea.Pumps.Add((Pump2D) structure);
-                    pumpCount++;
-                }
-                else if (structure is Weir2D)
-                {
-                    targetHydroArea.Weirs.Add((Weir2D) structure);
-                    weirCount++;
-                }
-                else if (structure is Gate2D)
-                {
-                    targetHydroArea.Gates.Add((Gate2D) structure);
-                    gateCount++;
-                }
-                else
-                {
-                    throw new NotImplementedException();
+                    case Pump2D pump2D:
+                        targetHydroArea.Pumps.Add(pump2D);
+                        pumpCount++;
+                        break;
+                    case Weir2D weir2D:
+                        targetHydroArea.Weirs.Add(weir2D);
+                        weirCount++;
+                        break;
+                    case Gate2D gate2D:
+                        targetHydroArea.Gates.Add(gate2D);
+                        gateCount++;
+                        break;
+                    default:
+                        throw new NotImplementedException();
                 }
             }
 

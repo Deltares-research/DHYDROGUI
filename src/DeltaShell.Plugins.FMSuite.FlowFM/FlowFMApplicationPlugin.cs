@@ -160,11 +160,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PliFileImporterExporter<FixedWeir, FixedWeir>
             {
                 Mode = Feature2DImportExportMode.Import,
-                CreateDelegate = delegate(List<Coordinate> points1, string name1)
+                CreateDelegate = (points1, name1) => new FixedWeir
                 {
-                    var feature1 = new FixedWeir {Name = name1, Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1)};
-                    feature1.InitializeAttributes();
-                    return feature1;
+                    Name = name1,
+                    Geometry = PliFile<FixedWeir>.CreatePolyLineGeometry(points1)
                 },
                 EqualityComparer = new GroupableFeatureComparer<FixedWeir>(),
                 AfterCreateAction = delegate(object featureList, FixedWeir fixedWeir)
