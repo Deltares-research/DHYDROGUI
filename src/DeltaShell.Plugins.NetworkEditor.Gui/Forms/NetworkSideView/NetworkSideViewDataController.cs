@@ -163,6 +163,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                              var multiDimensionalArray = networkCoverage.GetValues<double>(new VariableValueFilter<INetworkLocation>(networkCoverage.Locations, l));
                              return multiDimensionalArray != null && multiDimensionalArray.Count > 0 ? multiDimensionalArray.Max() : double.NaN;
                          })
+                         .Where(v => !double.IsNaN(v))
                          .ToList();
 
                 // cache values because they do not change when using time navigator

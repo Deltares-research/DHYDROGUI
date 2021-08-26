@@ -91,7 +91,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             Chart.Legend.ShowCheckBoxes = true;
 
             // restore visibility of serie
-            Chart.Series.ForEach(s => s.Visible = !seriesActiveCache.ContainsKey(s.Title) || seriesActiveCache[s.Title]);
+            if (seriesActiveCache.Any())
+            {
+                Chart.Series.ForEach(s => s.Visible = !seriesActiveCache.ContainsKey(s.Title) || seriesActiveCache[s.Title]);
+            }
         }
 
         private void CreateTools(SideViewChartData[] bedLevelChartDatas, Dictionary<SideViewChartData, IChartSeries> lookup, SideViewChartData waterLevelChartData, SideViewChartData[] pipeChartData, SideViewChartData waterLevelInPipeChartData)
@@ -193,6 +196,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return networkSideViewDataController.MaxWaterLevelFunction != null
                        ? CreateLineChartDataForFunction(networkSideViewDataController.MaxWaterLevelFunction, NetworkSideViewStyles.MaxWaterLevelColor, (lcs) =>
                        {
+                           lcs.Visible = false;
                            lcs.Color = NetworkSideViewStyles.MaxWaterLevelColor;
                            lcs.DashStyle = DashStyle.Solid;
                            lcs.Width = 2;
