@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
@@ -51,26 +50,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             };
         }
 
-        public static INetworkCoverage[] Create1dMeshCoverages(FouFileMetaData metaData)
+        public static NetworkCoverage[] Create1dMeshCoverages(FouFileMetaData metaData)
         {
-            INetworkCoverage BuildNetworkCoverage(NetCdfFile file, string vn)
-            {
-                return GenerateCoverageForVariable(file, vn, () =>
-                                                       new NetworkCoverage("", false)
-                                                       {
-                                                           Network = metaData.Network,
-                                                           SegmentGenerationMethod = SegmentGenerationMethod.None
-                                                       });
-            }
-
             if (!File.Exists(metaData.Path))
-                Enumerable.Empty<INetworkCoverage>();
+                return Array.Empty<NetworkCoverage>();
 
-            return DoWithNetCdfFile(metaData.Path, file => metaData.Variables1D.Select(v => BuildNetworkCoverage(file, v)).ToArray());
+            return DoWithNetCdfFile(metaData.Path, file =>
+            {
+                return metaData.Variables1D
+                               .Select(v => GenerateCoverageForVariable(file, v, () =>
+                                                                            new NetworkCoverage("", false)
+                                                                            {
+                                                                                Network = metaData.Network,
+                                                                                SegmentGenerationMethod = SegmentGenerationMethod.None
+                                                                            }))
+                               .ToArray();
+            });
         }
 
         public static UnstructuredGridCellCoverage[] Create2dMeshCoverages(FouFileMetaData metaData)
         {
+            if (!File.Exists(metaData.Path))
+                return Array.Empty<UnstructuredGridCellCoverage>();
+
             return DoWithNetCdfFile(metaData.Path, file =>
             {
                 return metaData.Variables2D
@@ -117,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     return variableDimensions.Length == 1
                            && dimensions.Contains(variableDimensions[0])
                            && attributes.ContainsKey(fourierAttributeToCheck);
-                }).Select(v => file.GetVariableName(v)).ToArray();
+                }).Select(file.GetVariableName).ToArray();
             });
         }
 

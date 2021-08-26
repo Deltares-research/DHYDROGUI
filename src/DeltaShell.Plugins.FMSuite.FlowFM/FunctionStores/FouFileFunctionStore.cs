@@ -172,6 +172,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 {
                     return new MultiDimensionalArray<int>(Enumerable.Range(0, MetaData.Grid.Cells.Count).ToArray(), MetaData.Grid.Cells.Count);
                 }
+
+                return CreateEmptyArrayForType(variable.ValueType);
             }
 
             // check for unsupported filters
@@ -180,29 +182,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 throw new NotSupportedException("Invalid set of filters. Either to many filters or not supported filters");
             }
 
-            if (!variable.IsIndependent)
+            if (!variable.Attributes.TryGetValue(FouFileReader.ncVariableName, out string variableName))
             {
-                if (!variable.Attributes.TryGetValue(FouFileReader.ncVariableName, out string variableName))
-                {
-                    return CreateEmptyArrayForType(variable.ValueType);
-                }
-
-                var variableValueFilter = filters.OfType<IVariableValueFilter>().FirstOrDefault();
-                var indices = variableValueFilter != null
-                                  ? GetIndicesForFilter(variableValueFilter)
-                                  : Array.Empty<int>();
-
-                return FouFileReader.DoWithNetCdfFile(MetaData.Path, file =>
-                {
-                    var ncVariable = file.GetVariableByName(variableName);
-
-                    var data = GetMultiDimensionalArray<double>(file, ncVariable, indices);
-                    UpdateMinMax(data, variableName, variable);
-                    return data;
-                });
+                return CreateEmptyArrayForType(variable.ValueType);
             }
 
-            return CreateEmptyArrayForType(variable.ValueType);
+            var variableValueFilter = filters.OfType<IVariableValueFilter>().FirstOrDefault();
+            var indices = variableValueFilter != null
+                              ? GetIndicesForFilter(variableValueFilter)
+                              : Array.Empty<int>();
+
+            return FouFileReader.DoWithNetCdfFile(MetaData.Path, file =>
+            {
+                var ncVariable = file.GetVariableByName(variableName);
+
+                var data = GetMultiDimensionalArray<double>(file, ncVariable, indices);
+                UpdateMinMax(data, variableName, variable);
+                return data;
+            });
+
         }
 
         public IMultiDimensionalArray<T> GetVariableValues<T>(IVariable variable, params IVariableFilter[] filters)
@@ -212,34 +210,32 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         public T GetMaxValue<T>(IVariable variable)
         {
-            if (variable.Attributes.TryGetValue(FouFileReader.ncVariableName, out string variableName)
-                && !variable.IsIndependent)
+            if (!variable.Attributes.TryGetValue(FouFileReader.ncVariableName, out string variableName) || variable.IsIndependent)
             {
-                if (maxValues.TryGetValue(variableName, out double maxValue))
-                {
-                    return (T)Convert.ChangeType(maxValue, typeof(T));
-                }
-
-                return default(T);
+                throw new NotSupportedException("Fou file only contains doubles values");
             }
 
-            throw new NotSupportedException("Fou file only contains doubles values");
+            if (maxValues.TryGetValue(variableName, out double maxValue))
+            {
+                return (T)Convert.ChangeType(maxValue, typeof(T));
+            }
+
+            return default(T);
         }
 
         public T GetMinValue<T>(IVariable variable)
         {
-            if (variable.Attributes.TryGetValue(FouFileReader.ncVariableName, out string variableName)
-                && !variable.IsIndependent)
+            if (!variable.Attributes.TryGetValue(FouFileReader.ncVariableName, out string variableName) || variable.IsIndependent)
             {
-                if (minValues.TryGetValue(variableName, out double minValue))
-                {
-                    return (T)Convert.ChangeType(minValue, typeof(T));
-                }
-
-                return default(T);
+                throw new NotSupportedException("Fou file only contains doubles values");
             }
 
-            throw new NotSupportedException("Fou file only contains doubles values");
+            if (minValues.TryGetValue(variableName, out double minValue))
+            {
+                return (T)Convert.ChangeType(minValue, typeof(T));
+            }
+
+            return default(T);
         }
 
         public void CreateNew(string path)
@@ -272,7 +268,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         public void SwitchTo(string newPath)
         {
-            path = newPath;
+            Path = newPath;
         }
 
         public void Delete()
@@ -290,7 +286,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private int[] GetIndicesForFilter(IVariableValueFilter filter)
         {
-            int[] indices;
             var filterVariable = filter.Variable;
             if (!filterVariable.IsIndependent)
             {
@@ -300,18 +295,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             if (filterVariable.ValueType == typeof(INetworkLocation))
             {
                 var locations = filter.Values.OfType<INetworkLocation>().ToArray();
-                indices = locations.Select(l => MetaData.IndexByLocation[l]).ToArray();
-            }
-            else if (filterVariable.ValueType == typeof(int))
-            {
-                indices = filter.Values.OfType<int>().ToArray();
-            }
-            else
-            {
-                throw new NotSupportedException("The requested filter is not supported, can not retrieve fou file results");
+                return locations.Select(l => MetaData.IndexByLocation[l]).ToArray();
             }
 
-            return indices;
+            if (filterVariable.ValueType == typeof(int))
+            {
+                return filter.Values.OfType<int>().ToArray();
+            }
+
+            throw new NotSupportedException("The requested filter is not supported, can not retrieve fou file results");
         }
 
         private static IMultiDimensionalArray<T> GetMultiDimensionalArray<T>(NetCdfFile file, NetCdfVariable ncVariable, int[] indices)
@@ -342,7 +334,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                                             .Concat(FouFileReader.Create2dMeshCoverages(MetaData))
                                             .ToArray();
 
-            // todo : check adding arguments and components
             allCoverages.ForEach(c => c.Store = this);
 
             return allCoverages;
