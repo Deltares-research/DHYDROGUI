@@ -191,13 +191,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 var indices = variableValueFilter != null
                                   ? GetIndicesForFilter(variableValueFilter)
                                   : Array.Empty<int>();
-                
-                var file = NetCdfFile.OpenExisting(MetaData.Path);
-                var ncVariable = file.GetVariableByName(variableName);
 
-                var data = GetMultiDimensionalArray<double>(file, ncVariable, indices);
-                UpdateMinMax(data, variableName, variable);
-                return data;
+                return FouFileReader.DoWithNetCdfFile(MetaData.Path, file =>
+                {
+                    var ncVariable = file.GetVariableByName(variableName);
+
+                    var data = GetMultiDimensionalArray<double>(file, ncVariable, indices);
+                    UpdateMinMax(data, variableName, variable);
+                    return data;
+                });
             }
 
             return CreateEmptyArrayForType(variable.ValueType);
@@ -217,6 +219,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 {
                     return (T)Convert.ChangeType(maxValue, typeof(T));
                 }
+
+                return default(T);
             }
 
             throw new NotSupportedException("Fou file only contains doubles values");
@@ -231,6 +235,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 {
                     return (T)Convert.ChangeType(minValue, typeof(T));
                 }
+
+                return default(T);
             }
 
             throw new NotSupportedException("Fou file only contains doubles values");
@@ -242,7 +248,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         public void Close()
         {
-
+            Path = null;
         }
 
         public void Open(string path)

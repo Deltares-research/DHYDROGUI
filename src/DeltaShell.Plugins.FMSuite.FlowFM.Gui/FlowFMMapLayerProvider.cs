@@ -228,6 +228,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     };
             }
 
+            if (data is FouFileFunctionStore)
+            {
+                return new GroupLayer("Output (fou)")
+                {
+                    LayersReadOnly = true,
+                    NameIsReadOnly = true
+                };
+            }
+
             if (data is FM1DFileFunctionStore)
             {
                 var groupLayer = new GroupLayer("Output 1D (map file)")
@@ -445,6 +454,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is FMMapFileFunctionStore
                    || data is FMHisFileFunctionStore
                    || data is FMClassMapFileFunctionStore
+                   || data is FouFileFunctionStore
                    || data is FM1DFileFunctionStore
                    || data is ImportedFMNetFile
                    || data is IEventedList<BoundaryConditionSet> && parentObject is WaterFlowFMModel
@@ -591,6 +601,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     yield return model.OutputClassMapFileStore;
                 }
+
+                if (model.OutputFouFileStore!= null)
+                {
+                    yield return model.OutputFouFileStore;
+                }
             }
 
             var coverageDepthLayersList = data as CoverageDepthLayersList;
@@ -633,7 +648,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                         yield return output;
                 }
             }
-            
+
+            if (data is FouFileFunctionStore outputFouFileStore)
+            {
+                foreach (IFunction function in outputFouFileStore.Functions)
+                {
+                    yield return function;
+                }
+            }
+
             // groupings currently used by FMMapFileFunctionStore (for sedimentation outputs)
             var grouping = data as IGrouping<string, IFunction>;
             if (grouping != null)
@@ -703,20 +726,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private static IEnumerable<object> GetMapOutputFunctions(FMMapFileFunctionStore mapStore)
         {
             yield return mapStore.Grid;
-            yield return mapStore.Network;
-            yield return mapStore.Discretization;
             yield return mapStore.Links;
             
             var functionGrouping = mapStore.GetFunctionGrouping();
             foreach (IGrouping<string, IFunction> group in functionGrouping)
             {
-                if (@group.Count() == 1)
+                if (group.Count() == 1)
                 {
-                    yield return @group.ElementAt(0);
+                    yield return group.ElementAt(0);
                     continue;
                 }
 
-                yield return @group;
+                yield return group;
             }
 
             // Needs to be handled separately since it would be grouped with EastwardSeaWaterVelocityStandardName

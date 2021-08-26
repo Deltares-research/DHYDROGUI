@@ -944,7 +944,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             reportProgress("Reading fm meteo external forcings file", 6, totalSteps);
 
-            reportProgress("Reading FouFile is used", 7, totalSteps);
+            reportProgress("Reading FouFile if used", 7, totalSteps);
+
             string targetDir = System.IO.Path.GetDirectoryName(filePath);
             FouFileReader.ReadFouFile(targetDir, modelDefinition);
             

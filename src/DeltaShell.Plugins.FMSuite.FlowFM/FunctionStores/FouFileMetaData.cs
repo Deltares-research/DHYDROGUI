@@ -48,13 +48,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         public IDictionary<INetworkLocation, int> IndexByLocation { get; private set; }
 
         /// <summary>
-        /// Output NetCdfVariables based on the 1d mesh
+        /// Output variable names based on the 1d mesh
         /// </summary>
-        public IEnumerable<NetCdfVariable> Variables1D { get; set; }
+        public string[] Variables1D { get; set; }
 
         /// <summary>
-        /// Output NetCdfVariables based on the 2d mesh
+        /// Output variable names based on the 2d mesh
         /// </summary>
-        public IEnumerable<NetCdfVariable> Variables2D { get; set; }
+        public string[] Variables2D { get; set; }
     }
 }

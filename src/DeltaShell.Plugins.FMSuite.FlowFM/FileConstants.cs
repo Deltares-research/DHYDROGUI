@@ -38,6 +38,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM {
         public const string ClassMapFileExtension = "_clm" + NetCdfFileExtension;
         public const string RestartFileExtension = "_rst" + NetCdfFileExtension;
         public const string GeomFileExtension = "geom" + NetCdfFileExtension;
+        public const string FouFileExtension = "_fou" + NetCdfFileExtension;
 
         public const string ThinDamPliFileExtension = "_thd" + PliFileExtension;
         public const string ThinDamPlizFileExtension = "_thd" + PlizFileExtension;

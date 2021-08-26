@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using BasicModelInterface;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -32,6 +33,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects;
@@ -39,6 +41,7 @@ using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -1103,36 +1106,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         protected override void OnClearOutput()
         {
-            if (OutputMapFileStore != null)
-            {
-                OutputMapFileStore.Functions.Clear();
-                OutputMapFileStore.Close();
-                OutputMapFileStore = null;
-            }
-            if (Output1DFileStore != null)
-            {
-                Output1DFileStore.Functions.OfType<INetworkCoverage>().ForEach(nc => nc.Network = null);
-                Output1DFileStore.Functions.Clear();
-                Output1DFileStore.Close();
-                Output1DFileStore = null;
-            }
-            if (OutputHisFileStore != null)
-            {
-                OutputHisFileStore.Functions.Clear();
-                OutputHisFileStore.Close();
-                OutputHisFileStore = null;
-            }
-            if (OutputClassMapFileStore != null)
-            {
-                ClearFunctionStore(OutputClassMapFileStore);
-                OutputClassMapFileStore = null;
-            }
+            DisconnectOutput();
         }
 
-        private static void ClearFunctionStore(IReadOnlyNetCdfFunctionStoreBase functionStore)
+        private void ClearFunctionStore(PropertyInfo property)
         {
+            if (!(property.GetValue(this) is IFunctionStore functionStore))
+            {
+                return;
+            }
+
             functionStore.Functions.Clear();
-            functionStore.Close();
+
+            if (functionStore is IFileBased fileBasedFunctionStore)
+            {
+                fileBasedFunctionStore.Close();
+            }
+
+            property.SetValue(this, null);
         }
 
         public override IProjectItem DeepClone()
@@ -1772,8 +1763,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         public virtual FMHisFileFunctionStore OutputHisFileStore { get; protected set; }
-        public virtual FMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
         
+        public virtual FMClassMapFileFunctionStore OutputClassMapFileStore { get; protected set; }
+
+        public virtual FouFileFunctionStore OutputFouFileStore { get; protected set; }
+
         private string WaqHydFilePath { get; set; }
 
         public const string DiaFileDataItemTag = "DiaFile";
@@ -2007,6 +2001,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             public string ClassMapFilePath => FindFileThatEndsWith(FileConstants.ClassMapFileExtension);
 
             /// <summary>
+            /// The file path to the fou file.
+            /// </summary>
+            /// <remarks> Returns null in case the file was not found. </remarks>
+            public string FouFilePath => FindFileThatEndsWith(FileConstants.FouFileExtension); 
+
+            /// <summary>
             /// The path to the waq output directory.
             /// </summary>
             /// <remarks> Returns null in case the directory was not found. </remarks>
@@ -2064,6 +2064,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
             ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
             ReconnectClassMapFile(outputDirectory.ClassMapFilePath, switchTo);
+            ReconnectFouFile(outputDirectory.FouFilePath, switchTo);
             ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
             ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
             ReconnectRestartFiles(outputDirectory.RestartFilePaths);
@@ -2154,20 +2155,42 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void ReconnectClassMapFile(string classMapFilePath, bool switchTo)
         {
-            if (classMapFilePath != null)
+            if (classMapFilePath == null)
             {
-                ReportProgressText("Reading class map file");
-                FireImportProgressChanged(this,"Reading output files - Reading Class Map file", 1, 2);
-                if (switchTo && OutputClassMapFileStore != null)
-                {
-                    OutputClassMapFileStore.Path = classMapFilePath;
-                }
-                else
-                {
-                    OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
-                }
+                return;
+            }
+
+            ReportProgressText("Reading class map file");
+            FireImportProgressChanged(this,"Reading output files - Reading Class Map file", 1, 2);
+            if (switchTo && OutputClassMapFileStore != null)
+            {
+                OutputClassMapFileStore.Path = classMapFilePath;
+            }
+            else
+            {
+                OutputClassMapFileStore = new FMClassMapFileFunctionStore(classMapFilePath);
             }
         }
+
+        private void ReconnectFouFile(string fouFilePath, bool switchTo)
+        {
+            if (fouFilePath == null)
+            {
+                return;
+            }
+
+            ReportProgressText("Reading fou file");
+            FireImportProgressChanged(this, "Reading output files - Reading Fou file", 1, 2);
+            if (switchTo && OutputFouFileStore != null)
+            {
+                OutputFouFileStore.Path = fouFilePath;
+            }
+            else
+            {
+                OutputFouFileStore = new FouFileFunctionStore {Path = fouFilePath};
+            }
+        }
+
         /// <summary>
         /// Gets the cache file.
         /// </summary>
@@ -2824,31 +2847,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual void DisconnectOutput()
         {
-            var hasMapFileStore = OutputMapFileStore != null;
-            var hasHisFileStore = OutputHisFileStore != null;
-            if (hasMapFileStore || hasHisFileStore)
+            var storeNames = new[]
             {
-                BeginEdit(new DefaultEditAction("Disconnecting from output files"));
+                nameof(OutputMapFileStore),
+                nameof(OutputHisFileStore),
+                nameof(OutputClassMapFileStore),
+                nameof(OutputFouFileStore)
+            };
 
-                if (hasMapFileStore)
+            var properties = storeNames.Select(n => GetType().GetProperty(n)).ToArray();
+
+            if (properties.Any(p => p.GetValue(this) != null))
+            {
+                using (this.InEditMode("Disconnecting from output files"))
                 {
-                    OutputMapFileStore.Close();
-                    OutputMapFileStore = null;
-                    Output1DFileStore?.Close();
-                    Output1DFileStore = null;
+                    properties.ForEach(ClearFunctionStore);
                 }
-                if (hasHisFileStore)
-                {
-                    OutputHisFileStore.Close();
-                    OutputHisFileStore = null;
-                }
-                if (OutputClassMapFileStore != null)
-                {
-                    OutputClassMapFileStore.Close();
-                    OutputClassMapFileStore = null;
-                }
-                EndEdit();
             }
+
             OutputSnappedFeaturesPath = null;
         }
 
