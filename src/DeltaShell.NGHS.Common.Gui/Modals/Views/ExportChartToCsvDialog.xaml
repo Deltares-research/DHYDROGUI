@@ -1,0 +1,223 @@
+﻿<Window x:Class="DeltaShell.NGHS.Common.Gui.Modals.Views.ExportChartToCsvDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:DeltaShell.NGHS.Common.Gui.Modals.ViewModels"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:converters="clr-namespace:DeltaShell.NGHS.Common.Gui.Converters"
+        mc:Ignorable="d"
+        Title="Export to csv"
+        Height="600"
+        Width="800"
+        WindowStartupLocation="CenterScreen"
+        Topmost="True"
+        BorderThickness="0"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DeltaShell.NGHS.Common.Gui;component/DefaultControlTemplates.xaml" />
+                <ResourceDictionary>
+                    <ObjectDataProvider x:Key="ExportFormatTypes"
+                                        MethodName="GetValues"
+                                        ObjectType="{x:Type system:Enum}">
+                        <ObjectDataProvider.MethodParameters>
+                            <x:Type TypeName="viewModels:ExportFormatType" />
+                        </ObjectDataProvider.MethodParameters>
+                    </ObjectDataProvider>
+                    <converters:EnumToDescriptionConverter x:Key="ResultConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.DataContext>
+        <viewModels:ExportChartToCsvDialogViewModel x:Name="ViewModel" />
+    </Window.DataContext>
+    <GroupBox Header="Export to csv"
+              Padding="0"
+              Style="{StaticResource GroupBoxStyle}"
+              Margin="0">
+        <Grid Background="White">
+            <Grid.Resources>
+                <Style TargetType="GroupBox"
+                       BasedOn="{StaticResource GroupBoxStyle}" />
+                <Style TargetType="TextBlock">
+                    <Setter Property="Margin"
+                            Value="3" />
+                </Style>
+                <Style TargetType="Button">
+                    <Setter Property="Padding"
+                            Value="3"/>
+                    <Setter Property="Template"
+                            Value="{StaticResource ButtonControlTemplate}" />
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <GroupBox Header="Target file"
+                      Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding Path}"
+                               TextWrapping="Wrap" />
+                    <Button Grid.Column="1"
+                            Content="..."
+                            Command="{Binding SelectFileCommand}" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Settings"
+                      Grid.Row="1"
+                      Grid.Column="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Field separator"
+                               Grid.Column="0"
+                               VerticalAlignment="Center" />
+                    <TextBox Text="{Binding Separator}"
+                             MaxLength="1"
+                             Grid.Row="0"
+                             Grid.Column="1"
+                             VerticalAlignment="Center" />
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="3,0,3,0"
+                               VerticalAlignment="Center"
+                               Text="Format" />
+                    <ComboBox Grid.Row="1"
+                              Grid.Column="1"
+                              VerticalAlignment="Center"
+                              ItemsSource="{Binding Source={StaticResource ExportFormatTypes}}"
+                              SelectedItem="{Binding FormatType}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource ResultConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <CheckBox Grid.Row="2"
+                              Grid.Column="0"
+                              x:Name="UseDecimalCheckBox"
+                              Margin="3,0,3,0"
+                              Content="Use decimal places"
+                              VerticalAlignment="Center"
+                              IsChecked="{Binding UseDecimalPlaces}" />
+                    <Grid Grid.Row="2"
+                          Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Slider IsEnabled="{Binding IsChecked, ElementName=UseDecimalCheckBox}"
+                                IsSnapToTickEnabled="True"
+                                Maximum="10"
+                                Minimum="0"
+                                TickFrequency="1"
+                                TickPlacement="Both"
+                                Value="{Binding NumberOfDigits}" />
+                        <TextBlock Grid.Column="1"
+                                   Text="{Binding NumberOfDigits}"
+                                   IsEnabled="{Binding IsChecked, ElementName=UseDecimalCheckBox}"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+                    <TextBlock Grid.Row="3"
+                               Grid.Column="0"
+                               MaxWidth="100"
+                               TextWrapping="Wrap"
+                               Text="Combine series in one table"
+                               HorizontalAlignment="Left" />
+                    <CheckBox Grid.Row="3"
+                              Grid.Column="1"
+                              VerticalAlignment="Center"
+                              IsChecked="{Binding CombineSeries}" />
+                </Grid>
+            </GroupBox>
+            <GroupBox Header="Series"
+                      Grid.Row="2"
+                      Grid.Column="0">
+                <ListBox ItemsSource="{Binding Series}"
+                         BorderThickness="0"
+                         d:ItemsSource="{d:SampleData}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type viewModels:ChartSeriesInfo}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <CheckBox IsChecked="{Binding Selected}"
+                                          Grid.Column="0"
+                                          Margin="0,2,5,2" />
+                                <TextBlock Text="{Binding Name}"
+                                           Grid.Column="1"
+                                           MaxWidth="200"
+                                           VerticalAlignment="Center"
+                                           TextWrapping="Wrap" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </GroupBox>
+            <GroupBox Header="Preview"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      Grid.RowSpan="2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <TextBox VerticalScrollBarVisibility="Auto"
+                             HorizontalScrollBarVisibility="Auto"
+                             Text="{Binding PreviewText}"
+                             BorderThickness="0"
+                             IsReadOnly="True"
+                             FontFamily="Cascadia Mono"></TextBox>
+                    <StackPanel Grid.Row="1"
+                                Orientation="Horizontal">
+                        <TextBlock Text="Preview length" />
+                        <TextBox Text="{Binding PreviewTextLength}"
+                                 MinWidth="100" />
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
+            <StackPanel Grid.Row="3"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                <Button Content="Ok"
+                        IsDefault="True"
+                        Margin="3"
+                        Width="50"
+                        Command="{Binding ExportToFileCommand}"/>
+                <Button Content="Cancel"
+                        IsCancel="True"
+                        Margin="3"
+                        Width="50" />
+            </StackPanel>
+        </Grid>
+    </GroupBox>
+</Window>

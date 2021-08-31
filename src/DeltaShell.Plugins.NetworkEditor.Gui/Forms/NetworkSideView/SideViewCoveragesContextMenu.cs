@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf.Charting;
+using DeltaShell.NGHS.Common.Gui.Modals.Views;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -46,6 +47,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 menu.Items.Add(new ToolStripSeparator());
             }
 
+            var exportToCsv = new ToolStripMenuItem("Export to csv");
+            exportToCsv.Click += ExportToCsvOnClick;
+            menu.Items.Add(exportToCsv);
+
             // all not rendered coverages can be added
             var dropDownMenuItem = new ToolStripMenuItem
                                        {
@@ -74,6 +79,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 }    
             }
             menu.Items.Add(dropDownMenuItem);
+        }
+
+        private void ExportToCsvOnClick(object sender, EventArgs e)
+        {
+            var exportDialog = new ExportChartToCsvDialog();
+            exportDialog.SetChart(ChartView.Chart);
+            exportDialog.ShowDialog();
         }
 
         private void AddCoveragesToMenuItem(IEnumerable<ICoverage> coveragesPerModel, ToolStripMenuItem dropDownMenuItem)

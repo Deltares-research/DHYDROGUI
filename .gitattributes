@@ -659,8 +659,13 @@ src/DeltaShell.NGHS.Common.Gui/MapLayers/WmtsGroupLayer.hbm.xml -text
 src/DeltaShell.NGHS.Common.Gui/MapLayers/WmtsLayer.cs -text
 src/DeltaShell.NGHS.Common.Gui/Modals/Helpers/IRequestUserInputService.cs -text
 src/DeltaShell.NGHS.Common.Gui/Modals/Helpers/RequestUserInputService.cs -text
+src/DeltaShell.NGHS.Common.Gui/Modals/ViewModels/ChartSeriesInfo.cs -text
+src/DeltaShell.NGHS.Common.Gui/Modals/ViewModels/ExportChartToCsvDialogViewModel.cs -text
+src/DeltaShell.NGHS.Common.Gui/Modals/ViewModels/ExportFormatType.cs -text
 src/DeltaShell.NGHS.Common.Gui/Modals/ViewModels/UserInputModalViewModel.cs -text
 src/DeltaShell.NGHS.Common.Gui/Modals/ViewModels/UserInputModalViewModelBase.cs -text
+src/DeltaShell.NGHS.Common.Gui/Modals/Views/ExportChartToCsvDialog.xaml -text
+src/DeltaShell.NGHS.Common.Gui/Modals/Views/ExportChartToCsvDialog.xaml.cs -text
 src/DeltaShell.NGHS.Common.Gui/Modals/Views/UserInputModalView.xaml -text
 src/DeltaShell.NGHS.Common.Gui/Modals/Views/UserInputModalView.xaml.cs -text
 src/DeltaShell.NGHS.Common.Gui/NodePresenters/ContextMenuFactory.cs -text
@@ -3598,7 +3603,9 @@ test/DeltaShell.NGHS.Common.Gui.Tests/DeltaShell.NGHS.Common.Gui.Tests.csproj -t
 test/DeltaShell.NGHS.Common.Gui.Tests/LayerExtensionsTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/MapLayers/LayerExtensionsTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/Modals/Helpers/RequestUserInputServiceTest.cs -text
+test/DeltaShell.NGHS.Common.Gui.Tests/Modals/ViewModels/ExportChartToCsvDialogViewModelTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/Modals/ViewModels/UserInputModalViewModelTest.cs -text
+test/DeltaShell.NGHS.Common.Gui.Tests/Modals/Views/ExportChartToCsvDialogTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/NodePresenters/ContextMenuFactoryTest.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/Properties/AssemblyInfo.cs -text
 test/DeltaShell.NGHS.Common.Gui.Tests/TestClassSetup.cs -text

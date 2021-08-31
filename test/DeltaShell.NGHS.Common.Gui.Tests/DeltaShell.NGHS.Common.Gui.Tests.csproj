@@ -43,6 +43,11 @@
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="DelftTools.Controls.Swf, Version=2.0.0.736, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DelftTools.Shell.Core">
       <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
@@ -95,6 +100,7 @@
       <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="Rhino.Mocks">
       <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
@@ -125,6 +131,8 @@
     <Compile Include="CoordinateSystemPickerViewModelTest.cs" />
     <Compile Include="LayerExtensionsTest.cs" />
     <Compile Include="MapLayers\LayerExtensionsTest.cs" />
+    <Compile Include="Modals\ViewModels\ExportChartToCsvDialogViewModelTest.cs" />
+    <Compile Include="Modals\Views\ExportChartToCsvDialogTest.cs" />
     <Compile Include="Modals\Helpers\RequestUserInputServiceTest.cs" />
     <Compile Include="Modals\ViewModels\UserInputModalViewModelTest.cs" />
     <Compile Include="NodePresenters\ContextMenuFactoryTest.cs" />
@@ -147,6 +155,7 @@
       <Name>DeltaShell.NGHS.TestUtils</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
