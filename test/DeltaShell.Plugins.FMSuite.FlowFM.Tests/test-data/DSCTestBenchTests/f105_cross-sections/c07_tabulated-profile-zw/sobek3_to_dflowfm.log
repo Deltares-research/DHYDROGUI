@@ -1,9 +1,0 @@
-08-23 10:43 root         INFO     Converting from Sobek3 to D-Flow FM: Flow1D.md1d
-08-23 10:43 sobek3Reader INFO     Reading Sobek files
-08-23 10:43 sobek3Reader INFO     Number of Nodes     :14
-08-23 10:43 sobek3Reader INFO     Number of Branches  :7
-08-23 10:43 sobek3Reader INFO     Number of Boundaries:14
-08-23 10:43 converter    INFO     Converting
-08-23 10:43 FMWriter     INFO     Writing FM files
-08-23 10:43 UgridWriter  INFO     Writing Ugrid file
-08-23 10:43 root         INFO     Finished
