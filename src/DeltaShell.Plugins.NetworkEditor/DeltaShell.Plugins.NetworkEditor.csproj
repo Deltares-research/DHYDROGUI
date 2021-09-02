@@ -164,6 +164,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.1D2D_B.cs">
+      <Link>Properties\AssemblyInfo.Version.1D2D_B.cs</Link>
+    </Compile>
     <Compile Include="ImportExportCsv\CrossSectionToCsvExporterBase.cs" />
     <Compile Include="ImportExportCsv\CrossSectionXYZFromCsvFileImporter.cs" />
     <Compile Include="ImportExportCsv\CrossSectionXYZToCsvFileExporter.cs" />
@@ -414,9 +417,6 @@
       <Properties InternalTargetFrameworkVersion="3.5" />
     </MonoDevelop>
   </ProjectExtensions>
-  <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(ProjectDir)Scripts $(OutDir)..\DeltaShell.Plugins.Toolbox\Scripts /s /y</PostBuildEvent>

@@ -183,6 +183,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.1D2D_A.cs">
+      <Link>Properties\AssemblyInfo.Version.1D2D_A.cs</Link>
+    </Compile>
     <Compile Include="BoundaryDataMapSymbols.cs" />
     <Compile Include="Forms\CreateFmModelSettingViewViewModel.cs" />
     <Compile Include="Editors\BoundaryConditionExtensions.cs" />
@@ -727,9 +730,6 @@
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

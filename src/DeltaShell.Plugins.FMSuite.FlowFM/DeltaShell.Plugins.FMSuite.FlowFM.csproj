@@ -143,6 +143,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.1D2D_A.cs">
+      <Link>Properties\AssemblyInfo.Version.1D2D_A.cs</Link>
+    </Compile>
     <Compile Include="Api\FlexibleMeshBasicModelInterface.cs" />
     <Compile Include="Api\FlexibleMeshModelApi.cs" />
     <Compile Include="Api\FlexibleMeshModelApiFactory.cs" />
@@ -495,9 +498,6 @@
     <Folder Include="SedMor\IO\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
     <PostBuildEvent>xcopy $(ProjectDir)Scripts $(OutDir)..\DeltaShell.Plugins.Toolbox\Scripts /s /y

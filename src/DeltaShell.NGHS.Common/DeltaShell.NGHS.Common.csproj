@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.1D2D_A.cs">
+      <Link>Properties\AssemblyInfo.Version.1D2D_A.cs</Link>
+    </Compile>
     <Compile Include="ApplicationPluginHelper.cs" />
     <Compile Include="DefaultModelSettings.cs" />
     <Compile Include="EnvironmentConstants.cs" />
@@ -121,9 +124,6 @@
     <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets'))" />
   </Target>
-  <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
-  </PropertyGroup>
   <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" />
 </Project>

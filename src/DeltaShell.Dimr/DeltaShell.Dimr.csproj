@@ -70,6 +70,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.1D2D_A.cs">
+      <Link>Properties\AssemblyInfo.Version.1D2D_A.cs</Link>
+    </Compile>
     <Compile Include="DimrApi.cs" />
     <Compile Include="DimrApiDataSet.cs" />
     <Compile Include="DimrApiFactory.cs" />
@@ -153,7 +156,7 @@
       ..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd
       cd "$(ProjectDir)\dimr_xsd"
       ..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.DimrXsd</PreBuildEvent>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "
+    <PreBuildEvent>
 cd "$(ProjectDir)\drtc_xsd"
 ..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd
 cd "$(ProjectDir)\dimr_xsd"

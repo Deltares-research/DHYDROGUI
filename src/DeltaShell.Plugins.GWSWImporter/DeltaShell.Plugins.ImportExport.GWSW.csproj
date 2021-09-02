@@ -134,6 +134,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.1D2D_A.cs">
+      <Link>Properties\AssemblyInfo.Version.1D2D_A.cs</Link>
+    </Compile>
     <Compile Include="ArchCrossSectionDefinitionGenerator.cs" />
     <Compile Include="ASewerCompartmentGenerator.cs" />
     <Compile Include="ASewerProfileDefinitionReader.cs" />

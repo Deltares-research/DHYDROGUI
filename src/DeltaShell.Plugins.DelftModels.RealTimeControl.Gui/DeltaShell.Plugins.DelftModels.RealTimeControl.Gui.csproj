@@ -45,6 +45,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\AssemblyInfo.Version.1D2D_B.cs">
+      <Link>Properties\AssemblyInfo.Version.1D2D_B.cs</Link>
+    </Compile>
     <Compile Include="ControlGroupFeatureCollection.cs" />
     <Compile Include="Forms\ControlGroupLayerEditorView.cs">
       <SubType>UserControl</SubType>
@@ -360,9 +363,6 @@
     <Content Include="Resources\signal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir). " "$(ProjectDir)Properties\AssemblyInfo.cs.svn " "$(ProjectDir)Properties\AssemblyInfo.cs "</PreBuildEvent>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
