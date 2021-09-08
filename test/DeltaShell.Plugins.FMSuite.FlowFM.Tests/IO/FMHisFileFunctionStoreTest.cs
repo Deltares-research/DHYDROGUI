@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 Assert.Multiple(() =>
                 {
-                    Assert.AreEqual(79, store.Functions.Count);
+                    Assert.AreEqual(81, store.Functions.Count);
                     var pumpFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_s1up");
                     Assert.That(pumpFunction, Is.Not.Null);
                     Assert.AreEqual(5, pumpFunction.GetValues().Count);
