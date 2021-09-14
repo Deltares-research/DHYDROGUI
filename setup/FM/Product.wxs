@@ -17,29 +17,29 @@
   <?ifdef var.RWS?>
   <?define Delft3DPackageName="D-HYDRO"?>
   <?define registrationFeature="D-HYDRO"?>
-  <?define registrationVersion="1.7"?>
-  <?define CheckOriginOfProject="False"?>
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>
+  <?define registrationVersion="2022"?>
+  <?define CheckOriginOfProject="False"?>  
+  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
   <?else?>
   <?ifdef var.NOWAQ?>
   <?define Delft3DPackageName="Delft3D FM HM"?>
   <?define registrationFeature="Delft3D_FM_Hyd-Mor"?>
-  <?define registrationVersion="1.7"?>
-  <?define CheckOriginOfProject="False"?>
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>
+  <?define registrationVersion="2022"?>
+  <?define CheckOriginOfProject="False"?>  
+  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
   <?else?>
   <?ifdef var.NOKERNELS?>
   <?define Delft3DPackageName="Delft3D FM HMWQ"?>
   <?define registrationFeature="Delft3D_FM_OSS"?>
-  <?define registrationVersion="1.7"?>
-  <?define CheckOriginOfProject="False"?>
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>
+  <?define registrationVersion="2022"?>
+  <?define CheckOriginOfProject="False"?>  
+  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
   <?else?>
   <?define Delft3DPackageName="Delft3D FM HMWQ"?>
   <?define registrationFeature="Delft3D_FM_Hyd-Mor_And_Waq"?>
-  <?define registrationVersion="1.7"?>
-  <?define CheckOriginOfProject="False"?>
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>
+  <?define registrationVersion="2022"?>
+  <?define CheckOriginOfProject="False"?>  
+  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
   <?endif?>
   <?endif?>
   <?endif?>
@@ -79,7 +79,7 @@
   <?ifdef var.RWS?>
   <?define splashScreenLicense="NGHS project"?>
   <?else?>
-  <?define splashScreenLicense="Valid until 30 oct 2020"?>
+  <?define splashScreenLicense="Valid until 30 oct 2022"?>
   <?endif?>
 
   <?define plugin_wixUIDeltares="FM_WixUI_Deltares"?>
