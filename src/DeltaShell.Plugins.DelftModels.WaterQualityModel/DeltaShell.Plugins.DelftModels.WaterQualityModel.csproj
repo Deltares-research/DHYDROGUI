@@ -554,7 +554,7 @@
     <Error Condition="!Exists('..\..\packages\Substances.Libs.1.0.0.68442\build\net40\Substances.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Substances.Libs.1.0.0.68442\build\net40\Substances.Libs.targets'))" />
     <Error Condition="!Exists('..\..\packages\PLCT.Libs.1.0.0.68442\build\net40\plct.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PLCT.Libs.1.0.0.68442\build\net40\plct.Libs.targets'))" />
     <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.662-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.662-beta\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DIDO.6.4.0.71701\build\net40\DIDO.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DIDO.6.4.0.71701\build\net40\DIDO.targets'))" />
+    <Error Condition="!Exists('..\..\packages\DIDO.6.5.0.72783\build\net40\DIDO.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DIDO.6.5.0.72783\build\net40\DIDO.targets'))" />
   </Target>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
@@ -564,5 +564,5 @@
   <Import Project="..\..\packages\Substances.Libs.1.0.0.68442\build\net40\Substances.Libs.targets" Condition="Exists('..\..\packages\Substances.Libs.1.0.0.68442\build\net40\Substances.Libs.targets')" />
   <Import Project="..\..\packages\PLCT.Libs.1.0.0.68442\build\net40\plct.Libs.targets" Condition="Exists('..\..\packages\PLCT.Libs.1.0.0.68442\build\net40\plct.Libs.targets')" />
   <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.662-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.662-beta\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\DIDO.6.4.0.71701\build\net40\DIDO.targets" Condition="Exists('..\..\packages\DIDO.6.4.0.71701\build\net40\DIDO.targets')" />
+  <Import Project="..\..\packages\DIDO.6.5.0.72783\build\net40\DIDO.targets" Condition="Exists('..\..\packages\DIDO.6.5.0.72783\build\net40\DIDO.targets')" />
 </Project>
