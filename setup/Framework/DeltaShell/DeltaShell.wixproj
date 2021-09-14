@@ -31,6 +31,8 @@
     <Content Include="generate_ironpython_libs.cmd" />
     <Content Include="MainExecutableFiles.wxi" />
     <Content Include="Manuals\Delta_Shell_User_Manual.pdf" />
+    <Content Include="Microsoft_VC142_CRT_x64.msm" />
+    <Content Include="Microsoft_VC142_CRT_x64.msm.README.md" />
     <Content Include="NetCdf.wxi" />
     <Content Include="OSVersionCheck.wxi" />
     <Content Include="packages.config" />
