@@ -26,7 +26,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.ProjectExplorer
                 parentNodeData.ObservationCrossSections,
                 parentNodeData.Pumps,
                 parentNodeData.Structures,
-                parentNodeData.Embankments,
                 parentNodeData.Enclosures,
                 parentNodeData.BridgePillars
             };

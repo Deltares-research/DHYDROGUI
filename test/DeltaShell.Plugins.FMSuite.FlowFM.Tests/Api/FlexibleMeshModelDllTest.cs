@@ -195,11 +195,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 string cat = model.GetFeatureCategory(pump);
                 Array result = model.GetVar(cat, pump.Name, "capacity");
 
-                Assert.AreEqual(100.0, ((double[]) result)[0]);
+                Assert.AreEqual(100.0, ((double[])result)[0]);
 
                 model.Execute();
                 result = model.GetVar(cat, pump.Name, "capacity");
-                Assert.AreEqual(94.999999979045242, ((double[]) result)[0]);
+                Assert.AreEqual(94.999999979045242, ((double[])result)[0]);
             }
             finally
             {
@@ -235,14 +235,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 string cat = model.GetFeatureCategory(weir);
                 Array result = model.GetVar(cat, weir.Name, KnownStructureProperties.CrestLevel);
 
-                Assert.AreEqual(3.0, ((double[]) result)[0]);
+                Assert.AreEqual(3.0, ((double[])result)[0]);
 
                 model.SetVar(new[]
                 {
                     -3.0
                 }, cat, weir.Name, KnownStructureProperties.CrestLevel);
                 result = model.GetVar(cat, weir.Name, KnownStructureProperties.CrestLevel);
-                Assert.AreEqual(-3.0, ((double[]) result)[0]);
+                Assert.AreEqual(-3.0, ((double[])result)[0]);
             }
             finally
             {
@@ -334,7 +334,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 }).ToList();
                 model.Initialize();
                 Assert.AreEqual(DimrApiDataSet.DimrFillValue,
-                                ((double[]) model.GetVar("party", "at", "myplace"))[0], 0.01d);
+                                ((double[])model.GetVar("party", "at", "myplace"))[0], 0.01d);
             }
             finally
             {
@@ -363,7 +363,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Array result = model.GetVar(cat, pump.Name, "water_level");
 
                 // the water level should be found on an observation point, so it is not NaN
-                Assert.AreEqual(0.0, ((double[]) result)[0]);
+                Assert.AreEqual(0.0, ((double[])result)[0]);
             }
             finally
             {
@@ -447,12 +447,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                                                                          center.CoordinateValue,
                                                                          new Coordinate(center.X + 100.0, center.Y + 100.0)
                                                                      }));
-                IGeometry snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
-                                                                           new LineString(new[]
-                                                                           {
-                                                                               center.CoordinateValue,
-                                                                               new Coordinate(center.X + 100.0, center.Y + 100.0)
-                                                                           }));
 
                 IGeometry snappedWaterLevelBnd =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.WaterLevelBnd,
@@ -474,7 +468,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 Assert.IsTrue(snappedWeir.SnapsToFlowFmGrid(model.GridExtent));
                 Assert.IsTrue(snappedGate.SnapsToFlowFmGrid(model.GridExtent));
                 Assert.IsTrue(snappedPump.SnapsToFlowFmGrid(model.GridExtent));
-                //Assert.IsTrue(snappedEmbankment.SnapsToFlowFmGrid(model.GridExtent)); // UNST-1769 
                 Assert.IsTrue(snappedWaterLevelBnd.SnapsToFlowFmGrid(model.GridExtent));
                 Assert.IsTrue(snappedVelocityBnd.SnapsToFlowFmGrid(model.GridExtent));
                 Assert.IsTrue(snappedDischargeBnd.SnapsToFlowFmGrid(model.GridExtent));
@@ -733,36 +726,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         }
 
         [Test]
-        [Category(TestCategory.Jira)] // UNST-1769 also see test TestGetSnappedFeatures (assert is commented out)
-        public void TestGetSnappedEmbankmentFeature()
-        {
-            string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
-
-            string localCopy = TestHelper.CreateLocalCopy(mduPath);
-
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(localCopy);
-
-            IFlexibleMeshModelApi api = RemoteInstanceContainer.CreateInstance<IFlexibleMeshModelApi, FlexibleMeshModelApi>();
-            using (var remoteApi = new RemoteFlexibleMeshModelApi(api))
-            {
-                remoteApi.Initialize(model.MduFilePath);
-
-                Envelope gridExtent = model.GridExtent;
-
-                Coordinate center = gridExtent.Centre;
-                IGeometry snappedEmbankment = model.GetGridSnappedGeometry(UnstrucGridOperationApi.Embankment,
-                                                                           new LineString(new[]
-                                                                           {
-                                                                               center.CoordinateValue,
-                                                                               new Coordinate(center.X + 100.0, center.Y + 100.0)
-                                                                           }));
-
-                Assert.IsTrue(snappedEmbankment.SnapsToFlowFmGrid(model.GridExtent));
-            }
-        }
-
-        [Test]
         public void TestGetSnappedObservationPointFeature()
         {
             string mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
@@ -880,7 +843,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     model.Grid.Cells.Last().Center
                 });
 
-                model.SourcesAndSinks.Add(new SourceAndSink {Feature = new Feature2D {Geometry = geometry}});
+                model.SourcesAndSinks.Add(new SourceAndSink { Feature = new Feature2D { Geometry = geometry } });
 
                 IGeometry snappedSourceAndSink =
                     model.GetGridSnappedGeometry(UnstrucGridOperationApi.SourceSink,
@@ -945,16 +908,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     if (diffTime.TotalMinutes >= 4.5)
                     {
                         Assert.GreaterOrEqual(0.01,
-                                              ((double[]) model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0]);
+                                              ((double[])model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0]);
                         Assert.GreaterOrEqual(70,
-                                              ((double[]) model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0]);
+                                              ((double[])model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0]);
                         break;
                     }
                     else if (!threeMinutesChecked && diffTime.TotalMinutes >= 3)
                     {
-                        double waterLevel = ((double[]) model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0];
+                        double waterLevel = ((double[])model.GetVar(obsPointCat, obsSeg9.Name, "water_level"))[0];
                         Assert.AreEqual(0.0, waterLevel);
-                        double discharge = ((double[]) model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0];
+                        double discharge = ((double[])model.GetVar(obsCrossCat, obCrWeir02.Name, "discharge"))[0];
                         Assert.AreEqual(0.0, discharge);
 
                         threeMinutesChecked = true;

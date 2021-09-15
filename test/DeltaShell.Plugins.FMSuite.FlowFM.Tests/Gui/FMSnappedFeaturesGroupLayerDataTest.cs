@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
@@ -40,7 +39,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         [Test]
         public void GetAllAvailableSnappedFeaturesLayers()
         {
-            var expectedNumberOfLayers = 14;
+            const int expectedNumberOfLayers = 13;
 
             using (var gui = new DeltaShellGui())
             {
@@ -63,7 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.CommandHandler.OpenView(fmModel, typeof(ProjectItemMapView));
                 ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
                 Assert.IsNotNull(mapView);
-                var modelLayer = (GroupLayer) mapView.MapView.GetLayerForData(fmModel);
+                var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(fmModel);
 
                 var snappedLayer = modelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.GridSnappedFeaturesLayerName) as GroupLayer;
                 Assert.IsNotNull(snappedLayer);
@@ -78,7 +77,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Pump, "Pumps (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Weir, "Structures (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.ObsCrossSection, "Observation cross sections (snapped)"));
-                Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Embankment, "Embankments (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.SourceSink, "Sources and sinks (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.Boundary, "Boundaries (snapped)"));
                 Assert.IsTrue(SnapLayerExistsForFeatureType(snappedLayer.Layers, UnstrucGridOperationApi.WaterLevelBnd, "Water level boundary points"));
@@ -101,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Envelope gridExtent = model.GridExtent;
                 Coordinate center = gridExtent.Centre;
-                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint() {Geometry = new Point(center)});
+                model.Area.ObservationPoints.Add(new GroupableFeature2DPoint() { Geometry = new Point(center) });
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Observation points (snapped)"));
             }
         }
@@ -176,7 +174,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 Envelope gridExtent = model.GridExtent;
                 Coordinate center = gridExtent.Centre;
-                model.Area.DryPoints.Add(new GroupablePointFeature() {Geometry = new Point(center)});
+                model.Area.DryPoints.Add(new GroupablePointFeature() { Geometry = new Point(center) });
 
                 Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Dry points (snapped)"));
             }
@@ -327,34 +325,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        public void SnappedEmbankmentsFeatureIsGenerated()
-        {
-            string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
-            netFile = TestHelper.CreateLocalCopy(netFile);
-
-            using (var gui = new DeltaShellGui())
-            {
-                IEventedList<ILayer> snappedLayers = SnappedLayers(gui, netFile);
-
-                WaterFlowFMModel model = gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>().FirstOrDefault();
-                Assert.IsNotNull(model);
-
-                Envelope gridExtent = model.GridExtent;
-                Coordinate center = gridExtent.Centre;
-                model.Area.Embankments.Add(new Embankment()
-                {
-                    Geometry = new LineString(new[]
-                    {
-                        center.CoordinateValue,
-                        new Coordinate(center.X + 100.0, center.Y + 100.0)
-                    })
-                });
-
-                Assert.IsTrue(SnapLayerHasFeatures(snappedLayers, "Embankments (snapped)"));
-            }
-        }
-
-        [Test]
         public void SnappedSourcesAndSinksFeatureIsGenerated()
         {
             string netFile = TestHelper.GetTestFilePath(@"basicGrid\basicGrid_net.nc");
@@ -435,7 +405,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
             gui.CommandHandler.OpenView(fmModel, typeof(ProjectItemMapView));
             ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-            var modelLayer = (GroupLayer) mapView.MapView.GetLayerForData(fmModel);
+            var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(fmModel);
 
             var snappedLayer =
                 modelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.GridSnappedFeaturesLayerName) as
@@ -462,7 +432,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
         private static bool SnapLayerExistsForFeatureType(IList<ILayer> layers, string operationApiName, string layerName)
         {
-            return layers.Any() && layers.Any(l => ((SnappedFeatureCollection) l.DataSource).SnapApiFeatureType == operationApiName && l.Name == layerName);
+            return layers.Any() && layers.Any(l => ((SnappedFeatureCollection)l.DataSource).SnapApiFeatureType == operationApiName && l.Name == layerName);
         }
 
         private static WaterFlowFMModel AddFMModelToProject(IApplication app)

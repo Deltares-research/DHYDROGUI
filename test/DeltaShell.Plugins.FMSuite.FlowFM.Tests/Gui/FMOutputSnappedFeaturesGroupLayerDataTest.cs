@@ -61,7 +61,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.Run();
                 app.OpenProject(filePath); // save to initialize file repository..
-                var model = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                var model = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
                 Assert.NotNull(model);
 
                 var secondModel = new WaterFlowFMModel();
@@ -108,7 +108,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 gui.Run();
 
                 app.OpenProject(filePath); // save to initialize file repository..
-                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
@@ -125,7 +125,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.CommandHandler.OpenView(loadedModel, typeof(ProjectItemMapView));
                 ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                var modelLayer = (GroupLayer) mapView.MapView.GetLayerForData(loadedModel);
+                var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(loadedModel);
 
                 //No layer should be found.
                 loadedModel.ModelDefinition.WriteSnappedFeatures = false;
@@ -178,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 app.OpenProject(filePath); // save to initialize file repository..
                 app.SaveProject();
-                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
@@ -192,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 
                 gui.CommandHandler.OpenView(loadedModel, typeof(ProjectItemMapView));
                 ProjectItemMapView mapView = gui.DocumentViews.OfType<ProjectItemMapView>().FirstOrDefault();
-                var modelLayer = (GroupLayer) mapView.MapView.GetLayerForData(loadedModel);
+                var modelLayer = (GroupLayer)mapView.MapView.GetLayerForData(loadedModel);
 
                 try
                 {
@@ -284,7 +284,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     app.SaveProjectAs(newSavePath);
                 }
 
-                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
                 try
                 {
@@ -361,7 +361,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     app.SaveProjectAs(newSavePath);
                 }
 
-                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
@@ -453,7 +453,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     app.SaveProject();
                 }
 
-                var loadedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+                var loadedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
                 // In order for this test to succeed, we need to manually set the Crest Width to anything greater than 0.
                 // This is due to the structures file (har_structures.ini) not containing values for Crest Width.
                 // The Gui will initialize the Crest Width with a default value of 0.0, whilst the computational core will initialize with the default length of the structure.
@@ -480,7 +480,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     "Fixed weirs",
                     "Thin dams",
                     "Observation stations",
-                    "Embankments",
                     "Dry areas"
                 };
                 foreach (ILayer ol in outputSnappedLayers)

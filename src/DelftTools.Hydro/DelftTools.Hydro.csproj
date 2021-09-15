@@ -163,7 +163,6 @@
     <Compile Include="Area\Objects\StructureObjects\IStructureObject.cs" />
     <Compile Include="Area\Objects\StructureObjects\Pump.cs" />
     <Compile Include="Area\Objects\StructureObjects\Structure.cs" />
-    <Compile Include="Embankment.cs" />
     <Compile Include="GroupableFeatures\GroupableFeature2D.cs" />
     <Compile Include="GroupableFeatures\GroupableFeature2DPoint.cs" />
     <Compile Include="GroupableFeatures\GroupableFeature2DPolygon.cs" />
@@ -260,9 +259,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HydroArea.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Embankment.hbm.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

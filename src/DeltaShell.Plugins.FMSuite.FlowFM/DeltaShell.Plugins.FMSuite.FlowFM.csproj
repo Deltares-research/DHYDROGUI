@@ -154,7 +154,6 @@
     <Compile Include="FeatureData\BridgePillarFmModelFeatureCoordinateDataSyncExtensions.cs" />
     <Compile Include="FeatureData\DataColumn.cs" />
     <Compile Include="FeatureData\DataColumnsNameComparer.cs" />
-    <Compile Include="FeatureData\EmbankmentMerger.cs" />
     <Compile Include="Coverages\CoverageDepthLayersList.cs" />
     <Compile Include="Coverages\FileBasedFeatureCoverage.cs" />
     <Compile Include="Coverages\UnstructuredGridCoverageExtensions.cs" />
@@ -327,7 +326,6 @@
     <Compile Include="Validation\VerticalProfileValidator.cs" />
     <Compile Include="Validation\FMStructuresValidator.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidator.cs" />
-    <Compile Include="Validation\WaterFlowFMEmbankmentValidator.cs" />
     <Compile Include="Validation\WaterFlowFMEnclosureValidator.cs" />
     <Compile Include="Validation\WaterFlowFMGridValidator.cs" />
     <Compile Include="Validation\WaterFlowFMModelTimersValidator.cs" />

@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             app.CloseProject();
             app.OpenProject(path);
 
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
             Assert.IsTrue(retrievedModel.NetFilePath.EndsWith("_net.nc"));
             Assert.AreEqual(0, retrievedModel.BoundaryConditions.Count());
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             app.CloseProject();
             app.OpenProject(path);
 
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
             Assert.AreEqual(newStartTime, retrievedModel.StartTime);
             Assert.AreEqual(dtUserTimeSpan, retrievedModel.TimeStep);
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             app.CloseProject();
             app.OpenProject(path);
 
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
             Assert.AreEqual(HeatFluxModelType.ExcessTemperature, retrievedModel.HeatFluxModelType);
             Assert.AreEqual(true, retrievedModel.UseTemperature);
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             app.CloseProject();
             app.OpenProject(path);
 
-            retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
             Assert.AreEqual(HeatFluxModelType.None, retrievedModel.HeatFluxModelType);
             Assert.AreEqual(false, retrievedModel.UseTemperature);
@@ -196,7 +196,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             app.CloseProject();
             app.OpenProject(path);
 
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
 
             Assert.IsTrue(retrievedModel.NetFilePath.EndsWith("bend1_net.nc"));
             Assert.AreEqual(2, retrievedModel.BoundaryConditions.Count());
@@ -226,7 +226,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             app.OpenProject(path);
 
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Models.First();
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Models.First();
 
             int subscriptionsAfter = TestReferenceHelper.FindEventSubscriptions(retrievedModel);
 
@@ -312,7 +312,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             app.OpenProject(path2);
 
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
             Assert.AreEqual(
                 Path.GetFullPath(Path.Combine(path2 + "_data", "bendprof", "input", "bend1_net.nc")),
                 retrievedModel.NetFilePath);
@@ -342,7 +342,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             Assert.IsTrue(File.Exists("mdu_save_as_grid.dsproj_data\\bendprof\\input\\bend1_net.nc"),
                           "grid file does not exist");
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
             Assert.AreEqual(451, retrievedModel.Grid.Vertices.Count);
         }
 
@@ -370,7 +370,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             app.OpenProject(path);
 
             // check obs point still exists
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
             Assert.AreEqual(1, retrievedModel.Area.ObservationPoints.Count, "#obs points");
         }
 
@@ -400,7 +400,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             app.OpenProject(path);
 
             // check obs point still exists
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
             Assert.AreEqual(1, retrievedModel.Area.ObservationPoints.Count, "#obs points");
         }
 
@@ -439,7 +439,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             const string path = "mdu_drt.dsproj";
             app.SaveProjectAs(path); // save to initialize file repository..
 
-            var model = new WaterFlowFMModel {Name = "mdu_drt"};
+            var model = new WaterFlowFMModel { Name = "mdu_drt" };
             app.Project.RootFolder.Add(model);
 
             var line = new LineString(new[]
@@ -463,7 +463,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             app.CloseProject();
             app.OpenProject(path);
 
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
             Assert.AreEqual(1, retrievedModel.Boundaries.Count, "#boundaries");
             Assert.AreEqual(1, retrievedModel.BoundaryConditions.Count(), "#bcs");
         }
@@ -494,7 +494,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             // reopen
             app.OpenProject(path);
 
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
             Assert.That(retrievedModel.OutputHisFileStore.Functions[0].Components[0].Values.Count > 0);
             Assert.That(retrievedModel.OutputMapFileStore.Functions[0].Components[0].Values.Count > 0);
         }
@@ -524,7 +524,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             //reopen
             app.OpenProject(path);
 
-            var retrievedModel = (WaterFlowFMModel) app.Project.RootFolder.Items[0];
+            var retrievedModel = (WaterFlowFMModel)app.Project.RootFolder.Items[0];
             Assert.IsNotNull(retrievedModel.OutputMapFileStore);
         }
 
@@ -710,18 +710,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             var model = new WaterFlowFMModel();
 
-            // Embankments are mapped in dbase (and will also be written to file..)
-            model.Area.Embankments.Add(new Embankment
-            {
-                Name = "embankment",
-                Region = model.Area,
-                Geometry = new LineString(new[]
-                {
-                    new Coordinate(10, 10),
-                    new Coordinate(-10, 10)
-                })
-            });
-
             // Thin Dams are written to file and file only
             model.Area.ThinDams.Add(new ThinDam2D
             {
@@ -741,7 +729,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             app.OpenProject("saveLoadAreaFeaturesTest.dsproj");
 
             var loadedModel = app.Project.RootFolder.Models.FirstOrDefault() as WaterFlowFMModel;
-            Assert.AreEqual(1, loadedModel.Area.Embankments.Count);
             Assert.AreEqual(1, loadedModel.Area.ThinDams.Count);
         }
 
@@ -900,7 +887,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
             model.SedimentOverallProperties.Add(
                 new SedimentProperty<double>("MyOverall Property", 0, 0, false, 1, false, string.Empty,
-                                             string.Empty, false) {Value = 0.5});
+                                             string.Empty, false)
+                { Value = 0.5 });
             var fraction = new SedimentFraction();
             ISedimentType sedType = fraction.AvailableSedimentTypes.ElementAtOrDefault(1);
             Assert.IsNotNull(sedType);

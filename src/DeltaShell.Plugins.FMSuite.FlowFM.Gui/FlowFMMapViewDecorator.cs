@@ -6,7 +6,6 @@ using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Properties;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using SharpMap.Api.Layers;
@@ -21,9 +20,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         internal const string SourceToolName = "Source tool (2D)";
         internal const string SourceAndSinkToolName = "Source & sink tool";
         internal const string Reverse2DLineToolName = "Reverse line(s) (2D)";
-        internal const string GenerateEmbankmentsToolName = "Generate embankments (2D)";
-        internal const string MergeEmbankmentsToolName = "Merge embankments";
-        internal const string GridWizardToolName = "Grid wizard";
         private static readonly Bitmap BoundaryIcon = Resources.boundary;
         private static readonly Bitmap SourceSinkIcon = Properties.Resources.SourceSink;
         private static readonly Bitmap SourceIcon = Properties.Resources.LateralSourceMap;
@@ -53,7 +49,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.BoundariesLayerName, BoundaryToolName, BoundaryIcon));
             tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceAndSinkToolName, SourceSinkIcon));
             tools.Add(new Feature2DPointTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceToolName, SourceIcon));
-            tools.Add(new MergeEmbankmentsMapTool());
             tools.OfType<ITargetLayerTool>().ForEach(t => t.LayerFilter = GetLayerFilter(t));
 
             mapView.MapControl.Tools.AddRange(tools);
@@ -63,7 +58,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             return l => l.Name == tool.LayerName &&            //expected layer name must match
                         l.DataSource is Feature2DCollection && //and layer must be a 2D layer
-                        ((Feature2DCollection) l.DataSource).ModelName == ModelName;
+                        ((Feature2DCollection)l.DataSource).ModelName == ModelName;
         }
     }
 }

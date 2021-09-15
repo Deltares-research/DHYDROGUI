@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             {
                 // Arrange
                 CreateRestartOutputFile(tempDirectory.Path);
-              
+
                 model.ConnectOutput(tempDirectory.Path);
                 // Check pre-condition
                 Assert.IsFalse(model.OutputOutOfSync);
@@ -146,11 +146,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
                 Directory.CreateDirectory(exportDirectory);
                 Directory.CreateDirectory(outputDirectoryPath);
-                
+
                 CreateRestartOutputFile(outputDirectoryPath);
-                
+
                 data.AddExportableHydroAreaFeature(model);
-                
+
                 model.ConnectOutput(outputDirectoryPath);
 
                 // Check pre-condition
@@ -343,7 +343,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             yield return new TestCaseData(new AddingDryAreaForExportTestStep()).SetName("Exporting model with dry area should not mark the output out of sync.");
             yield return new TestCaseData(new AddingDryPointForExportTestStep()).SetName("Exporting model with dry point should not mark the output out of sync.");
             yield return new TestCaseData(new AddingFixedWeirForExportTestStep()).SetName("Exporting model with fixed weir should not mark the output out of sync.");
-            yield return new TestCaseData(new AddingEmbankmentForExportTestStep()).SetName("Exporting model with embankment should not mark the output out of sync.");
             yield return new TestCaseData(new AddingEnclosureForExportTestStep()).SetName("Exporting model with enclosure should not mark the output out of sync.");
             yield return new TestCaseData(new AddingThinDamForExportTestStep()).SetName("Exporting model with thin dam should not mark the output out of sync.");
             yield return new TestCaseData(new AddingStructureForExportTestStep()).SetName("Exporting model with structure should not mark the output out of sync.");
@@ -431,7 +430,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             public void Arrange(WaterFlowFMModel model) => model.SourcesAndSinks.Add(sourceAndSink);
             public void Act(WaterFlowFMModel model) => model.SourcesAndSinks.Remove(sourceAndSink);
         }
-        
+
         private class AddingObservationPointTestSteps : ITestStepsForModelOutputOutOfSync
         {
             public void Arrange(WaterFlowFMModel model) { }
@@ -465,7 +464,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             public void Arrange(WaterFlowFMModel model) { }
             public void Act(WaterFlowFMModel model) => model.Area.Structures.Add(new Structure());
         }
-        
+
         private class RemovingStructureTestSteps : ITestStepsForModelOutputOutOfSync
         {
             private readonly Structure structure = new Structure();
@@ -590,7 +589,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
 
         private class ChangingTheGridTestSteps : ITestStepsForModelOutputOutOfSync
         {
-            public void Arrange(WaterFlowFMModel model) {}
+            public void Arrange(WaterFlowFMModel model) { }
 
             public void Act(WaterFlowFMModel model) => model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
         }
@@ -598,7 +597,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
         private class ChangingTheGroupNameOfHydroAreaFeatureTestSteps : ITestStepsForModelOutputOutOfSync
         {
             private readonly GroupableFeature2DPoint observationPoint = new GroupableFeature2DPoint();
-            
+
             public void Arrange(WaterFlowFMModel model) => model.Area.ObservationPoints.Add(observationPoint);
             public void Act(WaterFlowFMModel model) => observationPoint.GroupName = "onzin";
         }
@@ -684,14 +683,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
             });
         }
 
-        private class AddingEmbankmentForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
-        {
-            public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.Embankments.Add(new Embankment
-            {
-                Geometry = new LineString(lineString)
-            });
-        }
-
         private class AddingEnclosureForExportTestStep : ITestStepForAddingHydroAreaFeatureForExport
         {
             public void AddExportableHydroAreaFeature(WaterFlowFMModel model) => model.Area.Enclosures.Add(new GroupableFeature2DPolygon
@@ -723,7 +714,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Model
                 Geometry = new LineString(lineString)
             });
         }
-        
+
         private static readonly Coordinate[] lineString =
         {
             new Coordinate(3, 3),

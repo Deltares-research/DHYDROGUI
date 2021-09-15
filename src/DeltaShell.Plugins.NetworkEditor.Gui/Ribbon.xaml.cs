@@ -37,7 +37,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addLandBoundary2dCommand = new MapToolCommand(HydroRegionEditorMapTool.LandBoundaryToolName) { LayerType = typeof(HydroAreaLayer) };
         private ICommand addDryPoint2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryPointToolName) { LayerType = typeof(HydroAreaLayer) };
         private ICommand addDryArea2dCommand = new MapToolCommand(HydroRegionEditorMapTool.DryAreaToolName) { LayerType = typeof(HydroAreaLayer) };
-        private ICommand addNewEmbankmentCommand = new MapToolCommand(HydroRegionEditorMapTool.EmbankmentToolName) { LayerType = typeof(HydroAreaLayer) };
         private ICommand addEnclosure2dCommand = new MapToolCommand(HydroRegionEditorMapTool.EnclosureToolName) { LayerType = typeof(HydroAreaLayer) };
         private ICommand addBridgePillarCommand = new MapToolCommand(HydroRegionEditorMapTool.BridgePillarToolName) { LayerType = typeof(HydroAreaLayer) };
 
@@ -66,7 +65,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addLandBoundary2dCommand;
                 yield return addDryPoint2dCommand;
                 yield return addDryArea2dCommand;
-                yield return addNewEmbankmentCommand;
                 yield return addEnclosure2dCommand;
                 yield return addBridgePillarCommand;
             }
@@ -86,7 +84,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonAddNewLandBoundary2D.SetState(addLandBoundary2dCommand, showArea2DTools);
             ButtonAddNewDryPoint2D.SetState(addDryPoint2dCommand, showArea2DTools);
             ButtonAddNewDryArea2D.SetState(addDryArea2dCommand, showArea2DTools);
-            ButtonAddNewEmbankment2D.SetState(addNewEmbankmentCommand, showArea2DTools);
             ButtonAddNewEnclosure2D.SetState(addEnclosure2dCommand, showArea2DTools);
             ButtonAddBridgePillar.SetState(addBridgePillarCommand, showArea2DTools);
         }
@@ -174,12 +171,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonAddNewDryArea_Click(object sender, RoutedEventArgs e)
         {
             addDryArea2dCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewEmbankment_Click(object sender, RoutedEventArgs e)
-        {
-            addNewEmbankmentCommand.Execute();
             ValidateItems();
         }
 

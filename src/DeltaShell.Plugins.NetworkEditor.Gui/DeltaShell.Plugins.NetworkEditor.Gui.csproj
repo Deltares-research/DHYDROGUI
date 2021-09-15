@@ -245,8 +245,6 @@
       <DependentUpon>PumpView.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\HydroRegionEditorHelper.cs" />
-    <Compile Include="Layers\Editors\HydroAreaFeatureEditor.cs" />
-    <Compile Include="Layers\Editors\Interactors\EmbankmentInteractor.cs" />
     <Compile Include="Layers\HydroAreaFeature2DCollection.cs" />
     <Compile Include="Layers\HydroAreaLayer.cs" />
     <Compile Include="Layers\HydroAreaLayerStyles.cs" />
@@ -255,7 +253,6 @@
     <Compile Include="Layers\Providers\BridgePillarsLayerProvider.cs" />
     <Compile Include="Layers\Providers\DryAreasLayerProvider.cs" />
     <Compile Include="Layers\Providers\DryPointsLayerProvider.cs" />
-    <Compile Include="Layers\Providers\EmbankmentsLayerProvider.cs" />
     <Compile Include="Layers\Providers\EnclosuresLayerProvider.cs" />
     <Compile Include="Layers\Providers\FeaturesLayerProvider.cs" />
     <Compile Include="Layers\Providers\FixedWeirsLayerProvider.cs" />
@@ -268,7 +265,6 @@
     <Compile Include="Layers\Providers\PumpsLayerProvider.cs" />
     <Compile Include="Layers\Providers\ThinDamsLayerProvider.cs" />
     <Compile Include="Layers\Providers\StructuresLayerProvider.cs" />
-    <Compile Include="Layers\Renderers\EmbankmentRenderer.cs" />
     <Compile Include="Layers\Renderers\EnclosureRenderer.cs" />
     <Compile Include="MapTools\HydroRegionEditorMapTool.cs" />
     <Compile Include="MapTools\SingleFeature2DLineTool.cs" />
@@ -431,9 +427,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\hydroarea.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\Embankment.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\enclosure.png" />

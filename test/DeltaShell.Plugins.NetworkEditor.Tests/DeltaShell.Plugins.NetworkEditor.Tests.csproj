@@ -251,7 +251,6 @@
     <Compile Include="Gui\Layers\Providers\EnclosuresLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\GroupableFeature2DPolygonsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\DryPointsLayerProviderTest.cs" />
-    <Compile Include="Gui\Layers\Providers\EmbankmentsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\FeaturesLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\FixedWeirsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\HydroAreaLayerProviderTest.cs" />
@@ -263,8 +262,6 @@
     <Compile Include="Gui\Layers\Providers\ThinDamsLayerProviderTest.cs" />
     <Compile Include="Gui\Layers\Providers\StructuresLayerProviderTest.cs" />
     <Compile Include="HydroAreaProjectTreeViewNodePresenterTest.cs" />
-    <Compile Include="Import\HydroAreaEmbankmentHeightImporterTests.cs" />
-    <Compile Include="Import\HydroAreaEmbankmentImporterTest.cs" />
     <Compile Include="MapLayers\Providers\HydroAreaFeature2DCollectionTest.cs" />
     <Compile Include="MapLayers\Tools\Feature2DPointToolTest.cs" />
     <Compile Include="NetworkEditorApplicationPluginTest.cs" />

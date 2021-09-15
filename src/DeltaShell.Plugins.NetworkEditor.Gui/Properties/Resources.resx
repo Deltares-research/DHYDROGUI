@@ -160,9 +160,6 @@
   <data name="hydroarea" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hydroarea.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Embankment" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Embankment.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="AreaProperties_DisplayName" xml:space="preserve">
     <value>Area</value>
   </data>

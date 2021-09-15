@@ -19,7 +19,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         public const string LandBoundaryToolName = "Land boundary tool";
         public const string DryPointToolName = "Dry point tool";
         public const string DryAreaToolName = "Dry area tool";
-        public const string EmbankmentToolName = "Embankment tool";
         public const string EnclosureToolName = "Enclosure tool";
         public const string BridgePillarToolName = "Bridge pillar tool";
 
@@ -101,7 +100,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.LandBoundariesPluralName, LandBoundaryToolName, Resources.landboundary));
             AddMapTool(new Feature2DPointTool(HydroAreaLayerNames.DryPointsPluralName, DryPointToolName, Resources.dry_point));
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.DryAreasPluralName, DryAreaToolName, Resources.dry_area) { CloseLine = true });
-            AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.EmbankmentsPluralName, EmbankmentToolName, Resources.Embankment));
             AddMapTool(new SingleFeature2DLineTool(HydroAreaLayerNames.EnclosureName, EnclosureToolName, Resources.enclosure) { CloseLine = true });
             AddMapTool(new Feature2DLineTool(HydroAreaLayerNames.BridgePillarsPluralName, BridgePillarToolName, Resources.BridgeSmall));
 

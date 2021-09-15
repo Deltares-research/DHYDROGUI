@@ -304,16 +304,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     "LdbGroup2.ldb"
                 });
 
-                Assert.AreEqual(2, area.Embankments.Count);
-                List<string> embankmentsList = area.Embankments.Select(e => e.Name).ToList();
-                var expectedEmbankments = new List<string>
-                {
-                    "Embankment01",
-                    "Embankment02"
-                };
-                Assert.IsFalse(embankmentsList.Any(e => !expectedEmbankments.Contains(e)));
-                Assert.IsFalse(expectedEmbankments.Any(e => !embankmentsList.Contains(e)));
-
                 /* StructuresFile 
                  * We CAN read from multiple structures files, however these structures will not get the GroupName due to its implementation nature.
                  */
@@ -384,7 +374,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             };
 
             mduFile.WriteProperties(mduFilePath,
-                                    new List<WaterFlowFMProperty>() {property},
+                                    new List<WaterFlowFMProperty>() { property },
                                     mduFileWriteConfig);
 
             Assert.IsTrue(File.Exists(mduFilePath));
@@ -556,13 +546,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 }
 
                 CompareHydroAreaFeatures(originalArea, savedArea);
-
-                /* Embankments */
-                Assert.AreEqual(originalArea.Embankments.Count, savedArea.Embankments.Count);
-                List<string> expectedEmbankments = originalArea.Embankments.Select(e => e.Name).ToList();
-                List<string> savedEmbankments = savedArea.Embankments.Select(e => e.Name).ToList();
-                Assert.IsFalse(savedEmbankments.Any(e => !expectedEmbankments.Contains(e)));
-                Assert.IsFalse(expectedEmbankments.Any(e => !savedEmbankments.Contains(e)));
             }
             finally
             {
@@ -595,7 +578,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 var allFixedWeirsAndCorrespondingProperties = new Dictionary<FixedWeir, ModelFeatureCoordinateData<FixedWeir>>();
                 mduFile.Read(mduFilePath, originalMd, originalArea, allFixedWeirsAndCorrespondingProperties);
 
-                var mduFileWriteConfig = new MduFileWriteConfig {WriteExtForcings = false};
+                var mduFileWriteConfig = new MduFileWriteConfig { WriteExtForcings = false };
 
                 mduFile.Write(savePath,
                               originalMd,
@@ -1230,7 +1213,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 });
 
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>> {new ModelFeatureCoordinateData<FixedWeir> {Feature = fixedWeir}};
+                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>> { new ModelFeatureCoordinateData<FixedWeir> { Feature = fixedWeir } };
                 mduFile.Write(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
                 Assert.That(File.Exists(obsCrsFileName));
                 Assert.That(File.Exists(fixedWeirFileName));
@@ -1293,7 +1276,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 });
 
                 var modelDefinition = new WaterFlowFMModelDefinition(mduDir, modelName);
-                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>() {new ModelFeatureCoordinateData<FixedWeir>() {Feature = fixedWeir}};
+                var allFixedWeirsAndCorrespondingProperties = new List<ModelFeatureCoordinateData<FixedWeir>>() { new ModelFeatureCoordinateData<FixedWeir>() { Feature = fixedWeir } };
 
                 mduFile.Write(mduFilePath, modelDefinition, area, allFixedWeirsAndCorrespondingProperties);
                 Assert.That(File.Exists(obsCrsFileName));

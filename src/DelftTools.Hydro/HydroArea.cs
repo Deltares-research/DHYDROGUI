@@ -72,11 +72,6 @@ namespace DelftTools.Hydro
         public virtual IEventedList<GroupableFeature2D> DredgingLocations { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the collection of <see cref="Embankment"/> objects.
-        /// </summary>
-        public virtual IEventedList<Embankment> Embankments { get; protected set; }
-
-        /// <summary>
         /// Gets or sets the enclosures.
         /// </summary>
         public virtual IEventedList<GroupableFeature2DPolygon> Enclosures { get; protected set; }
@@ -109,7 +104,6 @@ namespace DelftTools.Hydro
             ObservationCrossSections = new EventedList<ObservationCrossSection2D>();
             DumpingLocations = new EventedList<GroupableFeature2D>();
             DredgingLocations = new EventedList<GroupableFeature2D>();
-            Embankments = new EventedList<Embankment>();
             Enclosures = new EventedList<GroupableFeature2DPolygon>();
             BridgePillars = new EventedList<BridgePillar>();
 
@@ -181,11 +175,6 @@ namespace DelftTools.Hydro
                 yield return dredgingLocation;
             }
 
-            foreach (Embankment embankment in Embankments)
-            {
-                yield return embankment;
-            }
-
             foreach (GroupableFeature2DPolygon enclosure in Enclosures)
             {
                 yield return enclosure;
@@ -199,7 +188,7 @@ namespace DelftTools.Hydro
 
         public override object Clone()
         {
-            var clone = (HydroArea) base.Clone();
+            var clone = (HydroArea)base.Clone();
             clone.Initialize();
 
             return clone;

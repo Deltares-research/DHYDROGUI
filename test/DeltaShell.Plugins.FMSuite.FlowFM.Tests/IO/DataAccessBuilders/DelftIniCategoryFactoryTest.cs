@@ -16,19 +16,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.DataAccessBuilders
             const string locationFilePath = "some_location_file_path";
             const string forcingFilePath = "some_forcing_file_path";
             var thatcherHarlemanTimeLag = new TimeSpan(1, 2, 3);
-            const bool isEmbankment = true;
 
             // Call
-            DelftIniCategory result = DelftIniCategoryFactory.CreateBoundaryBlock(quantity, locationFilePath, forcingFilePath, thatcherHarlemanTimeLag, isEmbankment);
+            DelftIniCategory result = DelftIniCategoryFactory.CreateBoundaryBlock(quantity, locationFilePath, forcingFilePath, thatcherHarlemanTimeLag);
 
             // Assert
             Assert.That(result.Name, Is.EqualTo("[boundary]"));
-            Assert.That(result.Properties, Has.Count.EqualTo(5));
+            Assert.That(result.Properties, Has.Count.EqualTo(4));
             CategoryContains(result, "quantity", quantity);
             CategoryContains(result, "locationFile", locationFilePath);
             CategoryContains(result, "forcingFile", forcingFilePath);
             CategoryContains(result, "returnTime", "3.7230000e+003");
-            CategoryContains(result, "OpenBoundaryTolerance", "5.0000000e-001");
         }
 
         [Test]

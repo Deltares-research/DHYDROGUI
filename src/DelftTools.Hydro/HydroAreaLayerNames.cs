@@ -51,11 +51,6 @@
         public const string StructuresPluralName = "Structures";
 
         /// <summary>
-        /// The embankments layer name
-        /// </summary>
-        public const string EmbankmentsPluralName = "Embankments";
-
-        /// <summary>
         /// The enclosures layer name
         /// </summary>
         public const string EnclosureName = "Enclosure";

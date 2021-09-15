@@ -90,18 +90,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 },
                 AdditionalOwnerCheck = owner =>
                     !(owner is ICompositeActivity) // Allow "standalone" flow models
-                    || !((ICompositeActivity) owner).Activities.OfType<WaterFlowFMModel>().Any() &&
+                    || !((ICompositeActivity)owner).Activities.OfType<WaterFlowFMModel>().Any() &&
                     owner is IHydroModel, // Don't allow multiple flow models in one composite activity
-                CreateModel = owner => new WaterFlowFMModel {WorkingDirectoryPathFunc = () => Application.WorkDirectory}
+                CreateModel = owner => new WaterFlowFMModel { WorkingDirectoryPathFunc = () => Application.WorkDirectory }
             };
         }
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new WaterFlowFMFileImporter(() => Application.WorkDirectory);
-            yield return new Area2DStructuresImporter {GetModelForArea = GetModelForArea};
-            yield return new StructuresListImporter(StructuresListType.Pumps) {GetModelForList = GetModelForCollection};
-            yield return new StructuresListImporter(StructuresListType.Weirs) {GetModelForList = GetModelForCollection};
+            yield return new Area2DStructuresImporter { GetModelForArea = GetModelForArea };
+            yield return new StructuresListImporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
+            yield return new StructuresListImporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };
             yield return new FMMapFileImporter();
             yield return new FMHisFileImporter();
             yield return new FMRestartFileImporter(GetWaterFlowFMModels);
@@ -117,24 +117,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 }
             };
 
-            yield return new PliFileImporterExporter<Embankment, Embankment>
-            {
-                Mode = Feature2DImportExportMode.Import,
-                CreateDelegate = delegate(List<Coordinate> points, string name)
-                {
-                    points.ForEach(p => p.Z = 0.0);
-                    return new Embankment
-                    {
-                        Name = name,
-                        Geometry = LineStringCreator.CreateLineString(points)
-                    };
-                }
-            };
-
             yield return new PlizFileImporterExporter<FixedWeir, FixedWeir>
             {
                 Mode = Feature2DImportExportMode.Import,
-                CreateDelegate = delegate(List<Coordinate> points1, string name1)
+                CreateDelegate = delegate (List<Coordinate> points1, string name1)
                 {
                     var feature1 = new FixedWeir
                     {
@@ -223,9 +209,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             {
                 Mode = Feature2DImportExportMode.Import,
                 CreateDelegate =
-                    delegate(List<Coordinate> points, string name) { return MduFile.CreateDelegateBridgePillar(name, points); },
+                    delegate (List<Coordinate> points, string name) { return MduFile.CreateDelegateBridgePillar(name, points); },
                 EqualityComparer = new GroupableFeatureComparer<BridgePillar>(),
-                AfterCreateAction = delegate(object featureList, BridgePillar bridgePillar)
+                AfterCreateAction = delegate (object featureList, BridgePillar bridgePillar)
                 {
                     WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.BridgePillars);
                     if (waterFlowFmModel == null)
@@ -236,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     bridgePillar.UpdateGroupName(waterFlowFmModel);
 
                     var modelFeatureCoordinateData =
-                        new ModelFeatureCoordinateData<BridgePillar>() {Feature = bridgePillar};
+                        new ModelFeatureCoordinateData<BridgePillar>() { Feature = bridgePillar };
                     modelFeatureCoordinateData.UpdateDataColumns();
                     MduFile.SetBridgePillarDataModel(waterFlowFmModel.BridgePillarsDataModel,
                                                      modelFeatureCoordinateData, bridgePillar);
@@ -265,7 +251,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PliFileImporterExporter<Structure, Structure>
             {
                 Mode = Feature2DImportExportMode.Import,
-                CreateFromFeature = f => new Structure() {Name = f.Name, Geometry = f.Geometry},
+                CreateFromFeature = f => new Structure() { Name = f.Name, Geometry = f.Geometry },
                 GetFeature = w => new Structure()
                 {
                     Name = w.Name,
@@ -278,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PliFileImporterExporter<Pump, Pump>
             {
                 Mode = Feature2DImportExportMode.Import,
-                CreateFromFeature = f => new Pump() {Name = f.Name, Geometry = f.Geometry},
+                CreateFromFeature = f => new Pump() { Name = f.Name, Geometry = f.Geometry },
                 CreateDelegate = (points1, name1) =>
                 {
                     var pump = new Pump()
@@ -323,11 +309,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PliFileImporterExporter<BoundaryConditionSet, Feature2D>
             {
                 Mode = Feature2DImportExportMode.Import,
-                CreateFromFeature = f => new BoundaryConditionSet {Feature = f},
+                CreateFromFeature = f => new BoundaryConditionSet { Feature = f },
                 GetFeature = b => b.Feature
             };
 
-            yield return new PointFileImporterExporter {Mode = Feature2DImportExportMode.Import};
+            yield return new PointFileImporterExporter { Mode = Feature2DImportExportMode.Import };
             yield return new ObsFileImporterExporter<GroupableFeature2DPoint>
             {
                 Mode = Feature2DImportExportMode.Import,
@@ -351,7 +337,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 GetEditableObject = target => GetModelFor(target, a => a.LandBoundaries).Area
             };
 
-            yield return new FlowFMNetFileImporter {GetModelForGrid = GetModelForGrid};
+            yield return new FlowFMNetFileImporter { GetModelForGrid = GetModelForGrid };
             yield return new TimFileImporter
             {
                 WindFileImporter = false,
@@ -378,8 +364,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName); // ObservationPoint
             yield return ShapeFileImporterFactory.Construct<ILineString, ObservationCrossSection2D>(
                 ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
-            yield return ShapeFileImporterFactory.Construct<ILineString, Embankment>(
-                ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
             yield return ShapeFileImporterFactory.Construct<ILineString, BridgePillar>(
                 ShapeFileImporterFactory.AfterFeatureCreateActions.TryAddName);
             yield return ShapeFileImporterFactory.Construct<ILineString, Pump>(
@@ -397,16 +381,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new WaterFlowFMFileExporter();
-            yield return new Area2DStructuresExporter {GetModelForArea = GetModelForArea};
-            yield return new StructuresListExporter(StructuresListType.Pumps) {GetModelForList = GetModelForCollection};
-            yield return new StructuresListExporter(StructuresListType.Weirs) {GetModelForList = GetModelForCollection};
-            yield return new BcFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
-            yield return new BcmFileExporter {GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition};
-            yield return new PlizFileImporterExporter<Embankment, Embankment> {Mode = Feature2DImportExportMode.Export};
+            yield return new Area2DStructuresExporter { GetModelForArea = GetModelForArea };
+            yield return new StructuresListExporter(StructuresListType.Pumps) { GetModelForList = GetModelForCollection };
+            yield return new StructuresListExporter(StructuresListType.Weirs) { GetModelForList = GetModelForCollection };
+            yield return new BcFileExporter { GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition };
+            yield return new BcmFileExporter { GetRefDateForBoundaryCondition = GetRefDateForBoundaryCondition };
             yield return new PlizFileImporterExporter<FixedWeir, FixedWeir>
             {
                 Mode = Feature2DImportExportMode.Export,
-                BeforeExportActionDelegate = delegate(object featureList)
+                BeforeExportActionDelegate = delegate (object featureList)
                 {
                     WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.FixedWeirs);
                     var fixedWeirs = featureList as IEnumerable<FixedWeir>;
@@ -446,12 +429,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
                             for (var i = 0; i < dataColumnWithData.Count; ++i)
                             {
-                                syncedList[i] = (double) dataColumnWithData[i];
+                                syncedList[i] = (double)dataColumnWithData[i];
                             }
                         }
                     }
                 },
-                AfterExportActionDelegate = delegate(object featureList)
+                AfterExportActionDelegate = delegate (object featureList)
                 {
                     var fixedWeirs = featureList as IEnumerable<FixedWeir>;
                     if (fixedWeirs == null)
@@ -465,7 +448,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PlizFileImporterExporter<BridgePillar, BridgePillar>
             {
                 Mode = Feature2DImportExportMode.Export,
-                BeforeExportActionDelegate = delegate(object featureList)
+                BeforeExportActionDelegate = delegate (object featureList)
                 {
                     WaterFlowFMModel waterFlowFmModel = GetModelFor(featureList, a => a.BridgePillars);
                     var bridgePillars = featureList as IEnumerable<BridgePillar>;
@@ -478,7 +461,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                         waterFlowFmModel.BridgePillarsDataModel;
                     MduFile.SetBridgePillarAttributes(bridgePillars, modelFeatureCoordinateDatas);
                 },
-                AfterExportActionDelegate = delegate(object featureList)
+                AfterExportActionDelegate = delegate (object featureList)
                 {
                     var bridgePillars = featureList as IEnumerable<BridgePillar>;
                     if (bridgePillars == null)
@@ -489,13 +472,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     MduFile.CleanBridgePillarAttributes(bridgePillars);
                 }
             };
-            yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> {Mode = Feature2DImportExportMode.Export};
+            yield return new PliFileImporterExporter<ThinDam2D, ThinDam2D> { Mode = Feature2DImportExportMode.Export };
             yield return
-                new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D> {Mode = Feature2DImportExportMode.Export};
+                new PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D> { Mode = Feature2DImportExportMode.Export };
             yield return new PliFileImporterExporter<Structure, Structure>
             {
                 Mode = Feature2DImportExportMode.Export,
-                CreateFromFeature = f => new Structure() {Name = f.Name, Geometry = f.Geometry},
+                CreateFromFeature = f => new Structure() { Name = f.Name, Geometry = f.Geometry },
                 GetFeature = w => new Structure
                 {
                     Name = w.Name,
@@ -505,7 +488,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PliFileImporterExporter<Pump, Pump>
             {
                 Mode = Feature2DImportExportMode.Export,
-                CreateFromFeature = f => new Pump() {Name = f.Name, Geometry = f.Geometry},
+                CreateFromFeature = f => new Pump() { Name = f.Name, Geometry = f.Geometry },
                 GetFeature = w => new Pump
                 {
                     Name = w.Name,
@@ -525,14 +508,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             yield return new PliFileImporterExporter<BoundaryConditionSet, Feature2D>
             {
                 Mode = Feature2DImportExportMode.Export,
-                CreateFromFeature = f => new BoundaryConditionSet {Feature = f},
+                CreateFromFeature = f => new BoundaryConditionSet { Feature = f },
                 GetFeature = b => b.Feature
             };
-            yield return new PointFileImporterExporter {Mode = Feature2DImportExportMode.Export};
-            yield return new ObsFileImporterExporter<GroupableFeature2DPoint> {Mode = Feature2DImportExportMode.Export};
-            yield return new PolFileImporterExporter {Mode = Feature2DImportExportMode.Export};
-            yield return new LdbFileImporterExporter {Mode = Feature2DImportExportMode.Export};
-            yield return new FlowFMNetFileExporter {GetModelForGrid = GetModelForGrid};
+            yield return new PointFileImporterExporter { Mode = Feature2DImportExportMode.Export };
+            yield return new ObsFileImporterExporter<GroupableFeature2DPoint> { Mode = Feature2DImportExportMode.Export };
+            yield return new PolFileImporterExporter { Mode = Feature2DImportExportMode.Export };
+            yield return new LdbFileImporterExporter { Mode = Feature2DImportExportMode.Export };
+            yield return new FlowFMNetFileExporter { GetModelForGrid = GetModelForGrid };
             yield return
                 new FMModelPartitionExporter
                 {
@@ -549,14 +532,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                     IsContiguous = true,
                     NumDomains = 1
                 };
-            yield return new GeometryZipExporter {GetModelForGrid = GetModelForGrid};
+            yield return new GeometryZipExporter { GetModelForGrid = GetModelForGrid };
             yield return new TimFileExporter
             {
                 GetModelForHeatFluxModel = GetModelForHeatFluxModel,
                 GetModelForSourceAndSink = GetModelForSourceAndSink
             };
-            yield return new ImportedNetFileXyzExporter {Output = GridPointsExporter.OutputMode.Vertices};
-            yield return new ImportedNetFileXyzExporter {Output = GridPointsExporter.OutputMode.CellCenters};
+            yield return new ImportedNetFileXyzExporter { Output = GridPointsExporter.OutputMode.Vertices };
+            yield return new ImportedNetFileXyzExporter { Output = GridPointsExporter.OutputMode.CellCenters };
 
             foreach (WindItemExporter windItemExporter in WindItemExporter.CreateExporters())
             {
@@ -628,7 +611,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private DateTime? GetRefDateForBoundaryCondition(IBoundaryCondition boundaryCondition)
         {
             WaterFlowFMModel waterFlowFMModel = FlowModels.FirstOrDefault();
-            return waterFlowFMModel == null ? (DateTime?) null : waterFlowFMModel.ReferenceTime;
+            return waterFlowFMModel == null ? (DateTime?)null : waterFlowFMModel.ReferenceTime;
         }
 
         private WaterFlowFMModel GetModelForGrid(UnstructuredGrid grid)

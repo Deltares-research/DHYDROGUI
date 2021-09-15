@@ -23,7 +23,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers
             {"Fixed weirs", "_fxw"},
             {"Thin dams", "_thd"},
             {"Observation stations", "_obs"},
-            {"Embankments", "_emb"},
             {"Dry areas", "_dryarea"},
             {"Enclosures", "_enc"},
             {"Sources", "_src"}

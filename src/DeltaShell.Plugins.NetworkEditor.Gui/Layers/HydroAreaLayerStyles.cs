@@ -112,13 +112,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers
                 ShapeSize = 8
             };
 
-        public static VectorStyle EmbankmentStyle =>
-            new VectorStyle
-            {
-                Line = new Pen(Color.SandyBrown, 1f),
-                GeometryType = typeof(ILineString)
-            };
-
         public static VectorStyle EnclosureStyle =>
             new VectorStyle
             {

@@ -164,8 +164,6 @@
     <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
       <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
     </Compile>
-    <Compile Include="Import\HydroAreaEmbankmentHeightImporter.cs" />
-    <Compile Include="Import\HydroAreaEmbankmentImporter.cs" />
     <Compile Include="Properties\PluginInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

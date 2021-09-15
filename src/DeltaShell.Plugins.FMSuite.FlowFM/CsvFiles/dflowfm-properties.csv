@@ -202,7 +202,7 @@ output,Wrishp_gate,output,Shape files,Write shape file for gates,0|1,0,,,FALSE,W
 output,Wrishp_fxw,output,Shape files,Write shape file for fixed weirs,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for fixed weirs
 output,Wrishp_thd,output,Shape files,Write shape file for thin dams,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for thin dams
 output,Wrishp_obs,output,Shape files,Write shape file for observation stations,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for observation stations
-output,Wrishp_emb,output,Shape files,Write shape file for embankments,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for embankments
+output,Wrishp_emb,output,Shape files,Write shape file for embankments,0|1,0,,,TRUE,WriteSnappedFeatures,,,,,Write shape file for embankments
 output,Wrishp_dryarea,output,Shape files,Write shape file for dry area,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for dry area
 output,Wrishp_enc,output,Shape files,Write shape file for enclosure,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for enclosure
 output,Wrishp_src,output,Shape files,Write shape file for sources,0|1,0,,,FALSE,WriteSnappedFeatures,,,,,Write shape file for sources

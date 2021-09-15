@@ -39,7 +39,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 RestartTimeRangeValidator.ValidateWriteRestartSettings(model.WriteRestart,
                                                                        model.RestartStartTime, model.RestartStopTime, model.RestartTimeStep,
                                                                        model.StartTime, model.TimeStep, outputParametersShortcut),
-                WaterFlowFMEmbankmentValidator.Validate(model),
                 WaterFlowFMEnclosureValidator.Validate(model)
             };
 
@@ -106,7 +105,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
             return sedimentThicknessDataItems.Select(di => di.Value as UnstructuredGridCoverage).Where(c => c != null);
         }
-        
+
         private static ValidationReport ValidateBathymetry(WaterFlowFMModel model)
         {
             var issues = new List<ValidationIssue>();

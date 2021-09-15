@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
                                                                                 .ToArray();
 
             // Assert
-            Assert.That(providers.Length, Is.EqualTo(14));
+            Assert.That(providers.Length, Is.EqualTo(13));
 
             IEnumerable<Type> providerTypes = providers.Select(p => p.GetType());
             Assert.That(providerTypes, Is.EqualTo(new[]
@@ -40,7 +40,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
                 typeof(LandBoundariesLayerProvider),
                 typeof(DryPointsLayerProvider),
                 typeof(DryAreasLayerProvider),
-                typeof(EmbankmentsLayerProvider),
                 typeof(EnclosuresLayerProvider),
                 typeof(BridgePillarsLayerProvider)
             }));
@@ -52,12 +51,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
         {
             // Arrange
             var hydroAreaName = Guid.NewGuid().ToString();
-            var hydroArea = new HydroArea {Name = hydroAreaName};
+            var hydroArea = new HydroArea { Name = hydroAreaName };
 
             IMapLayerProvider mapLayerProvider = NetworkEditorMapLayerProviderCreator.CreateMapLayerProvider();
 
             // Act
-            var hydroAreaLayer = (HydroAreaLayer) MapLayerProviderHelper.CreateLayersRecursive(hydroArea, null, new[]
+            var hydroAreaLayer = (HydroAreaLayer)MapLayerProviderHelper.CreateLayersRecursive(hydroArea, null, new[]
             {
                 mapLayerProvider
             });
@@ -66,7 +65,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
             Assert.That(hydroAreaLayer.Name, Is.EqualTo(hydroAreaName));
 
             IEventedList<ILayer> subLayers = hydroAreaLayer.Layers;
-            Assert.That(subLayers.Count, Is.EqualTo(12));
+            Assert.That(subLayers.Count, Is.EqualTo(11));
 
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.ThinDamsPluralName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.FixedWeirsPluralName));
@@ -77,7 +76,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.LandBoundariesPluralName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.DryPointsPluralName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.DryAreasPluralName));
-            Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.EmbankmentsPluralName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.EnclosureName));
             Assert.That(subLayers.Any(l => l.Name == HydroAreaLayerNames.BridgePillarsPluralName));
         }

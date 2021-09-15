@@ -286,12 +286,6 @@
       <DependentUpon>FMPartitionExportDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FMWeirProperties.cs" />
-    <Compile Include="Forms\GenerateEmbankmentsDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\GenerateEmbankmentsDialog.Designer.cs">
-      <DependentUpon>GenerateEmbankmentsDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\GridWizard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -310,7 +304,6 @@
     </Compile>
     <Compile Include="Layers\FMOutputSnappedFeaturesGroupLayerData.cs" />
     <Compile Include="Layers\FMSnappedFeaturesGroupLayerData.cs" />
-    <Compile Include="MapTools\MergeEmbankmentsMapTool.cs" />
     <Compile Include="NodePresenters\BoundaryConditionSetNodePresenter.cs" />
     <Compile Include="NodePresenters\Feature2DPolygonTreeViewNodePresenter.cs" />
     <Compile Include="NodePresenters\FeatureProjectTreeViewNodePresenter.cs" />
@@ -443,9 +436,6 @@
     <EmbeddedResource Include="Forms\FMPartitionExportDialog.resx">
       <DependentUpon>FMPartitionExportDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GenerateEmbankmentsDialog.resx">
-      <DependentUpon>GenerateEmbankmentsDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\GridWizard.resx">
       <DependentUpon>GridWizard.cs</DependentUpon>
     </EmbeddedResource>
@@ -490,7 +480,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\BridgeSmall.png" />
-    <None Include="Resources\Embankment.png" />
     <None Include="Resources\observationcs2d.png" />
     <None Include="Resources\Observation.png" />
     <Resource Include="Resources\deletehs.png" />

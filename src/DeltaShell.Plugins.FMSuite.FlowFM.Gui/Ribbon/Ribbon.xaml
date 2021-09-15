@@ -21,9 +21,6 @@
                 <fluent:ToggleButton x:Name="ButtonAddSourceSink" ToolTip="Add a (2D) source/sink" Header="Add Source/Sink" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\SourceSink.png" Size="Middle" SizeDefinition="Small,Small,Small" />
                 <fluent:ToggleButton x:Name="ButtonAddSource" ToolTip="Add a (2D) point source" Header="Add Point Source" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\LateralSourceMap.png" Size="Middle" SizeDefinition="Small,Small,Small" />
                 <fluent:Button x:Name="ButtonReverseLine" Header="Reverse line(s)" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\arrow_switch.png" Size="Middle" SizeDefinition="Small, Small, Small" />
-                <fluent:Button x:Name="ButtonGenerateEmbankments" Header="Generate embankments" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\guide.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Generate embankments for selected channels" />
-                <fluent:Button x:Name="ButtonMergeEmbankments" Header="Merge embankments" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\wrenchPlus.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Merge two selected embankments" />
-                <fluent:ToggleButton x:Name="ButtonGridWizard" Header="Grid creation wizard" Click="OnClick" Icon="/DeltaShell.Plugins.FMSuite.FlowFM.Gui;component\Resources\gridwizard.png" Size="Middle" SizeDefinition="Small, Small, Small" ToolTip="Generate grid based on embankments" />
             </fluent:RibbonGroupBox>
         </fluent:RibbonTabItem>
     </fluent:Ribbon>

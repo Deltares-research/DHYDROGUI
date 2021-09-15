@@ -7,7 +7,7 @@
     {
         #region Directory names
 
-        
+
         public const string PrefixDelwaqDirectoryName = "DFM_DELWAQ_";
         public const string SnappedFeaturesDirectoryName = "snapped";
 
@@ -51,7 +51,6 @@
         public const string StructuresFileExtension = "_structures" + IniFileExtension;
         public const string ObsPointFileExtension = "_obs" + XynFileExtension;
         public const string EnclosureExtension = "_enc" + PolylineFileExtension;
-        public const string EmbankmentFileExtension = "_bnk" + PlizFileExtension;
         public const string MeteoFileExtension = "_meteo" + TimFileExtension;
         public const string BoundaryExternalForcingFileExtension = "_bnd" + ExternalForcingFileExtension;
 

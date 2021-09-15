@@ -157,7 +157,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new FeatureProjectTreeViewNodePresenter<ObservationCrossSection2D>(HydroAreaLayerNames.ObservationCrossSectionsPluralName, Properties.Resources.observationcs2d) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Pump>(HydroAreaLayerNames.PumpsPluralName, Properties.Resources.Pump) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<Structure>(HydroAreaLayerNames.StructuresPluralName, Properties.Resources.Weir) { GuiPlugin = this };
-            yield return new FeatureProjectTreeViewNodePresenter<Embankment>(HydroAreaLayerNames.EmbankmentsPluralName, Properties.Resources.Embankment) { GuiPlugin = this };
             yield return new FeatureProjectTreeViewNodePresenter<BridgePillar>(HydroAreaLayerNames.BridgePillarsPluralName, Properties.Resources.BridgeSmall) { GuiPlugin = this };
         }
 
@@ -434,7 +433,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
 
-            yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<Embankment, Embankment>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<FixedWeir, FixedWeir>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ThinDam2D, ThinDam2D>>();

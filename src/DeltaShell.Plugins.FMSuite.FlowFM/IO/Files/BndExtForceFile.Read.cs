@@ -90,11 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 string pliFilePath = GetFullPathForReading(locationFile);
                 CheckFilePath(pliFilePath, $"Boundary location file {pliFilePath} not found");
 
-                if (IsEmbankmentCategory(delftIniCategory))
-                {
-                    ReadPlizFile(modelDefinition, pliFilePath);
-                }
-                else
+                if (!IsEmbankmentCategory(delftIniCategory))
                 {
                     ReadPliFile(modelDefinition, pliFilePath, locationFile);
                 }
@@ -110,23 +106,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             {
                 existingPolyLineFiles[feature] = locationFile;
                 modelDefinition.Boundaries.Add(feature);
-                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet {Feature = feature});
+                modelDefinition.BoundaryConditionSets.Add(new BoundaryConditionSet { Feature = feature });
             }
-        }
-
-        private static void ReadPlizFile(WaterFlowFMModelDefinition modelDefinition, string pliFilePath)
-        {
-            var plizFile = new PlizFile<Embankment>();
-            IList<Embankment> embankments = plizFile.Read(pliFilePath);
-            LogWarningMessagesForOnePointGeometryEmbankments(embankments, pliFilePath);
-
-            Embankment[] validEmbankments = embankments.Where(e => e.Geometry.Coordinates.Length > 1).ToArray();
-            if (!validEmbankments.Any())
-            {
-                return;
-            }
-
-            modelDefinition.Embankments.Add(validEmbankments.First());
         }
 
         private static void CheckFilePath(string filePath, string warningMessage)
@@ -137,23 +118,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             }
         }
 
-        private static void LogWarningMessagesForOnePointGeometryEmbankments(
-            IEnumerable<Embankment> embankments, string pliFilePath)
-        {
-            IEnumerable<Embankment> onePointEmbankments = embankments.Where(e => e.Geometry.Coordinates.Length == 1);
-            string directory = Directory.GetParent(pliFilePath).FullName;
-            onePointEmbankments.ForEach(e =>
-            {
-                string embankmentFilePath = Path.Combine(directory, $"{e.Name}{FileConstants.EmbankmentFileExtension}");
-                log.Warn(
-                    $"Embankment file '{embankmentFilePath}' with only 1 point detected and it will not be imported.");
-            });
-        }
-
-        private static bool IsEmbankmentCategory(DelftIniCategory delftIniCategory)
-        {
-            return delftIniCategory.GetPropertyValue(BndExtForceFileConstants.QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
-        }
+        private static bool IsEmbankmentCategory(DelftIniCategory delftIniCategory) =>
+            delftIniCategory.GetPropertyValue(BndExtForceFileConstants.QuantityKey) == ExtForceQuantNames.EmbankmentBnd;
 
         private void ReadBoundaryConditions(IList<DelftIniCategory> delftIniCategories,
                                             WaterFlowFMModelDefinition modelDefinition)
@@ -227,7 +193,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             WaterFlowFMModelDefinition modelDefinition)
         {
             return modelDefinition.BoundaryConditionSets
-                                  .Select(bcs => new BoundaryConditionSet {Feature = bcs.Feature})
+                                  .Select(bcs => new BoundaryConditionSet { Feature = bcs.Feature })
                                   .ToList();
         }
 

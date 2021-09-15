@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
                     if (!gui.Application.FileExporters.Any(e => e is HydroRegionShapeFileExporter))
                     {
-                        ((List<IFileExporter>) gui.Application.FileExporters).Add(new HydroRegionShapeFileExporter(Gui));
+                        ((List<IFileExporter>)gui.Application.FileExporters).Add(new HydroRegionShapeFileExporter(Gui));
                     }
                 }
             }
@@ -144,17 +144,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
-            yield return new ViewInfo<Embankment, IGeometry, GeometryEditor>
-            {
-                GetViewData = (v) => v.Geometry,
-                GetViewName = (v, g) => ((Embankment) v.Tag).Name,
-                AfterCreate = (v, o) =>
-                {
-                    v.Name = o.Name;
-                    v.Tag = o;
-                }
-            };
-
             yield return new ViewInfo<IStructureObject, AreaStructureView>()
             {
                 Description = "Structure Editor"
@@ -169,7 +158,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.FixedWeirs);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationPoints);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.ObservationCrossSections);
-            yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Embankments);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.Enclosures);
             yield return GetViewInfoForHydroAreaFeatureCollection(ha => ha.BridgePillars);
         }
@@ -223,8 +211,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
-            yield return new HydroRegionProjectTreeViewNodePresenter {GuiPlugin = this};
-            yield return new HydroAreaProjectTreeViewNodePresenter {GuiPlugin = this};
+            yield return new HydroRegionProjectTreeViewNodePresenter { GuiPlugin = this };
+            yield return new HydroAreaProjectTreeViewNodePresenter { GuiPlugin = this };
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -323,10 +311,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void CreateAddRemoveContextMenu<TFeature>(IEnumerable<TFeature> features, ToolStripItemCollection stripItemCollection) //where TFeature : IGroupableFeature
         {
-            var eventedList = (IEventedList<TFeature>) features;
+            var eventedList = (IEventedList<TFeature>)features;
 
             // add separator
-            var separator = new ToolStripSeparator() {Name = SeparatorToolStripMenuKey};
+            var separator = new ToolStripSeparator() { Name = SeparatorToolStripMenuKey };
             stripItemCollection.Add(separator);
 
             // add addgroup
@@ -355,7 +343,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 List<string> groups = groupableList.Distinct().ToList();
                 foreach (string groupName in groups)
                 {
-                    var groupMenuItem = new ToolStripMenuItem {Text = groupName};
+                    var groupMenuItem = new ToolStripMenuItem { Text = groupName };
 
                     groupMenuItem.Click += (s, e) => eventedList.RemoveGroup(groupName);
                     removeAreaItemsGroup.DropDownItems.Add(groupMenuItem);
@@ -376,7 +364,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void UpdateContextMenu<TFeature>(IEnumerable<TFeature> features, ToolStripItemCollection items)
         {
-            var eventedList = (IEventedList<TFeature>) features;
+            var eventedList = (IEventedList<TFeature>)features;
 
             if (items.ContainsKey(AddGroupToolStripMenuKey))
             {
@@ -401,12 +389,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             if (typeof(T) == typeof(Structure))
             {
-                view.SetCreateFeatureRowFunction(feature => new FMWeirPropertiesRow((Structure) feature));
+                view.SetCreateFeatureRowFunction(feature => new FMWeirPropertiesRow((Structure)feature));
             }
 
             if (typeof(T) == typeof(Pump))
             {
-                view.SetCreateFeatureRowFunction(feature => new FMPumpPropertiesRow((Pump) feature));
+                view.SetCreateFeatureRowFunction(feature => new FMPumpPropertiesRow((Pump)feature));
             }
         }
 
@@ -505,9 +493,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             if (activeView is MapView || activeView is ProjectItemMapView)
             {
                 // when region is dragged onto an opened mapview
-                MapView mapView = activeView is ProjectItemMapView view 
+                MapView mapView = activeView is ProjectItemMapView view
                                       ? view.MapView
-                                      : (MapView) activeView;
+                                      : (MapView)activeView;
 
                 HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
                 region = HydroRegionEditorHelper.RootGetHydroRegion(mapView);

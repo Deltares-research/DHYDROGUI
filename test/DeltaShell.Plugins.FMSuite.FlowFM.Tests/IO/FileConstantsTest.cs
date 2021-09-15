@@ -41,7 +41,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         [TestCase(FileConstants.StructuresFileExtension, "_structures.ini")]
         [TestCase(FileConstants.ObsPointFileExtension, "_obs.xyn")]
         [TestCase(FileConstants.EnclosureExtension, "_enc.pol")]
-        [TestCase(FileConstants.EmbankmentFileExtension, "_bnk.pliz")]
         [TestCase(FileConstants.MeteoFileExtension, "_meteo.tim")]
         [TestCase(FileConstants.BoundaryExternalForcingFileExtension, "_bnd.ext")]
         public void Field_HasCorrectValue(string resultValue, string expectedValue)

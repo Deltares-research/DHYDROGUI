@@ -12,7 +12,6 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.FunctionStores;
-using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Extensions.Feature;
 using Mono.Addins;
 
@@ -46,20 +45,14 @@ namespace DeltaShell.Plugins.NetworkEditor
             Application.ProjectOpened += ApplicationOnProjectOpened;
         }
 
-        public override IEnumerable<IFileImporter> GetFileImporters()
-        {
-            yield return new HydroAreaEmbankmentImporter();
-            yield return new HydroAreaEmbankmentHeightImporter();
-        }
-
         private void ApplicationOnProjectClosing(Project project)
         {
-            ((INotifyCollectionChanged) Application.Project).CollectionChanged -= OnProjectCollectionChanged;
+            ((INotifyCollectionChanged)Application.Project).CollectionChanged -= OnProjectCollectionChanged;
         }
 
         private void ApplicationOnProjectOpened(Project project)
         {
-            ((INotifyCollectionChanged) Application.Project).CollectionChanged += OnProjectCollectionChanged;
+            ((INotifyCollectionChanged)Application.Project).CollectionChanged += OnProjectCollectionChanged;
             FixOwnersOnChildDataItems(project.RootFolder);
         }
 
@@ -126,7 +119,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 // handle child data item removed
-                var region = (IHydroRegion) regionDataItem.Value;
+                var region = (IHydroRegion)regionDataItem.Value;
                 if (region.Parent != null && regionDataItem.Parent != null && Equals(regionDataItem.Parent.Children, sender))
                 {
                     region.Parent.SubRegions.Remove(region);

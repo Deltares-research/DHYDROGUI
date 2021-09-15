@@ -34,12 +34,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             bndExtFilePath = filePath;
             IList<DelftIniCategory> bndExtForceFileItems = WriteBndExtForceFileSubFiles(modelDefinition.ModelName, modelDefinition.BoundaryConditionSets,
                                                                                         refDate);
-            IEnumerable<DelftIniCategory> embankmentForceFileItems = WriteEmbankmentFiles(modelDefinition.Embankments);
 
-            List<DelftIniCategory> allItems = bndExtForceFileItems.Concat(embankmentForceFileItems).ToList();
-            if (allItems.Count > 0)
+            if (bndExtForceFileItems.Count > 0)
             {
-                WriteBndExtForceFile(allItems);
+                WriteBndExtForceFile(bndExtForceFileItems);
                 modelProperty.SetValueAsString(Path.GetFileName(bndExtFilePath));
             }
             else
@@ -141,33 +139,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
         private void WritePropertyValue(string propertyName, string propertyValue)
         {
             WriteLine($"{propertyName}={propertyValue}");
-        }
-
-        private IEnumerable<DelftIniCategory> WriteEmbankmentFiles(IEnumerable<Embankment> embankments)
-        {
-            var categories = new List<DelftIniCategory>();
-
-            foreach (Embankment embankment in embankments)
-            {
-                if (!existingPolyLineFiles.TryGetValue(embankment, out string existingFile))
-                {
-                    existingFile = embankment.Name + FileConstants.EmbankmentFileExtension;
-                    existingPolyLineFiles[embankment] = existingFile;
-                }
-
-                if (WriteToDisk)
-                {
-                    new PlizFile<Embankment>().Write(GetFullPathForWriting(existingFile), new[]
-                    {
-                        embankment
-                    });
-                }
-
-                categories.Add(DelftIniCategoryFactory.CreateBoundaryBlock(ExtForceQuantNames.EmbankmentBnd, existingFile,
-                                                                           ExtForceQuantNames.EmbankmentForcingFile, TimeSpan.Zero, true));
-            }
-
-            return categories;
         }
 
         private void WritePolyLines(IEnumerable<BoundaryConditionSet> boundaryConditionSets)

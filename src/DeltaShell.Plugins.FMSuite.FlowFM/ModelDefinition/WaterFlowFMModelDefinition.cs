@@ -155,7 +155,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
             SpatialOperations = new Dictionary<string, IList<ISpatialOperation>>();
             InitialTracerNames = new List<string>();
             InitialSpatiallyVaryingSedimentPropertyNames = new List<string>();
-            Embankments = new EventedList<Embankment>();
             UpdateWriteOutputSnappedFeatures();
         }
 
@@ -218,8 +217,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
         public IEventedList<Feature2D> Pipes { get; private set; }
 
         public IEventedList<SourceAndSink> SourcesAndSinks { get; private set; }
-
-        public IList<Embankment> Embankments { get; set; }
 
         public int Kmx
         {

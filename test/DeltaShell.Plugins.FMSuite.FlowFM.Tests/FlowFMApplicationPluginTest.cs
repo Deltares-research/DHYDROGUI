@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Hydro.Area.Objects;
 using DelftTools.Hydro.Area.Objects.StructureObjects;
 using DelftTools.Hydro.GroupableFeatures;
@@ -11,11 +10,9 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Gui;
 using DeltaShell.NGHS.TestUtils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
-using DeltaShell.Plugins.FMSuite.Common.IO.ImportExport;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData.SourcesAndSinks;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.ImportersExporters;
-using DeltaShell.Plugins.NetworkEditor.Import;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NUnit.Framework;
@@ -67,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             IFileImporter[] importers = plugin.GetFileImporters().ToArray();
 
             // Assert
-            Assert.That(importers, Has.Length.EqualTo(37));
+            Assert.That(importers, Has.Length.EqualTo(35));
             Contains<WaterFlowFMFileImporter>(importers);
             Contains<Area2DStructuresImporter>(importers);
             Contains<StructuresListImporter>(importers, 2);
@@ -77,7 +74,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Contains<BcFileImporter>(importers);
             Contains<BcmFileImporter>(importers);
             Contains<GroupablePointCloudImporter>(importers);
-            Contains<PliFileImporterExporter<Embankment, Embankment>>(importers);
             Contains<PlizFileImporterExporter<FixedWeir, FixedWeir>>(importers);
             Contains<PlizFileImporterExporter<BridgePillar, BridgePillar>>(importers);
             Contains<PliFileImporterExporter<ThinDam2D, ThinDam2D>>(importers);
@@ -99,25 +95,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             Contains<ShapeFileImporter<ILineString, FixedWeir>>(importers);
             Contains<ShapeFileImporter<IPoint, GroupableFeature2DPoint>>(importers);
             Contains<ShapeFileImporter<ILineString, ObservationCrossSection2D>>(importers);
-            Contains<ShapeFileImporter<ILineString, Embankment>>(importers);
             Contains<ShapeFileImporter<ILineString, BridgePillar>>(importers);
             Contains<ShapeFileImporter<ILineString, Pump>>(importers);
             Contains<ShapeFileImporter<ILineString, Structure>>(importers);
-        }
-
-        [Test]
-        public void GetFileExporters_ContainsExpectedExporterForEmbankments()
-        {
-            // Call
-            IEnumerable<IFileExporter> exporters = plugin.GetFileExporters();
-
-            // Assert
-            Type expectedType = typeof(PlizFileImporterExporter<Embankment, Embankment>);
-            var embankmentExporter = (IFeature2DImporterExporter) exporters.SingleOrDefault(e => e.GetType() == expectedType);
-            Assert.That(embankmentExporter, Is.Not.Null,
-                        $"No file exporter with the expected type was found: {nameof(expectedType)}.");
-            Assert.That(embankmentExporter.Mode, Is.EqualTo(Feature2DImportExportMode.Export),
-                        $"The property {embankmentExporter.Mode} of the file exporter was incorrect.");
         }
 
         private static void Contains<T>(IFileImporter[] source, int n = 1)

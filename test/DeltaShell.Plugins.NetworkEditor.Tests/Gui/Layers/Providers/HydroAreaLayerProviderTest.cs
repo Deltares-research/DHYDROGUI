@@ -110,7 +110,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Layers.Providers
             yield return typeof(EventedList<LandBoundary2D>);
             yield return typeof(EventedList<GroupablePointFeature>);
             yield return typeof(EventedList<GroupableFeature2DPolygon>);
-            yield return typeof(EventedList<Embankment>);
             yield return typeof(EventedList<BridgePillar>);
         }
     }

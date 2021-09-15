@@ -28,7 +28,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
         public const string Weir = "weir";
         public const string Gate = "gate";
         public const string Pump = "pump";
-        public const string Embankment = "embankment";
         public const string SourceSink = "sourcesink";
         public const string Boundary = "boundary";
         public const string WaterLevelBnd = "waterlevelbnd";
@@ -91,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             foreach (string propertyToClear in propertiesToClear)
             {
                 WaterFlowFMProperty existingProperty = model.ModelDefinition.GetModelProperty(propertyToClear);
-                var clonedProperty = (WaterFlowFMProperty) existingProperty.Clone();
+                var clonedProperty = (WaterFlowFMProperty)existingProperty.Clone();
                 if (propertyToClear.ToLowerInvariant() == KnownProperties.TrtRou.ToLowerInvariant())
                 {
                     clonedProperty.SetValueAsString("N");
@@ -200,26 +199,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
         }
 
-        public int[] GetLinkedCells()
-        {
-            var linkedCells = new int[0];
-
-            if (api == null)
-            {
-                return linkedCells; // no grid, return empty list
-            }
-
-            try
-            {
-                linkedCells = GetLinkedCellsCore();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-            return linkedCells;
-        }
+        public int[] GetLinkedCells() =>
+            throw new NotSupportedException();
 
         protected virtual void Dispose(bool disposing)
         {
@@ -246,28 +227,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             }
         }
 
-        private int[] GetLinkedCellsCore()
-        {
-            var edgesAlongEmbankments = new int[0];
-
-            Array edgeNumbers = api.GetValues("edgenumbers1d2d");
-            if (edgeNumbers == null || edgeNumbers.Length == 0)
-            {
-                return edgesAlongEmbankments;
-            }
-
-            edgesAlongEmbankments = new int[edgeNumbers.Length];
-            for (var i = 0; i < edgeNumbers.Length; i++)
-            {
-                edgesAlongEmbankments[i] = (int) edgeNumbers.GetValue(i);
-            }
-
-            return edgesAlongEmbankments;
-        }
-
         private static MultiPoint ConvertToMultiPoint(IGeometry geom)
         {
-            return new MultiPoint(geom.Coordinates.Select(c => (IPoint) new Point(c.X, c.Y)).ToArray());
+            return new MultiPoint(geom.Coordinates.Select(c => (IPoint)new Point(c.X, c.Y)).ToArray());
         }
 
         private IEnumerable<IGeometry> GetGridSnappedGeometryCore(string featureType, ICollection<IGeometry> geometries)

@@ -77,9 +77,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers
                                                       HydroAreaLayerStyles.ObsCrossSectionStyle,
                                                       "Observation cross sections (snapped)",
                                                       UnstrucGridOperationApi.ObsCrossSection);
-            yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.Area.Embankments,
-                                                      HydroAreaLayerStyles.EmbankmentStyle, "Embankments (snapped)",
-                                                      UnstrucGridOperationApi.Embankment);
             yield return new SnappedFeatureCollection(model, model.CoordinateSystem, (IList)model.SourcesAndSinks,
                                                       HydroAreaLayerStyles.SnappedSourcesAndSinksStyle,
                                                       "Sources and sinks (snapped)",

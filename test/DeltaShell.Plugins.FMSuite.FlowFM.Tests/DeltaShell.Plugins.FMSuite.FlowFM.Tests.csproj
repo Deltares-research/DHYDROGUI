@@ -263,7 +263,6 @@
     <Compile Include="Editors\SedimentPropertyValidationRuleTest.cs" />
     <Compile Include="Editors\TracerDefinitionsEditorWpfTest.cs" />
     <Compile Include="Editors\TracerDefinitionsEditorWpfViewModelTest.cs" />
-    <Compile Include="EmbankmentMergerTest.cs" />
     <Compile Include="CoverageDepthLayersListTest.cs" />
     <Compile Include="Editors\FlowBoundaryConditionEditorControllerTest.cs" />
     <Compile Include="Editors\FlowBoundaryConditionsListViewTest.cs" />
@@ -424,7 +423,6 @@
     <Compile Include="Validation\VerticalProfileValidatorTests.cs" />
     <Compile Include="Validation\FMStructuresValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMBoundaryConditionValidatorTest.cs" />
-    <Compile Include="Validation\WaterFlowFMEmbankmentValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMEnclosureValidationTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelDefinitionValidatorTest.cs" />
     <Compile Include="Validation\WaterFlowFMModelTimersValidatorTest.cs" />

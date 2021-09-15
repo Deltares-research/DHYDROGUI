@@ -45,7 +45,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Layers.Providers
             yield return hydroArea.LandBoundaries;
             yield return hydroArea.DryPoints;
             yield return hydroArea.DryAreas;
-            yield return hydroArea.Embankments;
             yield return hydroArea.Enclosures;
             yield return hydroArea.BridgePillars;
         }

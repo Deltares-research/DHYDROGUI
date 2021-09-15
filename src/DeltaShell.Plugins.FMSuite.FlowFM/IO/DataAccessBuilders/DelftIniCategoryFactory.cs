@@ -19,13 +19,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// <param name="locationFilePath">The location file path.</param>
         /// <param name="forcingFilePath">The forcing file path.</param>
         /// <param name="thatcherHarlemanTimeLag">The Thatcher-Harleman time lag.</param>
-        /// <param name="isEmbankment">Whether or not the feature is an embankment. </param>
         /// <returns>
         /// The created <see cref="DelftIniCategory"/>.
         /// </returns>
         public static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath,
-                                                           string forcingFilePath, TimeSpan thatcherHarlemanTimeLag,
-                                                           bool isEmbankment = false)
+                                                           string forcingFilePath, TimeSpan thatcherHarlemanTimeLag)
         {
             var block = new DelftIniCategory(BndExtForceFileConstants.BoundaryBlockKey);
             if (quantity != null)
@@ -46,11 +44,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
             if (thatcherHarlemanTimeLag != TimeSpan.Zero)
             {
                 block.AddProperty(BndExtForceFileConstants.ThatcherHarlemanTimeLagKey, thatcherHarlemanTimeLag.TotalSeconds);
-            }
-
-            if (isEmbankment)
-            {
-                block.AddProperty(BndExtForceFileConstants.OpenBoundaryToleranceKey, openBoundaryTolerance);
             }
 
             return block;
