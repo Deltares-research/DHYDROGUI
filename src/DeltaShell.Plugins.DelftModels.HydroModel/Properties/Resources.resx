@@ -221,9 +221,6 @@
   <data name="HydroModelConverter_The_imported_model_is_not_a_dimr_model" xml:space="preserve">
     <value>The imported model '{0}' is not a dimr model.</value>
   </data>
-  <data name="HydroModelConverter_The_parallel_element_is_missing" xml:space="preserve">
-    <value>The &lt;parallel&gt; element is missing from the dimr config.</value>
-  </data>
   <data name="HydroModelConverter_The_startGroup_element_is_missing" xml:space="preserve">
     <value>The &lt;startGroup&gt; element is missing from the dimr config.</value>
   </data>

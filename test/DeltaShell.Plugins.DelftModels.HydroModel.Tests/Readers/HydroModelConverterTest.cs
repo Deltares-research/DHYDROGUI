@@ -460,7 +460,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
 
         [Test]
         [TestCaseSource(nameof(Convert_MissingElement_Cases))]
-        public void Convert_MissingElement_LogsError(object[] controlElement, string expError)
+        public void Convert_MissingElement_HandlesErrorCorrectly(object[] controlElement, Action<ILogHandler> assertAction)
         {
             // Setup
             const string masterFileExtension = "some_extension";
@@ -489,20 +489,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
             converter.Convert(dimrXml, "path/to/the/dimr/config.xml", new List<IDimrModelFileImporter> {dimrImporter});
 
             // Assert
-            Assert.That(loggingHandler.ReceivedCalls(), Has.Length.EqualTo(1));
-            loggingHandler.Received(1).ReportError(expError);
+            assertAction.Invoke(loggingHandler);
         }
 
         private static IEnumerable<TestCaseData> Convert_MissingElement_Cases()
         {
-            yield return new TestCaseData(new object[]
-                                          {
-                                              new dimrParallelXML {Items = new object[0]}
-                                          },
-                                          "The <startGroup> element is missing from the dimr config.");
+            void ValidateReportsMissingStartGroup(ILogHandler logHandlerMock)
+            {
+                const string expectedError = "The <startGroup> element is missing from the dimr config.";
+                Assert.That(logHandlerMock.ReceivedCalls(), Has.Length.EqualTo(1));
+                logHandlerMock.Received(1).ReportError(expectedError);
 
-            yield return new TestCaseData(new object[0],
-                                          "The <parallel> element is missing from the dimr config.");
+            }
+            yield return new TestCaseData(
+                new object[] { new dimrParallelXML {Items = new object[0]} },
+                (Action<ILogHandler>) ValidateReportsMissingStartGroup);
+
+            void ValidateReportsNoErrorWhenMissingParallelElement(ILogHandler logHandlerMock) =>
+                logHandlerMock.DidNotReceiveWithAnyArgs().ReportError("");
+            yield return new TestCaseData(
+                new object[0],
+                (Action<ILogHandler>) ValidateReportsNoErrorWhenMissingParallelElement);
         }
 
         private static IDimrModel CreateDimrModel(DateTime startTime)
