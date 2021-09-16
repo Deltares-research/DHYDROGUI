@@ -10,8 +10,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
     /// </summary>
     public static class DelftIniCategoryFactory
     {
-        private const double openBoundaryTolerance = 0.5;
-
         /// <summary>
         /// Creates the boundary <see cref="DelftIniCategory"/> with the specified property values.
         /// </summary>
@@ -22,8 +20,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// <returns>
         /// The created <see cref="DelftIniCategory"/>.
         /// </returns>
-        public static DelftIniCategory CreateBoundaryBlock(string quantity, string locationFilePath,
-                                                           string forcingFilePath, TimeSpan thatcherHarlemanTimeLag)
+        public static DelftIniCategory CreateBoundaryBlock(string quantity, 
+                                                           string locationFilePath,
+                                                           string forcingFilePath, 
+                                                           TimeSpan thatcherHarlemanTimeLag)
         {
             var block = new DelftIniCategory(BndExtForceFileConstants.BoundaryBlockKey);
             if (quantity != null)
