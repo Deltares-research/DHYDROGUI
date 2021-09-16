@@ -124,7 +124,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             dimrParallelXML dimrParallel = dimrObject.control.OfType<dimrParallelXML>().FirstOrDefault();
             if (dimrParallel == null)
             {
-                logHandler.ReportError(Resources.HydroModelConverter_The_parallel_element_is_missing);
                 return false;
             } 
             
