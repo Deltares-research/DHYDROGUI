@@ -2,26 +2,29 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
     <ReleaseVersion>1.0.0</ReleaseVersion>
+    <!-- Change this if we want to move to a 2020.xx version schema. -->
+    <PublicReleaseVersion>$(ReleaseVersion)</PublicReleaseVersion>
     <!-- This is the product name -->
-    <ProductName>Delft3D FM Suite 1D2D</ProductName>
+    <ApplicationName>Delft3D FM Suite 1D2D</ApplicationName>
+    <ProductName>$(ApplicationName) ($(PublicReleaseVersion))</ProductName>
     <ProjectGuid>{1dd62dbb-f7d3-40be-8063-b7b80cec8b9f}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
-    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion).$(BUILD_NUMBER))</OutputName>
+    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;</DefineConstants>
     <SuppressIces>ICE57</SuppressIces>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM\$(Configuration)\</IntermediateOutputPath>
     <SuppressIces>ICE57</SuppressIces>
@@ -29,7 +32,7 @@
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);ProductName=$(ProductName);</DefineConstants>
+    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);PublicReleaseVersion=$(PublicReleaseVersion);ProductName=$(ProductName);ApplicationName=$(ApplicationName)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Dimr\Dimr.wxi">

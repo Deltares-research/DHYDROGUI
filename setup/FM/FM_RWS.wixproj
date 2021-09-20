@@ -7,12 +7,15 @@
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
     <ReleaseVersion>1.0.0</ReleaseVersion>
+    <!-- Change this if we want to move to a 2020.xx version schema. -->
+    <PublicReleaseVersion>$(ReleaseVersion)</PublicReleaseVersion>
     <!-- This is the product name -->
-    <ProductName>D-HYDRO Suite 1D2D</ProductName>
+    <ApplicationName>Delft3D FM Suite 1D2D</ApplicationName>
+    <ProductName>$(ApplicationName) ($(PublicReleaseVersion))</ProductName>
     <ProjectGuid>{5725d793-35b5-48a1-bb6a-2291df6c2980}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
-    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion).$(BUILD_NUMBER))</OutputName>
+    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
@@ -29,7 +32,7 @@
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);ProductName=$(ProductName);RWS=true;</DefineConstants>
+    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);PublicReleaseVersion=$(PublicReleaseVersion);ProductName=$(ProductName);ApplicationName=$(ApplicationName)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Dimr\Dimr.wxi">

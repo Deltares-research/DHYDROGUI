@@ -6,6 +6,8 @@
   <?define Description="D-FM Delta Shell" ?>
   
   <?define checkForRegistration="true"?>
+
+  <?define EnableDHydroDelft3DFMVersionNaming="true"?>
   
   <?ifdef var.RWS?>
     <?define Delft3DPackageName="D-HYDRO"?>
