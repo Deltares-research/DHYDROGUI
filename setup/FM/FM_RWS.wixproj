@@ -6,7 +6,7 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <ReleaseVersion>1.0.0</ReleaseVersion>
+    <ReleaseVersion>1.1.0</ReleaseVersion>
     <!-- Change this if we want to move to a 2020.xx version schema. -->
     <PublicReleaseVersion>$(ReleaseVersion)</PublicReleaseVersion>
     <!-- This is the product name -->
@@ -14,8 +14,9 @@
     <ProductName>$(ApplicationName) ($(PublicReleaseVersion))</ProductName>
     <ProjectGuid>{5725d793-35b5-48a1-bb6a-2291df6c2980}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
-    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ProductName) ($(ReleaseVersion))</OutputName>
+    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ApplicationName) ($(ReleaseVersion))</OutputName>
+    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ApplicationName) ($(ReleaseVersion).$(BUILD_NUMBER))</OutputName>
+    <!-- $(BUILD_NUMBER) is an TC environment variable: https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties -->
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">

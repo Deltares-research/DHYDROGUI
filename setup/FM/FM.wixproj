@@ -16,6 +16,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ApplicationName) ($(ReleaseVersion))</OutputName>
     <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ApplicationName) ($(ReleaseVersion).$(BUILD_NUMBER))</OutputName>
+    <!-- $(BUILD_NUMBER) is an TC environment variable: https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties -->
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
