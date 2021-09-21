@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
@@ -35,7 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             return networkCoverage;
         }
 
-        [Test]
+        [Test, Apartment(ApartmentState.STA)]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void PerformOperationOnCopiedItemWorksOk()

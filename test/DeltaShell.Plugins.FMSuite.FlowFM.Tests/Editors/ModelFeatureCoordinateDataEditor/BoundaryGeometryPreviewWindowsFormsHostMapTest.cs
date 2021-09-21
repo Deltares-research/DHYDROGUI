@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading;
 using System.Windows.Forms.Integration;
 using DelftTools.TestUtils;
 using DelftTools.Utils;
@@ -14,7 +15,7 @@ using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinateDataEditor
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class BoundaryGeometryPreviewWindowsFormsHostMapTest
     {
         [Test, NUnit.Framework.Category(TestCategory.Integration)]

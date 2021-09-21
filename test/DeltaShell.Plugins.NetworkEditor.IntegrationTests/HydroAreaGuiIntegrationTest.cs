@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Windows.Forms.Integration;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -19,7 +20,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.Integration)]
 
     public class HydroAreaGuiIntegrationTest

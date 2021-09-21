@@ -46,7 +46,7 @@ using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class WaterFlowFMModelGuiIntegrationTest
     {
         [Test]

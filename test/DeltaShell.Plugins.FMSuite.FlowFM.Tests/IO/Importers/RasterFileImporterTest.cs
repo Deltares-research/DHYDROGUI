@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.TestUtils;
@@ -22,7 +23,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class RasterFileImporterTest
     {
 

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading;
+using System.Windows;
 using System.Windows.Threading;
 using NUnit.Framework;
 using SharpMap;
@@ -6,7 +7,7 @@ using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 {
-    [SetUpFixture]
+    [SetUpFixture, Apartment(ApartmentState.STA)]
     public class TestClassSetup
     {
         [OneTimeSetUp]

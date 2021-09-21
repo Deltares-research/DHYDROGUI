@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <?include ..\Scripts\RainfallRunoffScripts.wxi?>
   <Directory Id="DeltaShell.Plugins.DelftModels.RainfallRunoff" Name="DeltaShell.Plugins.RainfallRunoffModel">
     <?define rrplugindir="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RainfallRunoff\"?>
     <Component Id="RainfallRunoffModelPlugin" Guid="8BDD43E2-FF10-499C-9C4A-8F9C239DEFEC">

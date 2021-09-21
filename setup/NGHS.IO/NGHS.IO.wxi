@@ -5,7 +5,6 @@
     <!-- Same as SharpMapGisPlugin DeltaShell.Plugins.SharpMapGis to control the sequence of loading -->
     <Component Id='NGHS.IO' Guid="BB9754C7-4C87-4CF7-9E48-38156880994A">
         <File Id="NGHS_IO_Deltares.UGrid.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\Deltares.UGrid.dll' />
-        <File Id="NGHS_IO_Deltares.UGrid.xml" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\Deltares.UGrid.xml' />
         <File Id="NGHS_IO_DeltaShell.NGHS.IO.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.dll' />
         <File Id="NGHS_IO_hdf5.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\hdf5.dll' />
         <File Id="NGHS_IO_hdf5_hl.dll" Source='$(var.deltashell_output_folder)plugins\DeltaShell.NGHS.IO\hdf5_hl.dll' />

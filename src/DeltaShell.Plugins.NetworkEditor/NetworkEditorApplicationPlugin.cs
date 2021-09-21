@@ -51,10 +51,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
 
-        public override string FileFormatVersion
-        {
-            get { return "3.5.2.0"; }
-        }
+        public override string FileFormatVersion => "3.5.2.0";
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
         {

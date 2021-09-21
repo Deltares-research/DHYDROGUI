@@ -10,7 +10,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Polder.Forms
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class PolderConceptViewTest
     {

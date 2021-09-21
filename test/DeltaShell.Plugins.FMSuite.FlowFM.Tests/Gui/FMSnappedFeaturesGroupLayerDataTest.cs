@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
@@ -30,7 +31,7 @@ using SharpMap.Layers;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
     [TestFixture]
-    [Parallelizable(ParallelScope.None)]
+    [Parallelizable(ParallelScope.None), Apartment(ApartmentState.STA)]
     public class FMSnappedFeaturesGroupLayerDataTest
     {
         [Test]

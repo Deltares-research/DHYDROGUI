@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Functions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Reflection;
@@ -351,7 +352,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             Assert.AreEqual(40.06, function3[new DateTime(2003, 1, 1)]);
         }
 
-        [Test, Category(TestCategory.WindowsForms)]
+        [Test, Apartment(ApartmentState.STA), Category(TestCategory.WindowsForms)]
         public void MultipleFractionsInChart()
         {
             var feature2D = new Feature2D

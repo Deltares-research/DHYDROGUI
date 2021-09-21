@@ -1,11 +1,12 @@
-﻿using DelftTools.Shell.Core.Workflow;
+﻿using System.Threading;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class HydroModelSettingsTest
     {
         [Test] 

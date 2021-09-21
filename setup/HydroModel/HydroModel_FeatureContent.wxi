@@ -3,9 +3,6 @@
   <ComponentRef Id="HydroModelPlugin"/>
   <?ifndef var.NOKERNELS?>
   <?endif?>
-  
-  <ComponentRef Id="hydro_model_scripts_examples_files"/>
-  <ComponentRef Id="hydro_model_scripts_libraries_files"/>
 
   <?ifndef var.NOKERNELS?>
   <Feature Id="HM_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">

@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System.Threading;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts;
@@ -6,7 +7,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Concepts
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class PavedDataViewTest
     {

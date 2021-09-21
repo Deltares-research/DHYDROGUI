@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -27,7 +28,7 @@ using ComboBox = System.Windows.Controls.ComboBox;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class HydroRegionEditorGuiIntegrationTest
     {

@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro;
+﻿using System.Threading;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
@@ -7,7 +8,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class ComputationalGridDialogTest
     {
         private static double CGWMinimumCellLength = 0.5;

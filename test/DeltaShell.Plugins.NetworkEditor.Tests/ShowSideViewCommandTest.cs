@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -18,7 +19,7 @@ using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class ShowSideViewCommandTest
     {
         private static readonly MockRepository mocks = new MockRepository();

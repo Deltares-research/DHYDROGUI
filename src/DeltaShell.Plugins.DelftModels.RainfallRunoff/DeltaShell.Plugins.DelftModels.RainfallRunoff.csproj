@@ -1,390 +1,104 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeltaShell.Plugins.DelftModels.RainfallRunoff</RootNamespace>
-    <AssemblyName>DeltaShell.Plugins.DelftModels.RainfallRunoff</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.Version.1D2D_B.cs">
-      <Link>Properties\AssemblyInfo.Version.1D2D_B.cs</Link>
-    </Compile>
-    <Compile Include="CatchmentCoverageMaintainer.cs" />
-    <Compile Include="Domain\Concepts\GreenhouseDataProperties.cs" />
-    <Compile Include="Domain\Concepts\HbvDataProperties.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\DryWeatherFlow.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\DryweatherFlowDistributionTypeConverter.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\INwrwComponentFileWriterBase.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\INwrwFeature.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwFileReader.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwSurfaceTypeHelper.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwTpComponentFileWriter.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\Nwrw3BComponentFileWriter.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwAlgComponentFileWriter.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwComponentFileWriterBase.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwDryWeatherFlowDefinition.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwDefinition.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwData.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwDwfComponentFileWriter.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwEnums.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwModelFileWriter.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwKeywords.cs" />
-    <Compile Include="Domain\Concepts\Nwrw\NwrwSpecialArea.cs" />
-    <Compile Include="Domain\Concepts\OpenWaterDataProperties.cs" />
-    <Compile Include="Domain\Concepts\Polder\PolderConceptProperties.cs" />
-    <Compile Include="Domain\Concepts\SacramentoData.cs" />
-    <Compile Include="Domain\Concepts\HbvData.cs" />
-    <Compile Include="Domain\Concepts\SacramentoDataProperties.cs" />
-    <Compile Include="Domain\Meteo\IMeteoDataDistributed.cs" />
-    <Compile Include="Domain\Meteo\IMeteoTimeAggregator.cs" />
-    <Compile Include="Domain\Meteo\MeteoDataDistributedGlobal.cs" />
-    <Compile Include="Domain\Meteo\MeteoDataDistributedPerFeature.cs" />
-    <Compile Include="Domain\Meteo\MeteoDataDistributedPerStation.cs" />
-    <Compile Include="Domain\Meteo\MeteoDataTimeIntegrator.cs" />
-    <Compile Include="Domain\Meteo\MeteoDataTimeInterpolator.cs" />
-    <Compile Include="Domain\PolderSubTypes.cs" />
-    <Compile Include="Exporters\MeteoDataExporter.cs" />
-    <Compile Include="Exporters\RainfallRunoffBoundaryDataFileWriter.cs" />
-    <Compile Include="Exporters\RainfallRunoffModelExporter.cs" />
-    <Compile Include="Exporters\RRDimrConfigModelCouplerProvider.cs" />
-    <Compile Include="Exporters\RRFlowDimrConfigModelCoupler.cs" />
-    <Compile Include="FileWriter\ElementSetEnum.cs" />
-    <Compile Include="FileWriter\IRRModelHybridFileWriter.cs" />
-    <Compile Include="FileWriter\QuantityTypeEnum.cs" />
-    <Compile Include="FileWriter\RRModelEngineEnums.cs" />
-    <Compile Include="FileWriter\RRModelEngineHelper.cs" />
-    <Compile Include="FileWriter\RRModelHybridFileWriter.cs" />
-    <Compile Include="FileWriter\RRModelHybridFileWriterFactory.cs" />
-    <Compile Include="Importers\RainfallRunoffModelImporter.cs" />
-    <Compile Include="Importers\NWRWCatchmentFrom3BImporter.cs" />
-    <Compile Include="ModelControllers\Concepts\NwrwModelController.cs" />
-    <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="Properties\PluginInfo.cs" />
-    <Compile Include="RainfallRunoffModel.FileBased.cs" />
-    <Compile Include="RainfallRunoffModelDataSet.cs" />
-    <Compile Include="RainfallRunoffDimrCoupling.cs" />
-    <Compile Include="rr_kernel\IRRModelEngineDll.cs" />
-    <Compile Include="rr_kernel\RRModelEngineDll.cs" />
-    <Compile Include="Validation\RainfallRunoffInWorkFlowTypeValidator.cs" />
-    <Compile Include="Validation\RainfallRunoffInWorkFlowTypeValidatorProvider.cs" />
-    <Compile Include="FeatureCoverageProviders\CompositeFeatureCoverageProvider.cs" />
-    <Compile Include="Domain\AreaDictionary.cs" />
-    <Compile Include="Importers\EvaporationDataImporter.cs" />
-    <Compile Include="Importers\MeteoDataImporter.cs" />
-    <Compile Include="Importers\TemperatureDataImporter.cs" />
-    <Compile Include="ModelControllers\Concepts\HbvModelController.cs" />
-    <Compile Include="ModelControllers\Concepts\SacramentoModelController.cs" />
-    <Compile Include="ModelControllers\IConceptModelController.cs" />
-    <Compile Include="ModelControllers\ITimeBasedFunction.cs" />
-    <Compile Include="ModelControllers\ModelLink.cs" />
-    <Compile Include="ModelControllers\RainfallRunoffModelOutputController.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="RainfallRunoffDataCatchmentExtensions.cs" />
-    <Compile Include="Domain\RunoffBoundaryData.cs" />
-    <Compile Include="Importers\PolderFromGisImporter.cs" />
-    <Compile Include="Importers\LandUseMapping.cs" />
-    <Compile Include="Domain\Concepts\PavedDataProperties.cs" />
-    <Compile Include="Domain\Concepts\PavedEnums.cs" />
-    <Compile Include="ModelControllers\AggregationBuffer.cs" />
-    <Compile Include="ModelControllers\ConceptModelController.cs" />
-    <Compile Include="RainfallRunoffDataAccessListener.cs" />
-    <Compile Include="RainfallRunoffModelExtensions.cs" />
-    <Compile Include="ICatchmentModelDataSynchronizer.cs" />
-    <Compile Include="IRainfallRunoffAreaUnitManager.cs" />
-    <Compile Include="ModelControllers\MeteoDataModelController.cs" />
-    <Compile Include="ModelControllers\Concepts\GreenhouseModelController.cs" />
-    <Compile Include="ModelControllers\Concepts\OpenWaterModelController.cs" />
-    <Compile Include="RainfallRunoffBoundaryData.cs" />
-    <Compile Include="CatchmentModelDataSynchronizer.cs" />
-    <Compile Include="Importers\PrecipitationDataImporter.cs" />
-    <Compile Include="EngineParameter.cs" />
-    <Compile Include="EngineParameters.cs" />
-    <Compile Include="ModelControllers\Concepts\PavedModelController.cs" />
-    <Compile Include="ModelControllers\Concepts\UnpavedModelController.cs" />
-    <Compile Include="ModelControllers\RainfallRunoffModelController.cs" />
-    <Compile Include="RainfallRunoffChildDataItemProvider.cs" />
-    <Compile Include="FixedFiles\RainfallRunoffModelFixedFiles.cs" />
-    <Compile Include="RainfallRunoffBasinSynchronizer.cs" />
-    <Compile Include="RainfallRunoffUnitConverter.cs" />
-    <Compile Include="Domain\Concepts\GreenhouseAreaDictionary.cs" />
-    <Compile Include="Domain\Concepts\UnpavedCropAreaDictionary.cs" />
-    <Compile Include="Domain\Concepts\Unpaved\DeZeeuwHellingaDrainageFormula.cs" />
-    <Compile Include="Domain\Concepts\Polder\PolderConceptViewData.cs" />
-    <Compile Include="Domain\RainfallRunoffEnums.cs" />
-    <Compile Include="FeatureCoverageProviders\ModelOutputFeatureCoverageProvider.cs" />
-    <Compile Include="Domain\Concepts\Unpaved\ErnstDeZeeuwHellingaDrainageFormulaBase.cs" />
-    <Compile Include="Domain\Concepts\Unpaved\ErnstDrainageFormula.cs" />
-    <Compile Include="FeatureCoverageProviders\ConceptFeatureCoverageProvider.cs" />
-    <Compile Include="Domain\Concepts\GreenhouseData.cs" />
-    <Compile Include="Domain\Concepts\GreenhouseEnums.cs" />
-    <Compile Include="Domain\Concepts\Unpaved\IDrainageFormula.cs" />
-    <Compile Include="Domain\Concepts\OpenWaterData.cs" />
-    <Compile Include="Domain\Concepts\PavedData.cs" />
-    <Compile Include="Domain\Meteo\MeteoData.cs" />
-    <Compile Include="Domain\Concepts\UnpavedDataProperties.cs" />
-    <Compile Include="RRInitialConditionsWrapper.cs" />
-    <Compile Include="TimeDependentFeatureCoverageSplitter.cs" />
-    <Compile Include="ICatchmentCoverageMaintainer.cs" />
-    <Compile Include="IFeatureCoverageProvider.cs" />
-    <Compile Include="Domain\Concepts\Unpaved\KrayenhoffVanDeLeurDrainageFormula.cs" />
-    <Compile Include="Domain\Concepts\UnpavedEnums.cs" />
-    <Compile Include="Domain\Concepts\FeatureCoverageProviders\UnpavedFeatureCoverageProvider.cs" />
-    <Compile Include="Domain\CatchmentModelData.cs" />
-    <Compile Include="Domain\Concepts\Polder\PolderConcept.cs" />
-    <Compile Include="Domain\Concepts\UnpavedData.cs" />
-    <Compile Include="MeteoDataController.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RainfallRunoffModel.cs" />
-    <Compile Include="RainfallRunoffApplicationPlugin.cs" />
-    <Compile Include="SplitFunctionsBindingList.cs" />
-    <Compile Include="Validation\CatchmentMeteoDataValidator.cs" />
-    <Compile Include="Validation\HbvDataValidator.cs" />
-    <Compile Include="Validation\Polder\GreenhouseDataValidator.cs" />
-    <Compile Include="Validation\Polder\OpenWaterDataValidator.cs" />
-    <Compile Include="Validation\RainfallRunoffCatchmentDataValidator.cs" />
-    <Compile Include="Validation\RainfallRunoffMeteoValidator.cs" />
-    <Compile Include="Validation\Polder\PavedDataValidator.cs" />
-    <Compile Include="Validation\RainfallRunoffBasinValidator.cs" />
-    <Compile Include="Validation\RainfallRunoffModelValidator.cs" />
-    <Compile Include="RainfallRunoffOutputSettingData.cs" />
-    <Compile Include="Validation\RainfallRunoffSettingsValidator.cs" />
-    <Compile Include="Validation\Polder\UnpavedDataValidator.cs" />
-    <Compile Include="Validation\RainfallRunoffValidationHelper.cs" />
-    <Compile Include="Validation\SacramentoDataValidator.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
-      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
-      <Name>DelftTools.Hydro</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
-      <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
-      <Name>DeltaShell.Dimr</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
-      <Project>{368694EB-CB62-4008-A27C-37AFAC0FDF14}</Project>
-      <Name>DeltaShell.NGHS.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
-      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
-      <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj">
-      <Project>{0AE5102C-0560-4A9C-8197-A6D8CA99B5DE}</Project>
-      <Name>DeltaShell.NGHS.Utils</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
-      <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
-      <Project>{11330f89-2b3d-449d-9211-ea3e0d7f6cdc}</Project>
-      <Name>DeltaShell.Plugins.NetworkEditor</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj">
-      <Project>{5EA08B58-6125-4D81-8767-8152D1CA2FBD}</Project>
-      <Name>DeltaShell.Sobek.Readers</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="DelftTools.Controls.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DeltaShell.Plugins.NetCDF">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NHibernate">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\NHibernate.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\SharpMap.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FixedFiles\CROPFACT" />
-    <EmbeddedResource Include="FixedFiles\BERGCOEF" />
-    <EmbeddedResource Include="FixedFiles\CROP_OW.PRN" />
-    <EmbeddedResource Include="FixedFiles\KASGEBR" />
-    <EmbeddedResource Include="FixedFiles\KASINIT" />
-    <EmbeddedResource Include="FixedFiles\KASKLASS" />
-    <EmbeddedResource Include="FileWriter\Fixed\Bergcoef.cap" />
-    <EmbeddedResource Include="FileWriter\Fixed\CropData.Dat" />
-    <EmbeddedResource Include="FileWriter\Fixed\CropOwData.Dat" />
-    <EmbeddedResource Include="FileWriter\Fixed\DEFAULT.BUI" />
-    <EmbeddedResource Include="FileWriter\Fixed\DEFAULT.EVP" />
-    <EmbeddedResource Include="FileWriter\Fixed\EVAPOR.GEM" />
-    <EmbeddedResource Include="FileWriter\Fixed\EVAPOR.PLV" />
-    <EmbeddedResource Include="FileWriter\Fixed\KasGebrData.Dat" />
-    <EmbeddedResource Include="FileWriter\Fixed\KasInitData.Dat" />
-    <EmbeddedResource Include="FileWriter\Fixed\KasKlasData.Dat" />
-    <EmbeddedResource Include="FileWriter\Fixed\ROOT_SIM.INP" />
-    <EmbeddedResource Include="FileWriter\Fixed\Sobek_3b.fnm" />
-    <EmbeddedResource Include="FileWriter\Fixed\SOBEK_3B.LNG" />
-    <EmbeddedResource Include="FileWriter\Fixed\SoilData.Dat" />
-    <EmbeddedResource Include="FileWriter\Fixed\UNSA_SIM.INP" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RainfallRunoffModel.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\Meteo\MeteoData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Domain\RunoffBoundaryData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="RainfallRunoffBoundaryData.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="EngineParameter.hbm.xml" />
-    <EmbeddedResource Include="RainfallRunoffOutputSettingData.hbm.xml" />
-  </ItemGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy $(ProjectDir)Scripts $(OutDir)..\DeltaShell.Plugins.Toolbox\Scripts /s /y</PostBuildEvent>
-  </PropertyGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
+
+	<ItemGroup>
+		<PackageReference Include="log4net" Version="2.0.12">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="PostSharp" Version="5.0.55">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="PostSharp.Redist" Version="5.0.55">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="DelftTools.Controls.Swf">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Functions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Shell.Core">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Shell.Gui">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Units">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Utils">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DeltaShell.Plugins.NetCDF">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="GeoAPI">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="GeoAPI.CoordinateSystems">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="GeoAPI.Extensions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="NetTopologySuite">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="NetTopologySuite.Extensions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="NHibernate">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\NHibernate.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="SharpMap">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="SharpMap.Api">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="SharpMap.Extensions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="System" />
+		<Reference Include="System.Data" />
+		<Reference Include="System.Drawing" />
+		<Reference Include="System.Xml" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="FixedFiles\**" />
+		<EmbeddedResource Include="FileWriter\Fixed\**" />
+	</ItemGroup>
 </Project>

@@ -1,0 +1,22 @@
+<Project>
+  <Import Project="Source.targets" />
+  <ItemGroup>
+    <AssemblyAttribute Include="Mono.Addins.Addin">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="Mono.Addins.AddinDependency">
+      <_Parameter1>DeltaShellApplication</_Parameter1>
+      <_Parameter2>1.0</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <!-- Implicitly DeltaShell.Framework will be included by the DeltaShell.ApplicationPlugin reference.-->
+    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.736" IncludeAssets="compile" PrivateAssets="all"/>
+    <PackageReference Include="Mono.Addins" Version="1.3.8" IncludeAssets="compile" PrivateAssets="all"/>
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+  </PropertyGroup>
+</Project>

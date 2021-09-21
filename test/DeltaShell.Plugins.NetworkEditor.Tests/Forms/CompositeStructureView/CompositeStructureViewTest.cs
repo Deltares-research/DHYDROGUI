@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using DelftTools.Hydro;
@@ -30,7 +31,7 @@ using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class CompositeStructureViewTest
     {

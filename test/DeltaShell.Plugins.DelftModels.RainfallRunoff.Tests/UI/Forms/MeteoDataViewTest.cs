@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
@@ -11,7 +12,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class MeteoDataViewTest
     {
         [Test]

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels;
@@ -14,7 +15,7 @@ using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.ViewModels
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class HydroModelTimeSettingsViewModelTest
     {
         [Test]

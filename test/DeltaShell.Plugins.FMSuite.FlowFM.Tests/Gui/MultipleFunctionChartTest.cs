@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.TestUtils;
@@ -10,7 +11,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class MultipleFunctionChartTest
     {

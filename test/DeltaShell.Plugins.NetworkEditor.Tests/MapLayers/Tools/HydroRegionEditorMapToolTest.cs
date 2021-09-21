@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf;
 using DelftTools.Functions.Filters;
@@ -36,7 +37,7 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class HydroRegionEditorMapToolTest
     {
         private Form geometryEditorForm;

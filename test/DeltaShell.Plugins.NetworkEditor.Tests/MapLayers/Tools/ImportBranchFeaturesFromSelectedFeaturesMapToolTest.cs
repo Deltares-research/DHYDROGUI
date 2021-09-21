@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -24,7 +25,7 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class ImportBranchFeaturesFromSelectedFeaturesMapToolTest
     {
         private IHydroNetwork network;

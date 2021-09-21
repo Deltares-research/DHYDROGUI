@@ -65,21 +65,6 @@
     <Content Include="..\RealTimeControl\RealTimeControl_FeatureContent.wxi">
       <Link>RealTimeControl_FeatureContent.wxi</Link>
     </Content>
-    <Content Include="..\Scripts\FMScripts.wxi">
-      <Link>Scripts\FMScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Scripts\HydroModelScripts.wxi">
-      <Link>Scripts\HydroModelScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Scripts\NetworkEditorScripts.wxi">
-      <Link>Scripts\NetworkEditorScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Scripts\RainfallRunoffScripts.wxi">
-      <Link>Scripts\RainfallRunoffScripts.wxi</Link>
-    </Content>
-    <Content Include="..\Scripts\RealTimeControlScripts.wxi">
-      <Link>Scripts\RealTimeControlScripts.wxi</Link>
-    </Content>
     <Content Include="..\Sobek\ImportSobek2NetworkPlugin.wxi">
       <Link>ImportSobek2NetworkPlugin.wxi</Link>
     </Content>
@@ -142,7 +127,6 @@
   <ItemGroup>
     <Folder Include="Delft3D FM HMWQ_Manuals\" />
     <Folder Include="Delft3D FM HMWQ_Resources\" />
-    <Folder Include="Scripts" />
     <Folder Include="WixUI" />
     <Folder Include="Manuals\" />
     <Folder Include="Localization" />

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <?include ..\Scripts\FMScripts.wxi?>
   <?define flowfm_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.FlowFM\"?>
   <Directory Id="DeltaShell.Plugins.FMSuite.FlowFM" Name="DeltaShell.Plugins.FMSuite.FlowFM">
     <Component Id="FMPlugin" Guid="DC83C067-D310-43EF-91B1-2FABAAC52721">
       <File Id="DeltaShell.Plugins.FMSuite.FlowFM.dll" Source="$(var.flowfm_plugin_bin)DeltaShell.Plugins.FMSuite.FlowFM.dll" />
       <File Id="DeltaShell.Plugins.FMSuite.FlowFM.Gui.dll" Source="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.dll" />
       <File Id="System.ValueTuple.dll" Source="$(var.flowfm_plugin_bin)System.ValueTuple.dll" />
-      <File Id="System.ValueTuple.xml" Source="$(var.flowfm_plugin_bin)System.ValueTuple.xml" />
       <File Id="dflowfmprop.csv" Source="$(var.flowfm_plugin_bin)dflowfm-properties.csv" />
       <File Id="structureproperties.csv" Source="$(var.flowfm_plugin_bin)structure-properties.csv" />
       <File Id="dflowfmmorprop.csv" Source="$(var.flowfm_plugin_bin)dflowfm-mor-properties.csv" />

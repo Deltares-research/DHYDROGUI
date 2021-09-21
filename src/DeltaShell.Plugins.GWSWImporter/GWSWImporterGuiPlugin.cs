@@ -28,10 +28,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         {
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
-        public override string FileFormatVersion
-        {
-            get { return FileVersionInfo.GetVersionInfo(GetType().Assembly.Location).FileVersion; }
-        }
+        public override string FileFormatVersion => "4.5.0.0";
 
         public override IGraphicsProvider GraphicsProvider { get; } = new GwswGraphicsProvider();
 

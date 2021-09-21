@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Grid;
@@ -16,7 +17,7 @@ using SharpMap.UI.Tools.Decorations;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class UnstructuredGridVertexFillCoverageLayerTest
     {
         [Test]

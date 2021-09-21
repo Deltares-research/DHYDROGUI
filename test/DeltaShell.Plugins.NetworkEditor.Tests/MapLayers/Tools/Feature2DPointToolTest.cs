@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
@@ -16,7 +17,7 @@ using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class Feature2DPointToolTest
     {
         [Test]

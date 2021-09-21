@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FeatureCoverageProviders;
@@ -9,7 +10,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class RainfallRunoffViewInfoBuilderTest
     {
         [Test]

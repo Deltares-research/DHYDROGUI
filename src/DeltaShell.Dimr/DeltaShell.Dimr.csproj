@@ -1,169 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeltaShell.Dimr</RootNamespace>
-    <AssemblyName>DeltaShell.Dimr</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug\plugins\DeltaShell.Dimr\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\Release\plugins\DeltaShell.Dimr\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="BasicModelInterface">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="ProtoBufRemote">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.Version.1D2D_A.cs">
-      <Link>Properties\AssemblyInfo.Version.1D2D_A.cs</Link>
-    </Compile>
-    <Compile Include="DimrApi.cs" />
-    <Compile Include="DimrApiDataSet.cs" />
-    <Compile Include="DimrApiFactory.cs" />
-    <Compile Include="DimrApiWrapper.cs" />
-    <Compile Include="DimrErrorCodeException.cs" />
-    <Compile Include="DimrRunHelper.cs" />
-    <Compile Include="DimrRunner.cs" />
-    <Compile Include="dimr_xsd\dimr.cs">
-      <DependentUpon>dimr.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="dimr_xsd\dimr.custom.cs" />
-    <Compile Include="dimr_xsd\DimrXMLSerializer.cs" />
-    <Compile Include="drtc_xsd\rtcRuntimeConfig.cs">
-      <DependentUpon>rtcRuntimeConfig.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="drtc_xsd\rtcRuntimeConfig.custom.cs" />
-    <Compile Include="IDimrApi.cs" />
-    <Compile Include="IDimrApiFactory.cs" />
-    <Compile Include="IDimrCoupling.cs" />
-    <Compile Include="IDimrModel.cs" />
-    <Compile Include="IDimrModelFileImporter.cs" />
-    <Compile Include="LoggerToProtoConverter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="RemoteDimrApi.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
-      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
-      <Name>DelftTools.Hydro</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
-      <Project>{ae78982b-8798-4b5a-9db4-fca8f5c8428b}</Project>
-      <Name>DeltaShell.NGHS.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="dimr_xsd\dimr.xsd" />
-    <Content Include="drtc_xsd\pi_diag.xsd" />
-    <Content Include="drtc_xsd\pi_modelparameters.xsd" />
-    <Content Include="drtc_xsd\pi_run.xsd" />
-    <Content Include="drtc_xsd\pi_sharedtypes.xsd" />
-    <Content Include="drtc_xsd\pi_state.xsd" />
-    <Content Include="drtc_xsd\pi_timeseries.xsd" />
-    <Content Include="drtc_xsd\rtcDataConfig.xsd" />
-    <Content Include="drtc_xsd\rtcObjectiveConfig.xsd" />
-    <Content Include="drtc_xsd\rtcRuntimeConfig.xsd" />
-    <Content Include="drtc_xsd\rtcSharedTypes.xsd" />
-    <Content Include="drtc_xsd\rtcStateConfig.xsd" />
-    <Content Include="drtc_xsd\rtcToolsConfig.xsd" />
-    <Content Include="drtc_xsd\treeVector.xsd" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Dimr.Libs.3.0.1.3647-1D2Dspecial-Signed\build\net40\Dimr.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Dimr.Libs.3.0.1.3647-1D2Dspecial-Signed\build\net40\Dimr.Libs.targets'))" />
-  </Target>
-  <PropertyGroup>
-    <PreBuildEvent>cd "$(ProjectDir)\drtc_xsd"
-      ..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd
-      cd "$(ProjectDir)\dimr_xsd"
-      ..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.DimrXsd</PreBuildEvent>
-    <PreBuildEvent>
-cd "$(ProjectDir)\drtc_xsd"
-..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd
-cd "$(ProjectDir)\dimr_xsd"
-..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.DimrXsd</PreBuildEvent>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\Dimr.Libs.3.0.1.3647-1D2Dspecial-Signed\build\net40\Dimr.Libs.targets" Condition="Exists('..\..\packages\Dimr.Libs.3.0.1.3647-1D2Dspecial-Signed\build\net40\Dimr.Libs.targets')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(SolutionDir)\Build\targets\Base.targets" />
+
+	<Target Name="PreBuild" BeforeTargets="CoreCompile">
+	<Exec Command="cd &quot;$(ProjectDir)\drtc_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd&#xD;&#xA;cd &quot;$(ProjectDir)\dimr_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.DimrXsd " />
+	<ItemGroup>
+		<Compile Include="dimr_xsd\dimr.cs;drtc_xsd\rtcRuntimeConfig.cs" />
+	</ItemGroup>
+</Target>
+
+	<PropertyGroup>
+		<OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.736">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Dimr.Libs" Version="3.0.1.3647-1D2Dspecial-Signed" />
+		<PackageReference Include="log4net" Version="2.0.12">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="PostSharp" Version="5.0.55">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="PostSharp.Redist" Version="5.0.55">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="BasicModelInterface" Private="False">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+		</Reference>
+		<Reference Include="DelftTools.Shell.Core" Private="False">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="DelftTools.Utils" Private="False">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+		</Reference>
+		<Reference Include="ProtoBufRemote" Private="False">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
+		</Reference>
+		<Reference Include="System" />
+		<Reference Include="System.Core" />
+		<Reference Include="System.Xml" />
+	</ItemGroup>
 </Project>

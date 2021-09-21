@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
@@ -7,7 +8,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class WpfGuiCategoryTest
     {
         [Test]

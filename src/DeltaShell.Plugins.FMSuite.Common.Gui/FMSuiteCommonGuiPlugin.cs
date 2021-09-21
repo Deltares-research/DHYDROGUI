@@ -126,10 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
 
-        public override string FileFormatVersion
-        {
-            get { return "1.0.0.0"; }
-        }
+        public override string FileFormatVersion => "1.0.0.0";
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {

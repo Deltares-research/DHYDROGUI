@@ -28,10 +28,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
 
-        public override string FileFormatVersion
-        {
-            get { return "1.1.0.0"; }
-        }
+        public override string FileFormatVersion => "1.1.0.0";
 
         public override IEnumerable<ProjectTemplate> ProjectTemplates()
         {

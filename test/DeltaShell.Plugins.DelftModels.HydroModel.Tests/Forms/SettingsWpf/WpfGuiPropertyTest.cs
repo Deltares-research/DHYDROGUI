@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
@@ -9,7 +10,7 @@ using Rhino.Mocks;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class WpfGuiPropertyTest
     {
         [Test]

@@ -1,247 +1,94 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{855BC365-72E4-4BBE-997D-DC94AC58DC3F}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeltaShell.Plugins.ImportExport.GWSW.Tests</RootNamespace>
-    <AssemblyName>DeltaShell.Plugins.ImportExport.GWSW.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="DelftTools.Controls">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.TestUtils">
-      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.736\lib\net40\DelftTools.TestUtils.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DeltaShell.Plugins.Scripting">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Dynamic">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.Scripting">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Scripting.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="QuickGraph">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpMap.Api, Version=1.5.0.48233, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ASewerCompartmentGeneratorTest.cs" />
-    <Compile Include="CompartmentShapeConverterTest.cs" />
-    <Compile Include="Gui\Views\GwswImportControlTest.cs" />
-    <Compile Include="Gui\Views\GwswImportDialogTest.cs" />
-    <Compile Include="Gui\Views\SeparatorTypeCharacterExtensionsTest.cs" />
-    <Compile Include="IO\Importers\DefinitionsProviderTest.cs" />
-    <Compile Include="IO\Importers\DefinitionsVersionProviderTest.cs" />
-    <Compile Include="IO\Importers\GwswFileImporterTest.cs" />
-    <Compile Include="IO\Importers\GwswFileImporterTestHelper.cs" />
-    <Compile Include="ISewerFeatureTest.cs" />
-    <Compile Include="NwrwDischargeDataTest.cs" />
-    <Compile Include="NwrwSurfaceDataTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SewerCompartmentGeneratorTest.cs" />
-    <Compile Include="SewerCompartmentOutletTest.cs" />
-    <Compile Include="SewerConnectionGeneratorTest.cs" />
-    <Compile Include="SewerConnectionOrificeGeneratorTest.cs" />
-    <Compile Include="SewerConnectionPipeGeneratorTest.cs" />
-    <Compile Include="SewerCrossSectionDefinitionGeneratorTest.cs" />
-    <Compile Include="SewerFeatureFactoryTest.cs" />
-    <Compile Include="SewerFeatureFactoryTestHelper.cs" />
-    <Compile Include="SewerFeatures\GwswStructurePumpTest.cs" />
-    <Compile Include="SewerFeatures\GwswOrificeTest.cs" />
-    <Compile Include="SewerProfileDefinitionGenerationTest.cs" />
-    <Compile Include="SewerPumpGeneratorTest.cs" />
-    <Compile Include="SewerWeirGeneratorTest.cs" />
-    <Compile Include="WaterTypeConverterTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
-      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
-      <Name>DelftTools.Hydro</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
-      <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
-      <Name>DeltaShell.Dimr</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
-      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
-      <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj">
-      <Project>{6F5B9016-2DD7-4148-BA0B-0167B9E57D78}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.HydroModel</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj">
-      <Project>{1D52125E-F765-4D51-80C8-F9A67C6BE3D1}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.RainfallRunoff</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
-      <Project>{368694eb-cb62-4008-a27c-37afac0fdf14}</Project>
-      <Name>DeltaShell.NGHS.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
-      <Project>{33e367f7-fc78-4e22-8213-4374cbfb86cb}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
-      <Project>{56103155-E7A6-45D7-BA64-50A6F9D81B94}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.GWSWImporter\DeltaShell.Plugins.ImportExport.GWSW.csproj">
-      <Project>{f456b556-d969-4768-9e3f-f151a387071b}</Project>
-      <Name>DeltaShell.Plugins.ImportExport.GWSW</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj">
-      <Project>{5ea08b58-6125-4d81-8767-8152d1ca2fbd}</Project>
-      <Name>DeltaShell.Sobek.Readers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj">
-      <Project>{49CD81DC-63D2-4A23-818E-ADE790E1D9D8}</Project>
-      <Name>DelftTools.Hydro.Tests</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj">
-      <Project>{2D52249A-F256-49CD-A3F3-3A2EC3944CA7}</Project>
-      <Name>DeltaShell.Plugins.NetworkEditor.Tests</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.2.0.0.736\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.2.0.0.736\build\net40\DeltaShell.TestProject.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <PropertyGroup>
-    <PostBuildEvent>
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.736\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.2.0.0.736\test-data\DelftTools.TestUtils
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.736\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
-</PostBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <!-- Exclude the project from analysis -->
-    <SonarQubeExclude>true</SonarQubeExclude>
-  </PropertyGroup>
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\DeltaShell.TestProject.2.0.0.736\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.2.0.0.736\build\net40\DeltaShell.TestProject.targets')" />
+	<ItemGroup>
+		<PackageReference Include="RhinoMocks">
+			<Version>3.6.1</Version>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel\DeltaShell.Plugins.DelftModels.HydroModel.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RainfallRunoff\DeltaShell.Plugins.DelftModels.RainfallRunoff.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.Plugins.GWSWImporter\DeltaShell.Plugins.ImportExport.GWSW.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.Sobek.Readers\DeltaShell.Sobek.Readers.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DelftTools.Hydro.Tests\DelftTools.Hydro.Tests.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.Plugins.NetworkEditor.Tests\DeltaShell.Plugins.NetworkEditor.Tests.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="DelftTools.Controls">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Functions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Shell.Core">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Units">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Utils">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DeltaShell.Plugins.Scripting">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="GeoAPI">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="GeoAPI.Extensions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Dynamic">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Microsoft.Scripting">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Scripting.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="NetTopologySuite">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="NetTopologySuite.Extensions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="PresentationCore" />
+		<Reference Include="PresentationFramework" />
+		<Reference Include="QuickGraph">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="SharpMap.Api">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="System" />
+		<Reference Include="System.Core" />
+		<Reference Include="System.Data" />
+		<Reference Include="System.Xml" />
+		<Reference Include="WindowsBase" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Properties\" />
+	</ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -40,7 +41,7 @@ using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class DeltaShellNetworkEditorIntegrationTest
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DeltaShellNetworkEditorIntegrationTest));

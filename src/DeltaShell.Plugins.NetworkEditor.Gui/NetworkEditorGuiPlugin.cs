@@ -118,10 +118,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
 
-        public override string FileFormatVersion
-        {
-            get { return "3.5.0.0"; }
-        }
+        public override string FileFormatVersion => "3.5.0.0";
 
         public override IGui Gui
         {

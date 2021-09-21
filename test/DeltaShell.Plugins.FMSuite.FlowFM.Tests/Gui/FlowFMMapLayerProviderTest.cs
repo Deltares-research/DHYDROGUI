@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Functions;
@@ -47,7 +48,7 @@ using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class FlowFMMapLayerProviderTest
     {

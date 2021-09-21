@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
@@ -24,7 +25,7 @@ using SharpTestsEx;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class NetworkEditorMapLayerProviderTest
     {
         [Test]

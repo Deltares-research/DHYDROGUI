@@ -1,11 +1,12 @@
-﻿using System.Windows.Controls;
+﻿using System.Threading;
+using System.Windows.Controls;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class RainfallRunoffGuiIntegrationTests
     {
         [Test]

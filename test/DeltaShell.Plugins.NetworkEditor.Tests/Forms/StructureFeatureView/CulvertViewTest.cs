@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Windows;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
@@ -12,7 +13,7 @@ using FlowDirection = DelftTools.Hydro.FlowDirection;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class CulvertViewTest
     {
         [Test]

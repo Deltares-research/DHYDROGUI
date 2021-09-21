@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
@@ -20,7 +21,7 @@ using Point = NetTopologySuite.Geometries.Point;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
 {
     // TODO : move to SharpMap tests
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class UnstructuredGridLayerTest
     {

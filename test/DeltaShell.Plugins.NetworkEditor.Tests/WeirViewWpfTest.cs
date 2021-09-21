@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System.Threading;
+using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView;
@@ -7,7 +8,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class WeirViewWpfTest
     {
         [Test, Category(TestCategory.WindowsForms)]

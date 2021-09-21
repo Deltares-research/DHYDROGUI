@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
@@ -38,7 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 {
     [TestFixture]
     [Category(TestCategory.DataAccess)]
-    [Category(TestCategory.Slow)]
+    [Category(TestCategory.Slow), Apartment(ApartmentState.STA)]
     public class NHibernateNetCdfFunctionStoreTest
     {
         private NHibernateProjectRepository projectRepository;

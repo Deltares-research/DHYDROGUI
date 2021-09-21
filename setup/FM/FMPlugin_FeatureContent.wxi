@@ -6,8 +6,6 @@
   <ComponentRef Id="GridEditorPlugin"/>
   <ComponentRef Id="GridEditorPluginLib"/>
   <ComponentRef Id="GWSWImporterPlugin"/>
-  <ComponentRef Id="network_editor_scripts_examples_files"/>
-  <ComponentRef Id="network_editor_scripts_libraries_files"/>
 
   <ComponentRef Id="ImportSobek2NetworkPlugin"/>
   
@@ -17,8 +15,6 @@
   <ComponentRef Id="Dimr"/>
 
   <ComponentRef Id="FMPlugin"/>
-  <ComponentRef Id="fm_scripts_examples_files"/>
-  <ComponentRef Id="fm_scripts_libraries_files"/>
   
   <!-- Wanted to add this to a separate feature with conditions, but couldn't manage to get it to work.-->
   <ComponentRef Id="HydroModelPlugin"/>

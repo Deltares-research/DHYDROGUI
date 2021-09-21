@@ -340,7 +340,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             var addInterpolatedCrossSectionTool = new NewPointFeatureTool(FeatureTypeLayerFilter<CrossSection>, AddInterpolatedCrossSectionToolName) { Cursor = AddInterpolatedCrossSectionToolCursor };
             AddMapTool(addInterpolatedCrossSectionTool);
 
-            MapControl.ActivateTool(MapControl.SelectTool);
+            //MapControl.ActivateTool(MapControl.SelectTool);
         }
 
         private static bool HydroNetworkFilter(ILayer layer)

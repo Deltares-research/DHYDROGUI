@@ -1,4 +1,5 @@
-﻿using DelftTools.Hydro.Structures;
+﻿using System.Threading;
+using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDataEditor;
@@ -8,7 +9,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinateDataEditor
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class ModelFeatureCoordinateDataViewTest
     {
         [Test, Category(TestCategory.WindowsForms)]

@@ -1,9 +1,10 @@
-﻿using System.Windows.Threading;
+﻿using System.Threading;
+using System.Windows.Threading;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.Common.Tests
 {
-    [SetUpFixture]
+    [SetUpFixture, Apartment(ApartmentState.STA)]
     public class TestClassSetup
     {
         [OneTimeTearDown]

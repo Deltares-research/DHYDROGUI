@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
@@ -12,7 +13,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class TimeDependentFeatureCoverageViewTest
     {

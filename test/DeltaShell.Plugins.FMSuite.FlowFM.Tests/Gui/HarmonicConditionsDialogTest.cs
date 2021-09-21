@@ -1,10 +1,11 @@
-﻿using DelftTools.TestUtils;
+﻿using System.Threading;
+using DelftTools.TestUtils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class HarmonicConditionsDialogTest
     {

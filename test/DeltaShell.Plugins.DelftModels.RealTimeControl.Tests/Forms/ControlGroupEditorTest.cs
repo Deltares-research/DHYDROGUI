@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using DelftTools.Controls;
@@ -35,7 +36,7 @@ using Clipboard = DelftTools.Controls.Clipboard;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class ControlGroupEditorTest
     {
         private MockRepository mocks;

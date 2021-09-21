@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
@@ -29,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
      TEST NOTES:
      Due to the file locks, if one of the tests fails with an unhandled exception, the rest could also fall in waterfall (the file will remain locked until leaving this test fixture).
      Take that into account when 'fixing' tests here.         */
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class FMOutputSnappedFeaturesGroupLayerDataTest
     {
         [Test]

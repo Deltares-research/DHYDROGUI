@@ -2,8 +2,6 @@
 <Include>
   <!-- Wanted to add this to a separate feature with conditions, but couldn't manage to get it to work.-->
   <ComponentRef Id="RealTimeControlPluginDll"/>
-  <ComponentRef Id="RealTimeControl_scripts_examples_files"/>
-  <ComponentRef Id="RealTimeControl_scripts_libraries_files"/>
 
   <?ifndef var.NOKERNELS?>
   <Feature Id="RTC_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">

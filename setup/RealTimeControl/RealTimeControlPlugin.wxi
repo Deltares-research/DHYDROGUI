@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <?include ..\Scripts\RealTimeControlScripts.wxi?>
   <?define rtc_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RealTimeControl\"?>
   <?define rtc_gui_plugin_bin="$(var.deltashell_output_folder)plugins\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\"?>
   <Directory Id="RealTimeControl" Name="DeltaShell.Plugins.RealTimeControl">

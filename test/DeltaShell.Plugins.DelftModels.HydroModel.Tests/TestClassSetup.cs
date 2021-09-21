@@ -1,10 +1,11 @@
-﻿using System.Windows;
+﻿using System.Threading;
+using System.Windows;
 using System.Windows.Threading;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
-    [SetUpFixture]
+    [SetUpFixture, Apartment(ApartmentState.STA)]
     public class TestClassSetup
     {
         [OneTimeSetUp]

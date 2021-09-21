@@ -1,3 +1,4 @@
+using System.Threading;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
@@ -6,7 +7,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CaseAnalysis
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class CoverageAnalysisViewTest
     {
         [Test]

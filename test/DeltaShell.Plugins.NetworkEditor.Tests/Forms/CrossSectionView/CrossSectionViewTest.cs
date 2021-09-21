@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.TestUtils;
@@ -14,7 +15,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView
     /// Since most functionality is kept on CrossSectionDefinitionView the tests here should only be 
     /// about the wrapper view : CrossSectionView
     /// </summary>
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class CrossSectionViewTest
     {

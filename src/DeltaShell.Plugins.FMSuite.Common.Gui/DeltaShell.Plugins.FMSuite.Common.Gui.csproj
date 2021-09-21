@@ -1,482 +1,131 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7F3D15D6-3425-47A6-AFD4-9B6E054EE8BE}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeltaShell.Plugins.FMSuite.Common.Gui</RootNamespace>
-    <AssemblyName>DeltaShell.Plugins.FMSuite.Common.Gui</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="DelftTools.Controls">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Controls.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Shell.Gui.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="QuickGraph">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\SharpMap.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SharpMap.UI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.Version.1D2D_A.cs">
-      <Link>Properties\AssemblyInfo.Version.1D2D_A.cs</Link>
-    </Compile>
-    <Compile Include="Editors\ListBoxItemRemovingEventArgs.cs" />
-    <Compile Include="ExtrapolationTypeQh.cs" />
-    <Compile Include="FeatureCollectionViewInfoHelper.cs" />
-    <Compile Include="FileBasedWindDefinitionView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="FileBasedWindDefinitionView.Designer.cs">
-      <DependentUpon>FileBasedWindDefinitionView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FileSelectionControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="FileSelectionControl.Designer.cs">
-      <DependentUpon>FileSelectionControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FMSuiteCommonGuiPlugin.cs" />
-    <Compile Include="FMMenuItemHelper.cs" />
-    <Compile Include="Forms\AstroComponentSelection.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AstroComponentSelection.Designer.cs">
-      <DependentUpon>AstroComponentSelection.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\BoundaryConditionEditorController.cs" />
-    <Compile Include="Editors\BoundaryConditionPropertiesControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\BoundaryConditionPropertiesControl.Designer.cs">
-      <DependentUpon>BoundaryConditionPropertiesControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\BoundaryConditionEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\BoundaryConditionEditor.Designer.cs">
-      <DependentUpon>BoundaryConditionEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\Buttons\ToolboxesPanel.cs" />
-    <Compile Include="Forms\InterpolationTypeBoundaryQh.cs" />
-    <Compile Include="Forms\InterpolationTypeBoundaryTime.cs" />
-    <Compile Include="Forms\Model1DBoundaryNodeDataProperties.cs" />
-    <Compile Include="Forms\Model1DBoundaryNodeDataViewWpf.xaml.cs">
-      <DependentUpon>Model1DBoundaryNodeDataViewWpf.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Model1DBoundaryNodeDataViewWpfViewModel.cs" />
-    <Compile Include="Forms\Model1DLateralDataProperties.cs" />
-    <Compile Include="Forms\Model1DLateralSourceDataViewWpf.xaml.cs">
-      <DependentUpon>Model1DLateralSourceDataViewWpf.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Model1DLateralSourceDataViewWpfViewModel.cs" />
-    <Compile Include="Forms\WindowsFormsHostFunctionView.cs" />
-    <Compile Include="NodePresenters\WaterFlowModel1DBoundaryNodeDataProjectNodePresenter.cs" />
-    <Compile Include="NodePresenters\WaterFlowModel1DLateralDataProjectNodePresenter.cs" />
-    <Compile Include="Forms\SupportPointMode.cs" />
-    <Compile Include="Forms\SupportPointPropertiesForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SupportPointPropertiesForm.Designer.cs">
-      <DependentUpon>SupportPointPropertiesForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\SupportPointSelectionForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\SupportPointSelectionForm.Designer.cs">
-      <DependentUpon>SupportPointSelectionForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\Buttons\SetCoordinateSystemButton.cs" />
-    <Compile Include="Editors\DepthLayerControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\DepthLayerControl.Designer.cs">
-      <DependentUpon>DepthLayerControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\DepthLayerDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DepthLayerDialog.Designer.cs">
-      <DependentUpon>DepthLayerDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\ListBoxItemRemovedEventArgs.cs" />
-    <Compile Include="Editors\RemoveableItemsListBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Editors\RemoveableItemsListBox.Designer.cs">
-      <DependentUpon>RemoveableItemsListBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\MultipleFunctionChart.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Editors\MultipleFunctionChart.Designer.cs">
-      <DependentUpon>MultipleFunctionChart.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\SupportPointListBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Editors\VerticalProfileControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Editors\VerticalProfileControl.Designer.cs">
-      <DependentUpon>VerticalProfileControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\VerticalProfileDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\VerticalProfileDialog.Designer.cs">
-      <DependentUpon>VerticalProfileDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ModelTreeShortcut.cs" />
-    <Compile Include="NodePresenters\ContextMenuFactory.cs" />
-    <Compile Include="NodePresenters\FMSuiteNodePresenterBase.cs" />
-    <Compile Include="NodePresenters\ModelTreeShortcutNodePresenterBase.cs" />
-    <Compile Include="Properties\PluginInfo.cs" />
-    <Compile Include="ShortCutType.cs" />
-    <Compile Include="TimeArgumentConfigurer.cs" />
-    <Compile Include="ITabbedModelView.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="RgfGrid\RgfGridEditor.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
-      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
-      <Name>DelftTools.Hydro</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
-      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
-      <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
-      <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="FileBasedWindDefinitionView.resx">
-      <DependentUpon>FileBasedWindDefinitionView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FileSelectionControl.resx">
-      <DependentUpon>FileSelectionControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AstroComponentSelection.resx">
-      <DependentUpon>AstroComponentSelection.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\BoundaryConditionPropertiesControl.resx">
-      <DependentUpon>BoundaryConditionPropertiesControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\BoundaryConditionEditor.resx">
-      <DependentUpon>BoundaryConditionEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SupportPointPropertiesForm.resx">
-      <DependentUpon>SupportPointPropertiesForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SupportPointSelectionForm.resx">
-      <DependentUpon>SupportPointSelectionForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\DepthLayerControl.resx">
-      <DependentUpon>DepthLayerControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DepthLayerDialog.resx">
-      <DependentUpon>DepthLayerDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\MultipleFunctionChart.resx">
-      <DependentUpon>MultipleFunctionChart.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\VerticalProfileControl.resx">
-      <DependentUpon>VerticalProfileControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\VerticalProfileDialog.resx">
-      <DependentUpon>VerticalProfileDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.nl-NL.resx" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Resources\arrow.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\add.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\refresh.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\arrow_down_large.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\polygon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\gradient.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\linetool.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\down.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\up.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\chart_curve.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\112_Plus_Blue_16x16_72.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\contour.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\merge.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\interpolate_fill.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\blur.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\boundary_folder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\boundary.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\waterLayers.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\diffusion.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\timers.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\validation.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\area2d.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\processes.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\folder_wrench.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\folder_output.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\output_param.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\bathymetry.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\set_coordinate_system.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="Resources\DeleteHS.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\delete.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\import.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\properties.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\document-tree.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\realtime.png" />
-    <None Include="Resources\linkOverlay.png" />
-    <None Include="Resources\none.png" />
-    <None Include="Resources\QHBoundary.png" />
-    <None Include="Resources\QConst.png" />
-    <None Include="Resources\QBoundary.png" />
-    <None Include="Resources\weir.png" />
-    <None Include="Resources\pump.png" />
-    <None Include="Resources\landboundary.png" />
-    <None Include="Resources\fixedweir.png" />
-    <None Include="Resources\dry_point.png" />
-    <None Include="Resources\dry_area.png" />
-    <None Include="Resources\gate.png" />
-    <None Include="Resources\HConst.png" />
-    <None Include="Resources\HBoundary.png" />
-    <Content Include="Resources\Boundary_1d.png" />
-    <Content Include="Resources\hurricane2.png" />
-    <None Include="Resources\thindam.png" />
-    <Resource Include="Resources\Observation.png" />
-    <Resource Include="Resources\ObservationCS.png" />
-    <None Include="Resources\settings.png" />
-    <None Include="Resources\hurricane_del.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Forms\Model1DBoundaryNodeDataViewWpf.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Forms\Model1DLateralSourceDataViewWpf.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\RGFGRID.6.5.0.70663\build\net40\RGFGRID.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\RGFGRID.6.5.0.70663\build\net40\RGFGRID.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets'))" />
-  </Target>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\RGFGRID.6.5.0.70663\build\net40\RGFGRID.targets" Condition="Exists('..\..\packages\RGFGRID.6.5.0.70663\build\net40\RGFGRID.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<Import Project="$(SolutionDir)\Build\targets\Base.targets" />
+
+	<PropertyGroup>
+		<ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.736">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="log4net" Version="2.0.12">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="PostSharp" Version="5.0.55">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="PostSharp.Redist" Version="5.0.55">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="RGFGRID" Version="6.5.0.70663">
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+        <Reference Include="DelftTools.Controls">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="DelftTools.Controls.Swf">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="DelftTools.Functions">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="DelftTools.Shell.Core">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="DelftTools.Shell.Gui">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="DelftTools.Shell.Gui.Swf">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="DelftTools.Units">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="DelftTools.Utils">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="GeoAPI">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="GeoAPI.CoordinateSystems">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="GeoAPI.Extensions">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="NetTopologySuite">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="NetTopologySuite.Extensions">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="PresentationCore" />
+        <Reference Include="PresentationFramework" />
+        <Reference Include="QuickGraph">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="SharpMap">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="SharpMap.Api">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="SharpMap.Extensions">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="SharpMap.UI">
+          <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
+          <Private>False</Private>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Drawing" />
+        <Reference Include="System.Windows.Forms" />
+        <Reference Include="System.Xaml" />
+        <Reference Include="System.Xml" />
+        <Reference Include="WindowsBase" />
+        <Reference Include="WindowsFormsIntegration" />
+	</ItemGroup>
 </Project>

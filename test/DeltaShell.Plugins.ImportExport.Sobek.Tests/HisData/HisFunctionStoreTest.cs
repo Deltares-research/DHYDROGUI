@@ -5,9 +5,9 @@ using DelftTools.Functions.Filters;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.ImportExport.Sobek.HisData;
-using DeltaShell.Sobek.Readers.Readers;
 using GeoAPI.Extensions.Coverages;
 using NUnit.Framework;
+using HisFileReader = DeltaShell.Sobek.Readers.Readers.HisFileReader;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.HisData
 {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf;
@@ -23,7 +24,7 @@ using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class HydroRegionTreeViewTest
     {
         private MockRepository mocks = new MockRepository();

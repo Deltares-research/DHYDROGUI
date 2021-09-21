@@ -1,10 +1,11 @@
+using System.Threading;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class RainfallRunoffBoundaryDataViewTest
     {

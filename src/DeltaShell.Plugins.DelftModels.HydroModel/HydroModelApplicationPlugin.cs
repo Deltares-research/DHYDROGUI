@@ -49,11 +49,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
 
-        public override string FileFormatVersion
-        {
-            get { return "1.1.1.0"; }
-        }
-        
+        public override string FileFormatVersion => "1.1.1.0";
+
         public override IApplication Application
         {
             get

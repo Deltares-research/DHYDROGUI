@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
@@ -12,7 +13,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Editors
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class WaterFlowFMModelViewWPFTest
     {
 

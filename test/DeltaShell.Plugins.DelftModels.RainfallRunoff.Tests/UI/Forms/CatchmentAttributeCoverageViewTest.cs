@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
@@ -11,7 +12,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class CatchmentAttributeCoverageViewTest
     {

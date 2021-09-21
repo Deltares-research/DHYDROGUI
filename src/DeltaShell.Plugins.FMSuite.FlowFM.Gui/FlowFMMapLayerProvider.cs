@@ -310,24 +310,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 return featureCoverageLayer;
             }
 
-            if (data is Links1D2DCoverage link1d2dCoverage)
-            {
-                // Create link 1d2d coverage layer
-                var featureCoverageLayer = new FeatureCoverageLayer()
-                {
-                    FeatureCoverage = link1d2dCoverage,
-                    Name = link1d2dCoverage.Name,
-                    NameIsReadOnly = !link1d2dCoverage.IsEditable,
-                };
-
-                if (link1d2dCoverage.CoordinateSystem != null)
-                {
-                    featureCoverageLayer.DataSource.CoordinateSystem = link1d2dCoverage.CoordinateSystem;
-                }
-
-                return featureCoverageLayer;
-            }
-
             if (data is FrictionGroupLayerData)
             {
                 return new GroupLayer("Roughness Data 1D")
@@ -445,7 +427,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                    || data is IEventedList<Model1DBoundaryNodeData>
                    || data is IEventedList<Model1DLateralSourceData>
                    || data is FeatureCoverage && IsCoverageLeveeBreachWidth((FeatureCoverage) data)
-                   || data is Links1D2DCoverage
                    || data is IEventedList<ILink1D2D> &&
                    (parentObject is WaterFlowFMModel || parentObject is FMMapFileFunctionStore)
                    || data is IList<ILink1D2D> &&

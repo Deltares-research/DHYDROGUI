@@ -45,7 +45,7 @@ using SharpMapTestUtils;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     [Category(TestCategory.WindowsForms)]
     public class HydroModelGuiIntegrationTest
     {

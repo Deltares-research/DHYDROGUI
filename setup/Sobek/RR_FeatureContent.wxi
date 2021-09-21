@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
   <ComponentRef Id="RainfallRunoffModelPlugin"/>
-  <ComponentRef Id="RainfallRunoff_scripts_examples_files"/>
-  <ComponentRef Id="RainfallRunoff_scripts_libraries_files"/>
 
-  
   <Feature Id="RR_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
     <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
   </Feature>

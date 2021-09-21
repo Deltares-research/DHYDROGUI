@@ -99,6 +99,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Utils", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeltaShell.NGHS.Utils.Test", "test\DeltaShell.NGHS.Utils.Test\DeltaShell.NGHS.Utils.Test.csproj", "{8BA40318-60B7-4C40-88A1-F30EEFCA3264}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{A791355F-6EDC-4172-94CE-FB7AB2F42D07}"
+ProjectSection(SolutionItems) = preProject
+	Build\targets\Base.targets = Build\targets\Base.targets
+	Build\targets\Plugin.targets = Build\targets\Plugin.targets
+	Build\targets\Source.targets = Build\targets\Source.targets
+	Build\targets\Test.targets = Build\targets\Test.targets
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

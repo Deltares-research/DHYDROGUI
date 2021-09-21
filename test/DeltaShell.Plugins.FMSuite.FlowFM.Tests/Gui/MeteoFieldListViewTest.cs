@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -10,6 +11,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
 {
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class MeteoFieldListViewTest
     {
         private static TableViewTimeSeriesGeneratorTool TableViewTimeSeriesGeneratorTool

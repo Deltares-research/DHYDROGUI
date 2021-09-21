@@ -88,10 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             get { return GetType().Assembly.GetName().Version.ToString(); }
         }
 
-        public override string FileFormatVersion
-        {
-            get { return "1.1.0.0"; }
-        }
+        public override string FileFormatVersion => "1.1.0.0";
 
         public override IGraphicsProvider GraphicsProvider
         {

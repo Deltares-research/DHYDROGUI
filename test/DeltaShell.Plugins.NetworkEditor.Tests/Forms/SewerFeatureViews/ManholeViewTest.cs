@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
@@ -11,7 +12,7 @@ using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.SewerFeatureViews
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class ManholeViewTest
     {
         [Test]

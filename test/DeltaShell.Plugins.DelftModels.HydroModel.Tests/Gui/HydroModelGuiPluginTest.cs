@@ -1,3 +1,4 @@
+using System.Threading;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NetTopologySuite.Extensions.Coverages;
@@ -6,7 +7,7 @@ using SharpMap.Layers;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Gui
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class HydroModelGuiPluginTest
     {
         [Test]

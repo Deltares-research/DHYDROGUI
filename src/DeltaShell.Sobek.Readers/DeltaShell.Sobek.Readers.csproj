@@ -1,307 +1,71 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5EA08B58-6125-4D81-8767-8152D1CA2FBD}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeltaShell.Sobek.Readers</RootNamespace>
-    <AssemblyName>DeltaShell.Sobek.Readers</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>$(SolutionDir)bin\Debug\plugins\DeltaShell.Plugins.ImportExport.Sobek</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>$(SolutionDir)bin\Release\plugins\DeltaShell.Plugins.ImportExport.Sobek</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.Version.1D2D_B.cs">
-      <Link>Properties\AssemblyInfo.Version.1D2D_B.cs</Link>
-    </Compile>
-    <Compile Include="NumUtils.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Readers\SobekCrossSectionsReader.cs" />
-    <Compile Include="Readers\SobekObjectTypeReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRBuiFileReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRCapacitiesReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRHbvHiniReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRHbvReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRHbvSnowReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRHbvSoilReader.cs" />
-    <Compile Include="Readers\SobekNetworkLinkageNodeFileReader.cs" />
-    <Compile Include="Readers\SobekNetworkNodeFileReader.cs" />
-    <Compile Include="Readers\SobekNodeFileReader.cs" />
-    <Compile Include="Readers\CrossSectionDefinitionReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRREvaporationReader.cs" />
-    <Compile Include="Readers\HisFileReader.cs" />
-    <Compile Include="Readers\InitalFlowConditionsReader.cs" />
-    <Compile Include="Readers\InitalSaltConditionsReader.cs" />
-    <Compile Include="Readers\ISobekStructureReader.cs" />
-    <Compile Include="Readers\MeasurementLocationIdGenerator.cs" />
-    <Compile Include="Readers\ResultTextFile.cs" />
-    <Compile Include="Readers\SaltLateralBoundaryReader.cs" />
-    <Compile Include="Readers\SaltNodeBoundaryReader.cs" />
-    <Compile Include="Readers\SobekBoundaryConditionReader.cs" />
-    <Compile Include="Readers\SobekBoundaryLocationReader.cs" />
-    <Compile Include="Readers\SobekBridgeReader.cs" />
-    <Compile Include="Readers\SobekCaseSettingsReader.cs" />
-    <Compile Include="Readers\SobekCompoundStructureReader.cs" />
-    <Compile Include="Readers\SobekControllerReader.cs" />
-    <Compile Include="Readers\SobekCulvertReader.cs" />
-    <Compile Include="Readers\SobekCurvePointReader.cs" />
-    <Compile Include="Readers\SobekDataTableReader.cs" />
-    <Compile Include="Readers\SobekFrictionDatFileReader.cs" />
-    <Compile Include="Readers\SobekGeneralStructureReader.cs" />
-    <Compile Include="Readers\SobekNetworkBranchFileReader.cs" />
-    <Compile Include="Readers\SobekReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRBoundaryReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRGreenhouseReader.cs" />
-    <Compile Include="Readers\SobekGridPointsReader.cs" />
-    <Compile Include="Readers\SobekLateralFlowReader.cs" />
-    <Compile Include="Readers\SobekMeasurementLocationReader.cs" />
-    <Compile Include="Readers\SobekNetworkNetterReader.cs" />
-    <Compile Include="Readers\SobekNetworkStructureReader.cs" />
-    <Compile Include="Readers\SobekOrificeReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRNwrwReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRNwrwSettingsReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRPavedReader.cs" />
-    <Compile Include="Readers\SobekPumpReader.cs" />
-    <Compile Include="Readers\SobekReDefRun1Reader.cs" />
-    <Compile Include="Readers\SobekReDefRun2Reader.cs" />
-    <Compile Include="Readers\SobekReExtraFrictionDatFileReader.cs" />
-    <Compile Include="Readers\SobekReIniSettingsReader.cs" />
-    <Compile Include="Readers\SobekRetentionsReader.cs" />
-    <Compile Include="Readers\SobekRiverAdvancedWeirReader.cs" />
-    <Compile Include="Readers\SobekRiverPumpReader.cs" />
-    <Compile Include="Readers\SobekRiverWeirReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRAlfaReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRDryWeatherFlowReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRErnstReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRGreenhouseSiloDefinitionReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRInfiltrationReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRIniSettings.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRLinkReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRNodeReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRROpenWaterReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRRationalMethodReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRSacramentoReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRSeepageReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRIniSettingsReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRStorageReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRTableReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRSacramentoParametersReader.cs" />
-    <Compile Include="Readers\SobekSaltGlobalDispersionReader.cs" />
-    <Compile Include="Readers\SobekSaltLocalDispersionReader.cs" />
-    <Compile Include="Readers\SobekStructureDatFileReader.cs" />
-    <Compile Include="Readers\SobekStructureDefFileReader.cs" />
-    <Compile Include="Readers\SobekTriggerReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRUnitHydrographReader.cs" />
-    <Compile Include="Readers\SobekUniversalWeirReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRUnpavedReader.cs" />
-    <Compile Include="Readers\SobekValveDataReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqBoundaryConditionsReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqDispersionReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqInitialConditionsReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqNetworkNetterReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqMeteoReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqNumericalSettingsReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqOutputTimersReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqProcessCoefficientsReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqReaderHelper.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqSimulationTimerReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqSpatialsReader.cs" />
-    <Compile Include="Readers\SobekWaqReaders\SobekWaqUserDefinedTypesReader.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRWasteWaterTreatmentPlantReader.cs" />
-    <Compile Include="Readers\SobekWeirReader.cs" />
-    <Compile Include="Readers\SobekWindReader.cs" />
-    <Compile Include="Readers\SobekProfileDatFileReader.cs" />
-    <Compile Include="SobekDataObjects\BranchGeometry.cs" />
-    <Compile Include="SobekDataObjects\ISobekCatchment.cs" />
-    <Compile Include="SobekDataObjects\MeteoStationsMeasurement.cs" />
-    <Compile Include="SobekDataObjects\CalcGrid.cs" />
-    <Compile Include="SobekDataObjects\CurvingPoint.cs" />
-    <Compile Include="SobekDataObjects\EngelundBedFriction.cs" />
-    <Compile Include="SobekDataObjects\FlowInitialCondition.cs" />
-    <Compile Include="SobekDataObjects\InitialCondition.cs" />
-    <Compile Include="SobekDataObjects\ISobekControllerProperties.cs" />
-    <Compile Include="SobekDataObjects\ISobekStructureDefinition.cs" />
-    <Compile Include="SobekDataObjects\SobekBedFriction.cs" />
-    <Compile Include="SobekDataObjects\SobekBoundaryConditions.cs" />
-    <Compile Include="SobekDataObjects\SobekBoundaryLocation.cs" />
-    <Compile Include="SobekDataObjects\SobekBoundaryLocationType.cs" />
-    <Compile Include="SobekDataObjects\SobekBranch.cs" />
-    <Compile Include="SobekDataObjects\SobekBranchLocation.cs" />
-    <Compile Include="SobekDataObjects\SobekBridge.cs" />
-    <Compile Include="SobekDataObjects\SobekCalcGridPoint.cs" />
-    <Compile Include="SobekDataObjects\SobekCaseData.cs" />
-    <Compile Include="SobekDataObjects\SobekCaseSettings.cs" />
-    <Compile Include="SobekDataObjects\SobekController.cs" />
-    <Compile Include="SobekDataObjects\SobekCrossSectionDefinition.cs" />
-    <Compile Include="SobekDataObjects\SobekCrossSectionFriction.cs" />
-    <Compile Include="SobekDataObjects\SobekCrossSectionMapping.cs" />
-    <Compile Include="SobekDataObjects\SobekCulvert.cs" />
-    <Compile Include="SobekDataObjects\SobekFlowBoundaryCondition.cs" />
-    <Compile Include="SobekDataObjects\SobekFriction.cs" />
-    <Compile Include="SobekDataObjects\SobekGeneralStructure.cs" />
-    <Compile Include="SobekDataObjects\SobekObjectTypeData.cs" />
-    <Compile Include="SobekDataObjects\SobekRRGreenhouse.cs" />
-    <Compile Include="SobekDataObjects\SobekHydraulicControllerProperties.cs" />
-    <Compile Include="SobekDataObjects\SobekIntervalControllerProperties.cs" />
-    <Compile Include="SobekDataObjects\SobekLateralFlow.cs" />
-    <Compile Include="SobekDataObjects\SobekLinkageNode.cs" />
-    <Compile Include="SobekDataObjects\SobekMeasurementLocation.cs" />
-    <Compile Include="SobekDataObjects\SobekNode.cs" />
-    <Compile Include="SobekDataObjects\SobekOrifice.cs" />
-    <Compile Include="SobekDataObjects\SobekRRNwrw.cs" />
-    <Compile Include="SobekDataObjects\SobekRRNwrwSettings.cs" />
-    <Compile Include="SobekDataObjects\SobekRRPaved.cs" />
-    <Compile Include="SobekDataObjects\SobekPidControllerProperties.cs" />
-    <Compile Include="SobekDataObjects\SobekPump.cs" />
-    <Compile Include="SobekDataObjects\SobekRetention.cs" />
-    <Compile Include="SobekDataObjects\SobekRiverAdvancedWeir.cs" />
-    <Compile Include="SobekDataObjects\SobekRiverWeir.cs" />
-    <Compile Include="SobekDataObjects\SobekRRAlfa.cs" />
-    <Compile Include="SobekDataObjects\SobekRRBoundary.cs" />
-    <Compile Include="SobekDataObjects\SobekRRCapacities.cs" />
-    <Compile Include="SobekDataObjects\SobekRRDryWeatherFlow.cs" />
-    <Compile Include="SobekDataObjects\SobekRRErnst.cs" />
-    <Compile Include="SobekDataObjects\SobekRRGreenhouseSiloDefinition.cs" />
-    <Compile Include="SobekDataObjects\SobekRRHbv.cs" />
-    <Compile Include="SobekDataObjects\SobekRRHbvFlow.cs" />
-    <Compile Include="SobekDataObjects\SobekRRHbvHini.cs" />
-    <Compile Include="SobekDataObjects\SobekRRHbvSnow.cs" />
-    <Compile Include="SobekDataObjects\SobekRRHbvSoil.cs" />
-    <Compile Include="SobekDataObjects\SobekRRInfiltration.cs" />
-    <Compile Include="SobekDataObjects\SobekRRLink.cs" />
-    <Compile Include="SobekDataObjects\SobekRRNode.cs" />
-    <Compile Include="SobekDataObjects\SobekRROpenWater.cs" />
-    <Compile Include="SobekDataObjects\SobekRRSacramentoParameters.cs" />
-    <Compile Include="SobekDataObjects\SobekRRSeepage.cs" />
-    <Compile Include="SobekDataObjects\SobekRRStorage.cs" />
-    <Compile Include="SobekDataObjects\SobekRRUnitHydrograph.cs" />
-    <Compile Include="SobekDataObjects\SobekRRSacramento.cs" />
-    <Compile Include="SobekDataObjects\SobekSaltBoundary.cs" />
-    <Compile Include="SobekDataObjects\SobekSaltGlobalDispersion.cs" />
-    <Compile Include="SobekDataObjects\SobekSaltLocalDispersion.cs" />
-    <Compile Include="SobekDataObjects\SobekSaltNodeBoundary.cs" />
-    <Compile Include="SobekDataObjects\SobekStructureDefinition.cs" />
-    <Compile Include="SobekDataObjects\SobekStructureFriction.cs" />
-    <Compile Include="SobekDataObjects\SobekStructureLocation.cs" />
-    <Compile Include="SobekDataObjects\SobekStructureMapping.cs" />
-    <Compile Include="SobekDataObjects\SobekTrigger.cs" />
-    <Compile Include="SobekDataObjects\SobekUniversalWeir.cs" />
-    <Compile Include="SobekDataObjects\SobekRRUnpaved.cs" />
-    <Compile Include="SobekDataObjects\SobekValveData.cs" />
-    <Compile Include="SobekDataObjects\SobekWaqNumericalSettings.cs" />
-    <Compile Include="SobekDataObjects\SobekWaqTimer.cs" />
-    <Compile Include="SobekDataObjects\SobekRRWasteWaterTreatmentPlant.cs" />
-    <Compile Include="SobekDataObjects\SobekWeir.cs" />
-    <Compile Include="SobekDataObjects\SobekWind.cs" />
-    <Compile Include="SobekFileNames.cs" />
-    <Compile Include="Readers\SobekRrReaders\SobekRRHbvFlowReader.cs" />
-    <Compile Include="SobekReaderHelper.cs" />
-    <Compile Include="SobekType.cs" />
-    <Compile Include="StringUtils.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
-      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
-      <Name>DelftTools.Hydro</Name>
-      <Private>False</Private>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.736\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Nini">
-      <HintPath>lib\Nini.dll</HintPath>
-    </Reference>
-    <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Uml\SobekReaders.cd" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.736\build\net461\DeltaShell.Framework.targets')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="$(SolutionDir)\Build\targets\Base.targets" />
+	
+	<PropertyGroup>
+		<OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\DeltaShell.Plugins.ImportExport.Sobek</OutputPath>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.736">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="log4net" Version="2.0.12">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="PostSharp" Version="5.0.55">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="PostSharp.Redist" Version="5.0.55">
+			<IncludeAssets>compile</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="DelftTools.Functions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Shell.Core">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Units">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="DelftTools.Utils">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="GeoAPI">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="GeoAPI.Extensions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="NetTopologySuite">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="NetTopologySuite.Extensions">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="Nini">
+			<HintPath>lib\Nini.dll</HintPath>
+		</Reference>
+		<Reference Include="System" />
+		<Reference Include="System.Data" />
+		<Reference Include="System.Data.DataSetExtensions" />
+		<Reference Include="System.Xml" />
+	</ItemGroup>
 </Project>

@@ -43,7 +43,7 @@ using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests
 {
-    [TestFixture]
+    [TestFixture, Apartment(ApartmentState.STA)]
     public class NetworkEditorGuiPluginTest
     {
         private static readonly MockRepository Mocks = new MockRepository();

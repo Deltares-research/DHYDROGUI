@@ -1,0 +1,21 @@
+<Project>
+  <Import Project="Base.targets" />
+  <PropertyGroup>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)</OutputPath>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="DeltaShell.TestProject" Version="2.0.0.736" PrivateAssets="all"/>
+    <PackageReference Include="NUnit" Version="3.12.0"/>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Remove="test-data\**" />
+    <EmbeddedResource Remove="test-data\**" />
+    <None Remove="test-data\**" />
+  </ItemGroup>
+  
+  <Target Name="TakeAction" AfterTargets="Build">
+    <Exec Command="$(PkgDeltaShell_TestProject)\tools\mklink-test-data.bat $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data" />
+  </Target>
+</Project>
