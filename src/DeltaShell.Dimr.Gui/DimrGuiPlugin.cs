@@ -55,13 +55,7 @@ namespace DeltaShell.Dimr.Gui
         }
 
         [ExcludeFromCodeCoverage]
-        public override string FileFormatVersion
-        {
-            get
-            {
-                return "1.0.0.0";
-            }
-        }
+        public override string FileFormatVersion => "1.0.0.0";
 
         public override IRibbonCommandHandler RibbonCommandHandler
         {

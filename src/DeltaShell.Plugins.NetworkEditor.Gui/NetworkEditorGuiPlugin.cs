@@ -88,13 +88,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
         }
 
-        public override string FileFormatVersion
-        {
-            get
-            {
-                return "3.5.0.0";
-            }
-        }
+        public override string FileFormatVersion => "3.5.0.0";
 
         public override IGui Gui
         {

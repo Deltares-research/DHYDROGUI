@@ -61,14 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        public override string FileFormatVersion
-
-        {
-            get
-            {
-                return "1.3.0.0";
-            }
-        }
+        public override string FileFormatVersion => "1.3.0.0";
 
         public override IApplication Application
         {

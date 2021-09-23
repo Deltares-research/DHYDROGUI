@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
@@ -27,12 +26,8 @@ using GeoAPI.Extensions.Networks;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
-using NetTopologySuite.Geometries;
-using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap.Converters.WellKnownText;
-using SharpTestsEx;
 
 namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
 {

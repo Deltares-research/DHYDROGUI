@@ -76,19 +76,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Xml
         }
 
         [Test]
-        public void TimeSeriesConfigCultureNlNL()
-        {
-            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("NL-NL");
-
-            XElement xElement = xmlTimeSeries.GetTimeSeriesXElementForTimeSeriesFile("", new TimeSpan(0, 1, 0, 0));
-
-            Thread.CurrentThread.CurrentCulture = currentCulture;
-
-            Assert.AreEqual(GetRefXml(), xElement.ToString(SaveOptions.DisableFormatting));
-        }
-
-        [Test]
         public void TimeSeriesBooleanToComplexType()
         {
             TimeSeries timeSeries = xmlTimeSeries.TimeSeries;

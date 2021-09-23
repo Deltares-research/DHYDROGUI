@@ -1,582 +1,185 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" />
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{19EC5699-52F8-4AD8-A888-C7B65F8F045B}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeltaShell.Plugins.FMSuite.FlowFM.Tests</RootNamespace>
-    <AssemblyName>DeltaShell.Plugins.FMSuite.FlowFM.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)\Build\targets\Test.targets" />
   <ItemGroup>
-    <Reference Include="AutoFixture, Version=4.13.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.4.13.0\lib\net452\AutoFixture.dll</HintPath>
-    </Reference>
-    <Reference Include="AutoFixture.AutoNSubstitute, Version=4.13.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.AutoNSubstitute.4.13.0\lib\net452\AutoFixture.AutoNSubstitute.dll</HintPath>
-    </Reference>
-    <Reference Include="AutoFixture.NUnit3, Version=4.13.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\AutoFixture.NUnit3.4.13.0\lib\net452\AutoFixture.NUnit3.dll</HintPath>
-    </Reference>
     <Reference Include="BasicModelInterface">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Castle.Core.4.4.0\lib\net45\Castle.Core.dll</HintPath>
-    </Reference>
     <Reference Include="DelftTools.Controls">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Controls.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Controls.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Gui.Swf">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="DelftTools.TestUtils">
-      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.749-beta\lib\net40\DelftTools.TestUtils.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.Swf.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DeltaShell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DeltaShell.Gui.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.CommonTools.Gui\DeltaShell.Plugins.CommonTools.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Data.NHibernate">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.NetCDF">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.ProjectExplorer">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.ProjectExplorer\DeltaShell.Plugins.ProjectExplorer.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Scripting">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting\DeltaShell.Plugins.Scripting.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Scripting.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.Scripting.Gui\DeltaShell.Plugins.Scripting.Gui.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting.Gui\DeltaShell.Plugins.Scripting.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis.Gui\DeltaShell.Plugins.SharpMapGis.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Toolbox">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.Toolbox\DeltaShell.Plugins.Toolbox.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Toolbox\DeltaShell.Plugins.Toolbox.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Toolbox.Gui">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.Toolbox.Gui\DeltaShell.Plugins.Toolbox.Gui.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Toolbox.Gui\DeltaShell.Plugins.Toolbox.Gui.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="DHYDRO.TestModels.Common, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\lib\net461\DHYDRO.TestModels.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="DHYDRO.TestModels.DFlowFM, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\lib\net461\DHYDRO.TestModels.DFlowFM.dll</HintPath>
-    </Reference>
-    <Reference Include="Fare, Version=2.1.0.0, Culture=neutral, PublicKeyToken=ea68d375bf33a7c8, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Fare.2.1.1\lib\net35\Fare.dll</HintPath>
-    </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Dynamic">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Scripting\Microsoft.Dynamic.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Nini">
       <HintPath>.\Nini.dll</HintPath>
     </Reference>
-    <Reference Include="NSubstitute, Version=4.2.0.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NSubstitute.4.2.2\lib\net46\NSubstitute.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
-    </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.UI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMapTestUtils">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\DeltaShell.TestProject.2.0.0.749-beta\lib\net40\SharpMapTestUtils.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_TestProject)\lib\net40\SharpMapTestUtils.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Api\FlexibleMeshModelDllTest.cs" />
-    <Compile Include="Api\GridOperationApiTest.cs" />
-    <Compile Include="Api\RemoteFlexibleMeshModelApiTest.cs" />
-    <Compile Include="Api\UnstrucGridOperationApiIntegrationTest.cs" />
-    <Compile Include="Api\UnstrucGridOperationApiTest.cs" />
-    <Compile Include="Coverages\PointValueArrayEqualityComparerTest.cs" />
-    <Compile Include="Coverages\SpatialDataTest.cs" />
-    <Compile Include="Coverages\UnstructuredGridCoverageFactoryTest.cs" />
-    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\CoordinateDataRowTest.cs" />
-    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewTest.cs" />
-    <Compile Include="Editors\ModelFeatureCoordinateDataEditor\ModelFeatureCoordinateDataViewViewModelTest.cs" />
-    <Compile Include="Editors\SedimentFractionsEditorTest.cs" />
-    <Compile Include="Editors\SedimentFractionsEditorTestHelper.cs" />
-    <Compile Include="Editors\SedimentFractionsEditorViewModelTest.cs" />
-    <Compile Include="Editors\SedimentNamePropertyValidationRuleTests.cs" />
-    <Compile Include="Editors\SedimentPropertyValidationRuleTest.cs" />
-    <Compile Include="Editors\TracerDefinitionsEditorWpfTest.cs" />
-    <Compile Include="Editors\TracerDefinitionsEditorWpfViewModelTest.cs" />
-    <Compile Include="CoverageDepthLayersListTest.cs" />
-    <Compile Include="Editors\FlowBoundaryConditionEditorControllerTest.cs" />
-    <Compile Include="Editors\FlowBoundaryConditionsListViewTest.cs" />
-    <Compile Include="FeatureData\BoundaryConditionIntegrationTest.cs" />
-    <Compile Include="FeatureData\BoundaryConditionQuantityTypeConverterTest.cs" />
-    <Compile Include="FeatureData\BridgePillarFmModelFeatureCoordinateDataSyncExtensionsTest.cs" />
-    <Compile Include="FeatureData\DataColumnsNameComparerTest.cs" />
-    <Compile Include="FeatureData\FixedWeirFmModelFeatureCoordinateDataSyncExtensionsTest.cs" />
-    <Compile Include="FeatureData\FixedWeirSchemeExtensionsTest.cs" />
-    <Compile Include="FeatureData\FlowBoundaryConditionTest.cs" />
-    <Compile Include="FeatureData\ModelFeatureCoordinateDataTest.cs" />
-    <Compile Include="FeatureData\SourcesAndSinks\SedimentFractionVariableTest.cs" />
-    <Compile Include="FeatureData\SourcesAndSinks\SourceAndSinkFunctionTest.cs" />
-    <Compile Include="FeatureData\SourcesAndSinks\SourceAndSinkTest.cs" />
-    <Compile Include="FeatureData\SourcesAndSinks\TracerVariableTest.cs" />
-    <Compile Include="FlowFMApplicationPluginTest.cs" />
-    <Compile Include="FlowFMTestHelper.cs" />
-    <Compile Include="Grid\UnstructuredGridExtensionsTest.cs" />
-    <Compile Include="Grid\UnstructuredGridNetCdfFileWriterTest.cs" />
-    <Compile Include="Gui\AstroComponentSelectionTest.cs" />
-    <Compile Include="Gui\BcFileExportDialogTest.cs" />
-    <Compile Include="Gui\BcFileImportDialogTest.cs" />
-    <Compile Include="Gui\BoundaryConditionDialogLauncherTest.cs" />
-    <Compile Include="Gui\CustomRenderers\EnclosureRendererTest.cs" />
-    <Compile Include="Gui\DataImportPointsListBoxTest.cs" />
-    <Compile Include="Gui\Editors\BoundaryConditionExtensionsTest.cs" />
-    <Compile Include="Gui\Editors\WaterFlowFMModelViewWPFTest.cs" />
-    <Compile Include="Gui\FlowBoundaryConditionDataViewTest.cs" />
-    <Compile Include="Gui\FlowBoundaryConditionSeriesFactoryIntegrationTest.cs" />
-    <Compile Include="Gui\FlowFMGuiPluginTest.cs" />
-    <Compile Include="Gui\FMClassMapFileFunctionStoreNodePresenterTest.cs" />
-    <Compile Include="Gui\FMFileBasedTreeViewTest.cs" />
-    <Compile Include="Gui\FMOutputSnappedFeaturesGroupLayerDataTest.cs" />
-    <Compile Include="Gui\FMSnappedFeaturesGroupLayerDataTest.cs" />
-    <Compile Include="Gui\HarmonicConditionsDialogTest.cs" />
-    <Compile Include="Gui\HarmonicConditionsDialogViewModelTest.cs" />
-    <Compile Include="Gui\NodePresenters\BoundaryConditionSetNodePresenterTest.cs" />
-    <Compile Include="Gui\NodePresenters\SourceSinkNodePresenterTest.cs" />
-    <Compile Include="Gui\RgfGrid\RgfConfigTest.cs" />
-    <Compile Include="Gui\SourceAndSinkViewTest.cs" />
-    <Compile Include="Gui\SupportPointSelectionFormTest.cs" />
-    <Compile Include="Gui\FlowBoundaryPropertiesControlTest.cs" />
-    <Compile Include="Gui\BoundaryDataMapSymbolsTest.cs" />
-    <Compile Include="Gui\BoundaryConditionEditorTest.cs" />
-    <Compile Include="Gui\DepthLayerControlTest.cs" />
-    <Compile Include="Gui\DepthLayerDialogTest.cs" />
-    <Compile Include="Gui\WaterFlowFMGuiPropertyExtractorTest.cs" />
-    <Compile Include="Gui\MultipleFunctionChartTest.cs" />
-    <Compile Include="Gui\RgfGrid\RgfGridEditorTest.cs" />
-    <Compile Include="Gui\VerticalProfileControlTest.cs" />
-    <Compile Include="Gui\WaterFlowFMMapIntegrationTest.cs" />
-    <Compile Include="Gui\WaterFlowFMModelGuiIntegrationTest.cs" />
-    <Compile Include="Gui\WaterFlowFMModelViewTest.cs" />
-    <Compile Include="Gui\WaterFlowFMModelNodePresenterTest.cs" />
-    <Compile Include="Gui\WindFieldListViewTest.cs" />
-    <Compile Include="IO\DataAccessBuilders\BcFileFlowBoundaryDataBuilderTest.cs" />
-    <Compile Include="IO\BcFileExportImportTest.cs" />
-    <Compile Include="IO\DataAccessBuilders\BcmFileFlowBoundaryDataBuilderTest.cs" />
-    <Compile Include="IO\BcFileTest.cs" />
-    <Compile Include="IO\BcmFileExportImportTest.cs" />
-    <Compile Include="IO\BcmFileTest.cs" />
-    <Compile Include="IO\BndExtForceFileTest.cs" />
-    <Compile Include="IO\CmpFileTest.cs" />
-    <Compile Include="IO\DataAccessBuilders\DelftIniCategoryFactoryTest.cs" />
-    <Compile Include="IO\DataAccessBuilders\ExtForceFileItemFactoryTest.cs" />
-    <Compile Include="IO\DelftIniCategoryExtensionTest.cs" />
-    <Compile Include="IO\Exporters\BcFileExporterTest.cs" />
-    <Compile Include="IO\Exporters\CmpFileExporterTest.cs" />
-    <Compile Include="IO\Exporters\FlowFMNetFileExporterTest.cs" />
-    <Compile Include="IO\Exporters\GeometryZipExporterTest.cs" />
-    <Compile Include="IO\Exporters\ImportedNetFileXyzExporterTest.cs" />
-    <Compile Include="IO\Exporters\QhFileExporterTest.cs" />
-    <Compile Include="IO\Exporters\StructuresListExporterTest.cs" />
-    <Compile Include="IO\Exporters\TimFileExporterTest.cs" />
-    <Compile Include="IO\Exporters\WaterFlowFMFileExporterTest.cs" />
-    <Compile Include="IO\ExtForceFileHelperTest.cs" />
-    <Compile Include="IO\ExtForceFilePerformanceTest.cs" />
-    <Compile Include="IO\ExtForceFileTest.cs" />
-    <Compile Include="IO\FileConstantsTest.cs" />
-    <Compile Include="IO\NetCdfFileParsingExceptionTest.cs" />
-    <Compile Include="IO\Files\BndExtForceFileConstantsTest.cs" />
-    <Compile Include="IO\Files\CacheFileTest.cs" />
-    <Compile Include="IO\Files\ExtForceFileConstantsTest.cs" />
-    <Compile Include="IO\Files\Helpers\FileCopyExceptionTest.cs" />
-    <Compile Include="IO\Files\Helpers\ImportSamplesSpatialOperationTest.cs" />
-    <Compile Include="IO\Files\Helpers\MduFileBackwardsCompatibilityConfigurationValuesTest.cs" />
-    <Compile Include="IO\Files\Helpers\MorphologyFileBackwardsCompatibilityConfigurationValuesTest.cs" />
-    <Compile Include="IO\Files\Helpers\OverwriteCopyHandlerTest.cs" />
-    <Compile Include="IO\Files\MduFileReaderTest.cs" />
-    <Compile Include="IO\FMClassMapFileFunctionStoreTest.cs" />
-    <Compile Include="IO\FMHisFileFunctionStoreTest.cs" />
-    <Compile Include="IO\FMPartitionExporterTest.cs" />
-    <Compile Include="IO\GroupablePointCloudImporterTest.cs" />
-    <Compile Include="IO\Importers\BcFileImporterTest.cs" />
-    <Compile Include="IO\Importers\BcmFileImporterTest.cs" />
-    <Compile Include="IO\Importers\CmpFileImporterTest.cs" />
-    <Compile Include="IO\Importers\FlowFMNetFileImporterTest.cs" />
-    <Compile Include="IO\Importers\FMMapFileImporterTest.cs" />
-    <Compile Include="IO\Importers\IniImporterTest.cs" />
-    <Compile Include="IO\Importers\QhFileImporterTest.cs" />
-    <Compile Include="IO\Importers\ShapeFileImporterFactoryTest.cs" />
-    <Compile Include="IO\Importers\ShapeFileImporterHelperTest.cs" />
-    <Compile Include="IO\Importers\ShapeFileImporterTest.cs" />
-    <Compile Include="IO\Importers\SourceAndSinkImportExtensionsTest.cs" />
-    <Compile Include="IO\Importers\TimFileImporterTest.cs" />
-    <Compile Include="IO\Importers\WaterFlowFMFileImporterTest.cs" />
-    <Compile Include="IO\MduFileHelperTest.cs" />
-    <Compile Include="IO\MduFileTest.cs" />
-    <Compile Include="IO\PlizFileImporterExporterTest.cs" />
-    <Compile Include="IO\Readers\MduDelftIniReaderTest.cs" />
-    <Compile Include="IO\StructuresFileIntegrationTest.cs" />
-    <Compile Include="IO\StructuresFileReadTest.cs" />
-    <Compile Include="IO\WaterFlowFMMduFileTestHelper.cs" />
-    <Compile Include="IO\ObsFileImporterExporterTest.cs" />
-    <Compile Include="IO\PolFileImporterExporterTest.cs" />
-    <Compile Include="IO\StructuresFileWriteTest.cs" />
-    <Compile Include="IO\Importers\FMRestartFileImporterTest.cs" />
-    <Compile Include="IO\LdbFileTest.cs" />
-    <Compile Include="IO\FMMapFileFunctionStoreTest.cs" />
-    <Compile Include="IO\PliFileImporterExporterTest.cs" />
-    <Compile Include="IO\StructureFMPropertiesFileTest.cs" />
-    <Compile Include="IO\FMModelSchemaCsvFileTest.cs" />
-    <Compile Include="IO\WaterFlowFMMduFileTest.cs" />
-    <Compile Include="IO\WaterFlowFMModel120LegacyLoaderTest.cs" />
-    <Compile Include="IO\WaterFlowFMModel130LegacyLoaderTest.cs" />
-    <Compile Include="IO\WaterFlowFMModelHydroAreaExtensionsTest.cs" />
-    <Compile Include="IO\WindExtForceTest.cs" />
-    <Compile Include="Layers\UnstructuredGridCellCoverageLayerTest.cs" />
-    <Compile Include="Layers\UnstructuredGridCellVectorCoverageLayerTest.cs" />
-    <Compile Include="Layers\UnstructuredGridFlowLinkCoverageLayerTest.cs" />
-    <Compile Include="Layers\UnstructuredGridLayerTest.cs" />
-    <Compile Include="Layers\UnstructuredGridVertexFillCoverageLayerTest.cs" />
-    <Compile Include="Gui\FlowFMMapLayerProviderTest.cs" />
-    <Compile Include="ModelDefinition\HeatFluxModelTest.cs" />
-    <Compile Include="ModelDefinition\ISedimentFractionExtensionsTests.cs" />
-    <Compile Include="ModelDefinition\WaterFlowFMPropertyDefinitionCreatorTest.cs" />
-    <Compile Include="ModelSchema\ModelPropertySchemaExtensionsTest.cs" />
-    <Compile Include="Model\WaterFlowFMModelTest.DimrModel.cs" />
-    <Compile Include="Model\WaterFlowFMModelTest.CacheFile.cs" />
-    <Compile Include="Model\WaterFlowFMModelTest.OutOfSync.cs" />
-    <Compile Include="Model\WaterFlowFMModelTest.IO.Import.cs" />
-    <Compile Include="Model\WaterFlowFMModelTest.Spatial.cs" />
-    <Compile Include="QuantityGeneratorTest.cs" />
-    <Compile Include="ScriptingTest\FlowFlexibleMeshFunctionsScriptTest.cs" />
-    <Compile Include="IO\MorphologyFileTest.cs" />
-    <Compile Include="IO\SedimentFileTest.cs" />
-    <Compile Include="MapFileImporterTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Layers\UnstructuredGridVertexCoverageLayerTest.cs" />
-    <Compile Include="Sediment\SedimentFractionHelperTest.cs" />
-    <Compile Include="TestClassSetup.cs" />
-    <Compile Include="UnstructuredGridCoverageExtensionsTest.cs" />
-    <Compile Include="Validation\Area\FixedWeirValidatorTest.cs" />
-    <Compile Include="Validation\Area\PumpValidatorTest.cs" />
-    <Compile Include="Validation\Area\SourceAndSinkValidatorTest.cs" />
-    <Compile Include="Validation\Area\ThinDamValidatorTest.cs" />
-    <Compile Include="Validation\Area\WeirValidatorTest.cs" />
-    <Compile Include="Validation\VerticalProfileValidatorTests.cs" />
-    <Compile Include="Validation\FMStructuresValidatorTest.cs" />
-    <Compile Include="Validation\WaterFlowFMBoundaryConditionValidatorTest.cs" />
-    <Compile Include="Validation\WaterFlowFMEnclosureValidationTest.cs" />
-    <Compile Include="Validation\WaterFlowFMModelDefinitionValidatorTest.cs" />
-    <Compile Include="Validation\WaterFlowFMModelTimersValidatorTest.cs" />
-    <Compile Include="Validation\WaterFlowFMModelValidationExtensionsTest.cs" />
-    <Compile Include="Validation\WaterFlowFMProcessesValidatorTest.cs" />
-    <Compile Include="Validation\WaterFlowFMSedimentMorphologyValidatorTest.cs" />
-    <Compile Include="WaterFlowFMModel110LegacyLoaderTest.cs" />
-    <Compile Include="WaterFlowFMModelSedimentFractionsIntegrationTest.cs" />
-    <Compile Include="WaterFlowFMModelSedimentFractionsTest.cs" />
-    <Compile Include="Model\WaterFlowFMModelTest.Output.cs" />
-    <Compile Include="WaterFlowFMNHibernateIntegrationTest.cs" />
-    <Compile Include="WaterFlowFMImportExportTest.cs" />
-    <Compile Include="WaterFlowFMModelCoordinateConversionTest.cs" />
-    <Compile Include="WaterFlowFMModelTracersTest.cs" />
-    <Compile Include="WaterFlowFMResourcesTest.cs" />
-    <Compile Include="WaterFlowFMModelDefinitionTest.cs" />
-    <Compile Include="WaterFlowFMSaveLoadTest.cs" />
-    <Compile Include="Model\WaterFlowFMModelTest.cs" />
+    <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj">
-      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
-      <Name>DelftTools.Hydro</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
-      <Project>{ad22cec6-2a71-478c-96c3-b7acdfe9b84b}</Project>
-      <Name>DeltaShell.Dimr</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj">
-      <Project>{90DED9A6-DD9A-4694-ADEC-5918C12435C8}</Project>
-      <Name>DeltaShell.NGHS.Common.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
-      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
-      <Name>DeltaShell.NGHS.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
-      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
-      <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj">
-      <Project>{67C4F55D-2CF5-424D-91A3-A68365AC1C9C}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.HydroModel.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui\DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.csproj">
-      <Project>{A2D91FEB-C4D5-401A-AF97-ED0072899423}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.RealTimeControl.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.RealTimeControl\DeltaShell.Plugins.DelftModels.RealTimeControl.csproj">
-      <Project>{7DAD8091-178D-43B1-97A7-D47A5C5FAAEA}</Project>
-      <Name>DeltaShell.Plugins.DelftModels.RealTimeControl</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common.Gui\DeltaShell.Plugins.FMSuite.Common.Gui.csproj">
-      <Project>{7F3D15D6-3425-47A6-AFD4-9B6E054EE8BE}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Common.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
-      <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM.Gui\DeltaShell.Plugins.FMSuite.FlowFM.Gui.csproj">
-      <Project>{96CD03F1-2715-4827-95E1-3277A2DEADAE}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.FlowFM.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.FlowFM\DeltaShell.Plugins.FMSuite.FlowFM.csproj">
-      <Project>{56103155-e7a6-45d7-ba64-50a6f9d81b94}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.FlowFM</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Wave.Gui\DeltaShell.Plugins.FMSuite.Wave.Gui.csproj">
-      <Project>{9BFE4F50-7809-4BB6-A967-51B08E7359F5}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Wave.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.FMSuite.Wave\DeltaShell.Plugins.FMSuite.Wave.csproj">
-      <Project>{6C01336E-AA42-44E2-B72C-430CD2AC4469}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Wave</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj">
-      <Project>{56F47238-4ADC-4F56-BC27-BF1A0476D85C}</Project>
-      <Name>DeltaShell.Plugins.NetworkEditor.Gui</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj">
-      <Project>{11330F89-2B3D-449D-9211-EA3E0D7F6CDC}</Project>
-      <Name>DeltaShell.Plugins.NetworkEditor</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.IO.TestUtils\DeltaShell.NGHS.IO.TestUtils.csproj">
-      <Project>{002EB0B8-8D52-4794-A00E-A5D1FC465BFD}</Project>
-      <Name>DeltaShell.NGHS.IO.TestUtils</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.TestUtils\DeltaShell.NGHS.TestUtils.csproj">
-      <Project>{4a0f7700-aa64-463f-a602-8c15e3886ec5}</Project>
-      <Name>DeltaShell.NGHS.TestUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common.Tests\DeltaShell.Plugins.FMSuite.Common.Tests.csproj">
-      <Project>{7EC5B8E8-E326-4C4C-9D9B-E70388F0E4CA}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Common.Tests</Name>
-      <Private>False</Private>
-    </ProjectReference>
+    <PackageReference Include="AutoFixture" Version="4.13.0" />
+    <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.13.0" />
+    <PackageReference Include="AutoFixture.NUnit3" Version="4.13.0" />
+    <PackageReference Include="Castle.Core" Version="4.4.0" />
+    <PackageReference Include="DHYDRO.TestModels.Common" Version="1.0.1" />
+    <PackageReference Include="DHYDRO.TestModels.DFlowFM" Version="1.1.0" />
+    <PackageReference Include="Fare" Version="2.1.1" />
+    <PackageReference Include="log4net" Version="2.0.12" />
+    <PackageReference Include="Mono.Addins" Version="1.3.8" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="PostSharp" Version="5.0.55" />
+    <PackageReference Include="PostSharp.Redist" Version="5.0.55" />
+    <PackageReference Include="RhinoMocks" Version="3.6.1" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.3.0" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Gui\MapTools\" />
-    <Folder Include="test-data\MorphologySpatialVarying_Project\FM_model_Zandmotor_MOR1.dsproj_data\zm_dfm\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>IF EXIST "%25VS120COMNTOOLS%25vsvars32.bat" CALL “%25VS120COMNTOOLS%25vsvars32.bat” &amp;&amp; GOTO endvsvars
-IF EXIST "%25VS110COMNTOOLS%25vsvars32.bat" CALL “%25VS110COMNTOOLS%25vsvars32.bat” &amp;&amp; GOTO endvsvars
-:endvsvars
-editbin /LARGEADDRESSAWARE $(TargetFileName)
-
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.749-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ DelftTools.TestUtils $(SolutionDir)packages\DeltaShell.TestProject.2.0.0.749-beta\test-data\DelftTools.TestUtils
-
-cmd /c "$(SolutionDir)packages\DeltaShell.TestProject.2.0.0.749-beta\tools\mklink-test-data.bat" $(SolutionDir)bin\$(Configuration)\ $(TargetName) $(ProjectDir)test-data
-</PostBuildEvent>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\build\DHYDRO.TestModels.DFlowFM.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\build\DHYDRO.TestModels.DFlowFM.targets'))" />
-    <Error Condition="!Exists('..\..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\NUnit.3.12.0\build\NUnit.props'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.TestProject.2.0.0.749-beta\build\net40\DeltaShell.TestProject.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.TestProject.2.0.0.749-beta\build\net40\DeltaShell.TestProject.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\build\DHYDRO.TestModels.DFlowFM.targets" Condition="Exists('..\..\packages\DHYDRO.TestModels.DFlowFM.1.1.0\build\DHYDRO.TestModels.DFlowFM.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\DeltaShell.TestProject.2.0.0.749-beta\build\net40\DeltaShell.TestProject.targets" Condition="Exists('..\..\packages\DeltaShell.TestProject.2.0.0.749-beta\build\net40\DeltaShell.TestProject.targets')" />
 </Project>

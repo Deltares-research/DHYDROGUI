@@ -69,13 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             }
         }
 
-        public override string FileFormatVersion
-        {
-            get
-            {
-                return "1.1.0.0";
-            }
-        }
+        public override string FileFormatVersion => "1.1.0.0";
 
         public override IGui Gui
         {

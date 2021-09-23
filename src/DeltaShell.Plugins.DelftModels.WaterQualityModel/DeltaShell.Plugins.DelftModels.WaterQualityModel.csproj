@@ -1,568 +1,105 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{803D13C0-3274-4C83-AE54-5D828B3338F2}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeltaShell.Plugins.DelftModels.WaterQualityModel</RootNamespace>
-    <AssemblyName>DeltaShell.Plugins.DelftModels.WaterQualityModel</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <NoWarn>1591</NoWarn>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <NoWarn>1591</NoWarn>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
-      <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
-    </Compile>
-    <Compile Include="DataItemMetaData\ADataItemMetaData.cs" />
-    <Compile Include="DataItemMetaData\KnownWaqDataItemMetaData.cs" />
-    <Compile Include="DataObjects\BloomInfo.cs" />
-    <Compile Include="DataObjects\BoundaryData\DataTable.cs" />
-    <Compile Include="DataObjects\BoundaryData\DataTableManager.cs" />
-    <Compile Include="DataObjects\Model\IWaterQualityModelSettings.cs" />
-    <Compile Include="DataObjects\SegmentFileFunction.cs" />
-    <Compile Include="DataObjects\IHasLocationAliases.cs" />
-    <Compile Include="DataObjects\WaterQualityBoundary.cs" />
-    <Compile Include="DataObjects\WaterQualityLoad.cs" />
-    <Compile Include="DataObjects\FunctionFromHydroDynamics.cs" />
-    <Compile Include="DataObjects\Model\MonitoringOutputLevel.cs" />
-    <Compile Include="DataObjects\NameablePointFeature.cs" />
-    <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityParameter.cs" />
-    <Compile Include="IO\DelwaqNetCdfHistoryFileReader.cs" />
-    <Compile Include="IO\DelwaqNetCdfMapFileReader.cs" />
-    <Compile Include="IO\FileConstants.cs" />
-    <Compile Include="IO\NetCdfFileConventionChecker.cs" />
-    <Compile Include="IO\InputFileExporter.cs" />
-    <Compile Include="IO\BloomSpeFileReader.cs" />
-    <Compile Include="IO\MapFileMetaData.cs" />
-    <Compile Include="IO\NetCdfFileReaderHelper.cs" />
-    <Compile Include="IO\SubFileImporterComponents\SubFileHelper.cs" />
-    <Compile Include="IO\SubFileImporterComponents\SubFilePropertyRegexInfo.cs" />
-    <Compile Include="IO\WaqProcessesRules.cs" />
-    <Compile Include="IO\WaqProcessValidationRule.cs" />
-    <Compile Include="IO\WaqValidationRulesExtension.cs" />
-    <Compile Include="IO\WaterQualityObservationAreaImporter.cs" />
-    <Compile Include="IO\LazyMapFileFunctionStore.cs" />
-    <Compile Include="IO\MultiDimentionalArrayAdapter.cs" />
-    <Compile Include="IO\LoadsDataTableImporter.cs" />
-    <Compile Include="Model\WaqInitializationDataVerifier.cs" />
-    <Compile Include="Model\WaterQualityOutputConnector.cs" />
-    <Compile Include="Model\WaterQualityOutputDisconnector.cs" />
-    <Compile Include="NHibernate\WaterQualityModel350LegacyLoader.cs" />
-    <Compile Include="NHibernate\WaterQualityModel352LegacyLoader.cs" />
-    <Compile Include="NHibernate\WaterQualityModel353LegacyLoader.cs" />
-    <Compile Include="ObservationAreas\ObservationPointType.cs" />
-    <Compile Include="ObservationAreas\OverwriteLabelOperation.cs" />
-    <Compile Include="ObservationAreas\WaterQualityObservationAreaCoverage.cs" />
-    <Compile Include="Extensions\LocationAliasesExtensions.cs" />
-    <Compile Include="Extensions\WaterQualityModelExtensions.cs" />
-    <Compile Include="IO\AttributesFileData.cs" />
-    <Compile Include="IO\AttributesFileReader.cs" />
-    <Compile Include="IO\DataTableCsvFileReader.cs" />
-    <Compile Include="IO\DataTableCsvContents.cs" />
-    <Compile Include="IO\DataTableImporter.cs" />
-    <Compile Include="IO\BoundaryDataTableImporter.cs" />
-    <Compile Include="IO\DataTableInterpolationType.cs" />
-    <Compile Include="IO\HydFileElement\SchematizationElement.cs" />
-    <Compile Include="IO\HydFileImporter.cs" />
-    <Compile Include="IO\IHydroData.cs" />
-    <Compile Include="IO\BoundaryFileReader.cs" />
-    <Compile Include="IO\HydFileData.cs" />
-    <Compile Include="IO\HydFileElement\HydFileElement.cs" />
-    <Compile Include="IO\HydFileElement\HydFileStringValueParser.cs" />
-    <Compile Include="IO\HydFileElement\KeyValueElement.cs" />
-    <Compile Include="IO\HydroDynamicModelType.cs" />
-    <Compile Include="IO\HydFileReader.cs" />
-    <Compile Include="IO\IncludeFileFactory.cs" />
-    <Compile Include="IO\LayerType.cs" />
-    <Compile Include="IO\LoadsImporter.cs" />
-    <Compile Include="IO\NameablePointFeatureImporter.cs" />
-    <Compile Include="IO\ObservationPointImporter.cs" />
-    <Compile Include="DataObjects\Model\WaterQualityObservationVariableOutput.cs" />
-    <Compile Include="IO\DelwaqHisFileData.cs" />
-    <Compile Include="IO\DelwaqHistoryFileReader.cs" />
-    <Compile Include="IO\DelwaqMapFileReader.cs" />
-    <Compile Include="DataObjects\Model\BalanceUnit.cs" />
-    <Compile Include="DataObjects\Model\WaterQualityModelSettings.cs" />
-    <Compile Include="Model\IWaqProcessor.cs" />
-    <Compile Include="Model\WaqFileBasedPreProcessor.cs" />
-    <Compile Include="Model\WaqFileBasedProcessor.cs" />
-    <Compile Include="Model\WaqInitializationSettingsBuilder.cs" />
-    <Compile Include="Model\WaqHistoryFileParser.cs" />
-    <Compile Include="NHibernate\WaterQualityModelDataAccessListener.cs" />
-    <Compile Include="ObservationAreas\SetLabelOperation.cs" />
-    <Compile Include="ObservationAreas\WaterQualityObservationPoint.cs" />
-    <Compile Include="Properties\PluginInfo.cs" />
-    <Compile Include="Utils\DelwaqFileStructureHelper.cs" />
-    <Compile Include="Utils\FunctionTypeCreator.cs" />
-    <Compile Include="Utils\FunctionTypeCreatorFactory.cs" />
-    <Compile Include="Utils\IFunctionTypeCreator.cs" />
-    <Compile Include="Utils\PointToGridCellMapper.cs" />
-    <Compile Include="Utils\WaterQualityFunctionDataWrapper.cs" />
-    <Compile Include="Utils\WaterQualityUtils.cs" />
-    <Compile Include="WaterQualityModel.cs" />
-    <Compile Include="Extensions\WaterQualityFunctionExtensions.cs" />
-    <Compile Include="WaterQualityFunctionFactory.cs" />
-    <Compile Include="Model\WaqInitializationSettings.cs" />
-    <Compile Include="Model\IWaqPreProcessor.cs" />
-    <Compile Include="DataObjects\Model\NumericalScheme.cs" />
-    <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityOutputParameter.cs" />
-    <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualityProcess.cs" />
-    <Compile Include="IO\SubFileImporter.cs" />
-    <Compile Include="DataObjects\SubstanceProcessLibrary\WaterQualitySubstance.cs" />
-    <Compile Include="DataObjects\SubstanceProcessLibrary\SubstanceProcessLibrary.cs" />
-    <Compile Include="WaterQualityModelApplicationPlugin.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="WaterQualityModelSyncExtensions.cs" />
-    <Compile Include="WaterQualityModelValidator.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="DWAQ_allowed_values.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="plct\plct_eco.ini">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Default\coefedit_duflow.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Default\proc_def_duflow.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\01_Zoutr.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\01_Zoutr.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\01_Zoutr.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\02_decay2.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\02_decay2.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\02_decay2.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\03_Zuurst.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\03_Zuurst.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\03_Zuurst.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\04_Slibst.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\04_Slibst.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\04_Slibst.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\05_Slibme.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\05_Slibme.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\05_Slibme.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\06a_Slibli.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\06a_Slibli.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\06a_Slibli.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\06b_Eutr1l.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\06b_Eutr1l.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\06b_Eutr1l.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\06c_Eutr2l.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\06c_Eutr2l.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\06c_Eutr2l.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\07_Eutr1a.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\07_Eutr1a.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\07_Eutr1a.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\08_Eutr2a.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\08_Eutr2a.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\08_Eutr2a.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\09_Put.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\09_Put.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\09_Put.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\10_Omive.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\10_Omive.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\10_Omive.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\11_Metal.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\11_Metal.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\11_Metal.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\12a_Temp.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\12a_Temp.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\12a_Temp.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\12b_Trev.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\12b_Trev.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\12b_Trev.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\13_Pcl508.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\13_Pcl508.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\13_Pcl508.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\14_fract.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\14_fract.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\14_fract.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\16_PD124.0">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\16_PD124.des">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="waq_kernel\Data\Duflow\16_PD124.sub">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy $(ProjectDir)Scripts $(OutDir)..\DeltaShell.Plugins.Toolbox\Scripts /s /y" />
+  </Target>  
+
   <ItemGroup>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.Data.NHibernate">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\DeltaShell.Plugins.Data.NHibernate.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
-      <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
-      <Name>DeltaShell.Dimr</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
-      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
-      <Name>DeltaShell.NGHS.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
-      <Project>{e22a9330-5ee9-4c26-a014-3269bcf78ded}</Project>
-      <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>
+  
   <ItemGroup>
-    <EmbeddedResource Include="NHibernate\SubstanceProcessLibrary\WaterQualityProcess.hbm.xml" />
+    <PackageReference Include="DIDO" Version="6.5.0.72783" />
+    <PackageReference Include="log4net" Version="2.0.12">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Mono.Addins" Version="1.3.8">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="PLCT.Libs" Version="1.0.0.68442" />
+    <PackageReference Include="PostSharp" Version="5.0.55">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="PostSharp.Redist" Version="5.0.55">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Substances.Libs" Version="1.0.0.68442" />
   </ItemGroup>
+  
   <ItemGroup>
-    <EmbeddedResource Include="NHibernate\SubstanceProcessLibrary\WaterQualitySubstance.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <None Update=".\*.csv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="NHibernate\SubstanceProcessLibrary\SubstanceProcessLibrary.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <None Update="waq_kernel\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
+    <None Update="plct\**" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="NHibernate\SubstanceProcessLibrary\WaterQualityOutputParameter.hbm.xml" />
-    <EmbeddedResource Include="NHibernate\SubstanceProcessLibrary\WaterQualityParameter.hbm.xml" />
-    <EmbeddedResource Include="NHibernate\Model\WaterQualityModelSettings.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NHibernate\Model\WaterQualityObservationVariableOutput.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="WaterQualityModel.3.5.3.hbm.xml" />
-    <EmbeddedResource Include="WaterQualityModel.3.5.2.hbm.xml" />
-    <EmbeddedResource Include="WaterQualityModel.3.5.0.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="WaterQualityModel.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Resource Include="Resources\observation.png" />
-    <Resource Include="Resources\weight.png" />
-    <EmbeddedResource Include="DataObjects\NameablePointFeature.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DataObjects\WaterQualityLoad.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="IO\HydFileData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DataObjects\FunctionFromHydroDynamics.hbm.xml" />
-    <EmbeddedResource Include="IO\IHydroData.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="NHibernate\BoundaryData\DataTable.hbm.xml" />
-    <EmbeddedResource Include="NHibernate\BoundaryData\DataTableManager.hbm.xml" />
-    <EmbeddedResource Include="NHibernate\BoundaryData\DataTable.3.3.hbm.xml" />
-    <EmbeddedResource Include="NHibernate\BoundaryData\DataTableManager.3.3.hbm.xml" />
-    <EmbeddedResource Include="DataObjects\WaterQualityBoundary.hbm.xml" />
-    <EmbeddedResource Include="ObservationAreas\WaterQualityObservationAreaCoverage.hbm.xml" />
-    <EmbeddedResource Include="ObservationAreas\WaterQualityObservationPoint.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ObservationAreas\SetLabelOperation.hbm.xml" />
-    <EmbeddedResource Include="ObservationAreas\OverwriteLabelOperation.hbm.xml" />
-    <EmbeddedResource Include="IO\LazyMapFileFunctionStore.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DataObjects\SegmentFileFunction.hbm.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Content Include="waq_kernel\Data\Default\proc_def_duflow.def">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="waq_kernel\x64\duflow.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Resources\hydFile.png" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Substances.Libs.1.0.0.68442\build\net40\Substances.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Substances.Libs.1.0.0.68442\build\net40\Substances.Libs.targets'))" />
-    <Error Condition="!Exists('..\..\packages\PLCT.Libs.1.0.0.68442\build\net40\plct.Libs.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PLCT.Libs.1.0.0.68442\build\net40\plct.Libs.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DIDO.6.5.0.72783\build\net40\DIDO.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DIDO.6.5.0.72783\build\net40\DIDO.targets'))" />
-  </Target>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy $(ProjectDir)Scripts $(OutDir)..\DeltaShell.Plugins.Toolbox\Scripts /s /y</PostBuildEvent>
-  </PropertyGroup>
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\Substances.Libs.1.0.0.68442\build\net40\Substances.Libs.targets" Condition="Exists('..\..\packages\Substances.Libs.1.0.0.68442\build\net40\Substances.Libs.targets')" />
-  <Import Project="..\..\packages\PLCT.Libs.1.0.0.68442\build\net40\plct.Libs.targets" Condition="Exists('..\..\packages\PLCT.Libs.1.0.0.68442\build\net40\plct.Libs.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets')" />
-  <Import Project="..\..\packages\DIDO.6.5.0.72783\build\net40\DIDO.targets" Condition="Exists('..\..\packages\DIDO.6.5.0.72783\build\net40\DIDO.targets')" />
+
 </Project>

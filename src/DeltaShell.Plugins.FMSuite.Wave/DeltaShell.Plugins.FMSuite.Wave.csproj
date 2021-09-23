@@ -1,389 +1,115 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.props" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6C01336E-AA42-44E2-B72C-430CD2AC4469}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeltaShell.Plugins.FMSuite.Wave</RootNamespace>
-    <AssemblyName>DeltaShell.Plugins.FMSuite.Wave</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <LangVersion>7</LangVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>7</LangVersion>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
+  
   <ItemGroup>
     <Reference Include="BasicModelInterface">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\BasicModelInterface.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Functions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Functions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Shell.Core">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Units">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DelftTools.Utils">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.CommonTools">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DeltaShell.Plugins.SharpMapGis">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.CoordinateSystems">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.CoordinateSystems.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GeoAPI.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Mono.Addins, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Mono.Addins.1.3.8\lib\net45\Mono.Addins.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib" />
     <Reference Include="NetTopologySuite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="NetTopologySuite.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ProtoBufRemote">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\ProtoBufRemote.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Api">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SharpMap.Extensions">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\packages\DeltaShell.Framework.2.0.0.749-beta\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\System.Data.SQLite.dll</HintPath>
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.Data.NHibernate\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
-    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51">
-      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
-    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
+  
   <ItemGroup>
-    <Compile Include="..\..\AssemblyInfo.Version.FM.cs">
-      <Link>Properties\AssemblyInfo.Version.FM.cs</Link>
-    </Compile>
-    <Compile Include="Api\WaveEnvironmentConstants.cs" />
-    <Compile Include="Api\WaveEnvironmentHelper.cs" />
-    <Compile Include="Boundaries\BoundaryContainer.cs" />
-    <Compile Include="Boundaries\BoundaryContainerSyncService.cs" />
-    <Compile Include="Boundaries\CachedBoundary.cs" />
-    <Compile Include="Boundaries\Calculators\BoundarySnappingCalculator.cs" />
-    <Compile Include="Boundaries\Calculators\BoundarySnappingCalculatorHelper.cs" />
-    <Compile Include="Boundaries\Calculators\CartesianDistanceCalculator.cs" />
-    <Compile Include="Boundaries\Calculators\Coordinate2DEqualityComparer.cs" />
-    <Compile Include="Boundaries\Calculators\IBoundarySnappingCalculator.cs" />
-    <Compile Include="Boundaries\Calculators\IBoundarySnappingCalculatorProvider.cs" />
-    <Compile Include="Boundaries\Calculators\IDistanceCalculator.cs" />
-    <Compile Include="Boundaries\Calculators\CartesianOrientationCalculatorHelper.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\IVisitableWaveBoundaryConditionDefinition.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyDefinedDataComponentFactory.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponent.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponentFactory.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\IVisitableSpatiallyDefinedDataComponent.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\SpatiallyVaryingDataComponent.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\UniformDataComponent.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\ForcingTypeDefinedParametersFactory.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\ConstantParameters.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\BoundaryConditionPeriodType.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\IWaveBoundaryConditionDefinition.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\FileBasedParameters.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IForcingTypeDefinedParameters.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IForcingTypeDefinedParametersFactory.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IVisitableForcingTypeDefinedParameters.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\TimeDependentParameters.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\WaveTimeDependentParametersConstants.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Shapes\BoundaryConditionShapeFactory.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Shapes\GaussShape.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Shapes\IBoundaryConditionShape.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Shapes\IBoundaryConditionShapeFactory.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Shapes\IVisitableBoundaryConditionShape.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Shapes\JonswapShape.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Shapes\PiersonMoskowitzShape.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Spreading\DegreesDefinedSpreading.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Spreading\IBoundaryConditionSpreading.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Spreading\IVisitableBoundaryConditionSpreading.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Spreading\PowerDefinedSpreading.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Spreading\SpreadingConversion.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Spreading\WaveSpreadingConstants.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\WaveBoundaryConditionDefinition.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\WaveEnergyFunctions\IWaveEnergyFunction.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\WaveEnergyFunctions\WaveEnergyFunction.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\GridBoundary.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\GridBoundaryCoordinate.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\GridCoordinate.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\GridCoordinateValueComparer.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\GridSide.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\IGridBoundary.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\IGridBoundaryProvider.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\IWaveBoundaryGeometricDefinition.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\SupportPoint.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinition.cs" />
-    <Compile Include="Boundaries\GeometricDefinitions\WaveBoundaryGeometricDefinitionFactoryHelper.cs" />
-    <Compile Include="Boundaries\IBoundariesPerFile.cs" />
-    <Compile Include="Boundaries\IBoundaryContainer.cs" />
-    <Compile Include="Boundaries\IBoundaryProvider.cs" />
-    <Compile Include="Boundaries\IWaveBoundary.cs" />
-    <Compile Include="Boundaries\Utilities\SpatialDouble.cs" />
-    <Compile Include="Boundaries\SimpleBoundaryProvider.cs" />
-    <Compile Include="Boundaries\SnapBoundariesToNewGrid.cs" />
-    <Compile Include="Boundaries\WaveBoundary.cs" />
-    <Compile Include="DataAccess\BcwFile.cs" />
-    <Compile Include="DataAccess\BcwTimeSeriesOfBoundaryCollector.cs" />
-    <Compile Include="DataAccess\DelftIniOperations\DelftIniFileOperator.cs" />
-    <Compile Include="DataAccess\DelftIniOperations\IDelftIniFileOperator.cs" />
-    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DeleteSourcePostOperationBehaviour.cs" />
-    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\DelftIniPostOperationBehaviour.cs" />
-    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\IDelftIniPostOperationBehaviour.cs" />
-    <Compile Include="DataAccess\DelftIniOperations\PostBehaviours\WriteCategoriesPostOperationBehaviour.cs" />
-    <Compile Include="DataAccess\DelftIniOperations\IDelftIniPropertyBehaviour.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryOrientationType.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DistanceDirType.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DomainWideBoundaryCategoryConverter.cs" />
-    <Compile Include="DataAccess\Exporters\WaveModelFileExporter.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryCategoryConverter.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\BoundaryMdwBlock.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DefinitionImportType.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\IImportBoundaryConditionDataComponentFactory.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\ImportBoundaryConditionDataComponentFactory.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\IWaveBoundaryGeometricDefinitionFactory.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\KnownWaveBoundariesFileConstants.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\DomainWideBoundaryMdwBlock.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\ParametersBlock.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\PeriodImportExportType.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\ShapeImportType.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\SpectrumImportExportType.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\SpreadingImportType.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\WaveBoundaryConverter.cs" />
-    <Compile Include="DataAccess\Helpers\DelftIniCategoryExtensions.cs" />
-    <Compile Include="DataAccess\Helpers\Domain\WaveDomainDataConverter.cs" />
-    <Compile Include="DataAccess\Helpers\MdwFileBackwardsCompatibilityConfigurationValues.cs" />
-    <Compile Include="DataAccess\Helpers\Boundaries\WaveBoundaryGeometricDefinitionFactory.cs" />
-    <Compile Include="DataAccess\Helpers\WaveOutputData\CollectIniFileNamePostOperationBehaviour.cs" />
-    <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueBehaviour.cs" />
-    <Compile Include="DataAccess\Helpers\WaveOutputData\CollectPropertyValueWithDependentsBehaviour.cs" />
-    <Compile Include="DataAccess\Helpers\WaveOutputData\WaveOutputFileHelper.cs" />
-    <Compile Include="DataAccess\IInputFileImporterService.cs" />
-    <Compile Include="DataAccess\Importers\WaveBoundaryFileImporter.cs" />
-    <Compile Include="DataAccess\Importers\WaveDepthFileImporter.cs" />
-    <Compile Include="DataAccess\Importers\WaveGridFileImporter.cs" />
-    <Compile Include="DataAccess\Importers\WaveModelFileImporter.cs" />
-    <Compile Include="DataAccess\Importers\WavmFileImporter.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\ForcingTypeDefinedParameters\IForcingTypeDefinedParametersVisitor.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\IBoundaryConditionVisitor.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Shapes\IShapeVisitor.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\SpatiallyDefinedDataComponents\ISpatiallyDefinedDataComponentVisitor.cs" />
-    <Compile Include="Boundaries\ConditionDefinitions\Spreading\ISpreadingVisitor.cs" />
-    <Compile Include="DataAccess\InputFileImporterService.cs" />
-    <Compile Include="DataAccess\MdwBoundaryCategoryConditionsExtender.cs" />
-    <Compile Include="DataAccess\MdwFile.cs" />
-    <Compile Include="DataAccess\MdwBoundaryCategoryGeometryExtender.cs" />
-    <Compile Include="DataAccess\MdwBoundaryCategoriesCreator.cs" />
-    <Compile Include="DataAccess\MdwFileDTO.cs" />
-    <Compile Include="DataAccess\MeteoFileProperty.cs" />
-    <Compile Include="DataAccess\MeteoFileReader.cs" />
-    <Compile Include="DataAccess\SpectrumDataComponentVisitor.cs" />
-    <Compile Include="DataAccess\SpectrumParametersVisitor.cs" />
-    <Compile Include="IWaveFeatureContainer.cs" />
-    <Compile Include="Migrations\1.2.0.0\WaveModel120Migrator.cs" />
-    <Compile Include="Migrations\WavesMigrator.cs" />
-    <Compile Include="OutputData\IWaveOutputData.cs" />
-    <Compile Include="OutputData\IWaveOutputDataCopyHandler.cs" />
-    <Compile Include="OutputData\IWaveOutputDataHarvester.cs" />
-    <Compile Include="OutputData\IWavhFileFunctionStore.cs" />
-    <Compile Include="OutputData\IWavmFileFunctionStore.cs" />
-    <Compile Include="OutputData\WaveGeometryComparer.cs" />
-    <Compile Include="OutputData\WaveOutputConstants.cs" />
-    <Compile Include="OutputData\WaveOutputData.cs" />
-    <Compile Include="OutputData\WaveOutputDataCopyHandler.cs" />
-    <Compile Include="OutputData\WaveOutputDataHarvester.cs" />
-    <Compile Include="OutputData\WavhFileFunctionStore.cs" />
-    <Compile Include="OutputData\WavmFileFunctionStore.cs" />
-    <Compile Include="IWaveDomainData.cs" />
-    <Compile Include="IWaveModel.cs" />
-    <Compile Include="Migrations\1.1.0.0\DelftIniFileMigrateBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\FileMigrateBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\MigratorInstanceCreator.cs" />
-    <Compile Include="Migrations\1.1.0.0\NoDependentsFileMigrateBehaviour.cs" />
-    <Compile Include="Migrations\1.1.0.0\WaveDirectoryStructureMigrationHelper.cs" />
-    <Compile Include="Migrations\1.1.0.0\WaveModel110LegacyLoader.cs" />
-    <Compile Include="Migrations\1.1.0.0\WavmFunctionStoreMigrationHelper.cs" />
-    <Compile Include="ModelDefinition\IReferenceDateTimeProvider.cs" />
-    <Compile Include="ModelDefinition\ModelDefinitionReferenceDateTimeProvider.cs" />
-    <Compile Include="ModelDefinition\WaveModelDefinitionLoadHelper.cs" />
-    <Compile Include="Properties\PluginInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="TimeFrame\HydrodynamicsConstantData.cs" />
-    <Compile Include="TimeFrame\HydrodynamicsInputDataType.cs" />
-    <Compile Include="TimeFrame\ITimeFrameData.cs" />
-    <Compile Include="TimeFrame\TimeFrameDataExtensions.cs" />
-    <Compile Include="TimeFrame\TimeFrameData.cs" />
-    <Compile Include="TimeFrame\WindConstantData.cs" />
-    <Compile Include="TimeFrame\WindInputDataType.cs" />
-    <Compile Include="Validation\DomainSpecificValidationShortcut.cs" />
-    <Compile Include="Validation\WaveBoundariesValidator.cs" />
-    <Compile Include="Validation\WaveCouplingValidator.cs" />
-    <Compile Include="Validation\DomainMeteoDataValidator.cs" />
-    <Compile Include="Validation\WaveOutputParametersValidator.cs" />
-    <Compile Include="Validation\WavePropertiesValidator.cs" />
-    <Compile Include="Validation\WaveDomainValidator.cs" />
-    <Compile Include="Validation\WaveModelValidator.cs" />
-    <Compile Include="Validation\WaveTimePointValidator.cs" />
-    <Compile Include="Validation\WaveValidationShortcut.cs" />
-    <Compile Include="WaveDataAccessListener.cs" />
-    <Compile Include="WaveDomainHelper.cs" />
-    <Compile Include="WaveFeatureContainer.cs" />
-    <Compile Include="WaveGridOperationApi.cs" />
-    <Compile Include="WaveMeteoData.cs" />
-    <Compile Include="WaveModelCoordinateConversion.cs" />
-    <Compile Include="WaveModelFileHelper.cs" />
-    <Compile Include="WaveObstacle.cs" />
-    <Compile Include="WaveApplicationPlugin.cs" />
-    <Compile Include="WaveDomainData.cs" />
-    <Compile Include="ModelDefinition\WaveModelDefinition.cs" />
-    <Compile Include="ModelDefinition\WaveModelProperty.cs" />
-    <Compile Include="ModelDefinition\WaveModelPropertyDefinition.cs" />
-    <Compile Include="WaveModel.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
   </ItemGroup>
+  
   <ItemGroup>
-    <ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj">
-      <Project>{9F94F7FE-C79C-4E32-B3DC-A11C01B79349}</Project>
-      <Name>DelftTools.Hydro</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Dimr\DeltaShell.Dimr.csproj">
-      <Project>{AD22CEC6-2A71-478C-96C3-B7ACDFE9B84B}</Project>
-      <Name>DeltaShell.Dimr</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj">
-      <Project>{AE78982B-8798-4B5A-9DB4-FCA8F5C8428B}</Project>
-      <Name>DeltaShell.NGHS.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj">
-      <Project>{E22A9330-5EE9-4C26-A014-3269BCF78DED}</Project>
-      <Name>DeltaShell.NGHS.IO</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\DeltaShell.Plugins.FMSuite.Common\DeltaShell.Plugins.FMSuite.Common.csproj">
-      <Project>{33E367F7-FC78-4E22-8213-4374CBFB86CB}</Project>
-      <Name>DeltaShell.Plugins.FMSuite.Common</Name>
-      <Private>False</Private>
-    </ProjectReference>
+    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.662-beta">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="log4net" Version="2.0.12">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Mono.Addins" Version="1.3.8">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="PostSharp" Version="5.0.55">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="PostSharp.Redist" Version="5.0.55">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <None Update=".\*.csv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="dwave-properties.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-    <None Include="run_wave.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\wave.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="WaveModel.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="WaveModel.1.1.0.hbm.xml" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.props'))" />
-    <Error Condition="!Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\PostSharp.5.0.55\build\PostSharp.targets'))" />
-    <Error Condition="!Exists('..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets'))" />
-  </Target>
-  <Import Project="..\..\packages\PostSharp.5.0.55\build\PostSharp.targets" Condition="Exists('..\..\packages\PostSharp.5.0.55\build\PostSharp.targets')" />
-  <Import Project="..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets" Condition="Exists('..\..\packages\DeltaShell.Framework.2.0.0.749-beta\build\net461\DeltaShell.Framework.targets')" />
+  
 </Project>

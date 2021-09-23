@@ -1,0 +1,41 @@
+<Project>
+    <!--Default properties-->
+    <PropertyGroup>
+        <BuildNumber>0</BuildNumber>
+        <GitHash>DEV</GitHash>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+        <NoWarn>1591</NoWarn>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <TargetFramework>net461</TargetFramework>
+        <LangVersion>7.3</LangVersion>
+        <Company>Deltares</Company>
+        <Copyright>Copyright © Deltares 2021</Copyright>
+        <AssemblyTitle>$(AssemblyName)</AssemblyTitle>
+        <Product>$(AssemblyName)</Product>
+        <DhydroFileVersion>4.5.0</DhydroFileVersion>
+        <Version>$(DhydroFileVersion).$(BuildNumber)</Version>
+        <FileVersion>$(Version)</FileVersion>
+        <InformationalVersion>$(Version).$(GitHash)</InformationalVersion>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugType>full</DebugType>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <DebugType>pdbonly</DebugType>
+        <DebugSymbols>True</DebugSymbols>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Resource Include="Resources\**"/>
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include=".\**\*.hbm.xml"/>
+    </ItemGroup>
+
+</Project>
