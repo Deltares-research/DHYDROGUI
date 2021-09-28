@@ -103,7 +103,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
                     }
 
                     IFunction data = precipitation.Data;
-                    data.Clear();
+
+                    // clear function (MDAs)
+                    foreach (IMultiDimensionalArray currentValues in data.Components.Concat(data.Arguments).Select(v => v.Values))
+                    {
+                        currentValues.DoWithPropertySet(nameof(currentValues.FireEvents), false, ()=> currentValues.Clear());
+                    }
+
                     data.Arguments[0].SetValues(buiFileReader.MeasurementTimes);
 
                     if (distributionType == MeteoDataDistributionType.PerStation)
