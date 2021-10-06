@@ -6,7 +6,7 @@
 	</PropertyGroup>
 		  
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.736">
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.786-development">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
