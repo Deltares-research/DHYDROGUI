@@ -25,6 +25,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -254,7 +255,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                             listOfErrors.Enqueue(e.Message);
                         }
                     }, "Generating Hydrolinks");
-                while (network.LateralSources.Select(ls => ls.Name).Distinct().Count() != network.LateralSources.Select(ls =>ls.Name).Count())
+                while (!network.LateralSources.Select(ls => ls.Name).AllUnique())
                 {
                     NamingHelper.MakeNamesUnique(network.LateralSources);
                 }
@@ -595,8 +596,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         private void AddDiscretisationPointsOfSewerConnections(IHydroNetwork network, IDiscretization networkDiscretization)
         {
-            while (network.Branches.Select(ls => ls.Name).Distinct().Count() !=
-                   network.Branches.Count)
+            while (!network.Branches.Select(ls => ls.Name).AllUnique())
             {
                 NamingHelper.MakeNamesUnique(network.Branches);
             }

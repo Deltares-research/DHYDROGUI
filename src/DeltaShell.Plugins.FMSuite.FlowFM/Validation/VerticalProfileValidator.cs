@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
@@ -11,7 +12,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         public static IEnumerable<ValidationIssue> ValidateVerticalProfile(string subject,
             VerticalProfileDefinition depthProfile, object viewData, string locationName)
         {
-            if (depthProfile.PointDepths.Distinct().Count() != depthProfile.PointDepths.Count)
+            if (!depthProfile.PointDepths.AllUnique())
             {
                 yield return new ValidationIssue(subject, ValidationSeverity.Error,
                     ValidationMessage("Duplicate profile depths detected", subject, locationName),

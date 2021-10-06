@@ -1432,7 +1432,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.IsNotNull(rrModel);
 
                 Assert.That(rrModel.NwrwDefinitions.Count(), Is.EqualTo(12));
-                Assert.That(rrModel.NwrwDefinitions.Distinct().Count(), Is.EqualTo(12));
+                CollectionAssert.AllItemsAreUnique(rrModel.NwrwDefinitions);
             }
             finally
             {
@@ -1568,7 +1568,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.IsNotNull(rrModel);
 
                 Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Count(), Is.EqualTo(5));
-                Assert.That(rrModel.NwrwDryWeatherFlowDefinitions.Distinct().Count(), Is.EqualTo(5));
+                CollectionAssert.AllItemsAreUnique(rrModel.NwrwDryWeatherFlowDefinitions);
                 Assert.False(rrModel.NwrwDryWeatherFlowDefinitions.Any(dwfd =>
                     dwfd.DistributionType.Equals(DryweatherFlowDistributionType.Variable))); // not supported
             }
@@ -1648,7 +1648,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                 Assert.IsNotNull(rrModel);
 
                 Assert.That(rrModel.GetAllModelData().OfType<NwrwData>().Count(), Is.EqualTo(74));
-                Assert.That(rrModel.GetAllModelData().OfType<NwrwData>().Distinct().Count(), Is.EqualTo(74));
+                CollectionAssert.AllItemsAreUnique(rrModel.GetAllModelData().OfType<NwrwData>());
             }
             finally
             {

@@ -7,6 +7,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
+using DeltaShell.NGHS.Common.Utils;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
@@ -98,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                 case VerticalProfileType.ZFromDatum:
                 case VerticalProfileType.PercentageFromBed:
                     var ascendingDepths = SortDepths(values, type).ToList();
-                    if (ascendingDepths.Count != ascendingDepths.Distinct().Count())
+                    if (!ascendingDepths.AllUnique())
                     {
                         log.ErrorFormat("Duplicate profile depths enountered...");
                         return null;
@@ -106,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
                     return new VerticalProfileDefinition(type, ascendingDepths);
                 case VerticalProfileType.PercentageFromSurface:
                     var descendingDepths = SortDepths(values, type).ToList();
-                    if (descendingDepths.Count != descendingDepths.Distinct().Count())
+                    if (!descendingDepths.AllUnique())
                     {
                         log.ErrorFormat("Duplicate profile depths enountered...");
                         return null;

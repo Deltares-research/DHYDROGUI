@@ -11,6 +11,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
@@ -298,18 +299,31 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
         private void SyncModelTimes()
         {
             var hydroModel = TargetObject as HydroModel;
-            if (hydroModel == null) return;
-
-            hydroModel.OverrideStopTime = true;
-            hydroModel.OverrideStartTime = true;
-            hydroModel.OverrideTimeStep = true;
-
-            var timeDependentModel = hydroModel.Activities.OfType<ITimeDependentModel>().FirstOrDefault();
-            if (timeDependentModel != null)
+            if (hydroModel == null)
             {
-                // be careful: this overwrites the times of other models
-                hydroModel.StartTime = timeDependentModel.StartTime;
-                hydroModel.StopTime = timeDependentModel.StopTime;
+                return;
+            }
+
+            ITimeDependentModel[] models = hydroModel.Activities.OfType<ITimeDependentModel>().ToArray();
+            if (models.Select(m => m.StartTime).AllEqual() &&
+                models.Select(m => m.StopTime).AllEqual())
+            {
+                hydroModel.OverrideStartTime = true;
+                hydroModel.OverrideStopTime = true;
+
+                if (models.Select(m => m.TimeStep).AllEqual())
+                {
+                    hydroModel.OverrideTimeStep = true;
+                }
+            }
+            else
+            {
+                ITimeDependentModel timeDependentModel = models.FirstOrDefault();
+                if (timeDependentModel != null)
+                {
+                    hydroModel.StartTime = timeDependentModel.StartTime;
+                    hydroModel.StopTime = timeDependentModel.StopTime;
+                }
             }
         }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.Dimr.RtcXsd;
 using DeltaShell.NGHS.Common.Logging;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
 
@@ -93,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
             if (possibleFixedValue != null)
             {
-                if (records.Select(r => r.value).Distinct().Count() == 1)
+                if (records.Select(r => r.value).AllEqual())
                 {
                     intervalRule.SetPointType = IntervalRule.IntervalRuleSetPointType.Fixed;
                     intervalRule.TimeSeries.Components[0].DefaultValue = possibleFixedValue;

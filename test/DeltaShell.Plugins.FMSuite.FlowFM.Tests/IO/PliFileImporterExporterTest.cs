@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             importer.ImportItem(filePath, fmModel.Area.FixedWeirs);
 
             Assert.AreEqual(10, fmModel.Area.FixedWeirs.Count);
-            Assert.AreEqual(10, fmModel.Area.FixedWeirs.Select(w => w.Name).Distinct().Count(), "All names should be unique");
+            CollectionAssert.AllItemsAreUnique(fmModel.Area.FixedWeirs.Select(w => w.Name), "All names should be unique");
 
             var firstWeir = fmModel.Area.FixedWeirs[0];
             Assert.NotNull(firstWeir);

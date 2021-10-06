@@ -72,6 +72,98 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
+        [Test]
+        public void AllEqual_SourceNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => ((IEnumerable<string>)null).AllEqual();
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("source"));
+        }
+
+        [Test]
+        public void AllUnique_SourceNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => ((IEnumerable<string>)null).AllUnique();
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("source"));
+        }
+
+        [TestCaseSource(nameof(AllEqualReturnsCorrectResultCases))]
+        public void AllEqual_ReturnsCorrectResult(IEnumerable<string> source, bool expResult)
+        {
+            // Call
+            bool result = source.AllEqual();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expResult));
+        }
+        
+        [TestCaseSource(nameof(AllUniqueReturnsCorrectResultCases))]
+        public void AllUnique_ReturnsCorrectResult(IEnumerable<string> source, bool expResult)
+        {
+            // Call
+            bool result = source.AllUnique();
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expResult));
+        }
+        
+        private static IEnumerable<TestCaseData> AllEqualReturnsCorrectResultCases()
+        {
+            yield return new TestCaseData(Array.Empty<string>(), true);
+            yield return new TestCaseData(new[]
+            {
+                "a"
+            }, true);
+            yield return new TestCaseData(new[]
+            {
+                "a",
+                "a",
+                "a"
+            }, true);
+            yield return new TestCaseData(new[]
+            {
+                "b",
+                "a",
+                "a"
+            }, false);
+            yield return new TestCaseData(new[]
+            {
+                "a",
+                "b",
+                "a"
+            }, false);
+        }
+
+        private static IEnumerable<TestCaseData> AllUniqueReturnsCorrectResultCases()
+        {
+            yield return new TestCaseData(Array.Empty<string>(), true);
+            yield return new TestCaseData(new[]
+            {
+                "a",
+                "b",
+                "c"
+            }, true);
+            yield return new TestCaseData(new[]
+            {
+                "a",
+                "b",
+                "a"
+            }, false);
+            yield return new TestCaseData(new[]
+            {
+                "a",
+                "a",
+                "a"
+            }, false);
+        }
+
         private static IEnumerable<TestCaseData> ForEachSourceCollectionNullCases()
         {
             yield return new TestCaseData(((IEnumerable<string>) null, (IEnumerable<string>) new string[0]), "sources.Item1");

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Guards;
 
 namespace DeltaShell.NGHS.Common.Utils
@@ -28,7 +29,7 @@ namespace DeltaShell.NGHS.Common.Utils
             Ensure.NotNull(action, nameof(action));
             Ensure.NotNull(sources.Item1, $"{nameof(sources)}.{nameof(sources.Item1)}");
             Ensure.NotNull(sources.Item2, $"{nameof(sources)}.{nameof(sources.Item2)}");
-            
+
             using (IEnumerator<T1> first = sources.Item1.GetEnumerator())
             using (IEnumerator<T2> second = sources.Item2.GetEnumerator())
             {
@@ -37,6 +38,60 @@ namespace DeltaShell.NGHS.Common.Utils
                     action(first.Current, second.Current);
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines whether all elements in the collection are equal, using the default <see cref="IEqualityComparer{T}"/>>.
+        /// </summary>
+        /// <param name="source"> The source collection of which to compare the elements. </param>
+        /// <typeparam name="T"> The type of elements in the collection. </typeparam>
+        /// <returns>
+        /// True, if all elements in the collection are equal or if the collection is empty;
+        /// false, if not all elements in the collection are empty.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/> is <c>null</c>.
+        /// </exception>
+        public static bool AllEqual<T>(this IEnumerable<T> source)
+        {
+            Ensure.NotNull(source, nameof(source));
+
+            T[] array = source as T[] ?? source.ToArray();
+            return array.AllEqualTo(array.FirstOrDefault());
+        }
+
+        /// <summary>
+        /// Determines whether all elements in the collection are unique, using the default <see cref="IEqualityComparer{T}"/>>.
+        /// </summary>
+        /// <param name="source"> The source collection of which to determine if all elements are unique. </param>
+        /// <typeparam name="T">The type of elements in the collection.</typeparam>
+        /// <returns>
+        /// True, if all elements in the collection are unique or if the collection is empty;
+        /// false, if the collection contains duplicate elements.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/> is <c>null</c>.
+        /// </exception>
+        public static bool AllUnique<T>(this IEnumerable<T> source)
+        {
+            Ensure.NotNull(source, nameof(source));
+            
+            var hashset = new HashSet<T>();
+            
+            foreach(T element in source)
+            {
+                if (!hashset.Add(element))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool AllEqualTo<T>(this IEnumerable<T> source, T value)
+        {
+            return source.All(element => Equals(element, value));
         }
     }
 }

@@ -4,6 +4,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         {
                             var chainages = constantSpatialChannelFrictionDefinitions
                                 .Select(ccfd => ccfd.Chainage);
-                            if (chainages.Count() != chainages.Distinct().Count())
+                            if (!chainages.AllUnique())
                             {
                                 issues.Add(new ValidationIssue(channel,
                                     ValidationSeverity.Error,

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
@@ -6,6 +8,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DeltaShell.Plugins.DelftModels.HydroModel;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -164,6 +167,50 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             List<double> writeRestartFile = (List<double>)waterFlowFmModel.ModelDefinition.GetModelProperty(KnownProperties.RstInterval).Value;
             Assert.That(writeRestartFile.Count, Is.EqualTo(1));
             Assert.That(writeRestartFile.First(), Is.Zero);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        [Category(TestCategory.Slow)]
+        public void GivenAHydroModel_WhenImportingModelsWithDifferentTimeSettings_ThenHydroModelDoesNotOverrideTheseTimes()
+        {
+            // Setup
+            string testDir = TestHelper.GetTestDataDirectory() + @"\demo_01.lit";
+            HydroModel hydroModel = CreateHydroModel();
+            
+            using (var temp = new TemporaryDirectory())
+            {
+                string directory = temp.CopyDirectoryToTempDirectory(testDir);
+                string filePath = Path.Combine(directory, "1", "NETWORK.TP");
+                
+                IPartialSobekImporter partialImporter = PartialSobekImporterBuilder.BuildPartialSobekImporter(filePath, hydroModel);
+                var importer = new SobekHydroModelImporter(false)
+                {
+                    TargetObject = hydroModel,
+                    PartialSobekImporter = partialImporter,
+                    PathSobek = filePath
+                };
+                
+                // Call
+                importer.ImportItem(filePath, hydroModel);
+            }
+            
+            // Assert
+            Assert.That(hydroModel.StartTime, Is.EqualTo(new DateTime(2021, 1, 1)));
+            Assert.That(hydroModel.StopTime, Is.EqualTo(new DateTime(2021, 1, 2)));
+            Assert.That(hydroModel.TimeStep, Is.EqualTo(TimeSpan.FromHours(1)));
+            Assert.That(hydroModel.OverrideStartTime, Is.False);
+            Assert.That(hydroModel.OverrideStopTime, Is.False);
+            
+            WaterFlowFMModel waterFlowFMModel = hydroModel.GetAllActivitiesRecursive<WaterFlowFMModel>().Single();
+            Assert.That(waterFlowFMModel.StartTime, Is.EqualTo(new DateTime(1996, 1, 1)));
+            Assert.That(waterFlowFMModel.StopTime, Is.EqualTo(new DateTime(1996, 1, 15)));
+            Assert.That(waterFlowFMModel.TimeStep, Is.EqualTo(TimeSpan.FromHours(1)));
+            
+            RainfallRunoffModel rainFallRunoffModel = hydroModel.GetAllActivitiesRecursive<RainfallRunoffModel>().Single();
+            Assert.That(rainFallRunoffModel.StartTime, Is.EqualTo(new DateTime(2021, 1, 1)));
+            Assert.That(rainFallRunoffModel.StopTime, Is.EqualTo(new DateTime(2021, 1, 2)));
+            Assert.That(rainFallRunoffModel.TimeStep, Is.EqualTo(TimeSpan.FromHours(1)));
         }
         
 

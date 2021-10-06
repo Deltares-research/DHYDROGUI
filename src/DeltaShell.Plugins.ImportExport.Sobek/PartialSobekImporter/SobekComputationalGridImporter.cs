@@ -7,6 +7,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -116,8 +117,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             }
 
             //change stupid duplicate names of locations
-            while (locations.Select(ls => ls.Name).Distinct().Count() !=
-                   locations.Select(ls => ls.Name).Count())
+            while (!locations.Select(ls => ls.Name).AllUnique())
             {
                 NamingHelper.MakeNamesUnique(locations);
             }

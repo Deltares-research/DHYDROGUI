@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using DeltaShell.NGHS.Common.Utils;
 
 namespace DeltaShell.NGHS.IO.FunctionStores
 {
@@ -134,7 +135,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                     reader.ReadInt32(); // loc nummer: not needed
                     mapHisFileMetaData.Locations.Add(new string(reader.ReadChars(20)).Trim());
                 }
-                if (mapHisFileMetaData.Locations.Distinct().Count() != mapHisFileMetaData.Locations.Count)
+                if (!mapHisFileMetaData.Locations.AllUnique())
                 {
                     throw new FileLoadException("His file does not contain unique location names");
                 }

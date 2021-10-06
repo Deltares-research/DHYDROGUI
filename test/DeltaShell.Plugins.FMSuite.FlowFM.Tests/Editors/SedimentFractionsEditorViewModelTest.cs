@@ -59,7 +59,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             Assert.AreEqual(3, viewModel.ObjectModelSedimentFractions.Count);
 
             var fractionNames = viewModel.SedimentFractions.Select(f => f.Name).ToList();
-            Assert.AreEqual(3, fractionNames.Distinct().Count());
+            CollectionAssert.AllItemsAreUnique(fractionNames);
         }
         
         [Category(TestCategory.DataAccess)]
