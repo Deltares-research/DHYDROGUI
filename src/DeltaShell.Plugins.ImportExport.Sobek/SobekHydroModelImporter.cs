@@ -310,11 +310,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             {
                 hydroModel.OverrideStartTime = true;
                 hydroModel.OverrideStopTime = true;
-
-                if (models.Select(m => m.TimeStep).AllEqual())
-                {
-                    hydroModel.OverrideTimeStep = true;
-                }
+                hydroModel.OverrideTimeStep = true;
             }
             else
             {
