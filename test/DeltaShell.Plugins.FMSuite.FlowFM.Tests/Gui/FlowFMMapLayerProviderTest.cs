@@ -542,7 +542,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                 .Where(l => !(l is IGroupLayer))
                 .Count(l => l.RenderOrder == 0);
 
-            Assert.AreEqual(2, layersWithoutOrder);
+            Assert.AreEqual(0, layersWithoutOrder, $"Missing render order for {layersWithoutOrder} layers");
         }
 
         [Test]
