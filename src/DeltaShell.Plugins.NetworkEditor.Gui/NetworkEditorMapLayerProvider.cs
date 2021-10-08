@@ -658,10 +658,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             new ComplexFeatureCollection(drainageBasin,
                                 new WrappedEnumerableList<Catchment>(flattenedCatchments, catchments),
                                 typeof(Catchment)),
-                        FeatureEditor = new CatchmentFeatureEditor {DrainageBasin = drainageBasin},
+                        FeatureEditor = new CatchmentFeatureEditor(true) {DrainageBasin = drainageBasin },
                         CustomRenderers = {new CatchmentAnchorPointRenderer()},
-                        NameIsReadOnly = true,
-                        Selectable = false
+                        NameIsReadOnly = true
                     };
                     var catchmentLayer = new VectorLayer
                     {

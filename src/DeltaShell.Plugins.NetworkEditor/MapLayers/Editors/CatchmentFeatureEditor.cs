@@ -15,6 +15,13 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 {
     public class CatchmentFeatureEditor : DrainageBasinFeatureEditor
     {
+        private readonly bool usingPointGeometry;
+
+        public CatchmentFeatureEditor(bool usingPointGeometry = false)
+        {
+            this.usingPointGeometry = usingPointGeometry;
+        }
+
         public override IFeature AddNewFeatureByGeometry(ILayer layer, IGeometry geometry)
         {
             if (geometry.Envelope is IPoint) //single click
@@ -71,9 +78,11 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
 
         public override IFeatureInteractor CreateInteractor(ILayer layer, IFeature feature)
         {
-            return new CatchmentFeatureInteractor(layer, feature, ((VectorLayer)layer).Style, DrainageBasin);
+            return usingPointGeometry
+                       ? (IFeatureInteractor) new CatchmentPointFeatureInteractor(layer, feature, ((VectorLayer)layer).Style, DrainageBasin) 
+                       : new CatchmentFeatureInteractor(layer, feature, ((VectorLayer)layer).Style, DrainageBasin);
         }
-        
+
         public CatchmentType NewCatchmentType { get; set; }
     }
 }
