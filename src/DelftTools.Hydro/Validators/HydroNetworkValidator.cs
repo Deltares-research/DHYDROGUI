@@ -102,11 +102,6 @@ namespace DelftTools.Hydro.Validators
                 }
             }
 
-            if (issues.Count == 0)
-            {
-                issues.Add(new ValidationIssue(target, ValidationSeverity.Info, "No error found for culvert"));
-            }
-
             return new ValidationReport("Culverts", issues);
         }
 
