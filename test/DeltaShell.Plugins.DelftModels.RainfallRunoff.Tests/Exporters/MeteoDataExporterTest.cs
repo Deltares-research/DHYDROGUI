@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
+using log4net.Core;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
@@ -27,7 +28,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetTimes(meteoData, new DateTime(2014, 1, 1), new DateTime(2014, 1, 2), new DateTime(2014, 1, 3));
                 SetValues(meteoData, 1.0, 2.0, 3.0);
 
-                string file = Path.Combine(temp.Path, "some_file_name.bui");
+                string file = Path.Combine(temp.Path, "some_file_name.evp");
                 var exporter = new MeteoDataExporter();
 
                 // Call
@@ -59,7 +60,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetNames(meteoData, "station1", "station2");
                 SetValues(meteoData, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
 
-                string file = Path.Combine(temp.Path, "some_file_name.bui");
+                string file = Path.Combine(temp.Path, "some_file_name.evp");
                 var exporter = new MeteoDataExporter();
 
                 // Call
@@ -90,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 SetTimes(meteoData, new DateTime(2014, 1, 1, 0, 0, 0), new DateTime(2014, 1, 1, 2, 10, 0), new DateTime(2014, 1, 1, 4, 20, 0));
                 SetValues(meteoData, 1.0, 2.0, 3.0);
 
-                string file = Path.Combine(temp.Path, "some_file_name.bui");
+                string file = Path.Combine(temp.Path, "some_file_name.tmp");
                 var exporter = new MeteoDataExporter();
 
                 // Call
@@ -171,6 +172,65 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
                 AssertLineEqualTo(lines[1], "0.012", "1.123");
                 AssertLineEqualTo(lines[2], "2.235", "3.346");
                 AssertLineEqualTo(lines[3], "4.457", "5.568");
+            }
+        }
+        
+        [Test]
+        public void Export_Temperature_SingleValue_ExportFails()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                var meteoData = new MeteoData
+                {
+                    Name = RainfallRunoffModelDataSet.TemperatureName,
+                    DataDistributionType = MeteoDataDistributionType.Global
+                };
+
+                SetTimes(meteoData, new DateTime(2014, 1, 1, 0, 0, 0));
+                SetValues(meteoData, 1.0);
+
+                string file = Path.Combine(temp.Path, "some_file_name.tmp");
+                var exporter = new MeteoDataExporter();
+
+                var result = true;
+                
+                // Call
+                void Call() => result = exporter.Export(meteoData, file);
+
+                // Assert
+                IEnumerable<string> errors = TestHelper.GetAllRenderedMessages(Call, Level.Error);
+                Assert.That(errors.Single(), Is.EqualTo("Temperature: cannot determine period, because only one value has been defined. Export has been aborted."));
+                Assert.That(result, Is.False);
+                
+                Assert.That(file, Does.Exist);
+                string content = File.ReadAllText(file);
+                Assert.That(content, Is.Empty);
+            }
+        }
+        
+        [Test]
+        public void Export_Temperature_NoValues_ExportSucceedsWithEmptyFile()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                var meteoData = new MeteoData
+                {
+                    Name = RainfallRunoffModelDataSet.TemperatureName,
+                    DataDistributionType = MeteoDataDistributionType.Global
+                };
+                
+                string file = Path.Combine(temp.Path, "some_file_name.tmp");
+                var exporter = new MeteoDataExporter();
+                
+                // Call
+                bool result = exporter.Export(meteoData, file);
+
+                // Assert
+                Assert.That(result, Is.True);
+                
+                Assert.That(file, Does.Exist);
+                string content = File.ReadAllText(file);
+                Assert.That(content, Is.Empty);
             }
         }
 
