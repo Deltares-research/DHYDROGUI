@@ -58,6 +58,8 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
                 index++;
             }
 
+            geometryList.NumberOfCoordinates = index;
+
             return geometryList;
         }
 
