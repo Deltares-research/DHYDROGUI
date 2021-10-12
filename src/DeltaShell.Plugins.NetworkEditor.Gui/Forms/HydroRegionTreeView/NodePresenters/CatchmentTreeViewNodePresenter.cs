@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Linq;
-using DelftTools.Controls;
+﻿using DelftTools.Controls;
 using DelftTools.Hydro;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
@@ -31,12 +29,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
 
         protected override bool RemoveNodeData(object parentNodeData, Catchment source)
         {
-            var parentCatchment = parentNodeData as Catchment;
-            if (parentCatchment != null) //subcatchment
-            {
-                parentCatchment.SubCatchments.Remove(source);
-                return true;
-            }
             source.Basin.Catchments.Remove(source);
             return true;
         }
@@ -48,11 +40,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView.NodePre
                                           ? string.Format("<no name>")
                                           : string.Format("{0}", source.Name),
                                           source.CatchmentType != null ? source.CatchmentType.Name : "<no type>");
-        }
-
-        public override IEnumerable GetChildNodeObjects(Catchment parentNodeData, ITreeNode node)
-        {
-            return parentNodeData.SubCatchments.Cast<object>();
         }
     }
 }

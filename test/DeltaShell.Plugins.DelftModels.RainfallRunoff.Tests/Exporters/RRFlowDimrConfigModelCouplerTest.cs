@@ -25,7 +25,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
 
        
         [Test]
-        [TestCase("Polder", true)]
         [TestCase("Greenhouse", true)]
         [TestCase("OpenWater", true)]
         [TestCase("Paved", true)]

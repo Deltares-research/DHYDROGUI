@@ -470,7 +470,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
                 ConfigureSimpleModel(model);
 
-                model.Basin.Catchments[1].CatchmentType = CatchmentType.Polder; //disables it
+                model.Basin.Catchments[1].CatchmentType = CatchmentType.Paved; //disables it
 
                 ActivityRunner.RunActivity(model);
 

@@ -128,21 +128,5 @@ namespace DelftTools.Hydro.Tests
             Assert.AreEqual(10, catchment.InteriorPoint.X);
             Assert.AreEqual(10, catchment.InteriorPoint.Y);
         }
-
-        [Test]
-        public void PolderCannotHaveSacramentoSubCatchment()
-        {
-            var catchment = new Catchment {CatchmentType = CatchmentType.Polder};
-            Assert.Throws<InvalidOperationException>(() => catchment.AddSubCatchment(CatchmentType.Sacramento));
-        }
-
-        [Test]
-        public void PolderCanHavePavedSubCatchment()
-        {
-            var catchment = new Catchment {CatchmentType = CatchmentType.Polder, Geometry = new Point(0, 0)};
-
-            catchment.AddSubCatchment(CatchmentType.Paved);
-            Assert.IsTrue(catchment.SubCatchments.Count == 1);
-        }
     }
 }

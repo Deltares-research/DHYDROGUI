@@ -30,7 +30,6 @@ namespace DelftTools.Hydro
             CatchmentTypes = new EventedList<CatchmentType>();
 
             // TODO: inject by a specific model plugin and not here!
-            CatchmentTypes.Add((CatchmentType)CatchmentType.Polder.Clone());
             CatchmentTypes.Add((CatchmentType)CatchmentType.Paved.Clone());
             CatchmentTypes.Add((CatchmentType)CatchmentType.Unpaved.Clone());
             CatchmentTypes.Add((CatchmentType)CatchmentType.GreenHouse.Clone());
@@ -117,23 +116,10 @@ namespace DelftTools.Hydro
                 //for performance.. (used in Catchment CompareTo, among others)
                 if (allCatchmentsDirty)
                 {
-                    cachedAllCatchments = GetAllCatchments(catchments).ToList();
+                    cachedAllCatchments = catchments.ToList();
                     allCatchmentsDirty = false;
                 }
                 return cachedAllCatchments;
-            }
-        }
-
-        private IEnumerable<Catchment> GetAllCatchments(IEnumerable<Catchment> catchments)
-        {
-            foreach (var catchment in catchments)
-            {
-                yield return catchment;
-
-                foreach (var subCatchment in GetAllCatchments(catchment.SubCatchments))
-                {
-                    yield return subCatchment;
-                }
             }
         }
 
@@ -238,7 +224,7 @@ namespace DelftTools.Hydro
 
         void OnCatchmentsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (!(sender is IEventedList<Catchment>)) //catchments, or subcatchments list
+            if (!(sender is IEventedList<Catchment>))
                 return;
 
             allCatchmentsDirty = true;
@@ -255,20 +241,11 @@ namespace DelftTools.Hydro
             {
                 case NotifyCollectionChangedAction.Add:
                     catchment.Basin = this;
-                    foreach (var subcatchment in catchment.SubCatchments)
-                    {
-                        subcatchment.Basin = this;
-                    }
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
                     catchment.Links.ToArray().ForEach(HydroRegion.RemoveLink);
                     catchment.Basin = null;
-                    foreach (var subcatchment in catchment.SubCatchments)
-                    {
-                        subcatchment.Links.ToArray().ForEach(HydroRegion.RemoveLink);
-                        subcatchment.Basin = null;
-                    }
                     break;
             }
         }
@@ -318,9 +295,9 @@ namespace DelftTools.Hydro
         public override IEnumerable<object> GetDirectChildren()
         {
             return Catchments.Cast<object>()
-                             .Union(WasteWaterTreatmentPlants.Cast<object>())
-                             .Union(Boundaries.Cast<object>())
-                             .Union(Links.Cast<object>());
+                             .Union(WasteWaterTreatmentPlants)
+                             .Union(Boundaries)
+                             .Union(Links);
         }
     }
 }

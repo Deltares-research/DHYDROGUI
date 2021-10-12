@@ -121,7 +121,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
             if (nwrwData == null)
             {
-                catchment.AddDefaultModelDataForCatchment(rrModel, true);
+                catchment.AddDefaultModelDataForCatchment(rrModel);
                 nwrwData = rrModel.GetAllModelData()
                                   .OfType<NwrwData>()
                                   .SingleOrDefault(n => string.Equals(n.Catchment.Name, name, StringComparison.InvariantCultureIgnoreCase));

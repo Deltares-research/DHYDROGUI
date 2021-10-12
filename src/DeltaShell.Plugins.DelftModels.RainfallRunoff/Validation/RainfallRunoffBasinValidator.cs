@@ -14,16 +14,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
         {
             var issues = new List<ValidationIssue>();
 
-            var allCatchmentsIncludingComposites = target.AllCatchments.ToList();
-            var allParentCatchments = allCatchmentsIncludingComposites.Where(c => c.SubCatchments.Count > 0);
-            var allLeafCatchments = allCatchmentsIncludingComposites.Except(allParentCatchments).ToList();
+            var allCatchments = target.AllCatchments.ToList();
 
-            if (allLeafCatchments.Count == 0)
+            if (allCatchments.Count == 0)
             {
                 issues.Add(new ValidationIssue(target, ValidationSeverity.Error, "Contains no concrete catchments", target));
             }
 
-            issues.AddRange(ValidationHelper.ValidateDuplicateNames(allLeafCatchments.Cast<INameable>(), "catchments",
+            issues.AddRange(ValidationHelper.ValidateDuplicateNames(allCatchments, "catchments",
                                                                     target));
 
             var links = target.Links.Cast<INameable>().ToList();

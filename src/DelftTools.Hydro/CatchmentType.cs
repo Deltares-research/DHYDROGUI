@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Utils;
 
@@ -7,9 +6,6 @@ namespace DelftTools.Hydro
 {
     public class CatchmentType : INameable, ICloneable
     {
-        private IList<CatchmentType> subCatchmentTypes;
-        
-        public const string PolderTypeName = "Polder";
         public const string GreenhouseTypeName = "Greenhouse";
         public const string OpenwaterTypeName = "OpenWater";
         public const string PavedTypeName = "Paved";
@@ -19,9 +15,9 @@ namespace DelftTools.Hydro
         public const string NwrwTypeName = "NWRW";
         public const string NoneTypeName = "";
 
-        protected CatchmentType() //you shouldn't create one yourself: use the static ones
+        private CatchmentType() //you shouldn't create one yourself: use the static ones
         {
-            subCatchmentTypes=new List<CatchmentType>();
+            
         }
   
         public static readonly CatchmentType GreenHouse = new CatchmentType
@@ -59,13 +55,6 @@ namespace DelftTools.Hydro
             Name = NwrwTypeName,
             Icon = Properties.Resources.nwrw //todo: change icon
         };
-        public static readonly CatchmentType Polder = new CatchmentType
-            {
-                Name = PolderTypeName,
-                Icon = Properties.Resources.PolderConcept,
-                SoftIcon = Properties.Resources.polder_soft,
-                subCatchmentTypes = new[] {Paved, Unpaved, GreenHouse, OpenWater}
-            };
         public static readonly CatchmentType None = new CatchmentType
             {
                 Name = NoneTypeName
@@ -75,19 +64,10 @@ namespace DelftTools.Hydro
 
         public virtual Bitmap Icon { get; set; }
 
-        public virtual Bitmap SoftIcon { get; set; }
-
-        public IEnumerable<CatchmentType> SubCatchmentTypes
-        {
-            get { return subCatchmentTypes; }
-        }
-
         public static CatchmentType LoadFromString(string value)
         {
             switch(value)
             {
-                case PolderTypeName:
-                    return Polder;
                 case GreenhouseTypeName:
                     return GreenHouse;
                 case OpenwaterTypeName:
@@ -111,7 +91,7 @@ namespace DelftTools.Hydro
 
         public object Clone()
         {
-            return new CatchmentType {Name = Name, Icon = Icon, subCatchmentTypes = subCatchmentTypes};
+            return new CatchmentType {Name = Name, Icon = Icon};
         }
 
         protected bool Equals(CatchmentType other)

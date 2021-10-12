@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.TestUtils;
 using DelftTools.TestUtils.TestReferenceHelper;
-using DelftTools.Utils.Collections.Generic;
-using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI;
-using GeoAPI.Extensions.Coverages;
-using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
@@ -66,9 +58,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             model.CollectionChanged += (s, e) => { callCount++; };
 
             model.ModelData.Add(new UnpavedData(new Catchment()));
-            model.ModelData[0].SubCatchmentModelData.Add(new PavedData(new Catchment()));
 
-            Assert.AreEqual(2, callCount);
+            Assert.AreEqual(1, callCount);
         }
 
         [Test]
@@ -78,31 +69,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             var c2 = Catchment.CreateDefault();
             var c3 = Catchment.CreateDefault();
             var c4 = Catchment.CreateDefault();
-            var c5 = Catchment.CreateDefault();
-            var c6 = Catchment.CreateDefault();
 
             c1.CatchmentType = CatchmentType.Unpaved;
             c2.CatchmentType = CatchmentType.Paved;
             c3.CatchmentType = CatchmentType.GreenHouse;
             c4.CatchmentType = CatchmentType.OpenWater;
-            c5.CatchmentType = CatchmentType.Polder;
-            c6.CatchmentType = CatchmentType.Paved;
-
-            c5.SubCatchments.Add(c6); //nest this catchment
 
             var runoffBoundary = new RunoffBoundary();
             
             // create model and add catchments to its basin
             var model = new RainfallRunoffModel();
-            model.Basin.Catchments.AddRange(new[] {c1, c2, c3, c4, c5});
+            model.Basin.Catchments.AddRange(new[] {c1, c2, c3, c4});
             model.Basin.Boundaries.Add(runoffBoundary);
-            Assert.AreEqual(6, model.GetAllModelData().Count(), "before clone");
+            Assert.AreEqual(4, model.GetAllModelData().Count(), "before clone");
 
             var c1Data = ((UnpavedData) model.GetCatchmentModelData(c1));
 
             var clonedModel = (RainfallRunoffModel) model.DeepClone();
             
-            Assert.AreEqual(6, clonedModel.GetAllModelData().Count(), "after clone");
+            Assert.AreEqual(4, clonedModel.GetAllModelData().Count(), "after clone");
             Assert.AreEqual(1, clonedModel.BoundaryData.Count, "after clone bd");
             Assert.AreEqual(model.AllDataItems.Count(), clonedModel.AllDataItems.Count(), "all data items");
             

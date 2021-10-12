@@ -8,7 +8,6 @@ using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Gui;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.Common.Gui;
@@ -649,7 +648,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     };
                 case IEventedList<Catchment> catchments when drainageBasin != null:
                 {
-                    var flattenedCatchments = catchments.Select(c => c).Concat(catchments.Flatten(c => c.SubCatchments));
+                    var flattenedCatchments = catchments.Concat(catchments);
 
                     var centerLayers = new VectorLayer
                     {

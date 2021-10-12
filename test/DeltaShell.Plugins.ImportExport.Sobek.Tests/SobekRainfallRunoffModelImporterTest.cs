@@ -36,10 +36,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //no setting in file, but this is the default in sobek 2:
             Assert.AreEqual(RainfallRunoffEnums.CapsimCropAreaOptions.PerCropArea, rainfallRunoffModel.CapSimCropAreaOption, "CapSim crop method"); 
 
-            //Catchments
-            Assert.AreEqual(0, rainfallRunoffModel.Basin.Catchments.Count(c => c.SubCatchments.Count > 0), "nested catchments");
-            Assert.AreEqual(0, rainfallRunoffModel.ModelData.Count(md => md.SubCatchmentModelData.Count > 0), "nested model data");
-
             //Types
             Assert.AreEqual(328, rainfallRunoffModel.Basin.Catchments.Count(c => c.CatchmentType == CatchmentType.Unpaved), "unpaved");
             Assert.AreEqual(48, rainfallRunoffModel.Basin.Catchments.Count(c => c.CatchmentType == CatchmentType.Paved), "paved");
@@ -90,12 +86,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekModel, hydroModel);
             importer.Import();
             
-            var firstAreaWithPolderConceptWithUnpaved =
+            var unpavedData =
                 rainfallRunoffModel.GetAllModelData().OfType<UnpavedData>().FirstOrDefault();
 
-            Assert.IsNotNull(firstAreaWithPolderConceptWithUnpaved);
+            Assert.IsNotNull(unpavedData);
 
-            Assert.AreNotEqual(0, firstAreaWithPolderConceptWithUnpaved.Catchment.Links.Count);
+            Assert.AreNotEqual(0, unpavedData.Catchment.Links.Count);
         }
 
         [Test]

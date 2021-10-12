@@ -49,7 +49,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Unpaved)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Paved)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Hbv)));
-            Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Polder)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.GreenHouse)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.OpenWater)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Sacramento)));
@@ -76,7 +75,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Unpaved)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Paved)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Hbv)));
-            Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Polder)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.GreenHouse)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.OpenWater)));
             Assert.AreEqual(1, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Sacramento)));

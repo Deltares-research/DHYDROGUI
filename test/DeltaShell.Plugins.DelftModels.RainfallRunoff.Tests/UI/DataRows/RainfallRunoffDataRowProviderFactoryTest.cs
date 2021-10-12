@@ -15,15 +15,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.DataRows
         public void CreateAllRows()
         {
             var model = new RainfallRunoffModel();
-            var catchment = new Catchment {CatchmentType = CatchmentType.Polder};
-            catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.Unpaved});
-            catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.Paved});
-            catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.GreenHouse});
-            catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.OpenWater});
-            catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.Sacramento});
-            catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.Hbv});
-            catchment.SubCatchments.Add(new Catchment {CatchmentType = CatchmentType.NWRW});
-            model.Basin.Catchments.Add(catchment);
+            model.Basin.Catchments.Add(new Catchment {CatchmentType = CatchmentType.Unpaved});
+            model.Basin.Catchments.Add(new Catchment {CatchmentType = CatchmentType.Paved});
+            model.Basin.Catchments.Add(new Catchment {CatchmentType = CatchmentType.GreenHouse});
+            model.Basin.Catchments.Add(new Catchment {CatchmentType = CatchmentType.OpenWater});
+            model.Basin.Catchments.Add(new Catchment {CatchmentType = CatchmentType.Sacramento});
+            model.Basin.Catchments.Add(new Catchment {CatchmentType = CatchmentType.Hbv});
+            model.Basin.Catchments.Add(new Catchment {CatchmentType = CatchmentType.NWRW});
 
             foreach(var modelData in model.GetAllModelData())
             {

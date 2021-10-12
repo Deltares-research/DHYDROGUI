@@ -153,9 +153,8 @@ namespace DelftTools.Hydro
             {
                 var catchmentSource = source as Catchment;
                 if (catchmentSource != null)
-                { 
-                    //for now: if you can have subcatchments, you cannot be linked directly yourself (will probably change in the future)
-                    return catchmentSource.CatchmentType != null && !catchmentSource.CatchmentType.SubCatchmentTypes.Any();
+                {
+                    return catchmentSource.CatchmentType != null;
                 }
 
                 return true;

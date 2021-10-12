@@ -13,17 +13,13 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.FeatureCoverageProviders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FeatureCoverageProviders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Polder;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms.CoverageViews;
@@ -91,21 +87,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     Description = "HBV view",
                     AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
                 };
-            yield return new ViewInfo<PolderConcept, PolderConceptView>
-                {
-                    Description = "Polder Concept view",
-                    AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
-                };
             yield return new ViewInfo<RunoffBoundary, RunoffBoundaryData, RunoffBoundaryDataView>
                 {
                     GetViewName = (v, o) => "Runoff Boundary Data",
                     Description = "Runoff boundary data",
                     GetViewData = o => GetModelForRunoffBoundary(o, rainfallRunoffGuiPlugin.Gui).BoundaryData.First(bd => bd.Boundary == o),
-                    AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
-                };
-            yield return new ViewInfo<PolderFromGisImporter, ImportPolderWizardDialog>
-                {
-                    Description = "Multiple data editor (D-RR)",
                     AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
                 };
             yield return new ViewInfo<Catchment, UnpavedData, UnpavedDataView>
@@ -152,14 +138,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     Description = "HBV view",
                     GetViewData = o => (HbvData)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
                     AdditionalDataCheck = o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is HbvData,
-                    AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
-                };
-
-            yield return new ViewInfo<Catchment, PolderConcept, PolderConceptView>
-                {
-                    Description = "Polder Concept view",
-                    GetViewData = o => (PolderConcept)GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui),
-                    AdditionalDataCheck = o => GetCatchmentModelData(o, rainfallRunoffGuiPlugin.Gui) is PolderConcept,
                     AfterCreate = (v, o) => DefaultAfterCreate(v, v.Data, rainfallRunoffGuiPlugin.Gui)
                 };
 

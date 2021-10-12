@@ -121,6 +121,6 @@
     <value>'{0}' is not a valid dryweather flow distribution type.</value>
   </data>
   <data name="RainfallRunoffApplicationPlugin_Description" xml:space="preserve">
-    <value>Allows to simulate lumped rainfall runoff models, such as Sacramento, HBV and Polder concept.</value>
+    <value>Allows to simulate lumped rainfall runoff models, such as Sacramento and HBV.</value>
   </data>
 </root>

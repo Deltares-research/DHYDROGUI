@@ -107,4 +107,8 @@
 		<Reference Include="System.Xml" />
 		<Reference Include="WindowsBase" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Importers" />
+	</ItemGroup>
 </Project>

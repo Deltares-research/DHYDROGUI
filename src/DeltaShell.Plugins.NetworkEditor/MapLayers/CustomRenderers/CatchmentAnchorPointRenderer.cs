@@ -26,9 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 
             var symbol = catchmentType == null
                              ? Properties.Resources.catchment
-                             : catchment.SubCatchments.Count == 0
-                                   ? catchmentType.Icon
-                                   : catchmentType.SoftIcon;
+                             : catchmentType.Icon;
             VectorStyle vectorStyle = null;
             if (symbol != null)
             {

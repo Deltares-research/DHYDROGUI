@@ -651,7 +651,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public IEnumerable<CatchmentModelData> GetAllModelData()
         {
-            return ModelData.Flatten(cmd => cmd.SubCatchmentModelData);
+            return ModelData;
         }
 
         public IEventedList<CatchmentModelData> ModelData

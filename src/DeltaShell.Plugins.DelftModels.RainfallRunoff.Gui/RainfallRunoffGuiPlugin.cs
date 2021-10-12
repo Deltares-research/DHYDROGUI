@@ -8,7 +8,6 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters;
@@ -52,7 +51,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 };
             yield return new PropertyInfo<RRInitialConditionsWrapper, RRInitialConditionsWrapperProperties>();
             yield return new PropertyInfo<RainfallRunoffBoundaryData, RainfallRunoffBoundaryDataProperties>();
-            yield return new PropertyInfo<PolderConcept, PolderConceptProperties>();
             yield return new PropertyInfo<UnpavedData, UnpavedDataProperties>();
             yield return new PropertyInfo<PavedData, PavedDataProperties>();
             yield return new PropertyInfo<GreenhouseData, GreenhouseDataProperties>();

@@ -130,9 +130,6 @@
   <data name="unpaved" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\unpaved.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="polder_empty" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\polder_empty.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="sacramento" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\sacramento.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -162,9 +159,6 @@
   </data>
   <data name="thermometer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\thermometer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="PolderConcept" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\polder_concept.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="paved_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\paved_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

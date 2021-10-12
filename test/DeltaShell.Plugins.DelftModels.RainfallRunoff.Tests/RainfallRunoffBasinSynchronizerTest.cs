@@ -22,66 +22,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         }
 
         [Test]
-        public void AddCatchmentWithSubCatchmentsToBasinAddsModelData()
-        {
-            var rrModel = new RainfallRunoffModel { Name = "Test" };
-            var catchment = new Catchment { CatchmentType = CatchmentType.Polder };
-            var pavedCatchment = new Catchment { CatchmentType = CatchmentType.Paved };
-            var unpavedCatchment = new Catchment { CatchmentType = CatchmentType.Unpaved };
-            catchment.SubCatchments.Add(pavedCatchment);
-            catchment.SubCatchments.Add(unpavedCatchment);
-
-            rrModel.Basin.Catchments.Add(catchment);
-
-            Assert.AreEqual(3, rrModel.GetAllModelData().Count());
-            Assert.AreEqual(1, rrModel.ModelData.Count);
-        }
-
-        [Test]
-        public void RemoveCatchmentWithSubCatchmentsToBasinRemovesAllModelData()
-        {
-            var rrModel = new RainfallRunoffModel { Name = "Test" };
-            var catchment = new Catchment { CatchmentType = CatchmentType.Polder };
-            var pavedCatchment = new Catchment { CatchmentType = CatchmentType.Paved };
-            var unpavedCatchment = new Catchment { CatchmentType = CatchmentType.Unpaved };
-            catchment.SubCatchments.Add(pavedCatchment);
-            catchment.SubCatchments.Add(unpavedCatchment);
-
-            rrModel.Basin.Catchments.Add(catchment);
-
-            Assert.AreEqual(3, rrModel.GetAllModelData().Count());
-
-            rrModel.Basin.Catchments.Remove(catchment);
-
-            Assert.AreEqual(0, rrModel.GetAllModelData().Count());
-        }
-
-        [Test]
-        public void AddSubCatchmentToCatchmentAddsModelData()
-        {
-            var rrModel = new RainfallRunoffModel { Name = "Test" };
-            var catchment = new Catchment { CatchmentType = CatchmentType.Polder };
-            rrModel.Basin.Catchments.Add(catchment);
-
-            Assert.AreEqual(1, rrModel.GetAllModelData().Count());
-
-            var pavedCatchment = new Catchment { CatchmentType = CatchmentType.Paved };
-            catchment.SubCatchments.Add(pavedCatchment);
-
-            Assert.AreEqual(2, rrModel.GetAllModelData().Count());
-        }
-
-        [Test]
         public void ChangeCatchmentTypeRemovesModelData()
         {
             var rrModel = new RainfallRunoffModel { Name = "Test" };
-            var catchment = new Catchment { CatchmentType = CatchmentType.Polder };
+            var catchment = new Catchment { CatchmentType = CatchmentType.GreenHouse };
             rrModel.Basin.Catchments.Add(catchment);
 
             Assert.AreEqual(1, rrModel.GetAllModelData().Count());
 
             var pavedCatchment = new Catchment { CatchmentType = CatchmentType.Paved };
-            catchment.SubCatchments.Add(pavedCatchment);
+            rrModel.Basin.Catchments.Add(pavedCatchment);
 
             Assert.AreEqual(2, rrModel.GetAllModelData().Count());
 
@@ -94,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         public void ChangeCatchmentTypeRemovesModelDataForLinkedBasin()
         {
             var rrModel = new RainfallRunoffModel { Name = "Test" };
-            var catchment = new Catchment { CatchmentType = CatchmentType.Polder };
+            var catchment = new Catchment { CatchmentType = CatchmentType.GreenHouse };
             var basin = new DrainageBasin {Catchments = {catchment}};
             var dataItem = new DataItem(basin, DataItemRole.Input);
 
@@ -103,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             Assert.AreEqual(1, rrModel.GetAllModelData().Count());
 
             var pavedCatchment = new Catchment { CatchmentType = CatchmentType.Paved };
-            catchment.SubCatchments.Add(pavedCatchment);
+            rrModel.Basin.Catchments.Add(pavedCatchment);
 
             Assert.AreEqual(2, rrModel.GetAllModelData().Count());
 
@@ -116,14 +66,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         public void SetToKnownCatchmentTypeAddsModelData()
         {
             var rrModel = new RainfallRunoffModel { Name = "Test" };
-            var catchment = new Catchment { CatchmentType = CatchmentType.Polder };
-            var subCatchment = new Catchment { CatchmentType = CatchmentType.None };
+            var greenHouseCatchment = new Catchment { CatchmentType = CatchmentType.GreenHouse };
+            var catchment = new Catchment { CatchmentType = CatchmentType.None };
+            rrModel.Basin.Catchments.Add(greenHouseCatchment);
             rrModel.Basin.Catchments.Add(catchment);
-            catchment.SubCatchments.Add(subCatchment);
 
             Assert.AreEqual(1, rrModel.GetAllModelData().Count());
 
-            subCatchment.CatchmentType = CatchmentType.Paved;
+            catchment.CatchmentType = CatchmentType.Paved;
 
             Assert.AreEqual(2, rrModel.GetAllModelData().Count());
         }

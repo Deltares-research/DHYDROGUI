@@ -8,9 +8,7 @@
         void AddIniOption(string category, string property, string value);
 
         bool SetSimulationTimesAndGenerateIniFile(int startDate, int startTime, int endDate, int endTime, int timeStep, int outputTimeStep);
-        #endregion  
-
-        #region Polder
+        #endregion
 
         #region Paved
 
@@ -178,8 +176,6 @@
         /// <returns></returns>
         int AddOpenWater(string id, double area, string meteoId, double areaAdjustmentFactor,
             double x, double y);
-
-        #endregion
 
         #endregion
 

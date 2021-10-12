@@ -3,13 +3,6 @@ using DelftTools.Utils;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
 {
-    [TypeConverter(typeof (EnumDescriptionAttributeTypeConverter))]
-    public enum RainfallRunoffConceptsEnum
-    {
-        [Description("Not schematized")] NotSchematized = 0,
-        [Description("Polder concept")] PolderConcept = 1,
-    }
-
     public static class RainfallRunoffEnums
     {
         #region AreaUnit enum

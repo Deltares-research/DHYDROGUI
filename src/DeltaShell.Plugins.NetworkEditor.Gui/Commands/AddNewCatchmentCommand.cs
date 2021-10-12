@@ -92,11 +92,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Commands
             return GetMapView().MapControl.GetToolByName(HydroRegionEditorMapTool.AddCatchmentToolName);
         }
 
-        public class AddNewPolderCommand : AddNewCatchmentCommand
-        {
-            public AddNewPolderCommand() : base(CatchmentType.Polder) {}
-        }
-
         public class AddNewUnpavedCommand : AddNewCatchmentCommand
         {
             public AddNewUnpavedCommand(): base(CatchmentType.Unpaved) {}

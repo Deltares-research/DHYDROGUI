@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Swf;
 using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Feature;
-using GeoAPI.Geometries;
 using SharpMap.Api.Layers;
 using SharpMap.Layers;
 
@@ -44,40 +41,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 coverageLayer.Visible = false;
                 coverageLayer.NameIsReadOnly = true;
                 coverageLayer.AutoUpdateThemeOnDataSourceChanged = true;
-                coverageLayer.Renderer.GeometryForFeatureDelegate = GetCustomRenderGeometryForSubCatchmentsCached;
                 return coverageLayer;
             }
 
             return null;
-        }
-
-        private readonly IDictionary<IFeature, IGeometry> cachedGeometries = new Dictionary<IFeature, IGeometry>();
-
-        private IGeometry GetCustomRenderGeometryForSubCatchmentsCached(IFeature feature)
-        {
-            var catchment = feature as Catchment;
-            if (catchment == null)
-                return feature.Geometry;
-
-            IGeometry geometry;
-            if (!cachedGeometries.TryGetValue(feature, out geometry))
-            {
-                geometry = GetCustomRenderGeometryForSubCatchments(catchment);
-                cachedGeometries.Add(feature, geometry);
-            }
-            return geometry;
-        }
-
-        private static IGeometry GetCustomRenderGeometryForSubCatchments(Catchment catchment)
-        {
-            var basin = (IDrainageBasin) catchment.Region;
-            
-            foreach (var parentCatchment in basin.Catchments)
-            {
-                if (Equals(parentCatchment, catchment) || parentCatchment.SubCatchments.Contains(catchment))
-                    return parentCatchment.Geometry;
-            }
-            throw new InvalidOperationException("Catchment not found");
         }
 
         public bool CanCreateLayerFor(object data, object parentData)

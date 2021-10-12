@@ -8,13 +8,9 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
-using DeltaShell.Plugins.CommonTools.Functions;
 using DeltaShell.Plugins.Data.NHibernate;
-using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
-using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -46,8 +42,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
     [TestFixture]
     public class PluginPortabilityTest
     {
-        const double discharge = 5.0;
-        const string lsource1 = "lSource1";
         private static readonly DateTime fmModelStartTime = new DateTime(2000, 1, 1);
         private static readonly Coordinate[] coordinates = { new Coordinate(60, 60), new Coordinate(60, 80), new Coordinate(80, 60), new Coordinate(60, 60) };
         private static readonly Polygon myPolygon = new Polygon(
@@ -206,34 +200,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             }
         }
 
-        private static HydroModel MyFmRtcHydroModel()
-        {
-            //create a hydromodel with fm and rtc (FM minimal)
-            var fmModel = MyWaterFlowFmModel();
-            var rtcModel = MyRealTimeControlModel(fmModel);
-
-            var hydroModel = new HydroModel
-            {
-                Activities = { rtcModel },
-                OverrideStartTime = false,
-                OverrideStopTime = false,
-                OverrideTimeStep = false
-            };
-
-            fmModel.MoveModelIntoIntegratedModel(null, hydroModel);
-            var workflow = new ParallelActivity
-            {
-                Activities =
-                {
-                    new ActivityWrapper {Activity = fmModel},
-                    new ActivityWrapper {Activity = rtcModel}
-                }
-
-            };
-            hydroModel.Workflows.Add(workflow);
-            return hydroModel;
-        }
-
         private void ValidateModel(WaterFlowFMModel fmModel)
         {
             Assert.AreEqual((int) 121, (int) fmModel.Grid.Vertices.Count());
@@ -287,77 +253,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             //Can't check drypoints and dryareas at the same time.... info is saved in same file, is a feature of comp core
 //            Assert.AreEqual(1, fmModel.Area.DryPoints.Count());
             Assert.AreEqual((int) 1,(int) fmModel.SourcesAndSinks.Count);
-        }
-
-        private void ValidateModel(RealTimeControlModel rtcModel)
-        {
-            Assert.AreEqual((int) 1, (int) rtcModel.ControlGroups.Count());
-            var controlGroup = rtcModel.ControlGroups[0];
-            Assert.AreEqual((int) 2, (int) controlGroup.Inputs.Count());
-            Assert.AreEqual((int) 1, (int) controlGroup.Outputs.Count());
-            var hydraulicRule1A = (HydraulicRule)controlGroup.Rules[0];
-            Assert.AreEqual(1.0, hydraulicRule1A.Function[0.0]);
-        }
-
-        private void ValidateModel(RainfallRunoffModel rrModel)
-        {
-            Assert.AreEqual((int) 6, (int) rrModel.Basin.AllCatchments.Count());
-
-            Assert.AreEqual((int) 5, (int) rrModel.Basin.Catchments.Count());
-
-            Assert.AreEqual(CatchmentType.Paved, rrModel.Basin.Catchments.ElementAt(0).CatchmentType);
-            var pavedData = (PavedData)rrModel.GetCatchmentModelData(rrModel.Basin.Catchments.ElementAt(0));
-            Assert.AreEqual((object) 25000, pavedData.CalculationArea);
-            Assert.AreEqual((object) PavedEnums.SewerPumpDischargeTarget.WWTP, pavedData.MixedAndOrRainfallSewerPumpDischarge);
-            Assert.AreEqual((double) 1.0d, (double) pavedData.CapacityMixedAndOrRainfall, 0.1d);
-            Assert.AreEqual((object) PavedEnums.SpillingDefinition.UseRunoffCoefficient, pavedData.SpillingDefinition);
-            Assert.AreEqual((double) 0.001d, (double) pavedData.RunoffCoefficient, 0.001d); 
-            
-            Assert.AreEqual(CatchmentType.Unpaved, rrModel.Basin.Catchments.ElementAt(1).CatchmentType);
-            Assert.AreEqual(CatchmentType.GreenHouse, rrModel.Basin.Catchments.ElementAt(2).CatchmentType);
-            Assert.AreEqual(CatchmentType.OpenWater, rrModel.Basin.Catchments.ElementAt(3).CatchmentType);
-            Assert.AreEqual(CatchmentType.Polder, rrModel.Basin.Catchments.ElementAt(4).CatchmentType);
-            Assert.AreEqual((int) 1, (int) rrModel.Basin.Catchments.ElementAt(4).SubCatchments.Count()); 
-            Assert.AreEqual(CatchmentType.Paved, rrModel.Basin.Catchments.ElementAt(4).SubCatchments.ElementAt(0).CatchmentType);
-
-            Assert.AreEqual((int) 1, (int) rrModel.Basin.Boundaries.Count());
-            var retrievedBoundary = rrModel.Basin.Boundaries.First();
-            var retrievedBoundaryData = rrModel.BoundaryData.First();
-            Assert.AreSame(retrievedBoundary, retrievedBoundaryData.Boundary);
-            Assert.AreEqual(15.0, retrievedBoundaryData.Series.Data.Components[0].Values[0]);
-            Assert.AreEqual(11.0, retrievedBoundaryData.Series.Value);
-
-            Assert.AreEqual((int) 1, (int) rrModel.Basin.WasteWaterTreatmentPlants.Count());
-            Assert.AreEqual((object) new Point(55, 55), rrModel.Basin.WasteWaterTreatmentPlants.First().Geometry);
-
-            Assert.AreEqual((int) 25, (int) rrModel.Precipitation.Data.GetValues().Count);
-            Assert.AreEqual((int) 2, (int) rrModel.Evaporation.Data.GetValues().Count);
-            
-        }
-
-
-        private static void ValidateMinimalHydroFmModel(HydroModel hydroModel)
-        {
-            // check nr of model (2 => FM and RTC)
-            Assert.AreEqual((int) 2, (int) hydroModel.Models.Count());
-
-            // Check if we have a FM model
-            Assert.NotNull(hydroModel.Models.OfType<WaterFlowFMModel>().FirstOrDefault());
-
-            // Check if we have a RTC model
-            Assert.NotNull(hydroModel.Models.OfType<IRealTimeControlModel>().FirstOrDefault());
-
-            // Check the workflow
-            // - is is a sequential wf :
-            Assert.AreEqual(typeof(ParallelActivity), hydroModel.CurrentWorkflow.GetEntityType());
-
-            // - with 2 activities, FM and RTC (in this order) :
-            Assert.AreEqual((int) 2, (int) hydroModel.CurrentWorkflow.Activities.Count);
-            var activities = hydroModel.CurrentWorkflow.Activities.OfType<ActivityWrapper>().Select(a => a.Activity).ToList();
-            Assert.NotNull(activities.OfType<WaterFlowFMModel>().FirstOrDefault());
-            Assert.NotNull(activities.OfType<RealTimeControlModel>().FirstOrDefault());
-            Assert.AreEqual(typeof(RealTimeControlModel), activities[0].GetEntityType());
-            Assert.AreEqual(typeof(WaterFlowFMModel), activities[1].GetEntityType());
         }
 
         private static WaterFlowFMModel MyWaterFlowFmModel()
@@ -452,77 +347,6 @@ namespace DeltaShell.Plugins.NGHS.IntegrationTests
             operation.SetInputData(SpatialOperation.MaskInputName,new FeatureCollection(new []{new Feature(){Geometry = polygon}},typeof(Feature)));
             spatialOperationSet.AddOperation(operation);
             spatialOperationSet.Execute();
-        }
-
-        private static RainfallRunoffModel MyRainfallRunoffModel()
-        {
-            var rrModel = new RainfallRunoffModel();
-            var c1 = Catchment.CreateDefault();
-            c1.CatchmentType = CatchmentType.Paved;
-            
-            rrModel.Basin.Catchments.Add(c1);
-            var wwtp = new WasteWaterTreatmentPlant { Geometry = new Point(55, 55) }; 
-            rrModel.Basin.WasteWaterTreatmentPlants.Add(wwtp);
-            c1.LinkTo(wwtp);
-
-            var pavedData = (PavedData)rrModel.GetCatchmentModelData(c1);
-            pavedData.CalculationArea = 25000;
-            pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
-            pavedData.CapacityMixedAndOrRainfall = 1.0;
-
-            pavedData.SpillingDefinition = PavedEnums.SpillingDefinition.UseRunoffCoefficient;
-            pavedData.RunoffCoefficient = 0.001; //drag it out: gives us a nice spread of boundary outflow
-            
-            var generator = new TimeSeriesGenerator();
-            generator.GenerateTimeSeries(rrModel.Precipitation.Data, rrModel.StartTime, rrModel.StopTime,
-                                         new TimeSpan(0, 1, 0, 0));
-            generator.GenerateTimeSeries(rrModel.Evaporation.Data, rrModel.StartTime, rrModel.StopTime,
-                                         new TimeSpan(1, 0, 0, 0));
-            
-            var c2 = Catchment.CreateDefault();
-            var c3 = Catchment.CreateDefault();
-            var c4 = Catchment.CreateDefault();
-            var c5 = Catchment.CreateDefault();
-            var c6 = Catchment.CreateDefault();
-
-            
-            c2.CatchmentType = CatchmentType.Unpaved;
-            c3.CatchmentType = CatchmentType.GreenHouse;
-            c4.CatchmentType = CatchmentType.OpenWater;
-            c5.CatchmentType = CatchmentType.Polder;
-            c6.CatchmentType = CatchmentType.Paved;
-
-            c5.SubCatchments.Add(c6);
-            
-            rrModel.Basin.Catchments.AddRange(new[] { c2, c3, c4, c5 });
-            
-            var runoffBoundary = new RunoffBoundary();
-            rrModel.Basin.Boundaries.Add(runoffBoundary);
-            var boundaryData = rrModel.BoundaryData.First(bd => bd.Boundary == runoffBoundary);
-            boundaryData.Series.Data[new DateTime(2005, 1, 1)] = 15.0;
-            boundaryData.Series.Value = 11.0;
-            return rrModel;
-        }
-
-        private static RealTimeControlModel MyRealTimeControlModel(WaterFlowFMModel fmModel)
-        {
-            var rtcModel = new RealTimeControlModel();
-
-#pragma warning disable 618
-            var controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
-#pragma warning restore 618
-            controlGroup1.Name = "controlGroup1";
-
-            controlGroup1.Inputs[0].Feature = fmModel.Area.ObservationPoints.First();
-            controlGroup1.Inputs[0].ParameterName = "test";
-            controlGroup1.Inputs[1].Feature = fmModel.Area.ObservationPoints.Last();
-            controlGroup1.Inputs[1].ParameterName = "test";
-            controlGroup1.Outputs[0].Feature = fmModel.Area.Pumps.First();
-            controlGroup1.Outputs[0].ParameterName = "test";
-            var hydraulicRule1A = (HydraulicRule)controlGroup1.Rules[0];
-            hydraulicRule1A.Function[0.0] = 1.0;
-            rtcModel.ControlGroups.Add(controlGroup1);
-            return rtcModel;
         }
     }
 }

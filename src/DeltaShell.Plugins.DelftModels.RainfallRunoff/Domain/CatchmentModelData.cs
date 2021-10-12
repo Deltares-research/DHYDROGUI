@@ -2,7 +2,6 @@
 using DelftTools.Hydro;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Reflection;
 
@@ -14,13 +13,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
         protected CatchmentModelData(Catchment catchment)
         {
             Catchment = catchment;
-            SubCatchmentModelData = new EventedList<CatchmentModelData>();
             AreaAdjustmentFactor = 1.0;
             MeteoStationName = "";
         }
         
-        public IEventedList<CatchmentModelData> SubCatchmentModelData { get; set; }
-
         [Aggregation]
         public Catchment Catchment { get; protected set; }
         
@@ -40,7 +36,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
         {
             var clone = TypeUtils.MemberwiseClone(this); //copies members of subclasses
             clone.Catchment = Catchment; //aggregation, so no cloning
-            clone.SubCatchmentModelData = new EventedList<CatchmentModelData>(SubCatchmentModelData);
             clone.CalculationArea = CalculationArea;
             return clone;
         }

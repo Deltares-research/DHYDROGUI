@@ -193,26 +193,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap polder_empty {
-            get {
-                object obj = ResourceManager.GetObject("polder_empty", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap PolderConcept {
-            get {
-                object obj = ResourceManager.GetObject("PolderConcept", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap Precipitation {
             get {
                 object obj = ResourceManager.GetObject("Precipitation", resourceCulture);

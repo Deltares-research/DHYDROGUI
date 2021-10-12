@@ -254,12 +254,6 @@
             <fluent:RibbonGroupBox x:Name="DrainageBasin"
                                    Header="Basin"
                                    Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\basinGroup.png">
-                <fluent:ToggleButton x:Name="ButtonAddNewCatchmentPolder"
-                                     Click="ButtonAddNewCatchmentPolder_Click"
-                                     Header="Polder"
-                                     Icon="/DeltaShell.Plugins.NetworkEditor.Gui;component\Resources\polder_empty.png"
-                                     SizeDefinition="Small,Small,Small"
-                                     ToolTip="Add new polder catchment" />
                 <fluent:ToggleButton x:Name="ButtonAddNewCatchmentPaved"
                                      Click="ButtonAddNewCatchmentPaved_Click"
                                      Header="Paved"

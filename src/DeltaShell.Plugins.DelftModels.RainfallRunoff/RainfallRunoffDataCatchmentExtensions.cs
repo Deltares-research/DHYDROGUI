@@ -1,9 +1,7 @@
-using System.Linq;
 using DelftTools.Hydro;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
@@ -13,8 +11,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             switch(catchment.CatchmentType.Name)
             {
-                case CatchmentType.PolderTypeName:
-                    return new PolderConcept(catchment);
                 case CatchmentType.PavedTypeName:
                     return new PavedData(catchment);
                 case CatchmentType.UnpavedTypeName:
@@ -45,24 +41,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return modelData != null && modelData.GetType() == desiredModelData.GetType();
         }
 
-        internal static void AddDefaultModelDataForCatchment(this Catchment catchment, RainfallRunoffModel rainfallRunoffModel, bool catchmentInBasin = false)
+        internal static void AddDefaultModelDataForCatchment(this Catchment catchment, RainfallRunoffModel rainfallRunoffModel)
         {
             var catchmentModelData = catchment.CreateDefaultModelData();
 
             if (catchmentModelData == null)
                 return;
-
-            if (catchmentInBasin || rainfallRunoffModel.Basin.Catchments.Contains(catchment))
-            {
-                rainfallRunoffModel.ModelData.Add(catchmentModelData);
-            }
-            else
-            {
-                var parentCatchment = rainfallRunoffModel.Basin.AllCatchments.First(c => c.SubCatchments.Contains(catchment));
-                var parentModelData = rainfallRunoffModel.GetCatchmentModelData(parentCatchment);
-                parentModelData.SubCatchmentModelData.Add(catchmentModelData);
-            }
-
+            
+            rainfallRunoffModel.ModelData.Add(catchmentModelData);
             rainfallRunoffModel.FireModelDataAdded(catchmentModelData);
         }
     }

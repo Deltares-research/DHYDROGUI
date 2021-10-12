@@ -828,8 +828,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                                                                new Coordinate(10, 10), new Coordinate(0, 0)
                                                            })),
                 IsGeometryDerivedFromAreaSize = true,
-                CatchmentType = CatchmentType.GreenHouse,
-                SubCatchments = { new Catchment() }
+                CatchmentType = CatchmentType.GreenHouse
             };
 
             catchment.SetAreaSize(500);
@@ -853,7 +852,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             
             Assert.AreEqual(catchment.AreaSize, retrievedCatchment.AreaSize, 0.001);
             Assert.AreEqual(catchment.CatchmentType, retrievedCatchment.CatchmentType);
-            //Assert.AreEqual(catchment.SubCatchments.Count, retrievedCatchment.SubCatchments.Count);
         }
 
         [Test]

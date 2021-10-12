@@ -156,7 +156,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             yield return new RainfallRunoffModelImporter();
             yield return new MeteoDataImporter();
-            yield return new PolderFromGisImporter();
             yield return new NWRWCatchmentFrom3BImporter();
         }
 

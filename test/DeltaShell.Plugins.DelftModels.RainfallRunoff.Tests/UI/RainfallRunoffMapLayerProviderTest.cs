@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             Assert.IsTrue(layerProvider.CanCreateLayerFor(coverage, outputFolder));
 
             var createdLayer = (FeatureCoverageLayer) layerProvider.CreateLayer(coverage, outputFolder);
-            Assert.IsNotNull(createdLayer.Renderer.GeometryForFeatureDelegate); //asssert it got injected
+            Assert.IsNull(createdLayer.Renderer.GeometryForFeatureDelegate);
         }
     }
 }

@@ -4,8 +4,6 @@ using System.Linq;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation.Polder;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
@@ -20,7 +18,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
         private IEnumerable<ValidationReport> GetSubReports(RainfallRunoffModel rootObject)
         {
             var reports = new List<ValidationReport>();
-            reports.Add(CreateGeneralReport(rootObject.GetAllModelData().Where(cmd => !(cmd is PolderConcept))));
+            reports.Add(CreateGeneralReport(rootObject.GetAllModelData()));
             reports.Add(new UnpavedDataValidator().Validate(rootObject, rootObject.GetAllModelData().OfType<UnpavedData>()));
             reports.Add(new PavedDataValidator().Validate(rootObject, rootObject.GetAllModelData().OfType<PavedData>()));
             reports.Add(new GreenhouseDataValidator().Validate(rootObject, rootObject.GetAllModelData().OfType<GreenhouseData>()));
@@ -28,8 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             reports.Add(new SacramentoDataValidator().Validate(rootObject, rootObject.GetAllModelData().OfType<SacramentoData>()));
             reports.Add(new HbvDataValidator().Validate(rootObject, rootObject.GetAllModelData().OfType<HbvData>()));
 
-            var meteoReport = new CatchmentMeteoDataValidator().Validate(rootObject, rootObject.GetAllModelData()
-                                                                                   .Where(cmd => !(cmd is PolderConcept)));
+            var meteoReport = new CatchmentMeteoDataValidator().Validate(rootObject, rootObject.GetAllModelData());
             if (meteoReport != null)
                 reports.Add(meteoReport);
             return reports;

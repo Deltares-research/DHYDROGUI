@@ -127,9 +127,6 @@
   <data name="paved" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\paved.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="PolderConcept" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\polder_concept.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="unpaved" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\unpaved.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -138,9 +135,6 @@
   </data>
   <data name="hbv" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hbv.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="polder_soft" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\polder_soft.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Remove_group" xml:space="preserve">
     <value>Remove group</value>

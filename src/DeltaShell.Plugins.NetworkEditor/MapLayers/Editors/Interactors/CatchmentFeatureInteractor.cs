@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using DelftTools.Hydro;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -18,7 +17,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         public override IEnumerable<IFeatureRelationInteractor> GetFeatureRelationInteractors(IFeature feature)
         {
             yield return new HydroObjectToHydroLinkRelationInteractor();
-            yield return new SubCatchmentRelationInteractor();
         }
 
         public CatchmentFeatureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IDrainageBasin basin) : base(layer, feature, vectorStyle, basin)
@@ -29,25 +27,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         public override bool MoveTracker(TrackerFeature trackerFeature, double deltaX, double deltaY,
                                          SnapResult snapResult = null)
         {
-            // check that, if we're a sub-catchment, we do not leave the parent geometry
-            var catchment = (Catchment) SourceFeature;
-            if (catchment.Geometry is IPoint)
-            {
-                var targetPoint = TargetFeature.Geometry as IPoint;
-
-                //we're moving a sub-catchment directly: keep it within parent
-                var parentCatchment = GetParentCatchment(catchment); //SLOW!
-
-                if (parentCatchment != null)
-                {
-                    var newGeometry = new Point(targetPoint.X + deltaX, targetPoint.Y + deltaY);
-                    if (!newGeometry.Intersects(parentCatchment.Geometry))
-                    {
-                        return false; //do not allow to go outside parent
-                    }
-                }
-            }
-
             // do the move
             var movedTracker = base.MoveTracker(trackerFeature, deltaX, deltaY, snapResult);
 
@@ -72,29 +51,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
             base.Stop();
         }
 
-        private Catchment GetParentCatchment(Catchment catchment)
-        {
-            return DrainageBasin.Catchments.FirstOrDefault(c => c.SubCatchments.Contains(catchment));
-        }
-
         public override void Delete()
         {
             var catchment = (Catchment) SourceFeature;
-
-            // we get here for both the catchment center and the catchment geometry
-
-            if (DrainageBasin.Catchments.Contains(catchment))
-            {
-                DrainageBasin.Catchments.Remove(catchment);
-            }
-            else
-            {
-                var parentCatchment = GetParentCatchment(catchment);
-                if (parentCatchment != null)
-                {
-                    parentCatchment.SubCatchments.Remove(catchment);
-                }
-            }
+            DrainageBasin.Catchments.Remove(catchment);
         }
         
         protected override bool AllowDeletionCore()

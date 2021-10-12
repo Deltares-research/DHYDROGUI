@@ -50,32 +50,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors
             }
         }
 
-        protected override void AddFeatureToDataSource(ILayer layer, IFeature feature)
-        {
-            var catchment = (Catchment) feature;
-            if (feature.Geometry.Envelope is IPoint) //single click
-            {
-                //find catchments under click
-                var potentialParent = layer.DataSource.Features.OfType<Catchment>()
-                                           .FirstOrDefault(c => c.CatchmentType.SubCatchmentTypes.Contains(NewCatchmentType) &&
-                                                                c.Geometry.Contains(feature.Geometry));
-                if (potentialParent != null)
-                {
-                    if (potentialParent.SubCatchments.Any(c => c.CatchmentType.Equals(NewCatchmentType)))
-                    {
-                        throw new InvalidOperationException("Parent catchment can have only one of each subtype");
-                    }
-
-                    potentialParent.SubCatchments.Add(catchment);
-                    return;
-                }
-                throw new InvalidOperationException(
-                    "Catchment directly on basin must be defined by at least three vertices"); //aborts the add
-            }
-
-            base.AddFeatureToDataSource(layer, feature);
-        }
-
         public override IFeatureInteractor CreateInteractor(ILayer layer, IFeature feature)
         {
             return usingPointGeometry

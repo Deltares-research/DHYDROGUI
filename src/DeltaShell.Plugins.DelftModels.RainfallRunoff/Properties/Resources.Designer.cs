@@ -70,7 +70,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Allows to simulate lumped rainfall runoff models, such as Sacramento, HBV and Polder concept..
+        ///   Looks up a localized string similar to Allows to simulate lumped rainfall runoff models, such as Sacramento and HBV..
         /// </summary>
         public static string RainfallRunoffApplicationPlugin_Description {
             get {

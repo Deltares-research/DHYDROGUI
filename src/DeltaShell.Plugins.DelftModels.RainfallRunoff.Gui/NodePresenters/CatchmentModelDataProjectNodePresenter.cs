@@ -5,7 +5,6 @@ using DelftTools.Shell.Gui.Swf;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Polder;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
@@ -13,7 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
     public class CatchmentModelDataProjectNodePresenter : TreeViewNodePresenterBaseForPluginGui<CatchmentModelData>
     {
         private static readonly Image imgNotInUseConcept = Resources.NotInUseConcept;
-        private static readonly Image imgPolderConcept = Resources.PolderConcept;
         private static readonly Image imgPavedConcept = Resources.paved;
         private static readonly Image imgUnpavedConcept = Resources.unpaved;
         private static readonly Image imgGreenhouseConcept = Resources.greenhouse;
@@ -40,11 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
         private static Image GetImage(CatchmentModelData catchmentModelData)
         {
             Image img = imgNotInUseConcept;
-            if (catchmentModelData.GetType() == typeof (PolderConcept))
-            {
-                img = imgPolderConcept;
-            }
-            else if (catchmentModelData.GetType() == typeof (PavedData))
+            if (catchmentModelData.GetType() == typeof (PavedData))
             {
                 img = imgPavedConcept;
             }
@@ -73,11 +67,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.NodePresenters
                 img = imgNwrwConcept;
             }
             return img;
-        }
-
-        public override System.Collections.IEnumerable GetChildNodeObjects(CatchmentModelData parentNodeData, ITreeNode node)
-        {
-            return parentNodeData.SubCatchmentModelData;
         }
     }
 }

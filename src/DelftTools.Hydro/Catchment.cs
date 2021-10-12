@@ -25,11 +25,8 @@ namespace DelftTools.Hydro
             Name = "catchment";
             Attributes = new DictionaryFeatureAttributeCollection();
             Links = new EventedList<HydroLink>();
-            SubCatchments = new EventedList<Catchment>();
             CatchmentType = CatchmentType.None;
         }
-
-        public virtual IEventedList<Catchment> SubCatchments { get; set; }
 
         [DisplayName("Name")]
         [FeatureAttribute(Order = 1)]
@@ -112,7 +109,6 @@ namespace DelftTools.Hydro
                     Basin = Basin,
                     Description = Description,
                     Links = new EventedList<HydroLink>(Links),
-                    SubCatchments = new EventedList<Catchment>(SubCatchments.Select(sc => (Catchment) sc.Clone())),
                     CatchmentType = CatchmentType // hopefully it is static for now, TODO: extend when dynamic catchment types are added
                 };
             
@@ -139,7 +135,7 @@ namespace DelftTools.Hydro
         [Aggregation]
         public virtual IEventedList<HydroLink> Links { get; set; }
 
-        public virtual bool CanBeLinkSource { get { return !CatchmentType.SubCatchmentTypes.Any(); } }
+        public virtual bool CanBeLinkSource { get { return true; } }
 
         public virtual bool CanBeLinkTarget { get { return false; } }
 
@@ -267,45 +263,6 @@ namespace DelftTools.Hydro
         {
             get { return CatchmentType != null ? CatchmentType.Name : CatchmentType.PavedTypeName; }
             set { CatchmentType = CatchmentType.LoadFromString(value); }
-        }
-        
-        public virtual Catchment AddSubCatchment(CatchmentType catchmentType)
-        {
-            if (!CatchmentType.SubCatchmentTypes.Contains(catchmentType))
-                throw new InvalidOperationException("This catchment cannot have sub catchments of given type");
-
-            var delta = new Coordinate(0, 0);
-            var offset = 100;
-            switch (catchmentType.Name)
-            {
-                case CatchmentType.PavedTypeName:
-                    delta = new Coordinate(-offset, 0);
-                    break;
-                case CatchmentType.UnpavedTypeName:
-                    delta = new Coordinate(0, offset);
-                    break;
-                case CatchmentType.GreenhouseTypeName:
-                    delta = new Coordinate(offset, 0);
-                    break;
-                case CatchmentType.OpenwaterTypeName:
-                    delta = new Coordinate(0, -offset);
-                    break;
-                default:
-                    throw new NotSupportedException("Unknow type to render as part of polder concept");
-            }
-
-            var geometry = new Point(InteriorPoint.X + delta.X, InteriorPoint.Y + delta.Y);
-
-            var subCatchment = new Catchment
-                {
-                    Name = Name + "_" + catchmentType,
-                    LongName = LongName + "_" + catchmentType, 
-                    CatchmentType = catchmentType, 
-                    Geometry = geometry, 
-                    Basin = Basin
-                };
-            SubCatchments.Add(subCatchment);
-            return subCatchment;
         }
     }
 }

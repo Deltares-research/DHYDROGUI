@@ -46,22 +46,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return otherBasin != subscribedBasin;
         }
 
-        private void OnCatchmentAdded(Catchment catchment, bool catchmentInBasin)
+        private void OnCatchmentAdded(Catchment catchment)
         {
-            catchment.AddDefaultModelDataForCatchment(Model, catchmentInBasin);
-            foreach(var subcatchment in catchment.SubCatchments)
-            {
-                OnCatchmentAdded(subcatchment, false);
-            }
+            catchment.AddDefaultModelDataForCatchment(Model);
         }
 
         private void OnCatchmentRemoved(Catchment catchment)
         {
             RemoveModelDataForCatchment(catchment);
-            foreach (var subcatchment in catchment.SubCatchments)
-            {
-                OnCatchmentRemoved(subcatchment);
-            }
         }
 
         public void BeforeDataItemsSet()
@@ -192,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private void BasinCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (sender is IEventedList<Catchment> catchmentList && 
-                !catchmentList.SkipChildItemEventBubbling) //basin catchments or subcatchments
+                !catchmentList.SkipChildItemEventBubbling)
             {
                 //not aggregation list
                 CatchmentsCollectionChanged(sender, e);
@@ -210,7 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    OnCatchmentAdded(catchment, sender == Model?.Basin.Catchments);
+                    OnCatchmentAdded(catchment);
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     OnCatchmentRemoved(catchment);
@@ -250,7 +242,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             if (Basin != null)
             {
-                Basin.Catchments.ForEach(c => OnCatchmentAdded(c, true));
+                Basin.Catchments.ForEach(OnCatchmentAdded);
                 Basin.Boundaries.ForEach(OnBoundaryAdded);
 
                 Model.OutputCoverages.ForEach(c => c.CoordinateSystem = Basin?.CoordinateSystem);
@@ -262,15 +254,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             var modelData = Model.GetCatchmentModelData(catchment);
             if (modelData != null)
             {
-                if (Model.ModelData.Contains(modelData))
-                {
-                    Model.ModelData.Remove(modelData);
-                }
-                else
-                {
-                    var parentModelData = Model.GetAllModelData().First(md => md.SubCatchmentModelData.Contains(modelData));
-                    parentModelData.SubCatchmentModelData.Remove(modelData);
-                }
+                Model.ModelData.Remove(modelData);
                 Model.FireModelDataRemoved(modelData);
             }
         }

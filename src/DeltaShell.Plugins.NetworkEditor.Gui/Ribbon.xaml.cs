@@ -53,7 +53,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private ICommand addNewObservationPointCommand = new AddNewObservationPointCommand();
         private ICommand addNewRouteCommand = new AddNewNetworkRouteCommand();
         private ICommand showCrossSectionHistoryCommand = new ShowCrossSectionHistoryCommand();
-        private ICommand addNewCatchmentPolderCommand = new AddNewCatchmentCommand.AddNewPolderCommand();
         private ICommand addNewCatchmentPavedCommand = new AddNewCatchmentCommand.AddNewPavedCommand();
         private ICommand addNewCatchmentUnpavedCommand = new AddNewCatchmentCommand.AddNewUnpavedCommand();
         private ICommand addNewCatchmentOpenWaterCommand = new AddNewCatchmentCommand.AddNewOpenWaterCommand();
@@ -118,7 +117,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 yield return addNewObservationPointCommand;
                 yield return addNewRouteCommand;
                 yield return showCrossSectionHistoryCommand;
-                yield return addNewCatchmentPolderCommand;
                 yield return addNewCatchmentPavedCommand;
                 yield return addNewCatchmentUnpavedCommand;
                 yield return addNewCatchmentOpenWaterCommand;
@@ -196,7 +194,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             ButtonShowCrossSectionHistory.SetState(showCrossSectionHistoryCommand);
 
             // catchment tools
-            ButtonAddNewCatchmentPolder.SetState(addNewCatchmentPolderCommand, showBasinTools);
             ButtonAddNewCatchmentPaved.SetState(addNewCatchmentPavedCommand, showBasinTools);
             ButtonAddNewCatchmentUnpaved.SetState(addNewCatchmentUnpavedCommand, showBasinTools);
             ButtonAddNewCatchmentOpenWater.SetState(addNewCatchmentOpenWaterCommand, showBasinTools);
@@ -465,12 +462,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         private void ButtonShowCrossSectionHistory_Click(object sender, RoutedEventArgs e)
         {
             showCrossSectionHistoryCommand.Execute();
-            ValidateItems();
-        }
-
-        private void ButtonAddNewCatchmentPolder_Click(object sender, RoutedEventArgs e)
-        {
-            addNewCatchmentPolderCommand.Execute();
             ValidateItems();
         }
 

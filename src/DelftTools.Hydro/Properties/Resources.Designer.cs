@@ -182,26 +182,6 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap polder_soft {
-            get {
-                object obj = ResourceManager.GetObject("polder_soft", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap PolderConcept {
-            get {
-                object obj = ResourceManager.GetObject("PolderConcept", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap sacramento {
             get {
                 object obj = ResourceManager.GetObject("sacramento", resourceCulture);

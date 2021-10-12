@@ -4,7 +4,6 @@ using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
 using DeltaShell.NGHS.IO.Helpers;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
@@ -41,12 +40,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 ProjectRepository.PreLoad<UnpavedData>(up => up.BoundaryData);
                 ProjectRepository.PreLoad<UnpavedData>(up => up.DrainageFormula);
-                ProjectRepository.PreLoad<CatchmentModelData>(cmd => cmd.SubCatchmentModelData);
                 firstRRModel = false;
             }
             else if (firstBasin && entity is DrainageBasin || entity is IDrainageBasin)
             {
-                ProjectRepository.PreLoad<Catchment>(c => c.SubCatchments);
                 ProjectRepository.PreLoad<Catchment>(c => c.Links);
                 ProjectRepository.PreLoad<RunoffBoundary>(rb => rb.Links);
                 ProjectRepository.PreLoad<WasteWaterTreatmentPlant>(wwtp => wwtp.Links);
