@@ -25,6 +25,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" CopyLocal="False" />
+		<ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" CopyLocal="False" />
 	</ItemGroup>
 
 	<ItemGroup>

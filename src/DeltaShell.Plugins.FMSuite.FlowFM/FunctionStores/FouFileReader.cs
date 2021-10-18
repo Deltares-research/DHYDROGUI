@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Units;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 
@@ -26,6 +29,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             Mesh2d
         }
 
+        /// <summary>
+        /// Read meta data from Fou file
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <returns>Data object with meta data</returns>
         public static FouFileMetaData ReadMetaData(string path)
         {
             var grid = UGridFileHelper.ReadUnstructuredGrid(path, recreateCells:false);
@@ -49,14 +57,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 Variables2D = variables2D,
             };
         }
-
+        
+        /// <summary>
+        /// Creates coverages based on the 1d mesh
+        /// </summary>
+        /// <param name="metaData">Meta data of the fou file</param>
+        /// <returns>Collection of network coverages based on the 1d mesh</returns>
         public static NetworkCoverage[] Create1dMeshCoverages(FouFileMetaData metaData)
         {
             if (!File.Exists(metaData.Path))
                 return Array.Empty<NetworkCoverage>();
-
-            return DoWithNetCdfFile(metaData.Path, file =>
+            
+            using (var wrapper = CreateNetCdfWrapper(metaData.Path))
             {
+                var file = wrapper.WrapperObject;
                 return metaData.Variables1D
                                .Select(v => GenerateCoverageForVariable(file, v, () =>
                                                                             new NetworkCoverage("", false)
@@ -65,20 +79,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                                                                                 SegmentGenerationMethod = SegmentGenerationMethod.None
                                                                             }))
                                .ToArray();
-            });
+            }
         }
 
+        /// <summary>
+        /// Creates coverages based on the 2d mesh
+        /// </summary>
+        /// <param name="metaData">Meta data of the fou file</param>
+        /// <returns>Collection of grid coverages based on the 2d mesh</returns>
         public static UnstructuredGridCellCoverage[] Create2dMeshCoverages(FouFileMetaData metaData)
         {
             if (!File.Exists(metaData.Path))
                 return Array.Empty<UnstructuredGridCellCoverage>();
 
-            return DoWithNetCdfFile(metaData.Path, file =>
+            using (var wrapper = CreateNetCdfWrapper(metaData.Path))
             {
+                var file = wrapper.WrapperObject;
                 return metaData.Variables2D
                                .Select(v => GenerateCoverageForVariable(file, v, () => new UnstructuredGridCellCoverage(metaData.Grid, false)))
                                .ToArray();
-            });
+            }
+        }
+
+        /// <summary>
+        /// Reads the specified variable data from the specified fou file (path), filtered by specified indices
+        /// </summary>
+        /// <typeparam name="T">Type of the variable data</typeparam>
+        /// <param name="metaData">Meta data of the fou file</param>
+        /// <param name="variableName">Name of the variable to query</param>
+        /// <param name="indices">Indices to filter on (null = no filtering)</param>
+        /// <returns>MultiDimensionalArray with the requested values</returns>
+        public static IMultiDimensionalArray<T> Read1dArrayValues<T>(FouFileMetaData metaData, string variableName, int[] indices)
+        {
+            using (var wrapper = CreateNetCdfWrapper(metaData.Path))
+            {
+                var file = wrapper.WrapperObject;
+                var ncVariable = file.GetVariableByName(variableName);
+                return GetMultiDimensionalArray<T>(file, ncVariable, indices);
+            }
+        }
+
+        private static IMultiDimensionalArray<T> GetMultiDimensionalArray<T>(NetCdfFile file, NetCdfVariable ncVariable, int[] indices)
+        {
+            var values = new List<T>();
+            if (indices.Length == 1)
+            {
+                values = file.Read(ncVariable, new[] { indices[0] }, new[] { 1 }).OfType<T>().ToList();
+            }
+            else
+            {
+                var array = file.Read(ncVariable);
+
+                values = (indices.Any()
+                              ? indices.Select(i => array.GetValue(i)).OfType<T>()
+                              : array.OfType<T>()).ToList();
+            }
+
+            return new MultiDimensionalArray<T>(true, values, values.Count);
         }
 
         private static T GenerateCoverageForVariable<T>(NetCdfFile file, string variableName, Func<T> createCoverageFunc) where T : ICoverage
@@ -105,8 +162,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private static string[] GetMeshDependentVariables(string path, MeshType meshType)
         {
-            return DoWithNetCdfFile(path, file =>
+            using (var wrapper = CreateNetCdfWrapper(path))
             {
+                var file = wrapper.WrapperObject;
                 var dimensions = file.GetAllDimensions()
                                      .Where(d => string.Equals(file.GetDimensionName(d), GetDimensionName(meshType), StringComparison.InvariantCultureIgnoreCase))
                                      .ToArray();
@@ -120,7 +178,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                            && dimensions.Contains(variableDimensions[0])
                            && attributes.ContainsKey(fourierAttributeToCheck);
                 }).Select(file.GetVariableName).ToArray();
-            });
+            }
         }
 
         private static string GetDimensionName(MeshType meshType)
@@ -136,17 +194,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
         }
 
-        public static T DoWithNetCdfFile<T>(string path, Func<NetCdfFile,T> fileAction)
+        private static DisposableObjectWrapper<NetCdfFile> CreateNetCdfWrapper(string path)
         {
-            var file = NetCdfFile.OpenExisting(path);
-            try
-            {
-                return fileAction != null ? fileAction(file) : default(T);
-            }
-            finally
-            {
-                file?.Close();
-            }
+            return new DisposableObjectWrapper<NetCdfFile>(
+                () => NetCdfFile.OpenExisting(path), 
+                cdfFile => cdfFile?.Close());
         }
     }
 }

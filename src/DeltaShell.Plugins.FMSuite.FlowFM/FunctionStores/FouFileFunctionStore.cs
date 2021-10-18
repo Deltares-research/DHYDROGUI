@@ -9,7 +9,6 @@ using DelftTools.Functions.Generic;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.NetCdf;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 
@@ -26,6 +25,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
         private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
 
+        public FouFileFunctionStore()
+        {
+            TypeConverters = new List<ITypeConverter>();
+        }
+        
         public long Id { get; set; }
 
         public IEventedList<IFunction> Functions
@@ -51,15 +55,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             get { return new[] { Path }; }
         }
 
-        public bool IsFileCritical
-        {
-            get { return false; }
-        }
+        public bool IsFileCritical { get; } = false;
 
-        public bool IsOpen
-        {
-            get { return false; }
-        }
+        public bool IsOpen { get; } = false;
 
         public bool CopyFromWorkingDirectory { get; } = true;
 
@@ -67,22 +65,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         public bool SkipChildItemEventBubbling { get; set; }
 
-        public bool SupportsPartialRemove
-        {
-            get { return false; }
-        }
+        public bool SupportsPartialRemove => false;
 
-        public IList<ITypeConverter> TypeConverters
-        {
-            get { return null; }
-        }
+        public IList<ITypeConverter> TypeConverters { get; }
 
         public bool DisableCaching { get; set; }
-
-        public bool IsMultiValueFilteringSupported
-        {
-            get { return true; }
-        }
+        
+        public bool IsMultiValueFilteringSupported { get; } = true;
 
         #endregion
         
@@ -117,22 +106,22 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         public void SetVariableValues<T>(IVariable variable, IEnumerable<T> values, params IVariableFilter[] filters)
         {
-            throw new NotSupportedException("Function store is readonly");
+            throw ReadonlyError();
         }
 
         public void RemoveFunctionValues(IFunction function, params IVariableValueFilter[] filters)
         {
-            throw new NotSupportedException("Function store is readonly");
+            throw ReadonlyError();
         }
 
         public void AddIndependentVariableValues<T>(IVariable variable, IEnumerable<T> values)
         {
-            throw new NotSupportedException("Function store is readonly");
+            throw ReadonlyError();
         }
 
         public void UpdateVariableSize(IVariable variable)
         {
-            throw new NotSupportedException("Function store is readonly");
+            throw ReadonlyError();
         }
 
         public void CacheVariable(IVariable variable)
@@ -192,15 +181,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                               ? GetIndicesForFilter(variableValueFilter)
                               : Array.Empty<int>();
 
-            return FouFileReader.DoWithNetCdfFile(MetaData.Path, file =>
-            {
-                var ncVariable = file.GetVariableByName(variableName);
+            var data = FouFileReader.Read1dArrayValues<double>(MetaData, variableName, indices);
 
-                var data = GetMultiDimensionalArray<double>(file, ncVariable, indices);
-                UpdateMinMax(data, variableName, variable);
-                return data;
-            });
+            UpdateMinMax(data, variableName, variable);
 
+            return data;
         }
 
         public IMultiDimensionalArray<T> GetVariableValues<T>(IVariable variable, params IVariableFilter[] filters)
@@ -210,36 +195,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         public T GetMaxValue<T>(IVariable variable)
         {
-            if (!variable.Attributes.TryGetValue(FouFileReader.ncVariableName, out string variableName) || variable.IsIndependent)
-            {
-                throw new NotSupportedException("Fou file only contains doubles values");
-            }
-
-            if (maxValues.TryGetValue(variableName, out double maxValue))
-            {
-                return (T)Convert.ChangeType(maxValue, typeof(T));
-            }
-
-            return default(T);
+            return GetCachedValue<T>(variable, maxValues);
         }
 
         public T GetMinValue<T>(IVariable variable)
         {
-            if (!variable.Attributes.TryGetValue(FouFileReader.ncVariableName, out string variableName) || variable.IsIndependent)
-            {
-                throw new NotSupportedException("Fou file only contains doubles values");
-            }
-
-            if (minValues.TryGetValue(variableName, out double minValue))
-            {
-                return (T)Convert.ChangeType(minValue, typeof(T));
-            }
-
-            return default(T);
+            return GetCachedValue<T>(variable, minValues);
         }
 
         public void CreateNew(string path)
         {
+            // no action required
         }
 
         public void Close()
@@ -249,7 +215,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         public void Open(string path)
         {
-
+            // no action required
         }
 
         public void CopyTo(string destinationPath)
@@ -304,25 +270,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
             }
 
             throw new NotSupportedException("The requested filter is not supported, can not retrieve fou file results");
-        }
-
-        private static IMultiDimensionalArray<T> GetMultiDimensionalArray<T>(NetCdfFile file, NetCdfVariable ncVariable, int[] indices)
-        {
-            var values = new List<T>();
-            if (indices.Length == 1)
-            {
-                values = file.Read(ncVariable, new []{ indices[0]}, new[] { 1 }).OfType<T>().ToList();
-            }
-            else
-            {
-                var array = file.Read(ncVariable);
-
-                values = (indices.Any()
-                              ? indices.Select(i => array.GetValue(i)).OfType<T>()
-                              : array.OfType<T>()).ToList();
-            }
-
-            return new MultiDimensionalArray<T>(true, values, values.Count);
         }
 
         private IEnumerable<IFunction> CreateFunctions()
@@ -396,10 +343,28 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         private void CleanCaches()
         {
             metaData = null;
-            functions?.ForEach(f => f.Store = null);
-            functions = null;
             minValues.Clear();
             maxValues.Clear();
+        }
+
+        private static T GetCachedValue<T>(IVariable variable, IDictionary<string, double> dictionary)
+        {
+            if (!variable.Attributes.TryGetValue(FouFileReader.ncVariableName, out string variableName) || variable.IsIndependent)
+            {
+                throw new NotSupportedException("Fou file only contains doubles values");
+            }
+
+            if (dictionary.TryGetValue(variableName, out double value))
+            {
+                return (T)Convert.ChangeType(value, typeof(T));
+            }
+
+            return default(T);
+        }
+
+        private static NotSupportedException ReadonlyError()
+        {
+            return new NotSupportedException("Function store is readonly");
         }
     }
 }

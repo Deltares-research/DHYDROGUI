@@ -1,33 +1,22 @@
-﻿using System;
-using DelftTools.Utils.Editing;
+﻿using DelftTools.Utils.Editing;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Utils;
 
 namespace DeltaShell.NGHS.Common.Extensions
 {
-    public sealed class DisposableEditableObject : IDisposable
+    public sealed class DisposableEditableObject : DisposableObjectWrapper<IEditableObject>
     {
-        private readonly IEditableObject editableObject;
-
         /// <summary>
         /// Sets an editableObject in edit mode
         /// </summary>
         /// <param name="editableObject">Editable object</param>
         /// <param name="actionName">Name of the action</param>
-        public DisposableEditableObject(IEditableObject editableObject, string actionName = "")
+        public DisposableEditableObject(IEditableObject editableObject, string actionName = ""): base(()=> editableObject)
         {
-            this.editableObject = editableObject;
-
             Ensure.NotNull(editableObject, nameof(editableObject));
-            editableObject.BeginEdit(actionName);
-        }
 
-        /// <inheritdoc cref="IDisposable"/>
-        /// <summary>
-        /// Puts the <see cref="IEditableObject"/> out of edit mode
-        /// </summary>
-        public void Dispose()
-        {
-            editableObject.EndEdit();
+            editableObject.BeginEdit(actionName);
+            disposeAction = o => o.EndEdit();
         }
     }
 }

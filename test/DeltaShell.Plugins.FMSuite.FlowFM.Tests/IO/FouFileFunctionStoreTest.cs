@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DelftTools.Functions.Filters;
 using DelftTools.TestUtils;
+using DelftTools.Utils.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
@@ -11,7 +13,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
     [TestFixture]
     public class FouFileFunctionStoreTest
     {
-        [Test]
+        [Test, Category(TestCategory.DataAccess)]
         public void GivenFouFileFunctionStore_ReadingFouFile_ShouldGiveCorrectCoverages()
         {
             //Arrange
@@ -63,6 +65,50 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             // check min/max
             Assert.AreEqual(15, (double)component.MaxValue, 1e-4);
             Assert.AreEqual(15, (double)component.MinValue, 1e-4);
+        }
+
+        [Test, Category(TestCategory.DataAccess)]
+        public void GivenFouFileFunctionStoreTest_FileBasedItemActions_ShouldWorkCorrectly()
+        {
+            //Arrange
+            var path = TestHelper.GetTestFilePath(@"output_foufiles\moergestels_broek_fou.nc");
+            var pathToCopyTo = TestHelper.GetTestWorkingDirectoryGeneratedTestFilePath("nc", null, "_fou");
+            var store = new FouFileFunctionStore();
+
+            FileUtils.DeleteIfExists(pathToCopyTo);
+
+            // Act & Assert
+            store.CreateNew(path); // should do nothing (readonly)
+
+            Assert.IsNull(store.Path);
+            Assert.IsEmpty(store.Functions);
+
+            store.SwitchTo(path);
+            store.Open(path); // should do nothing (switch also opens)
+
+            Assert.AreEqual(path, store.Path);
+            Assert.NotNull(store.Functions);
+
+            store.CopyTo(pathToCopyTo);
+            store.SwitchTo(pathToCopyTo);
+
+            Assert.AreEqual(pathToCopyTo, store.Path);
+            Assert.NotNull(store.Functions);
+        }
+
+        [Test]
+        public void GivenFouFileFunctionStore_CallingWriteMethods_ShouldReturnAnError()
+        {
+            //Arrange
+            var store = new FouFileFunctionStore();
+            var expectedError = "Function store is readonly";
+
+            // Assert
+
+            Assert.Throws<NotSupportedException>(()=> store.SetVariableValues<double>(null, null), expectedError);
+            Assert.Throws<NotSupportedException>(() => store.RemoveFunctionValues(null), expectedError);
+            Assert.Throws<NotSupportedException>(() => store.AddIndependentVariableValues(null, Array.Empty<double>()), expectedError);
+            Assert.Throws<NotSupportedException>(() => store.UpdateVariableSize(null), expectedError);
         }
     }
 }

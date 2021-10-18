@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;

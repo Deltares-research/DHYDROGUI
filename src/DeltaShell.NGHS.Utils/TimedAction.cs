@@ -3,21 +3,17 @@ using System.Diagnostics;
 
 namespace DeltaShell.NGHS.Utils
 {
-    public class TimedAction : IDisposable
+    public class TimedAction : DisposableObjectWrapper<Stopwatch>
     {
-        private readonly Action<TimeSpan> afterAction;
-        private readonly Stopwatch stopWatch = new Stopwatch();
-
-        public TimedAction(Action<TimeSpan> afterAction)
+        public TimedAction(Action<TimeSpan> afterAction): base(()=> new Stopwatch())
         {
-            this.afterAction = afterAction;
-            stopWatch.Start();
-        }
+            WrapperObject.Start();
 
-        public void Dispose()
-        {
-            stopWatch.Stop();
-            afterAction?.Invoke(stopWatch.Elapsed);
+            disposeAction = s =>
+            {
+                s.Stop();
+                afterAction?.Invoke(s.Elapsed);
+            };
         }
     }
 }
