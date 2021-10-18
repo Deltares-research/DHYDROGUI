@@ -1,45 +1,85 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
+    /// <summary>
+    /// Reader for the casedesc.cmt file.
+    /// </summary>
     public static class SobekCaseDataReader
     {
-        public static SobekCaseData ReadCaseData(string caseDataPath)
+        /// <summary>
+        /// Reads the <see cref="SobekCaseData"/> from the specified <paramref name="stream"/>
+        /// </summary>
+        /// <param name="stream"> The stream. </param>
+        /// <param name="rootFilePath"> The root file path used with the relative paths. </param>
+        /// <returns>
+        /// The <see cref="SobekCaseData"/>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="stream"/> or <paramref name="rootFilePath"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the provided <paramref name="stream"/> does not support reading.
+        /// </exception>
+        public static SobekCaseData Read(Stream stream, string rootFilePath)
         {
-            var sobekCaseData = new SobekCaseData();
+            Ensure.NotNull(stream, nameof(stream));
+            Ensure.NotNull(rootFilePath, nameof(rootFilePath));
 
-            IList<string> caseData = new List<string>();
-            using (var reader = new StreamReader(caseDataPath))
+            if (!stream.CanRead)
             {
-                string line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    caseData.Add(line.ToUpper());
-                }
+                throw new InvalidOperationException("The current file stream does not support reading.");
             }
-            // Get first path that refers to wind data (wdc = constant, wnd is timeseries) SobekWindReader handle both
-            string windDataPath = caseData.FirstOrDefault(t => (t.Contains(".WDC ") || (t.Contains(".WND "))));
-            if (windDataPath != null)
-            {
-                sobekCaseData.WindDataPath = GetRelativePathFromCaseToSobekFixed(windDataPath.Split(' ')[1], caseDataPath);
-            }
-            // Get path that refers to precipitation data
-            string buiDataPath = caseData.FirstOrDefault(t => (t.Contains(".BUI ")));
-            if (buiDataPath != null)
-            {
-                sobekCaseData.BuiDataPath = GetRelativePathFromCaseToSobekFixed(buiDataPath.Split(' ')[1], caseDataPath);
-            }
-            return sobekCaseData;
+
+            string[] lines = ReadData(stream).ToArray();
+
+            var caseData = new SobekCaseData();
+
+            string windFilePathLine = lines.FirstOrDefault(l => l.ContainsCaseInsensitive(".wdc") || l.ContainsCaseInsensitive(".wnd"));
+            caseData.WindDataPath = GetAbsolutePath(windFilePathLine, rootFilePath);
+
+            string buiFilePathLine = lines.FirstOrDefault(l => l.ContainsCaseInsensitive(".bui"));
+            caseData.BuiDataPath = GetAbsolutePath(buiFilePathLine, rootFilePath);
+
+            return caseData;
         }
 
-        public static string GetRelativePathFromCaseToSobekFixed(string absoluteFilePath, string caseDataPath)
+        private static IEnumerable<string> ReadData(Stream stream)
         {
-            if (Directory.Exists(Path.Combine(Path.GetDirectoryName(caseDataPath), @"\..\..\FIXED\")))
-                return Path.GetFullPath(Path.GetDirectoryName(caseDataPath) + @"\..\..\FIXED\" + Path.GetFileName(absoluteFilePath));
-            return Path.GetFullPath(Path.GetDirectoryName(caseDataPath) + @"\..\FIXED\" + Path.GetFileName(absoluteFilePath));
+            using (var streamReader = new StreamReader(stream))
+            {
+                string line;
+                while ((line = streamReader.ReadLine()) != null)
+                {
+                    yield return line;
+                }
+            }
+        }
+
+        private static string GetAbsolutePath(string line, string rootPath)
+        {
+            if (string.IsNullOrWhiteSpace(line))
+            {
+                return null;
+            }
+
+            string caseDir = Path.GetDirectoryName(rootPath);
+
+            string fixedDir = Path.Combine(caseDir, @"..\..\FIXED\");
+            if (!Directory.Exists(fixedDir))
+            {
+                fixedDir = Path.Combine(caseDir, @"..\FIXED\");
+            }
+
+            string relativeFilePath = line.Split(' ')[1];
+            string fileName = Path.GetFileName(relativeFilePath);
+            return Path.GetFullPath(Path.Combine(fixedDir, fileName));
         }
     }
 }

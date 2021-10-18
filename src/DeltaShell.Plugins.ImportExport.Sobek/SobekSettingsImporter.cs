@@ -122,7 +122,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 Log.WarnFormat("Sobek case data file [{0}] not found; skipping...", caseDataPath);
                 return new SobekCaseData();
             }
-            return SobekCaseDataReader.ReadCaseData(caseDataPath);
+
+            using (var stream = new FileStream(caseDataPath, FileMode.Open))
+            {
+                return SobekCaseDataReader.Read(stream, caseDataPath);
+            }
         }
 
         private IEnumerable<DateTime> ReadMeasurementTimesFromBuiFile()
