@@ -121,7 +121,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
         private static IMultiDimensionalArray<T> GetMultiDimensionalArray<T>(NetCdfFile file, NetCdfVariable ncVariable, int[] indices)
         {
-            var values = new List<T>();
+            List<T> values;
+
             if (indices.Length == 1)
             {
                 values = file.Read(ncVariable, new[] { indices[0] }, new[] { 1 }).OfType<T>().ToList();

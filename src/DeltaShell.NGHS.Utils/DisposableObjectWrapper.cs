@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.Utils
 
         public T WrapperObject { get; }
 
-        private void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {

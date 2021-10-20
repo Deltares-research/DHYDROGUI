@@ -648,15 +648,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     };
                 case IEventedList<Catchment> catchments when drainageBasin != null:
                 {
-                    var flattenedCatchments = catchments.Concat(catchments);
-
                     var centerLayers = new VectorLayer
                     {
                         Name = "Catchments (centers)",
-                        DataSource =
-                            new ComplexFeatureCollection(drainageBasin,
-                                new WrappedEnumerableList<Catchment>(flattenedCatchments, catchments),
-                                typeof(Catchment)),
+                        DataSource = new ComplexFeatureCollection(drainageBasin, (IList) catchments, typeof(Catchment)),
                         FeatureEditor = new CatchmentFeatureEditor(true) {DrainageBasin = drainageBasin },
                         CustomRenderers = {new CatchmentAnchorPointRenderer()},
                         NameIsReadOnly = true
