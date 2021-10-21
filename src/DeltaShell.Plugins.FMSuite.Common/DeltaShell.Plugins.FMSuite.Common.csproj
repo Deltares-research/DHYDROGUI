@@ -86,7 +86,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.874-beta">
+    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.883-beta">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
