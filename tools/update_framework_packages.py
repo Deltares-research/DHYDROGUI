@@ -47,17 +47,9 @@ if __name__ == "__main__":
     version_regex = get_framework_version_regex_string()
 
     find_and_replace_csproj = [
-        (re.compile(f'DeltaShell\\.Framework\\.{version_regex}'),   f"DeltaShell.Framework.{new_version_string}"),
-        (re.compile(f'DeltaShell\\.TestProject\\.{version_regex}'), f"DeltaShell.TestProject.{new_version_string}"),
+        (re.compile(f'"DeltaShell\\.ApplicationPlugin" Version="{version_regex}"'), f'"DeltaShell.ApplicationPlugin" Version="{new_version_string}"'),
+        (re.compile(f'"DeltaShell\\.Framework" Version="{version_regex}"'),         f'"DeltaShell.Framework" Version="{new_version_string}"'),
+        (re.compile(f'"DeltaShell\\.TestProject" Version="{version_regex}"'),       f'"DeltaShell.TestProject" Version="{new_version_string}"'),
     ]
 
-    update_files(project_file_paths, find_and_replace_csproj, "utf-8-sig")
-
-    config_file_paths = search_files(root_path, 'packages.config')
-    find_and_replace_config = [
-        (re.compile(f'"DeltaShell\\.ApplicationPlugin" version="{version_regex}"'), f'"DeltaShell.ApplicationPlugin" version="{new_version_string}"'),
-        (re.compile(f'"DeltaShell\\.Framework" version="{version_regex}"'),         f'"DeltaShell.Framework" version="{new_version_string}"'),
-        (re.compile(f'"DeltaShell\\.TestProject" version="{version_regex}"'),       f'"DeltaShell.TestProject" version="{new_version_string}"'),
-    ]
-
-    update_files(config_file_paths, find_and_replace_config)
+    update_files(project_file_paths, find_and_replace_csproj)
