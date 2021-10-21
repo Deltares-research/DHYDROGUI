@@ -99,7 +99,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.883-beta">
+    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.884-beta">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
