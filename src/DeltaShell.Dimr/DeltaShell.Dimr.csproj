@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
-  <Target Name="PreBuild" BeforeTargets="CoreCompile">
+  <Target Name="PreBuild" BeforeTargets="CoreCompile" Condition="!Exists('$(ProjectDir)\dimr_xsd\dimr.cs') Or !Exists('$(ProjectDir)\drtc_xsd\rtcRuntimeConfig.cs')">
     <Exec Command="cd &quot;$(ProjectDir)\drtc_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS treeVector.xsd pi_sharedtypes.xsd pi_timeseries.xsd rtcSharedTypes.xsd rtcDataConfig.xsd rtcToolsConfig.xsd .\rtcRuntimeConfig.xsd /namespace:DeltaShell.Dimr.RtcXsd&#xD;&#xA;cd &quot;$(ProjectDir)\dimr_xsd&quot;&#xD;&#xA;..\..\..\tools\xsd\xsd.exe /classes /language:CS dimr.xsd /namespace:DeltaShell.Dimr.DimrXsd&#xD;&#xA;  " />
     <ItemGroup>
       <Compile Include="dimr_xsd\dimr.cs;drtc_xsd\rtcRuntimeConfig.cs" />
@@ -30,7 +30,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.896-beta" IncludeAssets="compile" PrivateAssets="all"/>
+    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.896-beta" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="Dimr.Libs" Version="2.17.12" />
     <PackageReference Include="log4net" Version="2.0.12">
       <IncludeAssets>compile</IncludeAssets>
