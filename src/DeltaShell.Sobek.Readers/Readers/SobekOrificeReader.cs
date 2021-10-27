@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using DelftTools.Utils;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -64,7 +65,7 @@ namespace DeltaShell.Sobek.Readers.Readers
         {
             if (!group.Success)
                 return 0;
-            string value = group.Value.Split(' ')[1];
+            string value = group.Value.SplitOnEmptySpace()[1];
             return ConversionHelper.ToDouble(value);
         }
     }

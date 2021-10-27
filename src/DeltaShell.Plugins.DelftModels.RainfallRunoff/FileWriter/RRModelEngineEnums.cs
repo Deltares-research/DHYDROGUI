@@ -49,13 +49,4 @@
         TimeTable = 4,
         TimeTableAndSaltConcentration = 5
     }
-
-    public enum ErrorLevel
-    {
-        Debug = 1,
-        Info,
-        Warning,
-        Error,
-        Fatal
-    }
 }

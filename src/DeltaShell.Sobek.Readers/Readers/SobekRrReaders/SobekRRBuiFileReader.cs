@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -109,16 +110,14 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             // *en het aantal seconden per waarnemingstijdstap
             // 1  3600
             // 3600 = 60 * 60 = 1 hour
-            MeasurementPeriodSeconds = int.Parse(buiFile.ParseLine(true).Split(new char[] {' '},
-                                                                               StringSplitOptions.RemoveEmptyEntries)[1]);
+            MeasurementPeriodSeconds = int.Parse(buiFile.ParseLine(true).SplitOnEmptySpace()[1]);
 
             // *Het format is: yyyymmdd:hhmmss:ddhhmmss
             //  yyyymmdd:hhmmss:ddhhmmss
             // PB: this comment is misleading it should be read as yyyy mm dd hh mm ss dd hh mm ss
             //     where leading zero'line are omitted!
             //  1951 1 1 0 0 0 1 16 0 0
-            string[] metaTimeData = buiFile.ParseLine(true).Split(new char[] {' '},
-                                                                  StringSplitOptions.RemoveEmptyEntries);
+            string[] metaTimeData = buiFile.ParseLine(true).SplitOnEmptySpace();
             if (metaTimeData.Length != 10)
             {
                 log.Error("Error parsing start time and/or timestep.");

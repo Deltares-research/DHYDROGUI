@@ -45,7 +45,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                 @"2.4  1.4  1.4 <" + Environment.NewLine +
                 @"2.4001  .0001  .0001 <" + Environment.NewLine +
                 @"tble  crds" + Environment.NewLine +
-                @"CRDS id '4' nm 'Estuary' ty 0 wm 3000 w1 0 w2 0 lt lw" + Environment.NewLine +
+                @"CRDS  id  '4'  nm  'Estuary'  ty  0  wm  3000  w1  0  w2  0  lt lw" + Environment.NewLine +
                 @"TBLE" + Environment.NewLine +
                 @"0 2000 2000 <" + Environment.NewLine +
                 @"14 3000 3000 <" + Environment.NewLine +

@@ -9,6 +9,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
@@ -865,7 +866,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         {
             foreach (string line in File.ReadAllLines(filePath))
             {
-                string[] split = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                string[] split = line.SplitOnEmptySpace();
                 if (!split.Any())
                 {
                     continue;

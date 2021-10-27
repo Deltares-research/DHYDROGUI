@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 
 namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
@@ -131,7 +132,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         {
             var lstValues = new List<double>();
 
-            var valuesArray = values.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var valuesArray = values.SplitOnEmptySpace();
             foreach (var value in valuesArray)
             {
                 lstValues.Add(Convert.ToDouble(value, CultureInfo.InvariantCulture));

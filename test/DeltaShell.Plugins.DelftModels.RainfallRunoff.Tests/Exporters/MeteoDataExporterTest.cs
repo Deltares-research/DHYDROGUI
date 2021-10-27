@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using log4net.Core;
@@ -238,7 +239,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         {
             string[] allLines = File.ReadAllLines(path).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
             IEnumerable<string> lastNLines = allLines.Skip(allLines.Length - n);
-            string[][] splitLines = lastNLines.Select(l => l.Split(new char[0], StringSplitOptions.RemoveEmptyEntries)).ToArray();
+            string[][] splitLines = lastNLines.Select(l => l.SplitOnEmptySpace()).ToArray();
 
             return splitLines;
         }

@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -68,7 +69,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void ReadObservationPointsFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
             var obsFiles = modelDefinition.GetModelProperty(KnownProperties.ObsFile).GetValueAsString();
-            foreach (var obsFile in obsFiles.Split(' '))
+            foreach (var obsFile in obsFiles.SplitOnEmptySpace())
             {
                 var obsFileFullPath = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, obsFile);
                 if (!File.Exists(obsFileFullPath)) return;

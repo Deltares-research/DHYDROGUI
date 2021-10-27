@@ -23,6 +23,21 @@ namespace DeltaShell.NGHS.Common.Extensions
         }
 
         /// <summary>
+        /// Splits the specified string on empty spaces and removes the empty strings.
+        /// </summary>
+        /// <param name="value"> The original string to be split. </param>
+        /// <returns> An array of the split parts. </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="value"/> is <c>null</c>.
+        /// </exception>
+        public static string[] SplitOnEmptySpace(this string value)
+        {
+            Ensure.NotNull(value, nameof(value));
+
+            return value.Split(Array.Empty<char>(), StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        /// <summary>
         /// Determines whether <paramref name="source"/> contains <paramref name="value"/>,
         /// ignoring the case of the strings.
         /// </summary>

@@ -11,12 +11,4 @@ namespace DelftTools.Hydro.Helpers
         /// <param name="crossSection">crossSection to use as base</param>
         IFunction GetConveyance(ICrossSection crossSection);
     }
-
-    public static class CrossSectionConveyanceExtensions
-    {
-        public static IFunction GetConveyanceData(this ICrossSection crossSection)
-        {
-            return CrossSectionHelper.GetConveyanceTable(crossSection);
-        }
-    }
 }

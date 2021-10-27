@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Shell.Core;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -394,7 +395,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
         private string GetCasePath(string caseName)
         {
             var caseDescription = caseName;
-            var caseId = caseDescription.Split(' ')[0];
+            var caseId = caseDescription.SplitOnEmptySpace()[0];
             
             var caseDirectory = Path.Combine(Path.GetDirectoryName(filePath) ?? string.Empty, caseId);
 

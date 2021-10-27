@@ -5,6 +5,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.Extensions;
 using log4net;
 
 namespace DeltaShell.NGHS.IO
@@ -146,7 +147,7 @@ namespace DeltaShell.NGHS.IO
                 var line = GetNextLine();
                 if (line == null) return timeSeries;
 
-                var componentColumns = line.Split(' ').Length - 1;
+                var componentColumns = line.SplitOnEmptySpace().Length - 1;
 
                 for (var i = 0; i < componentColumns; i++)
                 {

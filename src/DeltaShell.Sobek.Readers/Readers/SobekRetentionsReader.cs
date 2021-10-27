@@ -9,6 +9,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.Common.Extensions;
 using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers
@@ -76,7 +77,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             line = line.Replace("ct ss", "ctss");
             line = line.Replace("dc lt 5", "dclt5");
             line = line.Replace("wl ow", "wlow");
-            string[] words = line.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] words = line.SplitOnEmptySpace();
 
             if (words.Length == 0)
             {

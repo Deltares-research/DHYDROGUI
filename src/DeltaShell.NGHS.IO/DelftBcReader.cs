@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO
@@ -56,7 +56,7 @@ namespace DeltaShell.NGHS.IO
                     }
                     else
                     {
-                        var tableRow = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToArray();
+                        var tableRow = line.SplitOnEmptySpace();
                         
                         for(int i = 0; i < currentCategory.Table.Count; i++)
                         {

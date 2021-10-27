@@ -7,6 +7,7 @@ using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
@@ -102,7 +103,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Branch = branch,
                 Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : definition?.CrossSectionType == CrossSectionType.YZ ? BridgeType.YzProfile : BridgeType.Rectangle,
-                FlowDirection = (FlowDirection)category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key).GetEnumValueFromDisplayName(typeof(FlowDirection)),
+                FlowDirection = (FlowDirection) EnumUtils.GetEnumValueFromDisplayName(category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key),typeof(FlowDirection)),
                 Shift = shift,
                 Width = width,
                 Height = height,
@@ -387,7 +388,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW
                     ? definition as CrossSectionDefinitionZW
                     : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() ?? CrossSectionDefinitionZW.CreateDefault(),
-                FlowDirection = (FlowDirection)category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key).GetEnumValueFromDisplayName(typeof(FlowDirection)),
+                FlowDirection = (FlowDirection) EnumUtils.GetEnumValueFromDisplayName(category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key), typeof(FlowDirection)),
                 InletLevel = category.ReadProperty<double>(StructureRegion.LeftLevel.Key),
                 OutletLevel = category.ReadProperty<double>(StructureRegion.RightLevel.Key),
                 Length = category.ReadProperty<double>(StructureRegion.Length.Key),

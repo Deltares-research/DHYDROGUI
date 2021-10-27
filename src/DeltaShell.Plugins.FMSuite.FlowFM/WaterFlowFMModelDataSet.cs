@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using DelftTools.Functions;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 
@@ -30,13 +29,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public const string LateralSourcesDataTag = "1D Lateral Data";
         public const string BoundaryConditionsTag = "1D Boundary Data";
         public const string NetworkTag = "network";
-
-        public enum UnitIds
-        {
-            None,
-            Meter,
-            CubicMeterPerSecond,
-        }
 
         public const double DefaultSaltDispersion = 1;
 
@@ -221,26 +213,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {Model1DParameterNames.StructureHeadDifference, FunctionAttributes.StandardNames.StructureWaterHead},
                 {Model1DParameterNames.StructureWaterLevelAtCrest, FunctionAttributes.StandardNames.StructureWaterLevelAtCrest}
             };
-        }
-
-        [ExcludeFromCodeCoverage] // contains Data Only!
-        public class Meteo
-        {
-            public const double valueLatitudeDefault = 52.00667;
-            public const double valueLongitudDefault = 4.35556;
-            public const double valueBackgroundTemperatureDefault = 0.0;
-            public const double valueBackgroundTemperatureMin = 0.0;
-            public const double valueBackgroundTemperatureMax = 60.0;
-            public const double valueSurfaceAreaDefault = 1000000;
-            public const double valueSurfaceAreaMin = 0.0;
-            public const double valueAtmosphericPressureDefault = 100000;
-            public const double valueDaltonNumberDefault = 0.0013;
-            public const double valueDaltonNumberMin = 0.0;
-            public const double valueDaltonNumberMax = 1.0;
-            public const double valueStantonNumberDefault = 0.0013;
-            public const double valueStantonNumberMin = 0.0;
-            public const double valueStantonNumberMax = 1.0;
-            public const double valueHeatCapacityWaterDefault = 3930;
         }
     }
 }

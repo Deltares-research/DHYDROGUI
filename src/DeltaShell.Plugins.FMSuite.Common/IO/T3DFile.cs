@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using log4net;
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     if (line == null) break;
 
                     var valueRow =
-                        line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries)
+                        line.SplitOnEmptySpace()
                             .Select(s => GetDouble(s, "value"))
                             .ToList();
 
@@ -147,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 throw new FormatException(string.Format("Could not find TIME-qualifier in t3d-file {0} at line {1}.",
                     InputFilePath, LineNumber));
             }
-            var fields = field.Split(new char[0],StringSplitOptions.RemoveEmptyEntries).ToList();
+            var fields = field.SplitOnEmptySpace().ToList();
             if (fields.Count < 5)
             {
                 throw new FormatException(string.Format("Invalid time specification in t3d-file {0} at line {1}.",
@@ -221,7 +222,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                 return new VerticalProfileDefinition(VerticalProfileType.Uniform);
             }
             var layerDepths =
-                layerDepthString.Split(new char[0], StringSplitOptions.RemoveEmptyEntries)
+                layerDepthString.SplitOnEmptySpace()
                     .Select(s => GetDouble(s, "Layer depth"))
                     .ToList();
             var factor = verticalProfileType == VerticalProfileType.PercentageFromBed ||

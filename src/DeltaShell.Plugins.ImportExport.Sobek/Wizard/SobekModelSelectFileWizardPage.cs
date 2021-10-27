@@ -2,6 +2,7 @@
 using System.IO;
 using System.Security;
 using DelftTools.Controls.Swf.WizardPages;
+using DeltaShell.NGHS.Common.Extensions;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 {
@@ -125,7 +126,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             if (caseListBox.SelectedItem != null)
             {
                 var caseDescription = (string)caseListBox.SelectedItem;
-                var caseId = caseDescription.Split(' ')[0];
+                var caseId = caseDescription.SplitOnEmptySpace()[0];
 
                 var rootDirectory = Path.GetDirectoryName(CaseListFileName);
                 var caseDirectory = rootDirectory + Path.DirectorySeparatorChar + caseId;

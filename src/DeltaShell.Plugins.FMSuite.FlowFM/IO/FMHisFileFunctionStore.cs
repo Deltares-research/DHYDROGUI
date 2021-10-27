@@ -10,6 +10,7 @@ using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.CoordinateSystems;
@@ -111,7 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     double[] xCoordinates = null;
                     double[] yCoordinates = null;
 
-                    var idCollectionViaCoordinateAttribute = netCdfFile.GetAttributeValue(netcdfVariable, CoordinatesAttribute)?.Split(' ');
+                    var idCollectionViaCoordinateAttribute = netCdfFile.GetAttributeValue(netcdfVariable, CoordinatesAttribute)?.SplitOnEmptySpace();
                     if (idCollectionViaCoordinateAttribute == null) continue;
 
                     FindInputFeatureIdsOrOutputCoordinatesToPlaceTimeseriesOn(idCollectionViaCoordinateAttribute, ref ids, ref xCoordinates, ref yCoordinates);

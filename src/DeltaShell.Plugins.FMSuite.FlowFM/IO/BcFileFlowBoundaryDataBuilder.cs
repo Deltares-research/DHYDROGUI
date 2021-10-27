@@ -6,6 +6,7 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Extensions.Feature;
@@ -926,7 +927,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         stringValues.Select(s => DateTime.ParseExact(s, "yyyyMMddHHmmss", CultureInfo.InvariantCulture))
                             .Cast<object>();
                 }
-                var splittedFormat = format.Split().ToList();
+                var splittedFormat = format.SplitOnEmptySpace().ToList();
                 if (splittedFormat[1] == "since")
                 {
                     var dateString = string.Join(" ", splittedFormat.Skip(2));

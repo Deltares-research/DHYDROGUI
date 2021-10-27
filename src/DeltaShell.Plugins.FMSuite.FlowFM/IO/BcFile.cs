@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
@@ -427,7 +428,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             while (line != null)
             {
                 if (LineIsStartOfNewBlock(line)) break;
-                var columns = line.Split(new[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+                var columns = line.SplitOnEmptySpace();
                 if(columns.Length<quantityDataList.Count)
                 {
                     log.WarnFormat("Omitting line {0} with less than {1} columns", LineNumber, quantityDataList.Count);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using log4net;
@@ -111,9 +112,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
                 return Enumerable.Empty<string>();
             }
 
-            string[] split = make.Split(' ');
-
-            return split.Where(s => !string.IsNullOrEmpty(s));
+            return make.SplitOnEmptySpace();
         }
 
         private static FouFileRow FouFileEntry(List<string> tokens)

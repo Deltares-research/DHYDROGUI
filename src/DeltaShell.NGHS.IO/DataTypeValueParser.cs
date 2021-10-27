@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.Utils;
 using log4net;
 
@@ -199,8 +201,7 @@ namespace DeltaShell.NGHS.IO
             {
                 if (string.IsNullOrEmpty(str)) return new List<string>();
 
-                var strings = str.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                return strings;
+                return str.SplitOnEmptySpace().ToList();
             }
             if (dataType == typeof(double))
             {
@@ -235,7 +236,7 @@ namespace DeltaShell.NGHS.IO
                 var trimmedString = str.Replace('d', 'e').Trim();
                 if (string.IsNullOrEmpty(trimmedString)) return new List<double>(0);
 
-                var numbers = trimmedString.Split(new[] {' ', '\t'}, StringSplitOptions.RemoveEmptyEntries);
+                var numbers = trimmedString.SplitOnEmptySpace();
                 var resultList = new List<Double>();
                 foreach (var number in numbers)
                 {
@@ -259,7 +260,7 @@ namespace DeltaShell.NGHS.IO
             }
             if (dataType.IsEnum)
             {
-                var enumValue = str.GetEnumValueFromDisplayName(dataType);
+                var enumValue = EnumUtils.GetEnumValueFromDisplayName(str, dataType);
                 if (enumValue == null) throw new FormatException(String.Format("Value of '{0}' not valid.", str));
                 return enumValue;
             }

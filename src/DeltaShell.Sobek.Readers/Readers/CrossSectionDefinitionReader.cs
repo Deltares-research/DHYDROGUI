@@ -55,9 +55,9 @@ namespace DeltaShell.Sobek.Readers.Readers
 
         public SobekCrossSectionDefinition GetCrossSectionDefinition(string text)
         {
-            const string pattern = @"id\s'(?<Id>" + RegularExpression.Characters + @")'\snm\s'(?<Name>" +
-                                   RegularExpression.ExtendedCharacters + @")'\sty\s" + @"(?<Type>" +
-                                   RegularExpression.Integer + @")" + @"\s(?<Structure>" +
+            const string pattern = @"id\s+'(?<Id>" + RegularExpression.Characters + @")'\s+nm\s+'(?<Name>" +
+                                   RegularExpression.ExtendedCharacters + @")'\s+ty\s+" + @"(?<Type>" +
+                                   RegularExpression.Integer + @")" + @"\s+(?<Structure>" +
                                    RegularExpression.CharactersAndQuote + @"?)\s+crds";
 
             var match = RegularExpression.GetFirstMatch(pattern, text);

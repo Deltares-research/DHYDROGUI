@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 
@@ -39,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             return str.Split('\'')
                 .Select((element, index) => index % 2 == 0 // If even index
-                    ? element.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries) // Split the item
+                    ? element.SplitOnEmptySpace() // Split the item
                     : new string[] { element }) // Keep the entire item
                 .SelectMany(element => element).ToArray();
         }

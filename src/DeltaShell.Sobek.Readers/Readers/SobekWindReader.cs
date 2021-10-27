@@ -9,6 +9,7 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -116,7 +117,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             if (table.StartsWith("0"))
             {
                 sobekWind.IsConstantVelocity = true;
-                sobekWind.ConstantVelocity = table.Split(' ')[1].Parse<double>(CultureInfo.InvariantCulture);
+                sobekWind.ConstantVelocity = table.SplitOnEmptySpace()[1].Parse<double>(CultureInfo.InvariantCulture);
                 return;
             }
             sobekWind.IsConstantVelocity = false;
@@ -139,7 +140,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             if (table.StartsWith("0"))
             {
                 sobekWind.IsConstantDirection = true;
-                sobekWind.ConstantDirection = table.Split(' ')[1].Parse<double>(CultureInfo.InvariantCulture);
+                sobekWind.ConstantDirection = table.SplitOnEmptySpace()[1].Parse<double>(CultureInfo.InvariantCulture);
                 return;
             }
             sobekWind.IsConstantDirection = false;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO;
 using log4net;
 
@@ -48,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
             var nwrwData = new NwrwData(null);
 
-            var values = line.Split(new char[0], StringSplitOptions.RemoveEmptyEntries);
+            var values = line.SplitOnEmptySpace();
 
             for (int i = 0; i < values.Length; i++)
             {

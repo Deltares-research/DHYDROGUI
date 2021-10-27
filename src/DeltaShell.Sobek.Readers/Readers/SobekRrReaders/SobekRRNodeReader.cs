@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -86,8 +87,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             {
                 var bufstr = line.Substring(ipos + 3);
                 bufstr = bufstr.Replace("'", "");
-                char[] delimiter = {' '};
-                var items = bufstr.Split(delimiter);
+                var items = bufstr.SplitOnEmptySpace();
 
                 if (items.Count() >= 2)
                 {
