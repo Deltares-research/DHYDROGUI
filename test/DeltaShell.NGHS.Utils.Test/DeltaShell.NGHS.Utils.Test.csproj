@@ -2,6 +2,11 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.884-beta" PrivateAssets="all" />
+		<PackageReference Include="NUnit" Version="3.12.0" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>
