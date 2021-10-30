@@ -101,7 +101,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.896-beta" IncludeAssets="compile" PrivateAssets="all"/>
+    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.900-beta" IncludeAssets="compile" PrivateAssets="all"/>
     <PackageReference Include="log4net" Version="2.0.12">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
