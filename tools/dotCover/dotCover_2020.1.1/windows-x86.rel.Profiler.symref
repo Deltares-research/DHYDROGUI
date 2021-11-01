@@ -1,8 +1,0 @@
-﻿x86/JetBrains.Profiler.Core.pdb              jetbrains.profiler.core.pdb/ebc22c301be44ecfb24c27b1d98597761/jetbrains.profiler.core.pd_
-x86/JetBrains.Profiler.CoreApi.pdb           jetbrains.profiler.coreapi.pdb/d096ce541e5c4626b5a23ae4d2822de71/jetbrains.profiler.coreapi.pd_
-x86/JetBrains.Profiler.PdbServer.pdb         jetbrains.profiler.pdbserver.pdb/e53d3278efcc417ca1db04150fd3d2871/jetbrains.profiler.pdbserver.pd_
-x86/JetBrains.Profiler.AttachHelper.pdb      jetbrains.profiler.attachhelper.pdb/1e28f7ac6bd2487b87782944646575901/jetbrains.profiler.attachhelper.pd_
-x86/JetBrains.Profiler.CoreTransparent.pdb   jetbrains.profiler.coretransparent.pdb/89fd6423b50141fb866f1a0033cc1a9e1/jetbrains.profiler.coretransparent.pd_
-x86/JetBrains.Profiler.WinRTFakeDebugger.pdb jetbrains.profiler.winrtfakedebugger.pdb/1caa335deadb4e2fb27119246a39ec2b1/jetbrains.profiler.winrtfakedebugger.pd_
-x86/JetBrains.Profiler.WinRTHelper.pdb       jetbrains.profiler.winrthelper.pdb/8863094bdfc74d018bd930e05f199eda1/jetbrains.profiler.winrthelper.pd_
-x86/JetBrains.Profiler.EtwManifest.pdb       jetbrains.profiler.etwmanifest.pdb/357b49a5cf504776878383eca12ce12b1/jetbrains.profiler.etwmanifest.pd_
