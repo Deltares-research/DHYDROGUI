@@ -10,8 +10,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
-using SharpMap.Converters.Geometries;
-using SharpMap.Editors;
 using SharpMap.Editors.Interactors;
 using SharpMap.Editors.Interactors.Network;
 using SharpMap.Rendering;
@@ -28,17 +26,6 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
         public StructureInteractor(ILayer layer, IFeature feature, VectorStyle vectorStyle, IEditableObject editableObject)
             : base(layer, feature, vectorStyle, editableObject)
         {
-        }
-
-        protected override void CreateTrackers()
-        {
-            var bitmap = (VectorStyle != null)
-                ? TrackerSymbolHelper.GenerateComposite(new Pen(Color.Blue), new SolidBrush(Color.DarkBlue),
-                    VectorStyle.Symbol.Width, VectorStyle.Symbol.Height, 6,6)
-                : null;
-
-            Trackers.Add(new TrackerFeature(this, GeometryFactory.CreatePoint(CalculateCoordinate(SourceFeature.Geometry)), 0, bitmap));
-            Trackers[0].Selected = true;
         }
 
         private Coordinate CalculateCoordinate(IGeometry geometry)

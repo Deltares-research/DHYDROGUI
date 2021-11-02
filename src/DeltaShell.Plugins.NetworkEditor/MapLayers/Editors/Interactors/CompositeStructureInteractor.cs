@@ -43,12 +43,13 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                                                                  VectorStyle.Symbol.Height/2,
                                                                  3,
                                                                  3) : null;
-            SelectedImageTracker = (VectorStyle != null) ? TrackerSymbolHelper.GenerateComposite(new Pen(Color.Blue),
-                                                                         new SolidBrush(Color.DarkBlue),
+
+            SelectedImageTracker = (VectorStyle != null) ? TrackerSymbolHelper.GenerateComposite(new Pen(Color.DarkBlue),
+                                                                         new SolidBrush(Color.LightSkyBlue),
                                                                          compositeStructure.Structures.Count * VectorStyle.Symbol.Width,
                                                                          VectorStyle.Symbol.Height/2,
-                                                                         4,
-                                                                         4) : null;
+                                                                         8,
+                                                                         8) : null;
 
             var geometry = GeometryFactory.CreatePoint(CalculateCoordinate(SourceFeature.Geometry));
             Trackers.Add(new TrackerFeature(this, geometry, 0, SelectedImageTracker));

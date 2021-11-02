@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Linq;
+using DelftTools.Hydro;
 using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Feature;
 using SharpMap.Api.Editors;
@@ -18,8 +19,12 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         protected override void CreateTrackers()
         {
+            var symbol = SourceFeature is Catchment catchment
+                             ? catchment.CatchmentType.Icon
+                             : VectorStyle.Symbol;
+
             var generateComposite = VectorStyle != null 
-                                        ? TrackerSymbolHelper.GenerateComposite(new Pen(Color.Transparent), new SolidBrush(Color.DarkBlue), VectorStyle.Symbol.Width, VectorStyle.Symbol.Height, 6, 6) 
+                                        ? TrackerSymbolHelper.GenerateComposite(new Pen(Color.DarkBlue), new SolidBrush(Color.LightSkyBlue), symbol.Width, symbol.Height, 8, 8) 
                                         : TrackerSymbolHelper.GenerateSimple(new Pen(Color.Red, 2f), new SolidBrush(Color.White), 8, 8);
 
             var layerCustomRenderer = Layer.CustomRenderers?.FirstOrDefault();
