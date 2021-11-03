@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.906-beta" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.907-beta" PrivateAssets="all" />
 		<PackageReference Include="NUnit" Version="3.12.0" />
 	</ItemGroup>
 	
