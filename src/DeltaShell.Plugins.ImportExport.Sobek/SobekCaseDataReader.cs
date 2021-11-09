@@ -13,6 +13,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
     /// </summary>
     public static class SobekCaseDataReader
     {
+        private static readonly string[] fileTypes = {
+            "O",
+            "I",
+            "OO",
+            "OI",
+            "IO",
+            "OIO"
+        };
+        
         /// <summary>
         /// Reads the <see cref="SobekCaseData"/> from the specified <paramref name="stream"/>
         /// </summary>
@@ -34,20 +43,70 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
             if (!stream.CanRead)
             {
-                throw new InvalidOperationException("The current file stream does not support reading.");
+                throw new InvalidOperationException($"{nameof(stream)} does not support reading.");
             }
 
-            string[] lines = ReadData(stream).ToArray();
+            IEnumerable<string> data = ReadData(stream);
+            IEnumerable<string> relativeFilePaths = CollectFilePaths(data);
 
-            var caseData = new SobekCaseData();
+            string referenceDirectory = Path.GetDirectoryName(rootFilePath);
+            IEnumerable<string> absoluteFilePaths = relativeFilePaths.Select(r => GetFullPath(referenceDirectory, r));
+            
+            return new SobekCaseData(absoluteFilePaths);
+        }
 
-            string windFilePathLine = lines.FirstOrDefault(l => l.ContainsCaseInsensitive(".wdc") || l.ContainsCaseInsensitive(".wnd"));
-            caseData.WindDataPath = GetAbsolutePath(windFilePathLine, rootFilePath);
+        private static IEnumerable<string> CollectFilePaths(IEnumerable<string> data)
+        {
+            var filePaths = new HashSet<string>();
+            foreach (string line in data)
+            {
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                {
+                    continue;
+                }
 
-            string buiFilePathLine = lines.FirstOrDefault(l => l.ContainsCaseInsensitive(".bui"));
-            caseData.BuiDataPath = GetAbsolutePath(buiFilePathLine, rootFilePath);
+                string[] split = line.SplitOnEmptySpace();
+                string fileType = split[0];
+                string filePath = split[1];
+                
+                if (!fileTypes.Contains(fileType) || filePath.Contains("#"))
+                {
+                    continue;
+                }
 
-            return caseData;
+                filePath = ResolveFilePath(filePath);
+                filePaths.Add(filePath);
+            }
+
+            return filePaths;
+        }
+
+        private static string GetFullPath(string directory, string r)
+        {
+            return Path.GetFullPath(Path.Combine(directory, r));
+        }
+
+        private static string ResolveFilePath(string filePath)
+        {
+            if (!filePath.StartsWith(@"\"))
+            {
+                return filePath;
+            }
+
+            string directory = filePath.Split(new[]
+            {
+                '\\'
+            }, StringSplitOptions.RemoveEmptyEntries)[0];
+
+            // Not all file paths in the case description file are relative to the case description file.
+            // We assume here that file paths starting with a `\` are two directories higher,
+            // so that we can make it relative to the case description file.
+            // A path starting with `\` is often the work directory of a full SOBEK2 installation (with many models).
+            const string rootDirectoryReplacement = @"..\..";
+
+            filePath = filePath.Replace(@"\" + directory, rootDirectoryReplacement);
+
+            return filePath;
         }
 
         private static IEnumerable<string> ReadData(Stream stream)
@@ -60,26 +119,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     yield return line;
                 }
             }
-        }
-
-        private static string GetAbsolutePath(string line, string rootPath)
-        {
-            if (string.IsNullOrWhiteSpace(line))
-            {
-                return null;
-            }
-
-            string caseDir = Path.GetDirectoryName(rootPath);
-
-            string fixedDir = Path.Combine(caseDir, @"..\..\FIXED\");
-            if (!Directory.Exists(fixedDir))
-            {
-                fixedDir = Path.Combine(caseDir, @"..\FIXED\");
-            }
-
-            string relativeFilePath = line.Split(' ')[1];
-            string fileName = Path.GetFileName(relativeFilePath);
-            return Path.GetFullPath(Path.Combine(fixedDir, fileName));
         }
     }
 }

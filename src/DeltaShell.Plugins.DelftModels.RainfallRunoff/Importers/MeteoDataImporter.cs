@@ -9,7 +9,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
     public class MeteoDataImporter : IFileImporter
     {
         private IFileImporter importer = new PrecipitationDataImporter();
-
+        private readonly Func<MeteoData, RainfallRunoffModel> getModelFunc;
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MeteoDataImporter"/> class.
+        /// </summary>
+        /// <param name="getModelFunc"> Optional; a function to retrieve the corresponding model. </param>
+        public MeteoDataImporter(Func<MeteoData, RainfallRunoffModel> getModelFunc = null)
+        {
+            this.getModelFunc = getModelFunc;
+        }
         public string Name
         {
             get { return importer.Name; }
@@ -77,7 +86,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
 
                 if (meteoData.Name == RainfallRunoffModelDataSet.EvaporationName)
                 {
-                    importer = new EvaporationDataImporter();
+                    importer = new EvaporationDataImporter(getModelFunc);
                 }
 
                 if (meteoData.Name == RainfallRunoffModelDataSet.TemperatureName)

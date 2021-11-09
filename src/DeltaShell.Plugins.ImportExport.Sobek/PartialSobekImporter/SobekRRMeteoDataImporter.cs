@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
-using DelftTools.Utils.RegularExpressions;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
@@ -45,10 +43,24 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             log.DebugFormat("Importing meteo data...");
 
-            if (SetFilePath(GetFilePath(SobekFileNames.SobekCaseDescriptionFile)))
+            if (!CaseData.IsEmpty)
             {
+                filePathPrecipitation = CaseData.PrecipitationFile?.FullName;
+
+                string rksFile = CaseData.RksFile?.FullName;
+                if (rksFile != null)
+                {
+                    filePathPrecipitation = rksFile;
+                    log.WarnFormat(".rks files are not supported. The first event will be imported as precipitation data.");
+                }
+
+                filePathEvaporation = CaseData.EvaporationFile?.FullName;
+                filePathTemperature = CaseData.TemperatureFile?.FullName;
+                
                 log.DebugFormat("Importing precipitation data...");
                 ReadAndSetPrecipitation();
+                
+                SetModelTimesBasedOnEvent(rainfallRunoffModel, GetFilePath(SobekFileNames.SobekRRIniFileName));
 
                 log.DebugFormat("Importing evaporation data...");
                 ReadAndSetEvaporation();
@@ -67,6 +79,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     log.DebugFormat("Importing precipitation data...");
                     ReadAndSetPrecipitation();
                 }
+                
+                SetModelTimesBasedOnEvent(rainfallRunoffModel, GetFilePath(SobekFileNames.SobekRRIniFileName));
 
                 if (File.Exists(GetFilePath("default.evp")))
                 {
@@ -85,8 +99,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     }
                 }
             }
-
-            SetModelTimesBasedOnEvent(rainfallRunoffModel, GetFilePath(SobekFileNames.SobekRRIniFileName));
         }
 
         private void SetModelTimesBasedOnEvent(RainfallRunoffModel model, string path)
@@ -211,168 +223,85 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private void ReadAndSetEvaporation()
         {
             var model = GetModel<RainfallRunoffModel>();
-            var hydroModel = TryGetModel<DelftModels.HydroModel.HydroModel>();
 
-            bool isPeriodic;
-            using (var evaporationTable = hydroModel != null ? SobekRREvaporationReader.ReadEvaporationData(filePathEvaporation, hydroModel.StartTime, hydroModel.StopTime).FirstOrDefault() : SobekRREvaporationReader.ReadEvaporationData(filePathEvaporation, model.StartTime, model.StopTime).FirstOrDefault())
+            if (!File.Exists(filePathEvaporation))
             {
-                if (evaporationTable == null)
-                {
-                    log.ErrorFormat("Error importing evaporation data.");
-                    return;
-                }
-
-                var precipitationIsDefinedPerStation = precipitation.DataDistributionType ==
-                                                       MeteoDataDistributionType.PerStation;
-
-                var numStations = evaporationTable.Columns.Count - 3; //first 3 rows are the date
-                var evapDict = ParseEvaporationTableToDictionary(evaporationTable, out isPeriodic);
-
-                if (numStations == 1) //one station, typical
-                {
-                    if (!precipitationIsDefinedPerStation)
-                    {
-                        SetGlobalEvaporation(evapDict.Keys, evapDict.Values);
-                    }
-                    else
-                    {
-                        evaporation.Data.Arguments[0].Clear();
-                        evaporation.Data.Arguments[0].SetValues(evapDict.Keys);
-
-                        // stations already filled in (shared with precipitation)
-                        foreach (var stationName in rainfallRunoffModel.MeteoStations)
-                        {
-                            evaporation.Data.SetValues(evapDict.Values, new VariableValueFilter<string>(
-                                evaporation.Data.Arguments[1], stationName));
-                        }
-                    }
-                }
-                else //multiple stations
-                {
-                    if (!precipitationIsDefinedPerStation)
-                    {
-                        log.Error("Evaporation has multiple stations while precipitation has not! Not supported");
-                        SetGlobalEvaporation(evapDict.Keys, evapDict.Values);
-                    } 
-                    else if (numStations != rainfallRunoffModel.MeteoStations.Count)
-                    {
-                        log.Error("Number of evaporation stations does not match the number of precipitation stations! Not supported");
-                        SetGlobalEvaporation(evapDict.Keys, evapDict.Values);
-                    }
-                    else
-                    {
-                        evaporation.Data.Arguments[0].SetValues(evapDict.Keys);
-
-                        // stations already filled in (shared with precipitation)
-                        var stationIndex = 0;
-                        foreach (var stationName in rainfallRunoffModel.MeteoStations)
-                        {
-                            var values = evaporationTable.Rows.OfType<DataRow>()
-                                .Select(row => Convert.ToDouble(row[3 + stationIndex]))
-                                .ToList();
-
-                            evaporation.Data.SetValues(values, new VariableValueFilter<string>(
-                                evaporation.Data.Arguments[1], stationName));
-                            stationIndex++;
-                        }
-                    }
-                }
+                log.Warn($"Evaporation file does not exist: {filePathEvaporation}");
+                return;
             }
 
-            if (isPeriodic)
+            SobekRREvaporation sobekRREvaporation;
+            using (var stream = new FileStream(filePathEvaporation, FileMode.Open))
+            {
+                sobekRREvaporation = SobekRREvaporationReader.Read(stream);
+            }
+
+            if (sobekRREvaporation.IsLongTimeAverage)
+            {
+                sobekRREvaporation.ToLongTimeAverage(model.StartTime, model.StopTime);
+            }
+
+            var precipitationIsDefinedPerStation = precipitation.DataDistributionType ==
+                                                   MeteoDataDistributionType.PerStation;
+
+            if (sobekRREvaporation.NumberOfLocations == 1)
+            {
+                if (precipitationIsDefinedPerStation)
+                {
+                    SetEvaporationPerStation(sobekRREvaporation);
+                }
+                else
+                {
+                    SetGlobalEvaporation(sobekRREvaporation);
+                }
+            }
+            else
+            {
+                if (!precipitationIsDefinedPerStation)
+                {
+                    log.Error("Evaporation has multiple stations while precipitation has not! Not supported");
+                    SetGlobalEvaporation(sobekRREvaporation);
+                }
+                else if (sobekRREvaporation.NumberOfLocations != rainfallRunoffModel.MeteoStations.Count)
+                {
+                    log.Error("Number of evaporation stations does not match the number of precipitation stations! Not supported");
+                    SetGlobalEvaporation(sobekRREvaporation);
+                }
+                else
+                {
+                    SetEvaporationPerStation(sobekRREvaporation);
+                }
+            }
+            
+            if (sobekRREvaporation.IsPeriodic)
             {
                 evaporation.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Periodic;
             }
         }
 
-        private static IDictionary<DateTime, double> ParseEvaporationTableToDictionary(DataTable dataTable,
-                                                                                       out bool periodic)
+        private void SetEvaporationPerStation(SobekRREvaporation sobekRREvaporation)
         {
-            periodic = false;
-            var result = new Dictionary<DateTime, double>();
-            foreach (DataRow row in dataTable.Rows)
-            {
-                DateTime dateTime;
-                if (SobekRREvaporationReader.TryReadDateTime(row, out dateTime, out periodic))
-                {
-                    result[dateTime] = Convert.ToDouble(row[3]);
-                }
-            }
-            return result;
-        }
+            evaporation.Data.Arguments[0].Clear();
+            evaporation.Data.Arguments[0].SetValues(sobekRREvaporation.Dates);
 
-        private void SetGlobalEvaporation(IEnumerable<DateTime> times, IEnumerable<double> values)
+            IVariable stationArgument = evaporation.Data.Arguments[1];
+            for (var i = 0; i < sobekRREvaporation.NumberOfLocations; i++)
+            {
+                string stationName = rainfallRunoffModel.MeteoStations[i];
+                IEnumerable<double> evaporationValues = sobekRREvaporation.GetValuesByStationIndex(i);
+
+                evaporation.Data.SetValues(evaporationValues,
+                                           new VariableValueFilter<string>(stationArgument, stationName));
+            }
+        }
+        
+        private void SetGlobalEvaporation(SobekRREvaporation sobekRREvaporation)
         {
             // just do it global
             evaporation.DataDistributionType = MeteoDataDistributionType.Global;
             evaporation.Data.Arguments[0].Clear();
-            evaporation.Data.Arguments[0].SetValues(times);
-            evaporation.Data.SetValues(values);
+            evaporation.Data.Arguments[0].SetValues(sobekRREvaporation.Dates);
+            evaporation.Data.SetValues(sobekRREvaporation.GetValuesByStationIndex(0));
         }
-
-        private bool SetFilePath(string caseDescriptionFile)
-        {
-            if (!File.Exists(caseDescriptionFile))
-            {
-                return false;
-            }
-
-            string caseDescriptionFileText = File.ReadAllText(caseDescriptionFile, Encoding.Default);
-
-            const string group = "filepath";
-            const string buiPattern = @"I\s*(?<" + group + ">" + RegularExpression.FileName + @"\.BUI)\s*";
-            const string rksPattern = @"I\s*(?<" + group + ">" + RegularExpression.FileName + @"\.RKS)\s*";
-            const string evapPattern = @"I\s*(?<" + group + ">" + RegularExpression.FileName + @"\.(EVP|GEM|PLV))\s*";
-            const string evaporPattern = @"I\s*(?<" + group + ">" + RegularExpression.FileName + @"EVAPOR)\s*";
-            const string tmpPattern = @"I\s*(?<" + group + ">" + RegularExpression.FileName + @"\.TMP)\s*";
-            
-            //Precipitation
-            var matches = RegularExpression.GetMatches(buiPattern, caseDescriptionFileText);
-            if (matches.Count > 0)
-            {
-                filePathPrecipitation = GetFilePath(ResolveFixedPaths(matches[0].Groups[group].Value));
-            }
-
-            matches = RegularExpression.GetMatches(rksPattern, caseDescriptionFileText);
-            if (matches.Count > 0)
-            {
-                filePathPrecipitation = GetFilePath(ResolveFixedPaths(matches[0].Groups[group].Value));
-                log.WarnFormat(".rks files are not supported. The first event will be imported as precipitation data.");
-            }
-
-            //Evaporation           
-            matches = RegularExpression.GetMatches(evapPattern, caseDescriptionFileText);
-            if (matches.Count > 0)
-            {
-                filePathEvaporation = GetFilePath(ResolveFixedPaths(matches[0].Groups[group].Value));
-            }
-            else
-            {
-                matches = RegularExpression.GetMatches(evaporPattern, caseDescriptionFileText);
-                if (matches.Count > 0)
-                {
-                    filePathEvaporation = GetFilePath(ResolveFixedPaths(matches[0].Groups[group].Value));
-                }
-            }
-
-            //Temperatures
-            matches = RegularExpression.GetMatches(tmpPattern, caseDescriptionFileText);
-            if (matches.Count > 0)
-            {
-                filePathTemperature = GetFilePath(ResolveFixedPaths(matches[0].Groups[group].Value));
-            }
-
-            return true;
-        }
-
-        private static string ResolveFixedPaths(string inputPath)
-        {
-            const string find1 = @"(\\)?" + RegularExpression.AnyNonGreedy + @"\\FIXED\\";
-            const string replace = @"..\..\FIXED\";
-
-            var res = Regex.Replace(inputPath, find1, replace);
-            return res;
-        }
-
     }
 }

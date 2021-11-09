@@ -9,6 +9,7 @@ using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers;
 using log4net;
@@ -77,7 +78,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private void ApplicationOnProjectOpened(Project project)
         {
-            foreach (var rainfallRunoffModel in project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>())
+            foreach (var rainfallRunoffModel in GetModels(project))
             {
                 rainfallRunoffModel.WorkingDirectoryPathFunc = () => Application?.WorkDirectory;
             }
@@ -88,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             if (project == null || project.RootFolder == null) return;
 
             var projectDataFolderDirectory = Application.ProjectDataDirectory;
-            var rrModels = project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
+            var rrModels = GetModels(project);
             var exporter = new RainfallRunoffModelExporter();
 
             foreach (var rainfallRunoffModel in rrModels)
@@ -155,7 +156,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
             yield return new RainfallRunoffModelImporter();
-            yield return new MeteoDataImporter();
+            yield return new MeteoDataImporter(GetModelForMeteoData);
             yield return new NWRWCatchmentFrom3BImporter();
         }
 
@@ -173,6 +174,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
             yield return new RainfallRunoffDataAccessListener();
+        }
+        
+        private static IEnumerable<RainfallRunoffModel> GetModels(Project project)
+        {
+            return project.RootFolder.GetAllModelsRecursive().OfType<RainfallRunoffModel>();
+        }
+        
+        private RainfallRunoffModel GetModelForMeteoData(MeteoData meteoData)
+        {
+            return GetModels(Application.Project).First(m =>
+                                                            meteoData == m.Evaporation ||
+                                                            meteoData == m.Precipitation ||
+                                                            meteoData == m.Temperature);
         }
     }
 }

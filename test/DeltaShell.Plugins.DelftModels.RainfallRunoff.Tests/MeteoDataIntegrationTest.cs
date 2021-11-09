@@ -15,12 +15,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         public void BackwardPeriodicExtrapolationShouldWork()
         {
+            RainfallRunoffModel GetModelFunc(MeteoData evaporation)
+            {
+                return new RainfallRunoffModel
+                {
+                    StartTime = new DateTime(DateTime.Today.Year, 1, 1),
+                    StopTime = new DateTime(DateTime.Today.Year, 12, 31)
+                };
+            }
             var targetItem = new MeteoData(MeteoDataAggregationType.Cumulative)
                 {
                     Name = RainfallRunoffModelDataSet.EvaporationName,
                     DataDistributionType = MeteoDataDistributionType.Global
                 };
-            var importer = new EvaporationDataImporter();
+            var importer = new EvaporationDataImporter(GetModelFunc);
             importer.ImportItem(TestHelper.GetTestFilePath("EVAPOR.GEM"), targetItem);
             Assert.AreEqual(DateTime.IsLeapYear(DateTime.Now.Year) ? 366 : 365, targetItem.Data.Arguments[0].Values.Count);
 

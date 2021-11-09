@@ -9,6 +9,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
@@ -215,12 +216,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             void LogWarning(string key, string value)
             {
-                if (!warningList.ContainsKey(key))
-                {
-                    warningList[key] = new List<string>();
-                }
-
-                warningList[key].Add(value);
+                warningList.AddToList(key, value);
             }
 
             // process all BDFR records
@@ -729,12 +725,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             void LogWarning(string key, string value)
             {
-                if (!warningList.ContainsKey(key))
-                {
-                    warningList[key] = new List<string>();
-                }
-
-                warningList[key].Add(value);
+                warningList.AddToList(key, value);
             }
 
             foreach (var crossSectionID in sobekCrossSectionLocations.Keys)

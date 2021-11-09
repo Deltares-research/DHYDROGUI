@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -136,12 +137,7 @@ namespace DeltaShell.Sobek.Readers.Readers
 
             void LogWarning(string key, string value)
             {
-                if (!warningList.ContainsKey(key))
-                {
-                    warningList[key] = new List<string>();
-                }
-
-                warningList[key].Add(value);
+                warningList.AddToList(key, value);
             }
 
             foreach (Match match in RegularExpression.GetMatches(pattern, record))

@@ -10,6 +10,7 @@ using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers;
+using DeltaShell.Sobek.Readers.SobekDataObjects;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
@@ -22,6 +23,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         protected PartialSobekImporterBase()
         {
             SobekFileNames = new SobekFileNames();
+            CaseData = new SobekCaseData(Enumerable.Empty<string>());
         }
 
         public abstract string DisplayName { get; }
@@ -42,14 +44,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     throw new ArgumentNullException("Path of Sobek");
                 }
-
-                BaseDir = Path.GetDirectoryName(pathSobek);
-
-                if (BaseDir == null || !Directory.Exists(BaseDir))
-                {
-                    throw new DirectoryNotFoundException(string.Format("The path {0} doesn't exist", BaseDir));
-                }
-
+                
                 try
                 {
                     SobekFileNames.SobekType = DeltaShell.Sobek.Readers.SobekReaderHelper.GetSobekType(pathSobek);
@@ -60,6 +55,13 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     SobekFileNames.SobekType = SobekType.Sobek212;
                     SobekType = SobekType.Sobek212;
                     //gulp   
+                }
+                
+                BaseDir = Path.GetDirectoryName(pathSobek);
+
+                if (BaseDir == null || !Directory.Exists(BaseDir))
+                {
+                    throw new DirectoryNotFoundException(string.Format("The path {0} doesn't exist", BaseDir));
                 }
             }
         }
@@ -436,6 +438,40 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return null;
         }
 
-        private string BaseDir { get; set; }
+        /// <summary>
+        /// Gets the <see cref="SobekCaseData"/> for this case.
+        /// </summary>
+        protected SobekCaseData CaseData
+        {
+            get;
+            private set;
+        }
+
+        private string baseDir;
+        
+        private string BaseDir
+        {
+            get => baseDir;
+            set
+            {
+                baseDir = value;
+                SetCaseData();
+            }
+        }
+
+        private void SetCaseData()
+        {
+            string caseDescriptionFile = GetFilePath(SobekFileNames.SobekCaseDescriptionFile);
+            if (!File.Exists(caseDescriptionFile))
+            {
+                CaseData = new SobekCaseData(Enumerable.Empty<string>());
+                return;
+            }
+
+            using (var stream = new FileStream(caseDescriptionFile, FileMode.Open))
+            {
+                CaseData = SobekCaseDataReader.Read(stream, caseDescriptionFile);
+            }
+        }
     }
 }

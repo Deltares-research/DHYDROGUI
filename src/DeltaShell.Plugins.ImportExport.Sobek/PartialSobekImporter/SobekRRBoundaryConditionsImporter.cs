@@ -43,8 +43,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 .GroupBy(l => l.NodeToId)
                 .ToDictionary(g => g.Key, g => g.ToArray(), StringComparer.InvariantCultureIgnoreCase);
 
-            if (SetFilePath(GetFilePath(SobekFileNames.SobekCaseDescriptionFile)) ||
-                (File.Exists(GetFilePath("BOUND3B.3B")) && File.Exists(GetFilePath("BOUND3B.tbl"))))
+            if (!CaseData.IsEmpty)
+            {
+                log.DebugFormat("Importing boundary conditions data ...");
+                filePathBoundaryConditions = CaseData.BoundaryConditionsFile.FullName;
+                filePathBoundaryTableConditions = CaseData.BoundaryConditionsTableFile.FullName;
+                
+                ReadAndSetBoundaryConditions(rainfallRunoffModel);
+            }
+            else if (File.Exists(GetFilePath("BOUND3B.3B")) && File.Exists(GetFilePath("BOUND3B.tbl")))
             {
                 log.DebugFormat("Importing boundary conditions data ...");
                 filePathBoundaryConditions = GetFilePath("BOUND3B.3B");
@@ -195,37 +202,5 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
             }
         }
-
-        private bool SetFilePath(string caseDescriptionFile)
-        {
-            if (!File.Exists(caseDescriptionFile))
-            {
-                return false;
-            }
-
-            string caseDescriptionFileText = File.ReadAllText(caseDescriptionFile, Encoding.Default);
-
-            const string group = "filepath";
-            const string bound3b3bPattern = @"IO?\s*(?<" + group + ">" + RegularExpression.FileName + @"BOUND3B.3B)\s*";
-
-            //Boundary conditions
-            var matches = RegularExpression.GetMatches(bound3b3bPattern, caseDescriptionFileText);
-            if (matches.Count > 0)
-            {
-                filePathBoundaryConditions = GetFilePath(matches[0].Groups[group].Value);
-            }
-
-            const string bound3bTblPattern = @"IO?\s*(?<" + group + ">" + RegularExpression.FileName + @"BOUND3B.TBL)\s*";
-
-            //Boundary conditions table
-            matches = RegularExpression.GetMatches(bound3bTblPattern, caseDescriptionFileText);
-            if (matches.Count > 0)
-            {
-                filePathBoundaryTableConditions = GetFilePath(matches[0].Groups[group].Value);
-            }
-
-            return true;
-        }
-
     }
 }

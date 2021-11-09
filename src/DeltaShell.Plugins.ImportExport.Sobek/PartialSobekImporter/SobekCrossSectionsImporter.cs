@@ -10,6 +10,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Editing;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers;
@@ -106,25 +107,15 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             var initiatedEditing = false;
             var errorList = new Dictionary<string, IList<string>>();
             var warningList = new Dictionary<string, IList<string>>();
-
-            IList<string> GetListForKey(string key, IDictionary<string, IList<string>> lookup)
-            {
-                if (!lookup.ContainsKey(key))
-                {
-                    lookup[key] = new List<string>();
-                }
-
-                return lookup[key];
-            }
-
+            
             void LogError(string key, string value)
             {
-                GetListForKey(key, errorList).Add(value);
+                errorList.AddToList(key, value);
             }
 
             void LogWarning(string key, string value)
             {
-                GetListForKey(key, warningList).Add(value);
+                warningList.AddToList(key, value);
             }
 
             try
@@ -223,11 +214,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         }
 
                         // link the cross section to the definition so we can later update the friction
-                        if (!crossSectionUsage.ContainsKey(sobekCrossSectionMapping.DefinitionId))
-                        {
-                            crossSectionUsage[sobekCrossSectionMapping.DefinitionId] = new List<ICrossSection>();
-                        }
-                        crossSectionUsage[sobekCrossSectionMapping.DefinitionId].Add(crossSection);
+                        crossSectionUsage.AddToList(sobekCrossSectionMapping.DefinitionId, crossSection);
                     }
                 }
 
@@ -632,12 +619,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 var crossSections = crossSectionUsage[sobekCrossSectionFriction.CrossSectionID];
                 foreach (var crossSection in crossSections)
                 {
-                    if (!crossSectionsPerBranch.ContainsKey(crossSection.Branch))
-                    {
-                        crossSectionsPerBranch[crossSection.Branch] = new List<DelftTools.Utils.Tuple<ICrossSection, SobekCrossSectionFriction>>();
-                    }
-                    var crossSectionPerBranch = crossSectionsPerBranch[crossSection.Branch];
-                    crossSectionPerBranch.Add(new DelftTools.Utils.Tuple<ICrossSection, SobekCrossSectionFriction>(crossSection, sobekCrossSectionFriction));
+                    crossSectionsPerBranch.AddToList(crossSection.Branch, new DelftTools.Utils.Tuple<ICrossSection, SobekCrossSectionFriction>(crossSection, sobekCrossSectionFriction));
                 }
             }
 
