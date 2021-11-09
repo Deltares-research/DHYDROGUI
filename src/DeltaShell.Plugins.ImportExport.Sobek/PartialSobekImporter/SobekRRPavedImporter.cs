@@ -101,57 +101,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         }
                     }
 
-                    switch (sobekPaved.SewerDischarge)
-                    {
-                        case SewerDischargeType.BothSewerPumpsToOpenWater:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.OpenWater;
-                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.OpenWater;
-                            break;
-                        case SewerDischargeType.RainfallOrMixedToOpenWaterDWAToBoundary:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.OpenWater;
-                            pavedData.DryWeatherFlowSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
-                            break;
-                        case SewerDischargeType.RainfallOrMixedToOpenWaterDWAToWWTP:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.OpenWater;
-                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
-                            break;
-                        case SewerDischargeType.BothSewerPumpsToBoundary:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
-                            pavedData.DryWeatherFlowSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
-                            break;
-                        case SewerDischargeType.RainfallOrMixedToBoundaryDWAToOpenWater:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
-                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.OpenWater;
-                            break;
-                        case SewerDischargeType.RainfallOrMixedToBoundaryDWAToWWTP:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
-                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
-                            break;
-                        case SewerDischargeType.BothSewerPumpsToWWTP:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
-                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
-                            break;
-                        case SewerDischargeType.RainfallOrMixedToWWTPDWAToOpenWater:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
-                            pavedData.DryWeatherFlowSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.OpenWater;
-                            break;
-                        case SewerDischargeType.RainfallOrMixedToWWTPDWAToBoundary:
-                            pavedData.MixedAndOrRainfallSewerPumpDischarge = PavedEnums.SewerPumpDischargeTarget.WWTP;
-                            pavedData.DryWeatherFlowSewerPumpDischarge =
-                                PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
-                            break;
-                        default:
-                            log.WarnFormat("Paved sewer discharge value {0} ({1}) unknown...",
-                                           sobekPaved.SewerDischarge, sobekPaved.Id);
-                            break;
-                    }
+                    pavedData.DryWeatherFlowSewerPumpDischarge = ConvertDischargeType(sobekPaved.DryWeatherFlowSewerPumpDischarge);
+                    pavedData.MixedAndOrRainfallSewerPumpDischarge = ConvertDischargeType(sobekPaved.MixedAndOrRainfallSewerPumpDischarge);
 
                     //meteo
                     pavedData.MeteoStationName = sobekPaved.MeteoStationId;
@@ -246,6 +197,19 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 default:
                     log.ErrorFormat("{0}: Spilling option '{1}' is not unknown, switching to no delay", id, (int)spillingOption);
                     return PavedEnums.SpillingDefinition.NoDelay;
+            }
+        }
+
+        private static PavedEnums.SewerPumpDischargeTarget ConvertDischargeType(SewerDischargeType dischargeType)
+        {
+            switch (dischargeType)
+            {
+                case SewerDischargeType.BoundaryNode:
+                    return PavedEnums.SewerPumpDischargeTarget.BoundaryNode;
+                case SewerDischargeType.WWTP:
+                    return PavedEnums.SewerPumpDischargeTarget.WWTP;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dischargeType), dischargeType, null);
             }
         }
     }

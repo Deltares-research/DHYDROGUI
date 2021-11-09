@@ -38,8 +38,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         {
             [Description("Lateral source or boundary node")]
             BoundaryNode=0,
-            [Description("Open water")]
-            OpenWater = 1,
             [Description("Wastewater treatment plant")] 
             WWTP=2
         }

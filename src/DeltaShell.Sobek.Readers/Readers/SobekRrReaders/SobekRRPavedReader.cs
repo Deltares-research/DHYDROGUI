@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 
@@ -131,45 +132,25 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             }
 
             //Sewer discharge type
-            pattern = @"qo\s*(?<pattern>" + RegularExpression.Integer + @"\s" + RegularExpression.Integer + @")";
+            pattern = @"qo\s*(?<pattern>" + RegularExpression.Integer + @"\s+" + RegularExpression.Integer + @")";
             matches = RegularExpression.GetMatches(pattern, line);
             if (matches.Count == 1)
             {
-                SewerDischargeType type = SewerDischargeType.BothSewerPumpsToOpenWater;
-                switch(matches[0].Groups["pattern"].Value)
+                string[] parts = matches[0].Groups["pattern"].Value.SplitOnEmptySpace();
+
+                if (!TryGetSewerDischargeType(parts[0], out SewerDischargeType dryWeatherFlowDischargeTarget))
                 {
-                    case "0 0":
-                        type = SewerDischargeType.BothSewerPumpsToBoundary;
-                        break;
-                    case "1 0":
-                        type = SewerDischargeType.RainfallOrMixedToBoundaryDWAToOpenWater;
-                        break;
-                    case "2 0":
-                        type = SewerDischargeType.RainfallOrMixedToBoundaryDWAToWWTP;
-                        break;
-                    case "0 1":
-                        type = SewerDischargeType.RainfallOrMixedToOpenWaterDWAToBoundary;
-                        break;
-                    case "1 1":
-                        type = SewerDischargeType.BothSewerPumpsToOpenWater;
-                        break;
-                    case "2 1":
-                        type = SewerDischargeType.RainfallOrMixedToOpenWaterDWAToWWTP;
-                        break;
-                    case "0 2":
-                        type = SewerDischargeType.RainfallOrMixedToWWTPDWAToBoundary;
-                        break;
-                    case "1 2":
-                        type = SewerDischargeType.RainfallOrMixedToWWTPDWAToOpenWater;
-                        break;
-                    case "2 2":
-                        type = SewerDischargeType.BothSewerPumpsToWWTP;
-                        break;
-                    default:
-                        log.ErrorFormat("No sewer discharge type found for {0} has been found. The default {1} has been set to {2}.", matches[0].Groups["pattern"].Value, SewerDischargeType.BothSewerPumpsToOpenWater,sobekPaved.Id);
-                        break;
+                    log.WarnFormat(Resources.SobekRRPavedReader_Warning_UnsupportedDischargeTarget, "dry weather flow", sobekPaved.Id);
                 }
-                sobekPaved.SewerDischarge = type;
+
+                sobekPaved.DryWeatherFlowSewerPumpDischarge = dryWeatherFlowDischargeTarget;
+
+                if (!TryGetSewerDischargeType(parts[1], out SewerDischargeType mixedRainfallDischargeTarget))
+                {
+                    log.WarnFormat(Resources.SobekRRPavedReader_Warning_UnsupportedDischargeTarget, "mixed/rainfall", sobekPaved.Id);
+                }
+
+                sobekPaved.MixedAndOrRainfallSewerPumpDischarge = mixedRainfallDischargeTarget;
             }
 
             //Sewer overflow levels
@@ -273,6 +254,22 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
             }
 
             return sobekPaved;
+        }
+
+        private static bool TryGetSewerDischargeType(string str, out SewerDischargeType sewerDischargeType)
+        {
+            switch (str)
+            {
+                case "0":
+                    sewerDischargeType = SewerDischargeType.BoundaryNode;
+                    return true;
+                case "2":
+                    sewerDischargeType = SewerDischargeType.WWTP;
+                    return true;
+                default:
+                    sewerDischargeType = SewerDischargeType.BoundaryNode;
+                    return false;
+            }
         }
 
         public override IEnumerable<string> GetTags()

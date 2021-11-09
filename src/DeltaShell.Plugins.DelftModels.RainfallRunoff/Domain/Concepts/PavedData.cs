@@ -194,8 +194,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             {
                 case PavedEnums.SewerPumpDischargeTarget.BoundaryNode:
                     return targets.FirstOrDefault(f => !(f is WasteWaterTreatmentPlant));
-                case PavedEnums.SewerPumpDischargeTarget.OpenWater:
-                    return targets.OfType<Catchment>().FirstOrDefault(c => c.CatchmentType.Equals(CatchmentType.OpenWater));
                 case PavedEnums.SewerPumpDischargeTarget.WWTP:
                     return targets.OfType<WasteWaterTreatmentPlant>().FirstOrDefault();
                 default:

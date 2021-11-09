@@ -23,7 +23,15 @@
 
         public string CapacitySewerTableId { get; set; }
 
-        public SewerDischargeType SewerDischarge { get; set; }
+        /// <summary>
+        /// The discharge target for mixed/rainfall sewer pumps.
+        /// </summary>
+        public SewerDischargeType MixedAndOrRainfallSewerPumpDischarge { get; set; }
+
+        /// <summary>
+        /// The discharge target for dry weather flow sewer pumps.
+        /// </summary>
+        public SewerDischargeType DryWeatherFlowSewerPumpDischarge { get; set; }
 
         public double SewerOverflowLevelRWAMixed { get; set; }
 
@@ -68,15 +76,8 @@
     //                                          DWA-part (if separated) to WWTP
     public enum SewerDischargeType
     {
-        BothSewerPumpsToOpenWater = 0,
-        RainfallOrMixedToOpenWaterDWAToBoundary = 1,
-        RainfallOrMixedToOpenWaterDWAToWWTP = 2,
-        BothSewerPumpsToBoundary = 3,
-        RainfallOrMixedToBoundaryDWAToOpenWater = 4,
-        RainfallOrMixedToBoundaryDWAToWWTP = 5,
-        BothSewerPumpsToWWTP = 6,
-        RainfallOrMixedToWWTPDWAToOpenWater = 7,
-        RainfallOrMixedToWWTPDWAToBoundary = 8
+        BoundaryNode=0,
+        WWTP=2
     }
 
     public enum SpillingOption

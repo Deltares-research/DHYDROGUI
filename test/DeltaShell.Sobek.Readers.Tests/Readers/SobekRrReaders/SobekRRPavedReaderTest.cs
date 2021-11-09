@@ -3,6 +3,7 @@ using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.Sobek.Tests;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using log4net.Core;
 using NUnit.Framework;
 
 namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
@@ -53,8 +54,13 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             string line =
                 @"PAVE  id '1'  ar  100000. lv 1.0 sd 'stor_1mm' ss 0 qc 0 0.2 0 qo 1 1 so 0.5 0.5 si 0 0 ms 'meteostat1'  is 100. np 5000 dw  '1'  ro 1 ru 0.5 qh 'Qhrelation' pave";
 
-            var pavedData = new SobekRRPavedReader().Parse(line).First();
+            SobekRRPaved pavedData = null;
+            void Call() => pavedData = new SobekRRPavedReader().Parse(line).First();
 
+            var warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToArray();
+            Assert.That(warnings, Has.Length.EqualTo(2));
+            Assert.That(warnings[0], Is.EqualTo("Unsupported dry weather flow discharge target for paved data with id 1. Will be set to lateral source or boundary node."));
+            Assert.That(warnings[1], Is.EqualTo("Unsupported mixed/rainfall discharge target for paved data with id 1. Will be set to lateral source or boundary node."));
             Assert.AreEqual("1",pavedData.Id);
             Assert.AreEqual(100000.0, pavedData.Area);
             Assert.AreEqual(1.0, pavedData.StreetLevel);
@@ -73,6 +79,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             Assert.AreEqual(SpillingOption.UsingCoefficient, pavedData.SpillingOption);
             Assert.AreEqual(0.5, pavedData.SpillingRunoffCoefficient);
             Assert.AreEqual("Qhrelation", pavedData.QHTableId);
+            Assert.That(pavedData.DryWeatherFlowSewerPumpDischarge, Is.EqualTo(SewerDischargeType.BoundaryNode));
+            Assert.That(pavedData.MixedAndOrRainfallSewerPumpDischarge, Is.EqualTo(SewerDischargeType.BoundaryNode));
         }
 
         [Test]
@@ -98,6 +106,8 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             Assert.AreEqual(2, pavedData.SpillingRunoffCoefficient);
             Assert.AreEqual(SpillingOption.UsingCoefficient, pavedData.SpillingOption);
             Assert.AreEqual("haha", pavedData.QHTableId);
+            Assert.That(pavedData.DryWeatherFlowSewerPumpDischarge, Is.EqualTo(SewerDischargeType.WWTP));
+            Assert.That(pavedData.MixedAndOrRainfallSewerPumpDischarge, Is.EqualTo(SewerDischargeType.BoundaryNode));
 
         }
 

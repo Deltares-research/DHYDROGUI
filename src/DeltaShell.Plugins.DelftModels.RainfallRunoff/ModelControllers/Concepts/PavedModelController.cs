@@ -89,8 +89,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concept
             {
                 case PavedEnums.SewerPumpDischargeTarget.BoundaryNode:
                     return LinkType.Boundary;
-                case PavedEnums.SewerPumpDischargeTarget.OpenWater:
-                    return LinkType.OpenWater;
                 case PavedEnums.SewerPumpDischargeTarget.WWTP:
                     return LinkType.WasteWaterTreatmentPlant;
                 default:
