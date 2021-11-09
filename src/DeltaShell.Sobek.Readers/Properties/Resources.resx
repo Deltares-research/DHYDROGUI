@@ -21,4 +21,7 @@
     <data name="Exception_IndexEqualToOrHigherThanNumberOfLocations" xml:space="preserve">
         <value>{0} ({1}) can not be equal to or higher than {2} ({3}).</value>
     </data>
+    <data name="SobekRRPavedReader_Warning_UnsupportedDischargeTarget" xml:space="preserve">
+        <value>Unsupported {0} discharge target for paved data with id {1}. Will be set to lateral source or boundary node.</value>
+    </data>
 </root>

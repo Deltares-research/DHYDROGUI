@@ -68,5 +68,14 @@ namespace DeltaShell.Sobek.Readers.Properties {
                 return ResourceManager.GetString("Exception_IndexEqualToOrHigherThanNumberOfLocations", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported {0} discharge target for paved data with id {1}. Will be set to lateral source or boundary node..
+        /// </summary>
+        internal static string SobekRRPavedReader_Warning_UnsupportedDischargeTarget {
+            get {
+                return ResourceManager.GetString("SobekRRPavedReader_Warning_UnsupportedDischargeTarget", resourceCulture);
+            }
+        }
     }
 }
