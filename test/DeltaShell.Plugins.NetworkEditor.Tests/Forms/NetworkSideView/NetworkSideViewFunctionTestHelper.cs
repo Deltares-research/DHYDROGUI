@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
         /// <param name="min"></param>
         public static void AssertMinMax(INetworkCoverage source, Route route, double max, double min)
         {
-            var function = new NetworkSideViewDataController(route, null).CreateRouteFunctionFromNetworkCoverage(route, source, new Unit()); 
+            var function = new NetworkSideViewDataController(route, null).CreateRouteFunctionFromNetworkCoverage(source, new Unit()); 
 
             Assert.AreEqual(max, function.Components[0].Values.MaxValue);
             Assert.AreEqual(min, function.Components[0].Values.MinValue);
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
         public static void AssertRouteIsCorrect(INetworkCoverage source, Route route, int[] expectedOffsets, int[] expectedValues)
         {
-            var function = new NetworkSideViewDataController(route, null).CreateRouteFunctionFromNetworkCoverage(route, source, new Unit()); 
+            var function = new NetworkSideViewDataController(route, null).CreateRouteFunctionFromNetworkCoverage(source, new Unit()); 
 
             //using a loop like sideview does since a lot is not implemented here. Implement more
             //if needed in production code..not for test.

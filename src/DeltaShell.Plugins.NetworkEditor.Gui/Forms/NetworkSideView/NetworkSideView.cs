@@ -48,6 +48,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private readonly IChart chart;
         private readonly IEventedList<IView> childViews = new EventedList<IView>();
+        private bool routeChecked = false;
 
         public NetworkSideView()
         {
@@ -101,10 +102,28 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             get { return route; }
             set
             {
+                if (route != null)
+                {
+                    route.ValuesChanged -= RouteValuesChanged;
+                }
+                
                 route = value as Route;
+                
                 chartController.Route = route;
                 shapeHandler.NetworkRoute = route;
+                
+                routeChecked = false;
+
+                if (route != null)
+                {
+                    route.ValuesChanged += RouteValuesChanged;
+                }
             }
+        }
+
+        private void RouteValuesChanged(object sender, FunctionValuesChangingEventArgs e)
+        {
+            routeChecked = false;
         }
 
         public NetworkSideViewDataController DataController
@@ -329,6 +348,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             chartController.Dispose();
             UnsubscribeDataController();
             UnsubscribeTimeNavigator();
+
+            Data = null;
         }
  
         private void CreateAndSubscribeTimeNavigator()
@@ -482,33 +503,37 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             message = "";
 
+            if (routeChecked) return true;
+
             if (NetworkRoute.SegmentGenerationMethod != SegmentGenerationMethod.RouteBetweenLocations)
             {
-                message = string.Format("{0} can not be used as a route for sideview.", NetworkRoute.Name);
+                message = $"{NetworkRoute.Name} can not be used as a route for sideview.";
                 log.ErrorFormat(message);
                 return false;
             }
 
             if (RouteHelper.RouteContainLoops(NetworkRoute))
             {
-                message = string.Format("{0} is not a valid route; it contains loops.", NetworkRoute.Name);
+                message = $"{NetworkRoute.Name} is not a valid route; it contains loops.";
                 log.ErrorFormat(message);
                 return false;   
             }
 
             if (NetworkRoute.Locations.Values.Count < 2)
             {
-                message = string.Format("{0} is not a valid route; add extra locations first.", NetworkRoute.Name);
+                message = $"{NetworkRoute.Name} is not a valid route; add extra locations first.";
                 log.ErrorFormat(message);
                 return false;
             }
 
             if (!NetworkRoute.Network.IsEditing && RouteHelper.IsDisconnected(NetworkRoute) && !NetworkRoute.Locations.Values.All(l => l.Branch is ISewerConnection && Equals(l.Branch?.Source, l.Branch?.Target)))
             {
-                message = string.Format("{0} is not a valid route; is the route disconnected?", NetworkRoute.Name);
+                message = $"{NetworkRoute.Name} is not a valid route; is the route disconnected?";
                 log.ErrorFormat(message);
                 return false;
             }
+
+            routeChecked = true;
             return true;
         }
 

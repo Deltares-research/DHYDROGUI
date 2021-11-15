@@ -73,8 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             {
                 return;
             }
-
-            bindingList.Clear();
+            
             bindingList.Dispose();
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Threading;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.Extensions.Coverages;
@@ -528,20 +530,38 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        public IFunction CreateRouteFunctionFromNetworkCoverage(Route route, INetworkCoverage coverage, IUnit yUnit)
+        public IFunction CreateRouteFunctionFromNetworkCoverage(INetworkCoverage coverage, IUnit yUnit)
         {
             if (route == null || coverage == null || (coverage.Time != null && coverage.Time.Values.Count == 0))
                 // Last condition: if time-dependent, but no times available, do not create function. 
-                return null; 
-            
-            var networkLocations = RouteHelper.GetLocationsInRoute(coverage, route).OrderBy(loc => RouteHelper.GetRouteChainage(route, loc));
-            
-            var chainagesValues = networkLocations.Select(loc => RouteHelper.GetRouteChainage(route, loc));
+                return null;
+
+            var locIndex = coverage.Locations.GetValues().ToIndexDictionary();
+            var locationsInRoute = RouteHelper.GetLocationsInRoute(coverage, route).Select(l =>
+                                              {
+                                                  var found = locIndex.TryGetValue(l, out var currentLocIndex);
+                                                  return new
+                                                  {
+                                                      loc = l,
+                                                      index = found ? currentLocIndex : -1,
+                                                      chainage = RouteHelper.GetRouteChainage(route, l)
+                                                  };
+                                              })
+                                              .OrderBy(l => l.chainage)
+                                              .ToList();
+
+            var chainagesValues = locationsInRoute.Select(l => l.chainage).ToArray();
+
+            var values = coverage.GetValues<double>();
+            var yValues = locationsInRoute.Select(l => l.index != -1
+                                                       ? values[l.index]
+                                                       : coverage.Evaluate(l.loc))
+                                      .ToArray();
+
             var chainages = new Variable<double>("Chainage");
             chainages.Unit = new Unit("Chainage", "m");
-            FunctionHelper.SetValuesRaw<double>(chainages, chainagesValues);
-
-            var yValues = networkLocations.Select(coverage.Evaluate);
+            FunctionHelper.SetValuesRaw(chainages, (IList)chainagesValues);
+            
             var yVar = new Variable<double>(yUnit.Name);
             yVar.Unit = yUnit;
             FunctionHelper.SetValuesRaw<double>(yVar, yValues);
@@ -564,7 +584,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             return function; 
         }
 
-        public static IFunction CreateRouteFunctionFromFeatureCoverage(Route route, IFeatureCoverage coverage, IUnit yUnit)
+        public IFunction CreateRouteFunctionFromFeatureCoverage(IFeatureCoverage coverage, IUnit yUnit)
         {
             if (route == null || coverage == null || (coverage.Time != null && coverage.Time.Values.Count == 0))
                 // Last condition: if time-dependent, but no times available, do not create function. 
@@ -593,7 +613,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                var function = CreateRouteFunctionFromNetworkCoverage(route, WaterLevelNetworkCoverage, waterLevelUnit);
+                var function = CreateRouteFunctionFromNetworkCoverage(WaterLevelNetworkCoverage, waterLevelUnit);
 
                 if (function == null)
                 {
@@ -641,7 +661,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return ProfileNetworkCoverages.Select(cov => CreateRouteFunctionFromNetworkCoverage(route, cov, new Unit(cov.Name, "m AD"))); 
+                return ProfileNetworkCoverages.Select(cov => CreateRouteFunctionFromNetworkCoverage(cov, new Unit(cov.Name, "m AD"))); 
             }
         }
 
@@ -659,7 +679,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return renderedNetworkCoverages.Where(IsValidCoverage).Select(cov => CreateRouteFunctionFromNetworkCoverage(route, cov, new Unit(cov.Components[0].Name, cov.Components[0].Unit.Symbol)));
+                return renderedNetworkCoverages.Where(IsValidCoverage).Select(cov => CreateRouteFunctionFromNetworkCoverage(cov, new Unit(cov.Components[0].Name, cov.Components[0].Unit.Symbol)));
             }
         }
 
@@ -672,7 +692,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
-                return RenderedFeatureCoverages.Where(IsValidCoverage).Select(cov => CreateRouteFunctionFromFeatureCoverage(route, cov, new Unit(cov.Components[0].Name, cov.Components[0].Unit.Symbol)));
+                return RenderedFeatureCoverages.Where(IsValidCoverage).Select(cov => CreateRouteFunctionFromFeatureCoverage(cov, new Unit(cov.Components[0].Name, cov.Components[0].Unit.Symbol)));
             }
         }
 
