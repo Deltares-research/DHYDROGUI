@@ -6,7 +6,6 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
-using DelftTools.Utils.Guards;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
@@ -107,59 +106,78 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
                 return;
             }
             meteo.Data.Arguments[0].Clear();
-            var stations = table.NumberOfLocations;
-            if (meteo.DataDistributionType == MeteoDataDistributionType.Global)
-            {
-                if (stations != 1)
-                {
-                    Log.Warn(
-                        "Importing station-dependent evaporation data to global evaporation: restricting to first column");
-                }
-                foreach (KeyValuePair<DateTime, double[]> data in table.Data)
-                {
-                    DateTime dateTime = data.Key;
-                    double value = data.Value[0]; 
-                    meteo.Data[dateTime] = value;
-                }
-            }
-            if (meteo.DataDistributionType == MeteoDataDistributionType.PerStation)
-            {
-                var importedStations = Math.Min(stations, meteo.Data.Arguments[1].Values.Count);
-                if (importedStations < stations)
-                {
-                    Log.WarnFormat("Importing only {0} evaporation series of {1} defined in the file", importedStations,
-                                   stations);
-                }
-                foreach (KeyValuePair<DateTime, double[]> data in table.Data)
-                {
-                    DateTime dateTime = data.Key;
-                    double[] values = data.Value;
-                    for (var i = 0; i < importedStations; ++i)
-                    {
-                        var station = meteo.Data.Arguments[1].Values[i];
-                        meteo.Data[dateTime, station] = values[i];
-                    }
 
-                }
-            }
-            if (meteo.DataDistributionType == MeteoDataDistributionType.PerFeature)
+            switch (meteo.DataDistributionType)
             {
-                Log.Warn("Importing first evaporation series to all catchments");
-                var features = ((FeatureCoverage) meteo.Data).Features;
-                
-                foreach (KeyValuePair<DateTime, double[]> data in table.Data)
-                {
-                    DateTime dateTime = data.Key;
-                    double value = data.Value[0];
-                    foreach (var feature in features)
-                    {
-                        meteo.Data[dateTime, feature] = value;
-                    }
-                }
+                case MeteoDataDistributionType.Global:
+                    SetGlobalMeteoData(table, meteo);
+                    break;
+                case MeteoDataDistributionType.PerStation:
+                    SetMeteoDataPerStation(table, meteo);
+                    break;
+                case MeteoDataDistributionType.PerFeature:
+                    SetMeteoDataPerFeature(table, meteo);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
+
             if (table.IsPeriodic)
             {
                meteo.Data.Arguments[0].ExtrapolationType = ExtrapolationType.Periodic;
+            }
+        }
+
+        private static void SetMeteoDataPerFeature(SobekRREvaporation table, MeteoData meteo)
+        {
+            Log.Warn("Importing first evaporation series to all catchments");
+            var features = ((FeatureCoverage)meteo.Data).Features;
+
+            foreach (KeyValuePair<DateTime, double[]> data in table.Data)
+            {
+                DateTime dateTime = data.Key;
+                double value = data.Value[0];
+                foreach (var feature in features)
+                {
+                    meteo.Data[dateTime, feature] = value;
+                }
+            }
+        }
+
+        private static void SetMeteoDataPerStation(SobekRREvaporation table, MeteoData meteo)
+        {
+            var importedStations = Math.Min(table.NumberOfLocations, meteo.Data.Arguments[1].Values.Count);
+            if (importedStations < table.NumberOfLocations)
+            {
+                Log.WarnFormat("Importing only {0} evaporation series of {1} defined in the file", importedStations,
+                               table.NumberOfLocations);
+            }
+
+            foreach (KeyValuePair<DateTime, double[]> data in table.Data)
+            {
+                DateTime dateTime = data.Key;
+                double[] values = data.Value;
+                for (var i = 0; i < importedStations; ++i)
+                {
+                    var station = meteo.Data.Arguments[1].Values[i];
+                    meteo.Data[dateTime, station] = values[i];
+                }
+            }
+        }
+
+        private static void SetGlobalMeteoData(SobekRREvaporation table, MeteoData meteo)
+        {
+            if (table.NumberOfLocations != 1)
+            {
+                Log.Warn(
+                    "Importing station-dependent evaporation data to global evaporation: restricting to first column");
+            }
+
+            foreach (KeyValuePair<DateTime, double[]> data in table.Data)
+            {
+                DateTime dateTime = data.Key;
+                double value = data.Value[0];
+                meteo.Data[dateTime] = value;
             }
         }
     }
