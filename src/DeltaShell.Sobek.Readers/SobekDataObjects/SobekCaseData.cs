@@ -35,28 +35,28 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         /// <summary>
         /// Gets the bui file info.
         /// </summary>
-        public FileInfo PrecipitationFile => filePaths.GetByExtension(".bui");
+        public FileInfo PrecipitationFile => filePaths.GetByExtensions(".bui");
 
         /// <summary>
         /// Gets the RKS file.
         /// </summary>
-        public FileInfo RksFile => filePaths.GetByExtension(".rks");
+        public FileInfo RksFile => filePaths.GetByExtensions(".rks");
 
         /// <summary>
         /// Gets the wind file info.
         /// </summary>
-        public FileInfo WindFile => filePaths.GetByExtension(".wdc", ".wnd");
+        public FileInfo WindFile => filePaths.GetByExtensions(".wdc", ".wnd");
 
         /// <summary>
         /// Gets the evaporation file.
         /// </summary>
-        public FileInfo EvaporationFile => filePaths.GetByExtension(".evp", ".gem", ".plv") ??
+        public FileInfo EvaporationFile => filePaths.GetByExtensions(".evp", ".gem", ".plv") ??
                                            filePaths.GetByNameWithoutExtension("evapor");
 
         /// <summary>
         /// Gets the temperature file info.
         /// </summary>
-        public FileInfo TemperatureFile => filePaths.GetByExtension(".tmp");
+        public FileInfo TemperatureFile => filePaths.GetByExtensions(".tmp");
 
         /// <summary>
         /// Gets the boundary conditions file info.

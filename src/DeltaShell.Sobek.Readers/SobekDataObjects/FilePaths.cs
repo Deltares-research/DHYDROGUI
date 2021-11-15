@@ -44,7 +44,7 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         /// <exception cref="System.ArgumentNullException">
         /// Thrown when <paramref name="extensions"/> or one of its values is <c>null</c>.
         /// </exception>
-        public FileInfo GetByExtension(params string[] extensions)
+        public FileInfo GetByExtensions(params string[] extensions)
         {
             Ensure.NotNull(extensions, nameof(extensions));
             return extensions.Select(GetByExtension).FirstOrDefault(fileInfo => fileInfo != null);

@@ -21,7 +21,7 @@ namespace DeltaShell.Sobek.Readers.Tests.DataObjects
         }
 
         [Test]
-        public void GetByExtension_FileNotPresent_ReturnsNull()
+        public void GetByExtensions_FileNotPresent_ReturnsNull()
         {
             var files = new[]
             {
@@ -32,21 +32,21 @@ namespace DeltaShell.Sobek.Readers.Tests.DataObjects
             var filePaths = new FilePaths(files);
 
             // Call
-            FileInfo result = filePaths.GetByExtension(".def");
+            FileInfo result = filePaths.GetByExtensions(".def");
 
             // Assert
             Assert.That(result, Is.Null);
         }
 
         [Test]
-        [TestCaseSource(nameof(GetByExtensionCases))]
-        public void GetByExtension_FilePresent_ReturnsCorrectResult(string[] files, string[] extensions, string expPath)
+        [TestCaseSource(nameof(GetByExtensionsCases))]
+        public void GetByExtensions_FilePresent_ReturnsCorrectResult(string[] files, string[] extensions, string expPath)
         {
             // Setup
             var filePaths = new FilePaths(files);
 
             // Call
-            FileInfo result = filePaths.GetByExtension(extensions);
+            FileInfo result = filePaths.GetByExtensions(extensions);
 
             // Assert
             Assert.That(result.FullName, Is.EqualTo(expPath));
@@ -135,7 +135,7 @@ namespace DeltaShell.Sobek.Readers.Tests.DataObjects
             Assert.That(result.FullName, Is.EqualTo($"z:\\dir\\{expFileName}"));
         }
 
-        private static IEnumerable<TestCaseData> GetByExtensionCases()
+        private static IEnumerable<TestCaseData> GetByExtensionsCases()
         {
             // file paths, extensions parameters, expected result
             yield return new TestCaseData(new[]
