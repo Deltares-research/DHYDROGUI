@@ -37,7 +37,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
 
             if (!stream.CanRead)
             {
-                throw new InvalidOperationException("The current file stream does not support reading.");
+                throw new InvalidOperationException($"The current {nameof(stream)} does not support reading.");
             }
 
             var evaporation = new SobekRREvaporation();
