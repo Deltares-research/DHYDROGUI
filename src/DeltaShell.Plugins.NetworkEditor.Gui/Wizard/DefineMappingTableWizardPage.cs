@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
             var comboBoxEditor = new ComboBoxTypeEditor
                 {
                     ItemsMandatory = false,
-                    Items = (IEnumerable) dataRowView.Row.ItemArray[IndexItems]
+                    Items = (dataRowView.Row.ItemArray[IndexItems] as IEnumerable<MappingColumn>)?.Where(a=> a.Alias != null)
                 };
 
             tableView.Columns[IndexMappingColumn].Editor = comboBoxEditor;
