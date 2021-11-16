@@ -96,11 +96,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                 foreach (dimrComponentXML component in componentGroup)
                 {
-                    string workDir = component.workingDir.Trim();
-                    string inputFile = component.inputFile.Trim();
-                    string filePath = Path.Combine(rootFolder, workDir, inputFile);
+                    string filePath = GetFilePath(rootFolder, component.workingDir.Trim(), component.inputFile.Trim(), importer);
 
-                    object importedItem = importer.ImportItem(filePath);
+                    if (filePath == null)
+                    {
+                        continue;
+                    }
+
+                    object importedItem = importer.ImportItem(Path.GetFullPath(filePath));
 
                     if (!(importedItem is IActivity subModel))
                     {
@@ -165,6 +168,58 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
         private void LogUnknownImporter(string extension)
         {
             logHandler.ReportInfo($"No importer found for extension: {extension}");
+        }
+
+        private string GetFilePath(string rootFolder, string workingDirectory, string inputFileName,
+                                   IDimrModelFileImporter importer)
+        {
+            string fileName = GetFileName(inputFileName);
+            string filePath = ComposeFilePath(rootFolder, workingDirectory, fileName, importer);
+            return filePath;
+        }
+
+        private string GetFileName(string fileName)
+        {
+            return fileName.Equals(".")
+                       ? "settings.json"
+                       : fileName;
+        }
+
+        private string ComposeFilePath(string rootFolder, string workingDirectory, string fileName, IDimrModelFileImporter importer)
+        {
+            string[] pathParts;
+
+            if (importer.MasterFileExtension.Equals("json"))
+            {
+                string pathToFile = Path.Combine(rootFolder, workingDirectory, fileName);
+                string file = File.ReadAllText(pathToFile);
+                var fileObject = JsonConvert.DeserializeObject<RtcXmlDirectoryLookup>(file);
+                string xmlDirectory = fileObject.XmlDirectory;
+
+                if (xmlDirectory == null)
+                {
+                    logHandler.ReportError(Resources.HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_);
+                    return null;
+                }
+
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    xmlDirectory
+                };
+            }
+            else
+            {
+                pathParts = new[]
+                {
+                    rootFolder,
+                    workingDirectory,
+                    fileName
+                };
+            }
+
+            return Path.Combine(pathParts);
         }
 
         private void RenameSubModelWhenNeeded(IActivity subModel, string componentName)

@@ -773,15 +773,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not import RTC model, the settings.json file should contain an xml directory..
-        /// </summary>
-        public static string RealTimeControlModelXmlReader_GetXmlDirectory_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory {
-            get {
-                return ResourceManager.GetString("HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_" +
-                                                 "file_should_contain_an_xml_directory_", resourceCulture);
-            }
-        }
-        /// <summary>
         ///   Looks up a localized string similar to File &apos;{0}&apos; does not exist..
         /// </summary>
         public static string RealTimeControlRuntimeConfigXmlReader_Read_File___0___does_not_exist_ {

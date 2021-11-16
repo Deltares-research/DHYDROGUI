@@ -1,4 +1,0 @@
-// this is a valid settings.json which states that the XML files are one directory up
-{
-    "xmlDir": "../"
-}

@@ -202,7 +202,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
                         "in_the_dimr_xml_", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not import RTC model, the settings.json file should contain an xml directory..
+        /// </summary>
+        public static string HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_" +
+                        "file_should_contain_an_xml_directory_", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Cannot convert empty dimr data object..
         /// </summary>
