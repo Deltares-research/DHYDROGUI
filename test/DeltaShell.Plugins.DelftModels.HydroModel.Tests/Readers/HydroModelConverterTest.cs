@@ -331,46 +331,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
         }
 
         [Test]
-        [Category(TestCategory.DataAccess)]
-        public void GivenValidDimrXmlObjectWithXmlDirIsNullInRtcJsonFile_WhenConvertingToHydroModel_ThenRtcModelShouldNotBeImported()
-        {
-            // Given
-            var dimrFileImporter = mocks.DynamicMock<IDimrModelFileImporter>();
-            dimrFileImporter.Expect(importer => importer.MasterFileExtension).Return("json").Repeat.Any();
-
-            var importers = new List<IDimrModelFileImporter> {dimrFileImporter};
-
-            logHandler.Expect(l => l.ReportError("Could not import RTC model, the settings.json file should contain an xml directory.")).Repeat.Once();
-
-            string dimrPath = TestHelper.GetTestFilePath(Path.Combine("FileReader", "dimr.xml"));
-
-            var dimrXml = new dimrXML
-            {
-                component = new[]
-                {
-                    new dimrComponentXML
-                    {
-                        name = "RTC",
-                        workingDir = "IncorrectSettingsJson",
-                        inputFile = "."
-                    }
-                }
-            };
-
-            mocks.ReplayAll();
-
-            // When
-            HydroModel hydroModel = hydroModelConverter.Convert(dimrXml, dimrPath, importers);
-
-            //Then
-            Assert.IsNotNull(hydroModel, "The returned model was expected to be not null.");
-            Assert.That(hydroModel.Activities.Count, Is.EqualTo(0));
-
-            mocks.VerifyAll();
-            logHandler.VerifyAllExpectations();
-        }
-
-        [Test]
         public void ConvertingDimrXmlOfAHydroModelWithSubModelRegionIsNull_ThenTheHydroModelShouldBeReturnedAndRegionOfSubModelIsNotAddedToRegionOfHydroModel()
         {
             // Given
