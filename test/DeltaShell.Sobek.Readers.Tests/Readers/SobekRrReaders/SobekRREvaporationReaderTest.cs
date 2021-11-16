@@ -37,7 +37,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
 
             // Assert
             var e = Assert.Throws<InvalidOperationException>(Call);
-            Assert.That(e.Message, Is.EqualTo("The current file stream does not support reading."));
+            Assert.That(e.Message, Is.EqualTo("The current stream does not support reading."));
         }
 
         [Test]
