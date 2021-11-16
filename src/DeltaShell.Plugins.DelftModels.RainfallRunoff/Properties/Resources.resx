@@ -123,4 +123,7 @@
   <data name="RainfallRunoffApplicationPlugin_Description" xml:space="preserve">
     <value>Allows to simulate lumped rainfall runoff models, such as Sacramento and HBV.</value>
   </data>
+  <data name="Exception_UnsupportedDataDistributionType" xml:space="preserve">
+    <value>Unsupported data distribution type for meteo: {0}</value>
+  </data>
 </root>

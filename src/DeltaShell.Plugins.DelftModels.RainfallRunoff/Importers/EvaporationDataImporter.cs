@@ -7,6 +7,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Shell.Core;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
@@ -119,7 +120,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
                     SetMeteoDataPerFeature(table, meteo);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(meteo), $"Unsupported data distribution type for meteo: {meteo.DataAggregationType}");
+                    throw new ArgumentOutOfRangeException(nameof(meteo), string.Format(Resources.Exception_UnsupportedDataDistributionType,
+                                                                                       meteo.DataAggregationType));
             }
 
             if (table.IsPeriodic)

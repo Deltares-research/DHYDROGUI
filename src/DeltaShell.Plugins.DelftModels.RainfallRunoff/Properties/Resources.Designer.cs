@@ -77,5 +77,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
                 return ResourceManager.GetString("RainfallRunoffApplicationPlugin_Description", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported data distribution type for meteo: {0}.
+        /// </summary>
+        public static string Exception_UnsupportedDataDistributionType {
+            get {
+                return ResourceManager.GetString("Exception_UnsupportedDataDistributionType", resourceCulture);
+            }
+        }
     }
 }
