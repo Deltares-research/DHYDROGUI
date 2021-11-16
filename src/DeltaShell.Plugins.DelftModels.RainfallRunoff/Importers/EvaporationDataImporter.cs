@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
                     SetMeteoDataPerFeature(table, meteo);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(meteo), $"Unsupported data distribution type for meteo: {meteo.DataAggregationType}");
             }
 
             if (table.IsPeriodic)
