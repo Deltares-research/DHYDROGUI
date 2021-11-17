@@ -126,16 +126,6 @@ namespace DelftTools.Hydro.CrossSections
                 return new Utils.Tuple<string, bool>("Value must be a number.", false);
             }
 
-            // Y' :
-            if (columnIndex == 0 &&
-                rowIndex >= 0 &&
-                yzDataTable.Where((t, i) => rowIndex != i && // Skip the validated row
-                                          value == yzDataTable.Rows[i].Yq).Any())
-                // Any duplicates?
-            {
-                return new Utils.Tuple<string, bool>("Y' must be unique.", false);
-            }
-
             // DeltaZStorage
             if (columnIndex == 2 && value < 0.0)
             {

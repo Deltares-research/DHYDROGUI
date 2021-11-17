@@ -39,10 +39,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             e.NewObject = defaultRow;
         }
 
-        public new T this[int index]
-        {
-            get { return Rows[index]; }
-        }
+        public new T this[int index] => Rows[index];
 
         public new LightBindingList<T> Rows { get; private set; }
 
@@ -123,9 +120,9 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                 var r = Rows[i];
                 if (r == row)
                     continue; // ignore self
-                if (direction == SortOrder.Descending && value >= r[columnIndex])
+                if (direction == SortOrder.Descending && value > r[columnIndex])
                     return index;
-                if (direction == SortOrder.Ascending && value <= r[columnIndex])
+                if (direction == SortOrder.Ascending && value < r[columnIndex])
                     return index;
                 index++;
             }
@@ -184,29 +181,17 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
         public bool HasErrors { get; private set; }
 
-        public LightDataRow this[int index]
-        {
-            get { return GetRow(index); }
-        }
+        public LightDataRow this[int index] => GetRow(index);
 
-        public int Count
-        {
-            get { return GetRows().Count; }
-        }
+        public int Count => GetRows().Count;
 
-        public IList<LightDataRow> Rows
-        {
-            get { return GetRows().Cast<LightDataRow>().ToList().AsReadOnly(); }
-        }
+        public IList<LightDataRow> Rows => GetRows().Cast<LightDataRow>().ToList().AsReadOnly();
 
-        private IList MutableRows
-        {
-            get { return GetRows(); }
-        }
+        private IList MutableRows => GetRows();
 
         public bool EnforceConstraints
         {
-            get { return enforceConstraints; }
+            get => enforceConstraints;
             set
             {
                 enforceConstraints = value;
@@ -230,10 +215,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             return GetRows();
         }
 
-        public bool ContainsListCollection
-        {
-            get { return true; }
-        }
+        public bool ContainsListCollection => true;
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -333,10 +315,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             {
             }
 
-            public override bool HandlesRestore
-            {
-                get { return true; }
-            }
+            public override bool HandlesRestore => true;
 
             public override void Restore()
             {
@@ -355,10 +334,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             {
             }
 
-            public override bool HandlesRestore
-            {
-                get { return true; }
-            }
+            public override bool HandlesRestore => true;
 
             public override void Restore()
             {
@@ -374,10 +350,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             {
             }
 
-            public override bool HandlesRestore
-            {
-                get { return true; }
-            }
+            public override bool HandlesRestore => true;
 
             public override void Restore()
             {
@@ -396,10 +369,7 @@ namespace DelftTools.Hydro.CrossSections.DataSets
             {
             }
 
-            public override bool HandlesRestore
-            {
-                get { return true; }
-            }
+            public override bool HandlesRestore => true;
 
             public override void Restore()
             {
@@ -484,8 +454,8 @@ namespace DelftTools.Hydro.CrossSections.DataSets
 
         public double this[int index]
         {
-            get { return ItemArray[index]; }
-            set { Set(index, value); }
+            get => ItemArray[index];
+            set => Set(index, value);
         }
 
         protected void Set(int index, double value)

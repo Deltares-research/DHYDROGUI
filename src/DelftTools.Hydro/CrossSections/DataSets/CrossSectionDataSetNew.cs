@@ -175,13 +175,6 @@ namespace DelftTools.Hydro.CrossSections.DataSets
                 return SortOrder.Ascending;
             }
 
-            protected override void DoEnforceConstraints()
-            {
-                var yValues = Rows.Select(r => r[0]).ToList();
-                if (yValues.Count != yValues.Distinct().Count())
-                    throw new ConstraintException("Y' must be unique.");
-            }
-
             protected override void AddByValues(double[] itemArray)
             {
                 AddCrossSectionYZRow(itemArray[0], itemArray[1]);

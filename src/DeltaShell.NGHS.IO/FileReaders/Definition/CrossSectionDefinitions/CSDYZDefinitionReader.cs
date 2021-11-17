@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
@@ -38,12 +37,6 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.CrossSectionDefinitions
                     {
                         var errorMessage = "y-values are decreasing for " + crossSectionDefinition.Name;
                         throw new FileReadingException(errorMessage);
-                    }
-                    if (Math.Abs(yList[i] - yList[i - 1]) < 1e-5)
-                    {
-                        var warningMessage = $"cross section definition {crossSectionDefinition.Name}: y-value {yList[i]} not increasing, incremented with .01 millimeter";
-                        Log.Warn(warningMessage);
-                        yList[i] += 1e-5;
                     }
                 }
                 try

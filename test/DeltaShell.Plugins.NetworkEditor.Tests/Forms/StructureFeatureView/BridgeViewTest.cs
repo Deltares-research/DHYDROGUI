@@ -181,15 +181,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.StructureFeatureView
 
             Assert.AreEqual(1.0, tableView.GetCellValue(0, 0));
             Assert.AreEqual(2.0, tableView.GetCellValue(1, 0));
-
-            var succes = true;
-            const string errorMsg = "Can not set value into cell [0, 0] reason:Validation of cell failed: Y' must be unique.";
-            TestHelper.AssertLogMessageIsGenerated(() => succes = tableView.SetCellValue(0, 0, "2"), errorMsg, 1);
-            Assert.IsFalse(succes, "Should not allow a duplicate to be entered.");
-
-            // Verify that data is unchanged:
-            Assert.AreEqual(1.0, tableView.GetCellValue(0, 0));
-            Assert.AreEqual(2.0, tableView.GetCellValue(1, 0));
         }
     }
 }

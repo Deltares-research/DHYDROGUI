@@ -29,23 +29,6 @@ namespace DelftTools.Hydro.Tests
         }
 
         [Test]
-        public void AddNonUniqueTable()
-        {
-            var crossSection = new CrossSectionDefinitionYZ();
-
-            var error = Assert.Throws<ArgumentException>(() =>
-            {
-                crossSection.BeginEdit(new DefaultEditAction("Set YZ data"));
-                crossSection.YZDataTable.AddCrossSectionYZRow(0.0, 1.0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0);
-                crossSection.YZDataTable.AddCrossSectionYZRow(1.0, 1.0);
-                crossSection.EndEdit();
-            });
-
-            Assert.AreEqual("Y' must be unique.", error.Message);
-        }
-
-        [Test]
         public void GetGeometryWithNoYZReturnsPoint()
         {
             //this is not a requirement but it seems handy. null might also be reasonable
@@ -240,12 +223,6 @@ namespace DelftTools.Hydro.Tests
             Assert.IsFalse(validationResult.Second,
                 "User should be unable to set anything to NaN");
             Assert.AreEqual("Value must be a number.", validationResult.First);
-
-            // Setting Y' should be unique:
-            validationResult = crossSection.ValidateCellValue(1, 0, 0.0);
-            Assert.IsFalse(validationResult.Second,
-                "User should be unable to set Y' such that there will be duplicates");
-            Assert.AreEqual("Y' must be unique.", validationResult.First);
 
             // Setting Z:
             validationResult = crossSection.ValidateCellValue(1, 1, 0.0);
