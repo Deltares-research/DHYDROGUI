@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DeltaShell.NGHS.Common.Utils;
 using NUnit.Framework;
 
@@ -111,6 +112,89 @@ namespace DeltaShell.NGHS.Common.Tests.Utils
             bool result = source.AllUnique();
 
             // Assert
+            Assert.That(result, Is.EqualTo(expResult));
+        }
+
+        [Test]
+        public void Duplicates_SourceNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => ((IEnumerable<string>)null).Duplicates().ToArray();
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("source"));
+        }
+
+        [Test]
+        public void Duplicates_ReturnsCorrectResult()
+        {
+            var strings = new[]
+            {
+                "a",
+                "b",
+                "c",
+                "b",
+                "c",
+                "c"
+            };
+
+            // Call
+            string[] result = strings.Duplicates().ToArray();
+
+            // Assert
+            var expResult = new[]
+            {
+                "b",
+                "c"
+            };
+            Assert.That(result, Is.EqualTo(expResult));
+        }
+
+        [Test]
+        public void Duplicates_WithSelector_SourceNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => ((IEnumerable<string>)null).Duplicates(s => s.ToLower()).ToArray();
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("source"));
+        }
+
+        [Test]
+        public void Duplicates_SelectorNull_ThrowsArgumentNullException()
+        {
+            // Call
+            void Call() => Enumerable.Empty<string>().Duplicates((Func<string, string>)null).ToArray();
+
+            // Assert
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("selector"));
+        }
+
+        [Test]
+        public void Duplicates_With_Selector_ReturnsCorrectResult()
+        {
+            var objects = new[]
+            {
+                new { prop = "a" },
+                new { prop = "b" },
+                new { prop = "c" },
+                new { prop = "b" },
+                new { prop = "c" },
+                new { prop = "c" }
+            };
+
+            // Call
+            string[] result = objects.Duplicates(o => o.prop).ToArray();
+
+            // Assert
+            var expResult = new[]
+            {
+                "b",
+                "c"
+            };
             Assert.That(result, Is.EqualTo(expResult));
         }
         

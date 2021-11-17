@@ -912,5 +912,32 @@ namespace DeltaShell.NGHS.IO.Properties {
                         "t_currently_supported", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property '{0}' is not found in the file for category '{1}' on line {2}.
+        /// </summary>
+        public static string IniProperty_NotFound {
+            get {
+                return ResourceManager.GetString("IniProperty_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property '{0}' does not contain a value in the file for category '{1}' on line {2}.
+        /// </summary>
+        public static string IniProperty_EmptyValue {
+            get {
+                return ResourceManager.GetString("IniProperty_EmptyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property '{0}' contains an invalid floating-point number in the file for category '{1}' on line {2}: {3}.
+        /// </summary>
+        public static string IniProperty_InvalidDouble {
+            get {
+                return ResourceManager.GetString("IniProperty_InvalidDouble", resourceCulture);
+            }
+        }
     }
 }

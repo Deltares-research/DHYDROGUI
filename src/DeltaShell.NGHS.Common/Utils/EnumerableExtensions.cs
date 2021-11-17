@@ -88,6 +88,60 @@ namespace DeltaShell.NGHS.Common.Utils
 
             return true;
         }
+        
+        /// <summary>
+        /// Invokes the <paramref name="selector"/> on each item of the <paramref name="source"/>, and returns the duplicates of
+        /// this result, using the default <see cref="IEqualityComparer{T}"/>>.
+        /// </summary>
+        /// <param name="source"> The source collection. </param>
+        /// <param name="selector"> The selector function to invoke for each item. </param>
+        /// <typeparam name="TSource">The type of elements in the source collection.</typeparam>
+        /// <typeparam name="TResult"> The type of element in the resulting collection.</typeparam>
+        /// <returns>
+        /// The duplicate values in the resulting collection.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/> or <paramref name="selector"/> is <c>null</c>.
+        /// </exception>
+        public static IEnumerable<TResult> Duplicates<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> selector)
+        {
+            Ensure.NotNull(source, nameof(source));
+            Ensure.NotNull(selector, nameof(selector));
+
+            return source.Select(selector).Duplicates();
+        }
+
+        /// <summary>
+        /// Gets the duplicate values from a collection, using the default <see cref="IEqualityComparer{T}"/>>.
+        /// </summary>
+        /// <param name="source"> The collection to retrieve the duplicates from. </param>
+        /// <typeparam name="T">The type of elements in the collection.</typeparam>
+        /// <returns> The duplicate values in the collection. </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="source"/> is <c>null</c>.
+        /// </exception>
+        public static IEnumerable<T> Duplicates<T>(this IEnumerable<T> source)
+        {
+            Ensure.NotNull(source, nameof(source));
+
+            var dictionary = new Dictionary<T, bool>();
+
+            foreach (T item in source)
+            {
+                if (dictionary.TryGetValue(item, out bool isDuplicate))
+                {
+                    if (!isDuplicate)
+                    {
+                        dictionary[item] = true;
+                        yield return item;
+                    }
+                }
+                else
+                {
+                    dictionary[item] = false;
+                }
+            }
+        }
 
         private static bool AllEqualTo<T>(this IEnumerable<T> source, T value)
         {

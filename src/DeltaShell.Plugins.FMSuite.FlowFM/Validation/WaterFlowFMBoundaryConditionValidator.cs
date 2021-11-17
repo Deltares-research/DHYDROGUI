@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
@@ -14,12 +15,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             var issues = new List<ValidationIssue>();
 
-            var featureGroups = model.Boundaries.GroupBy(f => f.Name).Where(g => g.Count() > 1);
+            IEnumerable<string> duplicateBoundaryNames = model.Boundaries.Duplicates(b => b.Name);
 
-            issues.AddRange(featureGroups.Select(g => new ValidationIssue("Boundaries", ValidationSeverity.Warning,
+            issues.AddRange(duplicateBoundaryNames.Select(g => new ValidationIssue("Boundaries", ValidationSeverity.Warning,
                                                                           string.Format(
                                                                               "Boundary name {0} occurs multiple times, this can cause unexpected results",
-                                                                              g.Key), model.Boundaries)));
+                                                                              g), model.Boundaries)));
 
             foreach (var boundaryConditionSet in model.BoundaryConditionSets)
             {

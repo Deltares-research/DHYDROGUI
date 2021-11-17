@@ -387,4 +387,13 @@
   <data name="DelftIniPropertyExtensionMethods_Cannot_parse_value_for_property" xml:space="preserve">
     <value>Cannot parse {0} to a {1} for property {2} on line {3}.</value>
   </data>
+  <data name="IniProperty_NotFound" xml:space="preserve">
+    <value>Property '{0}' is not found in the file for category '{1}' on line {2}</value>
+  </data>
+  <data name="IniProperty_EmptyValue" xml:space="preserve">
+    <value>Property '{0}' does not contain a value in the file for category '{1}' on line {2}</value>
+  </data>
+  <data name="IniProperty_InvalidDouble" xml:space="preserve">
+    <value>Property '{0}' contains an invalid floating-point number in the file for category '{1}' on line {2}: {3}</value>
+  </data>
 </root>

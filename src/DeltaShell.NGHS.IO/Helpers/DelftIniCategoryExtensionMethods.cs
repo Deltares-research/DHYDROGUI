@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using DeltaShell.NGHS.IO.Properties;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.Helpers
@@ -61,7 +62,7 @@ namespace DeltaShell.NGHS.IO.Helpers
 
             if (!isOptional)
             {
-                string message = $"Property '{key}' is not found in the file for category '{category.Name}' on line {category.LineNumber}";
+                string message = string.Format(Resources.IniProperty_NotFound, key, category.Name, category.LineNumber);
                 if (!logError)
                     throw new PropertyNotFoundInFileException(message);
 

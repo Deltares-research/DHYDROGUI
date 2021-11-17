@@ -7,7 +7,9 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
+using DeltaShell.NGHS.IO.FileReaders.Location.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
@@ -20,6 +22,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 {
     public static class CrossSectionFileReader
     {
+        private static readonly CrossSectionLocationFileReader locationFileReader = new CrossSectionLocationFileReader(new DelftIniReader());
         private static readonly ILog log = LogManager.GetLogger(typeof(CrossSectionFileReader));
 
         /// <summary>
@@ -32,13 +35,17 @@ namespace DeltaShell.NGHS.IO.FileReaders
         /// <returns>Definitions that are not coupled to cross-sections and are not shared (usually structure profiles)</returns>
         public static ICrossSectionDefinition[] ReadFile(string crossSectionLocationFilePath, string crossSectionDefinitionPath, IHydroNetwork hydroNetwork, IEnumerable<ChannelFrictionDefinition> channelFrictionDefinitions)
         {
+            CrossSectionLocation[] crossSectionLocations = locationFileReader.Read(crossSectionLocationFilePath).ToArray();
+            HashSet<string> duplicateDefinitionIds = GetDuplicateDefinitionIds(crossSectionLocations);
+            
             channelFrictionDefinitions = channelFrictionDefinitions ?? Enumerable.Empty<ChannelFrictionDefinition>();
             var frictionDefinitions = channelFrictionDefinitions.ToLookup(cfd => cfd.Channel);
 
             var csDefinitionCategories = GetCrossSectionDefinitionCategories(crossSectionDefinitionPath);
 
             var sharedCsdCategories = csDefinitionCategories
-                                      .Where(d => d.ReadProperty<bool>(DefinitionPropertySettings.IsShared, true))
+                                      .Where(d => d.ReadProperty<bool>(DefinitionPropertySettings.IsShared, true) || 
+                                                  duplicateDefinitionIds.Contains(d.ReadProperty<string>(DefinitionPropertySettings.Id.Key)))
                                       .ToArray();
 
             // Shared cross-section definitions lookup
@@ -63,18 +70,16 @@ namespace DeltaShell.NGHS.IO.FileReaders
             // add shared cross-section definitions to network
             hydroNetwork.SharedCrossSectionDefinitions.AddRange(sharedDefinitionNameLookup.Values);
             
-            foreach (var crossSectionCategory in GetCrossSectionCategories(crossSectionLocationFilePath))
+            foreach (CrossSectionLocation crossSectionLocation in crossSectionLocations)
             {
-                var definitionId = crossSectionCategory.ReadProperty<string>(LocationRegion.Definition);
-                if (string.IsNullOrEmpty(definitionId))
-                    continue;
-                var name = crossSectionCategory.ReadProperty<string>(LocationRegion.Id);
+                string definitionId = crossSectionLocation.DefinitionId;
+                string name = crossSectionLocation.Id;
 
                 ICrossSectionDefinition definition = GetDefinitionForLocation(definitionId, name, sharedDefinitionNameLookup, unsharedDefinitionNameLookup, fileReadingExceptions);
 
-                var chainage = crossSectionCategory.ReadProperty<double>(LocationRegion.Chainage);
-                var branchId = crossSectionCategory.ReadProperty<string>(LocationRegion.BranchId);
-                var crossSectionLongName = crossSectionCategory.ReadProperty<string>(LocationRegion.Name, true);
+                double chainage = crossSectionLocation.Chainage;
+                string branchId = crossSectionLocation.BranchId;
+                string crossSectionLongName = crossSectionLocation.LongName;
 
                 if(!branchLookup.TryGetValue(branchId, out IBranch branch))
                 {
@@ -89,7 +94,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
                 crossSection.SetNameWithoutUpdatingDefinition(name);
                 
-                var shift = crossSectionCategory.ReadProperty<double>(LocationRegion.Shift);
+                double shift = crossSectionLocation.Shift;
 
                 if (AddCrossSectionToNetwork(branch, crossSection, shift, frictionDefinitions))
                     assignedDefinitions.Add(definition);
@@ -206,7 +211,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                                                                   StringComparison.InvariantCultureIgnoreCase))
                                          .ToArray();
         }
-
+        
         private static DelftIniCategory[] GetCrossSectionCategories(string cslFilename)
         {
             var cslCategories = File.Exists(cslFilename)
@@ -376,5 +381,9 @@ namespace DeltaShell.NGHS.IO.FileReaders
             }
             return crossSectionSectionType;
         }
+
+        private static HashSet<string> GetDuplicateDefinitionIds(IEnumerable<CrossSectionLocation> crossSectionLocations) => 
+            new HashSet<string>(crossSectionLocations.Duplicates(l => l.DefinitionId));
+
     }
 }
