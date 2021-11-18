@@ -1,12 +1,11 @@
 __author__ = "Maarten Tegelaers"
 __copyright__ = "Copyright (C) Stichting Deltares, 2020"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __maintainer__ = "Maarten Tegelaers, Prisca van der Sluis"
 __email__ = "Maarten.Tegelaers@deltares.nl"
 __status__ = "Development"
 
 import argparse
-import subprocess
 
 
 SERVICE_MSG_TEMPLATE = "##teamcity[{0}]"
@@ -28,37 +27,24 @@ def set_build_parameter(name: str, value: str) -> None:
         * no prefix for configuration parameters.
     """
     # See: https://www.jetbrains.com/help/teamcity/build-script-interaction-with-teamcity.html#BuildScriptInteractionwithTeamCity-AddingorChangingaBuildParameter
-    set_parameter_msg = "setParameter name='{}' value='{}'".format(name, 
-                                                                   value)
+    set_parameter_msg = "setParameter name='{}' value='{}'".format(name, value)
     service_msg = SERVICE_MSG_TEMPLATE.format(set_parameter_msg)
     print(service_msg)
 
 
-def get_branch_name() -> str:
-    p_cmd = "git symbolic-ref --short HEAD"
-    p = subprocess.run(p_cmd, shell=True, capture_output=True, text=True)
-
-    return p.stdout.strip()
+RELEASE_BRANCH_PREFIX = "release/D-HYDRO-"
 
 
-def verify_branch(branch_name: str) -> bool:
-    return branch_name.startswith("release/D-HYDRO-")
+def is_release_branch(branch_name: str) -> bool:
+    return branch_name.startswith(RELEASE_BRANCH_PREFIX)
 
 
-def get_version(branch_name: str) -> str:
-    return branch_name[16:]
-
-
-def set_version_parameter(variable_name: str, version: str):
-    set_build_parameter(variable_name, version)
-
-
-def report_failure(branch_name: str):
-    failure_description = f"The provided branch, {branch_name}, does not match the expected release convention: release/D-HYDRO-<version>"
-    failure_msg = f"buildProblem description='{failure_description}'"
-
-    service_msg = SERVICE_MSG_TEMPLATE.format(failure_msg)
-    print(service_msg)
+def get_version(branch_name: str, git_hash: str) -> str:
+    if is_release_branch(branch_name):
+        release_version = branch_name.replace(RELEASE_BRANCH_PREFIX, "")
+        return f"release_{release_version}.{git_hash}"
+    
+    return f"development.{git_hash}"
 
 
 def parse_arguments():
@@ -68,22 +54,14 @@ def parse_arguments():
     """
     parser = argparse.ArgumentParser()
 
+    parser.add_argument("branch_name", help="The branch name currently being analyzed")
+    parser.add_argument("git_hash_short", help="The short git hash used to set the version name.")
     parser.add_argument("--variable_name", default="D-HYDRO_ReleaseVersion",  help="The prefix variable name to write to.")
-    parser.add_argument("--skip_verification", action="store_true", help="Flag to skip verification.")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_arguments()
-    branch_name = get_branch_name()
 
-    # Set the variable directly to the variable name.
-    if args.skip_verification:
-        set_version_parameter(args.variable_name, branch_name)
-    # Verify the variable to be a release branch.
-    else:
-        if verify_branch(branch_name):
-            version = get_version(branch_name)
-            set_version_parameter(args.variable_name, version)
-        else:
-            report_failure(branch_name)
+    version = get_version(args.branch_name, args.git_hash_short)
+    set_build_parameter(args.variable_name, version)
