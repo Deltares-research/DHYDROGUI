@@ -212,22 +212,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                                          .ToArray();
         }
         
-        private static DelftIniCategory[] GetCrossSectionCategories(string cslFilename)
-        {
-            var cslCategories = File.Exists(cslFilename)
-                ? new DelftIniReader().ReadDelftIniFile(cslFilename)
-                : new DelftIniCategory[0];
-
-            var csIniLocations = cslCategories.Any()
-                ? cslCategories.Where(category => category.Name == CrossSectionRegion.IniHeader).ToArray()
-                : new DelftIniCategory[0];
-
-            if (cslCategories.Any() && !csIniLocations.Any())
-                throw new FileReadingException("Could not read any cross section locations it seems not available");
-
-            return csIniLocations;
-        }
-
         private static void SetFrictionOnCrossSectionDefinition(IDelftIniCategory csdDefinitionCategory, ICrossSectionDefinition readCrossSectionDefinition, IHydroNetwork network)
         {
             switch (readCrossSectionDefinition.CrossSectionType)
