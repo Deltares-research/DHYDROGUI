@@ -10,7 +10,7 @@
     <!-- Change this if we want to move to a 2020.xx version schema. -->
     <PublicReleaseVersion>$(ReleaseVersion)</PublicReleaseVersion>
     <!-- This is the product name -->
-    <ApplicationName>Delft3D FM Suite 1D2D</ApplicationName>
+    <ApplicationName>D-HYDRO FM Suite 1D2D</ApplicationName>
     <ProductName>$(ApplicationName) ($(PublicReleaseVersion))</ProductName>
     <ProjectGuid>{5725d793-35b5-48a1-bb6a-2291df6c2980}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
