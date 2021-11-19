@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.919-beta" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1-beta" PrivateAssets="all" />
 		<PackageReference Include="NUnit" Version="3.12.0" />
 		<PackageReference Include="NSubstitute" Version="4.2.2" />
 		<PackageReference Include="RhinoMocks" Version="3.6.1" />
