@@ -463,28 +463,6 @@
       <?include $(var.plugin_features)?>
 
     </Feature>
-
-    <!-- 
-    VC Redist Feature
-    =================
-
-    VC Redist is required for the license check as well as Visual C++ components like MeshKernel. 
-
-    The feature is added to the .msi through the use of the merge module provided by Visual Studio 2019. 
-    Ideally this would just use the path to the Visual Studio installation folder. However, this path is not easily accessible
-    within the WiX project. Furthermore, this requires additional components to be installed on the build server. As such this
-    file has been added directly to the repository.
-
-    For more information see "..\Microsoft_VC142_CRT_x64.msm.README.md"
-    -->
-    <DirectoryRef Id="TARGETDIR">
-      <!-- Path is relative to the wixproj files of the actual Product WiX projects. -->
-      <Merge Id="VCRedist" SourceFile="..\Framework\DeltaShell\Microsoft_VC142_CRT_x64.msm" DiskId="1" Language="0"/>
-    </DirectoryRef>
-
-    <Feature Id="VCRedist" Title="Visual C++ Runtime" AllowAdvertise="no" Display="hidden" Level="1">
-      <MergeRef Id="VCRedist"/>
-    </Feature>
     
     <!--jk, note that the WixUILicenseRtf is set to a path and not to a file, did not work. The filename depends on language and is concatenated in AdvancedWelcomeEulaDlgDeltares-->
     <WixVariable Id="WixUILicenseRtf" Value="$(var.licensefilepath)" />
@@ -496,7 +474,7 @@
     <WixVariable Id="WixUICostingPopupOptOut" Value="dummy" />
 
     <?ifdef plugin_wixUIDeltares?>
-      <UIRef Id="$(var.plugin_wixUIDeltares)" />
+     <UIRef Id="$(var.plugin_wixUIDeltares)" />
     <?else?>
     <!--jk added properties which are necessary for peruser and permachine installation.-->
     <Property Id="ApplicationFolderName" Value="$(var.FullProductName)"/>
@@ -507,7 +485,7 @@
     <?endif?>
     
     <UI>
-
+       
       <!-- These dialog references are needed for CloseApplication above to work correctly -->
 
       <DialogRef Id="FilesInUseDeltares" />
@@ -517,15 +495,15 @@
 
     <UIRef Id="WixUI_ErrorProgressText" />
 
-
+       
     <InstallExecuteSequence>
       <AppSearch Sequence="1"></AppSearch>
       <LaunchConditions After="AppSearch" />
       <!--RemoveExistingProducts After="InstallValidate"><![CDATA[PREVIOUSVERSIONSINSTALLED]]></RemoveExistingProducts-->
       <RemoveExistingProducts Before="InstallInitialize"/>
-
+ 
     </InstallExecuteSequence>
 
-
+   
   </Product>
 </Include>
