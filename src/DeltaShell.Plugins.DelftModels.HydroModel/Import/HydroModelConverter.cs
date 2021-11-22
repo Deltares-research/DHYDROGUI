@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,9 +11,7 @@ using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.Common.Logging;
-using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Geometries;
 using Newtonsoft.Json;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
@@ -313,15 +310,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
 
                             if (!linkAlreadyPresent && sourceItem.CanLinkTo(targetItem))
                             {
-                                var link = sourceItem.LinkTo(targetItem);
-                                if (link.Geometry == null)
-                                {
-                                    link.Geometry = new LineString(new[]
-                                    {
-                                        GetCoordinateForHydroObject(sourceItem),
-                                        GetCoordinateForHydroObject(targetItem)
-                                    });
-                                }
+                                sourceItem.LinkTo(targetItem);
                             }
                         }
                     }
@@ -335,12 +324,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
             
             sourceModel.DimrCoupling?.End();
             targetModel.DimrCoupling?.End();
-        }
-
-        private static Coordinate GetCoordinateForHydroObject(IHydroObject obj)
-        {
-            var catchment = obj as Catchment;
-            return catchment != null ? catchment.InteriorPoint.Coordinate : obj.Geometry.Coordinate;
         }
     }
 }

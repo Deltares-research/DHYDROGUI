@@ -91,7 +91,7 @@ namespace DelftTools.Hydro.Tests
             mocks.ReplayAll();
 
             // normally done using node.LinkTo
-            var link = new HydroLink { Source = source, Target = node };
+            var link = new HydroLink(source, node);
             node.Links.Add(link);
             source.Links.Add(link);
 

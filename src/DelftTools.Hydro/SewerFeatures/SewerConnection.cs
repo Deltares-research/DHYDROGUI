@@ -429,6 +429,7 @@ namespace DelftTools.Hydro.SewerFeatures
         public virtual bool CanBeLinkSource { get { return false; } }
 
         public virtual bool CanBeLinkTarget { get { return false; } }
+        public  virtual Coordinate LinkingCoordinate => Geometry?.Coordinate;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

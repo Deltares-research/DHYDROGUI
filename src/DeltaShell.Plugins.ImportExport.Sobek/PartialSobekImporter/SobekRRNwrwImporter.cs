@@ -500,7 +500,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     if (dataObject.Object is LateralSource lateralSource)
                     {
                         catchment.Geometry = lateralSource.Geometry;
-                        AddNwrwCatchmentLinkToFmModel(catchment, lateralSource);
+                        catchment.LinkTo(lateralSource);
                     }
                     else if (dataObject.Object is SobekRRNode rrNode)
                     {
@@ -527,19 +527,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 default:
                     throw new NotSupportedException();
             }
-        }
-
-        private void AddNwrwCatchmentLinkToFmModel(Catchment catchment, ILateralSource lateralSource)
-        {
-            HydroLink hydroLink = catchment.LinkTo(lateralSource);
-            if (hydroLink == null)
-                return;
-            
-            hydroLink.Geometry = new LineString(new[]
-            {
-                catchment.InteriorPoint?.Coordinate,
-                lateralSource.Geometry?.Coordinate
-            });
         }
 
         private void SetNwrwCatchmentData(NwrwData nwrwData, SobekRRNwrw readDefinition)

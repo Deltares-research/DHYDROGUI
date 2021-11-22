@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
   <subclass name="DelftTools.Hydro.HydroLink, DelftTools.Hydro" discriminator-value="hydro_link" extends="GeoAPI.Extensions.Feature.IFeature, GeoAPI.Extensions" >
-
     <property name="Name"/>
-    
-    <many-to-one name="SourceFeature" cascade="save-update" class="GeoAPI.Extensions.Feature.IFeature, GeoAPI.Extensions" column="source_feature_id" lazy="false" />
-    
-    <many-to-one name="TargetFeature" cascade="save-update" class="GeoAPI.Extensions.Feature.IFeature, GeoAPI.Extensions" column="target_feature_id" lazy="false" />
-  
   </subclass>
 </hibernate-mapping>

@@ -5,7 +5,6 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
-using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Editing;
 using DelftTools.Utils.IO;
@@ -155,20 +154,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         
                         if (source.CanLinkTo(target) && !linkConnections.Contains((source, target)))
                         {
-                            var hydroLink = new HydroLink(source, target)
-                            {
-                                Name = regionExchange.LinkName
-                            };
+                            var hydroLink = new HydroLink(source, target) { Name = regionExchange.LinkName };
+
                             if (source is Catchment catchment && Equals(catchment.CatchmentType, CatchmentType.NWRW))
                             {
                                 source.Geometry = target.Geometry;
-                                hydroLink.Geometry = new LineString(new []{source.Geometry?.Coordinate, target.Geometry?.Coordinate});
+                                hydroLink.Geometry = new LineString(new[]
+                                {
+                                    source.Geometry?.Coordinate,
+                                    target.Geometry?.Coordinate
+                                });
                             }
                             else
                             {
                                 hydroLink.Geometry = new WKTReader().Read(regionExchange.LinkGeometryWkt);
                             }
-                                
+
                             Region.Links.Add(hydroLink);
                             linkConnections.Add((hydroLink.Source, hydroLink.Target));
                         }

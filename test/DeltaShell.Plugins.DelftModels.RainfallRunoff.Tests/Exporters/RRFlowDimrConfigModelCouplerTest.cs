@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -83,14 +84,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
             ((IDimrModel)target).Expect(dm => dm.IsMasterTimeStep).Return(true).Repeat.Any();
 
             CatchmentType catchmentType = CatchmentType.LoadFromString(catchment);
-            var targetObj = mocks.StrictMultiMock<IHydroObject>(typeof(IHydroNode));
-            targetObj.Expect(so => so.Name).Return("Node001").Repeat.Any();
+            var targetObj = Substitute.For<IHydroObject, IHydroNode>();
+            targetObj.Name = "Node001";
 
-            var catchment1 = mocks.StrictMock<Catchment>();
-            catchment1.Expect(c => c.Name).Return("Catchment1").Repeat.Any();
-            catchment1.Expect(c => c.CatchmentType).Return(catchmentType).Repeat.Any();
-            var links = new EventedList<HydroLink>() {new HydroLink() {Source =  catchment1, Target = targetObj} };
-            catchment1.Expect(c => c.Links).Return(links).Repeat.Any();
+            var catchment1 = Substitute.For<Catchment>();
+            catchment1.Name = "Catchment1";
+            catchment1.CatchmentType = catchmentType;
+            var links = new EventedList<HydroLink>() { new HydroLink(catchment1, targetObj) };
+            catchment1.Links = links;
 
             
             var catchmentsList = new List<Catchment>{catchment1};

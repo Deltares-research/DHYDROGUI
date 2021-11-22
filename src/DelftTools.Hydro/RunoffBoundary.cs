@@ -3,6 +3,7 @@ using System.ComponentModel;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 
 namespace DelftTools.Hydro
@@ -38,6 +39,8 @@ namespace DelftTools.Hydro
         {
             get { return true; }
         }
+
+        public virtual Coordinate LinkingCoordinate => Geometry?.Coordinate;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

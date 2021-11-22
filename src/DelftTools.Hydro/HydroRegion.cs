@@ -7,10 +7,12 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Guards;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
+using NetTopologySuite.Geometries;
 
 namespace DelftTools.Hydro
 {
@@ -96,9 +98,25 @@ namespace DelftTools.Hydro
             return SubRegions.Cast<object>().Union(Links.Cast<object>());
         }
 
+        /// <summary>
+        /// Adds a new <see cref="HydroLink"/> between <paramref name="source"/> and <paramref name="target"/>
+        /// in their shared <see cref="HydroRegion"/>.
+        /// </summary>
+        /// <param name="source"> The source hydro object to link from. </param>
+        /// <param name="target"> The target hydro object to link to. </param>
+        /// <exception cref="System.ArgumentNullException">
+        /// Thrown when <paramref name="source"/> or <paramref name="target"/> is <c>null</c>.
+        /// </exception>
         public static HydroLink AddNewLink(IHydroObject source, IHydroObject target)
         {
-            var link = new HydroLink(source, target);
+            var link = new HydroLink(source, target)
+            {
+                Geometry = new LineString(new[]
+                {
+                    source.LinkingCoordinate,
+                    target.LinkingCoordinate
+                })
+            };
 
             var commonRegion = GetCommonRegion(source, target);
             if (commonRegion != null)

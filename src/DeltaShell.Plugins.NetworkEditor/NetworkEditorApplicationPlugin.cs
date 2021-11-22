@@ -334,8 +334,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             AddExampleHydroNetworkData(hydroNetwork);
             AddExampleDrainageBasinData(drainageBasin);
 
-            var link = drainageBasin.WasteWaterTreatmentPlants[0].LinkTo(hydroNetwork.LateralSources.FirstOrDefault());
-            link.Geometry = WktReader.Read("LINESTRING(5 5, 5 0)");
+            drainageBasin.WasteWaterTreatmentPlants[0].LinkTo(hydroNetwork.LateralSources.FirstOrDefault());
         }
 
         private static void AddExampleHydroNetworkData(IHydroNetwork network)
@@ -357,8 +356,7 @@ namespace DeltaShell.Plugins.NetworkEditor
             drainageBasin.Catchments.Add(catchment);
             drainageBasin.WasteWaterTreatmentPlants.Add(plant);
 
-            var link = catchment.LinkTo(plant);
-            link.Geometry = WktReader.Read("LINESTRING(5 9, 5 5)");
+            catchment.LinkTo(plant);
         }
     }
 }

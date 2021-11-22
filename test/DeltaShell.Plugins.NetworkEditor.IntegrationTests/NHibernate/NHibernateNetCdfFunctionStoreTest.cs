@@ -30,6 +30,7 @@ using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap.Converters.WellKnownText;
@@ -488,7 +489,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             double[] valuesArray = new[] { 1.0 };
             coverage.SetValues(valuesArray);
 
-            hydroNode.Links.Add(new HydroLink(null, null)); //triggers a bubbling collection changed
+            hydroNode.Links.Add(new HydroLink(Substitute.For<IHydroObject>(), Substitute.For<IHydroObject>())); //triggers a bubbling collection changed
             
             //we should get here without exception
         }

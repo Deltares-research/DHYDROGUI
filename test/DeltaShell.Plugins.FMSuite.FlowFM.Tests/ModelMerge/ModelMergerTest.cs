@@ -11,6 +11,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelMerge
@@ -92,7 +93,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelMerge
             branch.BranchFeatures.Add(new Pump(){Name = $"{namePrefix}Pump"});
             branch.BranchFeatures.Add(new Retention(){Name = $"{namePrefix}Retention"});
             branch.BranchFeatures.Add(new Weir(){Name = $"{namePrefix}Weir"});
-            branch.Links.Add(new HydroLink(){Name = $"{namePrefix}HydroLink"});
+            branch.Links.Add(new HydroLink(Substitute.For<IHydroObject>(), Substitute.For<IHydroObject>()){Name = $"{namePrefix}HydroLink"});
             
             network.Nodes.Add(new HydroNode(){Name = $"{namePrefix}HydroNode"});
 

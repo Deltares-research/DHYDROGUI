@@ -105,6 +105,8 @@ namespace DelftTools.Hydro.Structures
         public IEventedList<HydroLink> Links { get; set; }
         public bool CanBeLinkSource { get; }
         public bool CanBeLinkTarget { get; }
+        public virtual Coordinate LinkingCoordinate => Geometry?.Coordinate;
+
         public HydroLink LinkTo(IHydroObject target)
         {
             return null;

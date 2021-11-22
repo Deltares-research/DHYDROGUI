@@ -1,5 +1,6 @@
 ﻿using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 
 namespace DelftTools.Hydro
@@ -15,6 +16,7 @@ namespace DelftTools.Hydro
         public virtual bool CanBeLinkSource { get { return false; } }
 
         public virtual bool CanBeLinkTarget { get { return false; } }
+        public virtual Coordinate LinkingCoordinate => Geometry?.Coordinate;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

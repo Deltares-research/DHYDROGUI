@@ -38,7 +38,6 @@ using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {
@@ -306,15 +305,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         /// <param name="lateralSource"></param>
         private void AddHydroLinkToCatchment(NwrwData nwrwData, LateralSource lateralSource)
         {
-            var hydroLink = nwrwData?.Catchment?.LinkTo(lateralSource);
-            if (hydroLink != null)
-            {
-                hydroLink.Geometry = new LineString(new[]
-                {
-                    nwrwData?.Catchment?.InteriorPoint?.Coordinate,
-                    lateralSource?.Geometry?.Coordinate
-                });
-            }
+            nwrwData?.Catchment?.LinkTo(lateralSource);
         }
 
         /// <summary>

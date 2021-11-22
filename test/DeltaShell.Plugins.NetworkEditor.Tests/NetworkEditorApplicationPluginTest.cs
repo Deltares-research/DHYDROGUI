@@ -8,6 +8,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
@@ -203,36 +204,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         [Test]
         public void AddExampleDrainageBasinDataTest()
         {
-            var mocks = new MockRepository();
-            var drainageBasin = mocks.DynamicMock<IDrainageBasin>();
-            var catchments = new EventedList<Catchment>();
-            var wasteWaterTreatmentPlants = new EventedList<WasteWaterTreatmentPlant>();
-            var link = new HydroLink();
-            drainageBasin.Expect(n => n.Catchments).Return(catchments).Repeat.Any();
-            drainageBasin.Expect(n => n.WasteWaterTreatmentPlants).Return(wasteWaterTreatmentPlants).Repeat.Any();
-            Expect.Call(drainageBasin.AddNewLink(null, null)).IgnoreArguments().Return(link).Repeat.Any();
-            mocks.ReplayAll();
+            var drainageBasin = new DrainageBasin();
 
             TypeUtils.CallPrivateStaticMethod(typeof(NetworkEditorApplicationPlugin), "AddExampleDrainageBasinData",
-                drainageBasin);
+                                              drainageBasin);
+            
 
-            mocks.VerifyAll();
-
-            Assert.That(catchments.Count, Is.EqualTo(1));
-            var catchment = catchments.FirstOrDefault();
+            Assert.That(drainageBasin.Catchments.Count, Is.EqualTo(1));
+            var catchment = drainageBasin.Catchments.FirstOrDefault();
             Assert.IsNotNull(catchment);
             Assert.That(catchment.Name, Is.EqualTo("Catchment1"));
             Assert.That(catchment.CatchmentType, Is.EqualTo(CatchmentType.Unpaved));
             Assert.That(catchment.Geometry.ToString(), Is.EqualTo("POLYGON ((0 6, 0 12, 10 12, 10 6, 0 6))"));
             Assert.That(catchment.Basin, Is.EqualTo(drainageBasin));
 
-            Assert.That(wasteWaterTreatmentPlants.Count, Is.EqualTo(1));
-            var wasteWaterTreatmentPlant = wasteWaterTreatmentPlants.FirstOrDefault();
+            Assert.That(drainageBasin.WasteWaterTreatmentPlants.Count, Is.EqualTo(1));
+            var wasteWaterTreatmentPlant = drainageBasin.WasteWaterTreatmentPlants.FirstOrDefault();
             Assert.IsNotNull(wasteWaterTreatmentPlant);
             Assert.That(wasteWaterTreatmentPlant.Name, Is.EqualTo("Plant1"));
             Assert.That(wasteWaterTreatmentPlant.Geometry.ToString(), Is.EqualTo("POINT (5 5)"));
 
-            Assert.That(link.Geometry.ToString(), Is.EqualTo("LINESTRING (5 9, 5 5)"));
+            Assert.That(drainageBasin.Links.Single().Geometry.ToString(), Is.EqualTo("LINESTRING (5 9 0, 5 5)"));
         }
 
         [Test]
@@ -260,7 +252,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             hydroRegion.Expect(n => n.SubRegions).Return(subRegions).Repeat.Twice();
 
-            var link = new HydroLink();
+            var link = new HydroLink(Substitute.For<IHydroObject>(), Substitute.For<IHydroObject>());
             Expect.Call(drainageBasin.AddNewLink(null, null)).IgnoreArguments().Return(link).Repeat.Once();
             Expect.Call(wasteWaterTreatmentPlant.LinkTo(null)).IgnoreArguments().Return(link).Repeat.Once();
 

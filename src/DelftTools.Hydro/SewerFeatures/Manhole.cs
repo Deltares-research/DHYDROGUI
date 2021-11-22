@@ -293,6 +293,8 @@ namespace DelftTools.Hydro.SewerFeatures
             get { return !IsConnectedToMultipleBranches; }
         }
 
+        public virtual Coordinate LinkingCoordinate => Geometry?.Coordinate;
+
         public virtual HydroLink LinkTo(IHydroObject target)
         {
             return Region.AddNewLink(this, target);

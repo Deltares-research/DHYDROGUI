@@ -6,6 +6,7 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelMerge
@@ -199,7 +200,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.ModelMerge
             
             yield return new TestCaseData(new Action<IHydroNetwork, string>((network, name) =>
             {
-                network.Links.Add(new HydroLink(){Name = nameToDuplicate});
+                network.Links.Add(new HydroLink(Substitute.For<IHydroObject>(), Substitute.For<IHydroObject>()){Name = nameToDuplicate});
             }), $"{nameToDuplicate} (link)").SetName("Duplicate Link");
         }
     }

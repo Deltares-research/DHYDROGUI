@@ -157,6 +157,7 @@ namespace DelftTools.Hydro
         public virtual bool CanBeLinkSource { get { return false; } }
 
         public virtual bool CanBeLinkTarget { get { return !IsConnectedToMultipleBranches; } }
+        public virtual Coordinate LinkingCoordinate => Geometry?.Coordinate;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

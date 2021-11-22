@@ -8,7 +8,6 @@ using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
-using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Geometries;
 
@@ -351,17 +350,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             var link = source.LinkTo(target);
             link.Name = linkId;
-            link.Geometry = new LineString(new[]
-                {
-                    GetCoordinateForHydroObject(source),
-                    GetCoordinateForHydroObject(target)
-                });
-        }
-
-        private static Coordinate GetCoordinateForHydroObject(IHydroObject obj)
-        {
-            var catchment = obj as Catchment;
-            return catchment != null ? catchment.InteriorPoint.Coordinate : obj.Geometry.Coordinate;
         }
     }
 }

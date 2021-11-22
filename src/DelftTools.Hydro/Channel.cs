@@ -9,6 +9,7 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.IO;
 
@@ -166,6 +167,7 @@ namespace DelftTools.Hydro
         public virtual bool CanBeLinkSource { get { return false; } }
 
         public virtual bool CanBeLinkTarget { get { return false; } }
+        public virtual Coordinate LinkingCoordinate => Geometry?.Coordinate;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

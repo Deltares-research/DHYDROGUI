@@ -63,6 +63,7 @@ namespace DelftTools.Hydro
         public virtual bool CanBeLinkSource { get { return true; } }
 
         public virtual bool CanBeLinkTarget { get { return true; } }
+        public virtual Coordinate LinkingCoordinate => Geometry?.Coordinate;
 
         public virtual HydroLink LinkTo(IHydroObject target)
         {

@@ -2,6 +2,7 @@
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Geometries;
 
 namespace DelftTools.Hydro
 {
@@ -22,6 +23,12 @@ namespace DelftTools.Hydro
         bool CanBeLinkSource { get; }
 
         bool CanBeLinkTarget { get; }
+        
+        /// <summary>
+        /// Gets the coordinate for linking a <see cref="HydroLink"/>.
+        /// Can return <c>null</c> if the <see cref="IHydroObject.Geometry"/> of this instance is <c>null</c>.
+        /// </summary>
+        Coordinate LinkingCoordinate { get; }
 
         HydroLink LinkTo(IHydroObject target);
 

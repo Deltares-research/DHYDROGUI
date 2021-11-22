@@ -2,10 +2,11 @@
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Snapping;
+using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap.Api.Editors;
 using SharpMap.Api.Layers;
 
@@ -17,24 +18,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors.Snapping
         [Test]
         public void DoNotSnapIfThereIsAlreadyALink()
         {
-            var mocks = new MockRepository();
-
-            var hydroLinkingTarget1 = mocks.StrictMock<IHydroObject>();
+            var hydroLinkingTarget1 = Substitute.For<IHydroObject>();
             var hydroLinkingTarget1Geometry = new Point(0, 0);
-            hydroLinkingTarget1.Expect(hlt1 => hlt1.Geometry).Return(hydroLinkingTarget1Geometry).Repeat.Twice();
+            hydroLinkingTarget1.Geometry.Returns(hydroLinkingTarget1Geometry);
             
-            var hydroLinkingTarget1Layer = mocks.StrictMock<ILayer>();
+            var hydroLinkingTarget1Layer = Substitute.For<ILayer>();
 
-            var hydroLinkingSource1 = mocks.StrictMock<IHydroObject>();
-            hydroLinkingSource1.Expect(hsl1 => hsl1.Links).Return(new EventedList<HydroLink>()); // No hydro links
-            hydroLinkingSource1.Expect(hsl1 => hsl1.CanLinkTo(hydroLinkingTarget1)).Return(true);
-            
-            hydroLinkingTarget1Layer.Expect(l => l.CoordinateTransformation).Return(null).Repeat.Any();
+            var hydroLinkingSource1 = Substitute.For<IHydroObject>();
+            hydroLinkingSource1.Links = new EventedList<HydroLink>(); // No hydro links
+            hydroLinkingSource1.CanLinkTo(hydroLinkingTarget1).Returns(true);
 
-            var hydroLinkingSource2 = mocks.StrictMock<IHydroObject>();
-            hydroLinkingSource2.Expect(hsl2 => hsl2.Links).Return(new EventedList<HydroLink> { new HydroLink() {Source = hydroLinkingSource2, Target = hydroLinkingTarget1} }); // Has hydro links
+            hydroLinkingTarget1Layer.CoordinateTransformation.Returns((ICoordinateTransformation)null);
 
-            mocks.ReplayAll();
+            var hydroLinkingSource2 = Substitute.For<IHydroObject>();
+            hydroLinkingSource2.Links = new EventedList<HydroLink> { new HydroLink(hydroLinkingSource2, hydroLinkingTarget1) }; // Has hydro links
 
             var candidates = new[] { new Tuple<IFeature, ILayer>(hydroLinkingTarget1, hydroLinkingTarget1Layer) };
             var hydrolinkSnapTool = new HydroLinkSnapRule();
@@ -45,8 +42,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Editors.Snapping
 
             snapResult = hydrolinkSnapTool.Execute(hydroLinkingSource2, candidates, null, null, null, null, -1);
             AssertSnapResult(null, snapResult);
-
-            mocks.VerifyAll();
         }
 
         /// <summary>

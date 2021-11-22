@@ -606,15 +606,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             }
         }
 
-        private static ILineString GetFakeLinkGeometry(IFeature feature)
+        private static ILineString GetFakeLinkGeometry(IHydroObject hydroObject)
         {
-            if (feature.Geometry == null)
+            if (hydroObject.Geometry == null)
             {
                 return new LineString(new[] {new Coordinate(0, 0), new Coordinate(0, 100)});
             }
 
-            var catchment = feature as Catchment;
-            var coord = catchment != null ? catchment.InteriorPoint.Coordinate : feature.Geometry.Coordinate;
+            Coordinate coord = hydroObject.LinkingCoordinate;
             return new LineString(new[] {coord, new Coordinate(coord.X, coord.Y + 100)});
         }
 

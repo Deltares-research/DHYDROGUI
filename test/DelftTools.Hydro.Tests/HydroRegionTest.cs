@@ -1,13 +1,18 @@
-﻿using DelftTools.TestUtils;
+﻿using System;
+using System.Collections.Generic;
+using DelftTools.TestUtils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.UndoRedo;
+using DeltaShell.NGHS.TestUtils;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.IO;
+using NSubstitute;
 using NUnit.Framework;
 using SharpTestsEx;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace DelftTools.Hydro.Tests
 {
@@ -52,12 +57,12 @@ namespace DelftTools.Hydro.Tests
         {
             var node1 = new HydroNode { Name = "node1" };
             var node2 = new HydroNode { Name = "node2" };
-            var lateralSource = new LateralSource {Name = "lateral1"};
+            var lateralSource = new LateralSource {Name = "lateral1", Geometry = new Point(0,0)};
             var channel1 = new Channel { Name = "channel1", Source = node1, Target = node2, BranchFeatures = {lateralSource}};
             var network = new HydroNetwork { Nodes = { node1, node2 }, Branches = { channel1 } };
             
-            var catchment = new Catchment();
-            var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
+            var catchment = new Catchment { Geometry = new Point(1, 1) };
+            var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant { Geometry = new Point(2, 2) };
             var basin = new DrainageBasin { Catchments = { catchment }, WasteWaterTreatmentPlants = { wasteWaterTreatmentPlant } };
 
             catchment.LinkTo(wasteWaterTreatmentPlant); // internal link in basin
@@ -280,6 +285,51 @@ namespace DelftTools.Hydro.Tests
             public void CanNotLinkCatchmentToItself()
             {
                 region.CanLinkTo(catchment, catchment).Should().Be.False();
+            }
+
+            [Test]
+            [TestCaseSource(nameof(AddNewLinkArgumentNullCases))]
+            public void AddNewLink_ArgumentNull_ThrowsArgumentNullException(IHydroObject source, IHydroObject target, string expParamName)
+            {
+                // Call
+                void Call() => HydroRegion.AddNewLink(source, target);
+
+                // Assert
+                var e = Assert.Throws<ArgumentNullException>(Call);
+                Assert.That(e.ParamName, Is.EqualTo(expParamName));
+            }
+
+            [Test]
+            public void AddNewLink_AddsLinkToTheSharedRegion()
+            {
+                // Setup
+                var hydroRegion = Substitute.For<IHydroRegion>();
+                hydroRegion.Links = new EventedList<HydroLink>();
+                IHydroObject source = CreateHydroObject("source_name", hydroRegion);
+                IHydroObject target = CreateHydroObject("target_name", hydroRegion);
+
+                // Call
+                HydroLink link = HydroRegion.AddNewLink(source, target);
+
+                // Assert
+                CollectionContainsOnlyAssert.AssertContainsOnly(hydroRegion.Links, link);
+                Assert.That(link.Source, Is.SameAs(source));
+                Assert.That(link.Target, Is.SameAs(target));
+            }
+
+            private static IEnumerable<TestCaseData> AddNewLinkArgumentNullCases()
+            {
+                yield return new TestCaseData(null, Substitute.For<IHydroObject>(), "source");
+                yield return new TestCaseData(Substitute.For<IHydroObject>(), null, "target");
+            }
+
+            private static IHydroObject CreateHydroObject(string name, IHydroRegion region)
+            {
+                var hydroObject = Substitute.For<IHydroObject>();
+                hydroObject.Name = name;
+                hydroObject.Region.Returns(region);
+
+                return hydroObject;
             }
         }
     }

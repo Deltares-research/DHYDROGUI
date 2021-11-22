@@ -6,9 +6,9 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Geometries;
 using SharpMap.UI.Tools;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
@@ -63,65 +63,117 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 var menuItem = new ToolStripMenuItem($"{m.Name}");
                 ToolStripItem[] toolStripItems = m.Compartments
-                                                  .Select(c => new ToolStripMenuItem($"{c.Name}", null, (s, e) => AddNwrwCatchment(c)))
+                                                  .Select(c => CreateCompartmentToolStripMenuItem($"{c.Name}", c))
                                                   .ToArray();
 
                 menuItem.DropDownItems.AddRange(toolStripItems);
                 return menuItem;
             }
 
-            var firstCompartment = m.Compartments[0];
-            return new ToolStripMenuItem($"{firstCompartment.ParentManhole?.Name} ({firstCompartment.Name})", null, (s, e) => AddNwrwCatchment(firstCompartment));
+            ICompartment firstCompartment = m.Compartments[0];
+            return CreateCompartmentToolStripMenuItem($"{firstCompartment.ParentManhole?.Name} ({firstCompartment.Name})", firstCompartment);
+        }
+
+        private ToolStripMenuItem CreateCompartmentToolStripMenuItem(string text, ICompartment compartment)
+        {
+            return new ToolStripMenuItem(text, null, (s, e) => AddNwrwCatchment(compartment));
         }
 
         private void AddNwrwCatchment(ICompartment compartment)
         {
-            var manhole = compartment?.ParentManhole;
-            var network = manhole?.Network as IHydroNetwork;
-            var parentRegion = network?.Parent as IHydroRegion;
-            var basin = parentRegion?.SubRegions?.OfType<IDrainageBasin>().FirstOrDefault();
-            if (basin == null) return;
+            IManhole manhole = compartment.ParentManhole;
+            var network = (IHydroNetwork)manhole.Network;
+            var parentRegion = (IHydroRegion)network.Parent;
+            IDrainageBasin basin = parentRegion.SubRegions.OfType<IDrainageBasin>().FirstOrDefault() ??
+                                   throw new InvalidOperationException("No basin is available to add the NWRW catchment to.");
 
+            IEnumerable<BranchWithChainage> branchesWithChainages = GetBranchesWithChainages(manhole);
+            ILateralSource existingLateralSource = GetExistingLateralSource(branchesWithChainages);
+            if (existingLateralSource != null)
+            {
+                log.Error($"A lateral source already exists at branch {existingLateralSource.Branch.Name} ({existingLateralSource.Chainage})");
+                return;
+            }
+
+            BranchWithChainage branchWithChainage = branchesWithChainages.First();
+            Catchment catchment = CreateNwrwCatchment(compartment);
+            LateralSource lateral = CreateLateralSource(compartment, branchWithChainage.Branch, branchWithChainage.Chainage);
+
+            basin.Catchments.Add(catchment);
+            branchWithChainage.Branch.BranchFeatures.Add(lateral);
+            catchment.LinkTo(lateral);
+        }
+
+        private static LateralSource CreateLateralSource(ICompartment compartment, IBranch branch, double chainage)
+        {
+            return new LateralSource
+            {
+                Branch = branch,
+                Chainage = chainage,
+                Name = $"{compartment.Name}",
+                Geometry = compartment.Geometry
+            };
+        }
+
+        private Catchment CreateNwrwCatchment(ICompartment compartment)
+        {
             var catchment = new Catchment
             {
                 Name = $"{compartment.Name}",
                 CatchmentType = CatchmentType.NWRW,
                 IsGeometryDerivedFromAreaSize = true,
-                Geometry = compartment?.Geometry?.Centroid
+                Geometry = compartment.Geometry?.Centroid
             };
 
-            var width = Map.PixelSize * 30;
-            catchment.SetAreaSize(width* width);
+            double width = Map.PixelSize * 30;
+            catchment.SetAreaSize(width * width);
 
-            var branchAndDir = manhole.IncomingBranches
-                .Select(b => new {branch = b, incoming = true})
-                .Concat(manhole.OutgoingBranches.Select(b => new { branch = b, incoming = false }))
-                .FirstOrDefault();
+            return catchment;
+        }
 
-            if (branchAndDir == null) return;
-
-            var branch = branchAndDir.branch;
-            var chainage = branchAndDir.incoming ? branch.Length : 0;
-
-            var existingLateral = branch.BranchFeatures.OfType<ILateralSource>().FirstOrDefault(l => Math.Abs(l.Chainage - chainage) < 1e-8);
-            if (existingLateral != null)
+        private static IEnumerable<BranchWithChainage> GetBranchesWithChainages(INode node)
+        {
+            foreach (IBranch incomingBranch in node.IncomingBranches)
             {
-                log.Error($"An lateral ({existingLateral.Name}) already exists at branch {branch.Name} ({chainage})");
-                return;
+                yield return new BranchWithChainage(incomingBranch, incomingBranch.Length);
             }
-                
-            var lateral = new LateralSource
+
+            foreach (IBranch outgoingBranch in node.OutgoingBranches)
             {
-                Branch = branch, 
-                Chainage = chainage,
-                Name = $"{compartment.Name}",
-                Geometry = compartment.Geometry
-            };
+                yield return new BranchWithChainage(outgoingBranch, 0);
+            }
+        }
 
-            basin.Catchments.Add(catchment);
-            branch.BranchFeatures.Add(lateral);
+        private static ILateralSource GetExistingLateralSource(IEnumerable<BranchWithChainage> branchesWithChainages)
+        {
+            foreach (BranchWithChainage branchWithChainage in branchesWithChainages)
+            {
+                foreach (ILateralSource lateralSource in branchWithChainage.Branch.BranchFeatures.OfType<ILateralSource>())
+                {
+                    if (lateralSource.Chainage.IsEqualTo(branchWithChainage.Chainage, 1e-8))
+                    {
+                        return lateralSource;
+                    }
+                }
+            }
 
-            parentRegion.Links.Add(new HydroLink(catchment, lateral){Geometry = new LineString(new []{catchment.Geometry.Coordinate, lateral.Geometry.Coordinate})});
+            return null;
+        }
+
+        /// <summary>
+        /// Helper struct to couple a branch with a chainage for that branch.
+        /// </summary>
+        private struct BranchWithChainage
+        {
+            public BranchWithChainage(IBranch branch, double chainage)
+            {
+                Branch = branch;
+                Chainage = chainage;
+            }
+
+            public IBranch Branch { get; }
+
+            public double Chainage { get; }
         }
     }
 }
