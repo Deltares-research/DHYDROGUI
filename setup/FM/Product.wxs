@@ -45,7 +45,7 @@
   <!-- optional extra files to include in the bin folder in the main feature -->
   <?define customizationwxi="$(var.ProjectDir)\Extras.wxi"?>
 
-  <?define supportEmail="delft3d.support@deltares.nl"?>
+  <?define supportEmail="software.support@deltares.nl"?>
 
   <!-- optional splash screen -->
   <?define mainWindowTitle="$(var.ProductName)"?>
