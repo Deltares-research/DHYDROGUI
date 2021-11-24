@@ -13,7 +13,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.923">
+    <PackageReference Include="DeltaShell.Framework" Version="2.0.0.928">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="log4net" Version="2.0.12">
