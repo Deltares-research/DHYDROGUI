@@ -102,8 +102,8 @@ physics,UnifFrictCoefLin,physics,Roughness,Uniform linear friction coefficient,D
 physics,Umodlin,physics,Roughness,Linear friction Umod,Double,0,0,1,FALSE,,,,,,"Linear friction umod, for ifrctyp=4,5,6",-
 physics,Vicouv,physics,Viscosity,Uniform horizontal eddy viscosity,Double,0.1,0,,FALSE,,,,,,Uniform horizontal eddy viscosity, m2/s
 physics,Dicouv,physics,Viscosity,Uniform horizontal eddy diffusivity,Double,0.1,0,,FALSE,,,,,,Uniform horizontal eddy diffusivity, m2/s
-physics,Vicoww,physics,Viscosity,Uniform vertical eddy viscosity,Double,5.d-5,0,,FALSE,kmx>0,,,,,Uniform vertical eddy viscosity, m2/s
-physics,Dicoww,physics,Viscosity,Uniform vertical eddy diffusivity,Double,5.d-5,0,,FALSE,kmx>0,,,,,Uniform vertical eddy diffusivity, m2/s
+physics,Vicoww,physics,Viscosity,Uniform vertical eddy viscosity,Double,1.d-6,0,,FALSE,kmx>0,,,,,Uniform vertical eddy viscosity, m2/s
+physics,Dicoww,physics,Viscosity,Uniform vertical eddy diffusivity,Double,1.d-6,0,,FALSE,kmx>0,,,,,Uniform vertical eddy diffusivity, m2/s
 physics,Vicwminb,physics,Viscosity,Minimum buoyancy viscosity,Double,0,0,,TRUE,,,,,,Minimum viscosity in prod and buoyancy term, m2/s
 physics,Smagorinsky,physics,Viscosity,Smagorinsky factor,Double,0.2,0,,FALSE,,,,,,Smagorinsky factor in horizontal turbulence,-
 physics,Elder,advanced,Advanced,Elder factor,Double,0,0,,FALSE,,,,,,Elder factor in horizontal turbulence,-
