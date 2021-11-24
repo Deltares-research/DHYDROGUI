@@ -70,7 +70,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.928" IncludeAssets="compile" PrivateAssets="all"/>
+    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.929" IncludeAssets="compile" PrivateAssets="all"/>
     <PackageReference Include="DIDO" Version="6.5.0.72783" />
     <PackageReference Include="log4net" Version="2.0.12">
       <IncludeAssets>compile</IncludeAssets>
