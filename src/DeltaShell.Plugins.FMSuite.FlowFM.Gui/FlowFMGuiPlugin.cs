@@ -67,7 +67,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
     [Extension(typeof (IPlugin))]
     public class FlowFMGuiPlugin : GuiPlugin
     {
-        private readonly IGraphicsProvider graphicsProvider;
+        private TableViewTimeSeriesGeneratorTool tableViewTimeSeriesGeneratorTool;
+
+        private static readonly string CoordinateSystemMemberName =
+            nameof(WaterFlowFMModel.CoordinateSystem);
+
+        private static readonly string OutputHisFileStoreMemberName =
+            nameof(WaterFlowFMModel.OutputHisFileStore);
+
+        private static readonly string HeatFluxModelTypeMemberName =
+            nameof(WaterFlowFMModel.HeatFluxModelType);
+
+        private static Func<MapView> getActiveMapViewFunc;
+        private string _fmModelSettingsSuffix= " (FM model settings)";
+        private Ribbon.Ribbon ribbon;
+
+        public FlowFMGuiPlugin()
+        {
+            getActiveMapViewFunc = GetActiveMapView;
+            GraphicsProvider = new FmGuiGraphicsProvider();
+        }
+
         public override string Name
         {
             get { return "Delft3D FM (Gui)"; }
@@ -90,9 +110,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public override string FileFormatVersion => "1.1.0.0";
 
-        public override IGraphicsProvider GraphicsProvider
+        public override IGraphicsProvider GraphicsProvider { get; }
+
+        public override ResourceManager Resources { get; set; }
+
+        public override IMapLayerProvider MapLayerProvider
         {
-            get { return graphicsProvider; }
+            get { return new FlowFMMapLayerProvider(); }
+        }
+
+        public override IGui Gui
+        {
+            get { return base.Gui; }
+            set
+            {
+                if (base.Gui != null)
+                {
+                    UnsubscribeToProjectEvents();
+                    UnSubscribeToActivityEvents();
+                }
+                base.Gui = value;
+                if (base.Gui != null)
+                {
+                    SubscribeToProjectEvents();
+                    SubscribeToActivityEvents();
+                    Gui.UndoRedoManager.Enabled = false;
+                }
+
+                // HACK: setting the Gui happens just before Activate in DeltaShellGui, 
+                // hence we set the spatial operations flag here:
+                if (SharpMapGisGuiPlugin.Instance != null)
+                {
+                    SharpMapGisGuiPlugin.Instance.SpatialOperationsEnabled = true;
+                }
+
+                tableViewTimeSeriesGeneratorTool = new TableViewTimeSeriesGeneratorTool
+                {
+                    GetStartTime = GetModelStartTime,
+                    GetStopTime = GetModelStopTime,
+                    GetTimeStep = GetModelTimeStep
+                };
+                    
+            }
+        }
+
+        public override IRibbonCommandHandler RibbonCommandHandler
+        {
+            get { return ribbon ?? (ribbon = new Ribbon.Ribbon()); }
+        }
+
+        public static MapView ActiveMapView
+        {
+            get { return getActiveMapViewFunc(); }
+        }
+
+        private IEnumerable<WaterFlowFMModel> FlowModels
+        {
+            get { return Gui == null ? Enumerable.Empty<WaterFlowFMModel>() : Gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>(); }
         }
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
@@ -600,6 +674,63 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(channelInitialConditionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
         }
 
+        public override IEnumerable<PropertyInfo> GetPropertyInfos()
+        {
+            yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
+            yield return CreatePropertyInfoDynamic<PointCloudLayer>();
+            yield return new PropertyInfo<IWeir, FMWeirProperties>{ AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w)) };
+            yield return new PropertyInfo<FmModelTreeShortcut, HydroNetworkProperties>
+            {
+                AdditionalDataCheck = w => w.Data is IHydroNetwork,
+                GetObjectPropertiesData = o => o.Data
+            };
+            yield return new PropertyInfo<FmModelTreeShortcut, DiscretizationProperties>
+            {
+                AdditionalDataCheck = w => w.Data is IDiscretization,
+                GetObjectPropertiesData = o => o.Data
+            };
+
+        }
+
+        public override void OnActiveViewChanged(IView view)
+        {
+            if (view == null)
+                return;
+
+            var mapView = FindMapView(view);
+            if (mapView != null)
+                FlowFMMapViewDecorator.AddMapToolsIfMissing(mapView);
+            var projectItemMapView = GetFocusedProjectItemMapView();
+
+            if (projectItemMapView != null)
+            {
+                // get available layers from the map view and set them in the combobox ribbon
+                IEnumerable<ILayer> layers = projectItemMapView.GetAvailableSpatialOperationLayers();
+                var layer = layers.OfType<UnstructuredGridCellCoverageLayer>().SingleOrDefault(l =>
+                                                                                                   Equals(l.Coverage, FlowModels.FirstOrDefault()?.InitialWaterLevel));
+                if (layer != null && layer.Name != layer.Coverage.Name)
+                {
+                    layer.SetName(layer.Coverage.Name);
+                }
+
+            }
+
+
+
+        }
+
+        public override bool CanCopy(IProjectItem item)
+        {
+            if (item is WaterFlowFMModel)
+                return false;
+            return true;
+        }
+
+        public override bool CanCut(IProjectItem item)
+        {
+            return CanCopy(item);
+        }
+
         private static void SetLateralSourceCompartmentComboBoxTypeEditor(VectorLayerAttributeTableView view)
         {
             var model1DBoundaryNode = view.TableView.CurrentFocusedRowObject as Model1DLateralSourceData;
@@ -625,11 +756,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (sourcesAndSinks == null) return null;
             var model = FlowModels.FirstOrDefault(m => Equals(sourcesAndSinks, m.SourcesAndSinks));
             return model == null ? null : model.Pipes;
-        }
-
-        private IEnumerable<WaterFlowFMModel> FlowModels
-        {
-            get { return Gui == null ? Enumerable.Empty<WaterFlowFMModel>() : Gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>(); }
         }
 
         private ViewInfo<TImporter, Feature2DImportExportDialog> GetFeature2DImportDialogViewInfo<TImporter>()
@@ -700,66 +826,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return null;
         }
 
-        public override ResourceManager Resources { get; set; }
-
-        public override IEnumerable<PropertyInfo> GetPropertyInfos()
-        {
-            yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
-            yield return CreatePropertyInfoDynamic<PointCloudLayer>();
-            yield return new PropertyInfo<IWeir, FMWeirProperties>{ AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w)) };
-            yield return new PropertyInfo<FmModelTreeShortcut, HydroNetworkProperties>
-            {
-                AdditionalDataCheck = w => w.Data is IHydroNetwork,
-                GetObjectPropertiesData = o => o.Data
-            };
-            yield return new PropertyInfo<FmModelTreeShortcut, DiscretizationProperties>
-            {
-                AdditionalDataCheck = w => w.Data is IDiscretization,
-                GetObjectPropertiesData = o => o.Data
-            };
-
-        }
-
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get { return new FlowFMMapLayerProvider(); }
-        }
-
-        public override IGui Gui
-        {
-            get { return base.Gui; }
-            set
-            {
-                if (base.Gui != null)
-                {
-                    UnsubscribeToProjectEvents();
-                    UnSubscribeToActivityEvents();
-                }
-                base.Gui = value;
-                if (base.Gui != null)
-                {
-                    SubscribeToProjectEvents();
-                    SubscribeToActivityEvents();
-                    Gui.UndoRedoManager.Enabled = false;
-                }
-
-                // HACK: setting the Gui happens just before Activate in DeltaShellGui, 
-                // hence we set the spatial operations flag here:
-                if (SharpMapGisGuiPlugin.Instance != null)
-                {
-                    SharpMapGisGuiPlugin.Instance.SpatialOperationsEnabled = true;
-                }
-
-                tableViewTimeSeriesGeneratorTool = new TableViewTimeSeriesGeneratorTool
-                {
-                    GetStartTime = GetModelStartTime,
-                    GetStopTime = GetModelStopTime,
-                    GetTimeStep = GetModelTimeStep
-                };
-                    
-            }
-        }
-
         private DateTime? GetModelStartTime()
         {
             var model = FlowModels.FirstOrDefault();
@@ -777,8 +843,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             var model = FlowModels.FirstOrDefault();
             return model != null ? model.TimeStep : (TimeSpan?) null;
         }
-
-        private TableViewTimeSeriesGeneratorTool tableViewTimeSeriesGeneratorTool;
 
         private void SubscribeToProjectEvents()
         {
@@ -833,15 +897,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             ((INotifyPropertyChange)project).PropertyChanging -= ProjectPropertyChanging;
             ((INotifyPropertyChanged)project).PropertyChanged -= ProjectPropertyChanged;
             }
-
-        private static readonly string CoordinateSystemMemberName =
-            nameof(WaterFlowFMModel.CoordinateSystem);
-
-        private static readonly string OutputHisFileStoreMemberName =
-            nameof(WaterFlowFMModel.OutputHisFileStore);
-
-        private static readonly string HeatFluxModelTypeMemberName =
-            nameof(WaterFlowFMModel.HeatFluxModelType);
 
         void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -1075,17 +1130,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
         }
 
-        public override IRibbonCommandHandler RibbonCommandHandler
-        {
-            get { return ribbon ?? (ribbon = new Ribbon.Ribbon()); }
-        }
-
-        public FlowFMGuiPlugin()
-        {
-            getActiveMapViewFunc = GetActiveMapView;
-            graphicsProvider = new FmGuiGraphicsProvider();
-        }
-
         private void MakeLayerVisibleAfterImport(object layerData)
         {
             var layer = GetActiveMapView()?.GetLayerForData(layerData);
@@ -1093,15 +1137,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 layer.Visible = true;
             }
-        }
-
-        private static Func<MapView> getActiveMapViewFunc;
-        private string _fmModelSettingsSuffix= " (FM model settings)";
-        protected internal Ribbon.Ribbon ribbon;
-
-        public static MapView ActiveMapView
-        {
-            get { return getActiveMapViewFunc(); }
         }
 
         private MapView GetActiveMapView()
@@ -1119,32 +1154,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             return null;
         }
 
-        public override void OnActiveViewChanged(IView view)
-        {
-            if (view == null)
-                return;
-
-            var mapView = FindMapView(view);
-            if (mapView != null)
-                FlowFMMapViewDecorator.AddMapToolsIfMissing(mapView);
-            var projectItemMapView = GetFocusedProjectItemMapView();
-
-            if (projectItemMapView != null)
-            {
-                // get available layers from the map view and set them in the combobox ribbon
-                IEnumerable<ILayer> layers = projectItemMapView.GetAvailableSpatialOperationLayers();
-                var layer = layers.OfType<UnstructuredGridCellCoverageLayer>().SingleOrDefault(l =>
-                    Equals(l.Coverage, FlowModels.FirstOrDefault()?.InitialWaterLevel));
-                if (layer != null && layer.Name != layer.Coverage.Name)
-                {
-                    layer.SetName(layer.Coverage.Name);
-                }
-
-            }
-
-
-
-        }
         private ProjectItemMapView GetFocusedProjectItemMapView()
         {
             var mapView = GetFocusedMapControl();
@@ -1178,18 +1187,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             //todo: recursion
             return compositeView != null ? compositeView.ChildViews.OfType<MapView>().FirstOrDefault() : null;
-        }
-
-        public override bool CanCopy(IProjectItem item)
-        {
-            if (item is WaterFlowFMModel)
-                return false;
-            return true;
-        }
-
-        public override bool CanCut(IProjectItem item)
-        {
-            return CanCopy(item);
         }
 
         private static PropertyInfo CreatePropertyInfoDynamic<T>()

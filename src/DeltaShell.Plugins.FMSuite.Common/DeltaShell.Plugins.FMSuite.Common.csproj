@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<Import Project="$(SolutionDir)\Build\targets\Base.targets" />
+	<Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
 
 	<PropertyGroup>
 		<OutputPath>$(SolutionDir)bin\$(Configuration)\plugins\$(AssemblyName)</OutputPath>
