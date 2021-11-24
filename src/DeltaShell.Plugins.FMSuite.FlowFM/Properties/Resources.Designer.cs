@@ -198,6 +198,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot remove the branch when the model has output..
+        /// </summary>
+        public static string Error_CannotRemoveBranch {
+            get {
+                return ResourceManager.GetString("Error_CannotRemoveBranch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot export in this format if the grid is not correct..
         /// </summary>
         public static string ExportGrid_Cannot_export_in_this_format_if_the_grid_is_not_correct {

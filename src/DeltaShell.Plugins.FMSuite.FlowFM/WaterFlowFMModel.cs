@@ -922,35 +922,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 {
                     yield return location;
                 }
-
-                // Was used for OpenMI, can be removed.
-                // INetworkLocation[] segmentsCentroidLocations = NetworkDiscretization.Segments.Values
-                //                         .Where(s => s.Geometry.Centroid != null)
-                //                         .Select(s => new NetworkLocation(s.Branch, (s.EndChainage + s.Chainage) / 2))
-                //                         .OfType<INetworkLocation>()
-                //                         .ToArray();
-                //
-                // yield return new Feature // all locations
-                // {
-                //     Geometry = NetworkDiscretization.Geometry,
-                //     Attributes = new DictionaryFeatureAttributeCollection
-                //             {
-                //                 { "locations", NetworkDiscretization.Locations.Values },
-                //                 { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.GridpointsOnBranches)},
-                //                 { "ElementType", "GridpointsOnBranches" }
-                //             }
-                // };
-                //
-                // yield return new Feature // all staggered locations
-                // {
-                //     Geometry = new GeometryCollection(segmentsCentroidLocations.Select(nl => nl.Geometry).ToArray()),
-                //     Attributes = new DictionaryFeatureAttributeCollection
-                //             {
-                //                 { "locations", segmentsCentroidLocations },
-                //                 { "StandardFeatureName", EngineParameters.GetStandardFeatureName(ElementSet.ReachSegElmSet)},
-                //                 { "ElementType", "ReachSegElmSet" }
-                //             }
-                // };
             }
         }
 
@@ -958,18 +929,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             if (location == null) yield break;
 
-            List<IDataItem> items;
-            areaDataItems.TryGetValue(location, out items);
-
-            if (items != null)
-            {
-                foreach (var di in items)
-                {
-                    yield return di;
-                }
-            }
-
-            items = null;
+            areaDataItems.TryGetValue(location, out List<IDataItem> items);
 
             if (items != null)
             {
@@ -1116,6 +1076,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return;
             }
 
+            // FunctionStores are cleared, but NetworkCoverages still listen to Network changes,
+            // so the Network should be set to null.
+            foreach (INetworkCoverage function in functionStore.Functions.OfType<INetworkCoverage>())
+            {
+                function.Network = null;
+            }
             functionStore.Functions.Clear();
 
             if (functionStore is IFileBased fileBasedFunctionStore)
@@ -2850,6 +2816,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             var storeNames = new[]
             {
                 nameof(OutputMapFileStore),
+                nameof(Output1DFileStore),
                 nameof(OutputHisFileStore),
                 nameof(OutputClassMapFileStore),
                 nameof(OutputFouFileStore)

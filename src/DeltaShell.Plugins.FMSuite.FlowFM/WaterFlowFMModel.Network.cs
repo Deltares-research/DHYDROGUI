@@ -21,6 +21,7 @@ using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
@@ -101,9 +102,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             if (DisableNetworkSynchronization)
                 return;
 
-            if (Equals(sender, Network.Branches) && e.Action == NotifyCollectionChangeAction.Remove && e.Item is IChannel channel)
+            if (Equals(sender, Network.Branches) && e.Action == NotifyCollectionChangeAction.Remove)
             {
-                NetworkDiscretization.ReplacePointsForRemovedBranch(channel);
+                if (RemoveBranchCancelled(e, (IBranch)e.Item))
+                {
+                    return;
+                }
+
+                if (e.Item is IChannel channel)
+                {
+                    NetworkDiscretization.ReplacePointsForRemovedBranch(channel);
+                }
             }
 
             if (SuspendClearOutputOnInputChange ||
@@ -805,6 +814,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void RemoveBoundaryCondition(Model1DBoundaryNodeData boundaryNodeData)
         {
             BoundaryConditions1D.Remove(boundaryNodeData);
+        }
+
+        private bool RemoveBranchCancelled(CancelEventArgs e, IBranch branch)
+        {
+            if (OutputIsEmpty)
+            {
+                return false;
+            }
+            
+            Log.ErrorFormat(Resources.Error_CannotRemoveBranch, branch.GetType().Name.ToLower());
+            e.Cancel = true;
+            return true;
         }
     }
 }

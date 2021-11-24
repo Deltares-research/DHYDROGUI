@@ -481,4 +481,7 @@ File import of structures file '{1}' has failed.</value>
   <data name="CacheFile_CopyInternally_Could_not_copy__0__to__1__due_to___2_" xml:space="preserve">
     <value>Could not copy {0} to {1} due to: {2}</value>
   </data>
+  <data name="Error_CannotRemoveBranch" xml:space="preserve">
+    <value>Cannot remove the {0} when the model has output.</value>
+  </data>
 </root>
