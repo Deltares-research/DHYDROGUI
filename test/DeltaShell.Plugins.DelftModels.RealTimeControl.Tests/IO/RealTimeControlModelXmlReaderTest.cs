@@ -107,6 +107,34 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                                                                          directoryPath));
         }
 
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAInvalidSettingsJsonFileFormal_WhenReadingXmlDirectory_ThenExpectRtcModelToBeNull()
+        {
+            // Given
+            string invalidSettingsJsonFile = Path.Combine(directoryPath, "invalidJson");
+
+            // When
+            rtcModel = RealTimeControlModelXmlReader.Read(invalidSettingsJsonFile);
+            
+            // Then
+            Assert.Null(rtcModel);
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void GivenAValidSettingsJsonDirectory_WhenReadingXmlDirectory_ThenExpectCorrectRtcModelToBeCreated()
+        {
+            // given
+            string validSettingsJsonFile = Path.Combine(directoryPath, "validJson");
+            
+            // when
+            rtcModel = RealTimeControlModelXmlReader.Read((validSettingsJsonFile));
+            
+            // Then
+            Assert.NotNull(rtcModel, "RTC Model was not expected to be null after reading from a valid settings.json file");
+        }
+
         private static void CheckSimpleModelTimeSettings(ITimeDependentModel rtcModel)
         {
             Assert.AreEqual(new DateTime(2018, 12, 12, 0, 0, 0), rtcModel.StartTime, "Model start time is incorrectly set.");

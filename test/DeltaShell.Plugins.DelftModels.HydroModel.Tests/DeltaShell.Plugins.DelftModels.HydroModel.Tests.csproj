@@ -121,10 +121,6 @@
       <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\NetTopologySuite.Extensions.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json.Net35, Version=4.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>$(PkgDeltaShell_TestProject)\lib\net40\Newtonsoft.Json.Net35.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="QuickGraph">
@@ -186,6 +182,7 @@
     <PackageReference Include="Fare" Version="2.1.1" />
     <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="Mono.Addins" Version="1.3.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NSubstitute" Version="4.2.2" />
     <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="PostSharp" Version="5.0.55" />
