@@ -1082,7 +1082,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 idA
             };
 
-            yield return new TestCaseData(triggers, 1, expectedIds).SetName("Same control group, same level.");
+            //      O      ---> 1 root expressions
+            //     / \   
+            //    O   O   ---> 2 sub-expressions
+            //   / \ / \ 
+            //  *   O   * ---> 1 shared sub-expression for sub-expressions and 2 leaf inputs
+            //     / \
+            //    *  *    ---> 2 leaf inputs
+            yield return new TestCaseData(triggers, 2, expectedIds).SetName("Same control group, same level.");
 
             var condition = (StandardTriggerComplexType) CreateStandardConditionElement(RtcXmlTag.StandardCondition,
                                                                                         ControlGroupName,

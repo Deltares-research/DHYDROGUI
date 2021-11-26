@@ -1,7 +1,8 @@
 ﻿namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
 {
     /// <summary>
-    /// Represents an leaf node containing a parameter name as value.
+    /// Represents a leaf node containing a parameter name as value.
+    /// this parameter name is a reference to either an Input or another Mathematical Expression.
     /// </summary>
     public class ParameterLeafNode : ILeafNode
     {
@@ -15,7 +16,7 @@
         }
 
         /// <summary>
-        /// Gets or sets the value of the leaf node.
+        /// Gets or sets the value of the leaf node, referencing an Input or Mathematical Expression.
         /// </summary>
         public string Value { get; set; }
 

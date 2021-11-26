@@ -4,6 +4,7 @@ using System.Linq;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Helpers;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
@@ -11,42 +12,63 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
     [TestFixture]
     public class ExpressionTreeAssemblerTest
     {
-        [Test]
-        public void Assemble_ExpressionObjectsNull_ThrowsArgumentNullException()
+        private static IEnumerable<TestCaseData> ConstructorArgumentNullCases()
         {
-            // Call
-            void Call() => ExpressionTreeAssembler.Assemble(null, "controlGroupName ").ToList();
-
-            // Assert
-            var argumentNullException = Assert.Throws<ArgumentNullException>(Call);
-            Assert.That(argumentNullException.ParamName, Is.EqualTo("expressionObjects"),
-                        "Expected a different ParamName:");
+            yield return new TestCaseData(null, Array.Empty<RuleDataAccessObject>(), Array.Empty<ConditionDataAccessObject>(), "expressionObjects");
+            yield return new TestCaseData(Array.Empty<ExpressionObject>(),null, Array.Empty<ConditionDataAccessObject>(), "rules");
+            yield return new TestCaseData(Array.Empty<ExpressionObject>(),Array.Empty<RuleDataAccessObject>(), null, "conditions");
         }
 
         [Test]
-        public void Assemble_ControlGroupNameNull_ThrowsArgumentNullException()
+        [TestCaseSource(nameof(ConstructorArgumentNullCases))]
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(ExpressionObject[] expressionObjects,
+                                                                         RuleDataAccessObject[] rules,
+                                                                         ConditionDataAccessObject[] conditions,
+                                                                         string expParamName)
         {
             // Call
-            void Call() => ExpressionTreeAssembler.Assemble(Enumerable.Empty<ExpressionObject>(), null).ToList();
+            void Call() => new ExpressionTreeAssembler("controlGroupName", expressionObjects, rules, conditions);
 
             // Assert
-            var argumentNullException = Assert.Throws<ArgumentNullException>(Call);
+            var e = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo(expParamName));
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        public void Constructor_ControlGroupNameNullOrEmpty_ThrowsArgumentException(string controlGroupName)
+        {
+            // Call
+            void Call() => new ExpressionTreeAssembler(controlGroupName,
+                                                       Array.Empty<ExpressionObject>(),
+                                                       Array.Empty<RuleDataAccessObject>(),
+                                                       Array.Empty<ConditionDataAccessObject>());
+
+            // Assert
+            var argumentNullException = Assert.Throws<ArgumentException>(Call);
             Assert.That(argumentNullException.ParamName, Is.EqualTo("controlGroupName"),
                         "Expected a different ParamName:");
         }
-
+        
         [Test]
         [TestCaseSource(nameof(GetAssembleExpectedResultsData))]
         public void Assemble_ExpectedResults(string groupName,
                                              ExpressionObject[] expressionObjects,
-                                             ExpressionTree[] expectedResults)
+                                             RuleDataAccessObject[] rules,
+                                             ConditionDataAccessObject[] conditions,
+                                             ExpressionTree[] expectedResults
+)
         {
             // Setup
+            var expressionTreeAssembler = new ExpressionTreeAssembler(groupName,
+                                                                      expressionObjects,
+                                                                      rules,
+                                                                      conditions);
             var comparer = new ExpressionTreeEqualityComparer();
 
             // Call
-            IList<ExpressionTree> results =
-                ExpressionTreeAssembler.Assemble(expressionObjects, groupName).ToList();
+            IList<ExpressionTree> results = expressionTreeAssembler.Assemble().ToList();
 
             // Assert
             Assert.That(results, Is.EquivalentTo(expectedResults).Using(comparer),
@@ -139,9 +161,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
 
         private static TestCaseData GetEmptyTestData()
         {
-            return new TestCaseData("groupName", Enumerable.Empty<ExpressionObject>(), Enumerable.Empty<ExpressionTree>());
+            return new TestCaseData("groupName", 
+                                    Enumerable.Empty<ExpressionObject>(), 
+                                    Array.Empty<RuleDataAccessObject>(),
+                                    Array.Empty<ConditionDataAccessObject>(), 
+                                    Enumerable.Empty<ExpressionTree>());
         }
 
+        /// <summary>
+        /// Gets one expression object that references two leaf inputs.
+        /// 
+        ///   O   ---> 1 root expression
+        ///  / \    
+        /// *   * ---> 2 leaf inputs
+        /// </summary>
         private static Tuple<ExpressionObject[], ExpressionTree[]> GetTwoLeavesData(string groupName, string postFix)
         {
             var id = $"[{groupName}]twoLeavesOneBranch_{postFix}";
@@ -162,22 +195,54 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             });
         }
 
+        /// <summary>
+        /// Gets one expression object that references two leaf inputs.
+        /// 
+        ///   O   ---> 1 root expression
+        ///  / \    
+        /// *   * ---> 2 leaf inputs
+        /// </summary>
         private static TestCaseData GetTwoLeavesOneTree()
         {
             const string groupName = "groupName";
             Tuple<ExpressionObject[], ExpressionTree[]> data = GetTwoLeavesData(groupName, "1");
-            return new TestCaseData(groupName, data.Item1, data.Item2);
+            return new TestCaseData(groupName, 
+                                    data.Item1,                                     
+                                    Array.Empty<RuleDataAccessObject>(),
+                                    Array.Empty<ConditionDataAccessObject>(),  
+                                    data.Item2);
         }
 
+        /// <summary>
+        /// Gets two expression objects that form two groups of one expression object, where each group has
+        /// one expression object that reference two leaf inputs.
+        /// 
+        ///   O     O   ---> 2 root expressions
+        ///  / \   / \    
+        /// *   * *   * ---> 2 leaf inputs per root expression
+        /// </summary>
         private static TestCaseData GetTwoLeavesTwoTree()
         {
             const string groupName = "groupName";
             Tuple<ExpressionObject[], ExpressionTree[]> data =
                 CombineData(GetTwoLeavesData(groupName, "1"), GetTwoLeavesData(groupName, "2"));
 
-            return new TestCaseData(groupName, data.Item1, data.Item2);
+            return new TestCaseData(groupName,
+                                    data.Item1,
+                                    Array.Empty<RuleDataAccessObject>(),
+                                    Array.Empty<ConditionDataAccessObject>(),
+                                    data.Item2);
         }
 
+        /// <summary>
+        /// Gets two expression objects where one expression object references a leaf input and the other expression object, which has two leaf inputs.
+        /// 
+        ///    O      ---> 1 root expressions
+        ///  /   \    
+        /// *     O   ---> 1 leaf input & 1 sub-expression
+        ///      / \  
+        ///     *   * ---> 2 leaf inputs
+        /// </summary>
         private static Tuple<ExpressionObject[], ExpressionTree[]> GetOneLeafData(string groupName, string postFix)
         {
             var idBottom = $"[{groupName}]oneLeafOneBranch_{postFix}";
@@ -212,22 +277,58 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             });
         }
 
+        /// <summary>
+        /// Gets two expression objects where one expression object references an input and the other expression object, which has two leaf inputs.
+        ///
+        ///    O      ---> 1 root expressions
+        ///  /   \    
+        /// *     O   ---> 1 leaf input & 1 sub-expression
+        ///      / \  
+        ///     *   * ---> 2 leaf inputs
+        /// </summary>
         private static TestCaseData GetOneLeafOneTree()
         {
             const string groupName = "groupName";
             Tuple<ExpressionObject[], ExpressionTree[]> data = GetOneLeafData(groupName, "1");
-            return new TestCaseData(groupName, data.Item1, data.Item2);
+            return new TestCaseData(groupName,
+                                    data.Item1,
+                                    Array.Empty<RuleDataAccessObject>(),
+                                    Array.Empty<ConditionDataAccessObject>(),
+                                    data.Item2);
         }
 
+        /// <summary>
+        /// Gets four expression objects that form two groups of two expression objects, where each group has
+        /// one expression object that references a leaf input and the other expression object, which has two leaf inputs.
+        /// 
+        ///    O         O      ---> 2 root expressions
+        ///  /   \     /   \    
+        /// *     O   *     O   ---> 1 leaf input & 1 sub-expression per root expression
+        ///      / \       / \  
+        ///     *   *     *   * ---> 2 leaf inputs per sub-expression
+        /// </summary>
         private static TestCaseData GetOneLeafTwoTree()
         {
             const string groupName = "groupName";
             Tuple<ExpressionObject[], ExpressionTree[]> data =
                 CombineData(GetOneLeafData(groupName, "1"), GetOneLeafData(groupName, "2"));
 
-            return new TestCaseData(groupName, data.Item1, data.Item2);
+            return new TestCaseData(groupName,
+                                    data.Item1,
+                                    Array.Empty<RuleDataAccessObject>(),
+                                    Array.Empty<ConditionDataAccessObject>(),
+                                    data.Item2);
         }
 
+        /// <summary>
+        /// Gets three expression objects where one expression object references the other two expression objects.
+        ///
+        ///      O      ---> 1 root expressions
+        ///    /   \    
+        ///   O     O   ---> 2 sub-expressions
+        ///  / \   / \  
+        /// *   * *   * ---> 2 leaf inputs per sub-expression
+        /// </summary>
         private static Tuple<ExpressionObject[], ExpressionTree[]> GetTwoBranchData(string groupName, string postFix)
         {
             var idBottom1 = $"[{groupName}]twoLeavesOneBranch1_{postFix}";
@@ -264,22 +365,57 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             });
         }
 
+        /// <summary>
+        /// Gets three expression objects where one expression object references the other two expression objects.
+        ///
+        ///      O      ---> 1 root expressions
+        ///    /   \    
+        ///   O     O   ---> 2 sub-expressions
+        ///  / \   / \  
+        /// *   * *   * ---> 2 leaf inputs per sub-expression
+        /// </summary>
         private static TestCaseData GetTwoBranchOneTree()
         {
             const string groupName = "groupName";
             Tuple<ExpressionObject[], ExpressionTree[]> data = GetTwoBranchData(groupName, "1");
-            return new TestCaseData(groupName, data.Item1, data.Item2);
+            return new TestCaseData(groupName,
+                                    data.Item1,
+                                    Array.Empty<RuleDataAccessObject>(),
+                                    Array.Empty<ConditionDataAccessObject>(),
+                                    data.Item2);
         }
 
+        /// <summary>
+        /// Gets six expression objects that form two groups of three expression objects, where each group has
+        /// one expression object that references the other two expression objects.
+        ///
+        ///      O           O      ---> 2 root expressions
+        ///    /   \       /   \
+        ///   O     O     O     O   ---> 2 sub-expressions per root expression
+        ///  / \   / \   / \   / \
+        /// *   * *   * *   * *   * ---> 2 leaf inputs per sub-expression
+        /// </summary>
         private static TestCaseData GetTwoBranchTwoTree()
         {
             const string groupName = "groupName";
             Tuple<ExpressionObject[], ExpressionTree[]> data =
                 CombineData(GetTwoBranchData(groupName, "1"), GetTwoBranchData(groupName, "2"));
 
-            return new TestCaseData(groupName, data.Item1, data.Item2);
+            return new TestCaseData(groupName,
+                                    data.Item1,
+                                    Array.Empty<RuleDataAccessObject>(),
+                                    Array.Empty<ConditionDataAccessObject>(),
+                                    data.Item2);
         }
 
+        /// <summary>
+        /// Gets one expression object with references to an expression,
+        /// but these referenced expressions are not included in this group.
+        ///
+        ///   O   ---> 1 root expression
+        ///  / \
+        /// *O *O ---> 2 leaf root expressions that are not part of this group 
+        /// </summary>
         private static TestCaseData GetTwoLeavesOneTreeWithReferences()
         {
             const string groupName = "groupName";
@@ -308,23 +444,201 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             return new TestCaseData(groupName, new[]
             {
                 rootBranchObject
-            }, new[]
+            }, Array.Empty<RuleDataAccessObject>(), Array.Empty<ConditionDataAccessObject>(),  new[]
             {
                 expectedResult
             });
         }
 
+        /// <summary>
+        ///   O   ? ---> 1 root expression & 1 other object (rule/condition)
+        ///  / \ :
+        /// *   O   ---> 1 leaf input & 1 sub-expression
+        ///    / \
+        ///   *   * ---> 2 leaf inputs for the sub-expression
+        /// </summary>
+        private static TestCaseData OneRootExpressionWithSubExpressionReferencedByOtherObject(string groupName, 
+                                                                                              string idSharedExpression, 
+                                                                                              RuleDataAccessObject[] rules, 
+                                                                                              ConditionDataAccessObject[] conditions)
+        {
+            var idRootExpression = $"[{groupName}]root_expression";
+
+            var sharedExpression = new ExpressionObject(idSharedExpression,
+                                                        Operator.Divide,
+                                                        new ParameterLeafReference("[Input]some_input_1"),
+                                                        new ParameterLeafReference("[Input]some_input_2"),
+                                                        idSharedExpression);
+            var rootExpression = new ExpressionObject(idRootExpression,
+                                                      Operator.Add,
+                                                      new ParameterLeafReference("[Input]some_input_3"),
+                                                      new ExpressionReference(idSharedExpression),
+                                                      idRootExpression);
+
+            ExpressionObject[] expressionObjects =
+            {
+                sharedExpression,
+                rootExpression,
+            };
+
+            ExpressionTree[] expExpressionTrees =
+            {
+                CreateExpectedExpressionTree(sharedExpression, groupName),
+                CreateExpectedExpressionTree(rootExpression, groupName),
+            };
+
+            return new TestCaseData(groupName,
+                                    expressionObjects,
+                                    rules,
+                                    conditions,
+                                    expExpressionTrees);
+        }
+
+        /// <summary>
+        /// Gets three expression objects where one expression object is referenced by the two other expression objects.
+        /// O   O   ---> 2 root expressions
+        /// / \ / \
+        /// *   O   * ---> 1 leaf input per root expression, 1 shared sub-expression between root expressions
+        /// / \
+        /// *   *   ---> 2 leaf inputs for the shared sub-expression
+        /// </summary>
+        private static TestCaseData TwoRootExpressionsReferencingSameSubExpression()
+        {
+            const string groupName = "groupName";
+
+            var idRootExpression1 = $"[{groupName}]root_expression_1";
+            var idRootExpression2 = $"[{groupName}]root_expression_2";
+            var idSharedExpression = $"[{groupName}]shared_sub_expression";
+
+            var sharedExpression = new ExpressionObject(idSharedExpression,
+                                                        Operator.Divide,
+                                                        new ParameterLeafReference("[Input]some_input_1"),
+                                                        new ParameterLeafReference("[Input]some_input_2"),
+                                                        idSharedExpression);
+            var rootExpression1 = new ExpressionObject(idRootExpression1,
+                                                       Operator.Add,
+                                                       new ParameterLeafReference("[Input]some_input_3"),
+                                                       new ExpressionReference(idSharedExpression),
+                                                       idRootExpression1);
+            var rootExpression2 = new ExpressionObject(idRootExpression2,
+                                                       Operator.Subtract,
+                                                       new ExpressionReference(idSharedExpression),
+                                                       new ParameterLeafReference("[Input]some_input_4"),
+                                                       idRootExpression2);
+
+            ExpressionObject[] expressionObjects =
+            {
+                sharedExpression,
+                rootExpression1,
+                rootExpression2
+            };
+
+            ExpressionTree[] expExpressionTrees =
+            {
+                CreateExpectedExpressionTree(sharedExpression, groupName),
+                CreateExpectedExpressionTree(rootExpression1, groupName),
+                CreateExpectedExpressionTree(rootExpression2, groupName),
+            };
+            return new TestCaseData(groupName,
+                                    expressionObjects,
+                                    Array.Empty<RuleDataAccessObject>(),
+                                    Array.Empty<ConditionDataAccessObject>(),
+                                    expExpressionTrees);
+        }
+
+        private static ExpressionTree CreateExpectedExpressionTree(ExpressionObject expressionObject, string expControlGroupName)
+        {
+            var expectedBranchNode = new BranchNode(expressionObject.Operator, expressionObject.Y)
+            {
+                FirstNode = new ParameterLeafNode(expressionObject.FirstReference.Value),
+                SecondNode = new ParameterLeafNode(expressionObject.SecondReference.Value),
+            };
+
+            return new ExpressionTree(expectedBranchNode,
+                                      expControlGroupName,
+                                      expressionObject.Id,
+                                      new MathematicalExpression { Name = expressionObject.Y });
+        }
+
         private static IEnumerable<TestCaseData> GetAssembleExpectedResultsData()
         {
-            yield return GetEmptyTestData();
-            yield return GetTwoLeavesOneTree();
-            yield return GetOneLeafOneTree();
-            yield return GetOneLeafTwoTree();
-            yield return GetTwoBranchOneTree();
-            yield return GetTwoBranchTwoTree();
-            yield return GetTwoLeavesTwoTree();
+            yield return GetEmptyTestData().SetName(nameof(GetEmptyTestData));
 
-            yield return GetTwoLeavesOneTreeWithReferences();
+            //   O   ---> 1 root expression
+            //  / \    
+            // *   * ---> 2 leaf inputs
+            yield return GetTwoLeavesOneTree().SetName(nameof(GetTwoLeavesOneTree));
+
+            //    O      ---> 1 root expressions
+            //  /   \    
+            // *     O   ---> 1 leaf input & 1 sub-expression
+            //      / \  
+            //     *   * ---> 2 leaf inputs
+            yield return GetOneLeafOneTree().SetName(nameof(GetOneLeafOneTree));
+
+            //    O         O      ---> 2 root expressions
+            //  /   \     /   \    
+            // *     O   *     O   ---> 1 leaf input & 1 sub-expression per root expression
+            //      / \       / \  
+            //     *   *     *   * ---> 2 leaf inputs per sub-expression
+            yield return GetOneLeafTwoTree().SetName(nameof(GetOneLeafTwoTree));
+
+            //      O      ---> 1 root expressions
+            //    /   \    
+            //   O     O   ---> 2 sub-expressions
+            //  / \   / \  
+            // *   * *   * ---> 2 leaf inputs per sub-expression
+            yield return GetTwoBranchOneTree().SetName(nameof(GetTwoBranchOneTree));
+
+            //      O           O      ---> 2 root expressions
+            //    /   \       /   \
+            //   O     O     O     O   ---> 2 sub-expressions per root expression
+            //  / \   / \   / \   / \
+            // *   * *   * *   * *   * ---> 2 leaf inputs per sub-expression
+            yield return GetTwoBranchTwoTree().SetName(nameof(GetTwoBranchTwoTree));
+
+            //   O     O   ---> 2 root expressions
+            //  / \   / \    
+            // *   * *   * ---> 2 leaf inputs per root expression
+            yield return GetTwoLeavesTwoTree().SetName(nameof(GetTwoLeavesTwoTree));
+
+            //   O   ---> 1 root expression
+            //  / \
+            // *O *O ---> 2 leaf root expressions that are not part of this group 
+            yield return GetTwoLeavesOneTreeWithReferences().SetName(nameof(GetTwoLeavesOneTreeWithReferences));
+            
+            //   O   O   ---> 2 root expressions
+            //  / \ / \
+            // *   O   * ---> 1 leaf input per root expression, 1 shared sub-expression between root expressions 
+            //    / \
+            //   *   *   ---> 2 leaf inputs for the shared sub-expression
+            yield return TwoRootExpressionsReferencingSameSubExpression().SetName(nameof(TwoRootExpressionsReferencingSameSubExpression));
+
+            const string groupName = "groupName";
+            var idSubExpression = $"[{groupName}]shared_sub_expression";
+            var rules = new[]
+            {
+                new RuleDataAccessObject("", Substitute.For<RuleBase>()) { InputReferences = { idSubExpression } }
+            };
+            
+            var conditions = new[]
+            {
+                new ConditionDataAccessObject("", Substitute.For<ConditionBase>()) { InputReferences = { idSubExpression } }
+            };
+            
+            //   O   R ---> 1 root expression & 1 rule
+            //  / \ /
+            // *   O   ---> 1 shared sub-expression between root expression and rule 
+            //    / \
+            //   *   * ---> 2 leaf inputs for the shared sub-expression
+            yield return OneRootExpressionWithSubExpressionReferencedByOtherObject(groupName, idSubExpression, rules, Array.Empty<ConditionDataAccessObject>());
+            
+            //   O   C ---> 1 root expression & 1 condition
+            //  / \ /
+            // *   O   ---> 1 shared sub-expression between root expression and condition 
+            //    / \
+            //   *   * ---> 2 leaf inputs for the shared sub-expression
+            yield return OneRootExpressionWithSubExpressionReferencedByOtherObject(groupName, idSubExpression, Array.Empty<RuleDataAccessObject>(), conditions);
         }
     }
 }

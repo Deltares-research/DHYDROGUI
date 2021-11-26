@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Collections.Extensions;
 using DeltaShell.Dimr.RtcXsd;
@@ -30,13 +31,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             RuleComplexType[] signalElements = ruleElements.Where(IsSignal).ToArray();
             ruleElements = ruleElements.Except(signalElements).ToArray();
 
-            return ConvertToRuleDataAccessObjects(ruleElements, logHandler)
-                   .Concat<IRtcDataAccessObject<RtcBaseObject>>(ConvertToConditionDataAccessObjects(triggerElements, logHandler))
-                   .Concat(ConvertToSignalDataAccessObjects(signalElements))
-                   .Concat(ConvertToExpressionTrees(triggerElements))
+            RuleDataAccessObject[] rules = ConvertToRuleDataAccessObjects(ruleElements, logHandler).Where(r => r != null).ToArray();
+            ConditionDataAccessObject[] conditions = ConvertToConditionDataAccessObjects(triggerElements, logHandler).Where(c => c != null).ToArray();
+            SignalDataAccessObject[] signals = ConvertToSignalDataAccessObjects(signalElements).ToArray();
+            ExpressionTree[] expressions = ConvertToExpressionTrees(triggerElements, rules, conditions).ToArray();
+
+            return rules
+                   .Concat<IRtcDataAccessObject<RtcBaseObject>>(conditions)
+                   .Concat(signals)
+                   .Concat(expressions)
                    .Where(o => o != null);
         }
-
+        
         private static IEnumerable<RuleDataAccessObject> ConvertToRuleDataAccessObjects(IEnumerable<RuleComplexType> ruleElements,
                                                                                         ILogHandler logHandler)
         {
@@ -78,10 +84,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             return signalElements.Select(SignalDataAccessObjectCreator.Create);
         }
 
-        private static IEnumerable<ExpressionTree> ConvertToExpressionTrees(IEnumerable<TriggerComplexType> triggerElements)
+        private static IEnumerable<ExpressionTree> ConvertToExpressionTrees(IEnumerable<TriggerComplexType> triggerElements, 
+                                                                            RuleDataAccessObject[] rules, 
+                                                                            ConditionDataAccessObject[] conditions)
         {
             IEnumerable<ExpressionObjectGroup> expressionGroups = GetExpressionGroupsRecursively(triggerElements);
-            return AssembleExpressionTrees(expressionGroups).RemoveDuplicateIds();
+            return AssembleExpressionTrees(expressionGroups, rules, conditions).RemoveDuplicateIds();
         }
 
         private static IEnumerable<ExpressionObjectGroup> GetExpressionGroupsRecursively(IEnumerable<TriggerComplexType> triggerElements)
@@ -116,9 +124,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             return expressionGroups;
         }
 
-        private static IEnumerable<ExpressionTree> AssembleExpressionTrees(IEnumerable<ExpressionObjectGroup> expressionGroups)
+        private static IEnumerable<ExpressionTree> AssembleExpressionTrees(IEnumerable<ExpressionObjectGroup> expressionGroups, 
+                                                                           RuleDataAccessObject[] rules, 
+                                                                           ConditionDataAccessObject[] conditions)
         {
             var expressionTrees = new List<ExpressionTree>();
+
+            Dictionary<string, IEnumerable<RuleDataAccessObject>> rulesPerControlGroup = rules.ToGroupedDictionary(r => r.ControlGroupName);
+            Dictionary<string, IEnumerable<ConditionDataAccessObject>> conditionsPerControlGroup = conditions.ToGroupedDictionary(c => c.ControlGroupName);
 
             foreach (ExpressionObjectGroup expressionGroup in expressionGroups)
             {
@@ -129,8 +142,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                     ExpressionObject[] expressionObjects = group.ToArray();
                     string controlGroupName = group.Key;
 
-                    IEnumerable<ExpressionTree> expressionTreesInControlGroup =
-                        ExpressionTreeAssembler.Assemble(expressionObjects, controlGroupName);
+                    RuleDataAccessObject[] rulesInControlGroup = GetCollection(rulesPerControlGroup, controlGroupName).ToArray();
+                    ConditionDataAccessObject[] conditionsInControlGroup = GetCollection(conditionsPerControlGroup, controlGroupName).ToArray();
+
+                    var assembler = new ExpressionTreeAssembler(controlGroupName, expressionObjects, rulesInControlGroup, conditionsInControlGroup);
+                    IEnumerable<ExpressionTree> expressionTreesInControlGroup = assembler.Assemble();
 
                     expressionTrees.AddRange(expressionTreesInControlGroup);
                 }
@@ -160,6 +176,39 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         {
             return source.GroupBy(o => o?.Id)
                          .Select(g => g.First());
+        }
+
+        /// <summary>
+        /// Groups the source by the provided <paramref name="keySelector"/> and
+        /// creates a dictionary with the key and the corresponding grouped items.
+        /// </summary>
+        /// <param name="source"> The source elements. </param>
+        /// <param name="keySelector"> The key selector. </param>
+        /// <typeparam name="TKey"> The type of the key. </typeparam>
+        /// <typeparam name="TValue"> The type of the elements. </typeparam>
+        /// <returns>
+        /// A dictionary with grouped items by their corresponding key.
+        /// </returns>
+        private static Dictionary<TKey, IEnumerable<TValue>> ToGroupedDictionary<TKey, TValue>(this IEnumerable<TValue> source, Func<TValue, TKey> keySelector)
+        {
+            return source.GroupBy(keySelector).ToDictionary(r => r.Key, r => r.AsEnumerable());
+        }
+
+        /// <summary>
+        /// Safely gets a collection from the <paramref name="dictionary"/>.
+        /// </summary>
+        /// <param name="dictionary"> The dictionary. </param>
+        /// <param name="key"> THe key. </param>
+        /// <typeparam name="TKey"> The type of the key. </typeparam>
+        /// <typeparam name="TValue"> The type of the elements in the collection. </typeparam>
+        /// <returns>
+        /// The corresponding collection if the dictionary contains the given key; otherwise, an empty collection.
+        /// </returns>
+        private static IEnumerable<TValue> GetCollection<TKey, TValue>(this IDictionary<TKey, IEnumerable<TValue>> dictionary, TKey key)
+        {
+            return dictionary.TryGetValue(key, out IEnumerable<TValue> items)
+                       ? items
+                       : Enumerable.Empty<TValue>();
         }
     }
 }
