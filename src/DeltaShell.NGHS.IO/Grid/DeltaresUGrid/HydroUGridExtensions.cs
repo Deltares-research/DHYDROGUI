@@ -9,6 +9,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using Deltares.UGrid.Api;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils;
@@ -228,6 +229,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="network">Network that the <paramref name="meshGeometry"/> is based on</param>
         public static void SetMesh1DGeometry(this IDiscretization discretization, Disposable1DMeshGeometry meshGeometry, IHydroNetwork network, bool canUseXYForMesh1DNodeCoordinates = true)
         {
+            var logHandler = new LogHandler("the creation of the mesh 1d geometry", typeof(HydroUGridExtensions), 100);
             discretization.Network = network;
             
             IEnumerable<INetworkLocation> networkLocations = GetNetworkLocations(meshGeometry, network, canUseXYForMesh1DNodeCoordinates);
@@ -239,7 +241,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             foreach (var segment in discretization.Segments.Values)
             {
-                GetLocationIndices(discretization, segment, locationIdLookup, out segmentToRemove);
+                GetLocationIndices(discretization, segment, locationIdLookup, logHandler, out segmentToRemove);
             }
 
             if (segmentToRemove != null)
@@ -250,6 +252,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 }
 
             }
+            
+            logHandler.LogReport();
         }
 
         /// <summary>
@@ -258,6 +262,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="discretization">Discretization to base the mesh on</param>
         public static Disposable1DMeshGeometry CreateDisposable1DMeshGeometry(this IDiscretization discretization)
         {
+            var logHandler = new LogHandler("the creation of the mesh 1d geometry", typeof(HydroUGridExtensions), 100);
             var locations = discretization.Locations.Values.ToArray();
 
             var segments = discretization.Segments.Values.ToList();
@@ -270,7 +275,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 var segment = segments[i];
 
-                var indices = GetLocationIndices(discretization, segment, locationIdLookup, out doNotWriteTheseSegments);
+                var indices = GetLocationIndices(discretization, segment, locationIdLookup, logHandler, out doNotWriteTheseSegments);
                 locationIdxBySegment[segment] = indices;
             }
 
@@ -333,10 +338,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][1];
             }
 
+            logHandler.LogReport();
             return mesh;
         }
 
-        internal static int[] GetLocationIndices(IDiscretization discretization, INetworkSegment segment, IDictionary<INetworkLocation, int> locationIdLookup, out IList<INetworkSegment> doNotWriteTheseSegments)
+        internal static int[] GetLocationIndices(IDiscretization discretization, INetworkSegment segment, IDictionary<INetworkLocation, int> locationIdLookup, ILogHandler logHandler, out IList<INetworkSegment> doNotWriteTheseSegments)
         {
             const double epsilonLocation = 1e-5;
             var branchLocations = discretization.GetLocationsForBranch(segment.Branch);
@@ -367,7 +373,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[0] = locationIdLookup[firstLocation];
                 else
                 {
-                    Log.Warn($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}. Creating one on start node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
+                    logHandler.ReportWarning($"Cannot find start edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.Chainage}. Creating one on start node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
                     indices[0] = -1;
                     doNotWriteTheseSegments.Add(segment);
                 }
@@ -381,7 +387,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     indices[1] = locationIdLookup[firstLocation];
                 else
                 {
-                    Log.Warn($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}. Creating one on end node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
+                    logHandler.ReportWarning($"Cannot find end edge node of section {segment.SegmentNumber} on branch {segment.Branch.Name} at chainage {segment.EndChainage}. Creating one on end node of branch{segment.Branch.Name} (probably because of wrong rounding during load).");
                     indices[1] = -1;
                     doNotWriteTheseSegments.Add(segment);
                 }
@@ -393,20 +399,6 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         #region Network
 
-        /// <summary>
-        /// Creates a <see cref="IHydroNetwork"/> from the provided <paramref name="networkGeometry"/>
-        /// </summary>
-        /// <param name="networkGeometry">Network geometry to use</param>
-        /// <param name="branchProperties">Additional properties for the branches (see: <see cref="BranchProperties"/>)</param>
-        /// <param name="compartmentProperties">Additional properties for the compartments (see: <see cref="NodeFile.CompartmentProperties"/>)</param>
-        /// <returns>A newly created network based on the provided <paramref name="networkGeometry"/></returns>
-        public static IHydroNetwork CreateNetwork(this DisposableNetworkGeometry networkGeometry, IEnumerable<BranchProperties> branchProperties = null, ICollection<CompartmentProperties> compartmentProperties = null)
-        {
-            var network = new HydroNetwork();
-            network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
-            return network;
-        }
-        
         /// <summary>
         /// Sets the nodes and branches of the <paramref name="network"/> with the values of the <paramref name="networkGeometry"/>
         /// </summary>

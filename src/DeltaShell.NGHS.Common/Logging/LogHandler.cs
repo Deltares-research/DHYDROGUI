@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Utils.Guards;
 using log4net;
 
 namespace DeltaShell.NGHS.Common.Logging
@@ -9,34 +10,48 @@ namespace DeltaShell.NGHS.Common.Logging
     /// <seealso cref="T:DeltaShell.NGHS.Common.Logging.ILogHandler"/>
     public class LogHandler : ILogHandler
     {
-        private const char BulletPointCharacter = '-';
+        private const char bulletPointCharacter = '-';
         private readonly ILog log;
-
         private readonly string activityName;
-
-        private readonly string joinSeparator = Environment.NewLine + BulletPointCharacter + " ";
+        private readonly string joinSeparator = Environment.NewLine + bulletPointCharacter + " ";
+        private readonly int maxMessages;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogHandler"/> class with a default logger.
         /// </summary>
         /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
-        public LogHandler(string activityName) : this(activityName, typeof(LogHandler)) {}
+        /// <param name="maxMessages"> Optional; the maximum number of messages that should be logged in the report.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="maxMessages"/> is a negative integer.
+        /// </exception>
+        public LogHandler(string activityName, int maxMessages = int.MaxValue) : this(activityName, typeof(LogHandler), maxMessages) {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogHandler"/> class.
         /// </summary>
         /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
         /// <param name="type">The type that will be used to create the logger.</param>
-        public LogHandler(string activityName, Type type) : this(activityName, LogManager.GetLogger(type)) {}
+        /// <param name="maxMessages"> Optional; the maximum number of messages that should be logged in the report.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="maxMessages"/> is a negative integer.
+        /// </exception>
+        public LogHandler(string activityName, Type type, int maxMessages = int.MaxValue) : this(activityName, LogManager.GetLogger(type), maxMessages) {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogHandler"/> class.
         /// </summary>
         /// <param name="activityName">Name of the activity for which log messages will be generated.</param>
         /// <param name="log">The logger that will be used to log the messages.</param>
-        public LogHandler(string activityName, ILog log)
+        /// <param name="maxMessages"> Optional; the maximum number of messages that should be logged in the report.</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="maxMessages"/> is a negative integer.
+        /// </exception>
+        public LogHandler(string activityName, ILog log, int maxMessages = int.MaxValue)
         {
+            Ensure.NotNegative(maxMessages, nameof(maxMessages));
+
             this.activityName = activityName;
+            this.maxMessages = maxMessages;
             LogMessagesTable = new LogMessagesList();
             this.log = log;
         }
@@ -80,19 +95,19 @@ namespace DeltaShell.NGHS.Common.Logging
                 return;
             }
 
-            List<string> errorMessages = LogMessagesTable.ErrorMessages.ToList();
+            string[] errorMessages = LogMessagesTable.ErrorMessages.ToArray();
             if (errorMessages.Any())
             {
                 log.Error(CreateReport(errorMessages, "errors"));
             }
 
-            List<string> warningMessages = LogMessagesTable.WarningMessages.ToList();
+            string[] warningMessages = LogMessagesTable.WarningMessages.ToArray();
             if (warningMessages.Any())
             {
                 log.Warn(CreateReport(warningMessages, "warnings"));
             }
 
-            List<string> infoMessages = LogMessagesTable.InfoMessages.ToList();
+            string[] infoMessages = LogMessagesTable.InfoMessages.ToArray();
             if (infoMessages.Any())
             {
                 log.Info(CreateReport(infoMessages, "infos"));
@@ -101,15 +116,24 @@ namespace DeltaShell.NGHS.Common.Logging
             LogMessagesTable.Clear();
         }
 
-        private string CreateReport(IEnumerable<string> messages, string logSeverity)
+        private string CreateReport(IReadOnlyCollection<string> messages, string logSeverity)
         {
-            string formattedMessages = GetFormattedMessages(messages);
-            return GetReportHeader(logSeverity) + formattedMessages;
+            string formattedMessages = GetFormattedMessages(messages.Take(maxMessages));
+            string notShownMessage = GetNotShownMessage(messages.Count, logSeverity);
+            return GetReportHeader(logSeverity) + formattedMessages + notShownMessage;
         }
 
         private string GetFormattedMessages(IEnumerable<string> logMessages)
         {
             return joinSeparator + string.Join(joinSeparator, logMessages);
+        }
+
+        private string GetNotShownMessage(int nMessages, string logSeverity)
+        {
+            int hiddenMessages = nMessages - maxMessages;
+            return hiddenMessages > 0
+                       ? $"{Environment.NewLine}{hiddenMessages} more {logSeverity} were not shown..."
+                       : string.Empty;
         }
 
         private string GetReportHeader(string logSeverity)

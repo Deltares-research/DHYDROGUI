@@ -2034,6 +2034,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             ReconnectWaterQualityOutputDirectory(outputDirectory.WaqOutputDirectoryPath);
             ReconnectSnappedOutputDirectory(outputDirectory.SnappedOutputDirectoryPath);
             ReconnectRestartFiles(outputDirectory.RestartFilePaths);
+            ReportProgressText();
 
             OutputIsEmpty = false;
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
 using DeltaShell.NGHS.Utils;
 using GeoAPI.Extensions.Coverages;
@@ -70,6 +71,7 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
         /// <returns><see cref="DisposableMesh1D"/> containing the <paramref name="discretization"/> data</returns>
         public static DisposableMesh1D CreateDisposableMesh1D(this IDiscretization discretization)
         {
+            var logHandler = new LogHandler("the creation of the mesh 1d geometry", typeof(MeshKernelExtensions), 100);
             var locations = discretization.Locations.Values.ToArray();
             var segments = discretization.Segments.Values.ToList();
 
@@ -90,7 +92,7 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
             {
                 var segment = segments[i];
 
-                locationIdxBySegment[segment] = HydroUGridExtensions.GetLocationIndices(discretization, segment, locationIdLookup, out var doNotWriteTheseSegments);
+                locationIdxBySegment[segment] = HydroUGridExtensions.GetLocationIndices(discretization, segment, locationIdLookup,logHandler, out var doNotWriteTheseSegments);
             }
 
             var edgeNodeIndex = 0;
@@ -102,6 +104,7 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
                 mesh1D.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][1];
             }
 
+            logHandler.LogReport();
             return mesh1D;
         }
 

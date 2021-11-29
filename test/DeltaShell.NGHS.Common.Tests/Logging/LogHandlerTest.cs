@@ -12,7 +12,6 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
         private const string ActivityName = "some_activity";
         private const string LogMessage = "some_log_message";
         private const string Format = "{0}_{1}_{2}";
-        private LogHandler logHandler;
 
         private readonly object[] formatArgs =
         {
@@ -21,81 +20,76 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             "message"
         };
 
-        [SetUp]
-        public void SetUp()
-        {
-            logHandler = new LogHandler(ActivityName);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            logHandler = null;
-        }
-
         [Test]
         public void GivenALogMessage_WhenReportInfoIsCalled_MessageIsAddedToLogMessagesTableWithInfoSeverity()
         {
             // When
+            var logHandler = new LogHandler(ActivityName);
             logHandler.ReportInfo(LogMessage);
 
             // Then
-            AssertMessageWithCorrectSeverity(LogMessage, LogSeverity.Info);
+            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Info);
         }
 
         [Test]
         public void GivenALogMessage_WhenReportWarningIsCalled_MessageIsAddedToLogMessagesTableWithWarningSeverity()
         {
             // When
+            var logHandler = new LogHandler(ActivityName);
             logHandler.ReportWarning(LogMessage);
 
             // Then
-            AssertMessageWithCorrectSeverity(LogMessage, LogSeverity.Warning);
+            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Warning);
         }
 
         [Test]
         public void GivenALogMessage_WhenReportErrorIsCalled_MessageIsAddedToLogMessagesTableWithErrorSeverity()
         {
             // When
+            var logHandler = new LogHandler(ActivityName);
             logHandler.ReportError(LogMessage);
 
             // Then
-            AssertMessageWithCorrectSeverity(LogMessage, LogSeverity.Error);
+            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Error);
         }
 
         [Test]
         public void GivenALogMessage_WhenReportInfoFormatIsCalled_MessageIsAddedToLogMessagesTableWithInfoSeverity()
         {
             // When
+            var logHandler = new LogHandler(ActivityName);
             logHandler.ReportInfoFormat(Format, formatArgs);
 
             // Then
-            AssertMessageWithCorrectSeverity(LogMessage, LogSeverity.Info);
+            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Info);
         }
 
         [Test]
         public void GivenALogMessage_WhenReportWarningFormatIsCalled_MessageIsAddedToLogMessagesTableWithWarningSeverity()
         {
             // When
+            var logHandler = new LogHandler(ActivityName);
             logHandler.ReportWarningFormat(Format, formatArgs);
 
             // Then
-            AssertMessageWithCorrectSeverity(LogMessage, LogSeverity.Warning);
+            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Warning);
         }
 
         [Test]
         public void GivenALogMessage_WhenReportErrorFormatIsCalled_MessageIsAddedToLogMessagesTableWithErrorSeverity()
         {
             // When
+            var logHandler = new LogHandler(ActivityName);
             logHandler.ReportErrorFormat(Format, formatArgs);
 
             // Then
-            AssertMessageWithCorrectSeverity(LogMessage, LogSeverity.Error);
+            AssertMessageWithCorrectSeverity(logHandler, LogMessage, LogSeverity.Error);
         }
 
         [Test]
         public void GivenALogHandlerWithoutLogMessages_WhenLogReportIsCalled_ThenNoReportIsLogged()
         {
+            var logHandler = new LogHandler(ActivityName);
             TestHelper.AssertLogMessagesCount(() => logHandler.LogReport(), 0);
         }
 
@@ -103,6 +97,7 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
         public void GivenALogHandlerWithALogMessage_WhenLogReportIsCalled_ThenReportIsLoggedWithCorrectName()
         {
             // Given
+            var logHandler = new LogHandler(ActivityName);
             logHandler.ReportError(LogMessage);
 
             // When, Then
@@ -113,6 +108,7 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
         public void GivenALogHandlerWithALogMessage_WhenLogReportIsCalled_ThenReportIsLoggedWithCorrectMessage()
         {
             // Given
+            var logHandler = new LogHandler(ActivityName);
             logHandler.ReportError(LogMessage);
 
             // When, Then
@@ -130,6 +126,7 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             const string errorMessage1 = "error_message1";
             const string errorMessage2 = "error_message2";
 
+            var logHandler = new LogHandler(ActivityName);
             logHandler.ReportInfo(infoMessage1);
             logHandler.ReportInfo(infoMessage2);
             logHandler.ReportWarning(warningMessage1);
@@ -151,7 +148,40 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
             Assert.That(logHandler.LogMessagesTable, Is.Empty);
         }
 
-        public void AssertMessageWithCorrectSeverity(string message, LogSeverity logSeverity)
+        [Test]
+        public void LogReport_WithMaxMessages_CreatesCorrectReport()
+        {
+            // Setup
+            var logHandler = new LogHandler(ActivityName, 2);
+            logHandler.ReportWarning(LogMessage);
+            logHandler.ReportWarning(LogMessage);
+            logHandler.ReportWarning(LogMessage);
+            logHandler.ReportWarning(LogMessage);
+
+            // Call
+            void Call() => logHandler.LogReport();
+
+            // Assert
+            string warning = TestHelper.GetAllRenderedMessages(Call).Single();
+            string expWarning = CreateExpectedLogMessage("During some_activity the following warnings were reported:",
+                                                         LogMessage,
+                                                         LogMessage,
+                                                         "2 more warnings were not shown...");
+            Assert.That(warning, Is.EqualTo(expWarning));
+        }
+
+        [Test]
+        public void Constructor_NegativeMaxMessages_ThrowsArgumentOutOfRangeException()
+        {
+            // Call
+            void Call() => new LogHandler(ActivityName, -1);
+
+            // Assert
+            var e = Assert.Throws<ArgumentOutOfRangeException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("maxMessages"));
+        }
+
+        private static void AssertMessageWithCorrectSeverity(ILogHandler logHandler, string message, LogSeverity logSeverity)
         {
             Assert.AreEqual(1, logHandler.LogMessagesTable.Count,
                             "Exactly 1 log message was expected to be collected by the log handler.");
@@ -163,11 +193,12 @@ namespace DeltaShell.NGHS.Common.Tests.Logging
                            $"Expected log message '{message}' with expected severity '{logSeverity.ToString()}' was not added to the list.");
         }
 
-        private static string CreateExpectedLogMessage(string header, string message1, string message2)
+        private static string CreateExpectedLogMessage(string header, string message1, string message2, string notShownMessage = null)
         {
             return header +
                    $"{Environment.NewLine}- {message1}" +
-                   $"{Environment.NewLine}- {message2}";
+                   $"{Environment.NewLine}- {message2}" +
+                   (notShownMessage == null ? string.Empty : Environment.NewLine + notShownMessage);
         }
     }
 }

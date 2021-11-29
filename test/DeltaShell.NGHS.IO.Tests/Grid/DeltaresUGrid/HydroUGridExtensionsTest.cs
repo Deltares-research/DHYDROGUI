@@ -113,7 +113,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
         }
 
         [Test]
-        public void GivenUGridMeshAdapter_DoingCreateNetwork_ShouldCreateValidNetwork()
+        public void GivenUGridMeshAdapter_DoingSetNetworkGeometry_ShouldCreateValidNetwork()
         {                                      
             //          Rural network             Urban network
             // ^                                   
@@ -170,8 +170,10 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                 new BranchProperties{Name = "connection", BranchType = BranchFile.BranchType.SewerConnection },
             };
 
+            var network = new HydroNetwork();
+            
             // Act
-            var network = networkGeometry.CreateNetwork(branchProperties,compartmentProperties);
+            network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
             
             // Assert
             // check dimensions
