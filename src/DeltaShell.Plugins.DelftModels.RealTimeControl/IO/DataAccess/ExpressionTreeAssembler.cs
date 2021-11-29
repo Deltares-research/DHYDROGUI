@@ -189,19 +189,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
         private static HashSet<string> GetInputReferences(IEnumerable<RuleDataAccessObject> rules,
                                                           IEnumerable<ConditionDataAccessObject> conditions)
         {
-            var objectInputReferences = new HashSet<string>();
+            var inputReferences = new HashSet<string>();
 
             foreach (string inputReference in rules.SelectMany(r => r.InputReferences))
             {
-                objectInputReferences.Add(inputReference);
+                inputReferences.Add(inputReference);
             }
 
             foreach (string inputReference in conditions.SelectMany(r => r.InputReferences))
             {
-                objectInputReferences.Add(inputReference);
+                inputReferences.Add(inputReference);
             }
 
-            return objectInputReferences;
+            return inputReferences;
         }
     }
 }
