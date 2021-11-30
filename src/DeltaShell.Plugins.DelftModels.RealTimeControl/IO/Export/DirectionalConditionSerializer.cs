@@ -20,15 +20,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public DirectionalConditionSerializer(DirectionalCondition directionalCondition) : base(directionalCondition)
         {
             this.directionalCondition = directionalCondition;
+            XmlTag = RtcXmlTag.DirectionalCondition;
         }
 
         /// <summary>
         /// Gets the xml name of the lagged input.
         /// </summary>
+        /// <param name="prefix">Optional prefix that can be prepended to the input name</param>
         /// <returns> The xml name of the lagged input </returns>
-        public string GetLaggedInputName()
+        public string GetLaggedInputName(string prefix)
         {
-            return GetInputName() + timeLagPostFix;
+            return GetInputName(prefix) + timeLagPostFix;
         }
 
         /// <summary>
@@ -45,24 +47,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
                 yield return export;
             }
 
-            var timeSeriesElement = new XElement(xNamespace + "timeSeries", new XAttribute("id", GetLaggedInputName()));
+            var timeSeriesElement = new XElement(xNamespace + "timeSeries", new XAttribute("id", GetLaggedInputName(prefix)));
             yield return timeSeriesElement;
         }
-
-        protected override string XmlTag { get; } = RtcXmlTag.DirectionalCondition;
 
         /// <summary>
         /// Gets the x2 element for the condition element in the tools config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix">A string that can be used to prepend or append to the returned value. </param>
         /// <returns> The x2 element. </returns>
-        protected override XElement GetX2Element(XNamespace xNamespace)
+        protected override XElement GetX2Element(XNamespace xNamespace, string prefix)
         {
             return new XElement(xNamespace + "x2Series",
                                 directionalCondition.Reference == string.Empty
                                     ? null
                                     : new XAttribute("ref", directionalCondition.Reference),
-                                GetLaggedInputName());
+                                GetLaggedInputName(prefix));
         }
     }
 }

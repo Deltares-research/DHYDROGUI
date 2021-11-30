@@ -24,6 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public IntervalRuleSerializer(IntervalRule intervalRule) : base(intervalRule)
         {
             IntervalRule = intervalRule;
+            XmlTag = RtcXmlTag.IntervalRule;
         }
 
         // Example of ToXmlInputReference:
@@ -123,7 +124,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             yield return GetExportTimeSeries(prefix);
         }
 
-        protected override string XmlTag { get; } = RtcXmlTag.IntervalRule;
         private IntervalRule IntervalRule { get; }
 
         private IXmlTimeSeries GetImportTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)

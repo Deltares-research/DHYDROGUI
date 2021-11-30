@@ -29,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public XElement ToXmlInputReference(XNamespace xNamespace, string labelName, string labelSetpoint = null)
         {
             var result = new XElement(xNamespace + "input");
-            result.Add(new XElement(xNamespace + labelName, GetXmlName()));
+            result.Add(new XElement(xNamespace + labelName, GetXmlName(string.Empty)));
             string setpoint = input.SetPoint;
             if (!string.IsNullOrEmpty(setpoint) && !string.IsNullOrEmpty(labelSetpoint))
             {
@@ -42,7 +42,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         /// <summary>
         /// Gets the xml name of the input.
         /// </summary>
+        /// <param name="prefix">A string that can be used to prepend or append to the XmlName. </param>
         /// <returns> The xml name of the input. </returns>
-        public abstract string GetXmlName();
+        public abstract string GetXmlName(string prefix);
     }
 }

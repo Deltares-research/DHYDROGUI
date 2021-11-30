@@ -26,8 +26,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         /// <summary>
         /// Gets the xml name of the input.
         /// </summary>
+        /// <param name="prefix">Optional prefix that can be prepended to the XML name</param>
         /// <returns> The xml name of the input </returns>
-        public override string GetXmlName()
+        public override string GetXmlName(string prefix)
         {
             return XmlTag + input.LocationName.Replace("##", "~~") + "/" + input.ParameterName;
         }
@@ -44,7 +45,5 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         {
             throw new NotSupportedException();
         }
-
-        protected override string XmlTag { get; }
     }
 }

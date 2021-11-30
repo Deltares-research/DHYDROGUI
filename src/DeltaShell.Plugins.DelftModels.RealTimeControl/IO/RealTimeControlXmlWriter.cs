@@ -525,7 +525,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
 
                     inputItems.Add(input.Name);
                     var serializer = new InputSerializer(input);
-                    var tempElement = new XElement(Fns + "timeSeries", new XAttribute("id", serializer.GetXmlName()));
+                    var tempElement = new XElement(Fns + "timeSeries", new XAttribute("id", serializer.GetXmlName(string.Empty)));
 
                     if (input.IsConnected)
                     {
@@ -669,7 +669,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 foreach (MathematicalExpression expression in group.MathematicalExpressions)
                 {
                     var serializer = new MathematicalExpressionSerializer(expression);
-                    foreach (XElement element in serializer.GetDataConfigXmlElements(Fns))
+                    foreach (XElement element in serializer.GetDataConfigXmlElements(Fns,groupNameWithSeparator))
                     {
                         export.Add(element);
                     }
@@ -800,14 +800,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         /// <summary>
         /// TimeLags are presented by a UnitDelay component in ToolsConfig
         /// </summary>
-        /// <param name="controlGroups"></param>
+        /// <param name="xDocument">The <see cref="XDocument"/> to which the UnitDelayComponents are added. </param>
+        /// <param name="controlGroups">The <see cref="ControlGroup"/> that are traversed to save the UnitDelayComponents from. </param>
         private static void AddUnitDelayComponents(XDocument xDocument, IList<ControlGroup> controlGroups)
         {
             List<HydraulicRule> timeLagHydraulicRules = controlGroups.SelectMany(controlGroup => controlGroup.Rules.OfType<HydraulicRule>().Where(r => r.TimeLagInTimeSteps > 0)).ToList();
             IEnumerable<string> inputNames = timeLagHydraulicRules.SelectMany(timeLagHydraulicRule => timeLagHydraulicRule.Inputs.OfType<Input>().Select(input =>
             {
                 var serializer = new InputSerializer(input);
-                return serializer.GetXmlName();
+                return serializer.GetXmlName(string.Empty);
             }).Distinct());
 
             var xElementComponents = new XElement(Fns + "components");
@@ -851,8 +852,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 if (conditionInput is Input input)
                 {
                     var inputSerializer = new InputSerializer(input);
-                    string inputXmlName = inputSerializer.GetXmlName();
-                    if (passedNames.Contains(inputXmlName)) //avoid double elements
+                    string inputXmlName = inputSerializer.GetXmlName(string.Empty);
+                    if (passedNames.Contains(inputXmlName))             //avoid double elements
                     {
                         continue;
                     }
@@ -864,7 +865,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                                                         new XElement(Fns + "unitDelay",
                                                                      new XAttribute("id", RtcXmlTag.Delayed + inputXmlName),
                                                                      new XElement(Fns + "input", new XElement(Fns + "x", inputXmlName)),
-                                                                     new XElement(Fns + "output", new XElement(Fns + "y", serializer.GetLaggedInputName()))
+                                                                     new XElement(Fns + "output", new XElement(Fns + "y", serializer.GetLaggedInputName(string.Empty)))
                                                         )
                                            ));
                 }
@@ -885,7 +886,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 foreach (Input input in hydraulicRule.Inputs.OfType<Input>())
                 {
                     var serializer = new InputSerializer(input);
-                    string inputXmlName = serializer.GetXmlName();
+                    string inputXmlName = serializer.GetXmlName(string.Empty);
                     if (dictInputAndHydraulicRuleWithBiggestDelay.ContainsKey(inputXmlName))
                     {
                         if (hydraulicRule.TimeLagInTimeSteps > dictInputAndHydraulicRuleWithBiggestDelay[inputXmlName].TimeLagInTimeSteps)
@@ -907,7 +908,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 {
                     var serializer = new InputSerializer(input);
                     var timeSeriesElement = new XElement(Fns + "timeSeries",
-                                                         new XAttribute("id", RtcXmlTag.Delayed + serializer.GetXmlName()),
+                                                         new XAttribute("id", RtcXmlTag.Delayed + serializer.GetXmlName(string.Empty)),
                                                          new XAttribute("vectorLength", hydraulicRule.TimeLagInTimeSteps - 1));
 
                     var piTimeSeriesElement = new XElement(Fns + "PITimeSeries",

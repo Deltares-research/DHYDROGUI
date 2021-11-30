@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         /// <summary>
         /// Gets the XML tag that is used within the id of the object.
         /// </summary>
-        protected abstract string XmlTag { get; }
+        protected string XmlTag { get; set; }
 
         /// <summary>
         /// Gets the xml name with the tag.

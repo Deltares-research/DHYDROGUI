@@ -37,8 +37,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         /// Converts the condition to a collection of <see cref="XElement"/>
         /// to be written to export series in the data config xml file.
         /// </summary>
-        /// <param name="prefix"> The prefix. </param>
         /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
         /// <returns> The collection of <see cref="XElement"/>. </returns>
         public virtual IEnumerable<XElement> ToDataConfigExportSeries(XNamespace xNamespace, string prefix)
         {
@@ -51,6 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         /// to be written to the tools config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix"> The prefix. </param>
         /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
@@ -60,15 +61,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         /// <summary>
         /// Gets the xml name of the input of the condition.
         /// </summary>
+        /// <param name="prefix">Optional prefix that can be prepended to the xml name</param>
         /// <returns>The xml name of the input of the condition.</returns>
-        protected string GetInputName()
+        protected string GetInputName(string prefix)
         {
             IInput conditionInput = conditionBase.Input;
 
             return conditionInput == null
                        ? "|no input|"
                        : SerializerCreator.CreateSerializerType<InputSerializerBase>(
-                           (RtcBaseObject) conditionInput).GetXmlName();
+                           (RtcBaseObject) conditionInput).GetXmlName(prefix);
         }
     }
 }

@@ -22,10 +22,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
 
             // Act
-            string xmlName = serializer.GetXmlName();
+            string xmlName = serializer.GetXmlName(string.Empty);
 
             // Assert
             Assert.AreEqual(mathematicalExpression.Name, xmlName);
+        }
+        
+        [Test]
+        public void GetXmlNameWithPrefix_ShouldReturnExpressionNameWithPrefix()
+        {
+            // Arrange
+            const string prefix = "SomeRandomPrefix";
+            const string name = "Test";
+            var mathematicalExpression = new MathematicalExpression {Name = name};
+            var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
+
+            // Act
+            string xmlName = serializer.GetXmlName(prefix);
+
+            // Assert
+            Assert.AreEqual(prefix+name, xmlName);
         }
 
         [Test]
@@ -56,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                                      "<x1Series ref=\"IMPLICIT\">[Input]feature1/waterlevel</x1Series>" +
                                      "<mathematicalOperator>+</mathematicalOperator>" +
                                      "<x2Value>6</x2Value>" +
-                                     "<y>f1</y>" +
+                                     "<y>Control Group 1/f1</y>" +
                                      "</expression>" +
                                      "</trigger>";
 
@@ -104,10 +120,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             // Assert
             string expectedXmlCode1 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                                       "<expression id=\"Control Group 1/f1\">" +
-                                      "<x1Series ref=\"IMPLICIT\">f1/([Input]feature1/waterlevel + [Input]feature2/waterlevel)</x1Series>" +
+                                      "<x1Series ref=\"IMPLICIT\">Control Group 1/f1/([Input]feature1/waterlevel + [Input]feature2/waterlevel)</x1Series>" +
                                       "<mathematicalOperator>+</mathematicalOperator>" +
                                       "<x2Series ref=\"IMPLICIT\">[Input]feature3/waterlevel</x2Series>" +
-                                      "<y>f1</y>" +
+                                      "<y>Control Group 1/f1</y>" +
                                       "</expression>" +
                                       "</trigger>";
 
@@ -116,7 +132,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                                       "<x1Series ref=\"IMPLICIT\">[Input]feature1/waterlevel</x1Series>" +
                                       "<mathematicalOperator>+</mathematicalOperator>" +
                                       "<x2Series ref=\"IMPLICIT\">[Input]feature2/waterlevel</x2Series>" +
-                                      "<y>f1/([Input]feature1/waterlevel + [Input]feature2/waterlevel)</y>" +
+                                      "<y>Control Group 1/f1/([Input]feature1/waterlevel + [Input]feature2/waterlevel)</y>" +
                                       "</expression>" +
                                       "</trigger>";
 
@@ -152,10 +168,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             // Assert
             string expectedXmlCode = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                                      "<expression id=\"Control Group 1/f1\">" +
-                                     "<x1Series ref=\"IMPLICIT\">f2</x1Series>" +
+                                     "<x1Series ref=\"IMPLICIT\">Control Group 1/f2</x1Series>" +
                                      "<mathematicalOperator>+</mathematicalOperator>" +
                                      "<x2Series ref=\"IMPLICIT\">[Input]feature2/waterlevel</x2Series>" +
-                                     "<y>f1</y>" +
+                                     "<y>Control Group 1/f1</y>" +
                                      "</expression>" +
                                      "</trigger>";
 
@@ -199,19 +215,19 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             // Assert
             string expectedXmlCode1 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                                       "<expression id=\"Control Group 1/f1\">" +
-                                      "<x1Series ref=\"IMPLICIT\">f1/(f2 + [Input]feature2/waterlevel)</x1Series>" +
+                                      "<x1Series ref=\"IMPLICIT\">Control Group 1/f1/(Control Group 1/f2 + [Input]feature2/waterlevel)</x1Series>" +
                                       "<mathematicalOperator>+</mathematicalOperator>" +
                                       "<x2Series ref=\"IMPLICIT\">[Input]feature3/waterlevel</x2Series>" +
-                                      "<y>f1</y>" +
+                                      "<y>Control Group 1/f1</y>" +
                                       "</expression>" +
                                       "</trigger>";
 
             string expectedXmlCode2 = "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
-                                      "<expression id=\"Control Group 1/f1/(f2 + [Input]feature2/waterlevel)\">" +
-                                      "<x1Series ref=\"IMPLICIT\">f2</x1Series>" +
+                                      "<expression id=\"Control Group 1/f1/(Control Group 1/f2 + [Input]feature2/waterlevel)\">" +
+                                      "<x1Series ref=\"IMPLICIT\">Control Group 1/f2</x1Series>" +
                                       "<mathematicalOperator>+</mathematicalOperator>" +
                                       "<x2Series ref=\"IMPLICIT\">[Input]feature2/waterlevel</x2Series>" +
-                                      "<y>f1/(f2 + [Input]feature2/waterlevel)</y>" +
+                                      "<y>Control Group 1/f1/(Control Group 1/f2 + [Input]feature2/waterlevel)</y>" +
                                       "</expression>" +
                                       "</trigger>";
 
@@ -278,7 +294,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
 
             // Act
-            var returnedXmlCode = serializer.GetDataConfigXmlElements(fns).Single().ToString(SaveOptions.DisableFormatting);
+            var returnedXmlCode = serializer.GetDataConfigXmlElements(fns, string.Empty).Single().ToString(SaveOptions.DisableFormatting);
 
             // Assert
             var expectedXmlCode = "<timeSeries id=\"f1\" xmlns=\"http://www.wldelft.nl/fews\" />";
@@ -305,7 +321,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             var serializer = new MathematicalExpressionSerializer(mathematicalExpression);
 
             // Act
-            IEnumerable<XElement> dataConfigXmlElements = serializer.GetDataConfigXmlElements(fns);
+            IEnumerable<XElement> dataConfigXmlElements = serializer.GetDataConfigXmlElements(fns, string.Empty);
 
             // Assert
             Assert.AreEqual(2, dataConfigXmlElements.Count());
@@ -359,7 +375,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                                      "<x1Series ref=\"IMPLICIT\">[Input]feature1/waterlevel</x1Series>" +
                                      "<mathematicalOperator>" + operatorAsString + "</mathematicalOperator>" +
                                      "<x2Series ref=\"IMPLICIT\">[Input]feature2/waterlevel</x2Series>" +
-                                     "<y>f1</y>" +
+                                     "<y>Control Group 1/f1</y>" +
                                      "</expression>" +
                                      "</trigger>";
 

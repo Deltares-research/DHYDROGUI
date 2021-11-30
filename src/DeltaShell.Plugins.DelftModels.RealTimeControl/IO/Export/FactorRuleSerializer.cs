@@ -12,8 +12,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         /// Initializes a new instance of the <see cref="FactorRuleSerializer"/> class.
         /// </summary>
         /// <param name="factorRule"> The factor rule to serialize. </param>
-        public FactorRuleSerializer(FactorRule factorRule) : base(factorRule) {}
-
-        protected override string XmlTag { get; } = RtcXmlTag.FactorRule;
+        public FactorRuleSerializer(FactorRule factorRule) : base(factorRule)
+        {
+            XmlTag = RtcXmlTag.FactorRule;
+        }
     }
 }

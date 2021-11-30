@@ -23,6 +23,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public LookupSignalSerializer(LookupSignal lookupSignal) : base(lookupSignal)
         {
             this.lookupSignal = lookupSignal;
+            XmlTag = RtcXmlTag.LookupSignal;
         }
 
         /// <summary>
@@ -85,8 +86,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         {
             yield return GetExportTimeSeries(RtcXmlTag.Signal + GetXmlNameWithoutTag(prefix));
         }
-
-        protected override string XmlTag { get; } = RtcXmlTag.LookupSignal;
 
         /// <summary>
         /// Returns a IXmlTimeSeries that is written to rtcDataConfig.xml and only used internally by RTCTools.

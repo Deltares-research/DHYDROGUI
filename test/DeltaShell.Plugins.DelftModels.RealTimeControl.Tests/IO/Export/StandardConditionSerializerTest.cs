@@ -155,6 +155,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             var serializer = new StandardConditionSerializer(condition);
             var retrievedXml = serializer.ToXml(fns, "Group1/").Single().ToString(SaveOptions.DisableFormatting);
 
+
             string expectedXml =
                 "<trigger xmlns=\"http://www.wldelft.nl/fews\">" +
                 "<standard id=\"[StandardCondition]Group1/Standard Condition\">" +
@@ -166,10 +167,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 "<true>" +
                 "<trigger>" +
                 "<expression id=\"Group1/expression\">" +
-                "<x1Series ref=\"IMPLICIT\">expression/([Input]ObservationPoint2/WaterLevel2 + 1)</x1Series>" +
+                "<x1Series ref=\"IMPLICIT\">Group1/expression/([Input]ObservationPoint2/WaterLevel2 + 1)</x1Series>" +
                 "<mathematicalOperator>+</mathematicalOperator>" +
                 "<x2Value>2</x2Value>" +
-                "<y>expression</y>" +
+                "<y>Group1/expression</y>" +
                 "</expression>" +
                 "</trigger>" +
                 "<trigger>" +
@@ -177,17 +178,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 "<x1Series ref=\"IMPLICIT\">[Input]ObservationPoint2/WaterLevel2</x1Series>" +
                 "<mathematicalOperator>+</mathematicalOperator>" +
                 "<x2Value>1</x2Value>" +
-                "<y>expression/([Input]ObservationPoint2/WaterLevel2 + 1)</y>" +
+                "<y>Group1/expression/([Input]ObservationPoint2/WaterLevel2 + 1)</y>" +
                 "</expression>" +
                 "</trigger>" +
                 "</true>" +
                 "<false>" +
                 "<trigger>" +
                 "<expression id=\"Group1/expression2\">" +
-                "<x1Series ref=\"IMPLICIT\">expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</x1Series>" +
+                "<x1Series ref=\"IMPLICIT\">Group1/expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</x1Series>" +
                 "<mathematicalOperator>+</mathematicalOperator>" +
                 "<x2Value>2</x2Value>" +
-                "<y>expression2</y>" +
+                "<y>Group1/expression2</y>" +
                 "</expression>" +
                 "</trigger>" +
                 "<trigger>" +
@@ -195,7 +196,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 "<x1Series ref=\"IMPLICIT\">[Input]ObservationPoint3/WaterLevel3</x1Series>" +
                 "<mathematicalOperator>+</mathematicalOperator>" +
                 "<x2Value>1</x2Value>" +
-                "<y>expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</y>" +
+                "<y>Group1/expression2/([Input]ObservationPoint3/WaterLevel3 + 1)</y>" +
                 "</expression>" +
                 "</trigger>" +
                 "</false>" +
@@ -204,7 +205,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 "</output>" +
                 "</standard>" +
                 "</trigger>";
-
             Assert.AreEqual(expectedXml, retrievedXml);
         }
 

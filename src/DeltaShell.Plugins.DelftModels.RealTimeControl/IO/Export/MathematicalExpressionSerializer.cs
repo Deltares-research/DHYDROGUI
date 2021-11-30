@@ -29,8 +29,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         /// to be written to export time series in the data config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix">An optional prefix string that can be used to add GroupName to elements. </param>
         /// <returns> The collection of <see cref="XElement"/>. </returns>
-        public IEnumerable<XElement> GetDataConfigXmlElements(XNamespace xNamespace)
+        public IEnumerable<XElement> GetDataConfigXmlElements(XNamespace xNamespace, string prefix)
         {
             IBranchNode rootNode = RetrieveRootBranchNode();
 
@@ -38,7 +39,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             List<IBranchNode> subBranchNodes = allSubNodes.OfType<IBranchNode>().ToList();
             IEnumerable<ParameterLeafNode> subParameterLeafNodes = allSubNodes.OfType<ParameterLeafNode>();
 
-            CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes);
+            CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes, prefix);
 
             yield return new XElement(xNamespace + "timeSeries",
                                       new XAttribute("id", rootNode.YName));
@@ -65,47 +66,47 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             List<IBranchNode> subBranchNodes = allSubNodes.OfType<IBranchNode>().ToList();
             IEnumerable<ParameterLeafNode> subParameterLeafNodes = allSubNodes.OfType<ParameterLeafNode>();
 
-            CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes);
+            CorrectAllNodesByUsingOriginalInputNames(rootNode, subBranchNodes, subParameterLeafNodes, prefix);
 
             string idRootNode = GetXmlNameWithoutTag(prefix);
-            yield return CreateTriggerForExpression(xNamespace, rootNode, idRootNode);
+            yield return CreateTriggerForExpression(xNamespace, rootNode, idRootNode, prefix);
 
             foreach (IBranchNode subBranchNode in subBranchNodes)
             {
-                string idSubBranchNodes = prefix + subBranchNode.YName;
-                yield return CreateTriggerForExpression(xNamespace, subBranchNode, idSubBranchNodes);
+                string idSubBranchNodes = subBranchNode.YName;
+                yield return CreateTriggerForExpression(xNamespace, subBranchNode, idSubBranchNodes, prefix);
             }
         }
 
         /// <summary>
         /// Used by other RTC components if they are connected to a Mathematical Expression.
         /// </summary>
+        /// <param name="prefix">A string that is prepended to the Xml name</param>
         /// <returns> The xml name of the mathematical expression. </returns>
-        public override string GetXmlName()
+        public override string GetXmlName(string prefix)
         {
-            return MathematicalExpression.Name;
+            return prefix + MathematicalExpression.Name;
         }
-
-        protected override string XmlTag { get; }
+        
         private MathematicalExpression MathematicalExpression { get; }
 
-        private XElement CreateTriggerForExpression(XNamespace xNamespace, IBranchNode branchNode, string id)
+        private XElement CreateTriggerForExpression(XNamespace xNamespace, IBranchNode branchNode, string id, string prefix)
         {
             var expression = new XElement(xNamespace + "expression", new XAttribute("id", id));
 
-            expression.Add(CreateXElementForNode(xNamespace, branchNode.FirstNode, "x1Value", "x1Series"));
+            expression.Add(CreateXElementForNode(xNamespace, branchNode.FirstNode, "x1Value", "x1Series", prefix));
             expression.Add(new XElement(xNamespace + "mathematicalOperator",
                                         ConvertToMathematicalOperatorEnumStringType(branchNode.OperatorValue)));
-            expression.Add(CreateXElementForNode(xNamespace, branchNode.SecondNode, "x2Value", "x2Series"));
+            expression.Add(CreateXElementForNode(xNamespace, branchNode.SecondNode, "x2Value", "x2Series", prefix));
             expression.Add(new XElement(xNamespace + "y", branchNode.YName));
 
             return new XElement(xNamespace + "trigger", expression);
         }
 
         private XElement CreateXElementForNode(XNamespace xNamespace, IExpressionNode node, string constantName,
-                                               string seriesName)
+                                               string seriesName, string prefix)
         {
-            string nodeReference = RetrieveNodeReference(node);
+            string nodeReference = RetrieveNodeReference(node, prefix);
 
             bool isConstant = node is ConstantValueLeafNode;
             XName xName = xNamespace + (isConstant ? constantName : seriesName);
@@ -113,12 +114,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             return new XElement(xName, xAttribute, nodeReference);
         }
 
-        private string RetrieveNodeReference(IExpressionNode node)
+        private string RetrieveNodeReference(IExpressionNode node, string prefix)
         {
             var nodeReference = node.ToString();
             if (node is BranchNode)
             {
-                nodeReference = MathematicalExpression.Name + "/" + nodeReference;
+                nodeReference = GetXmlName(prefix) + "/" + nodeReference;
             }
 
             return nodeReference;
@@ -145,11 +146,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             }
         }
 
-        private void CorrectAllNodesByUsingOriginalInputNames(IBranchNode rootNode, IEnumerable<IBranchNode> subBranchNodes, IEnumerable<ParameterLeafNode> subParameterLeafNodes)
+        private void CorrectAllNodesByUsingOriginalInputNames(IBranchNode rootNode, IEnumerable<IBranchNode> subBranchNodes, IEnumerable<ParameterLeafNode> subParameterLeafNodes, string prefix)
         {
-            CorrectXmlInputNamesForLeafNodes(subParameterLeafNodes);
-            SetYNameOfRootNode(rootNode);
-            SetYNamesOfSubBranchNodes(subBranchNodes);
+            CorrectXmlInputNamesForLeafNodes(subParameterLeafNodes, prefix);
+            SetYNameOfRootNode(rootNode, prefix);
+            SetYNamesOfSubBranchNodes(subBranchNodes, prefix);
         }
 
         private IBranchNode RetrieveRootBranchNode()
@@ -174,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             return rootNode;
         }
 
-        private void CorrectXmlInputNamesForLeafNodes(IEnumerable<ParameterLeafNode> leafNodes)
+        private void CorrectXmlInputNamesForLeafNodes(IEnumerable<ParameterLeafNode> leafNodes, string prefix)
         {
             foreach (ParameterLeafNode leafNode in leafNodes)
             {
@@ -184,23 +185,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
                     IInput expressionInput = MathematicalExpression.Inputs.First(i => i.Equals(parameterKvp.Value));
 
                     var serializer = SerializerCreator.CreateSerializerType<InputSerializerBase>((RtcBaseObject) expressionInput);
-                    string xmlName = serializer.GetXmlName();
-
-                    leafNode.Value = xmlName;
+                    leafNode.Value = serializer.GetXmlName(prefix);
                 }
             }
         }
 
-        private void SetYNameOfRootNode(IBranchNode branchNode)
+        private void SetYNameOfRootNode(IBranchNode branchNode, string prefix)
         {
-            branchNode.YName = MathematicalExpression.Name;
+            branchNode.YName = GetXmlName(prefix);
         }
 
-        private void SetYNamesOfSubBranchNodes(IEnumerable<IBranchNode> branchNodes)
+        private void SetYNamesOfSubBranchNodes(IEnumerable<IBranchNode> branchNodes, string prefix)
         {
             foreach (IBranchNode branchNode in branchNodes)
             {
-                branchNode.YName = MathematicalExpression.Name + "/" + branchNode;
+                branchNode.YName = GetXmlName(prefix) + "/" + branchNode;
             }
         }
     }

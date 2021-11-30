@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public RelativeTimeRuleSerializer(RelativeTimeRule relativeTimeRule) : base(relativeTimeRule)
         {
             RelativeTimeRule = relativeTimeRule;
+            XmlTag = RtcXmlTag.RelativeTimeRule;
         }
 
         // Example of ToXmlInputReference:
@@ -127,7 +128,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             yield return GetExportTimeSeries(prefix);
         }
 
-        protected override string XmlTag { get; } = RtcXmlTag.RelativeTimeRule;
         private RelativeTimeRule RelativeTimeRule { get; }
 
         private string TimeValueOption => RelativeTimeRule.FromValue ? "RELATIVE" : "ABSOLUTE";

@@ -25,6 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public TimeRuleSerializer(TimeRule timeRule) : base(timeRule)
         {
             this.timeRule = timeRule;
+            XmlTag = RtcXmlTag.TimeRule;
         }
 
         // Example of ToXmlInputReference:
@@ -80,8 +81,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         {
             yield return GetTimeSeries(prefix, start, stop, step);
         }
-
-        protected override string XmlTag { get; } = RtcXmlTag.TimeRule;
 
         private IXmlTimeSeries GetTimeSeries(string prefix, DateTime start, DateTime stop, TimeSpan step)
         {

@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public StandardConditionSerializer(StandardCondition standardCondition) : base(standardCondition)
         {
             this.standardCondition = standardCondition;
+            XmlTag = RtcXmlTag.StandardCondition;
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
                                       new XElement(xNamespace + "relationalOperator",
                                                    standardCondition.Operation.ToString()),
                                       // see above comment
-                                      GetX2Element(xNamespace)));
+                                      GetX2Element(xNamespace, prefix)));
             if (standardCondition.TrueOutputs.OfType<RuleBase>().Any())
             {
                 //rules
@@ -145,17 +146,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         /// <returns> The collection of <see cref="XElement"/>. </returns>
         public override IEnumerable<XElement> ToXml(XNamespace xNamespace, string prefix)
         {
-            return ToXml(xNamespace, prefix, GetInputName());
+            return ToXml(xNamespace, prefix, GetInputName(prefix));
         }
-
-        protected override string XmlTag { get; } = RtcXmlTag.StandardCondition;
 
         /// <summary>
         /// Gets the x2 element for the condition element in the tools config xml file.
         /// </summary>
         /// <param name="xNamespace"> The xml namespace. </param>
+        /// <param name="prefix">A string that can be used to prepend or append to the returned value. </param>
         /// <returns> The x2 element. </returns>
-        protected virtual XElement GetX2Element(XNamespace xNamespace)
+        protected virtual XElement GetX2Element(XNamespace xNamespace, string prefix)
         {
             return new XElement(xNamespace + "x2Value", standardCondition.Value);
         }

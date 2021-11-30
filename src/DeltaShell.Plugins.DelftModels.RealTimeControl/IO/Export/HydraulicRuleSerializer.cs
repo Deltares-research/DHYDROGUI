@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public HydraulicRuleSerializer(HydraulicRule hydraulicRule) : base(hydraulicRule)
         {
             HydraulicRule = hydraulicRule;
+            XmlTag = RtcXmlTag.HydraulicRule;
         }
 
         // Example of ToXmlInputReference:
@@ -110,7 +111,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             yield return result;
         }
 
-        protected override string XmlTag { get; } = RtcXmlTag.HydraulicRule;
         private HydraulicRule HydraulicRule { get; }
     }
 }

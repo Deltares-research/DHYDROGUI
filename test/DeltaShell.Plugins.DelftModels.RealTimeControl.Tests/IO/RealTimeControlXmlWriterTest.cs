@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.NotNull(idAttribute, "error in xml: attribute for time series element not found.");
 
             Assert.AreEqual("id", idAttribute.Name.LocalName);
-            Assert.AreEqual("f1", idAttribute.Value, "error in xml: mismatch for first attributes' value.");
+            Assert.AreEqual("Control Group/f1", idAttribute.Value, "error in xml: mismatch for first attributes' value.");
         }
 
         [Test]
@@ -132,9 +132,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.NotNull(secondAttribute, "error in xml: attribute for second time series element not found.");
 
             Assert.AreEqual("id", firstAttribute.Name.LocalName);
-            Assert.AreEqual("f1", firstAttribute.Value, "error in xml: mismatch for first attributes' value.");
+            Assert.AreEqual("Control Group/f1", firstAttribute.Value, "error in xml: mismatch for first attributes' value.");
             Assert.AreEqual("id", secondAttribute.Name.LocalName);
-            Assert.AreEqual("f1/([Input]feature1/waterlevel + 6)", secondAttribute.Value, "error in xml: mismatch for first attributes' value.");
+            Assert.AreEqual("Control Group/f1/([Input]feature1/waterlevel + 6)", secondAttribute.Value, "error in xml: mismatch for first attributes' value.");
         }
 
         [Test]

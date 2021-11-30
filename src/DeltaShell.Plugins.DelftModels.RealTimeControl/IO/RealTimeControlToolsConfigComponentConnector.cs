@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess;
@@ -157,11 +158,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             }
             else
             {
-                foreach (MathematicalExpression expression in FindByName<MathematicalExpression>(reference))
+                string name = RemoveControlGroupPrefix(reference);
+                foreach (MathematicalExpression expression in FindByName<MathematicalExpression>(name))
                 {
                     yield return expression;
                 }
             }
+        }
+
+        private string RemoveControlGroupPrefix(string name)
+        {
+            string controlGroupNamePrefixRemoved = name;
+            string combinedControlGroupName = controlGroup.Name + "/";
+            if (controlGroupNamePrefixRemoved.StartsWith(combinedControlGroupName))
+            {
+                controlGroupNamePrefixRemoved = controlGroupNamePrefixRemoved.Replace(combinedControlGroupName, "");
+            }
+
+            return controlGroupNamePrefixRemoved;
         }
 
         private Input GetInput(string inputRef)

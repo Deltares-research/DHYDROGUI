@@ -22,6 +22,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public PidRuleSerializer(PIDRule pidRule) : base(pidRule)
         {
             PidRule = pidRule;
+            XmlTag = RtcXmlTag.PIDRule;
         }
 
         /// <summary>
@@ -106,7 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
                                         {
                                             var serializer = SerializerCreator.CreateSerializerType<InputSerializerBase>(input);
                                             return PidRule.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.Constant
-                                                       ? GenerateConstantValueSetPointXml(xNamespace, serializer.GetXmlName())
+                                                       ? GenerateConstantValueSetPointXml(xNamespace, serializer.GetXmlName(prefix))
                                                        : serializer.ToXmlInputReference(xNamespace, "x", "setpointSeries");
                                         }),
                                     PidRule.Outputs.Select(
@@ -129,7 +130,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
             yield break;
         }
 
-        protected override string XmlTag { get; } = RtcXmlTag.PIDRule;
         private PIDRule PidRule { get; }
 
         private string GetIntegralPartId(string prefix)

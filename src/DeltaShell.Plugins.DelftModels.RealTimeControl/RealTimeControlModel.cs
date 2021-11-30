@@ -893,7 +893,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 {
                     case Input input:
                         var inputSerializer = new InputSerializer(input);
-                        return inputSerializer.GetXmlName();
+                        return inputSerializer.GetXmlName(string.Empty);
                     case Output output:
                         var outputSerializer = new OutputSerializer(output);
                         return outputSerializer.GetXmlName();

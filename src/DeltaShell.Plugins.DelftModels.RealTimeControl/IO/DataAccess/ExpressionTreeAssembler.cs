@@ -78,7 +78,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                 else
                 {
                     string id = branchNodeKvp.Key;
-                    var expression = new MathematicalExpression {Name = branchNode.YName};
+                    string name = RemoveControlGroupPrefix(branchNode.YName);
+                    var expression = new MathematicalExpression {Name = name};
                     yield return new ExpressionTree(branchNode, controlGroupName, id, expression);
                 }
             }
@@ -119,16 +120,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                 leafNode = new ParameterLeafNode(reference.Value);
                 return true;
             }
-            else if (reference is ConstantLeafReference)
+            if (reference is ConstantLeafReference)
             {
                 leafNode = new ConstantValueLeafNode(reference.Value);
                 return true;
             }
-
             if (reference is ExpressionReference)
             {
-                string expressionYName = reference.Value;
-                
+                string expressionYName = RemoveControlGroupPrefix(reference.Value);
                 if (ShouldNotBeASubExpression(expressionReferences, expressionYName)) 
                 {
                     leafNode = new ParameterLeafNode(expressionYName);
@@ -137,6 +136,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
             }
 
             return false;
+        }
+        
+        private string RemoveControlGroupPrefix(string name)
+        {
+            string controlGroupNamePrefixRemoved = name;
+            string combinedControlGroupName = controlGroupName + "/";
+            if (controlGroupNamePrefixRemoved.StartsWith(combinedControlGroupName))
+            {
+                controlGroupNamePrefixRemoved = controlGroupNamePrefixRemoved.Replace(combinedControlGroupName, "");
+            }
+
+            return controlGroupNamePrefixRemoved;
         }
 
         private bool ShouldNotBeASubExpression(ICollection<string> expressionReferences, string expressionYName)

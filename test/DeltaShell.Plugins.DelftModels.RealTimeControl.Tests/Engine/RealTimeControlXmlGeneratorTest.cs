@@ -1258,7 +1258,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             var outputSerializer = new OutputSerializer(testOutput);
             string result = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
             result += "<importSeries>";
-            result += "<timeSeries id=\"" + inputSerializer.GetXmlName() + "\">" +
+            result += "<timeSeries id=\"" + inputSerializer.GetXmlName(string.Empty) + "\">" +
                       "<OpenMIExchangeItem>" +
                       "<elementId>" + testInput.LocationName + "</elementId>" +
                       "<quantityId>" + input.ParameterName + "</quantityId>" +
