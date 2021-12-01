@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" Private="false" IncludeAssets="compile" PrivateAssets="all" />
+	  <ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -37,7 +37,7 @@
 		<Reference Include="DelftTools.Units" Private="false">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
 		</Reference>
-		<Reference Include="DelftTools.Utils">
+		<Reference Include="DelftTools.Utils" Private="false">
 		  <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
 		</Reference>
 		<Reference Include="GeoAPI" Private="false">

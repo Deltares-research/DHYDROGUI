@@ -24,15 +24,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" CopyLocal="False" />
-		<ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" CopyLocal="False" />
+		<ProjectReference Include="..\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\DeltaShell.NGHS.Utils\DeltaShell.NGHS.Utils.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="DelftTools.Utils" CopyLocal="False">
+		<Reference Include="DelftTools.Utils" Private="false">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
 		</Reference>
-		<Reference Include="DelftTools.Shell.Core" CopyLocal="False">
+		<Reference Include="DelftTools.Shell.Core" Private="false">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Core.dll</HintPath>
 		</Reference>
 		<Reference Include="mscorlib" />
