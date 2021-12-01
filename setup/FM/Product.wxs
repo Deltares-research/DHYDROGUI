@@ -14,35 +14,17 @@
 
   <?define RealNumberFormat="G12"?>
 
-  <?ifdef var.RWS?>
-  <?define Delft3DPackageName="D-HYDRO"?>
-  <?define registrationFeature="D-HYDRO"?>
-  <?define registrationVersion="2022"?>
-  <?define CheckOriginOfProject="False"?>  
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
-  <?else?>
-  <?ifdef var.NOWAQ?>
-  <?define Delft3DPackageName="Delft3D FM HM"?>
-  <?define registrationFeature="Delft3D_FM_Hyd-Mor"?>
-  <?define registrationVersion="2022"?>
-  <?define CheckOriginOfProject="False"?>  
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
-  <?else?>
-  <?ifdef var.NOKERNELS?>
-  <?define Delft3DPackageName="Delft3D FM HMWQ"?>
-  <?define registrationFeature="Delft3D_FM_OSS"?>
-  <?define registrationVersion="2022"?>
-  <?define CheckOriginOfProject="False"?>  
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
-  <?else?>
-  <?define Delft3DPackageName="Delft3D FM HMWQ"?>
-  <?define registrationFeature="Delft3D_FM_Hyd-Mor_And_Waq"?>
-  <?define registrationVersion="2022"?>
-  <?define CheckOriginOfProject="False"?>  
-  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
+  <?define FullProductName="$(var.ProductName)" ?>
+  <?if $(var.Configuration) != "Release"?>
+    <?ifdef env.BUILD_NUMBER ?>
+      <?define FullProductName="$(var.FullProductName) ($(env.BUILD_NUMBER)" ?>
+    <?endif?>
   <?endif?>
-  <?endif?>
-  <?endif?>
+
+  <?define FullProductVersion="$(var.ReleaseVersion)" ?>
+
+  <?define CheckOriginOfProject="False"?>  
+  <?define StartNamesCompatibleProducts="D-HYDRO,Delft3D"?>  
 
   <?define pluginicon="$(var.ProjectDir)\Resources\FM.ico"?>
   <?define licensefilepath="$(var.ProjectDir)\$(var.Delft3DPackageName)_Resources\"?>
@@ -66,21 +48,7 @@
   <!-- optional splash screen -->
   <?define mainWindowTitle="$(var.ApplicationName)"?>
   <?define splashScreenLogoImageFilePath="splash_screen.jpg"?>
-
-  <?define splashScreenCompany="Rijkswaterstaat"?>
-  <?define splashScreenLicense="NGHS project"?>
-
-  <?ifdef var.RWS?>
-  <?define splashScreenCompany="Rijkswaterstaat"?>
-  <?else?>
-  <?define splashScreenCompany="Deltares"?>
-  <?endif?>
-
-  <?ifdef var.RWS?>
-  <?define splashScreenLicense="NGHS project"?>
-  <?else?>
-  <?define splashScreenLicense="Valid until 30 oct 2022"?>
-  <?endif?>
+  <?define splashScreenCopyright="© Deltares"?>
 
   <?define plugin_wixUIDeltares="FM_WixUI_Deltares"?>
   <?define languages ="1033"?>

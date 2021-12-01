@@ -6,18 +6,24 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <PublicReleaseVersion>2022.01</PublicReleaseVersion>
-    <ReleaseVersion>4.6.0</ReleaseVersion>
-    <!-- This is the product name -->
+    <PublicReleaseVersion>2022.02</PublicReleaseVersion>
+    <ReleaseVersion>4.7.0</ReleaseVersion>
     <ApplicationName>D-HYDRO Suite</ApplicationName>
-    <ProductName>$(ApplicationName) ($(PublicReleaseVersion))</ProductName>
+    <DistributionName>HMWQ</DistributionName>
+    <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
+    <Delft3DPackageName>D-HYDRO</Delft3DPackageName>
+    <RegistrationFeature>D-HYDRO</RegistrationFeature>
+    <RegistrationVersion>2022</RegistrationVersion>
+    <SplashScreenCompany>Rijkswaterstaat</SplashScreenCompany>
+    <SplashScreenLicense>NGHS project</SplashScreenLicense>
     <ProjectGuid>{5725d793-35b5-48a1-bb6a-2291df6c2980}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ApplicationName) ($(PublicReleaseVersion))</OutputName>
-    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ApplicationName) ($(PublicReleaseVersion).$(BUILD_NUMBER))</OutputName>
+    <FormattedBuildNumber Condition=" '$(BUILD_NUMBER)' == '' "></FormattedBuildNumber>
+    <FormattedBuildNumber Condition=" '$(BUILD_NUMBER)' != '' "> ($(BUILD_NUMBER))</FormattedBuildNumber>
+    <OutputName>$(ProductName)$(FormattedBuildNumber)</OutputName>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM_RWS\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;</DefineConstants>
@@ -32,7 +38,7 @@
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);PublicReleaseVersion=$(PublicReleaseVersion);ProductName=$(ProductName);ApplicationName=$(ApplicationName);RWS=true;</DefineConstants>
+    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);PublicReleaseVersion=$(PublicReleaseVersion);ProductName=$(ProductName);ApplicationName=$(ApplicationName);RWS=true;Delft3DPackageName=$(Delft3DPackageName);registrationFeature=$(RegistrationFeature);registrationVersion=$(RegistrationVersion);splashScreenLicense=$(SplashScreenLicense);splashScreenCompany=$(SplashScreenCompany);DistributionName=$(DistributionName)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Dimr\Dimr.wxi">

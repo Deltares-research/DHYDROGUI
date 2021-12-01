@@ -6,18 +6,24 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <PublicReleaseVersion>2022.01</PublicReleaseVersion>
-    <ReleaseVersion>4.6.0</ReleaseVersion>
-    <!-- This is the product name -->
-    <ApplicationName>Delft3D Flexible Mesh Suite OpenHMWQ</ApplicationName>
-    <ProductName>$(ApplicationName) ($(PublicReleaseVersion))</ProductName>
+    <PublicReleaseVersion>2022.02</PublicReleaseVersion>
+    <ReleaseVersion>4.7.0</ReleaseVersion>
+    <DistributionName>OpenHMWQ</DistributionName>
+    <ApplicationName>Delft3D FM Suite</ApplicationName>
+    <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
+    <Delft3DPackageName>Delft3D FM HMWQ</Delft3DPackageName>
+    <RegistrationFeature>Delft3D_FM_OSS</RegistrationFeature>
+    <RegistrationVersion>2022</RegistrationVersion>
+    <SplashScreenCompany>Deltares</SplashScreenCompany>
+    <SplashScreenLicense>Valid until 30 oct 2022</SplashScreenLicense>
     <ProjectGuid>{2481f918-8b09-42cc-ac8b-b81e78a2aaa9}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <OutputName Condition=" '$(BUILD_NUMBER)' == '' ">$(ApplicationName) ($(PublicReleaseVersion))</OutputName>
-    <OutputName Condition=" '$(BUILD_NUMBER)' != '' ">$(ApplicationName) ($(PublicReleaseVersion).$(BUILD_NUMBER))</OutputName>
+    <FormattedBuildNumber Condition=" '$(BUILD_NUMBER)' == '' "></FormattedBuildNumber>
+    <FormattedBuildNumber Condition=" '$(BUILD_NUMBER)' != '' "> ($(BUILD_NUMBER))</FormattedBuildNumber>
+    <OutputName>$(ProductName)$(FormattedBuildNumber)</OutputName>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <IntermediateOutputPath>obj\FM_NOKERNELS\$(Configuration)\</IntermediateOutputPath>
     <DefineConstants>Debug;</DefineConstants>
@@ -32,7 +38,7 @@
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);PublicReleaseVersion=$(PublicReleaseVersion);ProductName=$(ProductName);ApplicationName=$(ApplicationName);NOKERNELS=true</DefineConstants>
+    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);PublicReleaseVersion=$(PublicReleaseVersion);ProductName=$(ProductName);ApplicationName=$(ApplicationName);NOKERNELS=true;Delft3DPackageName=$(Delft3DPackageName);registrationFeature=$(RegistrationFeature);registrationVersion=$(RegistrationVersion);splashScreenLicense=$(SplashScreenLicense);splashScreenCompany=$(SplashScreenCompany);DistributionName=$(DistributionName)</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Dimr\Dimr.wxi">
