@@ -18,6 +18,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.Dimr\DeltaShell.Dimr.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.NGHS.Common\DeltaShell.NGHS.Common.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.Plugins.DelftModels.HydroModel.Gui\DeltaShell.Plugins.DelftModels.HydroModel.Gui.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />

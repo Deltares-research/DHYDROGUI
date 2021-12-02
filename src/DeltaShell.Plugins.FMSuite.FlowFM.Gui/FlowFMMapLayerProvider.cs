@@ -17,7 +17,7 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.Common.Gui.MapLayers;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;

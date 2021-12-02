@@ -92,17 +92,17 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                 var geometry = linkGeometriesCloned[index];
                 var region = linkRegions[index];
 
-                var localStartCoordinate = GetLocalCoordinate(lastCoordinate, hydroObject.Region.CoordinateSystem, region.CoordinateSystem);
+                var localStartCoordinate = GetLocalCoordinate(lastCoordinate, hydroObject.Region?.CoordinateSystem, region.CoordinateSystem);
                 Coordinate localEndCoordinate;
                 
                 try
                 {
                     // interior point of newGeometry can become invalid, so use try catch
-                    localEndCoordinate = GetLocalCoordinate(newGeometry.InteriorPoint.Coordinates[0], hydroObject.Region.CoordinateSystem, region.CoordinateSystem);
+                    localEndCoordinate = GetLocalCoordinate(newGeometry.InteriorPoint.Coordinates[0], hydroObject.Region?.CoordinateSystem, region.CoordinateSystem);
                 }
                 catch (Exception)
                 {
-                    localEndCoordinate = (Coordinate) localStartCoordinate.Clone();
+                    localEndCoordinate = localStartCoordinate.Copy();
                 }
 
                 var deltaX = localEndCoordinate.X - localStartCoordinate.X;

@@ -17,6 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>

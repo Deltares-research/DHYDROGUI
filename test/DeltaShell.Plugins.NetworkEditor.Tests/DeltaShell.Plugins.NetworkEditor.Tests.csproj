@@ -18,6 +18,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\src\DelftTools.Hydro\DelftTools.Hydro.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.NGHS.IO\DeltaShell.NGHS.IO.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
+		<ProjectReference Include="..\..\src\DeltaShell.NGHS.Common.Gui\DeltaShell.NGHS.Common.Gui.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor.Gui\DeltaShell.Plugins.NetworkEditor.Gui.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 		<ProjectReference Include="..\..\src\DeltaShell.Plugins.NetworkEditor\DeltaShell.Plugins.NetworkEditor.csproj" Private="False" IncludeAssets="compile" PrivateAssets="all" />
 	</ItemGroup>
@@ -163,10 +164,6 @@
 			<Private>True</Private>
 		</Reference>
 		<Reference Include="System.Windows.Forms" />
-		<Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-			<HintPath>..\..\packages\Fluent.Ribbon.3.6.1.236\lib\net40\System.Windows.Interactivity.dll</HintPath>
-			<Private>False</Private>
-		</Reference>
 		<Reference Include="System.Xaml" />
 		<Reference Include="System.Xml" />
 		<Reference Include="WindowsBase" />
