@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <!-- This version is wix specific -->
+    <ProductVersion>3.5</ProductVersion>
+    <!-- This is our release version -->
+    <ReleaseVersion>1.1.0</ReleaseVersion>
+    <!-- Distribution Specific settings -->
+    <PublicReleaseVersion>2022.02</PublicReleaseVersion>
+    <DistributionName>Open1D2D</DistributionName>
+    <ApplicationName>Delft3D FM Suite</ApplicationName>
+    <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
+    <Delft3DPackageName>Delft3D FM HMWQ</Delft3DPackageName>
+    <!-- TODO: verify this is correct.-->
+    <RegistrationFeature>Delft3D_FM_OSS</RegistrationFeature>
+    <RegistrationVersion>1.5</RegistrationVersion>
+    <SplashScreenCompany>Deltares</SplashScreenCompany>
+    <SplashScreenLicense>Valid until 3 nov 2015</SplashScreenLicense>
+    <ProjectGuid>{82c09b5d-14fd-4f16-9aa0-112203087eac}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <!-- $(BUILD_NUMBER) is an TC environment variable: https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties -->
+    <OutputType>Package</OutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <FormattedBuildNumber Condition=" '$(BUILD_NUMBER)' == '' "></FormattedBuildNumber>
+    <FormattedBuildNumber Condition=" '$(BUILD_NUMBER)' != '' "> ($(BUILD_NUMBER))</FormattedBuildNumber>
+    <OutputName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)$(FormattedBuildNumber)</OutputName>
+    <IntermediateOutputPath>obj\FM\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;</DefineConstants>
+    <SuppressIces>ICE57</SuppressIces>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <OutputName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</OutputName>
+    <IntermediateOutputPath>obj\FM_Open\$(Configuration)\</IntermediateOutputPath>
+    <SuppressIces>ICE57</SuppressIces>
+  </PropertyGroup>
+  <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);ReleaseVersion=$(ReleaseVersion);PublicReleaseVersion=$(PublicReleaseVersion);ProductName=$(ProductName);ApplicationName=$(ApplicationName);Delft3DPackageName=$(Delft3DPackageName);registrationFeature=$(RegistrationFeature);registrationVersion=$(RegistrationVersion);splashScreenLicense=$(SplashScreenLicense);splashScreenCompany=$(SplashScreenCompany);DistributionName=$(DistributionName);NOKERNELS=true</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="..\Dimr\Dimr.wxi">
+      <Link>Dimr.wxi</Link>
+    </Content>
+    <Content Include="..\Dimr\DimrDefines.wxi">
+      <Link>DimrDefines.wxi</Link>
+    </Content>
+    <Content Include="..\HydroModel\HydroModelPlugin.wxi">
+      <Link>HydroModelPlugin.wxi</Link>
+    </Content>
+    <Content Include="..\HydroModel\HydroModel_FeatureContent.wxi">
+      <Link>HydroModel_FeatureContent.wxi</Link>
+    </Content>
+    <Content Include="..\NetworkEditor\NetworkEditorPlugin.wxi">
+      <Link>NetworkEditorPlugin.wxi</Link>
+    </Content>
+    <Content Include="..\GWSWImporter\GWSWImporterPlugin.wxi">
+      <Link>GWSWImporterPlugin.wxi</Link>
+    </Content>
+    <Content Include="..\GridEditor\GridEditorPlugin.wxi">
+      <Link>GridEditorPlugin.wxi</Link>
+    </Content>
+    <Content Include="..\NGHS.IO\NGHS.IO.wxi">
+      <Link>NGHS.IO.wxi</Link>
+    </Content>
+    <Content Include="..\RealTimeControl\RealTimeControlPlugin.wxi">
+      <Link>RealTimeControlPlugin.wxi</Link>
+    </Content>
+    <Content Include="..\RealTimeControl\RealTimeControl_FeatureContent.wxi">
+      <Link>RealTimeControl_FeatureContent.wxi</Link>
+    </Content>
+    <Content Include="..\Sobek\ImportSobek2NetworkPlugin.wxi">
+      <Link>ImportSobek2NetworkPlugin.wxi</Link>
+    </Content>
+    <Content Include="..\Sobek\RainfallRunoffModelPlugin.wxi">
+      <Link>RainfallRunoffModelPlugin.wxi</Link>
+    </Content>
+    <Content Include="..\Sobek\RR_FeatureContent.wxi">
+      <Link>RR_FeatureContent.wxi</Link>
+    </Content>
+    <Content Include="Delft3D FM HMWQ_Manuals\D-Flow_FM_Technical_Reference_Manual.pdf" />
+    <Content Include="Delft3D FM HMWQ_Manuals\D-Flow_FM_User_Manual.pdf" />
+    <Content Include="Delft3D FM HMWQ_Manuals\RGFGRID_User_Manual.pdf" />
+    <Content Include="Delft3D FM HMWQ_Resources\License.rtf" />
+    <Content Include="Delft3D FM HMWQ_Resources\setup_banner.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\setup_start.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\splash_screen.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\start_page_background.jpg" />
+    <Content Include="Delft3D FM HMWQ_Resources\Welcome.htm" />
+    <Content Include="Extras.wxi" />
+    <Content Include="Features.wxi" />
+    <Content Include="FMPlugin.wxi" />
+    <Content Include="FMPlugin_FeatureContent.wxi" />
+    <Content Include="FMSuiteCommonPlugin.wxi" />
+    <Content Include="Manuals.wxi" />
+    <Content Include="ManualShortcuts.wxi" />
+    <Content Include="Manuals\FMManuals.wxi" />
+    <Content Include="Manuals\FMManualShortcuts.wxi" />
+    <Content Include="Plugins.wxi" />
+    <Content Include="Resources\FM.ico" />
+    <Content Include="Resources\FM.png" />
+    <Content Include="Resources\WindowLayout_normal.en-US.xml" />
+    <Content Include="RGFGridDefines.wxi" />
+    <Content Include="RGFGrid_x64.wxi" />
+    <Content Include="UtilityShortcuts.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Dimr\DimrLibs.wxs">
+      <Link>DimrLibs.wxs</Link>
+    </Compile>
+    <Compile Include="RGFGridLibs.wxs">
+      <Link>RGFGridLibs.wxs</Link>
+    </Compile>
+    <Compile Include="WixUI\FM_WixUI_Deltares.wxs" />
+    <Compile Include="Product.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixToolPath)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WixToolPath)\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>$(WixToolPath)\WixNetFxExtension.dll</HintPath>
+      <Name>WixNetFxExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Delft3D FM HMWQ_Manuals\" />
+    <Folder Include="Delft3D FM HMWQ_Resources\" />
+    <Folder Include="WixUI" />
+    <Folder Include="Manuals\" />
+    <Folder Include="Localization" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Dimr\Localization\DIMRNames.wxl">
+      <Link>Localization\DIMRNames.wxl</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\RealTimeControl\Localization\RTCNames.wxl">
+      <Link>Localization\RTCNames.wxl</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Sobek\Localization\SobekNames.wxl">
+      <Link>Localization\SobekNames.wxl</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Localization\FMNames.wxl" />
+    <EmbeddedResource Include="WixUIVariables.wxl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Framework\DefaultDeltaresDialogs\DefaultDeltaresDialogs.wixproj">
+      <Name>DefaultDeltaresDialogs</Name>
+      <Project>{f30c1a46-d283-484e-aabe-ef52f9168e08}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="..\Framework\DeltaShell\CreateZipFromMSI.targets" />
+  <Import Project="FMProperties.targets" />
+  <Import Project="..\Dimr\HarvestDimrLibs.targets" />
+  <Import Project="HarvestRGFGridLibs.targets" />
+  <PropertyGroup>
+    <BuildDependsOn>
+      HarvestDimrLibsTarget;
+      HarvestRGFGridLibsTarget;
+      $(BuildDependsOn);
+    </BuildDependsOn>
+  </PropertyGroup>
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
+</Project>

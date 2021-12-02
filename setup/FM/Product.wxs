@@ -9,23 +9,14 @@
 
   <?define EnableDHydroDelft3DFMVersionNaming="true"?>
   
-  <?ifdef var.RWS?>
-    <?define Delft3DPackageName="D-HYDRO"?>
-    <?define registrationFeature="D-HYDRO"?>
-    <?define registrationVersion="1.5"?>
-    <?define splashScreenCopyright="© Deltares"?>
-  <?else?>
-    <?define splashScreenCopyright="© Deltares"?>    
-    <?ifdef var.NOWAQ?>
-      <?define Delft3DPackageName="Delft3D FM HM"?>
-      <?define registrationFeature="Delft3D_FM_Hyd-Mor"?>
-      <?define registrationVersion="1.5"?>
-    <?else?>
-      <?define Delft3DPackageName="Delft3D FM HMWQ"?>
-      <?define registrationFeature="Delft3D_FM_Hyd-Mor_And_Waq"?>
-      <?define registrationVersion="1.5"?>
+  <?define FullProductName="$(var.ProductName)" ?>
+  <?if $(var.Configuration) != "Release"?>
+    <?ifdef env.BUILD_NUMBER ?>
+      <?define FullProductName="$(var.FullProductName) ($(env.BUILD_NUMBER)" ?>
     <?endif?>
   <?endif?>
+
+  <?define FullProductVersion="$(var.ReleaseVersion)" ?>
   
   <?define StartPage="Welcome.htm"?>
   <?define pluginicon="$(var.ProjectDir)\Resources\FM.ico"?>
@@ -50,25 +41,11 @@
   <!-- optional splash screen -->
   <?define mainWindowTitle="$(var.ProductName)"?>
   <?define splashScreenLogoImageFilePath="splash_screen.jpg"?>
+  <?define splashScreenCopyright="© Deltares"?>
   
-  <?define splashScreenCompany="Rijkswaterstaat"?>
-  <?define splashScreenLicense="NGHS project"?>
-
-  <?ifdef var.RWS?>
-  <?define splashScreenCompany="Rijkswaterstaat"?>
-  <?else?>
-  <?define splashScreenCompany="Deltares"?>
-  <?endif?>
-  
-  <?ifdef var.RWS?>
-  <?define splashScreenLicense="NGHS project"?>
-  <?else?>
-  <?define splashScreenLicense="Valid until 3 nov 2015"?>
-  <?endif?>
-
   <?define plugin_wixUIDeltares="FM_WixUI_Deltares"?>
   <?define languages ="1033"?>
-  
+
   <!-- surpressed ICE57 in property window, which is related to per user and per machine installation, using e.g. HKMU instead of HKLM-->
   <?include ..\Framework\DeltaShell\Templates\PluginTemplate.wxi?>
 </Wix>

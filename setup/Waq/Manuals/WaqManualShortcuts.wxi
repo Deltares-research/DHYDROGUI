@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <Shortcut Id="DWater_Quality_Input_File_Description_Shortcut" Name="!(loc.WaqFileManualName)" Target="[BINDIR]D-Water_Quality_Input_File_Description.pdf" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="DWater_Quality_Processes_Technical_Reference_Manual_Shortcut" Name="!(loc.WaqReferenceManualName)" Target="[BINDIR]D-Water_Quality_Processes_Technical_Reference_Manual.pdf" WorkingDirectory="BINDIR"/>
-  <Shortcut Id="DWater_Quality_User_Manual_Shortcut" Name="!(loc.WaqUserManualName)" Target="[BINDIR]D-Water_Quality_User_Manual.pdf" WorkingDirectory="BINDIR"/>
-</Include>

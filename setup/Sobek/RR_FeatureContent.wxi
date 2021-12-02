@@ -2,7 +2,9 @@
 <Include>
   <ComponentRef Id="RainfallRunoffModelPlugin"/>
 
-  <Feature Id="RR_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
-    <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
-  </Feature>
+  <?ifndef var.NOKERNELS?>
+    <Feature Id="RR_x64_Feature" Level="0" Absent="disallow" AllowAdvertise="no" Display="hidden">
+      <Condition Level="1"><![CDATA[(VersionNT64)]]></Condition>
+    </Feature>
+  <?endif?>
 </Include>

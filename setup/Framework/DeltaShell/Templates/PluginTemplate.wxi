@@ -13,6 +13,10 @@
                             This is a 3 number product version. Example: 3.4.0
   - ProductName:            Set this variable as a project variable via <PropertyGroup>. See the FM wixproj (open in text editor).
                             E.g. FM (Early Preview)
+  - FullProductName:        The full product name defines the name used in the installer as well as the installation location. Needs to 
+                            be defined as a <?define ?> before this file is included.
+  - FullProductVersion:     The full product version. Should be defined as a <?define ?> before this file is included.
+  - FullProductNameVersion: The human readable product version. Should be defined as a <?define ?> before this file is included.
   - pluginicon:             The path to the icon to use. Let it be a *.ico file.
   - licensepath:            The path to the license file that is used in the installer. Specify the actual license agreement in location file, via key:LicenseRtf
   - windowlayoutpath:       The path to the default window layout. Specify the actual windows layout file in each location file, via key=WindowLayoutFile
@@ -100,32 +104,27 @@
   -->
   <!--Include the guids that should be regenerated regularly-->
   <?include "ApplicationGUIDs.wxi"?>
-  
+
   <?define FullProductVersion="$(var.ReleaseVersion)" ?>
+
   <?define FullProductNameVersion="$(var.ReleaseVersion)" ?>
+  <?if $(var.Configuration) != "Release"?>
+    <?ifdef env.BUILD_NUMBER ?>
+      <?define FullProductNameVersion="$(var.FullProductNameVersion).$(env.BUILD_NUMBER)" ?>
+    <?endif?>
+  <?endif?>
 
   <?ifdef var.EnableDHydroDelft3DFMVersionNaming?>
-    <?define DHydroApplicationName="$(var.ApplicationName)" ?>
+    <?define DHydroApplicationName="$(var.ApplicationName) $(var.DistributionName)" ?>
     <?define DHydroFullVersion="$(var.PublicReleaseVersion)" ?>
 
     <?if $(var.Configuration) != "Release"?>
       <?ifdef env.BUILD_NUMBER ?>
-        <?define FullProductNameVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
         <?define DHydroFullVersion="$(var.PublicReleaseVersion).$(env.BUILD_NUMBER)" ?>
       <?endif?>
     <?endif?>
-
-    <?define FullProductName="$(var.ApplicationName) ($(var.DHydroFullVersion))" ?>
-
-  <?else?>
-    <?ifdef env.BUILD_NUMBER ?>
-      <?define FullProductNameVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
-      <?define FullProductVersion="$(var.ReleaseVersion).$(env.BUILD_NUMBER)" ?>
-    <?endif?>
-
-    <?define FullProductName="$(var.ProductName) ($(var.FullProductNameVersion))" ?>
   <?endif?>
-
+  
   <?define ShortProductVersion="$(var.ReleaseVersion)"?>
 
   <?define deltashell_output_folder="$(var.SolutionDir)bin\$(var.Configuration)\"?>

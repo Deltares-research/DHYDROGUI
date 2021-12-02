@@ -49,9 +49,12 @@
     <MSBuild Projects="setup\FM\FM_RWS.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
   </Target>
 
-   <!-- Creates signed assemblies and a signed installer -->
   <Target Name="MsiFM_1D2D_ReleaseOnly_D3DFMSuite_NoSourcesBuild">
     <MSBuild Projects="setup\FM\FM.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
+  </Target>
+
+  <Target Name="MsiFM_1D2D_ReleaseOnly_Delft3DFMOpen_NoSourcesBuild">
+    <MSBuild Projects="setup\FM\FM_Open.wixproj" Targets="Rebuild" Properties="Configuration=Release;SolutionDir=$(SolutionDir);"/>
   </Target>
 
 </Project>
