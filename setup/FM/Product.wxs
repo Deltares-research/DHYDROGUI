@@ -17,7 +17,7 @@
   <?define FullProductName="$(var.ProductName)" ?>
   <?if $(var.Configuration) != "Release"?>
     <?ifdef env.BUILD_NUMBER ?>
-      <?define FullProductName="$(var.FullProductName) ($(env.BUILD_NUMBER)" ?>
+      <?define FullProductName="$(var.FullProductName) ($(env.BUILD_NUMBER))" ?>
     <?endif?>
   <?endif?>
 
@@ -46,7 +46,7 @@
   <?define supportEmail="software.support@deltares.nl"?>
 
   <!-- optional splash screen -->
-  <?define mainWindowTitle="$(var.ApplicationName)"?>
+  <?define mainWindowTitle="$(var.ProductName)"?>
   <?define splashScreenLogoImageFilePath="splash_screen.jpg"?>
   <?define splashScreenCopyright="© Deltares"?>
 
