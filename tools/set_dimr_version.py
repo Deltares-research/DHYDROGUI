@@ -55,7 +55,7 @@ def extract_version_number_from_svn_log_msg(log_msg: str, verbose: bool) -> str:
     if verbose:
         print("  Extract version number from svn log message:")
 
-    regex_str = r"DIMRset (\d+\.\d+\.\d+_patch\d+)"
+    regex_str = r"DIMRset (\d+\.\d+\.\d+_patch_?\d+)"
     matches = re.search(regex_str, log_msg)
 
     if not matches:
