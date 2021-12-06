@@ -27,7 +27,7 @@
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="MeshKernelNET" Version="1.0.0.41-Beta">
+		<PackageReference Include="MeshKernelNET" Version="1.0.0.47-Beta">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="NetTopologySuite">

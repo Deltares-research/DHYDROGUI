@@ -6,6 +6,7 @@ using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.Grid.MeshKernel;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Grids;
@@ -23,11 +24,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(MapTool1D2DLinksHelper));    
         private const double SNAP_DISTANCE = 10.0; //
-
-        public static IEnumerable<ILink1D2D> Generate1D2DLinks(IPolygon selectedArea, LinkGeneratingType linkType, UnstructuredGrid grid, IEventedList<Gully> gullies, IDiscretization discretization)
-        {
-            return Generate1D2DLinksHelper.Generate1D2DLinks(selectedArea, linkType, grid, gullies, discretization);
-        }
 
         public static bool AddNew1D2DLink(WaterFlowFMModel fmModel, LinkGeneratingType linkType, Coordinate startPoint, Coordinate endPoint, double snapTolerance = 0.0)
         {
@@ -47,7 +43,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         {
             var startPoint = new Point(startCoordinate);
             var endPoint = new Point(endCoordinate);
-            var filter1DMesh = Generate1D2DLinksHelper.GetMesh1DFilter(fmModel.NetworkDiscretization, linkType, generatedByUser:true);
+            var filter1DMesh = Generate1D2DLinksHelper.GetMesh1DFilter(fmModel.NetworkDiscretization.Locations.Values, linkType, generatedByUser: true);
             var networkLocationId = Links1D2DHelper.FindCalculationPointIndex(startPoint, fmModel.NetworkDiscretization, snapTolerance, filter1DMesh);
 
             if (networkLocationId == Links1D2DHelper.MISSING_INDEX)

@@ -93,6 +93,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Grid\MeshKernel\" />
 	  <Folder Include="Properties\" />
 	</ItemGroup>
 </Project>

@@ -52,8 +52,6 @@ namespace DelftTools.Hydro
         
         IEnumerable<IExtraResistance> ExtraResistances { get; }
         
-        IEnumerable<IGully> Gullies { get; }
-        
         IEventedList<CrossSectionSectionType> CrossSectionSectionTypes { get; }
         
         IEventedList<ICrossSectionDefinition> SharedCrossSectionDefinitions { get; }

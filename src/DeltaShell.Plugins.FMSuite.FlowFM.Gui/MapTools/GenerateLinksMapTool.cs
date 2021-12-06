@@ -4,12 +4,17 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Controls.Wpf.Dialogs;
+using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
+using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.IO.Grid.MeshKernel;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using GeoAPI.Extensions.Feature;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
@@ -148,7 +153,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             {
                 try
                 {
-                    var generated1D2DLinks = MapTool1D2DLinksHelper.Generate1D2DLinks(selectedArea, LinkType, fmModel.Grid, fmModel.Area.Gullies, fmModel.NetworkDiscretization);
+                    // exclude nodes with boundary conditions see issue FM1D2D-990
+                    var nodesToExclude = fmModel.BoundaryConditions1D
+                                                .Where(b => b.DataType != Model1DBoundaryNodeDataType.None)
+                                                .Select(b => b.Feature)
+                                                .OfType<IHydroNode>()
+                                                .ToArray();
+
+                    var generated1D2DLinks = Generate1D2DLinksHelper.Generate1D2DLinks(selectedArea, LinkType, fmModel.Grid, fmModel.Area.Gullies, fmModel.NetworkDiscretization, nodesToExclude);
                     var newLinks = generated1D2DLinks.Except(fmModel.Links).ToList();
                     var links = new EventedList<ILink1D2D>(fmModel.Links.Concat(newLinks));
 

@@ -19,5 +19,11 @@
 		<Reference Include="DelftTools.Utils" Private="False">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
 		</Reference>
+		<Reference Include="GeoAPI.Extensions" Private="False" IncludeAssets="compile" PrivateAssets="all" >
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
+		</Reference>
+		<Reference Include="QuickGraph" Private="False" IncludeAssets="compile" PrivateAssets="all" >
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 </Project>

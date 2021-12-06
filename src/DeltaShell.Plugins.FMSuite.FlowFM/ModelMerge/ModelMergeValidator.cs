@@ -65,7 +65,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge
             originalNetwork.Culverts.ForEach(c => lookup.Add(c.Name));
             originalNetwork.ExtraResistances.ForEach(er => lookup.Add(er.Name));
             originalNetwork.Gates.ForEach(g => lookup.Add(g.Name));
-            originalNetwork.Gullies.ForEach(g => lookup.Add(g.Name));
             originalNetwork.LateralSources.ForEach(ls => lookup.Add(ls.Name));
             originalNetwork.Links.ForEach(l => lookup.Add(l.Name));
             originalNetwork.ObservationPoints.ForEach(o => lookup.Add(o.Name));
@@ -94,7 +93,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge
             newModelNetwork.Culverts.ForEach(c => CheckIfItemIsUnique(c.Name, "culvert"));
             newModelNetwork.ExtraResistances.ForEach(er => CheckIfItemIsUnique(er.Name, "extra resistance"));
             newModelNetwork.Gates.ForEach(g => CheckIfItemIsUnique(g.Name, "gate"));
-            newModelNetwork.Gullies.ForEach(g => CheckIfItemIsUnique(g.Name, "gully"));
             newModelNetwork.LateralSources.ForEach(ls => CheckIfItemIsUnique(ls.Name, "lateral source"));
             newModelNetwork.Links.ForEach(l => CheckIfItemIsUnique(l.Name, "link"));
             newModelNetwork.ObservationPoints.ForEach(o => CheckIfItemIsUnique(o.Name, "observation point"));
