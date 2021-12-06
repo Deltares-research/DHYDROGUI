@@ -49,10 +49,6 @@ if __name__ == "__main__":
     version_regex = get_version_regex_string()
     
     project_file_paths = search_files(root_path, '.csproj')
-    update_files(project_file_paths, re.compile(f'{escaped_package_name}\\.{version_regex}'), 
-                                                f"{package_name}.{new_version_string}", 
+    update_files(project_file_paths, re.compile(f'"{escaped_package_name}" Version="{version_regex}"'), 
+                                                f'"{package_name}" Version="{new_version_string}"',
                                                 "utf-8-sig")
-
-    config_file_paths = search_files(root_path, 'packages.config')
-    update_files(config_file_paths, re.compile(f'"{escaped_package_name}" version="{version_regex}"'), 
-                                               f'"{package_name}" version="{new_version_string}"')
