@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.MapLayers;
 using DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers;
@@ -57,21 +58,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
                 case IEnumerable<IFeature> features
                     when Equals(features, area2DParent.DryAreas):
                     {
-                        var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.DryAreas, "DryArea",
-                            modelName, area2DParent.CoordinateSystem);
-                        ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                        var ds = new HydroAreaFeature2DCollection(area2DParent)
                         {
-                            if (!(geometry is IPolygon))
-                            {
-                                if (geometry.Coordinates.Count() < 4) return null;
-                                geometry = new Polygon(new LinearRing(geometry.Coordinates));
-                            }
-
-                            var newFeature = new GroupableFeature2DPolygon { Geometry = geometry };
-                            ds.Features.Add(newFeature);
-
-                            return newFeature;
-                        };
+                            AddNewFeatureFromGeometryDelegate = (provider, geometry) => AddNewPolygonFeature<GroupableFeature2DPolygon>(geometry, provider)
+                        }.Init(area2DParent.DryAreas, "DryArea",
+                               modelName, area2DParent.CoordinateSystem);
+                        ;
 
                         return new VectorLayer(HydroArea.DryAreasPluralName)
                         {
@@ -84,21 +76,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
                 case IEnumerable<IFeature> features
                     when Equals(features, area2DParent.Enclosures):
                     {
-                        var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Enclosures,
-                            "Enclosure", modelName, area2DParent.CoordinateSystem);
-                        ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                        var ds = new HydroAreaFeature2DCollection(area2DParent)
                         {
-                            if (!(geometry is IPolygon))
-                            {
-                                if (geometry.Coordinates.Count() < 4) return null;
-                                geometry = new Polygon(new LinearRing(geometry.Coordinates));
-                            }
-
-                            var newFeature = new GroupableFeature2DPolygon() { Geometry = geometry };
-                            ds.Features.Add(newFeature);
-
-                            return newFeature;
-                        };
+                            AddNewFeatureFromGeometryDelegate = (provider, geometry) => AddNewPolygonFeature<GroupableFeature2DPolygon>(geometry, provider)
+                        }.Init(area2DParent.Enclosures,
+                               "Enclosure", modelName, area2DParent.CoordinateSystem);
 
                         return new VectorLayer(HydroArea.EnclosureName)
                         {
@@ -113,27 +95,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
                 case IEnumerable<IFeature> features
                     when Equals(features, area2DParent.RoofAreas):
                     {
-                        var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.RoofAreas,
-                            "RoofAreas", modelName, area2DParent.CoordinateSystem);
-                        ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
+                        var ds = new HydroAreaFeature2DCollection(area2DParent)
                         {
-                            if (!(geometry is IPolygon))
-                            {
-                                var coordinates = geometry.Coordinates.ToList();
-                                if (coordinates.Count < 3) return null;
-                                if (!coordinates.First().Equals(coordinates.Last()))
-                                {
-                                    coordinates.Add(coordinates.First());
-                                }
-
-                                geometry = new Polygon(new LinearRing(coordinates.ToArray()));
-                            }
-
-                            var newFeature = new GroupableFeature2DPolygon { Geometry = geometry };
-                            ds.Features.Add(newFeature);
-
-                            return newFeature;
-                        };
+                            AddNewFeatureFromGeometryDelegate = (provider, geometry) => AddNewPolygonFeature<GroupableFeature2DPolygon>(geometry, provider)
+                        }.Init(area2DParent.RoofAreas, "RoofAreas", modelName, area2DParent.CoordinateSystem);
 
                         return new VectorLayer(HydroArea.RoofAreaName)
                         {
@@ -148,26 +113,17 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
                 case IEnumerable<IFeature> features
                     when Equals(features, area2DParent.Gullies):
                     {
-                        var ds = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Gullies, "Gullies",
-                            modelName, area2DParent.CoordinateSystem);
-                        ds.AddNewFeatureFromGeometryDelegate = (provider, geometry) =>
-                        {
-                            var newFeature = new Gully() { Geometry = geometry };
-                            ds.Features.Add(newFeature);
-
-                            return newFeature;
-                        };
                         return new VectorLayer(HydroArea.GullyName)
                         {
                             Style = AreaLayerStyles.Gulliestyle,
                             NameIsReadOnly = true,
-                            DataSource = ds,
+                            DataSource = new HydroAreaFeature2DCollection(area2DParent).Init(area2DParent.Gullies, "Gullies",
+                                                                                             modelName, area2DParent.CoordinateSystem),
                             FeatureEditor = new Feature2DEditor(area2DParent),
                             CanBeRemovedByUser = true,
                             Selectable = true,
                             MaxVisible = maxVisibilityLayerValue
                         };
-                        ;
                     }
 
                 case IEventedList<ObservationCrossSection2D> obsCrossSections2d
@@ -354,6 +310,41 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
                 default:
                     return null;
             }
+        }
+
+        private static IFeature AddNewPolygonFeature<TFeature>(IGeometry geometry, IFeatureProvider ds) where TFeature : IFeature, new()
+        {
+            var newFeature = CreatePolygonFeatureFromLineString<TFeature>(geometry);
+            if (newFeature == null)
+            {
+                return null;
+            }
+
+            ds.Features.Add(newFeature);
+
+            return newFeature;
+        }
+
+        private static IFeature CreatePolygonFeatureFromLineString<TFeature>(IGeometry geometry) where TFeature: IFeature, new()
+        {
+            if (geometry is IPolygon)
+            {
+                return new TFeature { Geometry = geometry };
+            }
+
+            var coordinates = geometry.Coordinates;
+            if (coordinates.Length < 3) 
+                return null;
+
+            if (!coordinates[0].Equals2D(coordinates[coordinates.Length -1]))
+            {
+                coordinates = coordinates.Plus(coordinates[0]).ToArray();
+            }
+
+            return new TFeature
+            {
+                Geometry = new Polygon(new LinearRing(coordinates))
+            };
         }
     }
 }
