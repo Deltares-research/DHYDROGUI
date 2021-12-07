@@ -63,7 +63,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
                             AddNewFeatureFromGeometryDelegate = (provider, geometry) => AddNewPolygonFeature<GroupableFeature2DPolygon>(geometry, provider)
                         }.Init(area2DParent.DryAreas, "DryArea",
                                modelName, area2DParent.CoordinateSystem);
-                        ;
 
                         return new VectorLayer(HydroArea.DryAreasPluralName)
                         {

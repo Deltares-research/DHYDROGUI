@@ -70,56 +70,55 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
 
             for (int i = 0; i < discretisationPoints.Count; i++)
             {
-                var discretisationPoint = discretisationPoints[i];
-                var isAvailableMesh1DPoint = true;
-                if (selectedArea == null || selectedArea.Intersects(discretisationPoint.Geometry))
+                if (selectedArea != null && !selectedArea.Intersects(discretisationPoints[i].Geometry))
                 {
-                    var sewerConnection = discretisationPoint.Branch as SewerConnection;
-
-                    switch (linkType)
-                    {
-                        case LinkGeneratingType.Lateral:
-                            isAvailableMesh1DPoint = sewerConnection == null;
-                            break;
-                        case LinkGeneratingType.EmbeddedOneToOne: //go to next case
-                        case LinkGeneratingType.EmbeddedOneToMany:
-                            if (sewerConnection == null)
-                            {
-                                if (nodesToExcludeHash.Count != 0)
-                                {
-                                    isAvailableMesh1DPoint &= !IsExcludedNode(nodesToExcludeHash, discretisationPoint);
-                                }
-                            }
-                            else
-                            {
-                                isAvailableMesh1DPoint = sewerConnection.WaterType == SewerConnectionWaterType.None ||
-                                                         sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
-                                                         sewerConnection.WaterType == SewerConnectionWaterType.StormWater;
-
-                                isAvailableMesh1DPoint &= !IsOnOutletCompartment(discretisationPoint, sewerConnection);
-                            }
-                            break;
-                        case LinkGeneratingType.GullySewer:
-                            if (sewerConnection != null)
-                            {
-                                isAvailableMesh1DPoint = sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
-                                                         sewerConnection.WaterType == SewerConnectionWaterType.StormWater;
-
-                                if (generatedByUser)
-                                {
-                                    isAvailableMesh1DPoint = isAvailableMesh1DPoint || sewerConnection.WaterType == SewerConnectionWaterType.None;
-                                }
-                            }
-
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(linkType), linkType, null);
-                    }
+                    filterList[i] = false;
+                    continue;
                 }
 
-                filterList[i] = isAvailableMesh1DPoint;
+                filterList[i] = IsMesh1DPointValid(discretisationPoints[i], linkType, generatedByUser, nodesToExcludeHash);
             }
             return filterList;
+        }
+
+        private static bool IsMesh1DPointValid(INetworkLocation discretisationPoint, LinkGeneratingType linkType, bool generatedByUser, HashSet<INode> nodesToExcludeHash)
+        {
+            var sewerConnection = discretisationPoint.Branch as SewerConnection;
+
+            switch (linkType)
+            {
+                case LinkGeneratingType.Lateral: 
+                    return sewerConnection == null;
+                case LinkGeneratingType.EmbeddedOneToOne: //go to next case
+                case LinkGeneratingType.EmbeddedOneToMany:
+                    if (sewerConnection != null)
+                    {
+                        var isCorrectWaterTypeEmbedded = sewerConnection.WaterType == SewerConnectionWaterType.None ||
+                                                 sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
+                                                 sewerConnection.WaterType == SewerConnectionWaterType.StormWater;
+
+                        return isCorrectWaterTypeEmbedded && !IsOnOutletCompartment(discretisationPoint, sewerConnection);
+                    }
+                    
+                    if (nodesToExcludeHash.Count != 0)
+                    {
+                        return !IsExcludedNode(nodesToExcludeHash, discretisationPoint);
+                    }
+
+                    return true;
+                case LinkGeneratingType.GullySewer:
+                    if (sewerConnection == null)
+                    {
+                        return true;
+                    }
+
+                    return sewerConnection.WaterType == SewerConnectionWaterType.Combined ||
+                           sewerConnection.WaterType == SewerConnectionWaterType.StormWater || 
+                           (sewerConnection.WaterType == SewerConnectionWaterType.None && generatedByUser);
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(linkType), linkType, null);
+            }
         }
 
         private static bool ComputeContacts(IMeshKernelApi api, int id, LinkGeneratingType linkType, bool[] mask1DMesh, IPolygon selectedArea, IEnumerable<Gully> gullies)
