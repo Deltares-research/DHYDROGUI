@@ -14,8 +14,8 @@
     <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
     <Delft3DPackageName>Delft3D FM HMWQ</Delft3DPackageName>
     <!-- TODO: verify this is correct.-->
-    <RegistrationFeature>Delft3D_FM_OSS</RegistrationFeature>
-    <RegistrationVersion>1.5</RegistrationVersion>
+    <RegistrationFeature>Delft3D_FM_1D2D_OSS</RegistrationFeature>
+    <RegistrationVersion>2022</RegistrationVersion>
     <SplashScreenCompany>Deltares</SplashScreenCompany>
     <SplashScreenLicense>Valid until 3 nov 2015</SplashScreenLicense>
     <ProjectGuid>{82c09b5d-14fd-4f16-9aa0-112203087eac}</ProjectGuid>

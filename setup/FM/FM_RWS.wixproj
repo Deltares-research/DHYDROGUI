@@ -14,8 +14,8 @@
     <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
     <Delft3DPackageName>D-HYDRO</Delft3DPackageName>
     <!-- TODO: verify this is correct.-->
-    <RegistrationFeature>D-HYDRO</RegistrationFeature>
-    <RegistrationVersion>1.5</RegistrationVersion>
+    <RegistrationFeature>D-HYDRO_1D2D</RegistrationFeature>
+    <RegistrationVersion>2022</RegistrationVersion>
     <SplashScreenCompany>Rijkswaterstaat</SplashScreenCompany>
     <SplashScreenLicense>NGHS project</SplashScreenLicense>
     <ProjectGuid>{5725d793-35b5-48a1-bb6a-2291df6c2980}</ProjectGuid>
