@@ -12,7 +12,7 @@
     <DistributionName>HMWQ</DistributionName>
     <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
     <Delft3DPackageName>D-HYDRO</Delft3DPackageName>
-    <RegistrationFeature>D-HYDRO</RegistrationFeature>
+    <RegistrationFeature>D-HYDRO_Hyd-Mor_And_Waq</RegistrationFeature>
     <RegistrationVersion>2022</RegistrationVersion>
     <SplashScreenCompany>Rijkswaterstaat</SplashScreenCompany>
     <SplashScreenLicense>NGHS project</SplashScreenLicense>

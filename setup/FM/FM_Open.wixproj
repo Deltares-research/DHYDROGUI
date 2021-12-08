@@ -12,7 +12,7 @@
     <ApplicationName>Delft3D FM Suite</ApplicationName>
     <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
     <Delft3DPackageName>Delft3D FM HMWQ</Delft3DPackageName>
-    <RegistrationFeature>Delft3D_FM_OSS</RegistrationFeature>
+    <RegistrationFeature>Delft3D_FM_Hyd-Mor_And_Waq_OSS</RegistrationFeature>
     <RegistrationVersion>2022</RegistrationVersion>
     <SplashScreenCompany>Deltares</SplashScreenCompany>
     <SplashScreenLicense>Valid until 30 oct 2022</SplashScreenLicense>
