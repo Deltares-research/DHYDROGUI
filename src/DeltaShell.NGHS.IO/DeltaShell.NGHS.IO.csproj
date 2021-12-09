@@ -13,31 +13,12 @@
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="GeoAPI">
-			<Version>1.7.5</Version>
-			<IncludeAssets>compile</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="GeoAPI.CoordinateSystems">
-			<Version>1.7.5</Version>
-			<IncludeAssets>compile</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
 		<PackageReference Include="log4net" Version="2.0.12">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="MeshKernelNET" Version="1.0.0.47-Beta">
 			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="NetTopologySuite">
-			<Version>1.15.0</Version>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="NetTopologySuite.CoordinateSystems">
-			<Version>1.15.0</Version>
-			<IncludeAssets>compile</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>      
 		</PackageReference>
 		<PackageReference Include="PostSharp" Version="5.0.55">
 			<PrivateAssets>all</PrivateAssets>
