@@ -6,7 +6,7 @@
      <Component Id="comp_SharpMap_Extensions_gdal_x64" Guid="32F7B3A9-1D46-4263-906C-3B83941927BE">
        <File Id="x64_expat.dll" Source="$(var.deltashell_gui_bin)gdal\x64\expat.dll" />
        <File Id="x64_freexl.dll" Source="$(var.deltashell_gui_bin)gdal\x64\freexl.dll" />
-       <File Id="x64_gdal203.dll" Source="$(var.deltashell_gui_bin)gdal\x64\gdal203.dll" />
+       <File Id="x64_gdal203.dll" Source="$(var.deltashell_gui_bin)gdal\x64\gdal204.dll" />
        <File Id="x64_gdalconst_wrap.dll" Source="$(var.deltashell_gui_bin)gdal\x64\gdalconst_wrap.dll" />
        <File Id="x64_gdal_wrap.dll" Source="$(var.deltashell_gui_bin)gdal\x64\gdal_wrap.dll" />
        <File Id="x64_gd_geos.dll" Source="$(var.deltashell_gui_bin)gdal\x64\geos.dll" />
