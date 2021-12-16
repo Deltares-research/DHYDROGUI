@@ -6,8 +6,8 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <PublicReleaseVersion>2022.02</PublicReleaseVersion>
-    <ReleaseVersion>4.7.0</ReleaseVersion>
+    <PublicReleaseVersion>2022.03</PublicReleaseVersion>
+    <ReleaseVersion>4.8.0</ReleaseVersion>
     <DistributionName>OpenHMWQ</DistributionName>
     <ApplicationName>Delft3D FM Suite</ApplicationName>
     <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
