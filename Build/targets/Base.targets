@@ -37,5 +37,20 @@
     <ItemGroup>
         <EmbeddedResource Include=".\**\*.hbm.xml"/>
     </ItemGroup>
+  
+  <!--Ensure resources are generated correctly.-->
+  <ItemGroup Condition="Exists('Properties\Resources.resx')">
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup Condition="Exists('Properties\Resources.resx')">
+    <EmbeddedResource Update="Properties\Resources.resx">
+    <Generator>ResXFileCodeGenerator</Generator>
+    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 
 </Project>
