@@ -12,7 +12,7 @@
   <?define FullProductName="$(var.ProductName)" ?>
   <?if $(var.Configuration) != "Release"?>
     <?ifdef env.BUILD_NUMBER ?>
-      <?define FullProductName="$(var.FullProductName) ($(env.BUILD_NUMBER)" ?>
+      <?define FullProductName="$(var.FullProductName) ($(env.BUILD_NUMBER))" ?>
     <?endif?>
   <?endif?>
 
