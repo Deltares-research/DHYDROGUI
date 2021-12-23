@@ -17,7 +17,7 @@
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="Dimr.Libs" Version="3.0.1.3647-1D2Dspecial-Signed" />
+		<PackageReference Include="Dimr.Libs" Version="2.18.11" />
 		<PackageReference Include="log4net" Version="2.0.12">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>

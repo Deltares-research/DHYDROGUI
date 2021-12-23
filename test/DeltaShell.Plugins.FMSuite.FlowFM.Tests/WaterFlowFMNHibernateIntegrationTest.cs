@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DelftTools.Hydro.Structures;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
@@ -297,7 +298,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Slow)]
-        public void GivenWaterFlowFmModel_WhenEnablingMorphologyAndSpatialOperations_ThenModelShoulLoadAndRun()
+        public void GivenWaterFlowFmModel_WhenEnablingMorphologyAndSpatialOperations_ThenModelShouldLoadAndRun()
         {
             using (var app = new DeltaShellApplication { IsProjectCreatedInTemporaryDirectory = true })
             {
@@ -331,6 +332,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
 
                     app.SaveProjectAs("spatial_hibernate.dsproj"); // save to initialize file repository..
                     app.RunActivity(loadedModel);
+                    Assert.That(loadedModel.Status, Is.Not.EqualTo(ActivityStatus.Failed));
                     Assert.IsFalse(loadedModel.OutputIsEmpty);
 
                     app.CloseProject();
