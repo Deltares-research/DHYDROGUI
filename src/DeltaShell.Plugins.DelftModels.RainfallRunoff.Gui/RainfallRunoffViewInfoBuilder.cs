@@ -182,27 +182,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
                 };
 
-            yield return new ViewInfo<TreeFolder, CompositeFeatureCoverageProvider, CatchmentAttributeCoverageView>
-                {
-                    Description = "Catchment attribute viewer",
-                    AdditionalDataCheck = o => o.Parent is RainfallRunoffModel && (o.Text == "Input" || o.Text == "Output"),
-                    ViewDataContainsData = (view,data) => ReferenceEquals((view?.Data as CompositeFeatureCoverageProvider)?.Model, data),
-                    GetViewData = o =>
-                        {
-                            var featureCoverageProviders = new IFeatureCoverageProvider[]
-                                {
-                                    new UnpavedFeatureCoverageProvider(((RainfallRunoffModel) o.Parent)),
-                                    new ModelOutputFeatureCoverageProvider(((RainfallRunoffModel) o.Parent))
-                                };
-                            return new CompositeFeatureCoverageProvider(featureCoverageProviders, (IRainfallRunoffModel) o.Parent);
-                        },
-                    GetViewName = (v, o) => v.Name,
-                    AfterCreate = (v, o) =>
-                        {
-                            DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui);
-                            v.Name = ((RainfallRunoffModel) o.Parent).Name + " input/output viewer";
-                        }
-                };
             yield return new ViewInfo<RRInitialConditionsWrapper, IEnumerable<IDataRowProvider>, MultipleDataEditor>
                     {
                         Description = "Multiple data editor (D-RR)",
@@ -211,6 +190,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                         GetViewData = GetInitialConditionsWrapperDataRowProviders,
                         AfterCreate = (v, o) => DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui)
                     };
+
             yield return new ViewInfo<IEnumerable<Catchment>, IEnumerable<IDataRowProvider>, MultipleDataEditorListeningToModelNwrwDryWeatherFlowDefinitions>
                 {
                     Description = "Multiple data editor (D-RR)",
