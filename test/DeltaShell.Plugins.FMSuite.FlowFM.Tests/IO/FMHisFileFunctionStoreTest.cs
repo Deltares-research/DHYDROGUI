@@ -101,7 +101,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
                 Assert.Multiple(() =>
                 {
-                    Assert.AreEqual(81, store.Functions.Count);
+                    Assert.AreEqual(80, store.Functions.Count);
                     var pumpFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "pump_s1up");
                     Assert.That(pumpFunction, Is.Not.Null);
                     Assert.AreEqual(5, pumpFunction.GetValues().Count);
@@ -565,6 +565,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             model.Area.Structures.Add(new Structure()
             {
                 Name = "structure01",
+                CrestWidth = 1.0d,
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(model.GridExtent.MinX + 1, model.GridExtent.MinY + 4),
@@ -574,6 +575,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             model.Area.Structures.Add(new Structure()
             {
                 Name = "structure02",
+                CrestWidth = 2.0d,
                 Geometry = new LineString(new[]
                 {
                     new Coordinate(model.GridExtent.MinX + 3, model.GridExtent.MinY + 4),
