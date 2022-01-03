@@ -42,5 +42,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
                 Assert.That(newDefaultDefinition, Is.Not.SameAs(defaultDefinition)); // Check if old default definition has really been removed and not just updated.
             }
         }
+
+        [Test]
+        public void Constructor_NameIsNotEmptyUponInitialization()
+        {
+            var definition = new NwrwDryWeatherFlowDefinition();
+
+            Assert.That(string.IsNullOrWhiteSpace(definition.Name), Is.False);
+        }
     }
 }

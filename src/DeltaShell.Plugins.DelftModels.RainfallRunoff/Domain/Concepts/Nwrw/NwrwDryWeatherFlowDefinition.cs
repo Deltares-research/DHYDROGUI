@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     [Entity]
     public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature
     {
-        public string Name { get; set; } //VER_IDE
+        public string Name { get; set; } = "DefinitionName"; //VER_IDE
         public DryweatherFlowDistributionType DistributionType { get; set; } // VER_TYPE
         public int DayNumber { get; set; } // VER_DAG
         public double DailyVolumeVariable { get; set; } // VER_VOL

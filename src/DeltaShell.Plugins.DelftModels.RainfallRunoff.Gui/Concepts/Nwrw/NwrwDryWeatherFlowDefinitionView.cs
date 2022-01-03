@@ -36,6 +36,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
                     Delay = 500,
                     SynchronizingObject = this
                 };
+
+            tableView.InputValidator = ValidateInput;
         }
 
         public object Data
@@ -45,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
             {
                 if (data != null)
                 {
-                    ((INotifyPropertyChanged) data).PropertyChanged -= OnPropertyChanged;
+                    ((INotifyPropertyChanged)data).PropertyChanged -= OnPropertyChanged;
                     data.CollectionChanged -= delayedEventHandlerDefinitionsCollectionChanged;
                 }
 
@@ -55,7 +57,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
                 {
                     tableView.Data = new BindingList<NwrwDryWeatherFlowDefinition>(data);
 
-                    ((INotifyPropertyChanged) data).PropertyChanged += OnPropertyChanged;
+                    ((INotifyPropertyChanged)data).PropertyChanged += OnPropertyChanged;
                     data.CollectionChanged += delayedEventHandlerDefinitionsCollectionChanged;
                 }
                 else
@@ -67,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
             }
         }
 
-        public void EnsureVisible(object item) { }
+        public void EnsureVisible(object item) {}
 
         public Image Image { get; set; }
 
@@ -121,7 +123,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
             column.Editor = new ComboBoxTypeEditor
             {
-                Items = Enum.GetValues(typeof(DryweatherFlowDistributionType)).Except(new List<DryweatherFlowDistributionType>{DryweatherFlowDistributionType.Variable}),
+                Items = Enum.GetValues(typeof(DryweatherFlowDistributionType)).Except(new List<DryweatherFlowDistributionType> { DryweatherFlowDistributionType.Variable }),
                 CustomFormatter = new EnumFormatter(typeof(DryweatherFlowDistributionType))
             };
         }
@@ -129,10 +131,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
         private void AddVolumeColumn()
         {
             tableView.AddColumn(nameof(NwrwDryWeatherFlowDefinition.DailyVolumeVariable),
-                columnCaption: "Daily volume (dm³/day)", 
-                readOnly: false,
-                width: 100,
-                displayFormat: "0.###");
+                                columnCaption: "Daily volume (dm³/day)",
+                                readOnly: false,
+                                width: 100,
+                                displayFormat: "0.###");
         }
 
         private void AddButtonColumn()
@@ -168,7 +170,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
             if (arg.RowIndex >= 1 && arg.RowIndex < tableView.RowCount)
             {
-                var nwrwDryWeatherFlowDefinition = (NwrwDryWeatherFlowDefinition) tableView.GetRowObjectAt(arg.RowIndex);
+                var nwrwDryWeatherFlowDefinition = (NwrwDryWeatherFlowDefinition)tableView.GetRowObjectAt(arg.RowIndex);
 
                 if (arg.Column.AbsoluteIndex == ButtonColumnIndex)
                 {
@@ -191,7 +193,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
         private bool CanDeleteCurrentSelection()
         {
             var selectionContainsFirstRow = tableView.SelectedCells
-                .Any(cell => cell.RowIndex == 0);
+                                                     .Any(cell => cell.RowIndex == 0);
             if (selectionContainsFirstRow)
             {
                 Log.ErrorFormat("Cannot delete the selected rows, as the selection contains a cell from the default definition row.");
@@ -200,7 +202,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
             return true;
         }
-        
+
         private void OnCollectionChanged(object sender, EventArgs e)
         {
             tableView.RefreshData();
@@ -212,5 +214,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
             tableView.RefreshData();
             tableView.BestFitColumns();
         }
+
+        private DelftTools.Utils.Tuple<string, bool> ValidateInput(TableViewCell cell, object newValue)
+        {
+            if (!IsValidId(cell, newValue))
+            {
+                return new DelftTools.Utils.Tuple<string, bool>("Id cannot be empty", false);
+            }
+
+            return new DelftTools.Utils.Tuple<string, bool>(string.Empty, true);
+        }
+
+        private bool IsValidId(TableViewCell cell, object newValue) =>
+            cell.Column != tableView.Columns.First() || // The cell is not an id, thus is valid
+            newValue is string newId && !string.IsNullOrWhiteSpace(newId);
     }
 }
