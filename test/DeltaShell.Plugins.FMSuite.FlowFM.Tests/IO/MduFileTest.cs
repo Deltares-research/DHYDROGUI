@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -17,6 +18,7 @@ using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
+using DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Geometries;
@@ -845,11 +847,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 // Call
                 mduFile.Write(mduFilePath, modelDefinition, area,
                               new HydroNetwork(),
-                              new RoughnessSection[0],
-                              new ChannelFrictionDefinition[0],
-                              new ChannelInitialConditionDefinition[0],
-                              new Model1DBoundaryNodeData[0],
-                              new Model1DLateralSourceData[0],
+                              Array.Empty<RoughnessSection>(),
+                              Array.Empty<ChannelFrictionDefinition>(),
+                              Array.Empty<ChannelInitialConditionDefinition>(),
+                              Array.Empty<Model1DBoundaryNodeData>(),
+                              Array.Empty<Model1DLateralSourceData>(),
                               new List<ModelFeatureCoordinateData<FixedWeir>>());
 
                 // Assert
@@ -859,6 +861,53 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 string[][] data = ReadData(gulliesFilePath).ToArray();
                 AssertLine(data[0], "1.2", "3.4", "'some_gully_1'");
                 AssertLine(data[1], "5.6", "7.8", "'some_gully_2'");
+            }
+        }
+
+        [Test]
+        [Category(TestCategory.DataAccess)]
+        public void Write_FouFile_WritesCorrectFile()
+        {
+            var startTime = new DateTime(2022, 01, 01);
+            const int nSecondsPerDay = 86400;
+
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                var mduFile = new MduFile();
+                string mduFilePath = Path.Combine(temp.Path, "some_name.mdu");
+                var modelDefinition = new WaterFlowFMModelDefinition();
+                var area = new HydroArea();
+
+                modelDefinition.SetModelProperty(FouFileProperties.WriteFouFile, true);
+
+                // Set model time properties
+                modelDefinition.SetModelProperty(KnownProperties.RefDate, startTime);
+                modelDefinition.SetModelProperty(KnownProperties.TStart, 0d);
+                modelDefinition.SetModelProperty(KnownProperties.TStop, (double)2 * nSecondsPerDay);
+
+                // Set GUI time properties
+                modelDefinition.SetModelProperty(GuiProperties.StartTime, startTime);
+                modelDefinition.SetModelProperty(GuiProperties.StopTime, startTime.AddSeconds(nSecondsPerDay));
+
+                // Call
+                mduFile.Write(mduFilePath, modelDefinition, area,
+                              new HydroNetwork(),
+                              Array.Empty<RoughnessSection>(),
+                              Array.Empty<ChannelFrictionDefinition>(),
+                              Array.Empty<ChannelInitialConditionDefinition>(),
+                              Array.Empty<Model1DBoundaryNodeData>(),
+                              Array.Empty<Model1DLateralSourceData>(),
+                              new List<ModelFeatureCoordinateData<FixedWeir>>());
+
+                // Assert
+                string fouFilePath = Path.Combine(temp.Path, "Maxima.fou");
+                Assert.That(fouFilePath, Does.Exist);
+
+                string[][] data = ReadData(fouFilePath).ToArray();
+                AssertLine(data[0], "*var", "tsrts", "sstop", "numcyc", "knfac", "v0plu", "layno", "elp");
+                AssertLine(data[1], "wl", "0", nSecondsPerDay.ToString(), "0", "1", "0", "max");
+                AssertLine(data[2], "uc", "0", nSecondsPerDay.ToString(), "0", "1", "0", "1", "max");
             }
         }
 
@@ -877,10 +926,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 
         private static void AssertLine(string[] data, params string[] values)
         {
-            for (int i = 0; i < values.Length; i++)
-            {
-                Assert.That(data[i], Is.EqualTo(values[i]));
-            }
+            Assert.That(data, Is.EqualTo(values));
         }
     }
 }

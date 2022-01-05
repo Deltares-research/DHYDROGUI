@@ -170,17 +170,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 WriteExternalForcings(targetMduFilePath, modelDefinition, hydroArea, boundaryConditions1D, lateralSourcesData);
             }
 
-            if(FouFileWriter.UseFouFile(modelDefinition))
-            {
-                FouFileWriter.Process(targetDir, modelDefinition);
-            }
-
             if (modelDefinition.UseMorphologySediment)
             {
                 WriteMorSedFiles(targetMduFilePath, modelDefinition, sedimentModelData);
             }
 
             modelDefinition.SetMduTimePropertiesFromGuiProperties();
+
+            if (FouFileWriter.UseFouFile(modelDefinition))
+            {
+                FouFileWriter.Process(targetDir, modelDefinition);
+            }
+
             if(targetMduFilePath != null &&
                network != null &&
                hydroArea != null &&
