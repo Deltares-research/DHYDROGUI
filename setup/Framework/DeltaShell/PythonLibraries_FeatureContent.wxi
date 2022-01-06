@@ -1867,6 +1867,9 @@
   <ComponentRef Id="comp_PythonScriptLib_1841" />
   <ComponentRef Id="comp_PythonScriptLib_1842" />
   <ComponentRef Id="comp_PythonScriptLib_1843" />
+  <ComponentRef Id="comp_PythonScriptLib_1844" />
+  <ComponentRef Id="comp_PythonScriptLib_1845" />
+  <ComponentRef Id="comp_PythonScriptLib_1846" />
     
   <ComponentRef Id="comp_IronPythonTools_0" />
 </Include>
