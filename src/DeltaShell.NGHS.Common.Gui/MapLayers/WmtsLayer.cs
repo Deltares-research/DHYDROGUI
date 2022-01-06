@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -50,10 +49,7 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
         /// </summary>
         public ITileSource SelectedTileSource
         {
-            get
-            {
-                return selectedTileSource ?? (selectedTileSource = TileSources.FirstOrDefault());
-            }
+            get => selectedTileSource ?? (selectedTileSource = TileSources.FirstOrDefault());
             set
             {
                 selectedTileSource = value;
@@ -67,19 +63,9 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
         }
 
         /// <summary>
-        /// Name of the current <see cref="SelectedTileSource"/>
+        /// Gets the name of the current <see cref="SelectedTileSource"/>.
         /// </summary>
-        public override string Name
-        {
-            get
-            {
-                return SelectedTileSource?.Name;
-            }
-            set
-            {
-                throw new InvalidOperationException();
-            }
-        }
+        public override string Name => SelectedTileSource?.Name;
 
         private string CacheLocation
         {
@@ -87,7 +73,7 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
             {
                 string path = SettingsHelper.GetApplicationLocalUserSettingsDirectory();
                 return Path.Combine(path,
-                                    $"cache_wmts_{WmtsTileSchema.Identifier}"
+                                    $"cache_wmts_{WmtsTileSchema?.Identifier}"
                                         .Replace(':', '_')
                                           .Replace('/', '_')
                                           .Replace('&', '_')
@@ -95,10 +81,7 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
             }
         }
 
-        private WmtsTileSchema WmtsTileSchema
-        {
-            get { return SelectedTileSource?.Schema as WmtsTileSchema; }
-        }
+        private WmtsTileSchema WmtsTileSchema => SelectedTileSource?.Schema as WmtsTileSchema;
 
         public override object Clone()
         {
