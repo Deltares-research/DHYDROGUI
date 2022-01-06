@@ -1249,8 +1249,14 @@
             <Component Id="comp_PythonScriptLib_377" Guid="F49CA2F8-4C5C-4E61-B1FD-F95488E02CBD">
               <File Id="file_PythonScriptLib_377" Source="$(var.deltashell_scripting_Lib_dir)ensurepip\_bundled\pip-8.1.1-py2.py3-none-any.whl" />
             </Component>
+            <Component Id="comp_PythonScriptLib_1844" Guid="833EB749-5E19-429D-83D8-42C0ACB72601">
+              <File Id="file_PythonScriptLib_1844" Source="$(var.deltashell_scripting_Lib_dir)ensurepip\_bundled\pip-19.2.3-py2.py3-none-any.whl" />
+            </Component>
             <Component Id="comp_PythonScriptLib_378" Guid="590E520C-D6DA-4EE8-8D48-1D107CB9D630">
               <File Id="file_PythonScriptLib_378" Source="$(var.deltashell_scripting_Lib_dir)ensurepip\_bundled\setuptools-20.10.1-py2.py3-none-any.whl" />
+            </Component>
+            <Component Id="comp_PythonScriptLib_1845" Guid="D243E113-B4A7-4275-ADB3-085C2D7FF981">
+              <File Id="file__PythonScriptLib_1845" Source="$(var.deltashell_scripting_Lib_dir)ensurepip\_bundled\setuptools-41.2.0-py2.py3-none-any.whl" />
             </Component>
           </Directory>
         </Directory>
@@ -5897,6 +5903,9 @@
             </Component>
           </Directory>
           <Directory Id="dir_lib_xml_etree_155" Name="etree">
+            <Component Id="comp_PythonScriptLib_1846" Guid="D59F6092-3F5D-4E8A-85E9-7BE9561E7419">
+              <File Id="file_PythonScriptLib_1846" Source="$(var.deltashell_scripting_Lib_dir)xml\etree\cElementTree.py" />
+            </Component>
             <Component Id="comp_PythonScriptLib_1831" Guid="9F5A30FE-BD0A-43B0-AD75-DDBCCC8C4822">
               <File Id="file_PythonScriptLib_1831" Source="$(var.deltashell_scripting_Lib_dir)xml\etree\ElementInclude.py" />
             </Component>
