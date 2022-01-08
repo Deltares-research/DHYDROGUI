@@ -2,6 +2,8 @@
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Remoting;
 using Deltares.UGrid.Api;
+using DeltaShell.NGHS.IO.Properties;
+using DeltaShell.NGHS.Utils.NetCdf;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
@@ -55,6 +57,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             ValidateFilePathWithAcceptableDeltaresVersion(filePath);
             api.Open(filePath, mode);
         }
+
         /// <summary>
         /// open netcdf manually, this functionality must be placed int the wrapper opening function using the ionc_adheresto_conventions_dll call when UNST-4908 is resolved
         /// format of the convention string could be:
@@ -62,47 +65,37 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// "CF-1.6 UGRID-1.0/Deltares-0.9"
         /// "CF-1.8 UGRID-1.0 Deltares-0.10"
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath"> The file path to the NetCDF file. </param>
         private static void ValidateFilePathWithAcceptableDeltaresVersion(string filePath)
         {
-            const string deltaresVersionKeyValue = "Deltares-";
             NetCdfFile file = null;
-            string conventions = string.Empty;
+            NetCdfConvention convention = null;
+
             try
             {
                 file = NetCdfFile.OpenExisting(filePath);
-                conventions = file.GetGlobalAttribute("Conventions")?.Value?.ToString() ?? string.Empty;
+                convention = file.GetConvention();
             }
             catch (Exception e)
             {
-                log.Warn($"While reading Deltares netcdf file version type from file {filePath} we encounter the following problem: {e.Message}");
+                log.WarnFormat(Resources.RemoteUGridApi_ProblemWhileReadingConvention, filePath, e.Message);
             }
             finally
             {
                 file?.Close();
             }
-            var indexOfStartDeltaresVersionSubString = conventions.IndexOf(deltaresVersionKeyValue, StringComparison.InvariantCultureIgnoreCase);
-            if (indexOfStartDeltaresVersionSubString == -1)
+
+            if (convention == null)
             {
-                log.Warn($"Could not find Deltares netcdf file version type string in the file {filePath}");
+                log.WarnFormat(Resources.RemoteUGridApi_MissingGlobalAttributeConventions, filePath);
                 return;
             }
 
-            var indexOfEndDeltaresVersionSubString = conventions.IndexOf(" ", indexOfStartDeltaresVersionSubString, StringComparison.InvariantCultureIgnoreCase);
-            var lengthOfDeltaresVersionSubString = indexOfEndDeltaresVersionSubString == -1
-                                                       ? conventions.Length - (indexOfStartDeltaresVersionSubString + deltaresVersionKeyValue.Length)
-                                                       : indexOfEndDeltaresVersionSubString - (indexOfStartDeltaresVersionSubString + deltaresVersionKeyValue.Length);
-
-            var deltaresVersionString = conventions.Substring(indexOfStartDeltaresVersionSubString + deltaresVersionKeyValue.Length, lengthOfDeltaresVersionSubString);
-            var deltaresVersionArray = deltaresVersionString.Contains(".")
-                                           ? Array.ConvertAll(deltaresVersionString.Split('.'), s => int.TryParse(s, out int version) ? version : 0)
-                                           : new[]
-                                           {
-                                               0,
-                                               int.TryParse(deltaresVersionString, out int v) ? v : 0
-                                           };
-            if (deltaresVersionArray.Length != 2 || deltaresVersionArray[0] < 0 || deltaresVersionArray[1] < 10)
-                log.Warn($"Could not find Deltares netcdf file version type with their version higher than 0.10 in the file {filePath}");
+            var requiredConvention = new NetCdfConvention(deltares: new Version(0, 10));
+            if (!convention.Satisfies(requiredConvention))
+            {
+                log.WarnFormat(Resources.RemoteUGridApi_RequiredNetCDFVersion, requiredConvention, convention, filePath);
+            }
         }
 
         /// <inheritdoc/>

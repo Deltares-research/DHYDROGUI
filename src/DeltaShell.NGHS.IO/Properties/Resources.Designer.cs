@@ -170,11 +170,65 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; does not contain a value in the file for category &apos;{1}&apos; on line {2}.
+        /// </summary>
+        public static string IniProperty_EmptyValue {
+            get {
+                return ResourceManager.GetString("IniProperty_EmptyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; contains an invalid floating-point number in the file for category &apos;{1}&apos; on line {2}: {3}.
+        /// </summary>
+        public static string IniProperty_InvalidDouble {
+            get {
+                return ResourceManager.GetString("IniProperty_InvalidDouble", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property &apos;{0}&apos; is not found in the file for category &apos;{1}&apos; on line {2}.
+        /// </summary>
+        public static string IniProperty_NotFound {
+            get {
+                return ResourceManager.GetString("IniProperty_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The category {0} on line {1} does not contain the {2} property..
         /// </summary>
         public static string NodeFile_The_category_does_not_contain_property {
             get {
                 return ResourceManager.GetString("NodeFile_The_category_does_not_contain_property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Global attribute &quot;Conventions&quot; is missing in file {0}.
+        /// </summary>
+        public static string RemoteUGridApi_MissingGlobalAttributeConventions {
+            get {
+                return ResourceManager.GetString("RemoteUGridApi_MissingGlobalAttributeConventions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While reading Deltares netcdf file version type from file {0} we encounter the following problem: {1}.
+        /// </summary>
+        public static string RemoteUGridApi_ProblemWhileReadingConvention {
+            get {
+                return ResourceManager.GetString("RemoteUGridApi_ProblemWhileReadingConvention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The minimum required NetCDF convention for this file is {0} but the provided convention is {1}. See global attribute &quot;Conventions&quot; in file {2}.
+        /// </summary>
+        public static string RemoteUGridApi_RequiredNetCDFVersion {
+            get {
+                return ResourceManager.GetString("RemoteUGridApi_RequiredNetCDFVersion", resourceCulture);
             }
         }
         
@@ -910,33 +964,6 @@ namespace DeltaShell.NGHS.IO.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_no" +
                         "t_currently_supported", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Property '{0}' is not found in the file for category '{1}' on line {2}.
-        /// </summary>
-        public static string IniProperty_NotFound {
-            get {
-                return ResourceManager.GetString("IniProperty_NotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Property '{0}' does not contain a value in the file for category '{1}' on line {2}.
-        /// </summary>
-        public static string IniProperty_EmptyValue {
-            get {
-                return ResourceManager.GetString("IniProperty_EmptyValue", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Property '{0}' contains an invalid floating-point number in the file for category '{1}' on line {2}: {3}.
-        /// </summary>
-        public static string IniProperty_InvalidDouble {
-            get {
-                return ResourceManager.GetString("IniProperty_InvalidDouble", resourceCulture);
             }
         }
     }

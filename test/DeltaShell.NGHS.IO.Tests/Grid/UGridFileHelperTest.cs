@@ -9,6 +9,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
+using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
@@ -36,15 +37,31 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void CheckUGridFileDeltaresVersion()
         {
-            var filePath = TestHelper.CreateLocalCopySingleFile(Path.Combine(TestHelper.GetTestDataDirectory(), "ugrid","Custom_Ugrid.nc"));
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => UGridFileHelper.IsUGridFile(filePath), $"Could not find Deltares netcdf file version type with their version higher than 0.10 in the file {filePath}");
+            // Setup
+            string filePath = TestHelper.CreateLocalCopySingleFile(Path.Combine(TestHelper.GetTestDataDirectory(), "ugrid", "Custom_Ugrid.nc"));
+
+            // Call
+            void Call() => UGridFileHelper.IsUGridFile(filePath);
+
+            // Assert
+            string[] warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToArray();
+            var expMessage = $"The minimum required NetCDF convention for this file is Deltares-0.10 but the provided convention is CF-1.6 UGRID-1.0 Deltares-0.8. See global attribute \"Conventions\" in file {filePath}";
+            Assert.That(warnings, Does.Contain(expMessage));
         }
 
         [Test]
         public void CheckDeltaresVersionInFileWithoutGlobalAttributeConventions()
         {
-            var filePath = TestHelper.CreateLocalCopySingleFile(Path.Combine(TestHelper.GetTestDataDirectory(), "nonUgrid", "small_net.nc"));
-            TestHelper.AssertAtLeastOneLogMessagesContains(() => UGridFileHelper.IsUGridFile(filePath), $"Could not find Deltares netcdf file version type string in the file {filePath}");
+            // Setup
+            string filePath = TestHelper.CreateLocalCopySingleFile(Path.Combine(TestHelper.GetTestDataDirectory(), "nonUgrid", "small_net.nc"));
+
+            // Call
+            void Call() => UGridFileHelper.IsUGridFile(filePath);
+
+            // Assert
+            string[] warnings = TestHelper.GetAllRenderedMessages(Call, Level.Warn).ToArray();
+            var expMessage = $"Global attribute \"Conventions\" is missing in file {filePath}";
+            Assert.That(warnings, Does.Contain(expMessage));
         }
 
         [Test]

@@ -396,4 +396,13 @@
   <data name="IniProperty_InvalidDouble" xml:space="preserve">
     <value>Property '{0}' contains an invalid floating-point number in the file for category '{1}' on line {2}: {3}</value>
   </data>
+  <data name="RemoteUGridApi_RequiredNetCDFVersion" xml:space="preserve">
+    <value>The minimum required NetCDF convention for this file is {0} but the provided convention is {1}. See global attribute "Conventions" in file {2}</value>
+  </data>
+  <data name="RemoteUGridApi_MissingGlobalAttributeConventions" xml:space="preserve">
+    <value>Global attribute "Conventions" is missing in file {0}</value>
+  </data>
+  <data name="RemoteUGridApi_ProblemWhileReadingConvention" xml:space="preserve">
+    <value>While reading Deltares netcdf file version type from file {0} we encounter the following problem: {1}</value>
+  </data>
 </root>
