@@ -212,7 +212,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                                 : rainfallRunoffGuiPlugin.Gui.Application.GetAllModelsInProject()
                                     .OfType<RainfallRunoffModel>()
                                     .FirstOrDefault(rrm => rrm.Basin.Catchments == o);;
-                            if (multipleDataEditorData.Item1 != model)
+                            if (!ReferenceEquals(multipleDataEditorData.Item1, model))
                             {
                                 multipleDataEditorData = Tuple.Create(model, RainfallRunoffDataRowProviderFactory.GetDataRowProviders(model, new Catchment[] { }).AsEnumerable());
                             }
@@ -241,7 +241,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                     GetViewData = o =>
                     {
                         var model = (RainfallRunoffModel) o.Parent;
-                        if (multipleDataEditorData.Item1 != model)
+                        if (!ReferenceEquals(multipleDataEditorData.Item1, model))
                         {
                             multipleDataEditorData = Tuple.Create(model, RainfallRunoffDataRowProviderFactory.GetDataRowProviders(model, new Catchment[] { }).AsEnumerable());
                         }
