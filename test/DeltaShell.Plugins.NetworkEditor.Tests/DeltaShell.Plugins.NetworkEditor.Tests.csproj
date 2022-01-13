@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1078" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1085" PrivateAssets="all" />
 		<PackageReference Include="NUnit" Version="3.12.0" />
 		<PackageReference Include="NSubstitute">
 			<Version>4.2.2</Version>
@@ -120,8 +120,8 @@
 		<Reference Include="nunit.framework, Version=3.12.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
 			<HintPath>..\..\packages\NUnit.3.12.0\lib\net45\nunit.framework.dll</HintPath>
 		</Reference>
-		<Reference Include="PostSharp, Version=5.0.55.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
-			<HintPath>..\..\packages\PostSharp.Redist.5.0.55\lib\net45\PostSharp.dll</HintPath>
+		<Reference Include="PostSharp, Version=6.10.5.0, Culture=neutral, PublicKeyToken=b13fd38b8f9c99d7, processorArchitecture=MSIL">
+			<HintPath>..\..\packages\PostSharp.Redist.6.10.5\lib\net45\PostSharp.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="PresentationCore" />

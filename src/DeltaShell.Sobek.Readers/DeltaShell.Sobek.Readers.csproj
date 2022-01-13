@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1078">
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1085">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -14,10 +14,10 @@
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="PostSharp" Version="5.0.55">
+		<PackageReference Include="PostSharp" Version="6.10.5">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="PostSharp.Redist" Version="5.0.55">
+		<PackageReference Include="PostSharp.Redist" Version="6.10.5">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
