@@ -69,14 +69,14 @@
     <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.13.0" />
     <PackageReference Include="AutoFixture.NUnit3" Version="4.13.0" />
     <PackageReference Include="Castle.Core" Version="4.4.0" />
-    <PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1078" PrivateAssets="all"/>
+    <PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1085" PrivateAssets="all"/>
     <PackageReference Include="Fare" Version="2.1.1" />
     <PackageReference Include="log4net" Version="2.0.12" />
     <PackageReference Include="Mono.Addins" Version="1.3.8" />
     <PackageReference Include="NSubstitute" Version="4.2.2" />
     <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="PostSharp" Version="5.0.55" />
-    <PackageReference Include="PostSharp.Redist" Version="5.0.55" />
+    <PackageReference Include="PostSharp" Version="6.10.5" />
+    <PackageReference Include="PostSharp.Redist" Version="6.10.5" />
     <PackageReference Include="RhinoMocks" Version="3.6.1" />
     <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.3.0" />
   </ItemGroup>
