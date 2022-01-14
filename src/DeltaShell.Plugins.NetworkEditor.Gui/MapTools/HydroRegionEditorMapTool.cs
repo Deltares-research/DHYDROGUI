@@ -544,16 +544,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
         /// <param name="provider"></param>
         /// <param name="geometry"></param>
         /// <returns></returns>
-        [Obsolete("TODO: move into NetworkLocationFeatureEditor (after making it independent from MapControl)")]
         private IFeature AddNetworkLocationGeometryDelegate(IFeatureProvider provider, IGeometry geometry)
         {
             var branch = (IBranch) MapControl.SnapTool.SnapResult.SnappedFeature;
             double offset = GeometryHelper.Distance((ILineString) branch.Geometry, geometry.Coordinates[0]);
 
-            if (branch.IsLengthCustom)
-            {
-                offset *= branch.Length / branch.Geometry.Length;
-            }
+            offset *= branch.Length / branch.Geometry.Length;
+
             var location = new NetworkLocation(branch, offset) {Geometry = geometry};
 
             //cannot add double locations..should maybe include a miminal distance based on the current zoom level.
