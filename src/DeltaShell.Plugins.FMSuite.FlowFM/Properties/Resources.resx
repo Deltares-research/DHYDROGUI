@@ -484,4 +484,7 @@ File import of structures file '{1}' has failed.</value>
   <data name="Error_CannotRemoveBranch" xml:space="preserve">
     <value>Cannot remove the {0} when the model has output.</value>
   </data>
+  <data name="WaterFlowFMModel__0__has_changed__clearing_results_" xml:space="preserve">
+    <value>{0} has changed, clearing results.</value>
+  </data>
 </root>

@@ -16,6 +16,7 @@ using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
@@ -220,6 +221,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 fmRegion.Name = Name;
                 if (!OutputIsEmpty)
                 {
+                    Log.WarnFormat(Resources.WaterFlowFMModel__0__has_changed__clearing_results_, Name);
                     OnClearOutput();
                 }
             }

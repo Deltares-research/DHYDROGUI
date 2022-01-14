@@ -1064,10 +1064,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        protected override void OnClearOutput()
-        {
-            DisconnectOutput();
-        }
+        protected override void OnClearOutput() => DisconnectOutput();
 
         private void ClearFunctionStore(PropertyInfo property)
         {
@@ -2834,6 +2831,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             OutputSnappedFeaturesPath = null;
+            OutputIsEmpty = true;
         }
 
         public virtual void ConnectOutput(string outputPath)

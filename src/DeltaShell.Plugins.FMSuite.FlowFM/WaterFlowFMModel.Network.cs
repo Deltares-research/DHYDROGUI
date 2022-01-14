@@ -121,6 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (!OutputIsEmpty)
             {
+                Log.WarnFormat(Resources.WaterFlowFMModel__0__has_changed__clearing_results_, "Network");
                 OnClearOutput();
             }
         }
