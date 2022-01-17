@@ -11,7 +11,6 @@ using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.FileReaders.Location.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
-using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils;
@@ -69,7 +68,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
 
             // add shared cross-section definitions to network
             hydroNetwork.SharedCrossSectionDefinitions.AddRange(sharedDefinitionNameLookup.Values);
-            
+
             foreach (CrossSectionLocation crossSectionLocation in crossSectionLocations)
             {
                 string definitionId = crossSectionLocation.DefinitionId;
@@ -81,7 +80,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 string branchId = crossSectionLocation.BranchId;
                 string crossSectionLongName = crossSectionLocation.LongName;
 
-                if(!branchLookup.TryGetValue(branchId, out IBranch branch))
+                if (!branchLookup.TryGetValue(branchId, out IBranch branch))
                 {
                     fileReadingExceptions.Add(new FileReadingException($"The read cross section '{name}' has a branch id ({branchId}) which is not available in the model."));
                     continue;
@@ -93,10 +92,14 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 };
 
                 crossSection.SetNameWithoutUpdatingDefinition(name);
-                
-                double shift = crossSectionLocation.Shift;
 
-                if (AddCrossSectionToNetwork(branch, crossSection, shift, frictionDefinitions))
+                if (branch is IChannel channel)
+                {
+                    SetFrictionType(channel, crossSection, frictionDefinitions);
+                }
+
+                double shift = crossSectionLocation.Shift;
+                if (AddCrossSectionToNetwork(branch, crossSection, shift))
                     assignedDefinitions.Add(definition);
             }
 
@@ -114,7 +117,23 @@ namespace DeltaShell.NGHS.IO.FileReaders
             return unsharedDefinitionNameLookup.Values.Except(assignedDefinitions).ToArray();
         }
 
-        private static bool AddCrossSectionToNetwork(IBranch branch, ICrossSection crossSection,  double shift, ILookup<IChannel, ChannelFrictionDefinition> frictionDefinitions)
+        private static void SetFrictionType(IChannel channel, ICrossSection crossSection, ILookup<IChannel, ChannelFrictionDefinition> frictionDefinitions)
+        {
+            if (HasNonDefaultChannelSections(crossSection) && frictionDefinitions.Contains(channel))
+            {
+                frictionDefinitions[channel].ForEach(cfd => cfd.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections);
+            }
+        }
+
+        private static bool HasNonDefaultChannelSections(ICrossSection crossSection)
+        {
+            var sections = crossSection.Definition.Sections;
+
+            return sections.Count > 1 
+                   || sections.Count == 1 && !sections[0].IsDefaultChannelsSection;
+        }
+
+        private static bool AddCrossSectionToNetwork(IBranch branch, ICrossSection crossSection,  double shift)
         {
             switch (branch)
             {
@@ -145,13 +164,6 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     }
                     
                     channel.BranchFeatures.Add(crossSection);
-
-                    if ((crossSection.Definition.Sections.Count != 1 && crossSection.Definition.Sections.Count != 0
-                            || !string.Equals(crossSection.Definition.Sections[0].SectionType.Name, RoughnessDataSet.MainSectionTypeName, StringComparison.InvariantCultureIgnoreCase) ) 
-                        && frictionDefinitions.Contains(channel))
-                    {
-                        frictionDefinitions[channel].ForEach(cfd => cfd.SpecificationType = ChannelFrictionSpecificationType.RoughnessSections);
-                    }
 
                     break;
                 }
@@ -219,127 +231,140 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 case CrossSectionType.YZ:
                 case CrossSectionType.GeometryBased:
                 {
-                    var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds, true, ';');
-                    if (frictionIds == null) return;
-                    if (frictionIds.Count < 0)
-                        throw new FileReadingException("reading error");
-
-                    if (frictionIds.Count == 1 && frictionIds[0].Equals(RoughnessDataRegion.SectionId.DefaultValue))
-                    {
-                        readCrossSectionDefinition.Sections.Add(new CrossSectionSection
-                        {
-                            SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network),
-                            MinY = readCrossSectionDefinition.Left,
-                            MaxY = readCrossSectionDefinition.Right
-                        });
-
-                        return;
-                    }
-
-                    var frictionPositions = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FrictionPositions);
-                    if (frictionPositions.Count < 0)
-                        throw new FileReadingException("reading error");
-
-                    if (frictionPositions.Count != frictionIds.Count + 1)
-                        throw new FileReadingException("reading error");
-
-                    readCrossSectionDefinition.Sections.Clear();
-
-                    for (int index = 0; index < frictionIds.Count; index++)
-                    {
-                        var networkSectionType = GetCrossSectionSectionType(frictionIds[index], network);
-
-                        readCrossSectionDefinition.Sections.Add(new CrossSectionSection
-                        {
-                            SectionType = networkSectionType,
-                            MinY = frictionPositions[index],
-                            MaxY = frictionPositions[index + 1]
-                        });
-                    }
-
-                    return;
+                    SetYzGeometryBasedCrossSectionFriction(csdDefinitionCategory, readCrossSectionDefinition, network);
+                    break;
                 }
                 case CrossSectionType.ZW:
                 {
-                    IList<double> flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths);
-
-                    string frictionId = csdDefinitionCategory.ReadProperty<string>(DefinitionPropertySettings.FrictionId, true);
-                    IList<string> frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds, true, ';');
-                    
-                    if (frictionId != null || (frictionIds != null && frictionIds.Any(id => !IsDefaultSectionId(id) && !IsDefaultChannelsSectionId(id))))
-                    {
-                        // read definition as zw definition
-                        string sectionName = frictionId ?? frictionIds.First();
-                        CrossSectionSectionType crossSectionSectionType = GetCrossSectionSectionType(sectionName, network);
-                        readCrossSectionDefinition.AddSection(crossSectionSectionType, flowWidths.Max());
-                        return;
-                    }
-                    
-                    // read definition as zwRiver definition
-                    CrossSectionSectionType mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network);
-                    
-                    if (frictionIds != null && frictionIds.Count == 3 && frictionIds.All(fi => fi.Equals(RoughnessDataRegion.SectionId.DefaultValue)))
-                    {
-                        readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, readCrossSectionDefinition.Width);
-                        return;
-                    }
-
-                    double mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.Main);
-                    double floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.FloodPlain1, true);
-
-                    double floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
-
-                    readCrossSectionDefinition.Sections.Clear();
-                    readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
-
-                    if (Math.Abs(floodPlain1Width) > 1e-6)
-                    {
-                        CrossSectionSectionType floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
-                        readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
-                    }
-
-                    if (Math.Abs(floodPlain2Width) > 1e-6)
-                    {
-                        CrossSectionSectionType floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
-                        readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
-                    }
-
-                    return;
+                    SetZwCrossSectionFriction(csdDefinitionCategory, readCrossSectionDefinition, network);
+                    break;
                 }
                 case CrossSectionType.Standard:
                 {
-                    var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionId, true, ';');
-                    if (frictionIds == null) return;
-
-                    if (frictionIds.Count != 1)
-                        throw new FileReadingException("reading error");
-
-                    var sectionTypeName = frictionIds.FirstOrDefault();
-                    if (sectionTypeName == null)
-                        throw new FileReadingException("reading error");
-
-                    if (sectionTypeName.Equals(RoughnessDataRegion.SectionId.DefaultValue))
-                    {
-                        readCrossSectionDefinition.Sections.Add(new CrossSectionSection
-                        {
-                            SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network),
-                            MinY = readCrossSectionDefinition.Left,
-                            MaxY = readCrossSectionDefinition.Right
-                        });
-                        return;
-                    }
-
-                    readCrossSectionDefinition.Sections.Add(new CrossSectionSection
-                    {
-                        SectionType = GetCrossSectionSectionType(sectionTypeName, network),
-                        MinY = readCrossSectionDefinition.Left,
-                        MaxY = readCrossSectionDefinition.Right
-                    });
-
-                    return;
+                    SetStandardCrossSectionFriction(csdDefinitionCategory, readCrossSectionDefinition, network);
+                    break;
                 }
-                default:
-                    return;
+            }
+        }
+
+        private static void SetStandardCrossSectionFriction(IDelftIniCategory csdDefinitionCategory, ICrossSectionDefinition readCrossSectionDefinition, IHydroNetwork network)
+        {
+            var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionId, true, ';');
+            if (frictionIds == null) return;
+
+            if (frictionIds.Count != 1)
+                throw new FileReadingException("reading error");
+
+            var sectionTypeName = frictionIds.FirstOrDefault();
+            if (sectionTypeName == null)
+                throw new FileReadingException("reading error");
+
+            if (IsDefaultChannelsSectionId(sectionTypeName))
+            {
+                readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                {
+                    SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network),
+                    MinY = readCrossSectionDefinition.Left,
+                    MaxY = readCrossSectionDefinition.Right,
+                    IsDefaultChannelsSection = true
+                });
+                return;
+            }
+
+            readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+            {
+                SectionType = GetCrossSectionSectionType(sectionTypeName, network),
+                MinY = readCrossSectionDefinition.Left,
+                MaxY = readCrossSectionDefinition.Right
+            });
+        }
+
+        private static void SetZwCrossSectionFriction(IDelftIniCategory csdDefinitionCategory, ICrossSectionDefinition readCrossSectionDefinition, IHydroNetwork network)
+        {
+            IList<double> flowWidths = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FlowWidths);
+
+            string frictionId = csdDefinitionCategory.ReadProperty<string>(DefinitionPropertySettings.FrictionId, true);
+            IList<string> frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds, true, ';');
+
+            if (frictionId != null || (frictionIds != null && frictionIds.Any(id => !IsDefaultSectionId(id) && !IsDefaultChannelsSectionId(id))))
+            {
+                // read definition as zw definition
+                string sectionName = frictionId ?? frictionIds.First();
+                CrossSectionSectionType crossSectionSectionType = GetCrossSectionSectionType(sectionName, network);
+                readCrossSectionDefinition.AddSection(crossSectionSectionType, flowWidths.Max());
+                return;
+            }
+
+            // read definition as zwRiver definition
+            CrossSectionSectionType mainCrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network);
+
+            if (frictionIds != null && frictionIds.Count == 3 && frictionIds.All(IsDefaultChannelsSectionId))
+            {
+                readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, readCrossSectionDefinition.Width);
+                return;
+            }
+
+            double mainSectionWidth = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.Main);
+            double floodPlain1Width = csdDefinitionCategory.ReadProperty<double>(DefinitionPropertySettings.FloodPlain1, true);
+
+            double floodPlain2Width = flowWidths.Max() - mainSectionWidth - floodPlain1Width; //FloodPlain2 is defined as max(FlowWidth) - Main - Floodplain1
+
+            readCrossSectionDefinition.Sections.Clear();
+            readCrossSectionDefinition.AddSection(mainCrossSectionSectionType, mainSectionWidth);
+
+            if (Math.Abs(floodPlain1Width) > 1e-6)
+            {
+                CrossSectionSectionType floodPlain1CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain1SectionTypeName, network);
+                readCrossSectionDefinition.AddSection(floodPlain1CrossSectionSectionType, floodPlain1Width);
+            }
+
+            if (Math.Abs(floodPlain2Width) > 1e-6)
+            {
+                CrossSectionSectionType floodPlain2CrossSectionSectionType = GetCrossSectionSectionType(RoughnessDataSet.Floodplain2SectionTypeName, network);
+                readCrossSectionDefinition.AddSection(floodPlain2CrossSectionSectionType, floodPlain2Width);
+            }
+        }
+
+        private static void SetYzGeometryBasedCrossSectionFriction(IDelftIniCategory csdDefinitionCategory, ICrossSectionDefinition readCrossSectionDefinition, IHydroNetwork network)
+        {
+            var frictionIds = csdDefinitionCategory.ReadPropertiesToListOfType<string>(DefinitionPropertySettings.FrictionIds, true, ';');
+            if (frictionIds == null) return;
+
+            if (frictionIds.Count < 0)
+                throw new FileReadingException("reading error");
+
+            if (frictionIds.Count == 1 && IsDefaultChannelsSectionId(frictionIds[0]))
+            {
+                readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                {
+                    SectionType = GetCrossSectionSectionType(RoughnessDataSet.MainSectionTypeName, network),
+                    MinY = readCrossSectionDefinition.Left,
+                    MaxY = readCrossSectionDefinition.Right,
+                    IsDefaultChannelsSection = true
+                });
+
+                return;
+            }
+
+            var frictionPositions = csdDefinitionCategory.ReadPropertiesToListOfType<double>(DefinitionPropertySettings.FrictionPositions);
+            if (frictionPositions.Count < 0)
+                throw new FileReadingException("reading error");
+
+            if (frictionPositions.Count != frictionIds.Count + 1)
+                throw new FileReadingException("reading error");
+
+            readCrossSectionDefinition.Sections.Clear();
+
+            for (int index = 0; index < frictionIds.Count; index++)
+            {
+                var networkSectionType = GetCrossSectionSectionType(frictionIds[index], network);
+
+                readCrossSectionDefinition.Sections.Add(new CrossSectionSection
+                {
+                    SectionType = networkSectionType,
+                    MinY = frictionPositions[index],
+                    MaxY = frictionPositions[index + 1]
+                });
             }
         }
 

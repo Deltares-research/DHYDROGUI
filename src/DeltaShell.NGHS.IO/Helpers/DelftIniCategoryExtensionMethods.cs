@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using DeltaShell.NGHS.IO.Properties;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.Helpers
@@ -17,7 +16,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             var iniProperty = category.GetProperty(key);
 
             var typeConverter = TypeDescriptor.GetConverter(typeof(T));
-            if (iniProperty != null && typeConverter.CanConvertFrom(typeof(string)) && typeConverter.IsValid(iniProperty.Value))
+            if (iniProperty != null && CanConvertFromString(typeConverter, iniProperty.Value))
             {
                 return (T)typeConverter.ConvertFromInvariantString(iniProperty.Value);
             }
@@ -33,6 +32,7 @@ namespace DeltaShell.NGHS.IO.Helpers
             return defaultValue;
 
         }
+
         public static bool ContainsProperty(this IDelftIniCategory category, string key)
         {
             return category.Properties.Any(property => string.Equals(property.Name, key, StringComparison.InvariantCultureIgnoreCase));
@@ -62,7 +62,7 @@ namespace DeltaShell.NGHS.IO.Helpers
 
             if (!isOptional)
             {
-                string message = string.Format(Resources.IniProperty_NotFound, key, category.Name, category.LineNumber);
+                string message = string.Format(Properties.Resources.IniProperty_NotFound, key, category.Name, category.LineNumber);
                 if (!logError)
                     throw new PropertyNotFoundInFileException(message);
 
@@ -74,6 +74,14 @@ namespace DeltaShell.NGHS.IO.Helpers
         public static IList<T> ReadPropertiesToListOfType<T>(this IDelftIniCategory category, ConfigurationSetting setting, bool isOptional = false, char customSeparator = '\0', IList<T> defaultValue = default(IList<T>), bool useStandardSeparators = true, bool logError = true)
         {
             return category.ReadPropertiesToListOfType(setting.Key, isOptional, customSeparator, defaultValue, useStandardSeparators, logError);
+        }
+
+        private static bool CanConvertFromString(TypeConverter typeConverter, string value)
+        {
+            // skip IsValid check for EnumConverter because it is case sensitive while the ConvertFromInvariantString is not
+            return typeConverter.CanConvertFrom(typeof(string)) 
+                   && (typeConverter is EnumConverter 
+                       || typeConverter.IsValid(value));
         }
     }
 }

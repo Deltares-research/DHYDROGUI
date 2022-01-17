@@ -16,6 +16,11 @@ namespace DelftTools.Hydro.CrossSections
         public virtual CrossSectionSectionType SectionType { get; set; }
 
         /// <summary>
+        /// Is the default channel section (does not have roughness defined on lanes)
+        /// </summary>
+        public bool IsDefaultChannelsSection { get; set; }
+
+        /// <summary>
         /// The Width is equal to the total width of the cross section that is covered by this
         /// cross section section. See the drawing above for an explanation.
         /// </summary>
