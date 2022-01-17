@@ -50,5 +50,60 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
 
             Assert.That(string.IsNullOrWhiteSpace(definition.Name), Is.False);
         }
+
+        [Test]
+        public void Constructor_HourlyPercentageDailyVolumeIsCorrectlyInitialized()
+        {
+            // Call
+            var definition = new NwrwDryWeatherFlowDefinition();
+
+            // Assert
+            Assert.That(definition.HourlyPercentageDailyVolume, Is.EqualTo(GetDefaultHourlyPercentageDailyVolume()));
+        }
+
+        [Test]
+        public void CreateDefaultDwaDefinition_ReturnsCorrectInstance()
+        {
+            // Call
+            var definition = NwrwDryWeatherFlowDefinition.CreateDefaultDwaDefinition();
+
+            // Assert
+            Assert.That(definition.Name, Is.EqualTo("Default_DWA"));
+            Assert.That(definition.DistributionType, Is.EqualTo(DryweatherFlowDistributionType.Constant));
+            Assert.That(definition.DailyVolumeConstant, Is.EqualTo(240));
+            Assert.That(definition.DailyVolumeVariable, Is.EqualTo(120));
+            Assert.That(definition.HourlyPercentageDailyVolume, Is.EqualTo(GetDefaultHourlyPercentageDailyVolume()));
+        }
+
+        private static double[] GetDefaultHourlyPercentageDailyVolume()
+        {
+            return new[]
+            {
+                1.5,
+                1.5,
+                1.5,
+                1.5,
+                1.5,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+                6.5,
+                7.5,
+                8.5,
+                7.5,
+                6.5,
+                6.0,
+                5.0,
+                5.0,
+                5.0,
+                4.0,
+                3.5,
+                3.0,
+                2.5,
+                2.0,
+                2.0
+            };
+        }
     }
 }

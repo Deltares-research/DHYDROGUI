@@ -272,7 +272,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             var constantDwfDefinition = new NwrwDryWeatherFlowDefinition()
             {
                 Name = "Constant DWF definition",
-                DailyVolumeConstant = 10,
+                DailyVolumeConstant = 240,
                 DailyVolumeVariable = 50,
                 DayNumber = 3,
                 DistributionType = DryweatherFlowDistributionType.Constant,
@@ -284,7 +284,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Domain.Concepts.Nw
             var dailyDwfDefinition = new NwrwDryWeatherFlowDefinition()
             {
                 Name = "Daily DWF definition",
-                DailyVolumeConstant = 123,
+                DailyVolumeConstant = 2952,
                 DailyVolumeVariable = 456,
                 DayNumber = 7,
                 DistributionType = DryweatherFlowDistributionType.Daily,

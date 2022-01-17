@@ -36,8 +36,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
             AppendDwfComputationOption(line, dryWeatherFlowDefinition.DistributionType);
 
-            line.Append($"{NwrwKeywords.Pluv_dwa_wc} {dryWeatherFlowDefinition.DailyVolumeConstant} ");
-            line.Append($"{NwrwKeywords.Pluv_dwa_wd} {dryWeatherFlowDefinition.DailyVolumeVariable.ToString()} ");
+            line.Append($"{NwrwKeywords.Pluv_dwa_wc} {Round(dryWeatherFlowDefinition.DailyVolumeConstant / 24)} ");
+            line.Append($"{NwrwKeywords.Pluv_dwa_wd} {Round(dryWeatherFlowDefinition.DailyVolumeVariable).ToString()} ");
 
             AppendWaterUsePerHour(line, dryWeatherFlowDefinition.HourlyPercentageDailyVolume);
 
@@ -72,5 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 line.Append($"{hourlyPercentageDailyVolume[i]} ");
             }
         }
+
+        private static double Round(double value) => Math.Round(value, 6);
     }
 }

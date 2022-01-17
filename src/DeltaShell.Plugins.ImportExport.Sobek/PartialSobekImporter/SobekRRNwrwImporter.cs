@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.ImportExport.Sobek.Builders;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
@@ -18,6 +20,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
     public class SobekRRNwrwImporter : PartialSobekImporterBase
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SobekRRNwrwImporter));
+        private static readonly ILogHandler logHandler = new LogHandler("importing RR NWRW data", Log);
+        private static readonly NwrwDryWeatherFlowDefinitionBuilder nwrwDryWeatherFlowDefinitionBuilder = new NwrwDryWeatherFlowDefinitionBuilder(logHandler);
 
         private RainfallRunoffModel rrModel;
         
@@ -25,7 +29,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private HashSet<string> nodeDictionary;
         private HashSet<string> branchDictionary;
         private HashSet<string> singleUnitDryweatherFlowDefinitions = new HashSet<string>();
-        private List<string> listOfWarnings = new List<string>();
 
         public override string DisplayName => "Rainfall Runoff NWRW data";
 
@@ -61,10 +64,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             AddNwrwDefinitionsToModel(readNwrwDefinitions.Values, lateralSourceFeatureDictionary, readSobekRrNodeDictionary);
 
-            if (listOfWarnings.Any())
-            {
-                Log.Warn($"While importing nwrw we encountered the following {listOfWarnings.Count} warnings: {Environment.NewLine}{string.Join(Environment.NewLine, listOfWarnings)}");
-            }
+            logHandler.LogReport();
         }
 
         private bool CreateNodeAndBranchDictionary()
@@ -72,14 +72,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             nodeDictionary = new HashSet<string>(HydroNetwork.Nodes.Select(node => node.Name), StringComparer.InvariantCultureIgnoreCase);
             if (nodeDictionary == null || nodeDictionary.Count == 0)
             {
-                listOfWarnings.Add("Can't import Nwrw catchments, no existing nodes found.");
+                logHandler.ReportWarning("Cannot import NWRW catchments, no existing nodes found.");
                 return false;
             }
 
             branchDictionary = new HashSet<string>(HydroNetwork.Branches.Select(branch => branch.Name), StringComparer.InvariantCultureIgnoreCase);
             if (branchDictionary == null || branchDictionary.Count == 0)
             {
-                listOfWarnings.Add("Can't import Nwrw catchments, no existing branches found.");
+                logHandler.ReportWarning("Cannot import NWRW catchments, no existing branches found.");
                 return false;
             }
 
@@ -101,22 +101,24 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 {
                     if (!string.Equals(readDefinition.Key, defaultDwa, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        listOfWarnings.Add($"A dryweather flow definition with the name '{readDefinition.Key}' already exists, skipping import.");
+                        logHandler.ReportWarning($"A dryweather flow definition with the name '{readDefinition.Key}' already exists, skipping import.");
                         continue;
                     }
                     
                     existingDefinitions.RemoveAllWhere(definition => string.Equals(definition.Name, defaultDwa, StringComparison.InvariantCultureIgnoreCase));
-                    existingDefinitions.Add(CreateNewNwrwDryWeatherFlowDefinition(readDefinition.Value));
+                    AddToSingleUnitDryWeatherFlowDefinitions(readDefinition.Value);
+                    existingDefinitions.Add(nwrwDryWeatherFlowDefinitionBuilder.Build(readDefinition.Value));
                     continue;
                 }
 
                 if (readDefinition.Value.ComputationOption == DWAComputationOption.UseTable)
                 {
-                    listOfWarnings.Add($"Using tables for dryweather flow definitions is currently not supported. Skipping import of '{readDefinition.Key}'.");
+                    logHandler.ReportWarning($"Using tables for dryweather flow definitions is currently not supported. Skipping import of '{readDefinition.Key}'.");
                     continue;
                 }
 
-                existingDefinitions.Add(CreateNewNwrwDryWeatherFlowDefinition(readDefinition.Value));
+                AddToSingleUnitDryWeatherFlowDefinitions(readDefinition.Value);
+                existingDefinitions.Add(nwrwDryWeatherFlowDefinitionBuilder.Build(readDefinition.Value));
             }
 
             dryweatherFlowDefinitions = new HashSet<string>(existingDefinitions.Select(definition => definition.Name), StringComparer.InvariantCultureIgnoreCase);
@@ -127,47 +129,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             return new SobekRRDryWeatherFlowReader().Read(filePath).ToDictionaryWithErrorDetails(filePath, item => item.Id, item => item);
         }
 
-        private NwrwDryWeatherFlowDefinition CreateNewNwrwDryWeatherFlowDefinition(SobekRRDryWeatherFlow readDefinition)
+        private void AddToSingleUnitDryWeatherFlowDefinitions(SobekRRDryWeatherFlow readDefinition)
         {
             DWAComputationOption readComputationOption = readDefinition.ComputationOption;
             if (readComputationOption == DWAComputationOption.ConstantDWAPerHour || readComputationOption == DWAComputationOption.VariablePerHour)
             {
                 singleUnitDryweatherFlowDefinitions.Add(readDefinition.Id);
-            }
-
-            var newDefinition = new NwrwDryWeatherFlowDefinition
-            {
-                Name = readDefinition.Id,
-                DistributionType = GetDistributionType(readComputationOption),
-                DailyVolumeConstant = readDefinition.WaterUsePerHourForConstant,
-                DailyVolumeVariable = readDefinition.WaterUsePerDayForVariable
-            };
-
-            if (readDefinition.WaterCapacityPerHour.Length != 24)
-            {
-                listOfWarnings.Add($"Expected 24 values but got {readDefinition.WaterCapacityPerHour.Length} values. Skipping import of water use per capita per hour.");
-            }
-            else
-            {
-                newDefinition.HourlyPercentageDailyVolume = readDefinition.WaterCapacityPerHour;
-            }
-
-            return newDefinition;
-        }
-
-        private DryweatherFlowDistributionType GetDistributionType(DWAComputationOption computationOption)
-        {
-            switch (computationOption)
-            {
-                case DWAComputationOption.NrPeopleTimesConstantPerHour:
-                case DWAComputationOption.ConstantDWAPerHour:
-                    return DryweatherFlowDistributionType.Constant;
-                case DWAComputationOption.NrPeopleTimesVariablePerHour:
-                case DWAComputationOption.VariablePerHour:
-                    return DryweatherFlowDistributionType.Daily;
-                case DWAComputationOption.UseTable:
-                default:
-                    throw new NotSupportedException($"{computationOption} is not a valid computation option.");
             }
         }
 
@@ -214,7 +181,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             if (readSettings.RunoffDelayFactors == null)
             {
-                listOfWarnings.Add($"Could not find any runoff factors.");
+                logHandler.ReportWarning("Could not find any runoff factors.");
                 return;
             }
 
@@ -241,7 +208,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             if (readSettings.MaximumStorages == null)
             {
-                listOfWarnings.Add("No settings found for maximum storages.");
+                logHandler.ReportWarning("No settings found for maximum storages.");
                 return;
             }
 
@@ -255,7 +222,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             if (readSettings.MaximumInfiltrationCapcaties == null)
             {
-                listOfWarnings.Add("No settings found for maximum infiltration capacities.");
+                logHandler.ReportWarning("No settings found for maximum infiltration capacities.");
                 return;
             }
 
@@ -272,7 +239,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             if (readSettings.MinimumInfiltrationCapcaties == null)
             {
-                listOfWarnings.Add("No settings found for minimum infiltration capacities.");
+                logHandler.ReportWarning("No settings found for minimum infiltration capacities.");
                 return;
             }
 
@@ -289,7 +256,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             if (readSettings.InfiltrationCapacityDecreases == null)
             {
-                listOfWarnings.Add("No settings found for infiltration capacity reduction.");
+                logHandler.ReportWarning("No settings found for infiltration capacity reduction.");
                 return;
             }
 
@@ -306,7 +273,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         {
             if (readSettings.InfiltrationCapacityIncreases == null)
             {
-                listOfWarnings.Add("No settings found for infiltration capacity recovery.");
+                logHandler.ReportWarning("No settings found for infiltration capacity recovery.");
                 return;
             }
 
@@ -318,17 +285,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 nwrwDefinitionArray[i + 9].InfiltrationCapacityRecovery = readSettings.InfiltrationCapacityIncreases[3];
             }
         }
-
-        private void UpdateInfiltrationFromDepressionsOption(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void UpdateInfiltrationFromRunoffOption(NwrwDefinition[] nwrwDefinitionArray, SobekRRNwrwSettings readSettings)
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
 
         #region Nwrw catchments
@@ -341,14 +297,14 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 if (!filteredReadSobekRRNodeDictionary.ContainsKey(readNwrwDefinition.Id))
                 {
-                    listOfWarnings.Add($"Could not import nwrw catchment, target node or branch '{readNwrwDefinition.Id}' was not found in the network.");
+                    logHandler.ReportWarning($"Could not import NWRW catchment, target node or branch '{readNwrwDefinition.Id}' was not found in the network.");
                     readNwrwDefinitions.Remove(readNwrwDefinition.Id);
                     continue;
                 }
 
                 if (!lateralSourceDictionary.ContainsKey(readNwrwDefinition.Id))
                 {
-                    listOfWarnings.Add($"Could not import nwrw catchment, no lateral was found for the nwrw catchment '{readNwrwDefinition.Id}.");
+                    logHandler.ReportWarning($"Could not import NWRW catchment, no lateral was found for the NWRW catchment '{readNwrwDefinition.Id}.");
                     readNwrwDefinitions.Remove(readNwrwDefinition.Id);
                 }
             }
@@ -463,7 +419,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     continue;
                 }
 
-                listOfWarnings.Add($"Could not import nwrw catchment, target node or branch '{targetName}' was not found in the network.");
+                logHandler.ReportWarning($"Could not import NWRW catchment, target node or branch '{targetName}' was not found in the network.");
             }
 
             return filteredReadSobekRRNodeDictionary;
@@ -552,7 +508,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             {
                 if (!dryweatherFlowDefinitions.Contains(dwaId))
                 {
-                    listOfWarnings.Add($"Could not add dryweather flow definition {dwaId} to nwrw catchment, because it is not defined.");
+                    logHandler.ReportWarning($"Could not add dryweather flow definition {dwaId} to nwrw catchment, because it is not defined.");
                     return;
                 }
 

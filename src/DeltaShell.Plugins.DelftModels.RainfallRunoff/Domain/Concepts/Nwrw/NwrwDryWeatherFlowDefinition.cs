@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
@@ -16,20 +15,40 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
     [Entity]
     public class NwrwDryWeatherFlowDefinition : Unique<long>, INwrwFeature
     {
-        public string Name { get; set; } = "DefinitionName"; //VER_IDE
-        public DryweatherFlowDistributionType DistributionType { get; set; } // VER_TYPE
+        /// <summary>
+        /// Name of the dry weather flow definition.
+        /// </summary>
+        public string Name { get; set; } = "DefinitionName";
+        
+        /// <summary>
+        /// The dry weather flow distribution type.
+        /// </summary>
+        public DryweatherFlowDistributionType DistributionType { get; set; } 
         public int DayNumber { get; set; } // VER_DAG
-        public double DailyVolumeVariable { get; set; } // VER_VOL
-        public double DailyVolumeConstant { get; set; } // VER_VOL
-        public double[] HourlyPercentageDailyVolume { get; set; } = new double[24]; // U00_DAG -- U23_DAG
+
+        /// <summary>
+        /// The constant daily volume of water use per capita [L/day].
+        /// </summary>
+        public double DailyVolumeConstant { get; set; }
+        
+        /// <summary>
+        /// The variable daily volume of water use per capita [L/day].
+        /// </summary>
+        public double DailyVolumeVariable { get; set; }
+        
+        /// <summary>
+        /// The hourly water use per capita expressed in percentages of <see cref="DailyVolumeVariable"/>.
+        /// The sum of the 24 percentages should be 100. 
+        /// </summary>
+        public double[] HourlyPercentageDailyVolume { get; set; } = GetDefaultHourlyPercentageDailyVolume();
+        
         public string Remark { get; set; } // ALG_TOE
 
         public IGeometry Geometry { get; set; }
 
 
-        public void AddNwrwCatchmentModelDataToModel(IHydroModel model, NwrwImporterHelper helper)
+        public void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper)
         {
-            var rrModel = model as RainfallRunoffModel;
             if (rrModel == null) throw new ArgumentException();
             
             if (NotSupportedByKernel()) return;
@@ -88,9 +107,40 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
             {
                 Name = NwrwData.DEFAULT_DWA_ID,
                 DistributionType = DryweatherFlowDistributionType.Constant,
-                DailyVolumeConstant = 12,
+                DailyVolumeConstant = 240,
                 DailyVolumeVariable = 120,
-                HourlyPercentageDailyVolume = new []{1.5, 1.5, 1.5, 1.5, 1.5, 3.0, 4.0, 5.0, 6.0, 6.5, 7.5, 8.5, 7.5, 6.5, 6.0, 5.0, 5.0, 5.0, 4.0, 3.5, 3.0, 2.5, 2.0, 2.0 }
+                HourlyPercentageDailyVolume = GetDefaultHourlyPercentageDailyVolume()
+            };
+        }
+
+        private static double[] GetDefaultHourlyPercentageDailyVolume()
+        {
+            return new[]
+            {
+                1.5,
+                1.5,
+                1.5,
+                1.5,
+                1.5,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+                6.5,
+                7.5,
+                8.5,
+                7.5,
+                6.5,
+                6.0,
+                5.0,
+                5.0,
+                5.0,
+                4.0,
+                3.5,
+                3.0,
+                2.5,
+                2.0,
+                2.0
             };
         }
     }

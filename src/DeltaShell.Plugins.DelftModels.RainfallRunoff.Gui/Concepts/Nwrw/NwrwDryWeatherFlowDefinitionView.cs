@@ -11,14 +11,13 @@ using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Threading;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 {
     public partial class NwrwDryWeatherFlowDefinitionView : UserControl, IView
     {
-        private const int ButtonColumnIndex = 3;
-
         private readonly ILog Log = LogManager.GetLogger(typeof(NwrwDryWeatherFlowDefinitionView));
         private readonly DelayedEventHandler<EventArgs> delayedEventHandlerDefinitionsCollectionChanged;
 
@@ -108,14 +107,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
             AddIdColumn();
             AddTypeColumn();
-            AddVolumeColumn();
+            AddConstantVolumeColumn();
+            AddDailyVolumeColumn();
             AddButtonColumn();
         }
 
-        private void AddIdColumn()
-        {
-            tableView.AddColumn(nameof(NwrwDryWeatherFlowDefinition.Name), "Name");
-        }
+        private void AddIdColumn() => tableView.AddColumn(nameof(NwrwDryWeatherFlowDefinition.Name), "Name");
 
         private void AddTypeColumn()
         {
@@ -128,14 +125,20 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
             };
         }
 
-        private void AddVolumeColumn()
-        {
-            tableView.AddColumn(nameof(NwrwDryWeatherFlowDefinition.DailyVolumeVariable),
-                                columnCaption: "Daily volume (dm³/day)",
+        private void AddDoubleFieldColumn(string bindingName, string caption) =>
+            tableView.AddColumn(bindingName,
+                                columnCaption: caption,
                                 readOnly: false,
                                 width: 100,
                                 displayFormat: "0.###");
-        }
+
+        private void AddConstantVolumeColumn() =>
+            AddDoubleFieldColumn(nameof(NwrwDryWeatherFlowDefinition.DailyVolumeConstant), 
+                                 Resources.NwrwDryWeatherFlowDefinitionView_ConstantVolumeColumnCaption);
+
+        private void AddDailyVolumeColumn() =>
+            AddDoubleFieldColumn(nameof(NwrwDryWeatherFlowDefinition.DailyVolumeVariable), 
+                                 Resources.NwrwDryWeatherFlowDefinitionView_DailyVolumeColumnCaption);
 
         private void AddButtonColumn()
         {
@@ -161,34 +164,33 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw
 
         private bool ReadOnlyCellFilter(TableViewCell arg)
         {
-            if (data == null || arg.Column.AbsoluteIndex < 0)
+            int rowIndex = arg.RowIndex;
+            int columnIndex = arg.Column.AbsoluteIndex;
+
+            if (IsNewRow(rowIndex))
             {
-                return false;
+                return IsButtonColumn(columnIndex);
             }
 
-            if (arg.RowIndex == 0) return true;
-
-            if (arg.RowIndex >= 1 && arg.RowIndex < tableView.RowCount)
+            if (IsConstantVolumeColumn(columnIndex))
             {
-                var nwrwDryWeatherFlowDefinition = (NwrwDryWeatherFlowDefinition)tableView.GetRowObjectAt(arg.RowIndex);
-
-                if (arg.Column.AbsoluteIndex == ButtonColumnIndex)
-                {
-                    return nwrwDryWeatherFlowDefinition.DistributionType != DryweatherFlowDistributionType.Daily;
-                }
-
-                return false;
+                return !HasDistributionType(rowIndex, DryweatherFlowDistributionType.Constant);
             }
-            else
+
+            if (IsDailyVolumeColumn(columnIndex))
             {
-                if (arg.Column.AbsoluteIndex == ButtonColumnIndex)
-                {
-                    return true;
-                }
-
-                return false;
+                return !HasDistributionType(rowIndex, DryweatherFlowDistributionType.Daily);
             }
+
+            return false;
         }
+
+        private bool HasDistributionType(int rowIndex, DryweatherFlowDistributionType distributionType) =>
+            ((NwrwDryWeatherFlowDefinition)tableView.GetRowObjectAt(rowIndex)).DistributionType == distributionType;
+        private static bool IsNewRow(int rowIndex) => rowIndex < 0;
+        private static bool IsConstantVolumeColumn(int columnIndex) => columnIndex == 2;
+        private static bool IsDailyVolumeColumn(int columnIndex) => columnIndex == 3 || IsButtonColumn(columnIndex);
+        private static bool IsButtonColumn(int columnIndex) => columnIndex == 4;
 
         private bool CanDeleteCurrentSelection()
         {

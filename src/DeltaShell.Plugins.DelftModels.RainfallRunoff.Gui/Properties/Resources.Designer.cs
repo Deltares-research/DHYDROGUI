@@ -151,6 +151,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Constant volume [L/day].
+        /// </summary>
+        internal static string NwrwDryWeatherFlowDefinitionView_ConstantVolumeColumnCaption {
+            get {
+                return ResourceManager.GetString("NwrwDryWeatherFlowDefinitionView_ConstantVolumeColumnCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily volume [L/day].
+        /// </summary>
+        internal static string NwrwDryWeatherFlowDefinitionView_DailyVolumeColumnCaption {
+            get {
+                return ResourceManager.GetString("NwrwDryWeatherFlowDefinitionView_DailyVolumeColumnCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap openwater {

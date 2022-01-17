@@ -61,6 +61,16 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expected 24 values but got {0} values. Skipping import of water use per capita per hour..
+        /// </summary>
+        internal static string NwrwDryWeatherFlowDefinitionBuilder_WarningIncorrectNumberOfWaterCapacityPerHourValues {
+            get {
+                return ResourceManager.GetString("NwrwDryWeatherFlowDefinitionBuilder_WarningIncorrectNumberOfWaterCapacityPerHourV" +
+                        "alues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap sobek {

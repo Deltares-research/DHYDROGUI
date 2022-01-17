@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         {
             var importedDefinition = rrModelNwrwDryWeatherFlowDefinitions[0];
             Assert.That(importedDefinition.Name, Is.EqualTo(NwrwData.DEFAULT_DWA_ID));
-            Assert.That(importedDefinition.DailyVolumeConstant, Is.EqualTo(12));
+            Assert.That(importedDefinition.DailyVolumeConstant, Is.EqualTo(240));
             Assert.That(importedDefinition.DailyVolumeVariable, Is.EqualTo(120));
             Assert.That(importedDefinition.DistributionType, Is.EqualTo(DryweatherFlowDistributionType.Constant));
             Assert.That(importedDefinition.HourlyPercentageDailyVolume,
@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importedDefinition = rrModelNwrwDryWeatherFlowDefinitions[1];
             Assert.That(importedDefinition.Name, Is.EqualTo("1"));
-            Assert.That(importedDefinition.DailyVolumeConstant, Is.EqualTo(10));
+            Assert.That(importedDefinition.DailyVolumeConstant, Is.EqualTo(240));
             Assert.That(importedDefinition.DailyVolumeVariable, Is.EqualTo(120));
             Assert.That(importedDefinition.DistributionType, Is.EqualTo(DryweatherFlowDistributionType.Constant));
             Assert.That(importedDefinition.HourlyPercentageDailyVolume,
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
             importedDefinition = rrModelNwrwDryWeatherFlowDefinitions[2];
             Assert.That(importedDefinition.Name, Is.EqualTo("P02_1"));
-            Assert.That(importedDefinition.DailyVolumeConstant, Is.EqualTo(10));
+            Assert.That(importedDefinition.DailyVolumeConstant, Is.EqualTo(240));
             Assert.That(importedDefinition.DailyVolumeVariable, Is.EqualTo(120));
             Assert.That(importedDefinition.DistributionType, Is.EqualTo(DryweatherFlowDistributionType.Constant));
             Assert.That(importedDefinition.HourlyPercentageDailyVolume,

@@ -1,5 +1,4 @@
-﻿using DelftTools.Hydro;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff;
+﻿using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using GeoAPI.Geometries;
 using log4net;
@@ -23,9 +22,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 
         public IGeometry Geometry { get; set; }
 
-        public void AddNwrwCatchmentModelDataToModel(IHydroModel model, NwrwImporterHelper helper)
+        public void AddNwrwCatchmentModelDataToModel(RainfallRunoffModel rrModel, NwrwImporterHelper helper)
         {
-            var rrModel = model as RainfallRunoffModel;
             if (rrModel == null)
             {
                 return;
