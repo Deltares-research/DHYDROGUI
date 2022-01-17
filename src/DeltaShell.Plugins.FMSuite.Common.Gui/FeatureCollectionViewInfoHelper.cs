@@ -44,6 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                             v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
                             v.DynamicAttributeVisible = s => s != Feature2D.LocationKey;
                             v.CanAddDeleteAttributes = false;
+                            v.OpenViewMethod = ob => getGui().CommandHandler.OpenView(ob);
                         }
                 };
         }
