@@ -11,13 +11,14 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.NetCdf;
 using DeltaShell.NGHS.Common.Extensions;
-using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.IO.NetCdf;
 using DeltaShell.Plugins.FMSuite.Common.IO;
 using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
+using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -65,11 +66,30 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected override void UpdateFunctionsAfterPathSet()
         {
-            if(CoordinateSystem == null)
-                CoordinateSystem = UGridFileHelper.ReadCoordinateSystem(Path);
+            if (CoordinateSystem == null)
+            {
+                CoordinateSystem = ReadCoordinateSystem();
+            }
+
             Close();
             base.UpdateFunctionsAfterPathSet();
         }
+
+        private ICoordinateSystem ReadCoordinateSystem()
+        {
+            NetCdfFile file = null;
+
+            try
+            {
+                file = NetCdfFile.OpenExisting(Path);
+                return file.GetCoordinateSystem(new OgrCoordinateSystemFactory());
+            }
+            finally
+            {
+                file?.Close();
+            }
+        }
+
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
             FeaturesByCoverage.Clear();

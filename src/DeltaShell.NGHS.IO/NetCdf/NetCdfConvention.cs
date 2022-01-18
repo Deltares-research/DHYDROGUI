@@ -1,7 +1,7 @@
 ﻿using System;
 using DelftTools.Utils.Guards;
 
-namespace DeltaShell.NGHS.Utils.NetCdf
+namespace DeltaShell.NGHS.IO.NetCdf
 {
     /// <summary>
     /// The <see cref="NetCdfConvention"/> in a NetCDF file as described by the "Conventions" attribute.

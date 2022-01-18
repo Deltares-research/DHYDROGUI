@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.Utils.NetCdf;
+using DeltaShell.NGHS.IO.NetCdf;
 using NUnit.Framework;
 
-namespace DeltaShell.NGHS.Utils.Test.NetCdf
+namespace DeltaShell.NGHS.IO.Tests.NetCdf
 {
     [TestFixture]
     public class NetCdfConventionTest

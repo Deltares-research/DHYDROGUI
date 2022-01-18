@@ -2,8 +2,8 @@
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Remoting;
 using Deltares.UGrid.Api;
+using DeltaShell.NGHS.IO.NetCdf;
 using DeltaShell.NGHS.IO.Properties;
-using DeltaShell.NGHS.Utils.NetCdf;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
