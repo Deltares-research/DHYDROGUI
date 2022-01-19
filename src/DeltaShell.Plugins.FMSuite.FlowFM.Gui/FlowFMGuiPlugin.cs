@@ -966,6 +966,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 model.OutputSnappedFeaturesPathPropertyChanged -= OnModelOutputSnappedFeaturesPathPropertyChanged;
             }
+            
+            Gui.DocumentViews.OfType<ProjectItemMapView>().ForEach(v => v.RefreshModelLayers());
         }
 
         private void OnModelOutputSnappedFeaturesPathPropertyChanged(object sender, PropertyChangedEventArgs e)
