@@ -12,7 +12,6 @@ using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
-    //todo: FM1D2D-660
     public class SobekInitialConditionsImporter: PartialSobekImporterBase
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SobekInitialConditionsImporter));

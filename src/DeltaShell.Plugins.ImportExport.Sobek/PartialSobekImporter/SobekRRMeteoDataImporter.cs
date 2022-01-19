@@ -8,6 +8,7 @@ using DelftTools.Functions.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers.fnm;
 using DeltaShell.Sobek.Readers.Readers.SobekRrReaders;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
@@ -27,12 +28,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         private RainfallRunoffModel rainfallRunoffModel;
 
         private const string displayName = "Rainfall Runoff meteo data";
-        public override string DisplayName
-        {
-            get { return displayName; }
-        }
+        public override string DisplayName => displayName;
 
-        public override SobekImporterCategories Category { get; } = SobekImporterCategories.RainfallRunoff;
+        public override SobekImporterCategories Category => SobekImporterCategories.RainfallRunoff;
 
         protected override void PartialImport()
         {
@@ -40,6 +38,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             precipitation = rainfallRunoffModel.Precipitation;
             evaporation = rainfallRunoffModel.Evaporation;
             temperature = rainfallRunoffModel.Temperature;
+
 
             log.DebugFormat("Importing meteo data...");
 
@@ -72,36 +71,48 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 }
             }
             else
-            {
-                if (File.Exists(GetFilePath("default.bui")))
+            { 
+                FnmData fnmData = ReadFnmData();
+
+                string buiFilePath = GetFilePath(fnmData.BuiFile);
+                if (File.Exists(buiFilePath))
                 {
-                    filePathPrecipitation = GetFilePath("default.bui");
+                    filePathPrecipitation = buiFilePath;
                     log.DebugFormat("Importing precipitation data...");
                     ReadAndSetPrecipitation();
                 }
                 
                 SetModelTimesBasedOnEvent(rainfallRunoffModel, GetFilePath(SobekFileNames.SobekRRIniFileName));
 
-                if (File.Exists(GetFilePath("default.evp")))
+                string evpFilePath = GetFilePath(fnmData.VerdampingsFile);
+                if (File.Exists(evpFilePath))
                 {
-                    filePathEvaporation = GetFilePath("default.evp");
+                    filePathEvaporation = evpFilePath;
                     log.DebugFormat("Importing precipitation data...");
                     ReadAndSetEvaporation();
                 }
 
-                if (rainfallRunoffModel.GetAllModelData().OfType<HbvData>().Any())
+                string tmpFilePath = GetFilePath(fnmData.TimeSeriesTemperature);
+                if (rainfallRunoffModel.GetAllModelData().OfType<HbvData>().Any() && 
+                    File.Exists(tmpFilePath))
                 {
-                    if (File.Exists(GetFilePath("default.tmp")))
-                    {
-                        filePathTemperature = GetFilePath("default.tmp");
-                        log.DebugFormat("Importing precipitation data...");
-                        ReadAndSetTemperature();
-                    }
+                    filePathTemperature = tmpFilePath;
+                    log.DebugFormat("Importing precipitation data...");
+                    ReadAndSetTemperature();
                 }
             }
         }
 
-        private void SetModelTimesBasedOnEvent(RainfallRunoffModel model, string path)
+        private FnmData ReadFnmData()
+        {
+            using (FileStream fileStream = File.OpenRead(PathSobek)) 
+            using (var reader = new StreamReader(fileStream)) 
+            { 
+                return FnmDataParser.Parse(reader);
+            }
+        }
+
+        private static void SetModelTimesBasedOnEvent(RainfallRunoffModel model, string path)
         {
             if (!File.Exists(path))
             {
@@ -109,7 +120,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 return;
             }
 
-            var settings = new SobekRRIniSettingsReader().GetSobekRRIniSettings(path);
+            SobekRRIniSettings settings = new SobekRRIniSettingsReader().GetSobekRRIniSettings(path);
 
             if (settings.PeriodFromEvent)
             {

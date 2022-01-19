@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using DelftTools.Shell.Core;
@@ -11,43 +12,69 @@ using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 namespace DeltaShell.Plugins.ImportExport.Sobek
 {
     //GuiImportHandler treats ITargetItemFileImporter and IFileImporter differently. We need both
-    public class SobekModelToRainfallRunoffModelImporter : IPartialSobekImporter, IFileImporter
+    public sealed class SobekModelToRainfallRunoffModelImporter : IPartialSobekImporter, IFileImporter
     {
-
         private string pathSobek;
-        protected object targetItem;
-        protected bool targetItemHasBeenSet;
+        private object targetItem;
         private IPartialSobekImporter importer;
 
-        public virtual string Name
+        public string Name => "Sobek 2 RR Model (into RR model)";
+
+        public string DisplayName => "Sobek 2 RR importer for RR";
+
+        SobekImporterCategories IPartialSobekImporter.Category { get; } = SobekImporterCategories.RainfallRunoff;
+
+        public string Category => ProductCategories.OneDTwoDModelImportCategory;
+
+        public string Description => DisplayName;
+
+        public IEnumerable<Type> SupportedItemTypes
         {
-            get { return "Sobek 2 RR Model (into RR model)"; }
+            get { yield return typeof(RainfallRunoffModel); }
         }
 
-        public SobekModelToRainfallRunoffModelImporter()
-        {
-            targetItemHasBeenSet = false;
-        }
+        public string FileFilter => "RR Sobek_3b.fnm file model import|Sobek_3b.fnm";
 
         public string TargetDataDirectory { get; set; }
 
-        public bool CanImportOn(object targetObject)
+        public bool ShouldCancel { get; set; }
+
+        public bool OpenViewAfterImport => true;
+
+        public ImportProgressChangedDelegate ProgressChanged { get; set; }
+
+        [ExcludeFromCodeCoverage]
+        public Bitmap Image => Properties.Resources.sobek;
+
+        public bool CanImportOnRootLevel => true;
+
+        public bool CanImportOn(object targetObject) => true;
+
+        public object TargetObject
         {
-            return true;
+            get => targetItem ?? (targetItem = new RainfallRunoffModel());
+            set => targetItem = value;
         }
 
+        public bool IsActive { get; set; }
+
+        public bool IsVisible { get; set; }
+
+        public Action<IPartialSobekImporter> AfterImport { get; set; }
+
+        public Action<IPartialSobekImporter> BeforeImport { get; set; }
         
-        public virtual object ImportItem(string path, object target = null)
+        public object ImportItem(string path, object target = null)
         {
             // Configure the TargetObject of the IPartialSobekImporter part of the importer
-            var targetObjectInternal = target ?? TargetObject;
+            object targetObjectInternal = target ?? TargetObject;
 
             if (ShouldCancel)
             {
                 return null;
             }
 
-            TargetItem = targetObjectInternal;
+            TargetObject = targetObjectInternal;
             if (importer == null && PathSobek == null)
             {
                 PathSobek = path;
@@ -68,54 +95,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
             var rrModel = targetObjectInternal as RainfallRunoffModel;
             targetItem = null;
-            targetItemHasBeenSet = false;
             return rrModel;
-        }
-
-        public IEnumerable<Type> SupportedItemTypes
-        {
-            get { yield return typeof(RainfallRunoffModel); }
-        }
-
-        public string FileFilter
-        {
-            get { return "RR Sobek_3b.fnm file model import|Sobek_3b.fnm"; }
-        }
-
-        public virtual object TargetItem
-        {
-            get
-            {
-                return targetItem ?? (targetItem = new RainfallRunoffModel());
-            }
-            set
-            {
-                targetItem = value;
-                targetItemHasBeenSet = true;
-            }
         }
 
         public string PathSobek
         {
-            get { return pathSobek; }
+            get => pathSobek;
             set
             {
                 pathSobek = value;
-                importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(PathSobek, TargetItem);
+                importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(PathSobek, TargetObject);
             }
-        }
-
-        public string DisplayName
-        {
-            get { return "Sobek 2 RR importer for RR"; }
-        }
-
-        SobekImporterCategories IPartialSobekImporter.Category { get; } = SobekImporterCategories.RainfallRunoff;
-
-        public object TargetObject
-        {
-            get { return TargetItem; }
-            set { TargetItem = value; }
         }
 
         public IPartialSobekImporter PartialSobekImporter
@@ -128,52 +118,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             set { }
         }
 
-        public void Import()
-        {
-            if (importer != null)
-            {
-                importer.Import();
-            }
-        }
+        public void Import() => importer?.Import();
 
-        public bool IsActive { get; set; }
-
-        public bool IsVisible { get; set; }
-
-        public bool ShouldCancel { get; set; }
-
-        public Action<IPartialSobekImporter> AfterImport { get; set; }
-
-        public Action<IPartialSobekImporter> BeforeImport { get; set; }
-
-        public string Category
-        {
-            get { return ProductCategories.OneDTwoDModelImportCategory; }
-        }
-
-        public string Description
-        {
-            get
-            {
-                return "Sobek 2 RR importer for RR";
-            } 
-        }
-
-        public Bitmap Image
-        {
-            get { return Properties.Resources.sobek; }
-        }
-
-        public virtual bool CanImportOnRootLevel
-        {
-            get { return true; }
-        }
-
-        public bool OpenViewAfterImport { get { return true; } }
-
-        public ImportProgressChangedDelegate ProgressChanged { get; set; }
-
-        private IEnumerable<IPartialSobekImporter> GetImporters(IPartialSobekImporter partialImporter)
+        private static IEnumerable<IPartialSobekImporter> GetImporters(IPartialSobekImporter partialImporter)
         {
             while (partialImporter != null)
             {
@@ -184,22 +131,17 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
         private void GatherProgressInformation()
         {
-            var importers = GetImporters(importer).Reverse().ToList();
-            var totalSteps = importers.Count(i => i.IsActive);
+            List<IPartialSobekImporter> importers = GetImporters(importer).Reverse().ToList();
+            int totalSteps = importers.Count(i => i.IsActive);
             var currentStep = 1;
-            for (var i = 0; i < importers.Count; i++)
+            foreach (IPartialSobekImporter imp in importers)
             {
-                var imp = importers[i];
-
                 imp.BeforeImport = currentImporter =>
                 {
                     if (!imp.IsActive)
                         return;
 
-                    if (ProgressChanged != null)
-                    {
-                        ProgressChanged(currentImporter.DisplayName, currentStep, totalSteps);
-                    }
+                    ProgressChanged?.Invoke(currentImporter.DisplayName, currentStep, totalSteps);
                 };
 
                 imp.AfterImport = currentImporter =>
@@ -211,10 +153,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
 
                     if (ProgressChanged == null) return;
 
-                    var nextStartIndex = importers.IndexOf(imp) + 1;
-                    var nextImporterIndex = nextStartIndex >= importers.Count
-                        ? -1
-                        : importers.FindIndex(nextStartIndex, im => im.IsActive);
+                    int nextStartIndex = importers.IndexOf(imp) + 1;
+                    int nextImporterIndex = nextStartIndex >= importers.Count 
+                                                ? -1
+                                                : importers.FindIndex(nextStartIndex, im => im.IsActive);
 
                     if (nextImporterIndex >= 0)
                         ProgressChanged(importers[nextImporterIndex].DisplayName, currentStep, totalSteps);

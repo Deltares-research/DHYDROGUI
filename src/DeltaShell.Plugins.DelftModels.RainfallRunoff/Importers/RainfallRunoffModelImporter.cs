@@ -13,34 +13,26 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
 {
+    /// <summary>
+    /// <see cref="RainfallRunoffModelImporter"/> implements the <see cref="IDimrModelFileImporter"/>
+    /// for importing <see cref="RainfallRunoffModel"/> objects.
+    /// </summary>
+    /// <seealso cref="ModelFileImporterBase"/>
+    /// <seealso cref="IDimrModelFileImporter"/>
     public class RainfallRunoffModelImporter : ModelFileImporterBase, IDimrModelFileImporter
     {
-        [ExcludeFromCodeCoverage]
-        public override string Name
-        {
-            get { return "Rainfall Runoff Model importer"; }
-        }
+        public override string Name => "Rainfall Runoff Model importer";
 
-        [ExcludeFromCodeCoverage]
-        public override string Category
-        {
-            get { return ProductCategories.OneDTwoDModelImportCategory; }
-        }
+        public override string Category => ProductCategories.OneDTwoDModelImportCategory;
 
-        public override string Description
-        {
-            get { return Name; }
-        }
-        
+        public override string Description => Name;
+
         public override IEnumerable<Type> SupportedItemTypes
         {
             get { yield return typeof(IHydroModel); }
         }
 
-        public override string FileFilter
-        {
-            get { return "RR Sobek_3b.fnm file model import|Sobek_3b.fnm"; }
-        }
+        public override string FileFilter => "RR Sobek_3b.fnm file model import|Sobek_3b.fnm";
 
         public override string TargetDataDirectory { get; set; }
 
@@ -48,32 +40,26 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
 
         public override ImportProgressChangedDelegate ProgressChanged { get; set; }
 
+        [ExcludeFromCodeCoverage]
         public override Bitmap Image { get; }
 
-        public override bool CanImportOnRootLevel
-        {
-            get { return true; }
-        }
+        public override bool CanImportOnRootLevel => true;
 
-        public override bool OpenViewAfterImport
-        {
-            get { return true; }
-        }
+        public override bool OpenViewAfterImport => true;
 
         public string MasterFileExtension => "fnm";
 
-        public override bool CanImportOn(object targetObject)
-        {
-            return targetObject is ICompositeActivity || targetObject is RainfallRunoffModel;
-        }
+        public override bool CanImportOn(object targetObject) => 
+            targetObject is ICompositeActivity || targetObject is RainfallRunoffModel;
 
         protected override object OnImportItem(string path, object target = null)
         {
             var importedRRModel = new RainfallRunoffModel();
-            var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
+            
+            IFileImporter importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
             if (importer == null)
             {
-                throw new NotSupportedException("Could not find Sobek RR model importer");
+                throw new NotSupportedException("Could not find Sobek RR model importer.");
             }
 
             importer?.ImportItem(path, importedRRModel);
@@ -83,8 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Importers
                 //replace the RR Model
                 case RainfallRunoffModel targetRRModel:
                 {
-                    var parent = targetRRModel.Owner;
-                    switch (parent)
+                    switch (targetRRModel.Owner)
                     {
                         //add / replace the RR Model in the project
                         case Folder folder:

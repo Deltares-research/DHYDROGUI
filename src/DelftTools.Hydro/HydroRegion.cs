@@ -7,7 +7,6 @@ using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
-using DelftTools.Utils.Guards;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
