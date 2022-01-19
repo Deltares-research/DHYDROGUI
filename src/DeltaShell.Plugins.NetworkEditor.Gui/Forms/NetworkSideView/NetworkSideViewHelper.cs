@@ -6,10 +6,11 @@ using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Charting.Series;
 using DelftTools.Functions;
 using DelftTools.Functions.Binding;
+using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures;
 using DelftTools.Units;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
@@ -518,29 +519,46 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             if (!route.Locations.Values.Any()) return;
 
+            INetworkLocation[] existingLocations = coverage.Locations.Values.ToArray();
+            
             foreach (var pipe in route.Network.Branches.OfType<IPipe>())
             {
-                if (pipe.Source is Manhole)
+                if (pipe.Source is IManhole)
                 {
                     var startLocationPipe = new NetworkLocation(pipe, 0);
-                    coverage[startLocationPipe] = pipe.SourceCompartment.SurfaceLevel;
+                    SetLocationValue(coverage, startLocationPipe, existingLocations, pipe.SourceCompartment.SurfaceLevel);
                 }
 
-                if (pipe.Target is Manhole)
+                if (pipe.Target is IManhole)
                 {
                     var endLocationPipe = new NetworkLocation(pipe, pipe.Length);
-                    coverage[endLocationPipe] = pipe.TargetCompartment.SurfaceLevel;
+                    SetLocationValue(coverage, endLocationPipe, existingLocations, pipe.TargetCompartment.SurfaceLevel);
                 }
             }
 
             var startLocationRoute = route.Locations.Values[0];
-            var endLocationRoute = route.Locations.Values[route.Locations.Values.Count - 1];
+            var endLocationRoute = route.Locations.Values.Last();
 
             if (startLocationRoute.Branch is IPipe startLocationRoutePipe)
                 coverage[startLocationRoute] = GetSurfaceLevelAtChainage(startLocationRoute.Chainage, startLocationRoutePipe);
 
             if (endLocationRoute.Branch is IPipe endLocationRoutePipe)
                 coverage[endLocationRoute] = GetSurfaceLevelAtChainage(endLocationRoute.Chainage, endLocationRoutePipe);
+        }
+
+        private static void SetLocationValue(IFunction coverage, INetworkLocation newLocation, IEnumerable<INetworkLocation> existingLocations, double newValue)
+        {
+            INetworkLocation[] locationsToReplace = existingLocations.Where(l => Equals(l, newLocation)).ToArray();
+
+            // `coverage[newLocation] = newValue` will not replace an existing location but will add it again,
+            // leading to duplicate locations in the coverage, which is invalid.
+            if (locationsToReplace.Any())
+            {
+                IVariable locationVariable = coverage.Arguments[0];
+                locationVariable.RemoveValues(new VariableValueFilter<INetworkLocation>(locationVariable, locationsToReplace));
+            }
+
+            coverage[newLocation] = newValue;
         }
 
         private static double GetSurfaceLevelAtChainage(double chainage, ISewerConnection connection)

@@ -5,8 +5,12 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
+using GeoAPI.Extensions.Coverages;
+using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
@@ -197,6 +201,67 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 
             Assert.AreEqual(resultOnSegment2.Item1, route.Segments.Values[1]);
             Assert.AreEqual(resultOnSegment2.Item2, secondSegment.Chainage + secondSegment.Length / 2);
+        }
+
+        [Test]
+        public void AddPipeSurfaceLevelsInRoute_WithExistingLocationOnCoverage_ReplacesLocation()
+        {
+            Pipe pipe = CreatePipe();
+
+            var network = Substitute.For<INetwork>();
+            network.Branches.Returns(new EventedList<IBranch>(new[]
+            {
+                pipe
+            }));
+
+            var startRouteLocation = new NetworkLocation(pipe, 0);
+            var endRouteLocation = new NetworkLocation(pipe, 100);
+
+            var route = new Route { Network = network };
+            route.SetLocations(new INetworkLocation[]
+            {
+                startRouteLocation,
+                endRouteLocation
+            });
+
+            var networkCoverage = new NetworkCoverage();
+            networkCoverage.SetLocations(new INetworkLocation[]
+            {
+                startRouteLocation,
+                endRouteLocation
+            });
+
+            // Call
+            NetworkSideViewHelper.AddPipeSurfaceLevelsInRoute(route, networkCoverage);
+
+            // Assert
+            Assert.That(networkCoverage.Locations.Values, Has.Count.EqualTo(2));
+            Assert.That(networkCoverage.Locations.Values[0], Is.EqualTo(startRouteLocation));
+            Assert.That(networkCoverage.Locations.Values[0], Is.Not.SameAs(startRouteLocation));
+            Assert.That(networkCoverage.Locations.Values[1], Is.EqualTo(endRouteLocation));
+            Assert.That(networkCoverage.Locations.Values[1], Is.Not.SameAs(endRouteLocation));
+        }
+
+        private static Pipe CreatePipe()
+        {
+            var pipe = new Pipe
+            {
+                Source = Substitute.For<IManhole>(),
+                Target = Substitute.For<IManhole>(),
+                Length = 100,
+                SourceCompartment = Substitute.For<ICompartment>(),
+                TargetCompartment = Substitute.For<ICompartment>(),
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(100, 0)
+                })
+            };
+
+            pipe.SourceCompartment.SurfaceLevel = 1.23;
+            pipe.TargetCompartment.SurfaceLevel = 4.56;
+
+            return pipe;
         }
     }
 }
