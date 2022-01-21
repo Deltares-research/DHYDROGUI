@@ -90,5 +90,6 @@
 
 	<ItemGroup>
 	  <Folder Include="Properties\" />
+	  <Folder Include="Validators\" />
 	</ItemGroup>
 </Project>

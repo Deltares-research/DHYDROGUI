@@ -309,6 +309,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return Convert.ToInt32(ModelDefinition.GetModelProperty(KnownProperties.ICdtyp).Value); }
         }
 
+        public double MinimumSegmentLength
+        {
+            get
+            {
+                return Convert.ToDouble(ModelDefinition.GetModelProperty(KnownProperties.Dxmin1D).Value);
+            }
+        }
+
         public IEventedList<IWindField> WindFields { get; private set; }
 
         public IEventedList<IFmMeteoField> FmMeteoFields { get; private set; }
