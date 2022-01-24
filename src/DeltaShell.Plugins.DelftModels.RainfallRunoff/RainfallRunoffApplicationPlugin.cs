@@ -103,28 +103,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private static void MoveOutputFromWorkingDirectory(RainfallRunoffModel rainfallRunoffModel, string savePath)
         {
-            var paths = rainfallRunoffModel.OutputFunctions
-                                           .Select(f => f.Store)
-                                           .OfType<IFileBased>()
-                                           .Select(f => f.Path)
-                                           .Where(p => p != null)
-                                           .Distinct()
-                                           .ToArray();
-
-            if (paths.Length == 0)
-            {
-                return;
-            }
-
             rainfallRunoffModel.DisconnectOutput();
-            foreach (string path in paths)
-            {
-                if (!path.StartsWith(savePath))
-                {
-                    File.Copy(path, Path.Combine(savePath, Path.GetFileName(path)));
-                }
-            }
-
+            rainfallRunoffModel.OutputFiles.CopyTo(savePath);
             rainfallRunoffModel.ConnectOutput(savePath);
         }
 

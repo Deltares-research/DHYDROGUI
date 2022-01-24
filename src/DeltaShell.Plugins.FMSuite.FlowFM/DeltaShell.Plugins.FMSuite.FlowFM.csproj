@@ -62,6 +62,10 @@
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="DeltaShell.Plugins.CommonTools">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.CommonTools\DeltaShell.Plugins.CommonTools.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="DeltaShell.Plugins.NetCDF">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
 			<Private>False</Private>
@@ -113,6 +117,7 @@
 		<Reference Include="System" />
 		<Reference Include="System.Core" />
 		<Reference Include="System.Data" />
+		<Reference Include="System.Data.DataSetExtensions" />
 		<Reference Include="System.Drawing" />
 		<Reference Include="WindowsBase" />
 	</ItemGroup>

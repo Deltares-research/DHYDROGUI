@@ -92,8 +92,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
-            FeaturesByCoverage.Clear();
+            if (!ValidateTimes())
+            {
+                yield break;
+            }
             
+            FeaturesByCoverage.Clear();
+
             // add special velocity timeseries?
             foreach (var timeVariable in dataVariables.Where(v => v.IsTimeDependent))
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
@@ -20,11 +21,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
     public class WaterFlowFmModelValidationExtensionsTest
     {
         [Test]
-        [Category("Quarantine")]
         public void CheckModelValidatesIfNoGridDefinedButNetworkIsValid()
         {
             var model = new WaterFlowFMModel();
-            var reportErrors = WaterFlowFMGridValidator.Validate(model);
+            var reportErrors = ComputationalGridValidator.Validate(model.NetworkDiscretization,model.Grid,model.MinimumSegmentLength);
 
             Assert.AreEqual(1, reportErrors.ErrorCount);
 
@@ -34,20 +34,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             Assert.AreEqual(ValidationSeverity.Error, errorFound.Severity);
             Assert.AreEqual(expectedErrorMessage, errorFound.Message);
 
-            WaterFlowFMTestHelper.ConfigureDemoNetwork(model.Network);
-            var firstChannel = model.Network.Channels.First();
-            model.NetworkDiscretization[new NetworkLocation(firstChannel, 0.2)] = 0.0;
-
-            reportErrors = WaterFlowFMGridValidator.Validate(model);
-            Assert.AreEqual(0, reportErrors.ErrorCount);
-
-            model.Network = new HydroNetwork();
-            reportErrors = WaterFlowFMGridValidator.Validate(model);
-            Assert.AreEqual(1, reportErrors.ErrorCount);
-
             model.Grid = UnstructuredGridTestHelper.GenerateRegularGrid(2, 2, 2, 2);
-            reportErrors = WaterFlowFMGridValidator.Validate(model);
+            reportErrors = ComputationalGridValidator.Validate(model.NetworkDiscretization, model.Grid, model.MinimumSegmentLength);
             Assert.AreEqual(0, reportErrors.ErrorCount);
+        }
+
+        [Test]
+        public void ValidateDiscretizationWithADoubleCalcPointTest()
+        {
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
+            var discretization = new Discretization() { Network = network };
+            var channel = network.Channels.First();
+            HydroNetworkHelper.GenerateDiscretization(discretization, true, false, 100.0, false, 0.0, false, false,
+                                                      true, 10.0, new List<IChannel> { channel });
+            var discretizationLocations = discretization.Locations;
+            var locations = discretizationLocations.Values;
+
+            discretizationLocations.SkipUniqueValuesCheck = true;
+            discretizationLocations.IsAutoSorted  = false;
+
+            locations[1].Branch = locations[2].Branch;
+            locations[1].Chainage = locations[2].Chainage;
+
+            discretizationLocations.IsAutoSorted = true;
+            discretizationLocations.SkipUniqueValuesCheck = false;
+
+            var report = ComputationalGridValidator.Validate(discretization,null, 1);
+
+            Assert.That(report.Severity(), Is.EqualTo(ValidationSeverity.Error));
+            Assert.That(report.AllErrors.Count(), Is.EqualTo(1));
+            Assert.That(report.AllErrors.Select(i => i.Message), Contains.Item($"There are duplicate calculation points at same the location. Kernel cannot handle this. Please remove one of the points."));
         }
 
         [Test]
@@ -56,7 +72,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             var model = new WaterFlowFMModel();
             var report = model.Validate();
 
-            Assert.NotNull(report.SubReports.First(r => r.Category.Equals(WaterFlowFMModelComputationalGridValidator.CategoryName)));
+            Assert.NotNull(report.SubReports.First(r => r.Category.Equals(ComputationalGridValidator.CategoryName)));
         }
 
         [Test]

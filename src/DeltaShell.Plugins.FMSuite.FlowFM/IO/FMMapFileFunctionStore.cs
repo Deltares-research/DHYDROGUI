@@ -86,6 +86,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
+            if (!ValidateTimes())
+            {
+                return Array.Empty<IFunction>();
+            }
+
             boundaryCellValues.Clear();
 
             Grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true, false);

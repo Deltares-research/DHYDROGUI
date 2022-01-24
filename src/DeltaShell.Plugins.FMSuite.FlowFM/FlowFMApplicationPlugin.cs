@@ -121,6 +121,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public override IEnumerable<IFileImporter> GetFileImporters()
         {
+            yield return new LateralSourceImporter();
             yield return new WaterFlowFMFileImporter(() => Application?.WorkDirectory);
             yield return new WaterFlowFMIntoWaterFlowFMFileImporter();
             yield return new Area2DStructuresImporter { GetModelForArea = GetModelForArea };

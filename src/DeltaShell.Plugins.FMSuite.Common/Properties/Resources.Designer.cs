@@ -68,5 +68,32 @@ namespace DeltaShell.Plugins.FMSuite.Common.Properties {
                 return ResourceManager.GetString("FMNetCdfFileFunctionStore_Could_not_parse_time_reference", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variable &quot;time&quot; does not contain values. Time dependent variables cannot be read. See file: {0}.
+        /// </summary>
+        public static string FMNetCdfFileFunctionStore_WarningTimeVariableEmpty {
+            get {
+                return ResourceManager.GetString("FMNetCdfFileFunctionStore_WarningTimeVariableEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variable &quot;time&quot; is missing. Time dependent variables cannot be read. See file: {0}.
+        /// </summary>
+        public static string FMNetCdfFileFunctionStore_WarningTimeVariableMissing {
+            get {
+                return ResourceManager.GetString("FMNetCdfFileFunctionStore_WarningTimeVariableMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variable &quot;time&quot; contains missing values. Time dependent variables cannot be read. See file: {0}.
+        /// </summary>
+        public static string FMNetCdfFileFunctionStore_WarningTimeVariableMissingValues {
+            get {
+                return ResourceManager.GetString("FMNetCdfFileFunctionStore_WarningTimeVariableMissingValues", resourceCulture);
+            }
+        }
     }
 }

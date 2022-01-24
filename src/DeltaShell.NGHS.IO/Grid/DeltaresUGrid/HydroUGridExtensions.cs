@@ -208,6 +208,12 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     Log.Error($"The chainage of a network location on branch '{networkBranch.Name}' is negative. Location will be skipped.");
                     continue;
                 }
+
+                if (chainage > networkBranch.Length)
+                {
+                    Log.Error($"The chainage ({meshGeometryBranchChainage}) of a network location on branch '{networkBranch.Name}' is beyond the length of the branch ({networkBranch.Length}). Location will be corrected to branch length.");
+                    chainage = networkBranch.Length;
+                }
                 
                 yield return new NetworkLocation
                 {

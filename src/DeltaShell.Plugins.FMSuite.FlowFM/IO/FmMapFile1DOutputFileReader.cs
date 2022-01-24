@@ -18,7 +18,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private const string longNameAttributeKeyNameInNetCdfFile = "long_name";
         private readonly string dateTimeFormatWithZone = $"{dateTimeFormat} zzz";
 
-        public OutputFile1DMetaData ReadMetaData(string path, bool doValidation = true)
+        public OutputFile1DMetaData ReadMetaData(string path)
         {
             IList<DateTime> times = ReadTimesFromNetCdfFile(path);
             IList<TimeDependentVariableMetaDataBase> timeDependentVariableMetaData = ReadTimeDependentVariableMetaDataFromNetCdfFile(path);
@@ -27,13 +27,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             return new OutputFile1DMetaData(times, locationMetaData, timeDependentVariableMetaData);
         }
 
-        private V DoWithNetCdfFile<V>(string path, Func<NetCdfFile, IList<TimeDependentVariableMetaDataBase>, V> function, IList<TimeDependentVariableMetaDataBase> timeDependentVariableMetaData = null)
+        private T DoWithNetCdfFile<T>(string path, Func<NetCdfFile, T> function)
         {
             NetCdfFile outputFile = null;
             try
             {
                 outputFile = NetCdfFile.OpenExisting(path);
-                return function(outputFile, timeDependentVariableMetaData);
+                return function(outputFile);
             }
             catch (Exception ex)
             {
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private IList<DateTime> ReadTimesFromNetCdfFile(string path)
         {
-            return DoWithNetCdfFile(path, (outputFile, timeDependentVariables) =>
+            return DoWithNetCdfFile(path, (outputFile) =>
             {
                 NetCdfVariable timeVariable = outputFile.GetVariableByName(timeVariableNameInNetCdfFile);
                 if (timeVariable == null)
@@ -66,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private IDictionary<TimeDependentVariableMetaDataBase, IList<LocationMetaData>> ReadLocationMetaDataFromNetCdfFile(IList<TimeDependentVariableMetaDataBase> timeDependentVariableMetaData, string path)
         {
-            return DoWithNetCdfFile(path, (outputFile, timeDependentVariableMetaDatas) =>
+            return DoWithNetCdfFile(path, (outputFile) =>
             {
                 var result = new Dictionary<TimeDependentVariableMetaDataBase, IList<LocationMetaData>>();
 
@@ -149,7 +149,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         private IList<TimeDependentVariableMetaDataBase> ReadTimeDependentVariableMetaDataFromNetCdfFile(string path)
         {
-            return DoWithNetCdfFile(path, (outputFile, timeDependentVariables) =>
+            return DoWithNetCdfFile(path, (outputFile) =>
             {
                 IList<TimeDependentVariableMetaDataBase> timeDependentVariableMetaData = new List<TimeDependentVariableMetaDataBase>();
 
@@ -244,45 +244,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             public bool OnNodes { get; }
 
-            public string id
-            {
-                get
-                {
-                    return OnNodes ? $"{meshName}_{location}_id" : $"{meshName}_{location}_nodes";
-                }
-            }
+            public string id => OnNodes ? $"{meshName}_{location}_id" : $"{meshName}_{location}_nodes";
 
-            public string BranchId
-            {
-                get
-                {
-                    return $"{meshName}_{location}_branch";
-                }
-            }
+            public string BranchId => $"{meshName}_{location}_branch";
 
-            public string Chainage
-            {
-                get
-                {
-                    return $"{meshName}_{location}_offset";
-                }
-            }
+            public string Chainage => $"{meshName}_{location}_offset";
 
-            public string XNodeCoordinate
-            {
-                get
-                {
-                    return $"{meshName}_{location}_x";
-                }
-            }
+            public string XNodeCoordinate => $"{meshName}_{location}_x";
 
-            public string YNodeCoordinate
-            {
-                get
-                {
-                    return $"{meshName}_{location}_y";
-                }
-            }
+            public string YNodeCoordinate => $"{meshName}_{location}_y";
         }
     }
 }

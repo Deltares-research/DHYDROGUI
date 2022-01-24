@@ -435,6 +435,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
+            if (!ValidateTimes())
+            {
+                return Array.Empty<IFunction>();
+            }
+
             var netCdfVariables = netCdfFile.GetVariables().ToList();
             var mesh1DNameNetCdfVariable = netCdfVariables.FirstOrDefault(dv =>
             {

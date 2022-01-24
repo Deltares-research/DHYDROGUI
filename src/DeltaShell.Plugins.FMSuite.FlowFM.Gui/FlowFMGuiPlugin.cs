@@ -14,6 +14,7 @@ using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.Shell.Gui.Swf.Validation;
@@ -172,26 +173,29 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new WaterFlowFMModelNodePresenter(this);
-            yield return new FmModelTreeShortcutNodePresenter { GuiPlugin = this};
-            yield return new BoundaryConditionSetNodePresenter { GuiPlugin = this };
+            yield return new FmModelTreeShortcutNodePresenter {GuiPlugin = this};
+            yield return new BoundaryConditionSetNodePresenter {GuiPlugin = this};
             yield return new SourceSinkNodePresenter {GuiPlugin = this};
             yield return new FMMapFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new FMHisFileFunctionStoreNodePresenter();
-            yield return new FMClassMapFileFunctionStoreNodePresenter { GuiPlugin = this };
+            yield return new FMClassMapFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new FM1DFileFunctionStoreNodePresenter {GuiPlugin = this};
             yield return new ImportedFMNetFileNodePresenter {GuiPlugin = this};
             yield return new HeatFluxModelNodePresenter {GuiPlugin = this};
             yield return new WindItemListNodePresenter {GuiPlugin = this};
             yield return new WindItemNodePresenter {GuiPlugin = this};
             yield return new FmMeteoItemNodePresenter {GuiPlugin = this};
-            yield return new FmMeteoItemListNodePresenter { GuiPlugin = this };
+            yield return new FmMeteoItemListNodePresenter {GuiPlugin = this};
         }
+        
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
             yield return new ViewInfo<ProjectTemplate, CreateFmModelSettingView>
             {
                 AdditionalDataCheck = t => t.Id?.Equals(FlowFMApplicationPlugin.FM_MODEL_DEFAULT_PROJECT_TEMPLATE_ID, StringComparison.CurrentCultureIgnoreCase) ?? false
             };
+
+            yield return GetLateralSourceViewInfo();
 
             yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>
             {
@@ -674,6 +678,37 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(channelInitialConditionDefinitionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
         }
 
+        private ViewInfo<LateralSourceImporter, LateralSourceImportDialog> GetLateralSourceViewInfo()
+        {
+            return new ViewInfo<LateralSourceImporter, LateralSourceImportDialog>
+            {
+                Description = "LateralSource Data CSV Importer",
+                AfterCreate = (v, o) =>
+                {
+                    var guiSelectionDataItem = Gui.Selection as FmModelTreeShortcut;
+                    switch (guiSelectionDataItem?.Data)
+                    {
+                        case IEventedList<Model1DLateralSourceData> _:
+                            v.BatchMode = true;
+                            v.ForBoundaryConditions = false;
+                            break;
+                        case IEventedList<Model1DBoundaryNodeData> _:
+                            v.BatchMode = true;
+                            v.ForBoundaryConditions = true;
+                            break;
+                        case Model1DLateralSourceData _:
+                            v.BatchMode = false;
+                            v.ForBoundaryConditions = false;
+                            break;
+                        case Model1DBoundaryNodeData _:
+                            v.BatchMode = false;
+                            v.ForBoundaryConditions = true;
+                            break;
+                    }
+                }
+            };
+        }
+        
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
