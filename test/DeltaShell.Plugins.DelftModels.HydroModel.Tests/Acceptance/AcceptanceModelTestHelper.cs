@@ -40,6 +40,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         private static string hisExtension = ".his";
         private static string mapExtension = ".map";
         private static string hiaExtension = ".hia";
+        private static string outExtension = ".out";
+        private static string logExtension = ".log";
+        private static string rtnExtension = ".rtn";
+        private static string txtExtension = ".txt";
+        
+        
         
         /// <summary>
         /// Creates a running <see cref="DeltaShellGui"/> instance with all relevant plugins.
@@ -165,15 +171,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         /// <returns>An collection of input files.</returns>
         public static IEnumerable<string> FilterInputFiles(IEnumerable<string> filepaths)
         {
-            return filepaths.Where(fp =>
-            {
-                string fileExtension = Path.GetExtension(fp);
-
-                return !string.Equals(fileExtension, ncExtension, StringComparison.InvariantCultureIgnoreCase)
-                       && !string.Equals(fileExtension, hisExtension, StringComparison.InvariantCultureIgnoreCase)
-                       && !string.Equals(fileExtension, mapExtension, StringComparison.InvariantCultureIgnoreCase)
-                       && !string.Equals(fileExtension, hiaExtension, StringComparison.InvariantCultureIgnoreCase);
-            });
+            return filepaths.Where(fp => !IsRainfallRunoffOutputFile(fp));
         }
         
         /// <summary>
@@ -183,14 +181,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
         /// <returns>A collection of output files.</returns>
         public static IEnumerable<string> FilterOutputFiles(IEnumerable<string> filepaths)
         {
-            return filepaths.Where(fp =>
+            return filepaths.Where(IsRainfallRunoffOutputFile);
+        }
+
+        private static bool IsRainfallRunoffOutputFile(string fp)
+        {
+            string fileName = Path.GetFileName(fp);
+            if (fileName == "RR-ready" || fileName == "RSRR_OUT")
             {
-                string fileExtension = Path.GetExtension(fp);
-                return string.Equals(fileExtension, ncExtension, StringComparison.InvariantCultureIgnoreCase)
-                       || string.Equals(fileExtension, hisExtension, StringComparison.InvariantCultureIgnoreCase)
-                       || string.Equals(fileExtension, mapExtension, StringComparison.InvariantCultureIgnoreCase)
-                       || string.Equals(fileExtension, hiaExtension, StringComparison.InvariantCultureIgnoreCase);
-            });
+                return true;
+            }
+
+            string fileExtension = Path.GetExtension(fp);
+            return string.Equals(fileExtension, ncExtension, StringComparison.InvariantCultureIgnoreCase)
+                   || string.Equals(fileExtension, hisExtension, StringComparison.InvariantCultureIgnoreCase)
+                   || string.Equals(fileExtension, mapExtension, StringComparison.InvariantCultureIgnoreCase)
+                   || string.Equals(fileExtension, hiaExtension, StringComparison.InvariantCultureIgnoreCase)
+                   || string.Equals(fileExtension, txtExtension, StringComparison.InvariantCultureIgnoreCase)
+                   || string.Equals(fileExtension, logExtension, StringComparison.InvariantCultureIgnoreCase)
+                   || string.Equals(fileExtension, rtnExtension, StringComparison.InvariantCultureIgnoreCase)
+                   || string.Equals(fileExtension, outExtension, StringComparison.InvariantCultureIgnoreCase);
         }
         
         /// <summary>
