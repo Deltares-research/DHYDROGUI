@@ -178,6 +178,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.Add(new RainfallRunoffInWorkFlowTypeValidatorProvider());
             }
             runner = new DimrRunner(this, new DimrApiFactory());
+            OutputFiles = new RainfallRunoffOutputFiles();
         }
 
         /// <summary>
@@ -1042,11 +1043,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public virtual void ConnectOutput(string outputPath)
         {
+            OutputFiles.SetDirectory(outputPath);
             OutputFunctions.ForEach(ChangeToReadOnlyMapHisFileFunctionStore);
             OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
             SetPathsOfFunctionStores(outputPath);
             OutputIsEmpty = false;
         }
+
+        /// <summary>
+        /// The output files of the model.
+        /// </summary>
+        public RainfallRunoffOutputFiles OutputFiles { get; }
 
         public virtual void RestoreOutputSettings()
         {
@@ -1256,6 +1263,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                         coverage.Clear();
                     }
                 }
+
+                OutputFiles.Clear();
             }
             finally
             {
