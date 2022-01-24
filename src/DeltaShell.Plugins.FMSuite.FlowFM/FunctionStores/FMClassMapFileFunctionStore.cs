@@ -102,6 +102,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
         /// <returns> </returns>
         protected override IEnumerable<IFunction> ConstructFunctions(IEnumerable<NetCdfVariableInfo> dataVariables)
         {
+            if (!ValidateTimes())
+            {
+                return Array.Empty<IFunction>();
+            }
+
             grid = UGridFileHelper.ReadUnstructuredGrid(netCdfFile.Path, true, false);
             links = UGridFileHelper.Read1D2DLinks(netCdfFile.Path);
             UpdateNetworkAndDiscretisation();

@@ -120,4 +120,13 @@
   <data name="FMNetCdfFileFunctionStore_Could_not_parse_time_reference" xml:space="preserve">
     <value>Could not parse time reference</value>
   </data>
+  <data name="FMNetCdfFileFunctionStore_WarningTimeVariableMissing" xml:space="preserve">
+    <value>Variable "time" is missing. Time dependent variables cannot be read. See file: {0}</value>
+  </data>
+  <data name="FMNetCdfFileFunctionStore_WarningTimeVariableEmpty" xml:space="preserve">
+    <value>Variable "time" does not contain values. Time dependent variables cannot be read. See file: {0}</value>
+  </data>
+  <data name="FMNetCdfFileFunctionStore_WarningTimeVariableMissingValues" xml:space="preserve">
+    <value>Variable "time" contains missing values. Time dependent variables cannot be read. See file: {0}</value>
+  </data>
 </root>
