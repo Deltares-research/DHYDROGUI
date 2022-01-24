@@ -487,4 +487,16 @@ File import of structures file '{1}' has failed.</value>
   <data name="WaterFlowFMModel__0__has_changed__clearing_results_" xml:space="preserve">
     <value>{0} has changed, clearing results.</value>
   </data>
+  <data name="LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBasedOnDiscriminator">
+    <value>SeriesCsvFileImporter does not support importer mode SeveralFunctionsBasedOnDiscriminator</value>
+  </data>
+  <data name="LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import">
+    <value>Import either cancelled or an error occured when reading the CSV file</value>
+  </data>
+  <data name="LateralSourceImporter_Error_Occured_While_Setting__0__to_target__1_" xml:space="preserve">
+    <value>An error occurred while setting {0} to target {1}</value>
+  </data>
+  <data name="LateralSourceImporter_Could_Not_Find_Suitable_Target_For__0_" xml:space="preserve">
+    <value>Could not find suitable target for: {0}</value>
+  </data>
 </root>

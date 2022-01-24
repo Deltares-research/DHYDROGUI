@@ -1260,5 +1260,49 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+
+        /// <summary>
+        /// Looks up string similar to not supported CsvFileImporterMode SeveralFunctionsBasedOnDiscriminator
+        /// </summary>
+        public static string LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBasedOnDiscriminator
+        {
+            get
+            {
+                return ResourceManager.GetString("LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBasedOnDiscriminator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Looks up string similar to Import cancelled or error occured on import
+        /// </summary>
+        public static string LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import
+        {
+            get
+            {
+                return ResourceManager.GetString("LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// Looks up string similar to error occured while setting {0} to target {1}
+        /// </summary>
+        public static string LateralSourceImporter_Error_Occured_While_Setting__0__to_target__1_
+        {
+            get
+            {
+                return ResourceManager.GetString("LateralSourceImporter_Error_Occured_While_Setting__0__to_target__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        /// looks up string similar to could not find suitable target for {0}
+        /// </summary>
+        public static string LateralSourceImporter_Could_Not_Find_Suitable_Target_For__0_
+        {
+            get
+            {
+                return ResourceManager.GetString("LateralSourceImporter_Could_Not_Find_Suitable_Target_For__0_", resourceCulture);
+            }
+        }
     }
 }
