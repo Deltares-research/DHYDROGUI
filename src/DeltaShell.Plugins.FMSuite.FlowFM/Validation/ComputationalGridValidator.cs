@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
     public static class ComputationalGridValidator
     {
-        internal static string CategoryName = "Computational grid";
+        internal static readonly string CategoryName = "Computational grid";
 
         public static ValidationReport Validate(IDiscretization networkDiscretization, UnstructuredGrid unstructuredGrid, double minimumSegmentLength = 1)
         {
@@ -99,7 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         private static IEnumerable<ValidationIssue> GetFiniteVolumeIssuesForBranch(IDiscretization networkDiscretization, IBranch branch, IList<INetworkLocation> branchLocations)
         {
             var structuresOnComputationPoint = branch.BranchFeatures.OfType<IStructure1D>()
-                                                     .Where(s => branchLocations.Any(l => Math.Abs(l.Chainage - s.Chainage) < BranchFeature.Epsilon))
+                                                     .Where(s => branchLocations.Any(l => Math.Abs(l.Chainage - s.Chainage) < 1e-7))
                                                      .ToArray();
 
             foreach (var structure1D in structuresOnComputationPoint)
@@ -135,7 +135,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                       .OrderBy(s => s.Chainage)
                       .ToList();
 
-            for (var i = 1; i < branchStructures.Count(); i++)
+            for (var i = 1; i < branchStructures.Count; i++)
             {
                 var branchStructureFirst = branchStructures[i - 1];
                 var branchStructureSecond = branchStructures[i];
