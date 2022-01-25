@@ -18,6 +18,8 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using SharpMap;
+using SharpMap.Extensions.CoordinateSystems;
 using SharpMapTestUtils;
 
 namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
@@ -170,7 +172,12 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
                 new BranchProperties{Name = "connection", BranchType = BranchFile.BranchType.SewerConnection },
             };
 
-            var network = new HydroNetwork();
+            if (Map.CoordinateSystemFactory == null)
+            {
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            }
+            var rdCoordinateSystem = Map.CoordinateSystemFactory.CreateFromEPSG(28992);
+            var network = new HydroNetwork{CoordinateSystem = rdCoordinateSystem };
             
             // Act
             network.SetNetworkGeometry(networkGeometry, branchProperties, compartmentProperties);
@@ -208,6 +215,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual(100, branch1.Geometry.Coordinates[0].Y);
             Assert.AreEqual(50, branch1.Geometry.Coordinates[1].X);
             Assert.AreEqual(50, branch1.Geometry.Coordinates[1].Y);
+            Assert.AreEqual(branch1.GeodeticLength, branch1.Length);
 
             Assert.AreEqual("pipe1 long",pipe1.LongName);
             Assert.AreEqual(2, pipe1.Geometry.Coordinates.Length);

@@ -419,6 +419,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
             network.Nodes.AddRange(nodes.Distinct());
             network.Branches.AddRange(branches);
+
+            network.UpdateGeodeticDistancesOfChannels();
         }
 
         /// <summary>
