@@ -265,7 +265,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private void RefreshMappings()
         {
             Links1D2DHelper.SetIndexes1D2DLinks(Links, NetworkDiscretization, Grid);
-            Links.RemoveAllWhere(l => l.FaceIndex == -1 || l.DiscretisationPointIndex == -1);
+
+            var linksWithout2dCell = Links.Where(l => l.FaceIndex == -1).ToArray();
+            var linksWithout1dCompPoint = Links.Where(l => l.DiscretisationPointIndex == -1).ToArray();
+            
+            RemoveLinks(linksWithout2dCell, "Can not find the cell for the following links");
+            RemoveLinks(linksWithout1dCompPoint, "Can not find the computation point for the following links");
+        }
+
+        private void RemoveLinks(ILink1D2D[] linksToRemove, string reason)
+        {
+            if (!linksToRemove.Any()) return;
+
+            var linkInformation = linksToRemove.Select(l => $"{l.Name } ({l.Geometry})");
+
+            Log.Warn($"{reason} (removing links) {Environment.NewLine}" +
+                      $" {string.Join(Environment.NewLine, linkInformation)}");
+
+            linksToRemove.ForEach(l => Links.Remove(l));
         }
 
         private void LoadLinks()
