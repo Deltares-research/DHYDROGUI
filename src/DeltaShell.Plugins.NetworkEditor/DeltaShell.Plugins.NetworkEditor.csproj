@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Plugin.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1085" IncludeAssets="compile" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1116" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="Mono.Addins" Version="1.3.8" IncludeAssets="compile" PrivateAssets="all" />
 		<PackageReference Include="DeltaShell.Plugins.GridEditor" Version="1.1.0.143-beta" />
 		<PackageReference Include="log4net" Version="2.0.12">
