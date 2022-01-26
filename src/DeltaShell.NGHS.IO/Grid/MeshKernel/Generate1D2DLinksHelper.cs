@@ -232,13 +232,17 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
             var xMax = points.Select(p => p.X).Max();
             var yMax = points.Select(p => p.Y).Max();
 
+            var envelope = new Envelope(xMin, xMax, yMin, yMax);
+
+            envelope.ExpandBy((envelope.Width/100) * 2, (envelope.Height/ 100) * 2);
+
             var coordinates = new[]
             {
-                new Coordinate(xMin, yMax),
-                new Coordinate(xMin, yMin),
-                new Coordinate(xMax, yMin),
-                new Coordinate(xMax, yMin),
-                new Coordinate(xMin, yMax)
+                new Coordinate(envelope.MinX, envelope.MaxY),
+                new Coordinate(envelope.MinX, envelope.MinY),
+                new Coordinate(envelope.MaxX, envelope.MinY),
+                new Coordinate(envelope.MaxX, envelope.MaxY),
+                new Coordinate(envelope.MinX, envelope.MaxY)
             };
 
             return new Polygon(new LinearRing(coordinates));

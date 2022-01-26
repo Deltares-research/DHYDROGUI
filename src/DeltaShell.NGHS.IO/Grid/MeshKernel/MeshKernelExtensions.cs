@@ -132,26 +132,23 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
         private static void SetCellArrays(this DisposableMesh2D mesh2d, IList<Cell> gridCells)
         {
             mesh2d.NumFaces = gridCells.Count;
-            mesh2d.NumFaceNodes = gridCells.Count > 0 ? gridCells.Max(c => c.VertexIndices.Length) : 0;
-
-            mesh2d.FaceNodes = new int[mesh2d.NumFaceNodes * gridCells.Count];
             mesh2d.FaceX = new double[gridCells.Count];
             mesh2d.FaceY = new double[gridCells.Count];
-            var max = 0;
+            mesh2d.NodesPerFace = new int[gridCells.Count];
+
+            var faceNodes = new List<int>();
 
             for (var i = 0; i < gridCells.Count; i++)
             {
-                var offset = i * mesh2d.NumFaceNodes;
-
                 var cell = gridCells[i];
-                for (int j = 0; j < cell.VertexIndices.Length; j++)
-                {
-                    mesh2d.FaceNodes[offset + j] = cell.VertexIndices[j];
-                }
-
+                faceNodes.AddRange(cell.VertexIndices);
+                
+                mesh2d.NodesPerFace[i] = cell.VertexIndices.Length;
                 mesh2d.FaceX[i] = cell.CenterX;
                 mesh2d.FaceY[i] = cell.CenterY;
             }
+
+            mesh2d.FaceNodes = faceNodes.ToArray();
         }
 
         private static void SetEdgeArrays(this DisposableMesh2D mesh2d, IList<Edge> gridEdges)

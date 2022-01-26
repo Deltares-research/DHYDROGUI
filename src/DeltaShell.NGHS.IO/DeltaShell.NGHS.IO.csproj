@@ -17,7 +17,7 @@
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="MeshKernelNET" Version="1.0.0.47-Beta">
+		<PackageReference Include="MeshKernelNET" Version="1.0.0.56-Beta">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="PostSharp" Version="6.10.5">
