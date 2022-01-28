@@ -13,7 +13,6 @@
     <ApplicationName>Delft3D FM Suite</ApplicationName>
     <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
     <Delft3DPackageName>Delft3D FM HMWQ</Delft3DPackageName>
-    <!-- TODO: verify this is correct.-->
     <RegistrationFeature>Delft3D_FM_1D2D</RegistrationFeature>
     <RegistrationVersion>2022</RegistrationVersion>
     <SplashScreenCompany>Deltares</SplashScreenCompany>

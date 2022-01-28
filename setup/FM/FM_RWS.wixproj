@@ -13,7 +13,6 @@
     <ApplicationName>D-HYDRO Suite</ApplicationName>
     <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
     <Delft3DPackageName>D-HYDRO</Delft3DPackageName>
-    <!-- TODO: verify this is correct.-->
     <RegistrationFeature>D-HYDRO_1D2D</RegistrationFeature>
     <RegistrationVersion>2022</RegistrationVersion>
     <SplashScreenCompany>Rijkswaterstaat</SplashScreenCompany>

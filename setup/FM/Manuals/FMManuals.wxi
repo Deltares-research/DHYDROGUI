@@ -3,6 +3,7 @@
   <!-- Manuals -->
   <File Id="DFlow_FM_Technical_Reference" Source="$(var.ProjectDir)\..\FM\$(var.Delft3DPackageName)_Manuals\D-Flow_FM_Technical_Reference_Manual.pdf"/>
   <File Id="DFlow_FM_User_Manual" Source="$(var.ProjectDir)\..\FM\$(var.Delft3DPackageName)_Manuals\D-Flow_FM_User_Manual.pdf"/>
+  <File Id="DFlow_FM_User_Manual_1D2D" Source="$(var.ProjectDir)\..\FM\$(var.Delft3DPackageName)_Manuals\D-Flow_FM_User_Manual_1D2D.pdf"/>
 
   <!-- RGFGRID -->
   <File Id="RGFGRID_User_Manual" Source="$(var.ProjectDir)\..\FM\$(var.Delft3DPackageName)_Manuals\RGFGRID_User_Manual.pdf"/>
