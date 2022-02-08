@@ -27,6 +27,7 @@ namespace DelftTools.Hydro.Structures
                 {LeveeBreachGrowthFormula.UserDefinedBreach, new UserDefinedBreachSettings() },
                 {LeveeBreachGrowthFormula.VerheijvdKnaap2002, new VerheijVdKnaap2002BreachSettings() }
             };
+            Name = "LeveeBreach";
         }
 
         public override IGeometry Geometry

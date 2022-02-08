@@ -84,5 +84,15 @@ namespace DelftTools.Hydro.Tests.Structures
             var settings = leveeBreach.GetActiveLeveeBreachSettings();
             Assert.AreEqual(type, settings.GetType());
         }
+
+        [Test]
+        public void Constructor_InitializesInstanceCorrectly()
+        {
+            // Call
+            var leveeBreach = new LeveeBreach();
+
+            // Assert
+            Assert.That(leveeBreach.Name, Is.EqualTo("LeveeBreach"));
+        }
     }
 }

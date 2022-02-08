@@ -26,8 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
     public class SnappedFeatureCollection : FeatureCollection
     {
         private HydroArea area2D;
-        private VectorStyle OriginalFeaturesLayerStyle { get; set; }
-        protected List<Feature2D> SnappedFeatures { get; set; }
+        private readonly VectorStyle originalFeaturesLayerStyle;
+        protected List<Feature2D> SnappedFeatures { get; }
         private bool dirty;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedFeatureCollection));
@@ -48,7 +48,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             Area2D = area2D;
             FeatureType = typeof(Feature2D);
             OriginalFeatures = originalFeatures;
-            OriginalFeaturesLayerStyle = originalFeaturesLayerStyle;
+            this.originalFeaturesLayerStyle = originalFeaturesLayerStyle;
             LayerName = layerName;
             SnapApiFeatureType = snapApiFeatureType;
             SnappedFeatures = new List<Feature2D>();
@@ -56,13 +56,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         }
         public override ICoordinateSystem CoordinateSystem
         {
-            get { return Area2D != null ? Area2D.CoordinateSystem : null; }
-            set { throw new NotSupportedException("Can not set CoordinateSystem directly. Change on the Area2D");}
+            get => Area2D != null ? Area2D.CoordinateSystem : null;
+            set => throw new NotSupportedException("Can not set CoordinateSystem directly. Change on the Area2D");
         }
 
         private HydroArea Area2D
         {
-            get { return area2D; }
+            get => area2D;
             set
             {
                 var previousCoordinateSystem = CoordinateSystem;
@@ -111,14 +111,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             }
         }
 
-        public string LayerName { get; private set; }
-        public string SnapApiFeatureType { get; private set; }
+        public string LayerName { get; }
+        public string SnapApiFeatureType { get; }
 
         public VectorStyle SnappedLayerStyle
         {
             get
             {
-                var snappedStyle = (VectorStyle)OriginalFeaturesLayerStyle.Clone();
+                var snappedStyle = (VectorStyle)originalFeaturesLayerStyle.Clone();
 
                 if (typeof(IPoint).IsAssignableFrom(snappedStyle.GeometryType))
                 {
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
 
         protected IList OriginalFeatures
         {
-            get { return originalFeatures; }
+            get => originalFeatures;
             set
             {
                 if (originalFeatures != null)
@@ -177,11 +177,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
         }
 
         public ILayer Layer { get; set; }
-        private bool LayerIsShown
-        {
-            get { return Layer != null && Layer.Map != null && Layer.Map.GetAllVisibleLayers(false).Contains(Layer); }
-        }
-        
+        private bool LayerIsShown => Layer?.Map != null && Layer.Map.GetAllVisibleLayers(false).Contains(Layer);
+
         void OriginalFeaturesPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (dirty)
@@ -294,7 +291,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Add:
-                    SnappedFeatures.Insert(e.GetRemovedOrAddedIndex(), GetSnappedFeature(feature));
+                    SnappedFeatures.Add(GetSnappedFeature(feature));
                     break;
                 case NotifyCollectionChangedAction.Remove:
                     SnappedFeatures.RemoveAt(e.GetRemovedOrAddedIndex());

@@ -7,7 +7,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Properties;
-using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
@@ -21,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Layers
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(SnappedLeveeBreachCollection));
 
-        public SnappedLeveeBreachCollection(IGridOperationApi operationApi, HydroArea area2D, ICoordinateSystem coordinateSystem, IList originalFeatures, VectorStyle originalFeaturesLayerStyle, string layerName, string snapApiFeatureType) : base(operationApi, area2D, originalFeatures, originalFeaturesLayerStyle, layerName, snapApiFeatureType)
+        public SnappedLeveeBreachCollection(IGridOperationApi operationApi, HydroArea area2D, IList originalFeatures, VectorStyle originalFeaturesLayerStyle, string layerName, string snapApiFeatureType) : base(operationApi, area2D, originalFeatures, originalFeaturesLayerStyle, layerName, snapApiFeatureType)
         {
         }
 

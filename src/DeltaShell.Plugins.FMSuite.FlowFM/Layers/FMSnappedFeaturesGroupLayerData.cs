@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Layers
                                                       AreaLayerStyles.ThinDamStyle, "Thin dams (snapped)", UnstrucGridOperationApi.ThinDams);
             yield return new SnappedFeatureCollection(model, model.Area, (IList)model.Area.FixedWeirs,
                                                       AreaLayerStyles.FixedWeirStyle, "Fixed weirs (snapped)", UnstrucGridOperationApi.FixedWeir);
-            yield return new SnappedLeveeBreachCollection(model, model.Area, model.CoordinateSystem, (IList)model.Area.LeveeBreaches,
+            yield return new SnappedLeveeBreachCollection(model, model.Area, (IList)model.Area.LeveeBreaches,
                                                       AreaLayerStyles.LeveeStyle, SNAPPED_LEVEE_BREACH_LAYER_NAME, UnstrucGridOperationApi.LeveeBreach);
             yield return new SnappedFeatureCollection(model, model.Area, (IList) model.Area.RoofAreas,
                                                       AreaLayerStyles.RoofAreaStyle, "Roof Areas (snapped)", UnstrucGridOperationApi.RoofArea);

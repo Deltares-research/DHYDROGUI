@@ -3,6 +3,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1117" PrivateAssets="all" />
+		<PackageReference Include="NSubstitute" Version="4.2.2" />
 		<PackageReference Include="NUnit" Version="3.12.0" />
 		<PackageReference Include="RhinoMocks">
 			<Version>3.6.1</Version>
@@ -56,6 +57,14 @@
 		</Reference>
 		<Reference Include="QuickGraph">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="SharpMap">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+		<Reference Include="SharpMap.Api">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\SharpMap.Api.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="System" />
