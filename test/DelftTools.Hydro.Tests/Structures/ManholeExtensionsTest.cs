@@ -53,7 +53,7 @@ namespace DelftTools.Hydro.Tests.Structures
             manhole.Compartments.Add(new Compartment());
             var network = new HydroNetwork();
             manhole.Network = network;
-            var internalConnection = SewerFactory.CreateConnectionWithStructure<Pump>(manhole);
+            var internalConnection = SewerFactory.CreatePumpConnection(manhole);
             network.Branches.Add(internalConnection);
 
             var internalConnections = manhole.InternalConnections().ToList();

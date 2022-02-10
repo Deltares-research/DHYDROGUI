@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.Extensions;
-using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Properties;
 using DelftTools.Hydro.Structures;
@@ -13,7 +13,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.Reflection;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
@@ -35,6 +34,7 @@ namespace DelftTools.Hydro.SewerFeatures
         private string sourceCompartmentName;
         private string targetCompartmentName;
         private ICrossSection crossSection;
+        private SewerConnectionSpecialConnectionType specialConnectionType = SewerConnectionSpecialConnectionType.None;
 
         public SewerConnection() : this("SewerConnection")
         {
@@ -57,11 +57,35 @@ namespace DelftTools.Hydro.SewerFeatures
         [FeatureAttribute(ExportName = "Sewer type", Order = 20)]
         public SewerConnectionWaterType WaterType { get; set; }
 
-        // This property is used in the NetworkLayerStyleFactory, do not remove :)
+        /// <summary>
+        /// The special connection type of the sewer connection.
+        /// Depends on the type of feature that is located on this sewer connection.
+        /// </summary>
         [DisplayName("Sewer special connection type")]
         [FeatureAttribute(ExportName = "Sewer Special Connection type", Order = 21)]
         [InvokeRequired]
-        public SewerConnectionSpecialConnectionType SpecialConnectionType { get { return GetConnectionType(); } }
+        public SewerConnectionSpecialConnectionType SpecialConnectionType {
+            get => specialConnectionType;
+            private set
+            {
+                specialConnectionType = value;
+                UpdateCrossSectionDefinition();
+            }
+        }
+
+        private void UpdateCrossSectionDefinition()
+        {
+            if (CrossSection == null)
+            {
+                return;
+            }
+
+            ICrossSectionDefinition crossSectionDefinition = SpecialConnectionType == SewerConnectionSpecialConnectionType.Weir
+                                                                 ? SewerFactory.GetDefaultWeirSewerConnectionProfile(HydroNetwork)
+                                                                 : SewerFactory.GetDefaultPressurizedPipeSewerConnectionProfile(HydroNetwork);
+
+            CrossSection.UseSharedDefinition(crossSectionDefinition);
+        }
 
         #region Source and Target
 
@@ -328,12 +352,37 @@ namespace DelftTools.Hydro.SewerFeatures
                 if (base.BranchFeatures != null)
                 {
                     base.BranchFeatures.CollectionChanging -= BranchFeaturesOnCollectionChanging;
+                    base.BranchFeatures.CollectionChanged -= BranchFeaturesOnCollectionChanged;
                 }
                 AddBranchFeatureWhenEmpty(value);
                 if (base.BranchFeatures != null)
                 {
                     base.BranchFeatures.CollectionChanging += BranchFeaturesOnCollectionChanging;
+                    base.BranchFeatures.CollectionChanged += BranchFeaturesOnCollectionChanged;
                 }
+            }
+        }
+
+        private void BranchFeaturesOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (!this.IsSpecialConnection())
+            {
+                return;
+            }
+
+            object feature = e.GetRemovedOrAddedItem();
+
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add when feature is IPump:
+                    SpecialConnectionType = SewerConnectionSpecialConnectionType.Pump;
+                    break;
+                case NotifyCollectionChangedAction.Add when feature is IWeir:
+                    SpecialConnectionType = SewerConnectionSpecialConnectionType.Weir;
+                    break;
+                case NotifyCollectionChangedAction.Remove when feature is IPump || feature is IWeir:
+                    SpecialConnectionType = SewerConnectionSpecialConnectionType.None;
+                    break;
             }
         }
 
@@ -382,18 +431,6 @@ namespace DelftTools.Hydro.SewerFeatures
         private void UpdateTargetCompartmentId()
         {
             if(targetCompartment != null) targetCompartmentName = targetCompartment.Name;
-        }
-
-        private SewerConnectionSpecialConnectionType GetConnectionType()
-        {
-            if(!this.IsSpecialConnection()) return SewerConnectionSpecialConnectionType.None;
-
-            if (!BranchFeatures.Any()) return SewerConnectionSpecialConnectionType.None;
-
-            if(BranchFeatures.Any(bf => bf.GetType().Implements(typeof(IPump)))) return SewerConnectionSpecialConnectionType.Pump;
-            if(BranchFeatures.Any(bf => bf.GetType().Implements(typeof(IWeir)))) return SewerConnectionSpecialConnectionType.Weir;
-
-            return SewerConnectionSpecialConnectionType.None;
         }
 
         private void BranchFeaturesOnCollectionChanging(object sender, NotifyCollectionChangingEventArgs e)

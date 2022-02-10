@@ -104,11 +104,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             return containsCompartment && hasMoreThanOneCompartment;
         }
 
-        private IFeature AddNewSewerConnectionWithStructure<T>()
+        private IFeature AddNewSewerConnectionWithStructure(ISewerConnection connection)
         {
-            var connection = SewerFactory.CreateConnectionWithStructure<T>(manhole);
-            if (connection == null) return null;
-
             network.Branches.Add(connection);
             NamingHelper.MakeNamesUnique(network.Structures);
             return connection.GetStructuresFromBranchFeatures().FirstOrDefault();
@@ -123,11 +120,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
                 case ShapeType.Compartment:
                     return SewerFactory.CreateNewCompartmentAndAddToManhole(network, manhole);
                 case ShapeType.Pump:
-                    return AddNewSewerConnectionWithStructure<Pump>();
+                    ISewerConnection pumpConnection = SewerFactory.CreatePumpConnection(manhole);
+                    return AddNewSewerConnectionWithStructure(pumpConnection);
                 case ShapeType.Weir:
-                    return AddNewSewerConnectionWithStructure<Weir>();
+                    ISewerConnection weirConnection = SewerFactory.CreateWeirConnection(manhole);
+                    return AddNewSewerConnectionWithStructure(weirConnection);
                 case ShapeType.Orifice:
-                    return AddNewSewerConnectionWithStructure<Orifice>();
+                    ISewerConnection orificeConnection = SewerFactory.CreateOrificeConnection(manhole);
+                    return AddNewSewerConnectionWithStructure(orificeConnection);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(item), item, null);
             }
