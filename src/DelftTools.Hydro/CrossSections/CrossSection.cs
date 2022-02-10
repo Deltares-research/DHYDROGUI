@@ -210,7 +210,7 @@ namespace DelftTools.Hydro.CrossSections
 
             if (branch is ISewerConnection && !(branch is IPipe))
             {
-                var defaultDefinition = SewerFactory.GetDefaultPressurizedPipeSewerConnectionProfile(hydroNetwork ?? branch?.Network as IHydroNetwork);
+                var defaultDefinition = SewerFactory.GetDefaultSewerConnectionDefinition(hydroNetwork ?? branch?.Network as IHydroNetwork);
                 crossSection.UseSharedDefinition(defaultDefinition);
             }
 

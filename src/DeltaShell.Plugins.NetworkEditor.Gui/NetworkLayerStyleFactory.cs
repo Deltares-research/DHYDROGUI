@@ -292,7 +292,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 
                 return new CategorialTheme
                 {
-                    AttributeName = nameof(SewerConnection.SpecialConnectionType),
+                    AttributeName = "SpecialConnectionType",
                     DefaultStyle = branchStyle,
                     ThemeItems = new EventedList<IThemeItem>
                     {
