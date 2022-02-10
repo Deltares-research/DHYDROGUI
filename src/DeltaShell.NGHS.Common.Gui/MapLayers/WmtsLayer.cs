@@ -10,6 +10,7 @@ using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using SharpMap.Extensions.Layers;
+using FileCache = SharpMap.Extensions.Layers.FileCache;
 
 namespace DeltaShell.NGHS.Common.Gui.MapLayers
 {
@@ -123,7 +124,12 @@ namespace DeltaShell.NGHS.Common.Gui.MapLayers
                 Template = resourceUrl.Template.Replace("{TileMatrixSet}", WmtsTileSchema.TileMatrixSet)
             };
 
-            return new WmtsRequest(new []{ currentResourceUrl });
+            // Use identifiers if declared, otherwise use resolution levels as string
+            IDictionary<int, string> levelToIdentifier = WmtsTileSchema.LevelToIdentifier.Count != 0 
+                                                             ? WmtsTileSchema.LevelToIdentifier 
+                                                             : WmtsTileSchema.Resolutions.ToDictionary(r => r.Key, r=> r.Key.ToString());
+
+            return new WmtsRequest(new []{ currentResourceUrl }, levelToIdentifier);
         }
     }
 }

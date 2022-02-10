@@ -2,7 +2,7 @@
 	<Import Project="$(SolutionDir)\Build\targets\Source.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1198">
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1214">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -19,10 +19,10 @@
 		<Reference Include="DelftTools.Utils" Private="False">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
 		</Reference>
-		<Reference Include="GeoAPI.Extensions" Private="False" IncludeAssets="compile" PrivateAssets="all" >
+		<Reference Include="GeoAPI.Extensions" Private="False" IncludeAssets="compile" PrivateAssets="all">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.Extensions.dll</HintPath>
 		</Reference>
-		<Reference Include="QuickGraph" Private="False" IncludeAssets="compile" PrivateAssets="all" >
+		<Reference Include="QuickGraph" Private="False" IncludeAssets="compile" PrivateAssets="all">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\QuickGraph.dll</HintPath>
 		</Reference>
 	</ItemGroup>

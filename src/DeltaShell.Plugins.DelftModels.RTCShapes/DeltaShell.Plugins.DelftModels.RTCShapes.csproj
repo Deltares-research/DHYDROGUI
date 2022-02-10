@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1198">
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1214">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
@@ -36,5 +36,11 @@
 		<Reference Include="System.Core" />
 		<Reference Include="System.Drawing" />
 		<Reference Include="System.Windows.Forms" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	  </Compile>
 	</ItemGroup>
 </Project>
