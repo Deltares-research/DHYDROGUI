@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
@@ -6,7 +6,6 @@ using DelftTools.Shell.Core;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
-using log4net.Core;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
@@ -29,9 +28,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance
             string xmlFilePath = Path.Combine(inputDataDirectory, xmlFileName + ".xml");
 
             HydroModel hydroModel = null;
-            IEnumerable<string> errorMessages = TestHelper.GetAllRenderedMessages(() => hydroModel = (HydroModel)dimrImporter.ImportItem(xmlFilePath), Level.Error);
+            string[] messages = TestHelper.GetAllRenderedMessages(() => hydroModel = (HydroModel)dimrImporter.ImportItem(xmlFilePath)).ToArray();
             
-            Assert.That(hydroModel, Is.Not.Null);
+            Assert.That(hydroModel, Is.Not.Null, string.Join(Environment.NewLine, messages));
             app.Project.RootFolder.Add(hydroModel);
 
             // [Precondition]

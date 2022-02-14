@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Import
                                       e is IOException ||
                                       e is InvalidOperationException)
             {
-                log.Error(string.Format("An error occurred while trying to import a {0}; ", Name), e);
+                log.Error($"An error occurred while trying to import a {Name}: {e.Message}", e);
                 return null;
             }
         }

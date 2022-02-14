@@ -95,8 +95,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Run
                 SetModelSettings(hydroModel);
                 
                 // [When]
+                var exportConfig = new ModelArtifactsExporterConfig(
+
+                    gui.Application.WorkDirectory,
+                    hydroModel.Name,
+                    TestContext.CurrentContext.Test.Name
+                );
+                var artifactsExporter = new ModelArtifactsExporter(exportConfig);
+                
                 Console.WriteLine("Running model");
                 ActivityRunner.RunActivity(hydroModel);
+                artifactsExporter.ExportModelLogFiles();
                 Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
 
                 Console.WriteLine("Saving model");

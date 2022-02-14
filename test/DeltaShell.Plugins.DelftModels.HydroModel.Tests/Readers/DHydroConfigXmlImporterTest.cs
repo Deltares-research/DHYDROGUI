@@ -8,6 +8,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
+using log4net.Core;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -355,12 +356,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                                                        () => new List<IDimrModelFileImporter>(), () => null);
 
             // When | Then
-
             HydroModel result = null;
-            TestHelper.AssertLogMessageIsGenerated(() => { result = (HydroModel) importer.ImportItem(path); }, string.Format("An error occurred while trying to import a {0}; ", importer.Name), 1);
+            void Call() => result = (HydroModel)importer.ImportItem(path);
 
+            string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
+            Assert.That(error, Does.StartWith($"An error occurred while trying to import a {importer.Name}:"));
             readFunc.VerifyAllExpectations();
-            Assert.That(result, Is.Null, "Expected ImportItem to file upon reading and return null:");
         }
 
         /// <summary>

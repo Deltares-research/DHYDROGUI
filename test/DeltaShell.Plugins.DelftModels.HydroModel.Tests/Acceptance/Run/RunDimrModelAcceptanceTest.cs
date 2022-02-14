@@ -43,9 +43,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
             
             string acceptanceModelReferenceOutputPath = Path.Combine(basePath, @"AcceptanceModelsReferenceOutput\DIMR");
             acceptanceModelsReferenceOutputDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, acceptanceModelReferenceOutputPath);
-            
-            referenceSaveData = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModelsReferenceSaveData\DIMR");
 
+            referenceSaveData = Path.Combine(TestContext.CurrentContext.TestDirectory, basePath, @"AcceptanceModelsReferenceSaveData\DIMR");
         }
 
         [SetUp]
@@ -89,8 +88,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
                 }
 
                 // [When]
+                var exportConfig = new ModelArtifactsExporterConfig(
+
+                    gui.Application.WorkDirectory,
+                    hydroModel.Name,
+                    TestContext.CurrentContext.Test.Name
+                );
+                var artifactsExporter = new ModelArtifactsExporter(exportConfig);
+                
                 Console.WriteLine("Running model");
                 ActivityRunner.RunActivity(hydroModel);
+                artifactsExporter.ExportModelLogFiles();
                 Assert.That(hydroModel.Status, Is.EqualTo(ActivityStatus.Cleaned));
                 
                 Console.WriteLine("Saving model");
