@@ -5,11 +5,11 @@ using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
-    class RemoveBoundaryPointDialog
+    internal class RemoveBoundaryPointDialog
     {
-        private readonly WaterFlowFMModel waterFlowFMModel;
+        private readonly IWaterFlowFMModel waterFlowFMModel;
 
-        public RemoveBoundaryPointDialog(WaterFlowFMModel waterFlowFMModel)
+        public RemoveBoundaryPointDialog(IWaterFlowFMModel waterFlowFMModel)
         {
             this.waterFlowFMModel = waterFlowFMModel;
         }

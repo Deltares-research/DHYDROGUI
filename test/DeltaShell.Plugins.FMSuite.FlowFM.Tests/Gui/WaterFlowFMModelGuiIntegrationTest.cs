@@ -24,6 +24,7 @@ using DeltaShell.Plugins.CommonTools.Gui;
 using DeltaShell.Plugins.Data.NHibernate;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -343,9 +344,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         }
 
         [Test]
-        [Category(TestCategory.Integration)]
-        [Category(TestCategory.Slow)]
         [Category(TestCategory.WindowsForms)]
+        [Category(TestCategory.Slow)]
         public void ShowSnappedFeatureLayersInMap()
         {
             var mduPath =
@@ -375,7 +375,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
                     gui.CommandHandler.OpenView(model, typeof (ProjectItemMapView));
 
                     var gridSnappedFeatureGroupLayer = ((ProjectItemMapView) gui.DocumentViews.ActiveView).MapView.Map.GetAllLayers(true)
-                        .First(l => l.Name == "Estimated Grid-snapped features");
+                        .First(l => l.Name == FlowFMLayerNames.EstimatedSnappedFeaturesLayerName);
 
                     gridSnappedFeatureGroupLayer.Visible = true;
 

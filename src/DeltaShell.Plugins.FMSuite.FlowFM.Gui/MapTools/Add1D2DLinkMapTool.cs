@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using DelftTools.Utils.Data;
 using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.FMSuite.Common.Layers;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
 using log4net;
@@ -65,7 +66,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
         {
             get
             {
-                return Layers.FirstOrDefault(l => l.Name.Equals(FlowFMMapLayerProvider.LayerName1D2DLinks)) as VectorLayer;
+                return Layers.FirstOrDefault(l => l.Name.Equals(FlowFMLayerNames.Links1D2DLayerName)) as VectorLayer;
             }
         }
 

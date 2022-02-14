@@ -5,6 +5,11 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>$(AssemblyName.Replace(".Gui", "")).Tests</_Parameter1>
     </AssemblyAttribute>
+
+    <!-- NSubstitute -->
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>"DynamicProxyGenAssembly2"</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
   
   <PropertyGroup>

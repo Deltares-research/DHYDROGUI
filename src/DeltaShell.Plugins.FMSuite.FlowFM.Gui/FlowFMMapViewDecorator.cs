@@ -5,6 +5,7 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Extensions;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
@@ -48,14 +49,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                                             layer.Name == HydroArea.PumpsPluralName ||
                                             layer.Name == HydroArea.WeirsPluralName ||
                                             layer.Name == HydroArea.GatesPluralName ||
-                                            layer.Name == FlowFMMapLayerProvider.SourcesAndSinksLayerName) &&
+                                            layer.Name == FlowFMLayerNames.SourcesAndSinksLayerName) &&
                                            layer.DataSource is Feature2DCollection
                 });
 
             // model
-            tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.BoundariesLayerName, BoundaryToolName, BoundaryIcon));
-            tools.Add(new Feature2DLineTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceAndSinkToolName, SourceSinkIcon));
-            tools.Add(new Feature2DPointTool(FlowFMMapLayerProvider.SourcesAndSinksLayerName, SourceToolName, SourceIcon));
+            tools.Add(new Feature2DLineTool(FlowFMLayerNames.BoundariesLayerName, BoundaryToolName, BoundaryIcon));
+            tools.Add(new Feature2DLineTool(FlowFMLayerNames.SourcesAndSinksLayerName, SourceAndSinkToolName, SourceSinkIcon));
+            tools.Add(new Feature2DPointTool(FlowFMLayerNames.SourcesAndSinksLayerName, SourceToolName, SourceIcon));
             tools.Add(new GenerateEmbankmentsMapTool());
             tools.Add(new MergeEmbankmentsMapTool());
             tools.Add(new GridWizardMapTool());

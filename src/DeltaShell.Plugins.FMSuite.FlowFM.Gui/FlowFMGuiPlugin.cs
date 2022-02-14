@@ -42,6 +42,7 @@ using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.Friction;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.InitialConditions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.GraphicsProviders;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Exporters;
@@ -65,22 +66,19 @@ using SharpMap.UI.Forms;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 {
-    [Extension(typeof (IPlugin))]
+    [Extension(typeof(IPlugin))]
     public class FlowFMGuiPlugin : GuiPlugin
     {
         private TableViewTimeSeriesGeneratorTool tableViewTimeSeriesGeneratorTool;
 
-        private static readonly string CoordinateSystemMemberName =
-            nameof(WaterFlowFMModel.CoordinateSystem);
+        private const string CoordinateSystemMemberName = nameof(WaterFlowFMModel.CoordinateSystem);
 
-        private static readonly string OutputHisFileStoreMemberName =
-            nameof(WaterFlowFMModel.OutputHisFileStore);
+        private const string OutputHisFileStoreMemberName = nameof(WaterFlowFMModel.OutputHisFileStore);
 
-        private static readonly string HeatFluxModelTypeMemberName =
-            nameof(WaterFlowFMModel.HeatFluxModelType);
+        private const string HeatFluxModelTypeMemberName = nameof(WaterFlowFMModel.HeatFluxModelType);
 
         private static Func<MapView> getActiveMapViewFunc;
-        private string _fmModelSettingsSuffix= " (FM model settings)";
+        private string _fmModelSettingsSuffix = " (FM model settings)";
         private Ribbon.Ribbon ribbon;
 
         public FlowFMGuiPlugin()
@@ -89,25 +87,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             GraphicsProvider = new FmGuiGraphicsProvider();
         }
 
-        public override string Name
-        {
-            get { return "Delft3D FM (Gui)"; }
-        }
+        public override string Name =>
+            "Delft3D FM (Gui)";
 
-        public override string DisplayName
-        {
-            get { return "D-Flow Flexible Mesh Plugin (UI)"; }
-        }
+        public override string DisplayName =>
+            "D-Flow Flexible Mesh Plugin (UI)";
 
-        public override string Description
-        {
-            get { return FlowFM.Properties.Resources.FlowFMApplicationPlugin_Description; }
-        }
+        public override string Description =>
+            FlowFM.Properties.Resources.FlowFMApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
-        }
+        public override string Version =>
+            GetType().Assembly.GetName().Version.ToString();
 
         public override string FileFormatVersion => "1.1.0.0";
 
@@ -115,14 +105,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         public override ResourceManager Resources { get; set; }
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get { return new FlowFMMapLayerProvider(); }
-        }
+        public override IMapLayerProvider MapLayerProvider { get; } =
+            FlowFMMapLayerProviderFactory.ConstructMapLayerProvider();
 
         public override IGui Gui
         {
-            get { return base.Gui; }
+            get => base.Gui;
             set
             {
                 if (base.Gui != null)
@@ -151,43 +139,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     GetStopTime = GetModelStopTime,
                     GetTimeStep = GetModelTimeStep
                 };
-                    
+
             }
         }
 
-        public override IRibbonCommandHandler RibbonCommandHandler
-        {
-            get { return ribbon ?? (ribbon = new Ribbon.Ribbon()); }
-        }
+        public override IRibbonCommandHandler RibbonCommandHandler =>
+            ribbon ?? (ribbon = new Ribbon.Ribbon());
 
-        public static MapView ActiveMapView
-        {
-            get { return getActiveMapViewFunc(); }
-        }
+        public static MapView ActiveMapView =>
+            getActiveMapViewFunc();
 
-        private IEnumerable<WaterFlowFMModel> FlowModels
-        {
-            get { return Gui == null ? Enumerable.Empty<WaterFlowFMModel>() : Gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>(); }
-        }
+        private IEnumerable<WaterFlowFMModel> FlowModels =>
+            Gui == null ? Enumerable.Empty<WaterFlowFMModel>()
+                        : Gui.Application.GetAllModelsInProject().OfType<WaterFlowFMModel>();
 
         public override IEnumerable<ITreeNodePresenter> GetProjectTreeViewNodePresenters()
         {
             yield return new WaterFlowFMModelNodePresenter(this);
-            yield return new FmModelTreeShortcutNodePresenter {GuiPlugin = this};
-            yield return new BoundaryConditionSetNodePresenter {GuiPlugin = this};
-            yield return new SourceSinkNodePresenter {GuiPlugin = this};
-            yield return new FMMapFileFunctionStoreNodePresenter {GuiPlugin = this};
+            yield return new FmModelTreeShortcutNodePresenter { GuiPlugin = this };
+            yield return new BoundaryConditionSetNodePresenter { GuiPlugin = this };
+            yield return new SourceSinkNodePresenter { GuiPlugin = this };
+            yield return new FMMapFileFunctionStoreNodePresenter { GuiPlugin = this };
             yield return new FMHisFileFunctionStoreNodePresenter();
-            yield return new FMClassMapFileFunctionStoreNodePresenter {GuiPlugin = this};
-            yield return new FM1DFileFunctionStoreNodePresenter {GuiPlugin = this};
-            yield return new ImportedFMNetFileNodePresenter {GuiPlugin = this};
-            yield return new HeatFluxModelNodePresenter {GuiPlugin = this};
-            yield return new WindItemListNodePresenter {GuiPlugin = this};
-            yield return new WindItemNodePresenter {GuiPlugin = this};
-            yield return new FmMeteoItemNodePresenter {GuiPlugin = this};
-            yield return new FmMeteoItemListNodePresenter {GuiPlugin = this};
+            yield return new FMClassMapFileFunctionStoreNodePresenter { GuiPlugin = this };
+            yield return new FM1DFileFunctionStoreNodePresenter { GuiPlugin = this };
+            yield return new ImportedFMNetFileNodePresenter { GuiPlugin = this };
+            yield return new HeatFluxModelNodePresenter { GuiPlugin = this };
+            yield return new WindItemListNodePresenter { GuiPlugin = this };
+            yield return new WindItemNodePresenter { GuiPlugin = this };
+            yield return new FmMeteoItemNodePresenter { GuiPlugin = this };
+            yield return new FmMeteoItemListNodePresenter { GuiPlugin = this };
         }
-        
+
         public override IEnumerable<ViewInfo> GetViewInfoObjects()
         {
             yield return new ViewInfo<ProjectTemplate, CreateFmModelSettingView>
@@ -205,7 +188,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 {
                     //Set the properties.
                     v.SettingsCategories = WaterFlowFmSettingsHelper.GetWpfGuiCategories(o, Gui);
-                    v.GetChangedPropertyName = (sender, prop)  =>  (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
+                    v.GetChangedPropertyName = (sender, prop) => (sender as WaterFlowFMProperty)?.PropertyDefinition.MduPropertyName;
                 }
             };
 
@@ -215,7 +198,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AdditionalDataCheck = o => o.ShortCutType == ShortCutType.SettingsTab,
                 GetViewData = o => o.FlowFmModel,
                 GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
-                OnActivateView = (v,o) =>
+                OnActivateView = (v, o) =>
                 {
                     var shortcut = o as FmModelTreeShortcut;
                     if (shortcut == null) return;
@@ -252,7 +235,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new ViewInfo<FixedWeir, IModelFeatureCoordinateData, ModelFeatureCoordinateDataView>
             {
                 Description = "Data for feature",
-                GetViewName = (v,o) => $"{o?.Feature.ToString()} data",
+                GetViewName = (v, o) => $"{o?.Feature.ToString()} data",
                 GetViewData = o => FlowModels.SelectMany(fm => fm.FixedWeirsProperties).FirstOrDefault(p => Equals(p.Feature, o)),
                 AdditionalDataCheck = o => FlowModels.Any(m => m.FixedWeirsProperties.Any(d => ReferenceEquals(d.Feature, o)))
             };
@@ -281,7 +264,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 AfterCreate = (v, o) =>
                 {
                     v.Gui = Gui;
-                    v.OnValidate = d => (d as WaterFlowFMModel)?.ValidationReport 
+                    v.OnValidate = d => (d as WaterFlowFMModel)?.ValidationReport
                                         ?? new ValidationReport("No report available", new List<ValidationIssue>());
                 }
             };
@@ -353,7 +336,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     };
                     v.ShowSupportPointNames = true;
                     var condition = o.BoundaryConditions.FirstOrDefault();
-                    if(condition == null) return;
+                    if (condition == null) return;
                     v.SelectedCategory = condition.ProcessName;
                     v.SelectedBoundaryCondition = condition;
                 },
@@ -389,11 +372,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(o.FirstOrDefault(bcs => bcs.BoundaryConditions.Contains(feature as IBoundaryCondition)));
                 }
             };
-            
+
             yield return allBoundarySetsViewInfo;
 
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(allBoundarySetsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
-            
+
             yield return FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Boundaries", m => m.Boundaries, () => Gui);
 
             var viewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<ILink1D2D, WaterFlowFMModel>("Links", m => m.Links, () => Gui);
@@ -417,7 +400,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return ViewInfoWrapper<Feature2D>.Create(sourceAndSinkViewInfo, FindDataForPipe, IsModelPipe);
 
             var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
-            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks,o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
+            yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
             var model1DBoundaryConditionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>("1D Boundary Conditions", m => m.BoundaryConditions1D, () => Gui);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(model1DBoundaryConditionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
@@ -426,7 +409,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(model1DLateralSourceViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) =>
             {
-                
                 v.CanAddDeleteAttributes = false;
                 ProjectItemMapView centralMap1 = Gui.DocumentViews.OfType<ProjectItemMapView>()
                                                     .FirstOrDefault(vi => vi.MapView.GetLayerForData(o) != null);
@@ -475,10 +457,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             //Wind
             yield return new ViewInfo<IEventedList<IWindField>, WindFieldListView>
-                {
-                    AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => Equals(m.WindFields, t)) != null,
-                    AfterCreate = (v, o) => v.TimeSeriesGeneratorTool = tableViewTimeSeriesGeneratorTool
-                };
+            {
+                AdditionalDataCheck = t => FlowModels.FirstOrDefault(m => Equals(m.WindFields, t)) != null,
+                AfterCreate = (v, o) => v.TimeSeriesGeneratorTool = tableViewTimeSeriesGeneratorTool
+            };
 
             yield return new ViewInfo<UniformWindField, IFunction, FunctionView>
             {
@@ -516,26 +498,26 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return new ViewInfo<BcFileImporter, BcFileImportDialog>();
             yield return new ViewInfo<BcFileExporter, BcFileExportDialog>();
             yield return new ViewInfo<FMModelPartitionExporter, FMPartitionExportDialog>
+            {
+                AfterCreate = (v, o) =>
                 {
-                    AfterCreate = (v, o) =>
-                    {
-                        v.Extension = o.FileFilter;
-                        v.EnableSolverSelection = true;
-                    }
-                };
+                    v.Extension = o.FileFilter;
+                    v.EnableSolverSelection = true;
+                }
+            };
             yield return new ViewInfo<FMGridPartitionExporter, FMPartitionExportDialog>
+            {
+                AfterCreate = (v, o) =>
                 {
-                    AfterCreate = (v, o) =>
-                    {
-                        v.Extension = o.FileFilter;
-                        v.EnableSolverSelection = false;
-                    }
-                };
-            
+                    v.Extension = o.FileFilter;
+                    v.EnableSolverSelection = false;
+                }
+            };
+
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<Embankment, Embankment>>();
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString, Embankment>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<FixedWeir, FixedWeir>>();
-            yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString,FixedWeir>>();
+            yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString, FixedWeir>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ObservationCrossSection2D, ObservationCrossSection2D>>();
             yield return GetFeature2DImportDialogViewInfo<PliFileImporterExporter<ThinDam2D, ThinDam2D>>();
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<ILineString, ThinDam2D>>();
@@ -708,12 +690,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
         }
-        
+
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
             yield return CreatePropertyInfoDynamic<WaterFlowFMModel>();
             yield return CreatePropertyInfoDynamic<PointCloudLayer>();
-            yield return new PropertyInfo<IWeir, FMWeirProperties>{ AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w)) };
+            yield return new PropertyInfo<IWeir, FMWeirProperties> { AdditionalDataCheck = w => FlowModels.Any(m => m.Area.Weirs.Contains(w)) };
             yield return new PropertyInfo<FmModelTreeShortcut, HydroNetworkProperties>
             {
                 AdditionalDataCheck = w => w.Data is IHydroNetwork,
@@ -776,7 +758,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (node is Manhole manhole)
                 list = manhole.Compartments;
 
-            var column = view.TableView.Columns.FirstOrDefault(c =>c.Caption.Equals(nameof(Model1DLateralSourceData.Compartment), StringComparison.InvariantCultureIgnoreCase)); 
+            var column = view.TableView.Columns.FirstOrDefault(c => c.Caption.Equals(nameof(Model1DLateralSourceData.Compartment), StringComparison.InvariantCultureIgnoreCase));
             if (column != null)
                 column.Editor = new ComboBoxTypeEditor
                 {
@@ -798,14 +780,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             return new ViewInfo<TImporter, Feature2DImportExportDialog>
             {
-                    AfterCreate = (v, o) =>
-                        {
-                            var model = FlowModels.FirstOrDefault();
-                            v.ModelCoordinateSystem = model == null ? null : model.CoordinateSystem;
-                            v.ImportMode = o.Mode == Feature2DImportExportMode.Import;
-                            v.FileFilter = o.FileFilter;
-                        }
-                };
+                AfterCreate = (v, o) =>
+                    {
+                        var model = FlowModels.FirstOrDefault();
+                        v.ModelCoordinateSystem = model == null ? null : model.CoordinateSystem;
+                        v.ImportMode = o.Mode == Feature2DImportExportMode.Import;
+                        v.FileFilter = o.FileFilter;
+                    }
+            };
         }
 
         private ViewInfo<TImporter, Feature2DImportExportDialog> GetGisToFeature2DImportDialogViewInfo<TImporter>()
@@ -828,7 +810,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private BoundaryConditionSet FindSetForBoundaryCondition(BoundaryCondition arg)
         {
             var model = FlowModels.FirstOrDefault(m => m.BoundaryConditionSets.SelectMany(bcs => bcs.BoundaryConditions).Contains(arg));
-            if (model == null) 
+            if (model == null)
                 return null;
 
             return model.BoundaryConditionSets.FirstOrDefault(
@@ -864,19 +846,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private DateTime? GetModelStartTime()
         {
             var model = FlowModels.FirstOrDefault();
-            return model != null ? model.StartTime : (DateTime?) null;
+            return model != null ? model.StartTime : (DateTime?)null;
         }
 
         private DateTime? GetModelStopTime()
         {
             var model = FlowModels.FirstOrDefault();
-            return model != null ? model.StopTime : (DateTime?) null;
+            return model != null ? model.StopTime : (DateTime?)null;
         }
 
         private TimeSpan? GetModelTimeStep()
         {
             var model = FlowModels.FirstOrDefault();
-            return model != null ? model.TimeStep : (TimeSpan?) null;
+            return model != null ? model.TimeStep : (TimeSpan?)null;
         }
 
         private void SubscribeToProjectEvents()
@@ -887,7 +869,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             base.Gui.Application.ProjectSaving += ApplicationOnProjectSaving;
             base.Gui.Application.ProjectSaved += ApplicationOnProjectSaved;
             base.Gui.Application.FileImporters.OfType<RasterFileImporter>().ForEach(rfi => rfi.MakeLayerVisibleAfterImport = MakeLayerVisibleAfterImport);
-            
+
             var project = base.Gui.Application.Project;
             if (project != null)
             {
@@ -923,15 +905,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         {
             if (project == null) return;
             ((INotifyPropertyChange)project).PropertyChanging += ProjectPropertyChanging;
-            ((INotifyPropertyChanged) project).PropertyChanged += ProjectPropertyChanged;
+            ((INotifyPropertyChanged)project).PropertyChanged += ProjectPropertyChanged;
         }
 
         private void UnsubscribeToProjectPropertyChanged(Project project)
-            {
+        {
             if (project == null) return;
             ((INotifyPropertyChange)project).PropertyChanging -= ProjectPropertyChanging;
             ((INotifyPropertyChanged)project).PropertyChanged -= ProjectPropertyChanged;
-            }
+        }
 
         void ProjectPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -944,7 +926,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
             var model = sender as WaterFlowFMModel;
-            if (! model.WriteSnappedFeatures) return;
+            if (!model.WriteSnappedFeatures) return;
 
             // Set coordinate system to OutputSnappedFeatures
             var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == model);
@@ -954,7 +936,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 var groupModelLayer = modelLayer as GroupLayer;
                 if (groupModelLayer != null)
                 {
-                    var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
+                    var snappedOutputLayer = groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMLayerNames.OutputSnappedFeaturesLayerName) as GroupLayer;
                     if (snappedOutputLayer == null) continue;
 
                     snappedOutputLayer.Layers.ForEach(l => l.DataSource.CoordinateSystem = model.CoordinateSystem);
@@ -970,7 +952,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             if (e.PropertyName.Equals(OutputHisFileStoreMemberName))
             {
 
-                var fmHisFileFunctionStore = ((WaterFlowFMModel) sender).OutputHisFileStore;
+                var fmHisFileFunctionStore = ((WaterFlowFMModel)sender).OutputHisFileStore;
                 if (fmHisFileFunctionStore != null)
                 {
                     CloseViewDataForOutdatedStore(fmHisFileFunctionStore);
@@ -979,7 +961,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             if (e.PropertyName.Equals(HeatFluxModelTypeMemberName))
             {
-                var heatFluxModel = ((WaterFlowFMModel) sender).ModelDefinition.HeatFluxModel;
+                var heatFluxModel = ((WaterFlowFMModel)sender).ModelDefinition.HeatFluxModel;
                 if (heatFluxModel != null)
                 {
                     CloseViewsForOutDatedHeatFluxModel(heatFluxModel);
@@ -1001,7 +983,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 model.OutputSnappedFeaturesPathPropertyChanged -= OnModelOutputSnappedFeaturesPathPropertyChanged;
             }
-            
+
             Gui.DocumentViews.OfType<ProjectItemMapView>().ForEach(v => v.RefreshModelLayers());
         }
 
@@ -1059,7 +1041,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
             var snappedOutputLayer =
-                groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as
+                groupModelLayer.Layers.FirstOrDefault(l => l.Name == FlowFMLayerNames.OutputSnappedFeaturesLayerName) as
                     GroupLayer;
             if (snappedOutputLayer == null)
             {
@@ -1075,10 +1057,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             {
                 var importer = fileImportActivity.FileImporter;
 
-                if ((importer is FlowFMNetFileImporter || importer is IFeature2DImporterExporter || importer is RasterFileImporter) && 
+                if ((importer is FlowFMNetFileImporter || importer is IFeature2DImporterExporter || importer is RasterFileImporter) &&
                     activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
                 {
-                    RefreshTreeViewAndZoomActiveMapViewToExtends();                     
+                    RefreshTreeViewAndZoomActiveMapViewToExtends();
                 }
                 if (importer is WaterFlowFMFileImporter &&
                     activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
@@ -1088,7 +1070,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             }
 
             var model = sender as WaterFlowFMModel;
-            if ( model != null && model.WriteSnappedFeatures && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
+            if (model != null && model.WriteSnappedFeatures && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
             {
                 CleanOutputSnappedLayersAndReleaseFileLocks(model);
             }
@@ -1100,24 +1082,59 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         [InvokeRequired]
         private void CleanOutputSnappedLayersAndReleaseFileLocks(WaterFlowFMModel model)
         {
+            // The Snapped Output Layers use a ShapeFile as their DataSource. The ShapeFile
+            // keeps it files actively locked (for whatever reason). As such it needs to
+            // be closed, before it can be deleted, otherwise it will result in a locked file
+            // exception.
+            // For whatever ungodly reason, instead of implementing an actual functioning 
+            // approach to dealing with this, it was opted to fix this here in GuiPlugin,
+            // and just query all views to check if we have open views with ShapeFiles. smh.
+
             //Clean output snapped layers;
             // release file locks
-            var mapViews = Gui.DocumentViews.OfType<ProjectItemMapView>().Where(m => (m.Data as WaterFlowFMModel) == model);
+            IEnumerable<ProjectItemMapView> mapViews =
+                Gui.DocumentViews
+                   .OfType<ProjectItemMapView>()
+                   .Where(m => (m.Data as WaterFlowFMModel) == model);
 
-            foreach (var mapView in mapViews)
+            foreach (ProjectItemMapView mapView in mapViews)
             {
-                var modelLayer = mapView.MapView.GetLayerForData(model);
-                var groupModelLayer = modelLayer as GroupLayer;
-                if (groupModelLayer != null)
-                {
-                    var snappedOutputLayer =
-                        groupModelLayer.Layers.FirstOrDefault(l =>
-                            l.Name == FlowFMMapLayerProvider.OutputSnappedFeaturesLayerName) as GroupLayer;
-                    if (snappedOutputLayer == null) continue;
+                ILayer modelLayer = mapView.MapView.GetLayerForData(model);
+                // Currently, it is possible to have the shape files nested under the model layer.
+                // As such we need to search recursively in all children.
+                // Note that this fails horribly if let users change the names of layers and they
+                // opt to being cheeky.
+                var snappedOutputLayer =
+                    FindLayerByNameRecursively(modelLayer, FlowFMLayerNames.OutputSnappedFeaturesLayerName)
+                        as IGroupLayer;
+                snappedOutputLayer?.Layers
+                                  .Select(l => l.DataSource)
+                                  .OfType<ShapeFile>()
+                                  .ForEach(sf => sf.Close());
+            }
+        }
 
-                    snappedOutputLayer.Layers.Select(l => l.DataSource).OfType<ShapeFile>().ForEach(sf => sf.Close());
+        private static ILayer FindLayerByNameRecursively(ILayer rootLayer, string layerName)
+        {
+            var layers = new Queue<ILayer>();
+            layers.Enqueue(rootLayer);
+
+            while (layers.Any())
+            {
+                ILayer nextLayer = layers.Dequeue();
+
+                if (nextLayer.Name == layerName)
+                {
+                    return nextLayer;
+                }
+
+                if (nextLayer is IGroupLayer groupLayer)
+                {
+                    groupLayer.Layers.ForEach(layers.Enqueue);
                 }
             }
+
+            return null;
         }
 
         [InvokeRequired]
@@ -1135,7 +1152,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 ActiveMapView.Map.ZoomToExtents();
             }
         }
-        
+
         [InvokeRequired]
         private void CloseViewDataForOutdatedStore(FMHisFileFunctionStore fmHisFileFunctionStore)
         {
@@ -1178,7 +1195,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
         private MapView GetActiveMapView()
         {
-            if (Gui == null) 
+            if (Gui == null)
                 return null;
 
             var activeView = Gui.DocumentViews.ActiveView;

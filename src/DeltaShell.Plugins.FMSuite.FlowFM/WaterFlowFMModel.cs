@@ -72,7 +72,6 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
-using SharpMap.Api;
 using SharpMap.Api.SpatialOperations;
 using SharpMap.Data.Providers;
 using SharpMap.SpatialOperations;
@@ -80,7 +79,14 @@ using SharpMap.SpatialOperations;
 namespace DeltaShell.Plugins.FMSuite.FlowFM
 {
     [Entity]
-    public partial class WaterFlowFMModel : TimeDependentModelBase, IHasCoordinateSystem, IGridOperationApi, IDisposable, IHydroModel, IHydFileModel, IDimrModel, IWaterFlowFMModel, ISedimentModelData, ICoupledModel
+    public partial class WaterFlowFMModel : TimeDependentModelBase, 
+                                            IDisposable, 
+                                            IHydroModel, 
+                                            IHydFileModel, 
+                                            IDimrModel, 
+                                            IWaterFlowFMModel, 
+                                            ISedimentModelData, 
+                                            ICoupledModel
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (WaterFlowFMModel));
         private readonly DimrRunner runner;

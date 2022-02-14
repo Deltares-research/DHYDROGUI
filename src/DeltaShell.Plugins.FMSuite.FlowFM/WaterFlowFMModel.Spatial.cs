@@ -703,7 +703,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
         }
 
-        internal int SnapVersion { get; private set; }
+        public int SnapVersion { get; private set; }
         
         public void InvalidateSnapping()
         {
