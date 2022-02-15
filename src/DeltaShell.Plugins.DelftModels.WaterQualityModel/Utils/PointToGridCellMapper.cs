@@ -115,7 +115,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
                 throw new InvalidOperationException("Cannot determine cell index as no grid was set.");
             }
 
-            return Grid.GetCellIndexForCoordinate(new Coordinate(x, y)) + 1 ?? 0; // + 1, waq is one based.
+            // do not include edges when checking if a coordinate is within a segment (cell)
+            // if the coordinate is exactly on an edge it is unclear to which segment the point belongs
+            return Grid.GetCellIndexForCoordinate(new Coordinate(x, y), includeEdges: false) + 1 ?? 0; // + 1, waq is one based.
+
         }
 
         public Cell GetCellFromWaqSegmentId(int segmentIndex)
