@@ -66,17 +66,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 ChildLayerObjectsFunc = region => region.SubRegions.OfType<object>().Plus(region.Links)
             };
 
-            yield return new MapLayerCreationInfo<IEventedList<HydroLink>, IHydroModel>
-            {
-                CreateLayerFunc = (links, model) => CreateLinksLayer(links, model.Region, "Model links"),
-                CanBuildWithParentFunc = model => model.Region is HydroRegion
-            };
-
             yield return new MapLayerCreationInfo<IEventedList<HydroLink>, IHydroRegion>
             {
-                CreateLayerFunc = (links, region) => CreateLinksLayer(links, region, $"{region.Name} links"),
+                CreateLayerFunc = (links, region) => new VectorLayer("Links " + region.Name)
+                {
+                    Visible = true,
+                    Style = NetworkLayerStyleFactory.CreateStyle(links, region is IDrainageBasin),
+                    NameIsReadOnly = true,
+                    DataSource = new ComplexFeatureCollection(region, (IList)region.Links, typeof(HydroLink)),
+                    FeatureEditor = new HydroLinkFeatureEditor
+                    {
+                        SnapRules = { new HydroLinkSnapRule { Obligatory = true, PixelGravity = 40 } },
+                        Region = region
+                    }
+                },
                 CanBuildWithParentFunc = region => !(region is IHydroNetwork || region is HydroArea)
             };
+
 
             yield return new MapLayerCreationInfo<IEventedList<RoughnessSection>>
             {
@@ -334,29 +340,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             return new MapLayerCreationInfo<IEnumerable<TFeature>, IDrainageBasin>
             {
                 CreateLayerFunc = (list, drainageBasin) => drainageBasin.GenerateDrainageBasinLayer(list)
-            };
-        }
-
-        private static ILayer CreateLinksLayer(IEventedList<HydroLink> links, IHydroRegion region, string layerName)
-        {
-            return new VectorLayer(layerName)
-            {
-                Visible = true,
-                Style = NetworkLayerStyleFactory.CreateStyle(links, region is IDrainageBasin),
-                NameIsReadOnly = true,
-                DataSource = new ComplexFeatureCollection(region, (IList)region.Links, typeof(HydroLink)),
-                FeatureEditor = new HydroLinkFeatureEditor
-                {
-                    SnapRules =
-                    {
-                        new HydroLinkSnapRule
-                        {
-                            Obligatory = true,
-                            PixelGravity = 40
-                        }
-                    },
-                    Region = region
-                }
             };
         }
     }

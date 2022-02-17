@@ -33,18 +33,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 };
             }
 
-            if (data is ModelFolder modelFolder && modelFolder.Model is RealTimeControlModel)
+            var modelfolder = data as ModelFolder;
+            if (modelfolder != null && modelfolder.Model is RealTimeControlModel)
             {
-                return new GroupLayer(modelFolder.Role == DataItemRole.Input ? "Input" : "Output")
+                return new GroupLayer(modelfolder.Role == DataItemRole.Input ? "Input" : "Output")
                 {
                     LayersReadOnly = true,
                     NameIsReadOnly = true
                 };
             }
 
-            if (data is IEventedList<ControlGroup> controlGroups)
+            var controlGroups = data as IEventedList<ControlGroup>;
+            if (controlGroups != null)
             {
-                var model = parentData as RealTimeControlModel;
+                var model = ((ModelFolder) parentData).Model as RealTimeControlModel;
 
                 var layers = new[]
                 {
@@ -98,15 +100,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
         public bool CanCreateLayerFor(object data, object parentData)
         {
             return data is RealTimeControlModel
-                   || (data as ModelFolder)?.Model is RealTimeControlModel
+                   || data is ModelFolder && ((ModelFolder) data).Model is RealTimeControlModel
                    || data is IEventedList<ControlGroup>;
         }
 
         public IEnumerable<object> ChildLayerObjects(object data)
         {
-            if (data is RealTimeControlModel realTimeControlModel)
+            var realTimeControlModel = data as RealTimeControlModel;
+            if (realTimeControlModel != null)
             {
-                yield return realTimeControlModel.ControlGroups;
+                yield return new ModelFolder
+                {
+                    Model = realTimeControlModel,
+                    Role = DataItemRole.Input
+                };
                 yield return new ModelFolder
                 {
                     Model = realTimeControlModel,
@@ -114,16 +121,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 };
             }
 
-            if (!(data is ModelFolder modelFolder) 
-                || !(modelFolder.Model is RealTimeControlModel rtcModel) 
-                || modelFolder.Role != DataItemRole.Output)
+            var modelfolder = data as ModelFolder;
+            if (modelfolder != null && modelfolder.Model is RealTimeControlModel)
             {
-                yield break;
-            }
+                var rtcModel = (RealTimeControlModel) modelfolder.Model;
 
-            foreach (IFeatureCoverage outputFeatureCoverage in rtcModel.OutputFeatureCoverages)
-            {
-                yield return outputFeatureCoverage;
+                if (modelfolder.Role == DataItemRole.Input)
+                {
+                    yield return rtcModel.ControlGroups;
+                }
+
+                if (modelfolder.Role == DataItemRole.Output)
+                {
+                    foreach (IFeatureCoverage outputFeatureCoverage in rtcModel.OutputFeatureCoverages)
+                    {
+                        yield return outputFeatureCoverage;
+                    }
+                }
             }
         }
 

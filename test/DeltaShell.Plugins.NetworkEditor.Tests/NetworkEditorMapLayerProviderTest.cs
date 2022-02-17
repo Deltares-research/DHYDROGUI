@@ -205,10 +205,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
         public void LinkLayerIsCreatedForBasinButNotForNetwork()
         {
             var basinLayer = (GroupLayer) MapLayerProviderHelper.CreateLayersRecursive(new DrainageBasin(), null, new List<IMapLayerProvider> { new NetworkEditorMapLayerProvider(), new SharpMapLayerProvider() });
-            Assert.IsTrue(basinLayer.Layers.Any(l => l.Name.EndsWith("links")));
+            Assert.IsTrue(basinLayer.Layers.Any(l => l.Name.StartsWith("Links")));
 
             var networkLayer = (GroupLayer)MapLayerProviderHelper.CreateLayersRecursive(new HydroNetwork(), null, new List<IMapLayerProvider> { new NetworkEditorMapLayerProvider(), new SharpMapLayerProvider() });
-            Assert.IsFalse(networkLayer.Layers.Any(l => l.Name.EndsWith(("links"))));
+            Assert.IsFalse(networkLayer.Layers.Any(l => l.Name.StartsWith("Links")));
         }
 
         [Test]

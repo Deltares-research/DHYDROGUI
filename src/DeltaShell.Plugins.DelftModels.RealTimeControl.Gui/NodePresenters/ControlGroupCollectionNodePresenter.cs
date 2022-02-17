@@ -43,10 +43,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         /// <returns>A ContextMenu for this node or null.</returns>
         public override IMenuItem GetContextMenu(ITreeNode sender, object nodeData)
         {
-            var model = sender?.Parent?.Tag as RealTimeControlModel;
-            return model != null 
-                       ? GuiPlugin?.GetContextMenu(model, nodeData) 
-                       : null;
+            var model = (RealTimeControlModel) sender.Parent.Parent.Tag;
+            return GuiPlugin?.GetContextMenu(model, nodeData);
         }
     }
 }

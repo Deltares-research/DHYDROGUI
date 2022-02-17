@@ -25,7 +25,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 };
             }
 
-            if (data is ModelFolder modelFolder && modelFolder.Model is HydroModel)
+            var modelFolder = data as ModelFolder;
+            if (modelFolder != null && modelFolder.Model is HydroModel)
             {
                 return new GroupLayer("Output")
                 {
@@ -46,9 +47,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 
         public IEnumerable<object> ChildLayerObjects(object data)
         {
-            if (data is HydroModel hydroModel)
+            var hydroModel = data as HydroModel;
+            if (hydroModel != null)
             {
-                yield return hydroModel.Region.Links;
+                yield return hydroModel.Region;
 
                 foreach (var activity in hydroModel.Activities)
                 {
@@ -64,13 +66,12 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 }
             }
 
-            if (data is ModelFolder modelFolder && modelFolder.Model is HydroModel folderHydroModel)
+            var modelFolder = data as ModelFolder;
+            if (modelFolder != null && modelFolder.Model is HydroModel)
             {
-                var modelWorkFlows = folderHydroModel.CurrentWorkflow
-                                                     .GetActivitiesOfType<IHydroModelWorkFlow>()
-                                                     .Where(wf => wf != null && wf.Data != null)
-                                                     .ToList();
+                var folderHydroModel = (HydroModel) modelFolder.Model;
 
+                var modelWorkFlows = folderHydroModel.CurrentWorkflow.GetActivitiesOfType<IHydroModelWorkFlow>().Where(wf => wf != null && wf.Data != null).ToList();
                 foreach (var modelWorkFlow in modelWorkFlows)
                 {
                     foreach (var coverage in modelWorkFlow.Data.OutputDataItems.Select(di => di.Value).OfType<IFeatureCoverage>())

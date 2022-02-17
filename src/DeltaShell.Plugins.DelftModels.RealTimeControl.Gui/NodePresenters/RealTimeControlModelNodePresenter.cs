@@ -89,11 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
         /// <returns></returns>
         public override IEnumerable GetChildNodeObjects(RealTimeControlModel parentNodeData, ITreeNode node)
         {
-            foreach (var inputItem in GetInputItems(parentNodeData))
-            {
-                yield return inputItem;
-            }
-
+            yield return new TreeFolder(parentNodeData, GetInputItems(parentNodeData), InputFolderName, FolderImageType.Input);
             yield return new OutputTreeFolder(parentNodeData, GetOutputItems(parentNodeData), OutputFolderName);
         }
 

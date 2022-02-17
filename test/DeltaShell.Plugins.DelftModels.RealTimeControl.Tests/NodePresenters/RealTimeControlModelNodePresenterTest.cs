@@ -53,8 +53,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
             IEnumerable childObjects = nodePresenter.GetChildNodeObjects(model, null);
 
             // Assert
+            TreeFolder inputTreeFolder =
+                childObjects.OfType<TreeFolder>().Single(f => f.Text == "Input");
             TreeFolder initialConditionsFolder =
-                childObjects.OfType<TreeFolder>().Single(f => f.Text == "Initial Conditions");
+                inputTreeFolder.ChildItems.OfType<TreeFolder>().Single(f => f.Text == "Initial Conditions");
             RealTimeControlRestartFile inputRestartFile =
                 initialConditionsFolder.ChildItems.OfType<RealTimeControlRestartFile>().Single();
 
