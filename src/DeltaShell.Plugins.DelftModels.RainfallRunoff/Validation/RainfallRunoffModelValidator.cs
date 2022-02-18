@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.Validators;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
@@ -50,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
                                                string.Format(
                                                    "A {0} node can only be connected (downstream) to a boundary or lateral",
                                                    conceptData.GetType().Name),
-                                               conceptData.Catchment.Basin));
+                                               new ValidatedFeatures(conceptData.Catchment.Basin, conceptData.Catchment)));
             }
         }
     }

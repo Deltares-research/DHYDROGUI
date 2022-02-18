@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using NetTopologySuite.Extensions.Features;
@@ -49,7 +50,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     feature,
                     ValidationSeverity.Error,
                     string.Format(Resources.WaterFlowFMEnclosureValidator_Validate_GeometryNotValid, feature.Name),
-                    model.Area.Enclosures));
+                    new ValidatedFeatures(model.Area, feature)));
                 return;
             }
 
@@ -62,7 +63,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     feature,
                     ValidationSeverity.Error,
                     string.Format(Resources.WaterFlowFMEnclosureValidator_Validate_Drawn_polygon_not__0__not_valid, feature.Name),
-                    model.Area.Enclosures));
+                    new ValidatedFeatures(model.Area, feature)));
             }
         }
     }

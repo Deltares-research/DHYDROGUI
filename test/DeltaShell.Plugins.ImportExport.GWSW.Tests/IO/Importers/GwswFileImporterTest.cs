@@ -16,6 +16,7 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.IO;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -753,8 +754,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
             //CheckManholes
             Assert.IsNotNull(network.Manholes);
-            var repeatedManholes =
-                network.Manholes.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => y.Key).ToList();
+            var repeatedManholes = network.Manholes.Duplicates();
             Assert.IsEmpty((IEnumerable) repeatedManholes,
                 string.Format("Repeated manhole entries. {0}",
                     String.Concat((IEnumerable<string>) repeatedManholes.Select(cmp => cmp.Name + " "))));

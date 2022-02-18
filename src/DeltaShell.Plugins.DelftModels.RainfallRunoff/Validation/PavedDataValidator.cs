@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 
@@ -42,13 +43,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             if (!hasMixedLink)
             {
                 issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                                              "No runoff target has been defined for the paved rainfall/mixed flow, or the selected runoff type does not match any of the linked features", pavedData.Catchment.Basin));
+                                              "No runoff target has been defined for the paved rainfall/mixed flow, or the selected runoff type does not match any of the linked features", 
+                                              new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
             }
 
             if (hasMixedLink && !(mixedToBoundary || mixedToOpenWater || mixedToWwtp))
             {
                 issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                                              "A paved node mixed sewer link can only be connected (downstream) to a boundary, open water, lateral or waste water treatment plant", pavedData.Catchment.Basin));
+                                              "A paved node mixed sewer link can only be connected (downstream) to a boundary, open water, lateral or waste water treatment plant", 
+                                              new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
             }
 
             if (pavedData.SewerType == PavedEnums.SewerType.MixedSystem)
@@ -57,7 +60,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             if (!hasDwfLink)
             {
                 issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                                              "No runoff target has been defined for the paved dry water flow", pavedData.Catchment.Basin));
+                                              "No runoff target has been defined for the paved dry water flow",
+                                              new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
                 return issues;
             }
             if (!hasMixedLink)
@@ -70,14 +74,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             if (!(dwfToBoundary || dwfToOpenWater || dwfToWwtp))
             {
                 issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                                              "A paved node dry water flow sewer link can only be connected (downstream) to a boundary, lateral or waste water treatment plant", pavedData.Catchment.Basin));
+                                              "A paved node dry water flow sewer link can only be connected (downstream) to a boundary, lateral or waste water treatment plant",
+                                              new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
             }
 
             if (((dwfToBoundary && mixedToBoundary) || (dwfToOpenWater && mixedToOpenWater) || (dwfToWwtp && mixedToWwtp)) && pavedDwfSewerLink != pavedMixedSewerLink)
             {
                 //if same type, must be same object
                 issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                    GetMessage(dwfToBoundary, dwfToOpenWater, dwfToWwtp), pavedData.Catchment.Basin));
+                    GetMessage(dwfToBoundary, dwfToOpenWater, dwfToWwtp), new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
             }
             return issues;
         }

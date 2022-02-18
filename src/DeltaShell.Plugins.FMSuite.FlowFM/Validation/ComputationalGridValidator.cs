@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Networks;
 using NetTopologySuite.Extensions.Grids;
-using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {
@@ -47,13 +48,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 issues.AddRange(GetMissingStartEndPointIssues(networkDiscretization, branch));
                 issues.AddRange(CheckBranchStructureLocations(branch, branchLocations));
                 
-                segmentIssues.AddRange(GetSegmentIssuesForBranch(networkDiscretization, minimumSegmentLength, segmentsPerBranch, branch));
+                segmentIssues.AddRange(GetSegmentIssuesForBranch(minimumSegmentLength, segmentsPerBranch, branch));
 
-                finiteVolumeIssues.AddRange(GetFiniteVolumeIssuesForBranch(networkDiscretization, branch, branchLocations));
+                finiteVolumeIssues.AddRange(GetFiniteVolumeIssuesForBranch(branch, branchLocations));
             }
 
-            var hasDuplicates = networkDiscretization.Locations.Values.GroupBy(lv => lv)
-                                                     .Any(grp => grp.Count() > 1);
+            var hasDuplicates = !networkDiscretization.Locations.Values.AllUnique();
             if (hasDuplicates)
             {
                 issues.Add(new ValidationIssue("Duplicate network calculation points found at same locations", ValidationSeverity.Error, $"There are duplicate calculation points at same the location. Kernel cannot handle this. Please remove one of the points."));
@@ -86,17 +86,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (networkDiscretization.GetLocationForBranchNode(branch, BranchNodeType.Begin) == null)
             {
                 var message = $"No computational grid cells defined for branch : {branch.Name}, not at start of branch; can not start calculation.";
-                yield return new ValidationIssue(branch.Source, ValidationSeverity.Error, message, networkDiscretization);
+                yield return new ValidationIssue(branch.Source, ValidationSeverity.Error, message, new ValidatedFeatures(branch.Network, branch));
             }
 
             if (networkDiscretization.GetLocationForBranchNode(branch, BranchNodeType.End) == null)
             {
                 var message = $"No computational grid cells defined for branch : {branch.Name}, not at end of branch; can not start calculation.";
-                yield return new ValidationIssue(branch.Target, ValidationSeverity.Error, message, networkDiscretization);
+                yield return new ValidationIssue(branch.Target, ValidationSeverity.Error, message, new ValidatedFeatures(branch.Network, branch));
             }
         }
 
-        private static IEnumerable<ValidationIssue> GetFiniteVolumeIssuesForBranch(IDiscretization networkDiscretization, IBranch branch, IList<INetworkLocation> branchLocations)
+        private static IEnumerable<ValidationIssue> GetFiniteVolumeIssuesForBranch(IBranch branch, IList<INetworkLocation> branchLocations)
         {
             var structuresOnComputationPoint = branch.BranchFeatures.OfType<IStructure1D>()
                                                      .Where(s => branchLocations.Any(l => Math.Abs(l.Chainage - s.Chainage) < 1e-7))
@@ -105,24 +105,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             foreach (var structure1D in structuresOnComputationPoint)
             {
                 var msg = string.Format(Resources.WaterFlowFMModelComputationalGridValidator_FiniteVolumeCheckStructuresNotOnGridPoints_Original_discretization_is_invalid__structure__0__is_on_a_grid_point, structure1D.Name);
-                yield return new ValidationIssue(structure1D, ValidationSeverity.Error, msg, networkDiscretization);
+                yield return new ValidationIssue(structure1D, ValidationSeverity.Error, msg, new ValidatedFeatures(branch.Network, structure1D));
             }
         }
 
-        private static IEnumerable<ValidationIssue> GetSegmentIssuesForBranch(IDiscretization networkDiscretization, double minimumSegmentLength, Dictionary<IBranch, List<INetworkSegment>> segmentsPerBranch, IBranch branch)
+        private static IEnumerable<ValidationIssue> GetSegmentIssuesForBranch(double minimumSegmentLength, Dictionary<IBranch, List<INetworkSegment>> segmentsPerBranch, IBranch branch)
         {
             if (segmentsPerBranch.TryGetValue(branch, out var segments))
             {
                 var toShortSegments = segments.Where(s => s.Length < minimumSegmentLength).ToArray();
                 foreach (var segment in toShortSegments)
                 {
-                    yield return new ValidationIssue(segment, ValidationSeverity.Warning, $"Segment {segment.Name} on branch {segment.Branch} is shorter ({segment.Length} than minimum length provided (Dxmin1D) : {minimumSegmentLength}.");
+                    yield return new ValidationIssue(segment, ValidationSeverity.Warning, $"Segment {segment.Name} on branch {segment.Branch} is shorter ({segment.Length} than minimum length provided (Dxmin1D) : {minimumSegmentLength}.", new ValidatedFeatures(branch.Network, segment));
                 }
             }
             else
             {
                 var message = string.Format(Resources.WaterFlowFMModelComputationalGridValidator_Validate_No_computational_grid_cells_defined_for_branch__0___can_not_start_calculation_, branch.Name);
-                yield return new ValidationIssue(branch, ValidationSeverity.Error, message, networkDiscretization);
+                yield return new ValidationIssue(branch, ValidationSeverity.Error, message, new ValidatedFeatures(branch.Network, branch));
             }
         }
 
@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 
                 var message = string.Format(Resources.WaterFlowFMModelComputationalGridValidator_CheckBranchStructureLocations_No_grid_points_defined_between_structure__0__and__1_,
                                             branchStructureFirst.Name, branchStructureSecond.Name);
-                yield return new ValidationIssue(branchStructureSecond.GetStructureType(), ValidationSeverity.Error, message, branchStructureFirst.Chainage);
+                yield return new ValidationIssue(branchStructureSecond.GetStructureType(), ValidationSeverity.Error, message, new ValidatedFeatures(branch.Network, branchStructureFirst, branchStructureSecond));
             }
         }
     }

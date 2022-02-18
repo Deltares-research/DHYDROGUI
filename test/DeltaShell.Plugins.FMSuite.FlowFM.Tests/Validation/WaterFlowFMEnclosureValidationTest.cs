@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Validators;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using DeltaShell.Plugins.FMSuite.FlowFM.Validation;
 using NUnit.Framework;
@@ -99,7 +100,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 featureName);
 
             Assert.AreEqual(expectedErrorMessage, errorFound.Message);
-            Assert.AreEqual(enclosures, errorFound.ViewData);
+            var validatedFeatures = errorFound.ViewData as ValidatedFeatures;
+            Assert.That(validatedFeatures, Is.Not.Null);
+            Assert.That(validatedFeatures.Features, Does.Contain(invalidEnclosureFeature));
         }
 
         [Test]
@@ -128,7 +131,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
                 featureName);
 
             Assert.AreEqual(expectedErrorMessage, errorFound.Message);
-            Assert.AreEqual(enclosures, errorFound.ViewData);
+            var validatedFeatures = errorFound.ViewData as ValidatedFeatures;
+            Assert.That(validatedFeatures, Is.Not.Null);
+            Assert.That(validatedFeatures.Features, Does.Contain(invalidEnclosureFeature));
         }
     }
 }

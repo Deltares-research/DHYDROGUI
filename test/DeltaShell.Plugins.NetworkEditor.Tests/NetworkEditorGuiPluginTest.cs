@@ -11,6 +11,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Validators;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DelftTools.TestUtils;
@@ -38,6 +39,7 @@ using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpMap;
+using SharpMap.Api;
 using SharpTestsEx;
 using Control = System.Windows.Controls.Control;
 
@@ -365,6 +367,27 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 mocks.VerifyAll();
 
             }
+        }
+
+        [Test]
+        public void GetViewInfoObjects_ContainsCorrectViewInfos()
+        {
+            // Setup
+            var plugin = new NetworkEditorGuiPlugin();
+
+            // Call
+            IEnumerable<ViewInfo> viewInfos = plugin.GetViewInfoObjects();
+
+            // Assert
+            Assert.That(viewInfos, Has.One.Matches<ViewInfo>(IsValidatedFeatureViewInfo));
+        }
+
+        private static bool IsValidatedFeatureViewInfo(ViewInfo viewInfo)
+        {
+            // Cannot just use TypeOf<ValidatedFeatureViewInfo>, since generic ViewInfos are implicitly converted to a ViewInfo
+            return viewInfo.DataType == typeof(ValidatedFeatures) &&
+                   viewInfo.ViewDataType == typeof(IMap) &&
+                   viewInfo.ViewType == typeof(MapView);
         }
     }
 }

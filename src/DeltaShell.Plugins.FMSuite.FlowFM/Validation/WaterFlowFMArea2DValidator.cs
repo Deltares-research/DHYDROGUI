@@ -4,7 +4,9 @@ using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Validation;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
@@ -21,7 +23,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 if (!model.SnapsToGrid(thinDam.Geometry))
                 {
                     issues.Add(new ValidationIssue(thinDam, ValidationSeverity.Warning,
-                                                   "thin dam '" + thinDam.Name + "' not within grid extent", area.ThinDams));
+                                                   "thin dam '" + thinDam.Name + "' not within grid extent", new ValidatedFeatures(area, thinDam)));
                 }
             }
 
@@ -30,7 +32,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 if (!model.SnapsToGrid(sourceAndSink.Feature.Geometry))
                 {
                     issues.Add(new ValidationIssue(sourceAndSink, ValidationSeverity.Warning,
-                                                   "source/sink '" + sourceAndSink.Name + "' not within grid extent", model.Pipes));
+                                                   "source/sink '" + sourceAndSink.Name + "' not within grid extent", new ValidatedFeatures(area, sourceAndSink.Feature)));
                 }
                 var timeArgument = sourceAndSink.Function.Arguments.OfType<IVariable<DateTime>>().First();
                 if (timeArgument.Values.Any())
@@ -58,7 +60,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 if (!model.SnapsToGrid(fixedWeir.Geometry))
                 {
                     issues.Add(new ValidationIssue(fixedWeir, ValidationSeverity.Warning,
-                                                   "fixed weir '" + fixedWeir.Name + "' not within grid extent", area.FixedWeirs));
+                                                   "fixed weir '" + fixedWeir.Name + "' not within grid extent", new ValidatedFeatures(area, fixedWeir)));
                 }
 
                 var dataToCheck =
@@ -71,7 +73,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         {
                             issues.Add(new ValidationIssue(fixedWeir, ValidationSeverity.Warning,
                                 "fixed weir '" + fixedWeir.Name +
-                                "' has unphysical sill depths, parts will be ignored by dflow-fm", area.FixedWeirs));
+                                "' has unphysical sill depths, parts will be ignored by dflow-fm", fixedWeir));
                         }
                 }
             }
@@ -81,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 if (!model.SnapsToGrid(weir.Geometry))
                 {
                     issues.Add(new ValidationIssue(weir, ValidationSeverity.Warning,
-                                                   "weir '" + weir.Name + "' not within grid extent", area.Pumps));
+                                                   "weir '" + weir.Name + "' not within grid extent", new ValidatedFeatures(area, weir)));
                 }
                 var result = weir.Validate();
                 if (!result.IsValid)
@@ -124,7 +126,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 if (!model.SnapsToGrid(sobekPump.Geometry))
                 {
                     issues.Add(new ValidationIssue(sobekPump, ValidationSeverity.Warning,
-                                                   "pump '" + sobekPump.Name + "' not within grid extent", area.Pumps));
+                                                   "pump '" + sobekPump.Name + "' not within grid extent", new ValidatedFeatures(area, sobekPump)));
                 }
                 var result = sobekPump.Validate();
                 if (!result.IsValid)
@@ -166,7 +168,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                     if (sobekPump.Capacity < 0)
                     {
                         issues.Add(new ValidationIssue(sobekPump, ValidationSeverity.Error,
-                            "pump '" + sobekPump.Name + "': Capacity must be greater than or equal to 0."));
+                            "pump '" + sobekPump.Name + "': Capacity must be greater than or equal to 0.", sobekPump));
                     }
                 }
 
@@ -190,7 +192,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 if (!model.SnapsToGrid(gate.Geometry))
                 {
                     issues.Add(new ValidationIssue(gate, ValidationSeverity.Warning,
-                                                   "gate '" + gate.Name + "' not within grid extent", gate));
+                                                   "gate '" + gate.Name + "' not within grid extent", new ValidatedFeatures(area, gate)));
                 }
                 if (gate.DoorHeight < 0.0)
                 {

@@ -23,6 +23,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.Common.Gui.MapLayers;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
@@ -69,6 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
     [Extension(typeof(IPlugin))]
     public class FlowFMGuiPlugin : GuiPlugin
     {
+        private readonly GuiContainer guiContainer = new GuiContainer();
         private TableViewTimeSeriesGeneratorTool tableViewTimeSeriesGeneratorTool;
 
         private const string CoordinateSystemMemberName = nameof(WaterFlowFMModel.CoordinateSystem);
@@ -139,7 +141,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                     GetStopTime = GetModelStopTime,
                     GetTimeStep = GetModelTimeStep
                 };
-
+                guiContainer.Gui = value;
             }
         }
 
@@ -377,9 +379,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(allBoundarySetsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet);
 
-            yield return FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Boundaries", m => m.Boundaries, () => Gui);
+            yield return FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Boundaries", m => m.Boundaries, guiContainer);
 
-            var viewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<ILink1D2D, WaterFlowFMModel>("Links", m => m.Links, () => Gui);
+            var viewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<ILink1D2D, WaterFlowFMModel>("Links", m => m.Links, guiContainer);
 
             yield return viewInfo;
 
@@ -399,13 +401,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return ViewInfoWrapper<Feature2D>.Create(sourceAndSinkViewInfo, FindDataForPipe, IsModelPipe);
 
-            var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, () => Gui);
+            var pipesViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Feature2D, WaterFlowFMModel>("Sources and Sinks", m => m.Pipes, guiContainer);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(pipesViewInfo, GetPipesFromSourcesAndSinks, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
-            var model1DBoundaryConditionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>("1D Boundary Conditions", m => m.BoundaryConditions1D, () => Gui);
+            var model1DBoundaryConditionsViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DBoundaryNodeData, WaterFlowFMModel>("1D Boundary Conditions", m => m.BoundaryConditions1D, guiContainer);
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(model1DBoundaryConditionsViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) => v.CanAddDeleteAttributes = false);
 
-            var model1DLateralSourceViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DLateralSourceData, WaterFlowFMModel>("Lateral Sources", m => m.LateralSourcesData, () => Gui);
+            var model1DLateralSourceViewInfo = FeatureCollectionViewInfoHelper.CreateViewInfo<Model1DLateralSourceData, WaterFlowFMModel>("Lateral Sources", m => m.LateralSourcesData, guiContainer);
 
             yield return ViewInfoWrapper<FmModelTreeShortcut>.Create(model1DLateralSourceViewInfo, o => o.Data, o => o.ShortCutType == ShortCutType.FeatureSet, (v, o) =>
             {

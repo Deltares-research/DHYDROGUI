@@ -17,7 +17,7 @@ namespace DelftTools.Hydro.Validators
                 if (composite.Structures.Count == 0)
                 {
                     issues.Add(new ValidationIssue(composite, ValidationSeverity.Error, "Does not contain any structures",
-                        network));
+                        new ValidatedFeatures(network, composite)));
                 }
 
                 foreach (var structure in composite.Structures)

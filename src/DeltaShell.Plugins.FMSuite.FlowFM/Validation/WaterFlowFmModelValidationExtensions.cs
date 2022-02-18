@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 ValidateCoordinateSystem(model),
                 ComputationalGridValidator.Validate(model.NetworkDiscretization, model.Grid, model.MinimumSegmentLength),
                 HydroNetworkValidator.Validate(model.Network),
-                ValidateLinks(model.Links),
+                ValidateLinks(model),
                 ValidateBathymetry(model),
                 ValidatePhysicalProcesses(model),
                 WaterFlowFMRoughnessValidator.Validate(model),
@@ -49,13 +49,19 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             return validationReport;
         }
         
-        private static ValidationReport ValidateLinks(IEnumerable<ILink1D2D> links)
+        private static ValidationReport ValidateLinks(WaterFlowFMModel model)
         {
-            var invalidLinkIssues = links
-                .Where(l => l.FaceIndex < 0 || l.DiscretisationPointIndex < 0)
-                .Select(l => $"Link {l.Name} has invalid indices (cell index {l.FaceIndex} - computation point {l.DiscretisationPointIndex})")
-                .Select(m => new ValidationIssue(links, ValidationSeverity.Error, m, links))
-                .ToArray();
+            var invalidLinkIssues = new List<ValidationIssue>();
+            foreach (ILink1D2D link in model.Links)
+            {
+                if (link.FaceIndex >= 0 && link.DiscretisationPointIndex >= 0)
+                {
+                    continue;
+                }
+
+                var message = $"Link {link.Name} has invalid indices (cell index {link.FaceIndex} - computation point {link.DiscretisationPointIndex})";
+                invalidLinkIssues.Add(new ValidationIssue(model.Links, ValidationSeverity.Error, message, new ValidatedFeatures(model.Region, link)));
+            }
 
             return new ValidationReport("Links", invalidLinkIssues);
         }
@@ -137,15 +143,21 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             var issues = new List<ValidationIssue>();
 
+            var coordinateSettingsShortcut = new FmValidationShortcut
+            {
+                FlowFmModel = model,
+                TabName = "General"
+            };
+            
             if (model.CoordinateSystem == null)
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Info,
-                                               "No coordinate system specified. The kernel will assume a projected system."));
+                                               "No coordinate system specified. The kernel will assume a projected system.", coordinateSettingsShortcut));
             }
             else if (model.CoordinateSystem.IsGeographic && model.CoordinateSystem.AuthorityCode != 4326 /*WGS84*/)
             {
                 issues.Add(new ValidationIssue(model, ValidationSeverity.Warning,
-                    "The geographic coordinate system specified may lead to incorrect results in the calculation. The calculation kernel only supports the WGS84 spherical system."));
+                    "The geographic coordinate system specified may lead to incorrect results in the calculation. The calculation kernel only supports the WGS84 spherical system.", coordinateSettingsShortcut));
             }
             return new ValidationReport("Model Coordinate System", issues);
         }

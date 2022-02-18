@@ -30,21 +30,21 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
                 yield return
                     new ValidationIssue(hbvData.Catchment, ValidationSeverity.Error,
                                         "Base flow reservoir constant should be between 0 and 1",
-                                        hbvData.Catchment.Basin);
+                                        hbvData);
             }
             if (hbvData.InterflowReservoirConstant <= 0.0 || hbvData.InterflowReservoirConstant >= 1.0)
             {
                 yield return
                     new ValidationIssue(hbvData.Catchment, ValidationSeverity.Error,
                                         "Inter flow reservoir constant should be between 0 and 1",
-                                        hbvData.Catchment.Basin);
+                                        hbvData);
             }
             if (hbvData.QuickFlowReservoirConstant <= 0.0 || hbvData.QuickFlowReservoirConstant >= 1.0)
             {
                 yield return
                     new ValidationIssue(hbvData.Catchment, ValidationSeverity.Error,
                                         "Quick flow reservoir constant should be between 0 and 1",
-                                        hbvData.Catchment.Basin);
+                                        hbvData);
             }
         }
     }

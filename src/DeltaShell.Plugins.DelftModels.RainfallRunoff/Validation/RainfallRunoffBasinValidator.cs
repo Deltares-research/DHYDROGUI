@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
 
@@ -45,18 +46,18 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
                 if (wwtp.Links.Count(l => Equals(wwtp, l.Target)) == 0)
                 {
                     issues.Add(new ValidationIssue(wwtp, ValidationSeverity.Warning,
-                                                   "Wastewater Treatment Plant has no incoming runoff links", target));
+                                                   "Wastewater Treatment Plant has no incoming runoff links", new ValidatedFeatures(target, wwtp)));
                 }
                 if (wwtp.Links.Count(l => Equals(wwtp, l.Source)) == 0)
                 {
                     issues.Add(new ValidationIssue(wwtp, ValidationSeverity.Warning,
-                                                   "Wastewater Treatment Plant has no outgoing runoff links; an implicit boundary will be created.", target));
+                                                   "Wastewater Treatment Plant has no outgoing runoff links; an implicit boundary will be created.", new ValidatedFeatures(target, wwtp)));
                 }
                 else if (wwtp.Links.Count(l => Equals(wwtp, l.Source)) > 1)
                 {
                     issues.Add(new ValidationIssue(wwtp, ValidationSeverity.Error,
                                                    "Wastewater Treatment Plant has more than one outgoing runoff link",
-                                                   target));
+                                                   new ValidatedFeatures(target, wwtp)));
                 }
             }
 

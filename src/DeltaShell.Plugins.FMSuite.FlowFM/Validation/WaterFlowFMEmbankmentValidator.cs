@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
 using GeoAPI.Extensions.Feature;
 using NetTopologySuite.Geometries;
@@ -29,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 foreach (var channel in intersectingChannels)
                 {
                     issues.Add(new ValidationIssue(model.GetDataItemByValue(model.Area), ValidationSeverity.Error,
-                        string.Format("Channel {0} intersects with the embankments", channel.Name)));
+                        string.Format("Channel {0} intersects with the embankments", channel.Name), new ValidatedFeatures(model.Area, channel)));
                 }
             }
 
@@ -40,7 +41,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 foreach (var embankment in intersectingEmbankments)
                 {
                     issues.Add(new ValidationIssue(model.GetDataItemByValue(model.Area), ValidationSeverity.Error,
-                        string.Format("Embankment {0} intersects with other embankments", embankment.Name)));
+                        string.Format("Embankment {0} intersects with other embankments",embankment.Name), new ValidatedFeatures(model.Area, embankment)));
                 }
             }
 
@@ -82,7 +83,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                 foreach (var embankment in intersectingEmbankments)
                 {
                     issues.Add(new ValidationIssue(model.GetDataItemByValue(model.Area), ValidationSeverity.Error,
-                        string.Format("Embankment {0} intersects with itself", embankment.Name)));
+                        string.Format("Embankment {0} intersects with itself", embankment.Name), new ValidatedFeatures(model.Area, embankment)));
                 }
             }
 

@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
         {
             if (boundaryConditionSet.BoundaryConditions.All(bc => FlowBoundaryCondition.IsMorphologyBoundary(bc)))
                 yield return new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
-                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_);
+                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateMorphologyBoundaryHaveHydroBoundaries_Morphology_boundary_condition_must_have_a_Hydro_boundary_condition_, boundaryConditionSet);
         }
 
         private static IEnumerable<ValidationIssue> ValidateSedimentConcentrationBoundaryHaveHydroBoundaries(BoundaryConditionSet boundaryConditionSet)

@@ -26,8 +26,10 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Reflection;
+using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.Common.Gui.MapLayers;
 using DeltaShell.NGHS.Common.Gui.PropertyGrid;
+using DeltaShell.NGHS.Common.Gui.Validation;
 using DeltaShell.Plugins.NetworkEditor.Gui.Editors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Export;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
@@ -72,6 +74,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
     [Extension(typeof(IPlugin))]
     public class NetworkEditorGuiPlugin : GuiPlugin
     {
+        private readonly GuiContainer guiContainer = new GuiContainer();
         private const string AddGroupToolStripMenuKey = "AddGroup";
         private const string RemoveGroupToolStripMenuKey = "RemoveGroup";
         private const string RemoveUngroupedToolStripMenuKey = "RemoveUngrouped";
@@ -134,6 +137,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                 }
 
                 gui = value;
+                guiContainer.Gui = value;
 
                 if (gui != null)
                 {
@@ -535,6 +539,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return attributeTableRetentions;
 
             yield return new ViewInfo<LeveeBreach, LeveeBreachView>();
+            yield return new ValidatedFeaturesViewInfo(guiContainer);
         }
 
         private void SetSharedCrossSectionDefinitionsComboBoxTypeEditor(VectorLayerAttributeTableView view, IModelWithNetwork networkModel)
@@ -1180,34 +1185,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         private void OnDocumentViewAdded(IView view)
         {
-            if (view is ValidationView validationView)
-            {
-                var validationControl = validationView.Controls.OfType<ValidationReportControl>().FirstOrDefault();
-                if (validationControl != null)
-                {
-                    var orgFunc = validationControl.OnOpenViewForIssue;
-                    validationControl.OnOpenViewForIssue = (i) =>
-                    {
-                        if (i.ViewData is RegionFeatureSelection viewItem)
-                        {
-                            var model = GetRootModel(viewItem.Region);
-                            Gui.DocumentViewsResolver.OpenViewForData(model);
-                            
-                            var mapView = Gui.DocumentViewsResolver.GetViewsForData(model).GetViewsOfType<MapView>().FirstOrDefault();
-                            if (mapView != null)
-                            {
-                                mapView.MapControl.SelectTool.Select(viewItem.Features);
-                                var env = new Envelope();
-                                viewItem.Features.ForEach(f => env.ExpandToInclude(f.Geometry.EnvelopeInternal));
-                                env.ExpandBy((env.Width /100.0) * 5.0);
-                                mapView.Map.ZoomToFit(env);
-                            }
-                        }
-                        orgFunc.Invoke(i);
-                    };
-                }
-            }
-
             var coverageView = view as CoverageView;
             if (coverageView == null && (view is ICompositeView compositeView))
             {
@@ -1497,25 +1474,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
             var model = models.FirstOrDefault();
             return model != null ? model.Name : "";
-        }
-
-        private IModel GetRootModel(IHydroRegion region)
-        {
-            var model = gui.Application.GetAllModelsInProject()
-                           .OfType<IHydroModel>()
-                           .FirstOrDefault(m => m.Region == region 
-                                                || m.Region is HydroRegion hydroRegion && hydroRegion.SubRegions.Contains(region));
-
-            return model != null ? GetRootModel(model) : null;
-        }
-
-        private static IModel GetRootModel(IModel model)
-        {
-            IModel parentModel = model.ParentModel();
-
-            return parentModel == null || parentModel == model
-                       ? model 
-                       : GetRootModel(parentModel);
         }
     }
 }

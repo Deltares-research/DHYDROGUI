@@ -7,6 +7,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils;
 using DelftTools.Utils.Validation;
+using GeoAPI.Extensions.Feature;
 using GeoAPI.Extensions.Networks;
 
 namespace DelftTools.Hydro.Validators
@@ -132,7 +133,7 @@ namespace DelftTools.Hydro.Validators
         private static ValidationReport ValidateBranches(IHydroNetwork network)
         {
             var issues = network?.Channels
-                                .SelectMany(b => GetBranchValidationIssues(b, network))
+                                .SelectMany(b => GetBranchValidationIssues(b))
                                 .ToList() 
                          ?? Enumerable.Empty<ValidationIssue>();
 
@@ -147,29 +148,30 @@ namespace DelftTools.Hydro.Validators
         private static IEnumerable<ValidationIssue> GetBranchOrderNumbersAtNode(INode node, INetwork network)
         {
             var mergedBranchesList = node.IncomingBranches.Concat(node.OutgoingBranches).ToList();
-            var groupedBranchesPerOrderNumber = mergedBranchesList.GroupBy(b => b.OrderNumber).Select(b => new { OrderNumber = b.Key, Count = b.Count() });
+            var groupedBranchesPerOrderNumber = mergedBranchesList.GroupBy(b => b.OrderNumber);
             foreach (var orderNumberGroup in groupedBranchesPerOrderNumber)
             {
-                if (orderNumberGroup.OrderNumber > 0 && orderNumberGroup.Count > 2)
+                int orderNumber = orderNumberGroup.Key;
+                if (orderNumber > 0 && orderNumberGroup.Count() > 2)
                 {
-                    var message = string.Format("More than two branches with the same ordernumber '{0}' are connected to node {1}; can not start calculation.", orderNumberGroup.OrderNumber, node.Name);
-                    yield return new ValidationIssue(node, ValidationSeverity.Error, message, network); 
+                    var message = string.Format("More than two branches with the same ordernumber '{0}' are connected to node {1}; can not start calculation.", orderNumber, node.Name);
+                    yield return new ValidationIssue(node, ValidationSeverity.Error, message, new ValidatedFeatures(network, new List<IFeature>(orderNumberGroup) { node }.ToArray()));
                 }
             }
         }
 
-        private static IEnumerable<ValidationIssue> GetBranchValidationIssues(IChannel channel, INetwork network)
+        private static IEnumerable<ValidationIssue> GetBranchValidationIssues(IChannel channel)
         {
             if (channel.Source.Name == channel.Target.Name)
             {
                 var message = $"Target and source node of branch '{channel.Name}' have the same id, '{channel.Source.Name}'. Circular branch?";
-                yield return new ValidationIssue(channel, ValidationSeverity.Error, message, network);
+                yield return new ValidationIssue(channel, ValidationSeverity.Error, message, new ValidatedFeatures(channel.Network, channel));
             }
 
             if (channel.OrderNumber != -1 && channel.OrderNumber < 0)
             {
                 var message = $"Branch '{channel.Name}' has an order number of '{channel.OrderNumber}'. Ordernumber can be -1 (no interpolation over node) or greater than or equal to 0 ";
-                yield return new ValidationIssue(channel, ValidationSeverity.Error, message, network);
+                yield return new ValidationIssue(channel, ValidationSeverity.Error, message, new ValidatedFeatures(channel.Network, channel));
             }
         }
 
@@ -273,7 +275,7 @@ namespace DelftTools.Hydro.Validators
                 {
                     var chainOfChannels = GetChainOfChannelsWithSameOrderNumber(channel, network).ToList();
 
-                    foreach (var issue in GetCorrectCrossSectionsOnChannelIssue(chainOfChannels, network))
+                    foreach (var issue in GetCorrectCrossSectionsOnChannelIssue(chainOfChannels.ToArray(), network))
                     {
                         yield return issue;
                     }
@@ -283,7 +285,7 @@ namespace DelftTools.Hydro.Validators
             }
         }
 
-        private static IEnumerable<ValidationIssue> GetCorrectCrossSectionsOnChannelIssue(IEnumerable<IChannel> chainOfChannels, IHydroNetwork network)
+        private static IEnumerable<ValidationIssue> GetCorrectCrossSectionsOnChannelIssue(IChannel[] chainOfChannels, IHydroNetwork network)
         {
             var crossSections = chainOfChannels.SelectMany(c => c.CrossSections);
             var crossSectionTypes = crossSections.Select(cs => cs.CrossSectionType).Distinct().ToArray();
@@ -291,7 +293,7 @@ namespace DelftTools.Hydro.Validators
             if (!crossSectionTypes.Any())
             {
                 var message = $"No cross sections on channel(s) {string.Join(",", chainOfChannels.Select(c => c.Name).ToArray())}; can not start calculation.";
-                yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, message, new RegionFeatureSelection(network, chainOfChannels));
+                yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, message, new ValidatedFeatures(network, chainOfChannels.ToArray<IFeature>()));
             }
 
             // Standard CS are sent as ZW to the modelApi at the moment, so we can consider them as the same
@@ -299,7 +301,7 @@ namespace DelftTools.Hydro.Validators
                 (crossSectionTypes.Contains(CrossSectionType.Standard) || crossSectionTypes.Contains(CrossSectionType.ZW)))
             {
                 var msg = $"Multiple cross-section-types (mix of Standard/ZW and Geometry/YZ) per branch(es) not supported.({string.Join(",", chainOfChannels.Select(c => c.Name).ToArray())})";
-                yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, msg, network);
+                yield return new ValidationIssue(chainOfChannels.First(), ValidationSeverity.Error, msg, new ValidatedFeatures(network, chainOfChannels.ToArray<IFeature>()));
             }
         }
 
@@ -335,12 +337,12 @@ namespace DelftTools.Hydro.Validators
 
             if (!CrossSectionValidator.IsCrossSectionAllowedOnBranch((CrossSection) crossSection, out errorMessage))
             {
-                yield return new ValidationIssue(crossSection, ValidationSeverity.Error, errorMessage, network);
+                yield return new ValidationIssue(crossSection, ValidationSeverity.Error, errorMessage, new ValidatedFeatures(network, crossSection));
             }
 
             if (crossSection.Geometry.Coordinates.Length == 0)
             {
-                yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "No profile defined", network);
+                yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "No profile defined", crossSection);
             }
 
             if (!CrossSectionValidator.IsFlowProfileValid(crossSectionDefinition))
@@ -348,11 +350,11 @@ namespace DelftTools.Hydro.Validators
                 if (crossSectionDefinition.CrossSectionType == CrossSectionType.ZW)
                 {
                     yield return new ValidationIssue(crossSection, ValidationSeverity.Error,  
-                        string.Format("Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", crossSection));
+                        string.Format("Tabulated cross section {0} cannot have zero width at levels above deepest point of its definition.", crossSection), crossSection);
                 }
                 else
                 {
-                    yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "Invalid flow profile", network);
+                    yield return new ValidationIssue(crossSection, ValidationSeverity.Error, "Invalid flow profile", crossSection);
                 }
             }
 
