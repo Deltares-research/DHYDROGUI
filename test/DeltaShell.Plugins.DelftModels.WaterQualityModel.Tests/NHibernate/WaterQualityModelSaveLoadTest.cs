@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Extensions;
 using DelftTools.Utils.Collections.Generic;
@@ -426,12 +427,16 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
         }
 
         [Test]
+        [Category(TestCategory.Integration)]
         [Category(TestCategory.Slow)]
         public void SaveModel_ChangeHydFileOtherData_LoadModel_OutputRemoved()
         {
+            const string hydFileName = "FlowFM.hyd";
+            const string hydFileDifferentTimeStep = "FlowFM_otherTimestep.hyd";
+            
             // copy hyd file and related files
             string dataDir = TestHelper.GetTestDataDirectory();
-            string squareHydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
+            string hydFile = Path.Combine(dataDir, "ValidWaqModels", "FM", hydFileName);
 
             using (var tempDirectory = new TemporaryDirectory())
             {
@@ -452,10 +457,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                     app.Run();
 
-                    string hydFileDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(Path.GetDirectoryName(squareHydFile));
-                    string hydFileInTemp = Path.Combine(hydFileDirectoryInTemp, "uni3d.hyd");
-                    string localHydFileOtherTimestep = Path.Combine(hydFileDirectoryInTemp,
-                                                                    "uni3d_otherTimestep.hyd");
+                    string hydFileDirectoryInTemp = tempDirectory.CopyDirectoryToTempDirectory(Path.GetDirectoryName(hydFile));
+                    string hydFileInTemp = Path.Combine(hydFileDirectoryInTemp, hydFileName);
+                    string localHydFileOtherTimestep = Path.Combine(hydFileDirectoryInTemp, hydFileDifferentTimeStep);
 
                     // create a model
                     var model = new WaterQualityModel();
@@ -466,15 +470,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
                     app.Project.RootFolder.Add(model);
 
                     new SubFileImporter().Import(model.SubstanceProcessLibrary,
-                                                 Path.Combine(dataDir, "IO", "03d_Tewor2003.sub"));
+                                                 Path.Combine(dataDir, "ValidWaqModels", "coli_04.sub"));
 
                     app.RunActivity(model);
 
+                    Assert.IsTrue(model.Status == ActivityStatus.Cleaned, $"Actual ActivityStatus was: {model.Status}");
                     Assert.IsFalse(model.OutputIsEmpty);
 
                     // save it
-                    string savePath = Path.Combine(hydFileDirectoryInTemp, "savedProject",
-                                                   "project1.dsproj");
+                    string savePath = Path.Combine(hydFileDirectoryInTemp, "savedProject", "project1.dsproj");
                     app.SaveProjectAs(savePath);
                     app.CloseProject();
 

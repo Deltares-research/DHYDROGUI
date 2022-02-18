@@ -15,18 +15,15 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
         public void RunDelwaqModelWithDoubleAliasEntries()
         {
             string dataDir = TestHelper.GetTestDataDirectory();
-            string hydFile = Path.Combine(dataDir, "IO", "real", "uni3d.hyd");
-
+            string hydFile = Path.Combine(dataDir, "ValidWaqModels", "FM", "FlowFM.hyd");
+            
             using (var model = new WaterQualityModel())
             {
                 new HydFileImporter().ImportItem(hydFile, model);
                 model.Boundaries[0].LocationAliases = "load 1, load 1"; // add double alias
 
-                string subFilePath = Path.Combine(dataDir, "IO", "03d_Tewor2003.sub");
+                string subFilePath = TestHelper.GetTestFilePath(@"ValidWaqModels\coli_04.sub");
                 new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
-
-                string csvFile = Path.Combine(dataDir, "IO", "csv", "loads_multisubs.csv");
-                new DataTableImporter().ImportItem(csvFile, model.BoundaryDataManager);
 
                 // Send the model to delwaq
                 ActivityRunner.RunActivity(model);

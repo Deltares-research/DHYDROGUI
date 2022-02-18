@@ -31,7 +31,7 @@
   
   <ItemGroup>
     <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1252" IncludeAssets="compile" PrivateAssets="all" />
-    <PackageReference Include="Dimr.Libs" Version="2.18.11" />
+    <PackageReference Include="Dimr.Libs" Version="2.19.8" />
     <PackageReference Include="log4net" Version="2.0.12">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

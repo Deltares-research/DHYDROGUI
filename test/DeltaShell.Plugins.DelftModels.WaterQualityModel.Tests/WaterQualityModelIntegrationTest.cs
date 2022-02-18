@@ -102,25 +102,22 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             {
                 new HydFileImporter().ImportItem(hydFile, model);
 
-                string subFilePath = Path.Combine(dataDir, "ValidWaqModels", "Eutrof_simple_fm.sub");
+                string subFilePath = Path.Combine(dataDir, "ValidWaqModels", "coli_04.sub");
                 new SubFileImporter().Import(model.SubstanceProcessLibrary, subFilePath);
 
                 // Send the model to delwaq
                 ActivityRunner.RunActivity(model);
 
-                Assert.IsTrue(model.Status == ActivityStatus.Cleaned);
+                Assert.IsTrue(model.Status == ActivityStatus.Cleaned, $"Actual ActivityStatus was: {model.Status}");
                 Assert.IsTrue(model.OutputSubstancesDataItemSet.DataItems.Any());
-                IDataItem oxygenDataItem = model.OutputSubstancesDataItemSet.DataItems.FirstOrDefault(d => d.Name.Equals("OXY"));
-                Assert.NotNull(oxygenDataItem, "OXY dataitem not found.");
-                var oxygen = (UnstructuredGridCellCoverage) oxygenDataItem.Value;
-                IFunction firstFeature = oxygen.GetTimeSeries(oxygen.GetCoordinatesForGrid(oxygen.Grid).First());
-                Assert.NotNull(firstFeature, "First feature in oxygen data item not found.");
+                IDataItem inorganicMatterDataItem = model.OutputSubstancesDataItemSet.DataItems.FirstOrDefault(d => d.Name.Equals("IM1"));
+                Assert.NotNull(inorganicMatterDataItem, "IM1 dataitem not found.");
+                var inorganicMatter = (UnstructuredGridCellCoverage) inorganicMatterDataItem.Value;
+                IFunction firstFeature = inorganicMatter.GetTimeSeries(inorganicMatter.GetCoordinatesForGrid(inorganicMatter.Grid).First());
+                Assert.NotNull(firstFeature, "First feature in IM1 data item not found.");
                 IVariable firstComponent = firstFeature.Components.FirstOrDefault();
                 Assert.NotNull(firstComponent, "first feature component invalid.");
-                for (var i = 1; i < firstComponent.Values.Count; i++)
-                {
-                    Assert.IsTrue((double) firstComponent.Values[i] > 0d);
-                }
+                Assert.True(firstComponent.Values.OfType<Double>().Any(t => t >0d));
             }
         }
 
