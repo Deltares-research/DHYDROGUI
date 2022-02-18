@@ -215,7 +215,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
             Assert.AreEqual(100, branch1.Geometry.Coordinates[0].Y);
             Assert.AreEqual(50, branch1.Geometry.Coordinates[1].X);
             Assert.AreEqual(50, branch1.Geometry.Coordinates[1].Y);
-            Assert.AreEqual(branch1.GeodeticLength, branch1.Length);
 
             Assert.AreEqual("pipe1 long",pipe1.LongName);
             Assert.AreEqual(2, pipe1.Geometry.Coordinates.Length);

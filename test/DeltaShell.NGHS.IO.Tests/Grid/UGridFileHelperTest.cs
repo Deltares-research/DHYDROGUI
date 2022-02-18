@@ -9,10 +9,12 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
+using GeoAPI.Extensions.Networks;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
 using NUnit.Framework;
+using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 using SharpMapTestUtils;
 
@@ -299,6 +301,30 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             UGridFileHelper.RewriteGridCoordinates(localtestFile, grid);
 
             FileUtils.DeleteIfExists(localtestFile);
+        }
+
+        [Test]
+        public void GivenUGridFileHelper_ReadingNetworkWithCoordinateSystem_ShouldSetBranchesGeodeticLength()
+        {
+            //Arrange
+            var path = TestHelper.GetTestFilePath(@"ugrid\ReadGeodeticLengthTest.nc");
+            var network = new HydroNetwork();
+            var discretization = new Discretization();
+
+            if (Map.CoordinateSystemFactory == null)
+            {
+                Map.CoordinateSystemFactory = new OgrCoordinateSystemFactory();
+            }
+
+            // Act
+            UGridFileHelper.ReadNetworkAndDiscretisation(path, discretization, network);
+
+            // Assert
+            Assert.NotNull(network.CoordinateSystem);
+            
+            var branch = network.Branches[0];
+            Assert.False(double.IsNaN(branch.GeodeticLength));
+            Assert.AreNotEqual(branch.Geometry.Length, branch.GeodeticLength);
         }
     }
 }

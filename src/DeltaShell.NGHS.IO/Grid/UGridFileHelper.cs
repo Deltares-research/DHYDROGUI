@@ -266,8 +266,8 @@ namespace DeltaShell.NGHS.IO.Grid
         /// returned from a native function</exception>
         public static void ReadNetworkAndDiscretisation(string path, IDiscretization discretization,
             IHydroNetwork network,
-            IList<CompartmentProperties> compartmentPropertiesList,
-            IList<BranchProperties> branchPropertiesList)
+            IList<CompartmentProperties> compartmentPropertiesList = null,
+            IList<BranchProperties> branchPropertiesList = null)
         {
             var errorMessage = $"Could not load network and computational grid from {path}";
             if (network == null || !IsValidPath(path))
@@ -289,6 +289,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 ReadNetwork(api, network, compartmentPropertiesList, branchPropertiesList);
 
                 network.CoordinateSystem = GetCoordinateSystemFromApi(api);
+                network.UpdateGeodeticDistancesOfChannels();
             }
 
             if (discretization == null)
@@ -625,11 +626,12 @@ namespace DeltaShell.NGHS.IO.Grid
             IList<BranchProperties> branchPropertiesList)
         {
             var networkIds = api.GetNetworkIds();
-            if (networkIds.Length != 0)
+            if (networkIds.Length == 0)
             {
-                network.SetNetworkGeometry(api.GetNetworkGeometry(networkIds[0]), branchPropertiesList,
-                    compartmentPropertiesList);
+                return;
             }
+
+            network.SetNetworkGeometry(api.GetNetworkGeometry(networkIds[0]), branchPropertiesList, compartmentPropertiesList);
         }
 
         private static void UpdateNodeZVariables(NetCdfFile file)
