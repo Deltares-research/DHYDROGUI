@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.NodePresenters
         {
             var realTimeControlModel = new RealTimeControlModel();
             var node = Substitute.For<ITreeNode>();
-            node.Parent.Parent.Tag.Returns(realTimeControlModel);
+            node.Parent.Tag.Returns(realTimeControlModel);
 
             var controlGroupCollectionNodePresenter = new ControlGroupCollectionNodePresenter();
             var guiPluginMock = Substitute.For<GuiPlugin>();

@@ -59,12 +59,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             var rainfallRunoffModel = data as RainfallRunoffModel;
             if (rainfallRunoffModel != null)
             {
-                var basinDataItem = rainfallRunoffModel.DataItems.FirstOrDefault(di => di.Role == DataItemRole.Input && di.Value is IDrainageBasin);
-                if (basinDataItem != null && basinDataItem.LinkedTo == null)
-                {
-                    yield return new ModelFolder { Model = rainfallRunoffModel, Role = DataItemRole.Input };
-                }
-                
+                yield return rainfallRunoffModel.Basin;
                 yield return new ModelFolder { Model = rainfallRunoffModel, Role = DataItemRole.Output };
             }
 
@@ -72,11 +67,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             if (modelfolder != null && modelfolder.Model is RainfallRunoffModel)
             {
                 var runoffModel = (RainfallRunoffModel)modelfolder.Model;
-
-                if (modelfolder.Role == DataItemRole.Input)
-                {
-                    yield return runoffModel.Basin;
-                }
 
                 if (modelfolder.Role == DataItemRole.Output)
                 {

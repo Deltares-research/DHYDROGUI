@@ -190,7 +190,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers.Providers.Providers
             }
 
             private (IWaterFlowFMModel model, IList<object>) GetValidInput(
-                bool withArea=false,
                 bool withInfiltration=false,
                 bool withHeatFlux=false,
                 bool withSalinity=false,
@@ -198,10 +197,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers.Providers.Providers
             {
                 IWaterFlowFMModel model = CreateMockedModel();
                 model.Owner.Returns(Substitute.For<IModel>());
-
-                var areaDataItem = Substitute.For<IDataItem>();
-                areaDataItem.LinkedTo.Returns(withArea ? (ILinkable<IDataItem>)null : Substitute.For<IDataItem>());
-                model.GetDataItemByValue(Area).Returns(areaDataItem);
 
                 model.UseInfiltration.Returns(withInfiltration);
                 model.HeatFluxModelType.Returns(withHeatFlux 
@@ -212,7 +207,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers.Providers.Providers
 
                 var expectedChildren = new List<object>
                 {
-                    withArea ? Area : null,
+                    Area,
                     Grid,
                     Bathymetry,
                     InitialWaterLevel,
@@ -251,13 +246,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers.Providers.Providers
                                      CommonAsserts.ChildrenEqualTo(data.Item2));
 
 
-                yield return ToTestCase(GetValidInput(withArea: true));
+                yield return ToTestCase(GetValidInput());
                 yield return ToTestCase(GetValidInput(withInfiltration: true));
                 yield return ToTestCase(GetValidInput(withHeatFlux: true));
                 yield return ToTestCase(GetValidInput(withSalinity: true));
                 yield return ToTestCase(GetValidInput(withMorSed: true));
                 yield return ToTestCase(GetValidInput(
-                                            withArea: true,
                                             withInfiltration: true,
                                             withHeatFlux: true,
                                             withSalinity:true,

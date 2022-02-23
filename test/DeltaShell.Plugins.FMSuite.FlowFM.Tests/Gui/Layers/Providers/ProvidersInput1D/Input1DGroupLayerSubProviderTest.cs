@@ -134,25 +134,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers.Providers.Providers
                     new InputLayerData(modelWithNetwork, LayerDataDimension.Data1D),
                     CommonAsserts.ChildrenEqualTo(childrenWithNetwork));
 
-                IWaterFlowFMModel modelWithoutNetwork = CreateMockedModel();
-                var linkedNetworkDataItem = Substitute.For<IDataItem>();
-                
-                linkedNetworkDataItem.LinkedTo.Returns(Substitute.For<IDataItem>());
-                modelWithoutNetwork.GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag)
-                                   .Returns(linkedNetworkDataItem);
-
-                object[] childrenWithoutNetwork =
-                {
-                    modelWithoutNetwork.NetworkDiscretization,
-                    modelWithoutNetwork.BoundaryConditions1D,
-                    modelWithoutNetwork.LateralSourcesData,
-                    new InputFeatureGroupLayerData(modelWithoutNetwork, FeatureType.InitialConditions),
-                    new InputFeatureGroupLayerData(modelWithoutNetwork, FeatureType.Friction),
-                };
-
-                yield return new TestCaseData(
-                    new InputLayerData(modelWithoutNetwork, LayerDataDimension.Data1D), 
-                    CommonAsserts.ChildrenEqualTo(childrenWithoutNetwork));
 
                 yield return new TestCaseData(
                     new InputLayerData(modelWithNetwork, LayerDataDimension.Data2D), 

@@ -60,11 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers.ProvidersInput2
 
             IWaterFlowFMModel model = layerData.Model;
 
-            if (ShouldYieldArea(model))
-            {
-                WarnInvalidEnclosures(model.Area.Enclosures);
-                yield return model.Area;
-            }
+            WarnInvalidEnclosures(model.Area.Enclosures);
+            yield return model.Area;
 
             yield return model.Grid;
             yield return model.Bathymetry;
@@ -112,15 +109,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers.ProvidersInput2
             yield return new EstimatedSnappedFeatureGroupData(model);
         }
 
-        private static bool ShouldYieldArea(IWaterFlowFMModel model)
-        {
-            IModel rootModel = GetRootModel(model);
-
-            return rootModel == null || 
-                   rootModel is WaterFlowFMModel || 
-                   model.GetDataItemByValue(model.Area).LinkedTo == null;
-        }
-
         private static void WarnInvalidEnclosures(IEnumerable<GroupableFeature2DPolygon> enclosures)
         {
             foreach (GroupableFeature2DPolygon invalidEnclosure in enclosures.Where(IsInvalid))
@@ -130,23 +118,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers.ProvidersInput2
             }
         }
 
-        private static bool IsInvalid(GroupableFeature2DPolygon enclosure) =>
-            !(enclosure.Geometry is Polygon polygon && polygon.IsValid);
-
-        private static IModel GetRootModel(IModel model)
+        private static bool IsInvalid(GroupableFeature2DPolygon enclosure)
         {
-            IModel rootModel = GetRootModelRecursive(model);
-            return rootModel == model ? null : rootModel;
-        }
-
-        private static IModel GetRootModelRecursive(IModel model)
-        {
-            while (model.Owner is IModel ownerModel)
-            {
-                model = ownerModel;
-            }
-
-            return model;
+            return !(enclosure.Geometry is Polygon polygon && polygon.IsValid);
         }
     }
 }

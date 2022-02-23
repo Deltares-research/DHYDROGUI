@@ -110,8 +110,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
 
         public override IEnumerable GetChildNodeObjects(HydroModel parentNodeData, ITreeNode node)
         {
-            yield return parentNodeData.GetDataItemByValue(parentNodeData.Region);
-            yield return new TreeFolder(parentNodeData, parentNodeData.Activities, "Models", FolderImageType.None);
+            foreach (var activity in parentNodeData.Activities)
+            {
+                yield return activity;
+            }
+
             var outputs = new List<TreeFolder>();
 
             if (parentNodeData.CurrentWorkflow is IHydroModelWorkFlow hydroModelWorkFlow && hydroModelWorkFlow.Data != null && hydroModelWorkFlow.Data.OutputDataItems.Any())

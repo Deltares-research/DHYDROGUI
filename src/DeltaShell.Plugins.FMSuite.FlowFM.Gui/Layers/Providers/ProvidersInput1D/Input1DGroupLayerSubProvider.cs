@@ -49,11 +49,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers.ProvidersInput1
 
             IWaterFlowFMModel model = layerData.Model;
 
-            if (model.GetDataItemByTag(WaterFlowFMModelDataSet.NetworkTag).LinkedTo == null)
-            {
-                yield return model.Network;
-            }
-
+            yield return model.Network;
+            
             yield return model.NetworkDiscretization;
 
             yield return model.BoundaryConditions1D;
