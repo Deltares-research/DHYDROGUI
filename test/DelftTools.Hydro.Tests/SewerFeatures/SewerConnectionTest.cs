@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.TestUtils;
@@ -8,6 +11,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DelftTools.Hydro.Tests.SewerFeatures
@@ -326,6 +330,105 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
             Assert.IsTrue(sewerConnection.BranchFeatures.Count.Equals(2));
             Assert.IsTrue(sewerConnection.BranchFeatures.Contains(compositeStructureOne));
             Assert.IsTrue(sewerConnection.BranchFeatures.Contains(featureOne));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(ChangeBranchFeaturesCases))]
+        public void AddPumpOrWeirToBranchFeatures_SetsSpecialConnectionTypeToCorrectType(
+            IBranchFeature feature, SewerConnectionSpecialConnectionType expType)
+        {
+            // Setup
+            var sewerConnection = new SewerConnection();
+
+            // Precondition
+            Assert.That(sewerConnection.SpecialConnectionType, Is.EqualTo(SewerConnectionSpecialConnectionType.None));
+
+            // Call
+            sewerConnection.BranchFeatures.Add(feature);
+
+            // Assert
+            Assert.That(sewerConnection.SpecialConnectionType, Is.EqualTo(expType));
+        }
+
+        [TestCaseSource(nameof(ChangeBranchFeaturesCases))]
+        public void RemovePumpOrWeirFromBranchFeatures_SetsSpecialConnectionTypeToNone(
+            IBranchFeature feature, SewerConnectionSpecialConnectionType precondition)
+        {
+            // Setup
+            var sewerConnection = new SewerConnection();
+            sewerConnection.BranchFeatures.Add(feature);
+
+            // Precondition
+            Assert.That(sewerConnection.SpecialConnectionType, Is.EqualTo(precondition));
+
+            // Call
+            sewerConnection.BranchFeatures.Remove(feature);
+
+            // Assert
+            Assert.That(sewerConnection.SpecialConnectionType, Is.EqualTo(SewerConnectionSpecialConnectionType.None));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(UpdateSpecialConnectionTypeUpdatesCrossSectionDefinitionCases))]
+        public void UpdateSpecialConnectionType_DefaultPreviousCrossSectionDefinition_UpdatesCrossSectionDefinition(IBranchFeature feature, ICrossSectionDefinition previousDefinition, string expCrossSectionDefinitionName)
+        {
+            // Setup
+            var hydroNetwork = Substitute.For<IHydroNetwork>();
+            var sharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition> { previousDefinition };
+            hydroNetwork.SharedCrossSectionDefinitions.Returns(sharedCrossSectionDefinitions);
+
+            var sewerConnection = new SewerConnection
+            {
+                CrossSection = new CrossSection(previousDefinition),
+                Network = hydroNetwork
+            };
+
+            // Call
+            sewerConnection.BranchFeatures.Add(feature);
+
+            // Assert
+            Assert.That(sewerConnection.CrossSection.Definition.Name, Is.EqualTo(expCrossSectionDefinitionName));
+        }
+
+        [Test]
+        public void UpdateSpecialConnectionType_CustomPreviousCrossSectionDefinition_UpdatesCrossSectionDefinition()
+        {
+            // Setup
+            var hydroNetwork = Substitute.For<IHydroNetwork>();
+            ICrossSectionDefinition previousDefinition = Substitute.For<ICrossSectionDefinition, INotifyPropertyChanged>();
+            previousDefinition.Name = "custom_definition";
+            var sharedCrossSectionDefinitions = new EventedList<ICrossSectionDefinition> { previousDefinition };
+            hydroNetwork.SharedCrossSectionDefinitions.Returns(sharedCrossSectionDefinitions);
+
+            var sewerConnection = new SewerConnection
+            {
+                CrossSection = new CrossSection(previousDefinition),
+                Network = hydroNetwork
+            };
+
+            // Call
+            sewerConnection.BranchFeatures.Add(Substitute.For<IWeir>());
+
+            // Assert
+            Assert.That(sewerConnection.CrossSection.Definition, Is.SameAs(previousDefinition));
+        }
+
+        private static IEnumerable<TestCaseData> UpdateSpecialConnectionTypeUpdatesCrossSectionDefinitionCases()
+        {
+            ICrossSectionDefinition pressurizedPipeCrossSectionDefinition = Substitute.For<ICrossSectionDefinition, INotifyPropertyChanged>();
+            pressurizedPipeCrossSectionDefinition.Name = SewerCrossSectionDefinitionFactory.DefaultPumpSewerStructureProfileName;
+
+            ICrossSectionDefinition weirCrossSectionDefinition = Substitute.For<ICrossSectionDefinition, INotifyPropertyChanged>();
+            weirCrossSectionDefinition.Name = SewerCrossSectionDefinitionFactory.DefaultWeirSewerStructureProfileName;
+
+            yield return new TestCaseData(Substitute.For<IWeir>(), pressurizedPipeCrossSectionDefinition, SewerCrossSectionDefinitionFactory.DefaultWeirSewerStructureProfileName);
+            yield return new TestCaseData(Substitute.For<IPump>(), weirCrossSectionDefinition, SewerCrossSectionDefinitionFactory.DefaultPumpSewerStructureProfileName);
+        }
+
+        private static IEnumerable<TestCaseData> ChangeBranchFeaturesCases()
+        {
+            yield return new TestCaseData(Substitute.For<IPump>(), SewerConnectionSpecialConnectionType.Pump);
+            yield return new TestCaseData(Substitute.For<IWeir>(), SewerConnectionSpecialConnectionType.Weir);
         }
 
         #region Adding source and target

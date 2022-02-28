@@ -208,13 +208,22 @@ namespace DelftTools.Hydro.CrossSections
                 crossSection.Name = HydroNetworkHelper.GetUniqueFeatureName(crossSection.Network as HydroNetwork, crossSection);    
             }
 
-            if (branch is ISewerConnection && !(branch is IPipe))
+            if (branch is SewerConnection sewerConnection && !(branch is IPipe))
             {
-                var defaultDefinition = SewerFactory.GetDefaultSewerConnectionDefinition(hydroNetwork ?? branch?.Network as IHydroNetwork);
-                crossSection.UseSharedDefinition(defaultDefinition);
+                ICrossSectionDefinition defaultCrossSectionDefinition = CreateDefaultCrossSectionDefinitionForSewerConnection(branch, hydroNetwork, sewerConnection);
+                crossSection.UseSharedDefinition(defaultCrossSectionDefinition);
             }
 
             return crossSection;
+        }
+
+        private static ICrossSectionDefinition CreateDefaultCrossSectionDefinitionForSewerConnection(IBranch branch, IHydroNetwork hydroNetwork, SewerConnection sewerConnection)
+        {
+            var network = (IHydroNetwork)(hydroNetwork ?? branch.Network);
+
+            return sewerConnection.SpecialConnectionType == SewerConnectionSpecialConnectionType.Weir
+                       ? SewerFactory.GetDefaultWeirSewerStructureProfile(network)
+                       : SewerFactory.GetDefaultPumpSewerStructureProfile(network);
         }
 
         private static ICrossSectionDefinition GetDefaultDefinition(CrossSectionType definitionType)

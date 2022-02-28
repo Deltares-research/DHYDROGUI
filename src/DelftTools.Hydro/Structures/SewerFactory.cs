@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
-using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils;
@@ -15,31 +13,12 @@ namespace DelftTools.Hydro.Structures
 {
     public static class SewerFactory
     {
-        private const string DefaultProfileDefinitionName = "Default Sewer Profile";
-        private const string DefaultSewerConnectionProfileDefinitionName = "Default Sewer Connection Profile";
-        private static readonly CrossSectionDefinitionStandard DefaultSewerProfile = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle { Diameter = 0.4 })
-        {
-            Name = DefaultProfileDefinitionName
-        };
-
-        private static readonly CrossSectionDefinitionStandard DefaultSewerConnectionProfile = new CrossSectionDefinitionStandard(new CrossSectionStandardShapeCircle { Diameter = 0.1 })
-        {
-            Name = DefaultSewerConnectionProfileDefinitionName
-        };
-
-        private static readonly Dictionary<Type, Func<ISewerConnection, ISewerConnection>> SewerConnectionStructureCreators = new Dictionary<Type, Func<ISewerConnection, ISewerConnection>>
-        {
-            { typeof(Orifice), CreateOrificeConnection},
-            { typeof(Pump), CreatePumpConnection },
-            { typeof(Weir), CreateWeirConnection }
-        };
-
         public static void AddDefaultPipeToNetwork(IPipe pipe, INetwork network)
         {
             var hydroNetwork = network as HydroNetwork;
             if (hydroNetwork == null) return;
             pipe.Network = network;
-            AddDefaultSewerProfileToNetwork(hydroNetwork);
+            AddDefaultPipeProfileToNetwork(hydroNetwork);
             SetPipeProperties(pipe, hydroNetwork);
 
             lock (network.Branches)
@@ -47,19 +26,14 @@ namespace DelftTools.Hydro.Structures
             BranchOrderHelper.SetOrderForBranch(network, pipe);
         }
 
-        private static void AddDefaultSewerProfileToNetwork(HydroNetwork hydroNetwork)
+        private static void AddDefaultPipeProfileToNetwork(HydroNetwork hydroNetwork)
         {
-            if (!DefaultSewerProfile.Sections.Any())
+            ICrossSectionDefinition defaultPipeProfile = GetDefaultPipeProfile(hydroNetwork);
+            if (!defaultPipeProfile.Sections.Any())
             {
                 var sewerCrossSectionType = hydroNetwork.CrossSectionSectionTypes.FirstOrDefault(csst => csst.Name.Equals(RoughnessDataSet.SewerSectionTypeName));
                 if (sewerCrossSectionType == null) return;
-                DefaultSewerProfile.AddSection(sewerCrossSectionType, DefaultSewerProfile.FlowWidth());
-            }
-
-            var crossSectionDefinitionAlreadyPresentInNetwork = hydroNetwork.SharedCrossSectionDefinitions.Any(d => d.Name == DefaultProfileDefinitionName);
-            if (!crossSectionDefinitionAlreadyPresentInNetwork)
-            {
-                hydroNetwork.SharedCrossSectionDefinitions.Add(DefaultSewerProfile);
+                defaultPipeProfile.AddSection(sewerCrossSectionType, defaultPipeProfile.FlowWidth());
             }
         }
 
@@ -102,8 +76,11 @@ namespace DelftTools.Hydro.Structures
 
             var sewerConnectionCrossSection = CrossSection.CreateDefault(CrossSectionType.Standard, sewerConnection, sewerConnection.Length / 2);
             if (sewerConnection.Network is IHydroNetwork hydroNetwork)
+            {
                 sewerConnectionCrossSection.Name = NamingHelper.GetUniqueName("SewerProfile_{0}", hydroNetwork.CrossSections, typeof(ICrossSection), true);
-            sewerConnectionCrossSection.UseSharedDefinition(sewerConnection is IPipe ? DefaultSewerProfile : DefaultSewerConnectionProfile);
+                var crossSectionDefinition = sewerConnection is IPipe ? GetDefaultPipeProfile(hydroNetwork) : GetDefaultPumpSewerStructureProfile(hydroNetwork);
+                sewerConnectionCrossSection.UseSharedDefinition(crossSectionDefinition);
+            }
             sewerConnection.CrossSection = sewerConnectionCrossSection;
         }
 
@@ -154,16 +131,6 @@ namespace DelftTools.Hydro.Structures
             return newCompartment;
         }
 
-        public static ISewerConnection CreateConnectionWithStructure<T>(IManhole manhole)
-        {
-            if (!SewerConnectionStructureCreators.ContainsKey(typeof(T))) return null;
-
-            var connection = CreateNewInternalConnection(manhole);
-            var connectionWithStructure = SewerConnectionStructureCreators[typeof(T)]?.Invoke(connection);
-
-            return connectionWithStructure;
-        }
-
         public static ISewerConnection CreateNewInternalConnection(IManhole manhole)
         {
             var connection = new SewerConnection
@@ -175,27 +142,25 @@ namespace DelftTools.Hydro.Structures
             return connection;
         }
 
-        private static ISewerConnection CreateWeirConnection(ISewerConnection sewerConnection)
+        public static ISewerConnection CreateWeirConnection(IManhole manhole)
         {
-            sewerConnection.AddStructureToBranch(CreateNewWeir());
+            ISewerConnection sewerConnection = CreateNewInternalConnection(manhole);
+            sewerConnection.AddStructureToBranch(new Weir());
             return sewerConnection;
         }
 
-        private static ISewerConnection CreatePumpConnection(ISewerConnection sewerConnection)
+        public static ISewerConnection CreatePumpConnection(IManhole manhole)
         {
+            ISewerConnection sewerConnection = CreateNewInternalConnection(manhole);
             sewerConnection.AddStructureToBranch(CreateNewPump());
             return sewerConnection;
         }
 
-        private static ISewerConnection CreateOrificeConnection(ISewerConnection sewerConnection)
+        public static ISewerConnection CreateOrificeConnection(IManhole manhole)
         {
-            sewerConnection.AddStructureToBranch(CreateNewOrifice());
+            ISewerConnection sewerConnection = CreateNewInternalConnection(manhole);
+            sewerConnection.AddStructureToBranch(new Orifice());
             return sewerConnection;
-        }
-
-        private static Weir CreateNewWeir()
-        {
-            return new Weir();
         }
 
         private static Pump CreateNewPump()
@@ -206,14 +171,6 @@ namespace DelftTools.Hydro.Structures
                 StopSuction = -0.5,
                 StartDelivery = 0.5,
                 StopDelivery = -0.5,
-            };
-        }
-
-        private static Orifice CreateNewOrifice()
-        {
-            return new Orifice
-            {
-                
             };
         }
 
@@ -229,27 +186,64 @@ namespace DelftTools.Hydro.Structures
             if (hydroNetwork == null) return;
             sewerConnection.Network = network;
 
-            AddIfMissing(hydroNetwork, DefaultSewerConnectionProfile);
-
             SetSewerConnectionProperties(sewerConnection, hydroNetwork);
 
             lock (network.Branches)
                 network.Branches.Add(sewerConnection);
             BranchOrderHelper.SetOrderForBranch(network, sewerConnection);
         }
-
-        public static ICrossSectionDefinition GetDefaultSewerConnectionDefinition(IHydroNetwork network)
+        
+        /// <summary>
+        /// Gets or creates a default <see cref="ICrossSectionDefinition"/> for pipes.
+        /// Newly created definitions are added to the <see cref="IHydroNetwork.SharedCrossSectionDefinitions"/>.
+        /// </summary>
+        /// <param name="network"> The hydro network. </param>
+        /// <returns> The existing or created <see cref="ICrossSectionDefinition"/>.</returns>
+        private static ICrossSectionDefinition GetDefaultPipeProfile(IHydroNetwork network)
         {
-            AddIfMissing(network, DefaultSewerConnectionProfile);
-            return DefaultSewerConnectionProfile;
+            return GetOrCreateCrossSectionDefinition(network,
+                                                     SewerCrossSectionDefinitionFactory.DefaultPipeProfileName,
+                                                     SewerCrossSectionDefinitionFactory.CreateDefaultPipeProfile);
         }
 
-        private static void AddIfMissing(IHydroNetwork network, ICrossSectionDefinition definition)
+        /// <summary>
+        /// Gets or creates a default <see cref="ICrossSectionDefinition"/> for pump sewer structures.
+        /// Newly created definitions are added to the <see cref="IHydroNetwork.SharedCrossSectionDefinitions"/>.
+        /// </summary>
+        /// <param name="network"> The hydro network. </param>
+        /// <returns> The existing or created <see cref="ICrossSectionDefinition"/>.</returns>
+        public static ICrossSectionDefinition GetDefaultPumpSewerStructureProfile(IHydroNetwork network)
         {
-            if (network != null && network.SharedCrossSectionDefinitions.All(d => d.Name != definition.Name))
+            return GetOrCreateCrossSectionDefinition(network,
+                                                     SewerCrossSectionDefinitionFactory.DefaultPumpSewerStructureProfileName,
+                                                     SewerCrossSectionDefinitionFactory.CreateDefaultPumpSewerStructureProfile);
+        }
+
+        /// <summary>
+        /// Gets or creates a default <see cref="ICrossSectionDefinition"/> for weir sewer structures.
+        /// Newly created definitions are added to the <see cref="IHydroNetwork.SharedCrossSectionDefinitions"/>.
+        /// </summary>
+        /// <param name="network"> The hydro network. </param>
+        /// <returns> The existing or created <see cref="ICrossSectionDefinition"/>.</returns>
+        public static ICrossSectionDefinition GetDefaultWeirSewerStructureProfile(IHydroNetwork network)
+        {
+            return GetOrCreateCrossSectionDefinition(network,
+                                                     SewerCrossSectionDefinitionFactory.DefaultWeirSewerStructureProfileName,
+                                                     SewerCrossSectionDefinitionFactory.CreateDefaultWeirSewerStructureProfile);
+        }
+
+        private static ICrossSectionDefinition GetOrCreateCrossSectionDefinition(IHydroNetwork network, string name, Func<ICrossSectionDefinition> createDefinitionFunc)
+        {
+            ICrossSectionDefinition crossSectionDefinition = network.SharedCrossSectionDefinitions.FirstOrDefault(d => d.Name == name);
+            if (crossSectionDefinition != null)
             {
-                network.SharedCrossSectionDefinitions.Add(definition);
+                return crossSectionDefinition;
             }
+
+            crossSectionDefinition = createDefinitionFunc();
+            network.SharedCrossSectionDefinitions.Add(crossSectionDefinition);
+
+            return crossSectionDefinition;
         }
 
         private static void SetSewerConnectionProperties(SewerConnection sewerConnection, HydroNetwork hydroNetwork)
