@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Guards;
 
-namespace DeltaShell.NGHS.Common.Extensions
+namespace DeltaShell.NGHS.Utils.Extensions
 {
     /// <summary>
     /// Provides extensions methods for an <see cref="IDictionary{TKey,TValue}"/>.

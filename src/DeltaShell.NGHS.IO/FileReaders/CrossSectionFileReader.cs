@@ -14,6 +14,7 @@ using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils;
+using DeltaShell.NGHS.Utils.Extensions;
 using GeoAPI.Extensions.Networks;
 using log4net;
 

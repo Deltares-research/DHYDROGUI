@@ -12,6 +12,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Dimr.DimrXsd;
 using DeltaShell.Dimr.Properties;
 using DeltaShell.NGHS.Common.IO;
+using DeltaShell.NGHS.Common.IO.LogFileReading;
 using log4net;
 
 namespace DeltaShell.Dimr
@@ -40,17 +41,20 @@ namespace DeltaShell.Dimr
         private double timeStep;
         private DateTime stopTime;
 
+        private readonly DimrRunHelper dimrRunHelper;
+
         public DimrRunner(IDimrModel model, IDimrApiFactory dimrApiFactory)
         {
             this.model = model;
             this.dimrApiFactory = dimrApiFactory;
+            dimrRunHelper = new DimrRunHelper(new ReadFileInTwoMegaBytesChunks());
         }
 
         public IDimrApi Api { get; private set; }
 
         public void OnInitialize()
         {
-            model.DataItems.RemoveAllWhere(di => di.Tag == DimrRunHelper.dimrRunLogfileDataItemTag);
+            model.DataItems.RemoveAllWhere(di => di.Tag == DimrRunHelper.DimrRunLogfileDataItemTag);
             if (model.RunsInIntegratedModel)
             {
                 return;
@@ -161,8 +165,9 @@ namespace DeltaShell.Dimr
 
             model.ConnectOutput(outputDirectory);
 
-            DimrRunHelper.ConnectDimrRunLogFile(model, model.DimrExportDirectoryPath);
+            dimrRunHelper.ConnectDimrRunLogFile(model, model.DimrExportDirectoryPath);
         }
+        
 
         public static string GenerateDimrXML(IDimrModel dimrModel, string workDirectory)
         {

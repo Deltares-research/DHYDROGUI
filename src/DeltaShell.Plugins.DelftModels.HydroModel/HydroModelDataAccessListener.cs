@@ -2,7 +2,7 @@
 using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.NGHS.Common.Extensions;
-using DeltaShell.NGHS.Common.Utils;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel
 {

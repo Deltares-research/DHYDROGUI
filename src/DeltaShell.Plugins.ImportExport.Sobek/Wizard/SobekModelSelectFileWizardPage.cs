@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security;
 using DelftTools.Controls.Swf.WizardPages;
-using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
 {

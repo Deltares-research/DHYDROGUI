@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.NGHS.IO
 {

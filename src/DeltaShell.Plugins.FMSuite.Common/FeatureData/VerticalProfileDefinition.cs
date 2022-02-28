@@ -7,7 +7,7 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Data;
-using DeltaShell.NGHS.Common.Utils;
+using DeltaShell.NGHS.Utils.Extensions;
 using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.FeatureData

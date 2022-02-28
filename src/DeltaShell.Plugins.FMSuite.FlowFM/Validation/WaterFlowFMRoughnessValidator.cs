@@ -6,6 +6,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
 {

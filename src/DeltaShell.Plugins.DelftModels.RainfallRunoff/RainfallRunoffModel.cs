@@ -22,6 +22,7 @@ using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
+using DeltaShell.NGHS.Common.IO.LogFileReading;
 using DeltaShell.NGHS.IO.FunctionStores;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
@@ -179,6 +180,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
             runner = new DimrRunner(this, new DimrApiFactory());
             OutputFiles = new RainfallRunoffOutputFiles();
+            RunLogFiles = new RainfallRunoffRunLogFiles(new ReadFileInTwoMegaBytesChunks(), this);
         }
 
         /// <summary>
@@ -1047,6 +1049,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             OutputFunctions.ForEach(ChangeToReadOnlyMapHisFileFunctionStore);
             OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
             SetPathsOfFunctionStores(outputPath);
+            RunLogFiles.ConnectLoggingFiles(outputPath);
             OutputIsEmpty = false;
         }
 
@@ -1054,6 +1057,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// The output files of the model.
         /// </summary>
         public RainfallRunoffOutputFiles OutputFiles { get; }
+        
+        /// <summary>
+        /// Visualizing the log files produced by running the model is handled in this object.
+        /// </summary>
+        private RainfallRunoffRunLogFiles RunLogFiles { get; }
 
         public virtual void RestoreOutputSettings()
         {
@@ -1221,6 +1229,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             BuildInputWaterLevelCoverage();
             runner.OnInitialize();
+            RunLogFiles.Clear();
         }
         protected override void OnProgressChanged()
         {
@@ -1270,6 +1279,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             {
                 ClearingOutput = false;
             }
+            
+            RunLogFiles.Clear();
         }
 
         #endregion
@@ -1327,5 +1338,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         event EventHandler ModelDataAdded;
         
         event EventHandler ModelDataRemoved;
+        
+        /// <summary>
+        /// The output files of the model.
+        /// </summary>
+        RainfallRunoffOutputFiles OutputFiles { get; }
     }
 }

@@ -5,8 +5,8 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
-using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using log4net;
 

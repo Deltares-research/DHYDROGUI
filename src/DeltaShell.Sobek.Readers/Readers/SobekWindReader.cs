@@ -9,7 +9,7 @@ using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;
 

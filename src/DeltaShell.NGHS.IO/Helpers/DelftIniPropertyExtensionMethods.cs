@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.Properties;
+using DeltaShell.NGHS.Utils.Extensions;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.Helpers

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Utils.Extensions;
 using NUnit.Framework;
 
-namespace DeltaShell.NGHS.Common.Tests.Extensions
+namespace DeltaShell.NGHS.Utils.Test.Extensions
 {
     [TestFixture]
     public class DictionaryExtensionsTest

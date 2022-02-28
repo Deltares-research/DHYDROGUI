@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Shell.Core;
-using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
 using GeoAPI.Extensions.CoordinateSystems;

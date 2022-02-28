@@ -107,6 +107,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             }
         }
 
+        [Test]
+        [TestCase(RainfallRunoffOutputFiles.LogFileName, "sobek_3b.log")]
+        [TestCase(RainfallRunoffOutputFiles.RunReportFilename, "3b_bal.out")]
+        public void FileNames_AreCorrect(string result, string expResult)
+        {
+            Assert.That(result, Is.EqualTo(expResult));
+        }
+
         private static void AddRandomExcludedFiles(TemporaryDirectory temp)
         {
             for (var i = 0; i < 3; i++)

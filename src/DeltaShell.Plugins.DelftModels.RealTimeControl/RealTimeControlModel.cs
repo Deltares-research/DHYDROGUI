@@ -28,6 +28,7 @@ using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.CommonTools.TextData;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Domain;
@@ -1816,7 +1817,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
                 var dirInfoSource = new DirectoryInfo(currentOutputDirectoryPath);
                 var dirInfoTarget = new DirectoryInfo(targetDirectory);
 
-                if (dirInfoSource.FullName == dirInfoTarget.FullName)
+                if (dirInfoSource.EqualsDirectory(dirInfoTarget))
                 {
                     return;
                 }
@@ -1862,8 +1863,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
             FileInfo[] sourceFiles = sourceDir.GetFiles();
             foreach (FileInfo file in sourceFiles)
             {
-                string destFilePath = Path.Combine(destDir.FullName, file.Name);
-                file.CopyTo(destFilePath, true);
+                file.CopyToDirectory(destDir, overwrite: true);
             }
 
             foreach (DirectoryInfo subDir in sourceSubDirs)

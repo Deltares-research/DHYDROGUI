@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
@@ -38,6 +39,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         };
 
         private FileInfo[] outputFiles = Array.Empty<FileInfo>();
+        private DirectoryInfo directory;
+
+        /// <summary>
+        /// Gets the name of the Log file produced after running the <see cref="IRainfallRunoffModel"/>
+        /// </summary>
+        public const string LogFileName = "sobek_3b.log";
+
+        /// <summary>
+        /// Gets the name of the run report file produced after running the <see cref="IRainfallRunoffModel"/>
+        /// </summary>
+        public const string RunReportFilename = "3b_bal.out";
 
         /// <summary>
         /// Sets the directory to the provided path.
@@ -57,7 +69,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             Ensure.NotNullOrEmpty(directoryPath, nameof(directoryPath));
 
-            var directory = new DirectoryInfo(directoryPath);
+            directory = new DirectoryInfo(directoryPath);
             if (!directory.Exists)
             {
                 throw new DirectoryNotFoundException(directory.FullName);
@@ -70,14 +82,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// Clears the output files.
         /// </summary>
         public void Clear() => outputFiles = Array.Empty<FileInfo>();
-
-        private static FileInfo[] FindOutputFiles(DirectoryInfo directory) => directory.GetFiles().Where(ShouldBeIncluded).ToArray();
-
-        private static bool ShouldBeIncluded(FileSystemInfo file) => !ShouldBeExcluded(file) &&
-                                                                     (outputFileInclusions.Contains(file.Name, stringComparer) ||
-                                                                      outputFileExtensions.Contains(file.Extension, stringComparer));
-
-        private static bool ShouldBeExcluded(FileSystemInfo file) => outputFileExclusions.Contains(file.Name, stringComparer);
 
         /// <summary>
         /// Copies the files into the specified <paramref name="directoryPath"/>,
@@ -95,18 +99,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         {
             Ensure.NotNullOrEmpty(directoryPath, nameof(directoryPath));
 
-            var directory = new DirectoryInfo(directoryPath);
+            var targetDirectory = new DirectoryInfo(directoryPath);
+            if (targetDirectory.EqualsDirectory(directory))
+            {
+                return;
+            }
 
             for (var i = 0; i < outputFiles.Length; i++)
             {
-                outputFiles[i] = CopyTo(directory, outputFiles[i]);
+                outputFiles[i] = outputFiles[i].CopyToDirectory(targetDirectory, overwrite: true);
             }
         }
 
-        private static FileInfo CopyTo(DirectoryInfo directory, FileInfo file)
-        {
-            string newFilePath = Path.Combine(directory.FullName, file.Name);
-            return file.CopyTo(newFilePath, true);
-        }
+        private static FileInfo[] FindOutputFiles(DirectoryInfo directory) => directory.GetFiles().Where(ShouldBeIncluded).ToArray();
+
+        private static bool ShouldBeIncluded(FileSystemInfo file) => !ShouldBeExcluded(file) &&
+                                                                     (outputFileInclusions.Contains(file.Name, stringComparer) ||
+                                                                      outputFileExtensions.Contains(file.Extension, stringComparer));
+
+        private static bool ShouldBeExcluded(FileSystemInfo file) => outputFileExclusions.Contains(file.Name, stringComparer);
     }
 }

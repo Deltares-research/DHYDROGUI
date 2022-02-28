@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DelftTools.Utils.RegularExpressions;
-using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Sobek.Readers.Properties;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
 using log4net;

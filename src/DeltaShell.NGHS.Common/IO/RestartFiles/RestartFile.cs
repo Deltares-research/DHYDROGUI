@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using DelftTools.Utils.IO;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.NGHS.Common.IO.RestartFiles
 {
@@ -107,10 +107,12 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
             }
 
             var dirInfo = new DirectoryInfo(directoryPath);
-            FileUtils.CreateDirectoryIfNotExists(dirInfo.FullName);
-            string targetFilePath = System.IO.Path.Combine(dirInfo.FullName, Name);
+            FileInfo destinationFileInfo = pathInfo.CopyToDirectory(dirInfo, true);
 
-            CopyTo(targetFilePath, switchTo);
+            if (switchTo)
+            {
+                Path = destinationFileInfo.FullName;
+            }
         }
 
         /// <summary>
@@ -122,56 +124,5 @@ namespace DeltaShell.NGHS.Common.IO.RestartFiles
         public RestartFile Clone() => new RestartFile(Path);
 
         public override string ToString() => Name;
-
-        /// <summary>
-        /// Copies the file to the specified <paramref name="destinationPath"/>.
-        /// </summary>
-        /// <param name="destinationPath"> The destination directory. </param>
-        /// <param name="switchTo">Whether this instance should be switched to the new path./></param>
-        /// <exception cref="ArgumentException">
-        /// Throws when <paramref name="destinationPath"/> contains invalid characters such as ", &, or |.
-        /// </exception>
-        /// <exception cref="PathTooLongException">
-        /// Throws when the specified <paramref name="destinationPath"/> exceeds the system-defined maximum length.
-        /// </exception>
-        /// <remarks>
-        /// If <paramref name="destinationPath"/> is <c>null</c> or empty, equals the current file path
-        /// or this <see cref="RestartFile"/> does not exist, the method returns.
-        /// </remarks>
-        /// <remarks>
-        /// The target directory of <paramref name="destinationPath"/> will be created without
-        /// overwriting the existing one.
-        /// </remarks>
-        private void CopyTo(string destinationPath, bool switchTo)
-        {
-            var destinationFileInfo = new FileInfo(destinationPath);
-
-            CreateParentDirectory(destinationFileInfo);
-
-            if (IsSamePath(destinationFileInfo))
-            {
-                return;
-            }
-
-            pathInfo.CopyTo(destinationFileInfo.FullName, true);
-
-            if (switchTo)
-            {
-                Path = destinationFileInfo.FullName;
-            }
-        }
-
-        private static void CreateParentDirectory(FileInfo destinationFileInfo)
-        {
-            DirectoryInfo parentDirInfo = destinationFileInfo.Directory;
-            if (parentDirInfo == null)
-            {
-                throw new InvalidOperationException("The file cannot map to a drive.");
-            }
-
-            parentDirInfo.Create();
-        }
-
-        private bool IsSamePath(FileInfo fileInfo) => pathInfo?.FullName == fileInfo?.FullName;
     }
 }

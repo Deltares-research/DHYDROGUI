@@ -2,9 +2,9 @@ using System;
 using System.Globalization;
 using System.IO;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {

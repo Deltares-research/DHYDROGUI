@@ -42,6 +42,7 @@ using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.Utils;
+using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
@@ -1811,7 +1812,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 return;
             }
 
-            if (sourceOutputDirectoryPath == targetOutputDirectoryPath)
+            if (sourceOutputDirectory.EqualsDirectory(targetOutputDirectory))
             {
                 return;
             }

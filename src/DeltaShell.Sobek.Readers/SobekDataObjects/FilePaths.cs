@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.Sobek.Readers.SobekDataObjects
 {

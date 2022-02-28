@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using DelftTools.Functions;
-using DeltaShell.NGHS.Common.Extensions;
+using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
 {

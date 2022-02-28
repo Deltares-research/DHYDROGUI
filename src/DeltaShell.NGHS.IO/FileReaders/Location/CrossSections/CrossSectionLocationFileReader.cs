@@ -3,10 +3,10 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.IO.FileWriters.Location;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using DeltaShell.NGHS.Utils.Extensions;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Location.CrossSections

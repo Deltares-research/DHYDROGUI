@@ -88,7 +88,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                 model.Finish();
                 model.Cleanup();
 
-                var dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunHelper.dimrRunLogfileDataItemTag);
+                var dimrLogDataItem = model.DataItems.FirstOrDefault(di => di.Tag == DimrRunHelper.DimrRunLogfileDataItemTag);
                 Assert.NotNull(dimrLogDataItem, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
                 Assert.NotNull(dimrLogDataItem.Value, "DimrRunLog not retrieved after model run, check DimrRunner.DIMR_RUN_LOGFILE_NAME");
             });

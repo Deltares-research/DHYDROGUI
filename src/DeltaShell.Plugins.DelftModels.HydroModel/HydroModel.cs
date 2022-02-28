@@ -22,6 +22,7 @@ using DelftTools.Utils.Validation;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO;
+using DeltaShell.NGHS.Common.IO.LogFileReading;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
@@ -40,6 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
     {
         private const string HydroRegionTag = "RootHydroRegion";
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModel));
+        private readonly DimrRunHelper dimrRunHelper;
 
         #region Fields and properties
 
@@ -136,6 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             creating = true;
 
+            dimrRunHelper = new DimrRunHelper(new ReadFileInTwoMegaBytesChunks());
             Workflows = new EventedList<ICompositeActivity>();
 
             Activities = new EventedList<IActivity>();
@@ -975,7 +978,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
                 }
 
-                DimrRunHelper.ConnectDimrRunLogFile(this, WorkingDirectoryPath);
+                dimrRunHelper.ConnectDimrRunLogFile(this, WorkingDirectoryPath);
             }
             else
             {

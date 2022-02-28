@@ -7,11 +7,11 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.Extensions;
 using DeltaShell.NGHS.Common.Logging;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Boundary;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.Utils.Extensions;
 using GeoAPI.Extensions.Feature;
 
 namespace DeltaShell.NGHS.IO.FileReaders
