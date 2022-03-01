@@ -107,43 +107,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                     Assert.AreEqual(5, pumpFunction.GetValues().Count);
                     Assert.AreEqual(5, pumpFunction.Time.Values.Count);
                     Assert.AreEqual(1, pumpFunction.Arguments[1].Values.Count);
-                    Assert.That(pumpFunction[DateTime.Today.AddHours(6)], Is.EqualTo(-1.91341121130216).Within(0.000001));
+                    Assert.That(pumpFunction[DateTime.Today.AddHours(6)], Is.EqualTo(-1.91340616245935).Within(0.000001));
 
                     var weirFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "weirgen_discharge");
                     Assert.That(weirFunction, Is.Not.Null);
                     Assert.AreEqual(5, weirFunction.GetValues().Count);
                     Assert.AreEqual(5, weirFunction.Time.Values.Count);
                     Assert.AreEqual(1, weirFunction.Arguments[1].Values.Count);
-                    Assert.That(weirFunction[DateTime.Today.AddHours(12)], Is.EqualTo(-13.7743508783153).Within(0.000001));
+                    Assert.That(weirFunction[DateTime.Today.AddHours(12)], Is.EqualTo(-13.8154611941720).Within(0.000001));
 
                     var stationFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel");
                     Assert.That(stationFunction, Is.Not.Null);
                     Assert.AreEqual(5 * 2, stationFunction.GetValues().Count);
                     Assert.AreEqual(5, stationFunction.Time.Values.Count);
                     Assert.AreEqual(2, stationFunction.Arguments[1].Values.Count);
-                    Assert.That(stationFunction[DateTime.Today.AddHours(6), model.Area.ObservationPoints.First()], Is.EqualTo(-1.91341120421632).Within(0.000001));
-                    Assert.That(stationFunction[DateTime.Today.AddHours(12), model.Area.ObservationPoints.Last()], Is.EqualTo(215.88595516168).Within(0.000001));
+                    Assert.That(stationFunction[DateTime.Today.AddHours(6), model.Area.ObservationPoints.First()], Is.EqualTo(-1.91340615696561).Within(0.000001));
+                    Assert.That(stationFunction[DateTime.Today.AddHours(12), model.Area.ObservationPoints.Last()], Is.EqualTo(216.54690713700).Within(0.000001));
 
                     var gateFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "gategen_s1up");
                     Assert.That(gateFunction, Is.Not.Null);
                     Assert.AreEqual(5, gateFunction.GetValues().Count);
                     Assert.AreEqual(5, gateFunction.Time.Values.Count);
                     Assert.AreEqual(1, gateFunction.Arguments[1].Values.Count);
-                    Assert.That(gateFunction[DateTime.Today.AddHours(6)], Is.EqualTo(-1.9134112053529).Within(0.000001));
+                    Assert.That(gateFunction[DateTime.Today.AddHours(6)], Is.EqualTo(-1.9134061580048).Within(0.000001));
 
                     var generalStructureFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "general_structure_s1up");
                     Assert.That(generalStructureFunction, Is.Not.Null);
                     Assert.AreEqual(5, generalStructureFunction.GetValues().Count);
                     Assert.AreEqual(5, generalStructureFunction.Time.Values.Count);
                     Assert.AreEqual(1, generalStructureFunction.Arguments[1].Values.Count);
-                    Assert.That(gateFunction[DateTime.Today.AddHours(6)], Is.EqualTo(-1.91341120296137).Within(0.000001));
+                    Assert.That(gateFunction[DateTime.Today.AddHours(6)], Is.EqualTo(-1.91340615800484).Within(0.000001));
 
                     var crossSection2DFunction = (FeatureCoverage) store.Functions.FirstOrDefault(f => f.Components[0].Name == "cross_section_discharge");
                     Assert.That(crossSection2DFunction, Is.Not.Null);
                     Assert.AreEqual(5, crossSection2DFunction.GetValues().Count);
                     Assert.AreEqual(5, crossSection2DFunction.Time.Values.Count);
                     Assert.AreEqual(1, crossSection2DFunction.Arguments[1].Values.Count);
-                    Assert.That(crossSection2DFunction[DateTime.Today.AddHours(12)], Is.EqualTo(1.87241903310696).Within(0.000001));
+                    Assert.That(crossSection2DFunction[DateTime.Today.AddHours(12)], Is.EqualTo(1.87815166718714).Within(0.000001));
                 });
             }
         }

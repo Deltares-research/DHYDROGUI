@@ -80,6 +80,7 @@ numerics,Icgsolver,advanced,Advanced,Solver type:sobekGS_OMP|sobekGS_OMPthreadsa
 numerics,Maxdegree,advanced,Advanced,Max degree in Gauss elimination,Integer,6,0,,FALSE,,,,,,Maximum degree in Gauss elimination
 numerics,FixedWeirScheme,numerics,Fixed weir parameters,Fixed weir scheme:None|Numerical|Tabellenboek|Villemonte,0|6|8|9,9,0,9,FALSE,,,,,,"Fixed weir scheme (0: None, 6: Numerical, 8: Tabellenboek, 9: Villemonte)"
 numerics,FixedWeirContraction,numerics,Fixed weir parameters,Fixed weir contraction,Double,1,0,,FALSE,,,,,,Fixed weir flow width contraction factor,-
+numerics,FixedWeirRelaxationcoef,numerics,Fixed weir parameters,Fixed weir relaxation coefficient,Double,0.6,0.0,1.0,FALSE,,,,,,Fixed weir relaxation coefficient for the computation of energy loss (0 <= coefficient <= 1),-
 numerics,Izbndpos,numerics,Numerical Parameters,Position of z boundary:Delft3D-FLOW|On net boundary|On specified polyline,0|1|2,0,0,2,TRUE,,,,,,"Position of z boundary (0: Delft3D-FLOW, 1: on net boundary, 2: on specifiend polyline)"
 numerics,Tlfsmo,numerics,Numerical Parameters,Boundary smoothing time,Double,3600,0,,FALSE,,,,,,Fourier smoothing time on water level boundaries, s
 numerics,Slopedrop2D,advanced,Advanced,Drop losses threshold,Double,0,0,,FALSE,,,,,,"Apply drop losses only if local bed slope > Slopedrop2D, (<=0: no drop losses)",-
@@ -111,7 +112,7 @@ physics,Irov,physics,Roughness,Wall behaviour:Free-slip|Partial-slip|No-slip,0|1
 physics,wall_ks,physics,Roughness,Wall ks for partial slip,Double,0,0,,FALSE,Irov=1,,,,,"Nikuradse roughness for side walls",m
 physics,Rhomean,physics,Density,Default water density,Double,1000,,,FALSE,,,,,,"Average water density ", kg/m3
 physics,Idensform,physics,Density,Equation of state:Uniform|Eckart|UNESCO|Baroclinic,0|1|2|3,2,,,FALSE,,,,,,"Density calculation (0: uniform, 1: Eckart, 2: UNESCO, 3: baroclinic case)"
-physics,Ag,physics,Others,Gravity,Double,9.813,,,FALSE,,,,,,"Gravitational acceleration",m/s2
+physics,Ag,physics,Others,Gravity,Double,9.81,,,FALSE,,,,,,"Gravitational acceleration",m/s2
 physics,TidalForcing,processes,Processes,Tide generating forces,0|1,0,0,1,FALSE,,,,,,"Tidal forcing, if jsferic = 1 (0: no, 1: yes)"
 physics,Doodsonstart,,,Doodson start,Double,55.565,,,TRUE,,,,,,"TRIWAQ: 55.565, D3D: 57.555"
 physics,Doodsonstop,,,Doodson stop,Double,375.575,,,TRUE,,,,,,"TRIWAQ: 375.575, D3D: 275.555"
@@ -132,7 +133,7 @@ physics,BetaSpiral,physics,Secondary flow,Spiral flow beta factor,Double,0,,,FAL
 wind,ICdtyp,wind,Wind,Wind drag coefficient type: Constant|Smith & Banks (2 break points)|Smith & Banks (3 break points)|Charnock 1955|Whang 2005,1|2|3|4|5,2,1,5,FALSE,,,,,,"Wind drag coefficient type (1: constant, 2: S&B 2 breakpoints, 3: S&B 3 breakpoints, 4: Charnock constant, 5: Whang)",-
 wind,Cdbreakpoints,wind,Wind,Break points wind drag coefficient,DoubleArray,6.3d-4 7.23d-3,,,FALSE,ICdtyp=2|3|4,,,,,Wind drag coefficient break points, m/s
 wind,Windspeedbreakpoints,wind,Wind,Break points wind speed,DoubleArray,0. 100.,,,FALSE,ICdtyp=2|3,,,,,Wind speed break points, m/s
-wind,Rhoair,wind,Wind,Air density,Double,1.205,,,FALSE,,,wind,,,Air density, kg/m3
+wind,Rhoair,wind,Wind,Air density,Double,1.2,,,FALSE,,,wind,,,Air density, kg/m3
 wind,PavBnd,wind,Wind,Average air pressure on bounds,Double,0,,,FALSE,,,,,,Average air pressure on open boundaries (only applied if > 0), N/m2
 wind,PavIni,wind,Wind,Average initial air pressure,Double,0,,,FALSE,,,,,,Average air pressure for initial water level correction (only applied if > 0), N/m2
 waves,Wavemodelnr,processes,Processes,Wave model:None|Fetch/depth limited Hurdle-Stive|Young-Verhagen|SWAN,0|1|2|3,0,0,3,FALSE,,,,,,"Wave model nr. (0: none, 1: fetch/depth limited Hurdle-Stive, 2: Young-Verhagen, 3: SWAN)"
