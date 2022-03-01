@@ -9,9 +9,9 @@ using SharpMap.Styles;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 {
-    public class ShapeFeatureBase : IShapeFeature, ICloneable, IHover
+    public abstract class ShapeFeatureBase : IShapeFeature, ICloneable, IHover
     {
-        public ShapeFeatureBase(IChart chart)
+        protected ShapeFeatureBase(IChart chart)
         {
             Chart = chart;
             Active = true;
@@ -47,7 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
 
         public VectorStyle DisabledStyle {get; set;}
 
-        public virtual IChart Chart { get; set; }
+        public IChart Chart { get; set; }
 
         public virtual void Paint(VectorStyle style)
         {
@@ -72,14 +72,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             chartDrawingContext.Reset();
         }
 
-        public virtual void Paint(IChartDrawingContext chartDrawingContext)
-        {
-            throw new NotImplementedException();
-        }
+        protected abstract void Paint(IChartDrawingContext chartDrawingContext);
 
         public virtual bool Selected { get; set; }
 
-        public virtual bool Active{ get; set;}
+        public bool Active{ get; set;}
         
         public virtual void Invalidate()
         {

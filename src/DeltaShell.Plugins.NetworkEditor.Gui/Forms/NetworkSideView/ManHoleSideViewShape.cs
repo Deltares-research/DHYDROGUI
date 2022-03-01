@@ -1,11 +1,12 @@
 using System.Linq;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro.Structures;
+using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
-    internal class ManHoleSideViewShape : FixedRectangleShapeFeature
+    internal sealed class ManHoleSideViewShape : FixedRectangleShapeFeature
     {
         private readonly double offsetInSideView;
         private readonly IManhole manhole;
@@ -20,7 +21,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public override double X
         {
-            get { return offsetInSideView; }
+            get => offsetInSideView;
             set
             {
                 // specified in constructor can not be changed
@@ -34,12 +35,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// </summary>
         public override double Y
         {
-            get
-            {
-                return manhole.Compartments.Count != 0 
-                    ? manhole.Compartments.Max(c => c.SurfaceLevel) 
-                    : 0;
-            }
+            get => manhole.Compartments.Max(c => c.SurfaceLevel);
             set
             {
                 // derived, can not be changed
@@ -51,12 +47,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// </summary>
         public override double Height
         {
-            get
-            {
-                return manhole.Compartments.Count != 0 ? 
-                    Y - manhole.Compartments.Min(c => c.BottomLevel) 
-                    : 0;
-            }
+            get => Y - manhole.Compartments.Min(c => c.BottomLevel);
             set
             {
                 // derived, can not be changed
@@ -65,16 +56,22 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public override double Width
         {
-            get
-            {
-                return manhole.Compartments.Count > 0
-                    ? manhole.Compartments.Sum(c => c.ManholeWidth)
-                    : 0;
-            }
+            get => GetDrawingWidth();
             set
             {
                 // derived, can not be changed
             }
+        }
+
+        private double GetDrawingWidth()
+        {
+            const double relativeWidthToHorizontalAxis = 0.003;
+
+            double horizontalAxisLength = Chart.BottomAxis.Maximum - Chart.BottomAxis.Minimum;
+            double minimumDrawingWidth = horizontalAxisLength * relativeWidthToHorizontalAxis;
+            double manholeWidth = manhole.Compartments.Sum(c => c.ManholeWidth);
+
+            return manholeWidth > minimumDrawingWidth ? manholeWidth : minimumDrawingWidth;
         }
     }
 }

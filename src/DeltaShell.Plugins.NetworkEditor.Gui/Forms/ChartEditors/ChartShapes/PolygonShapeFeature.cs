@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             return Contains(worldX, worldY);
         }
 
-        public override void Paint(IChartDrawingContext chartDrawingContext)
+        protected override void Paint(IChartDrawingContext chartDrawingContext)
         {
             var g = (ChartGraphics)chartDrawingContext.Graphics;
             Point[] devicePoint = new Point[Geometry.Coordinates.Length];

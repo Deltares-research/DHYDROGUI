@@ -87,7 +87,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             return rectangle;
         }
 
-        public override void Paint(IChartDrawingContext chartDrawingContext)
+        protected override void Paint(IChartDrawingContext chartDrawingContext)
         {
             var g = (ChartGraphics)chartDrawingContext.Graphics;
             if (!Active)

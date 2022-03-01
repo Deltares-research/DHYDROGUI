@@ -11,17 +11,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     public class PumpInSideViewShape : StructureSideViewShape<IPump>
     {
         //5 pixel line
-        private const int HorizontalLineLength = 10;
+        private const int horizontalLineLength = 10;
         private  VectorStyle normalLineStyle;
         private  VectorStyle normalLineSelectedStyle;
         private  VectorStyle offLevelLineSelectedStyle;
         private readonly bool horizontalAxisIsReversed;
-        private static readonly Bitmap PumpSmallLeftIcon = Properties.Resources.PumpSmallLeft;
-        private static readonly Bitmap PumpSmallRightIcon = Properties.Resources.PumpSmallRight;
+        private static readonly Bitmap pumpSmallLeftIcon = Properties.Resources.PumpSmallLeft;
+        private static readonly Bitmap pumpSmallRightIcon = Properties.Resources.PumpSmallRight;
+        private readonly double iconLocationY;
 
-        public PumpInSideViewShape(IChart chart, double offset, IPump pump, bool horizontalAxisIsReversed)
+        public PumpInSideViewShape(IChart chart, 
+                                   double offset, 
+                                   double iconLocationY,
+                                   IPump pump, 
+                                   bool horizontalAxisIsReversed)
             : base(chart, offset, pump)
         {
+            this.iconLocationY = iconLocationY;
             this.horizontalAxisIsReversed = horizontalAxisIsReversed;
         }
 
@@ -52,8 +58,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private double GetImageWidthInWorld()
         {
             Image image = DeliverySideIsLeft
-                              ? PumpSmallLeftIcon
-                              : PumpSmallRightIcon;
+                              ? pumpSmallLeftIcon
+                              : pumpSmallRightIcon;
             var imageWidth = image.Width - 2;
             return GetWorldWidth(imageWidth);
         }
@@ -62,10 +68,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// delivery is left if we pump along the branch and the axis is reversed
         /// or we pump against the branch and the axis was not reversed
         /// </summary>
-        private bool DeliverySideIsLeft
-        {
-            get { return Structure.DirectionIsPositive == horizontalAxisIsReversed;}
-        }
+        private bool DeliverySideIsLeft => Structure.DirectionIsPositive == horizontalAxisIsReversed;
 
         protected override IEnumerable<IShapeFeature> GetShapeFeatures()
         {
@@ -92,9 +95,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
                 yield return GetRightVerticalLine();
             }
             Image image = DeliverySideIsLeft
-                  ? PumpSmallLeftIcon
-                  : PumpSmallRightIcon;
-            var symbolShapeFeature = new SymbolShapeFeature(Chart, OffsetInSideView, Structure.OffsetZ,
+                  ? pumpSmallLeftIcon
+                  : pumpSmallRightIcon;
+            var symbolShapeFeature = new SymbolShapeFeature(Chart, 
+                                                            OffsetInSideView, 
+                                                            iconLocationY,
                                                             SymbolShapeFeatureHorizontalAlignment.Center,
                                                             SymbolShapeFeatureVerticalAlignment.Center)
                                          {Image = image};
@@ -141,7 +146,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             {
                 line.SelectedStyle = offLevelLineSelectedStyle;
                 line.NormalStyle = normalLineStyle;
-                line.AddHover(new HoverText("stop", string.Format("{0:f2}m.", 56),
+                line.AddHover(new HoverText("stop", $"{56:f2}m.",
                           line, offLevelLineSelectedStyle.Line.Color, HoverPosition.Left,
                           ArrowHeadPosition.None));
 
@@ -150,7 +155,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             {
                 line.SelectedStyle = normalLineSelectedStyle;
                 line.NormalStyle = normalLineStyle;
-                line.AddHover(new HoverText("start", string.Format("{0:f2}m.", 56),
+                line.AddHover(new HoverText("start", $"{56:f2}m.",
                           line, offLevelLineSelectedStyle.Line.Color, HoverPosition.Left,
                           ArrowHeadPosition.None));
             }
@@ -160,29 +165,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// Determines the left Z values.
         /// </summary>
         /// <returns></returns>
-        private IList<double> GetRelevantZValuesLeft()
-        {
-            return DeliverySideIsLeft
-                       ?
-                           new List<double>(new[] { Structure.StartDelivery, Structure.StopDelivery })
-                       :
-                           new List<double>(new[] { Structure.StartSuction, Structure.StopSuction });
-        }
+        private IList<double> GetRelevantZValuesLeft() =>
+            DeliverySideIsLeft
+                ? new List<double>(new[] { Structure.StartDelivery, Structure.StopDelivery })
+                : new List<double>(new[] { Structure.StartSuction, Structure.StopSuction });
 
-        private IList<double> GetRelevantZValuesRight()
-        {
-            return DeliverySideIsLeft
-                       ?
-                           new List<double>(new[] { Structure.StartSuction, Structure.StopSuction })
-                       :
+        private IList<double> GetRelevantZValuesRight() =>
+            DeliverySideIsLeft
+                ? new List<double>(new[] { Structure.StartSuction, Structure.StopSuction })
+                : new List<double>(new[] { Structure.StartDelivery, Structure.StopDelivery });
 
-                           new List<double>(new[] { Structure.StartDelivery, Structure.StopDelivery });
-        }
-
-        private double GetHorizontalLineLengthInWorld()
-        {
-            return GetWorldWidth(HorizontalLineLength);
-        }
+        private double GetHorizontalLineLengthInWorld() => 
+            GetWorldWidth(horizontalLineLength);
 
         private FixedRectangleShapeFeature GetRightVerticalLine()
         {

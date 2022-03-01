@@ -1,7 +1,9 @@
-﻿using DelftTools.Hydro.SewerFeatures;
+﻿using DelftTools.Controls.Swf.Charting;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
@@ -9,10 +11,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
     [TestFixture]
     public class ManHoleSideViewShapeTest
     {
-        [Test]
-        public void GivenManHoleSideViewShape_GettingDimensions_ShouldReturnCorrectValues()
+        [TestCase(100, 3)]
+        [TestCase(1000, 3)]
+        [TestCase(10000, 30)]
+        public void GivenManHoleSideViewShape_GettingDimensions_ShouldReturnCorrectValues(double horizontalAxisLength, double expWidth) 
         {
             //Arrange
+            var chart = Substitute.For<IChart>();
+            var bottomAxis = Substitute.For<IChartAxis>();
+            bottomAxis.Minimum = 0;
+            bottomAxis.Maximum = horizontalAxisLength;
+            chart.BottomAxis.Returns(bottomAxis);
+            
             var manhole = new Manhole{Compartments = new EventedList<ICompartment>
             {
                 new Compartment{SurfaceLevel = 5, BottomLevel =  0, ManholeWidth = 1},
@@ -20,13 +30,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             }};
 
             // Act
-            var shape = new ManHoleSideViewShape(null, 10, manhole);
+            var shape = new ManHoleSideViewShape(chart, 10, manhole);
 
             // Assert
             Assert.AreEqual(10,shape.X);
             Assert.AreEqual(5, shape.Y);
             Assert.AreEqual(7, shape.Height);
-            Assert.AreEqual(3, shape.Width);
+            Assert.AreEqual(expWidth, shape.Width);
         }
     }
 }

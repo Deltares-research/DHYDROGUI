@@ -944,9 +944,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private DelftTools.Utils.Tuple<double, double> GetMinMax()
         {
-            double minValue, maxValue;
- 
-            UpdateMinMax(out minValue, out maxValue);
+            UpdateMinMax(out double minValue, out double maxValue);
             
             if(Math.Abs(minValue - double.MaxValue) < 1e-10 || Math.Abs(maxValue - double.MinValue) < 1e-10)
             {
@@ -1005,22 +1003,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             disposed = true;
         }
         
-        public string GetModelNameForCoverage(ICoverage coverage)
-        {
-            if (modelNameForCoverageDelegate != null)
-            {
-                return modelNameForCoverageDelegate(coverage);
-            }
-            return "";
-        }
+        public string GetModelNameForCoverage(ICoverage coverage) => 
+            modelNameForCoverageDelegate != null ? modelNameForCoverageDelegate(coverage) : "";
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void FirePropertyChanged(object sender, PropertyChangedEventArgs args)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(sender, args);
-        }
+        private void FirePropertyChanged(object sender, PropertyChangedEventArgs args) => 
+            PropertyChanged?.Invoke(sender, args);
     }
 }

@@ -190,7 +190,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes
             return GetBounds().Contains(xDevice, yDevice);
         }
 
-        public override void Paint(IChartDrawingContext chartDrawingContext)
+        protected override void Paint(IChartDrawingContext chartDrawingContext)
         {
             var g = (ChartGraphics)chartDrawingContext.Graphics;
             var bounds = GetBounds();

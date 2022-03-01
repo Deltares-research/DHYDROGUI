@@ -190,13 +190,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 throw new ArgumentException("Couldnt create view because one of the functions doesnt contain components");
         }
 
-        public static void ThrowWhenValueTypeIsNull(IVariable xArgument)
-        {
-            if (xArgument == null)
-                throw new ArgumentException(
-                    "Couldn't create view because argument is null.");
-        }
-
         public static void ThrowWhenFunctionVariableNamesAreInvalid(string argName, string compName)
         {
             if (String.IsNullOrEmpty(argName) || argName.Trim() == "")

@@ -21,18 +21,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             CreateStyles();
         }
 
-        protected T Structure
-        {
-            get; private set;
-        }
+        protected T Structure { get; }
 
-        protected double OffsetInSideView
-        {
-            get;
-            private set;
-        }
-
-
+        protected double OffsetInSideView { get; }
 
         /// <summary>
         /// Style initialization. Called at constructor. 

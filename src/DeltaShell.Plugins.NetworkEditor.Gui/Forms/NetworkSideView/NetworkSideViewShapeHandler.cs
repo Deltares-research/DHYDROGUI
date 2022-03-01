@@ -124,32 +124,31 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        private void AddStructuresToChart(ICompositeBranchStructure compositeStructure, bool active)
+        private void AddStructuresToChart(ICompositeBranchStructure compositeStructure, 
+                                          bool active,
+                                          double iconLocationY)
         {
-            IShapeFeature shape = null;
-            foreach (var structure in compositeStructure.Structures)
+            foreach (IStructure1D structure in compositeStructure.Structures)
             {
-                if (!FeatureToShape.TryGetValue(structure, out shape))
+                if (!FeatureToShape.TryGetValue(structure, out IShapeFeature shape))
                 {
-                    if (structure is IWeir)
+                    switch (structure)
                     {
-                        shape = GetWeirShape((IWeir)structure);
-                    }
-                    else if (structure is IPump)
-                    {
-                        shape = GetPumpShape((IPump)structure);
-                    }
-                    else if (structure is IBridge)
-                    {
-                        shape = GetBrigdeShape((IBridge)structure);
-                    }
-                    else if (structure is ICulvert)
-                    {
-                        shape = GetCulvertShape((ICulvert)structure);
-                    }
-                    else if (structure is IExtraResistance)
-                    {
-                        shape = GetExtraResistanceShape((IExtraResistance)structure);
+                        case IWeir weir:
+                            shape = GetWeirShape(weir, iconLocationY);
+                            break;
+                        case IPump pump:
+                            shape = GetPumpShape(pump, iconLocationY);
+                            break;
+                        case IBridge bridge:
+                            shape = GetBridgeShape(bridge, iconLocationY);
+                            break;
+                        case ICulvert culvert:
+                            shape = GetCulvertShape(culvert, iconLocationY);
+                            break;
+                        case IExtraResistance resistance:
+                            shape = GetExtraResistanceShape(resistance, iconLocationY);
+                            break;
                     }
                 }
 
@@ -158,29 +157,29 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        private CulvertInSideViewShape GetCulvertShape(ICulvert culvert)
+        private CulvertInSideViewShape GetCulvertShape(ICulvert culvert, double iconLocationY)
         {
             double offset = RouteHelper.GetRouteChainage(NetworkRoute, culvert);
 
-            return new CulvertInSideViewShape(chart, offset, culvert, NetworkSideViewHelper.GetReversed(NetworkRoute, culvert));
+            return new CulvertInSideViewShape(chart, offset, iconLocationY, culvert, NetworkSideViewHelper.GetReversed(NetworkRoute, culvert));
         }
 
-        private BridgeInSideViewShape GetBrigdeShape(IBridge bridge)
+        private BridgeInSideViewShape GetBridgeShape(IBridge bridge, double iconLocationY)
         {
             double offset = RouteHelper.GetRouteChainage(NetworkRoute, bridge);
 
-            return new BridgeInSideViewShape(chart, offset, bridge);
+            return new BridgeInSideViewShape(chart, offset, iconLocationY, bridge);
         }
 
-        private WeirInSideViewShape GetWeirShape(IWeir weir)
+        private WeirInSideViewShape GetWeirShape(IWeir weir, double iconLocationY)
         {
             double offsetInSideView = RouteHelper.GetRouteChainage(NetworkRoute, weir);
             //pump levels etc.
-            var weirInSideViewShape = new WeirInSideViewShape(chart, offsetInSideView, weir);
+            var weirInSideViewShape = new WeirInSideViewShape(chart, offsetInSideView, iconLocationY, weir);
             return weirInSideViewShape;
         }
 
-        private PumpInSideViewShape GetPumpShape(IPump pump)
+        private PumpInSideViewShape GetPumpShape(IPump pump, double iconLocationY)
         {
             Route route = NetworkRoute;
             double offset = RouteHelper.GetRouteChainage(NetworkRoute, pump);
@@ -188,13 +187,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             // branch.
             bool reversed = NetworkSideViewHelper.GetReversed(route, pump);
             //pump levels etc.
-            return new PumpInSideViewShape(chart, offset, pump, reversed);
+            return new PumpInSideViewShape(chart, offset, iconLocationY, pump, reversed);
         }
 
-        private ExtraResistanceInSideViewShape GetExtraResistanceShape(IExtraResistance extraResistance)
+        private ExtraResistanceInSideViewShape GetExtraResistanceShape(IExtraResistance extraResistance, double iconLocationY)
         {
             double offset = RouteHelper.GetRouteChainage(NetworkRoute, extraResistance);
-            return new ExtraResistanceInSideViewShape(chart, offset, extraResistance);
+            return new ExtraResistanceInSideViewShape(chart, offset, iconLocationY, extraResistance);
         }
 
         private void AddStructureAndShape(IStructure1D structure, IShapeFeature symbolShapeFeature)
@@ -231,7 +230,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void AddImageShape(Image image, IBranchFeature structure, double minY)
         {
-            if (!FeatureToShape.TryGetValue(structure, out var symbolShapeFeature))
+            if (!FeatureToShape.TryGetValue(structure, out IShapeFeature symbolShapeFeature))
             {
                 double offset = RouteHelper.GetRouteChainage(NetworkRoute, structure);
                 symbolShapeFeature = new SymbolShapeFeature(chart, offset, minY,
@@ -377,12 +376,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             double minY = chart.LeftAxis.Minimum;
 
-            foreach (var branchFeature in NetworkSideViewDataController.ActiveBranchFeatures)
+            foreach (IBranchFeature branchFeature in NetworkSideViewDataController.ActiveBranchFeatures)
             {
                 switch (branchFeature)
                 {
                     case ICompositeBranchStructure branchStructure:
-                        AddStructuresToChart(branchStructure, true);
+                        AddStructuresToChart(branchStructure, true, minY);
                         break;
                     case LateralSource source when source.IsDiffuse:
                         AddDiffuseLateralSourceShape(source, minY);
@@ -399,9 +398,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 }
             }
 
-            foreach (var branchFeature in NetworkSideViewDataController.InactiveBranchFeatures.OfType<ICompositeBranchStructure>())
+            foreach (ICompositeBranchStructure branchFeature in NetworkSideViewDataController.InactiveBranchFeatures.OfType<ICompositeBranchStructure>())
             {
-                AddStructuresToChart(branchFeature, false);
+                AddStructuresToChart(branchFeature, false, minY);
             }
         }
     }

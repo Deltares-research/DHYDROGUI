@@ -22,11 +22,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private VectorStyle disableSurfaceStyle;
         private VectorStyle disabledCrossSectionStyle;
         private static readonly Bitmap BridgeSmallIcon = Properties.Resources.BridgeSmall;
+        private readonly double iconLocationY;
 
 
-        public BridgeInSideViewShape(IChart chart, double offset,IBridge bridge)
+        public BridgeInSideViewShape(IChart chart, 
+                                     double offset,
+                                     double iconLocationY,
+                                     IBridge bridge)
             : base(chart,offset,bridge)
         {
+            this.iconLocationY = iconLocationY;
         }
 
         protected override void CreateStyles()
@@ -80,12 +85,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
             if (Structure.IsPillar)
             {
-                //hack:
-                var y = (Chart.LeftAxis.Maximum - Chart.LeftAxis.Minimum) / 2.0 + Chart.LeftAxis.Minimum;
-
                 yield return
-                    new SymbolShapeFeature(Chart, OffsetInSideView, y,
-                                           SymbolShapeFeatureHorizontalAlignment.Left,
+                    new SymbolShapeFeature(Chart, OffsetInSideView, iconLocationY,
+                                           SymbolShapeFeatureHorizontalAlignment.Center,
                                            SymbolShapeFeatureVerticalAlignment.Center)
                         {Image = BridgeSmallIcon};
             }

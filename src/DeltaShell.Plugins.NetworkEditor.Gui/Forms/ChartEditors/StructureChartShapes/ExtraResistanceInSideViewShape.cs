@@ -9,10 +9,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
     public class ExtraResistanceInSideViewShape : StructureSideViewShape<IExtraResistance>
     {
         private static readonly Bitmap ExtraResistanceSmallIcon = Properties.Resources.ExtraResistanceSmall;
+        private readonly double iconLocationY;
 
-        public ExtraResistanceInSideViewShape(IChart chart, double offsetInSideView, IExtraResistance structure) 
+        public ExtraResistanceInSideViewShape(IChart chart, 
+                                              double offsetInSideView, 
+                                              double iconLocationY,
+                                              IExtraResistance structure) 
             : base(chart, offsetInSideView, structure)
         {
+            this.iconLocationY = iconLocationY;
         }
 
         protected override void CreateStyles()
@@ -22,10 +27,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         protected override IEnumerable<IShapeFeature> GetShapeFeatures()
         {
             yield return
-                new SymbolShapeFeature(Chart, OffsetInSideView,
-                                       ChartCoordinateService.ToWorldY(Chart, Chart.ChartBounds.Bottom),
+                new SymbolShapeFeature(Chart, 
+                                       OffsetInSideView,
+                                       iconLocationY,
                                        SymbolShapeFeatureHorizontalAlignment.Center,
-                                       SymbolShapeFeatureVerticalAlignment.Bottom)
+                                       SymbolShapeFeatureVerticalAlignment.Center)
                     {
                         Image = ExtraResistanceSmallIcon
                     };

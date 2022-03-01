@@ -11,12 +11,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 {
     public class WeirInSideViewShape : StructureSideViewShape<IWeir>
     {
+        private static readonly Bitmap weirSmallIcon = Properties.Resources.WeirSmall;
+        private static readonly Bitmap gateIcon = Properties.Resources.Gate;
+        private readonly double iconLocationY;
+
         private static readonly StructureShapeStyleProvider StructureShapeStyleProvider =
             new StructureShapeStyleProvider();
 
-        public WeirInSideViewShape(IChart chart, double offsetInSideView, IWeir structure)
+        public WeirInSideViewShape(IChart chart, 
+                                   double offsetInSideView, 
+                                   double iconLocationY,
+                                   IWeir structure)
             : base(chart, offsetInSideView, structure)
         {
+            this.iconLocationY = iconLocationY;
         }
 
         protected override void CreateStyles()
@@ -35,6 +43,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             weirShape.DisabledStyle = DisabledStyle;
 
             yield return weirShape;
+
+            var symbolShapeFeature = new SymbolShapeFeature(Chart, OffsetInSideView, iconLocationY,
+                                                            SymbolShapeFeatureHorizontalAlignment.Center,
+                                                            SymbolShapeFeatureVerticalAlignment.Center)
+                                         {Image = Structure.WeirFormula is IGatedWeirFormula ? gateIcon : weirSmallIcon};
+
+            yield return symbolShapeFeature;
         }
 
         private IShapeFeature GetWeirShape()
@@ -42,9 +57,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             double zMinValue = ChartCoordinateService.ToWorldY(Chart, Chart.ChartBounds.Bottom);
             double zMaxValue = ChartCoordinateService.ToWorldY(Chart, Chart.ChartBounds.Top);
             
-            if (Structure.WeirFormula is IGatedWeirFormula)
+            if (Structure.WeirFormula is IGatedWeirFormula formula)
             {
-                var formula = (IGatedWeirFormula)Structure.WeirFormula;
                 var gatedWeirShape = new GatedWeirShape(Chart, OffsetInSideView, Structure.CrestLevel,
                                                         16, Structure.CrestLevel + formula.GateOpening,
                                                         zMinValue,

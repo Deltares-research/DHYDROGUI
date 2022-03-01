@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         {
         }
 
-        public override void Paint(IChartDrawingContext chartDrawingContext)
+        protected override void Paint(IChartDrawingContext chartDrawingContext)
         {
             var g = (ChartGraphics)chartDrawingContext.Graphics;
             g.BackColor = ((SolidBrush)chartDrawingContext.Style.Fill).Color;

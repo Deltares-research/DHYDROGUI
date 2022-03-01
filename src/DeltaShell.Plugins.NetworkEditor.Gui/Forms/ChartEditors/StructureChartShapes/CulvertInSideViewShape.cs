@@ -16,11 +16,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         private readonly bool horizontalAxisIsReversed;
         private int LevelCircleFeatureRadius = 5;
 
+        private static readonly Bitmap culvertSmallIcon = Properties.Resources.CulvertSmall;
+        private readonly double iconLocationY;
 
-        public CulvertInSideViewShape(IChart chart, double offset, ICulvert culvert,bool horizontalAxisIsReversed)
+
+        public CulvertInSideViewShape(IChart chart, 
+                                      double offset, 
+                                      double iconLocationY,
+                                      ICulvert culvert,
+                                      bool horizontalAxisIsReversed)
             : base(chart,offset,culvert)
         {
             this.horizontalAxisIsReversed = horizontalAxisIsReversed;
+            this.iconLocationY = iconLocationY;
         }
 
         protected override void CreateStyles()
@@ -59,6 +67,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             {
                 feature.DisabledStyle = DisabledStyle;
             }
+
+            features.Add(GetIcon());
 
             return features;
         }
@@ -186,6 +196,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             return feature;
         }
 
-        
+        private IShapeFeature GetIcon()
+        { 
+            return new SymbolShapeFeature(Chart, 
+                                          OffsetInSideView,
+                                          iconLocationY,
+                                          SymbolShapeFeatureHorizontalAlignment.Center,
+                                          SymbolShapeFeatureVerticalAlignment.Center)
+            { 
+                Image = culvertSmallIcon, 
+            };
+        }
     }
 }
