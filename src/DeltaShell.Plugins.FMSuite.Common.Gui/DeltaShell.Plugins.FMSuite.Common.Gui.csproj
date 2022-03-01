@@ -99,7 +99,7 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1253" IncludeAssets="compile" PrivateAssets="all"/>
+    <PackageReference Include="DeltaShell.ApplicationPlugin" Version="2.0.0.1253" IncludeAssets="compile" PrivateAssets="all" />
     <PackageReference Include="log4net" Version="2.0.12">
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -115,6 +115,6 @@
       <IncludeAssets>compile</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="RGFGRID" Version="6.7.0.72783" />
+    <PackageReference Include="RGFGRID" Version="7.0.0.74073" />
   </ItemGroup>
 </Project>
