@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
             List<IntervalRule> intervalRules = controlGroup.Rules.OfType<IntervalRule>().ToList();
 
             // Check if time steps of rule match with the model time step
-            IEnumerable<PIDRule> invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
+            IEnumerable<PIDRule> invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointTypes.TimeSeries && !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
             IEnumerable<TimeRule> invalidTimeRules = timeRules.Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
             IEnumerable<IntervalRule> invalidIntervalRules = intervalRules.Where(r => !ValidateTimeSeries(r.TimeSeries, startTime, timeStep));
 
@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                                       timeStep.ToString()));
 
             // check start times
-            invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
+            invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointTypes.TimeSeries && TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
             invalidTimeRules = timeRules.Where(r => TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
             invalidIntervalRules = intervalRules.Where(r => TimeSeriesEntriesPrecedeModelStartTime(r.TimeSeries, startTime));
 
@@ -179,7 +179,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Validation
                                       startTime.ToString(CultureInfo.InvariantCulture)));
 
             // check end times
-            invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries && TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
+            invalidPidRules = pidRules.Where(r => r.PidRuleSetpointType == PIDRule.PIDRuleSetpointTypes.TimeSeries && TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
             invalidTimeRules = timeRules.Where(r => TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
             invalidIntervalRules = intervalRules.Where(r => TimeSeriesEntriesExceedModelStopTime(r.TimeSeries, stopTime));
 

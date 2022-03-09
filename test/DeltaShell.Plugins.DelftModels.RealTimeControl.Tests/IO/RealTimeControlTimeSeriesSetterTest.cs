@@ -180,17 +180,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                         "The collected log messages did not contain the expected message.");
         }
 
-        [TestCase(PIDRule.PIDRuleSetpointType.Signal)]
-        [TestCase(PIDRule.PIDRuleSetpointType.Constant)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Signal)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Constant)]
         public void GivenTimeSeriesXmlObjectForAPIDRuleWithoutSetPointTypeNotTimeSeries_WhenSetTimeSeriesIsCalled_ThenAWarningShouldBeGiven(
-            PIDRule.PIDRuleSetpointType setPointType)
+            PIDRule.PIDRuleSetpointTypes setPointTypes)
         {
             // Given
             string locationId = CreateLocationId(RtcXmlTag.PIDRule);
 
             var timeSeriesElements = new List<TimeSeriesComplexType> {new TimeSeriesComplexType {header = new HeaderComplexType {locationId = locationId}}};
 
-            controlGroup = CreateControlGroupWithAPIDRule(setPointType);
+            controlGroup = CreateControlGroupWithAPIDRule(setPointTypes);
 
             // When
             timeSeriesSetter.SetTimeSeries(timeSeriesElements, new[]
@@ -311,9 +311,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             return controlGroup;
         }
 
-        private static ControlGroup CreateControlGroupWithAPIDRule(PIDRule.PIDRuleSetpointType setPointType)
+        private static ControlGroup CreateControlGroupWithAPIDRule(PIDRule.PIDRuleSetpointTypes setPointTypes)
         {
-            var pidRule = new PIDRule(componentName) {PidRuleSetpointType = setPointType};
+            var pidRule = new PIDRule(componentName) {PidRuleSetpointType = setPointTypes};
             var controlGroup = new ControlGroup {Name = controlGroupName};
             controlGroup.Rules.Add(pidRule);
             Assert.AreEqual(0, pidRule.TimeSeries.GetValues().Count,

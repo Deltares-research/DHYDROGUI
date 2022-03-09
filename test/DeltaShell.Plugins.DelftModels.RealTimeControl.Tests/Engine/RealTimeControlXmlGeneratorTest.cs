@@ -530,7 +530,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             };
 
             //SOBEK3-1074: If set point has been set to constant PID Controller should not write set time.
-            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.Constant;
 
             //Only one of the rules is constant, the document should still be written with the values of the second.
             List<XElement> descendantsWithLocalName =
@@ -541,7 +541,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             Assert.AreEqual(expectedLocalName, descendantsWithLocalName[0].Value); // only the PidRule from the second control group
 
             /*Set both to time series, there should be two nodes now*/
-            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries;
             descendantsWithLocalName =
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(2, descendantsWithLocalName.Count);
@@ -555,7 +555,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void GetSTimeSeriesReturnsDocumentWhenTwoRulesInAControlGroupAndOneSetPointIsConstantTest()
         {
             SetUpTwoPidRulesSameOutput();
-            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.Constant;
             RuleBase pidrule02 = controlGroup.Rules.FirstOrDefault(r => r != pidRule);
             Assert.NotNull(pidrule02);
             string pidrule02TestName = pidrule02.Name;
@@ -571,7 +571,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             Assert.AreEqual(expectedLocalName, descendantsWithLocalName[0].Value);
 
             /*Set both to time series, there should be two nodes now*/
-            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries;
             descendantsWithLocalName =
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(2, descendantsWithLocalName.Count);
@@ -586,14 +586,14 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         {
             SetUpGlobalPidRuleForGlobalControlGroup();
             //SOBEK3-1074: If set point has been set to constant PID Controller should not write set time.
-            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.Constant;
             //Because it's constant and there are no more rules nothing should be written.
             var controlGroupList = new List<ControlGroup> {controlGroup};
             XDocument xDocument = RealTimeControlXmlWriter.GetTimeSeriesXml(XsdPath, realTimeControlModel, controlGroupList);
             Assert.IsNull(xDocument);
 
             //When changed to time series it should be valid, thus written.
-            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            pidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries;
             List<XElement> descendantsWithLocalName =
                 GetxDocumentDescendantsForControlGroupListTimeSeries("locationId", controlGroupList);
             Assert.AreEqual(1, descendantsWithLocalName.Count);
@@ -1218,7 +1218,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
                 Max = 1.2,
                 MaxSpeed = 1.3
             };
-            newPidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+            newPidRule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries;
             newPidRule.TimeSeries[new DateTime(2000, 1, 1, 0, 15, 30)] = 3.0;
             newPidRule.TimeSeries[new DateTime(2001, 2, 3, 4, 15, 45)] = 4.0;
             newPidRule.TimeSeries[new DateTime(2002, 3, 4, 5, 16, 0)] = 5.0;

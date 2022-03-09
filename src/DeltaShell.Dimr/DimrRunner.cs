@@ -309,20 +309,6 @@ namespace DeltaShell.Dimr
 
         // Display any warnings or errors.
         [InvokeRequired]
-        private static void ValidationCallBack(object sender, ValidationEventArgs args)
-        {
-            if (args.Severity == XmlSeverityType.Warning)
-            {
-                log.Info(args.Message);
-            }
-            else
-            {
-                log.Error(args.Message);
-            }
-        }
-
-        // Display any warnings or errors.
-        [InvokeRequired]
         private void ValidateModel()
         {
             bool orgSuspendClearOutputOnInputChange = model.SuspendClearOutputOnInputChange;

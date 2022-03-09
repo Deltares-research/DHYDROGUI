@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         public override IEnumerable<IXmlTimeSeries> XmlImportTimeSeries(string prefix, DateTime start, DateTime stop,
                                                                         TimeSpan step)
         {
-            if (PidRule.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries)
+            if (PidRule.PidRuleSetpointType == PIDRule.PIDRuleSetpointTypes.TimeSeries)
             {
                 yield return GetImportTimeSeries(prefix, start, stop, step);
             }
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
                                         input =>
                                         {
                                             var serializer = SerializerCreator.CreateSerializerType<InputSerializerBase>(input);
-                                            return PidRule.PidRuleSetpointType == PIDRule.PIDRuleSetpointType.Constant
+                                            return PidRule.PidRuleSetpointType == PIDRule.PIDRuleSetpointTypes.Constant
                                                        ? GenerateConstantValueSetPointXml(xNamespace, serializer.GetXmlName(prefix))
                                                        : serializer.ToXmlInputReference(xNamespace, "x", "setpointSeries");
                                         }),

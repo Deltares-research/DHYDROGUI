@@ -26,11 +26,11 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             get
             {
-                return GetFromValidGridApi(uGridApi => uGridApi.zCoordinateFillValue, double.NaN, Resources.UGrid_ZCoordinateFillValue_Couldn_t_get_the_z_coordinate);
+                return GetFromValidGridApi(uGridApi => uGridApi.ZCoordinateFillValue, double.NaN, Resources.UGrid_ZCoordinateFillValue_Couldn_t_get_the_z_coordinate);
             }
             set
             {
-                DoWithValidGridApi(uGridApi => uGridApi.zCoordinateFillValue = value, Resources.UGrid_ZCoordinateFillValue_Couldn_t_set_the_z_coordinate);
+                DoWithValidGridApi(uGridApi => uGridApi.ZCoordinateFillValue = value, Resources.UGrid_ZCoordinateFillValue_Couldn_t_set_the_z_coordinate);
             }
         }
 

@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var pidRule = new PIDRule()
             {
                 TimeSeries = timeSeries,
-                PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries
+                PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries
             };
 
             ControlGroup controlGroup = model.ControlGroups.First();
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             var PIDrule = new PIDRule()
             {
-                PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries,
+                PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries,
                 TimeSeries = timeSeries
             };
 
@@ -161,7 +161,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var pidRule = new PIDRule
             {
                 TimeSeries = timeSeries,
-                PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries
+                PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries
             };
             controlGroup.Rules.Add(pidRule);
             model.ControlGroups.Add(controlGroup);
@@ -262,7 +262,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var pidRule = new PIDRule
             {
                 TimeSeries = timeSeries,
-                PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries
+                PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries
             };
             controlGroup.Rules.Add(pidRule);
 
@@ -341,7 +341,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var PIDrule = new PIDRule()
             {
                 TimeSeries = timeSeries,
-                PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries
+                PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries
             };
             controlGroup.Rules.Add(PIDrule);
 
@@ -382,7 +382,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             TimeSeries timeSeries = setup.Item2;
 
-            var pidRule = new PIDRule {PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries};
+            var pidRule = new PIDRule {PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries};
             pidRule.TimeSeries = timeSeries;
             controlGroup.Rules.Add(pidRule);
 

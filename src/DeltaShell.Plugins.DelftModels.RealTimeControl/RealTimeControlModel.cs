@@ -632,20 +632,23 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
 
                     break;
                 case NotifyCollectionChangedAction.Remove:
-                    foreach (IDataItem dataItem in DataItems.Where(di => di.ValueType == typeof(ControlGroup)))
+                    foreach (IDataItem connectionPointDataItem in GetConnectionPointDataItems(dataItems, connectionPoint))
                     {
-                        IDataItem connectionPointDataItem = dataItem.Children.FirstOrDefault(di => di.ValueConverter != null && Equals(di.ValueConverter.OriginalValue, connectionPoint));
-                        if (connectionPointDataItem != null)
-                        {
-                            connectionPointDataItem.Unlink();
-                            dataItem.Children.Remove(connectionPointDataItem);
-                        }
+                        connectionPointDataItem.Unlink();
+                        connectionPointDataItem.Parent.Children.Remove(connectionPointDataItem);
                     }
 
                     break;
                 default:
                     throw new NotSupportedException();
             }
+        }
+
+        private static IEnumerable<IDataItem> GetConnectionPointDataItems(IEnumerable<IDataItem> modelDataItems, ConnectionPoint connectionPoint)
+        {
+            return modelDataItems.Where(di => di.ValueType == typeof(ControlGroup))
+                                 .Select(d => d.Children.FirstOrDefault(di => Equals(di.ValueConverter?.OriginalValue, connectionPoint)))
+                                 .Where(c => c != null);
         }
 
         private void ControlGroupsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

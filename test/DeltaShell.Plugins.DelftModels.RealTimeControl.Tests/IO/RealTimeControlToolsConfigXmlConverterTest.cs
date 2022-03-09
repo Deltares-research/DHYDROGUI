@@ -316,15 +316,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             AssertRelativeTimeRuleValidity(ruleObj.Object, expectedFromValue, expectedInterpolation);
         }
 
-        [TestCase(PIDRule.PIDRuleSetpointType.Constant, 7d)]
-        [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, 0d)]
-        [TestCase(PIDRule.PIDRuleSetpointType.Signal, 0d)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Constant, 7d)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.TimeSeries, 0d)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Signal, 0d)]
         public void ConvertToDataAccessObjects_PidRule_CorrectResultIsReturned(
-            PIDRule.PIDRuleSetpointType expectedSetpointType,
+            PIDRule.PIDRuleSetpointTypes expectedSetpointTypes,
             object expectedConstantValue)
         {
             // Setup
-            RuleComplexType ruleElement = CreatePidRuleElement(ControlGroupName, expectedSetpointType);
+            RuleComplexType ruleElement = CreatePidRuleElement(ControlGroupName, expectedSetpointTypes);
 
             RuleComplexType[] ruleElements =
             {
@@ -342,7 +342,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
             var ruleObj = dataAccessObjects[0] as RuleDataAccessObject;
             Assert.That(ruleObj, Is.Not.Null);
-            AssertPidRuleValidity(ruleObj.Object, expectedSetpointType, expectedConstantValue);
+            AssertPidRuleValidity(ruleObj.Object, expectedSetpointTypes, expectedConstantValue);
         }
 
         [TestCase(ItemChoiceType6.settingMaxStep, Item1ChoiceType3.deadbandSetpointAbsolute,
@@ -595,8 +595,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
         }
 
         private static RuleComplexType CreatePidRuleElement(string controlGroupName,
-                                                            PIDRule.PIDRuleSetpointType expectedSetpointType =
-                                                                PIDRule.PIDRuleSetpointType.Constant)
+                                                            PIDRule.PIDRuleSetpointTypes expectedSetpointTypes =
+                                                                PIDRule.PIDRuleSetpointTypes.Constant)
         {
             var pidRuleElement = new PidComplexType
             {
@@ -611,11 +611,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 input = new InputPidComplexType()
             };
 
-            if (expectedSetpointType == PIDRule.PIDRuleSetpointType.Constant)
+            if (expectedSetpointTypes == PIDRule.PIDRuleSetpointTypes.Constant)
             {
                 pidRuleElement.input.Item = 7.0d;
             }
-            else if (expectedSetpointType == PIDRule.PIDRuleSetpointType.TimeSeries)
+            else if (expectedSetpointTypes == PIDRule.PIDRuleSetpointTypes.TimeSeries)
             {
                 pidRuleElement.input.Item = RtcXmlTag.SP + "something";
             }
@@ -732,7 +732,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             return conditionElement;
         }
 
-        private void AssertPidRuleValidity(RuleBase rule, PIDRule.PIDRuleSetpointType expectedSetpointType,
+        private void AssertPidRuleValidity(RuleBase rule, PIDRule.PIDRuleSetpointTypes expectedSetpointTypes,
                                            object expectedConstantValue)
         {
             var pidRule = rule as PIDRule;
@@ -751,8 +751,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                             $"Pid rule: Ki was expected to be {5d}.");
             Assert.AreEqual(6d, pidRule.Kd,
                             $"Pid rule: Kd was expected to be {6d}.");
-            Assert.AreEqual(expectedSetpointType, pidRule.PidRuleSetpointType,
-                            $"Pid rule: setpoint type was expected to be {expectedSetpointType.ToString()}.");
+            Assert.AreEqual(expectedSetpointTypes, pidRule.PidRuleSetpointType,
+                            $"Pid rule: setpoint type was expected to be {expectedSetpointTypes.ToString()}.");
             Assert.AreEqual(expectedConstantValue, pidRule.ConstantValue,
                             $"Pid rule: constant value was expected to be {expectedConstantValue}.");
         }

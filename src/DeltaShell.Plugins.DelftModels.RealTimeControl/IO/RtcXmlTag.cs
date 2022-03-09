@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         public const string Delayed = "[Delayed]";
         public const string Signal = "[Signal]";
 
-        public static readonly IList<string> ComponentTags = new List<string>
+        public static readonly IEnumerable<string> ComponentTags = new[]
         {
             DirectionalCondition,
             FactorRule,
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             TimeRule
         };
 
-        public static readonly IList<string> ConnectionPointTags = new List<string>
+        public static readonly IEnumerable<string> ConnectionPointTags = new[]
         {
             Input,
             Output

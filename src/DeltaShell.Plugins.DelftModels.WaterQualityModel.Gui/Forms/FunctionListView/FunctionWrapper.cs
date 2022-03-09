@@ -14,22 +14,20 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
     {
         private readonly IEventedList<IFunction> functions;
         private readonly ICollection<IFunctionTypeCreator> functionTypes;
-        private IFunction function;
-        private IEditableObject functionOwner;
 
         public FunctionWrapper(IFunction function, IEventedList<IFunction> functions, IEditableObject functionOwner,
                                ICollection<IFunctionTypeCreator> functionTypes)
         {
             this.functions = functions;
-            this.functionOwner = functionOwner;
+            FunctionOwner = functionOwner;
             this.functionTypes = functionTypes ?? new Collection<IFunctionTypeCreator>();
-            this.function = function;
+            Function = function;
         }
 
         public string Name
         {
-            get => function.Name;
-            set => function.Name = value;
+            get => Function.Name;
+            set => Function.Name = value;
         }
 
         public string Description
@@ -37,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             get
             {
                 string result;
-                return function.Attributes.TryGetValue(WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE, out result)
+                return Function.Attributes.TryGetValue(WaterQualityFunctionFactory.DESCRIPTION_ATTRIBUTE, out result)
                            ? result
                            : null;
             }
@@ -47,7 +45,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         {
             get
             {
-                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(function));
+                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(Function));
                 return functionType != null ? functionType.FunctionTypeName : "";
             }
             set
@@ -58,8 +56,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
                     return;
                 }
 
-                function = FunctionTypeCreator.ReplaceFunctionUsingCreator(functions, function,
-                                                                           functionType, functionOwner,
+                Function = FunctionTypeCreator.ReplaceFunctionUsingCreator(functions, Function,
+                                                                           functionType, FunctionOwner,
                                                                            string.Format("from {0} ", FunctionType));
             }
         }
@@ -68,23 +66,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         {
             get
             {
-                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(function));
+                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(Function));
                 if (functionType == null)
                 {
                     return double.NaN;
                 }
 
-                return functionType.GetDefaultValueForFunction(function);
+                return functionType.GetDefaultValueForFunction(Function);
             }
             set
             {
-                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(function));
+                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(Function));
                 if (functionType == null)
                 {
                     return;
                 }
 
-                functionType.SetDefaultValueForFunction(function, value);
+                functionType.SetDefaultValueForFunction(Function, value);
             }
         }
 
@@ -92,23 +90,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         {
             get
             {
-                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(function));
+                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(Function));
                 if (functionType == null)
                 {
                     return "";
                 }
 
-                return functionType.GetUnitForFunction(function);
+                return functionType.GetUnitForFunction(Function);
             }
             set
             {
-                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(function));
+                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(Function));
                 if (functionType == null)
                 {
                     return;
                 }
 
-                functionType.SetUnitForFunction(function, value);
+                functionType.SetUnitForFunction(Function, value);
             }
         }
 
@@ -116,51 +114,38 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
         {
             get
             {
-                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(function));
+                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(Function));
                 if (functionType == null)
                 {
                     return "";
                 }
 
-                return functionType.GetUrlForFunction(function);
+                return functionType.GetUrlForFunction(Function);
             }
             set
             {
-                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(function));
+                IFunctionTypeCreator functionType = functionTypes.FirstOrDefault(ft => ft.IsThisFunctionType(Function));
                 if (functionType == null)
                 {
                     return;
                 }
 
-                functionType.SetUrlForFunction(function, value);
+                functionType.SetUrlForFunction(Function, value);
             }
         }
 
-        public string Arguments => VariablesToString(function.Arguments);
+        public string Arguments => VariablesToString(Function.Arguments);
 
-        public string Components => VariablesToString(function.Components);
+        public string Components => VariablesToString(Function.Components);
 
-        public string Edit
-        {
-            get => "";
-            set {}
-        }
+        public string Edit => string.Empty;
 
-        public IFunction Function
-        {
-            get => function;
-            private set => function = value;
-// For propagating Property Changed
-        }
+        public IFunction Function { get; private set; }
 
         /// <summary>
         /// The owner of <see cref="Function"/>
         /// </summary>
-        public IEditableObject FunctionOwner
-        {
-            get => functionOwner;
-            set => functionOwner = value;
-        }
+        public IEditableObject FunctionOwner { get; set; }
 
         private static string VariablesToString(IEnumerable<IVariable> variables)
         {

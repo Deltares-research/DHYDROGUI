@@ -298,9 +298,7 @@ namespace DeltaShell.Dimr
                 messages.Add(msg);
             }
 
-            {
-                Log.Info(msg);
-            }
+            Log.Info(msg);
         }
 
         /// <summary>

@@ -593,11 +593,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             return FlowModels.FirstOrDefault(m => m.SourcesAndSinks.Contains(sourceAndSink));
         }
 
-        private WaterFlowFMModel GetModelForBridgePillar(BridgePillar bridgePillar)
-        {
-            return FlowModels.FirstOrDefault(m => m.Area.BridgePillars.Contains(bridgePillar));
-        }
-
         private WaterFlowFMModel GetModelForWindField(IWindField windField)
         {
             return FlowModels.FirstOrDefault(m => m.WindFields.Contains(windField));

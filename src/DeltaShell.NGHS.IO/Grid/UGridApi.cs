@@ -6,23 +6,17 @@ namespace DeltaShell.NGHS.IO.Grid
 {
     public class UGridApi : GridApi, IUGridApi
     {
-        private double fillValue;
+        private double zCoordinateFillValue;
 
         public UGridApi()
         {
-            fillValue = 0.0d;
+            zCoordinateFillValue = 0.0d;
         }
 
-        public double zCoordinateFillValue
+        public double ZCoordinateFillValue
         {
-            get
-            {
-                return fillValue;
-            }
-            set
-            {
-                fillValue = value;
-            }
+            get => zCoordinateFillValue;
+            set => zCoordinateFillValue = value;
         }
 
         public int WriteXYCoordinateValues(int meshId, double[] xValues, double[] yValues)
@@ -166,7 +160,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
             try
             {
-                ierr = wrapper.GetVariable(ioncId, meshId, (int) locationType, varName, ref zPtr, nVal, ref fillValue);
+                ierr = wrapper.GetVariable(ioncId, meshId, (int) locationType, varName, ref zPtr, nVal, ref zCoordinateFillValue);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -430,11 +424,11 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 ierr = wrapper.GetVariable(ioncId, meshId, locationId, GridApiDataSet.UGridApiConstants.NodeZ, ref ptr,
-                                           numberOfNodes, ref fillValue);
+                                           numberOfNodes, ref zCoordinateFillValue);
                 if (ierr != GridApiDataSet.GridConstants.NOERR || ptr == IntPtr.Zero)
                 {
                     ierr = wrapper.GetVariable(ioncId, meshId, locationId, GridApiDataSet.UGridApiConstants.NetNodeZ, ref ptr,
-                                               numberOfNodes, ref fillValue);
+                                               numberOfNodes, ref zCoordinateFillValue);
                     if (ierr != GridApiDataSet.GridConstants.NOERR)
                     {
                         return ierr;

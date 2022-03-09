@@ -217,21 +217,21 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(conditionsXmlElement.Elements().Count(), Is.EqualTo(2), "Conditions XElement should contain two elements.");
         }
 
-        [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, false, 0)]
-        [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, true, 0)] // should never happen due to export validation
-        [TestCase(PIDRule.PIDRuleSetpointType.Constant, false, 1)]
-        [TestCase(PIDRule.PIDRuleSetpointType.Constant, true, 0)]
-        [TestCase(PIDRule.PIDRuleSetpointType.Signal, false, 1)]
-        [TestCase(PIDRule.PIDRuleSetpointType.Signal, true, 0)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.TimeSeries, false, 0)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.TimeSeries, true, 0)] // should never happen due to export validation
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Constant, false, 1)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Constant, true, 0)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Signal, false, 1)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Signal, true, 0)]
         public void
-            GivenARealTimeControlXmlWriterAndAModelWithAPidRule_WhenGetTimeSeriesXmlIsCalled_ThenExpectedNumberOfWarningsIsGiven(PIDRule.PIDRuleSetpointType setPointType, bool hasEmptyTimeSeries, int nExpectedWarnings)
+            GivenARealTimeControlXmlWriterAndAModelWithAPidRule_WhenGetTimeSeriesXmlIsCalled_ThenExpectedNumberOfWarningsIsGiven(PIDRule.PIDRuleSetpointTypes setPointTypes, bool hasEmptyTimeSeries, int nExpectedWarnings)
         {
             string expectedMessage = string.Format(Resources
                                                        .RealTimeControlXmlWriter_GetXmlTimeSeriesFromControlGroups_PIDRule__0__time_series_will_not_be_included_in_the_DIMR_XML_as_Set_Point_Type_is_not_TimeSeries, "PID Rule");
             string[] expectedMessages = Enumerable.Repeat(expectedMessage, nExpectedWarnings).ToArray();
 
             // Given
-            RealTimeControlModel model = CreateRealTimeControlModelWithPidRule(setPointType, hasEmptyTimeSeries);
+            RealTimeControlModel model = CreateRealTimeControlModelWithPidRule(setPointTypes, hasEmptyTimeSeries);
 
             TestHelper.AssertLogMessagesAreGenerated(
                 // When
@@ -240,22 +240,22 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
                 expectedMessages, nExpectedWarnings);
         }
 
-        private RealTimeControlModel CreateRealTimeControlModelWithPidRule(PIDRule.PIDRuleSetpointType setPointType,
+        private RealTimeControlModel CreateRealTimeControlModelWithPidRule(PIDRule.PIDRuleSetpointTypes setPointTypes,
                                                                            bool hasEmptyTimeSeries)
         {
             var model = new RealTimeControlModel();
             var controlGroup = new ControlGroup();
-            PIDRule pidRule = CreatePidRule(setPointType, hasEmptyTimeSeries, model.StartTime, model.StopTime);
+            PIDRule pidRule = CreatePidRule(setPointTypes, hasEmptyTimeSeries, model.StartTime, model.StopTime);
             controlGroup.Rules.Add(pidRule);
             model.ControlGroups.Add(controlGroup);
 
             return model;
         }
 
-        private static PIDRule CreatePidRule(PIDRule.PIDRuleSetpointType setPointType, bool hasEmptyTimeSeries,
+        private static PIDRule CreatePidRule(PIDRule.PIDRuleSetpointTypes setPointTypes, bool hasEmptyTimeSeries,
                                              DateTime start, DateTime stop)
         {
-            var pidRule = new PIDRule {PidRuleSetpointType = setPointType};
+            var pidRule = new PIDRule {PidRuleSetpointType = setPointTypes};
 
             if (hasEmptyTimeSeries)
             {

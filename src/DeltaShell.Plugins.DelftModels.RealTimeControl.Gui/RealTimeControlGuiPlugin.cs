@@ -42,6 +42,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RealTimeControlGuiPlugin));
 
+        private bool disposed = false;
         private IGui gui;
         private ContextMenuStrip contextMenuStripControlGroups;
         private ContextMenuStrip contextMenuStripControlGroup;
@@ -466,6 +467,35 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                       .FirstOrDefault(m =>
                                           m.OutputFileFunctionStore != null &&
                                           m.OutputFileFunctionStore.Functions.Contains(featureCoverage));
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                addNewControlGroupToolStripMenuItem.Click -= AddNewControlGroupToolStripMenuItemClick;
+                deleteToolStripMenuItem.Click -= ButtonDeleteRtcItemToolStripMenuItem_Click;
+                copyXmlToClipboardToolStripMenuItem.Click -= CopyXmlToClipboardToolStripMenuItemClick;
+                copyToolsXmlToClipboardToolStripMenuItem.Click -= CopyToolsXmlToClipboardToolStripMenuItemClick;
+                convertCoordinateSystemToolStripMenuItem.Click -= ConvertCoordinateSystemToolStripMenuItemClick;
+
+                addNewControlGroupToolStripMenuItem.Dispose();
+                deleteToolStripMenuItem.Dispose();
+                copyXmlToClipboardToolStripMenuItem.Dispose();
+                copyToolsXmlToClipboardToolStripMenuItem.Dispose();
+                convertCoordinateSystemToolStripMenuItem.Dispose();
+
+                Deactivate();
+                Gui = null;
+            }
+
+            base.Dispose(disposing);
+            disposed = true;
         }
     }
 }

@@ -784,13 +784,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                         return;
                     }
 
-                    // use message buffering when running in Main thread 
-                    // dimrExe (using process.WaitForExit) blocks main thread, so messages (that are marshaled to MainThread) that 
-                    // are send from async output handlers will cause deadlock
-                    bool runningInMainThread = Thread.CurrentThread.ManagedThreadId ==
-                                               HydroModelApplicationPlugin.MainThreadId;
-                    dimrApi = dimrApiFactory.CreateNew( /*runningInMainThread*/ /*runRemote:false*/);
-
+                    dimrApi = dimrApiFactory.CreateNew();
                     if (dimrApi == null)
                     {
                         throw new InvalidOperationException("Could not load the Dimr api.");
@@ -1120,20 +1114,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
             foreach (IModelMerge destinationChildModel in Activities.OfType<IModelMerge>())
             {
-                foreach (IModelMerge sourceChildModel in sourceHydroModel.Activities.OfType<IModelMerge>())
+                foreach (IModelMerge sourceChildModel in GetMergeableChildModels(sourceHydroModel, destinationChildModel))
                 {
-                    if (destinationChildModel.CanMerge(sourceChildModel))
+                    ValidationReport childModelValReport = destinationChildModel.ValidateMerge(sourceChildModel);
+                    if (childModelValReport != null)
                     {
-                        ValidationReport childModelValReport = destinationChildModel.ValidateMerge(sourceChildModel);
-                        if (childModelValReport != null)
-                        {
-                            validationReports.Add(childModelValReport);
-                        }
+                        validationReports.Add(childModelValReport);
                     }
                 }
             }
 
             return new ValidationReport("HydroModel Merge", validationReports);
+        }
+
+        private static IEnumerable<IModelMerge> GetMergeableChildModels(ICompositeActivity sourceHydroModel, IModelMerge destinationChildModel)
+        {
+            return sourceHydroModel.Activities.OfType<IModelMerge>().Where(destinationChildModel.CanMerge);
         }
 
         private void ProcessModelMergeWithDependencies(HydroModel sourceHydroModel, Action<IModelMerge, IModelMerge, Dictionary<IModelMerge, IModelMerge>> mergeAction = null)

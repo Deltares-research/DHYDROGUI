@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Extensions;
@@ -206,11 +207,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                         continue;
                     }
 
-                    string name = modelCoupler.Name;
-                    int n = modelCouplers.Count(mc => mc.Name.StartsWith(name));
+                    var name = new StringBuilder(modelCoupler.Name);
+                    int n = modelCouplers.Count(mc => mc.Name.StartsWith(name.ToString()));
                     if (n > 0)
                     {
-                        modelCoupler.Name = modelCoupler.Name + "_" + (n + 1);
+                        modelCoupler.Name = name.Append($"_{n + 1}").ToString();
                     }
 
                     modelCouplers.Add(modelCoupler);

@@ -180,36 +180,24 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         private static bool InputUsedByRtcObjects(ControlGroup controlGroup, Input input)
         {
-            foreach (RuleBase ruleBase in controlGroup.Rules)
+            if (controlGroup.Rules.Any(rule => rule.Inputs.Contains(input)))
             {
-                if (ruleBase.Inputs.Contains(input))
-                {
-                    return true;
-                }
+                return true;
             }
 
-            foreach (SignalBase signalBase in controlGroup.Signals)
+            if (controlGroup.Signals.Any(signal => signal.Inputs.Contains(input)))
             {
-                if (signalBase.Inputs.Contains(input))
-                {
-                    return true;
-                }
+                return true;
             }
 
-            foreach (ConditionBase conditionBase in controlGroup.Conditions)
+            if (controlGroup.Conditions.Any(condition => ReferenceEquals(condition.Input, input)))
             {
-                if (conditionBase.Input == input)
-                {
-                    return true;
-                }
+                return true;
             }
 
-            foreach (MathematicalExpression expression in controlGroup.MathematicalExpressions)
+            if (controlGroup.MathematicalExpressions.Any(expression => expression.Inputs.Contains(input)))
             {
-                if (expression.Inputs.Contains(input))
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;

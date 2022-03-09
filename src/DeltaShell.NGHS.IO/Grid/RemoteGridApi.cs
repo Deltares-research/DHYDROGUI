@@ -35,9 +35,14 @@ namespace DeltaShell.NGHS.IO.Grid
             return api != null ? api.GetConvention(file, out convention) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
 
-        public bool adherestoConventions(GridApiDataSet.DataSetConventions convtype)
+        public GridApiDataSet.DataSetConventions GetConvention()
         {
-            return api != null && api.adherestoConventions(convtype);
+            return api?.GetConvention() ?? GridApiDataSet.DataSetConventions.CONV_NULL;
+        }
+
+        public bool AdheresToConventions(GridApiDataSet.DataSetConventions convtype)
+        {
+            return api != null && api.AdheresToConventions(convtype);
         }
 
         public int CreateFile(string filePath, UGridGlobalMetaData uGridGlobalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_write)
@@ -65,11 +70,6 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             coordinateSystemCode = 0;
             return api != null ? api.GetCoordinateSystemCode(out coordinateSystemCode) : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
-        }
-
-        public GridApiDataSet.DataSetConventions GetConvention()
-        {
-            return api?.GetConvention() ?? GridApiDataSet.DataSetConventions.CONV_NULL;
         }
 
         public double GetVersion()

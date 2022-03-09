@@ -746,7 +746,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
                 foreach (RuleBase ruleBase in group.Rules)
                 {
                     if (ruleBase is PIDRule pidRule
-                        && pidRule.PidRuleSetpointType != PIDRule.PIDRuleSetpointType.TimeSeries)
+                        && pidRule.PidRuleSetpointType != PIDRule.PIDRuleSetpointTypes.TimeSeries)
                     {
                         if (pidRule.TimeSeries.Time.Values.Count != 0)
                         {

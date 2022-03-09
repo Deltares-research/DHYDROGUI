@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
@@ -40,15 +41,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
             if (ruleBase.Outputs.Count == 0)
             {
-                exceptions.Add(new ValidationException(string.Format("rule '{0}' has no output.", ruleBase.Name)));
+                exceptions.Add(new ValidationException($"rule '{ruleBase.Name}' has no output."));
             }
 
-            foreach (Output output in ruleBase.Outputs)
+            if (ruleBase.Outputs.Any(output => string.IsNullOrEmpty(output.ParameterName)))
             {
-                if (string.IsNullOrEmpty(output.ParameterName))
-                {
-                    exceptions.Add(new ValidationException(string.Format("rule '{0}' has unlinked output.", ruleBase.Name)));
-                }
+                exceptions.Add(new ValidationException($"rule '{ruleBase.Name}' has unlinked output."));
             }
 
             if (exceptions.Count > 0)

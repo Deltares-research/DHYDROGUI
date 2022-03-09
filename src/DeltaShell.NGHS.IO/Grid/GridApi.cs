@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.Grid
             wrapper = new GridWrapper();
         }
 
-        public int GetMeshGeom(ref int ioncid, ref int meshId, ref GridWrapper.meshgeom mesh, int nodes2D, bool includeArrays, ref double[] rc_twodnodex, ref double[] rc_twodnodey, ref double[] rc_twodnodez)
+        public int GetMeshGeom(ref int ioncid, ref int meshId, ref GridWrapper.MeshGeom mesh, int nodes2D, bool includeArrays, ref double[] rc_twodnodex, ref double[] rc_twodnodey, ref double[] rc_twodnodez)
         {
             mesh.nodex = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nodes2D);
             mesh.nodey = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(double)) * nodes2D);
@@ -53,11 +53,11 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR;
         }
 
-        public int GetMeshGeomDim(ref int ioncid, ref int meshId, ref GridWrapper.meshgeomdim meshgeomdim)
+        public int GetMeshGeomDim(ref int ioncid, ref int meshId, ref GridWrapper.MeshGeomDim meshGeomDim)
         {
             try
             {
-                int ierr = wrapper.get_meshgeom_dim(ref ioncid, ref meshId, ref meshgeomdim);
+                int ierr = wrapper.get_meshgeom_dim(ref ioncid, ref meshId, ref meshGeomDim);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
                     return ierr;
@@ -162,6 +162,11 @@ namespace DeltaShell.NGHS.IO.Grid
             return GridApiDataSet.GridConstants.NOERR;
         }
 
+        public GridApiDataSet.DataSetConventions GetConvention()
+        {
+            return !Initialized ? GridApiDataSet.DataSetConventions.CONV_NULL : iconvtype;
+        }
+
         /// <summary>
         /// Read the convention from the grid nc file via the NetCdf file library in DeltaShell Framework
         /// (Fallback!)
@@ -189,7 +194,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         #region Implementation of IGridApi
 
-        public bool adherestoConventions(GridApiDataSet.DataSetConventions convtype)
+        public bool AdheresToConventions(GridApiDataSet.DataSetConventions convtype)
         {
             if (!Initialized)
             {
@@ -370,11 +375,6 @@ namespace DeltaShell.NGHS.IO.Grid
             }
         }
 
-        public GridApiDataSet.DataSetConventions GetConvention()
-        {
-            return !Initialized ? GridApiDataSet.DataSetConventions.CONV_NULL : iconvtype;
-        }
-
         public double GetVersion()
         {
             return !Initialized ? double.NaN : convversion;
@@ -410,7 +410,7 @@ namespace DeltaShell.NGHS.IO.Grid
 
         private int CreateAndWriteDefaultNetCdfMetaData(UGridGlobalMetaData globalMetaData, int netcdfId)
         {
-            GridWrapper.interop_metadata metadata;
+            GridWrapper.InteropMetadata metadata;
             metadata.institution = ToDataSizeCharArray("Deltares");
             metadata.source = ToDataSizeCharArray(globalMetaData.Source);
             metadata.references = ToDataSizeCharArray("https://github.com/ugrid-conventions/ugrid-conventions");

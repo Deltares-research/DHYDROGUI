@@ -7,10 +7,8 @@ using DelftTools.Utils.Aop;
 namespace DeltaShell.Dimr.Gui.ViewModels
 {
     [Entity]
-    public class DIMRConfigRibbonViewModel
+    public class DimrConfigRibbonViewModel
     {
-        public DIMRConfigRibbonViewModel() {}
-
         public Level CurrentLogfileLevel
         {
             get

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Model;
+using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
@@ -29,7 +30,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            string mapFilePath = Path.Combine(Path.GetDirectoryName(mduPath), "bendprof_map.nc");
+            UnstructuredGrid grid = NetFileImporter.ImportModelGrid(mapFilePath);
 
             var gridLayer = new UnstructuredGridLayer {Grid = grid};
 
@@ -58,7 +60,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\pensioen\pensioen.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "pensioen_map.nc");
+            string mapFilePath = Path.Combine(Path.GetDirectoryName(mduPath), "pensioen_map.nc");
+            UnstructuredGrid grid = NetFileImporter.ImportModelGrid(mapFilePath);
 
             var gridLayer = new UnstructuredGridLayer {Grid = grid};
 

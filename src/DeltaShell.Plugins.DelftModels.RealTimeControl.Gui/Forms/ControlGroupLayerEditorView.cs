@@ -246,7 +246,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private class ControlGroupConditionWrapper
+        private sealed class ControlGroupConditionWrapper
         {
             private readonly ConditionBase condition;
 
@@ -286,7 +286,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             }
         }
 
-        private class ControlGroupRuleWrapper
+        private sealed class ControlGroupRuleWrapper
         {
             private readonly RuleBase rule;
 

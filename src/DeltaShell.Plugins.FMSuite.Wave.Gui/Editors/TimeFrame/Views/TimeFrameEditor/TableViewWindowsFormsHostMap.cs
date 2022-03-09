@@ -117,22 +117,5 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors.TimeFrame.Views.TimeFrameE
                 }
             }
         }
-
-        private static void UpdateTableViewWidths(ITableView tableView,
-                                                  IList<int?> columnWidths)
-        {
-            tableView.BestFitColumns();
-
-            int upperBound = Math.Min(tableView.Columns.Count,
-                                      columnWidths.Count);
-
-            for (var i = 0; i < upperBound; i++)
-            {
-                if (columnWidths[i].HasValue)
-                {
-                    tableView.Columns[i].Width = columnWidths[i].Value;
-                }
-            }
-        }
     }
 }

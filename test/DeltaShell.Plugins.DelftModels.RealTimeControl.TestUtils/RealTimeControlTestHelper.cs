@@ -887,7 +887,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
 
             var pidRuleNotActive = new PIDRule {Name = "PIDRuleNotActive"};
             pidRuleNotActive.Kp = 0.3;
-            pidRuleNotActive.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+            pidRuleNotActive.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.Constant;
             pidRuleNotActive.ConstantValue = 1.0;
             controlGroup.Rules.Add(pidRuleNotActive);
 

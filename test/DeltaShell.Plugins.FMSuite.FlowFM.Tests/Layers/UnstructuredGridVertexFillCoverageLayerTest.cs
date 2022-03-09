@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.Adapters;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
+using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -26,7 +27,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            string mapFilePath = Path.Combine(Path.GetDirectoryName(mduPath), "bendprof_map.nc");
+            UnstructuredGrid grid = NetFileImporter.ImportModelGrid(mapFilePath);
 
             // build coverage and show on map
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false);
@@ -70,7 +72,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            string mapFilePath = Path.Combine(Path.GetDirectoryName(mduPath), "bendprof_map.nc");
+            UnstructuredGrid grid = NetFileImporter.ImportModelGrid(mapFilePath);
 
             IEnumerable<double> values = grid.Vertices.Select(v => v.Z);
 
@@ -194,7 +197,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\pensioen\pensioen.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "pensioen_map.nc");
+            string mapFilePath = Path.Combine(Path.GetDirectoryName(mduPath), "pensioen_map.nc");
+            UnstructuredGrid grid = NetFileImporter.ImportModelGrid(mapFilePath);
 
             IEnumerable<double> values = grid.Vertices.Select(v => v.Z);
 

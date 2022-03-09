@@ -126,7 +126,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             return rule != null && rule.AllowedConnectors.Contains(targetConnector);
         }
 
-        private class ConnectionRule
+        private sealed class ConnectionRule
         {
             public ConnectionRule(Type shapeType, HashSet<ConnectorType> allowedConnectors)
             {

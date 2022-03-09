@@ -146,7 +146,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 Initialize();
             }
 
-            var uGridApi = GridApi as T;
+            T uGridApi = GridApi;
             bool isValid = uGridApi != null && IsValid();
             if (!isValid)
             {

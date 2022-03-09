@@ -14,19 +14,19 @@ namespace DeltaShell.NGHS.IO.Grid
             api = RemoteInstanceContainer.CreateInstance<IUGridApi, UGridApi>(null, false, dimrDllAssembly);
         }
 
-        public double zCoordinateFillValue
+        public double ZCoordinateFillValue
         {
             get
             {
                 var ugridApi = api as IUGridApi;
-                return ugridApi?.zCoordinateFillValue ?? double.NaN;
+                return ugridApi?.ZCoordinateFillValue ?? double.NaN;
             }
             set
             {
                 var ugridApi = api as IUGridApi;
                 if (ugridApi != null)
                 {
-                    ugridApi.zCoordinateFillValue = value;
+                    ugridApi.ZCoordinateFillValue = value;
                 }
             }
         }

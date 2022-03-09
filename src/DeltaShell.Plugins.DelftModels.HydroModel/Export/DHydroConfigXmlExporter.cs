@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
@@ -81,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                 return false;
             }
 
-            var errorLog = string.Empty;
+            var errorLog = new StringBuilder();
             XDocument configDocument;
             try
             {
@@ -103,8 +104,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                     var dimrModelExporter = (IFileExporter) Activator.CreateInstance(dimrModel.ExporterType);
                     if (!dimrModelExporter.Export(dimrModel, dimrModel.GetExporterPath(exportSubDirectory)))
                     {
-                        string formattedError = string.Format("Export failed for model {0}{1}", dimrModel.Name, Environment.NewLine);
-                        errorLog += formattedError;
+                        string formattedError = $"Export failed for model {dimrModel.Name}{Environment.NewLine}";
+                        errorLog.Append(formattedError);
                         Log.ErrorFormat(formattedError);
                     }
                 }
@@ -115,16 +116,16 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             catch (Exception e)
             {
                 Log.ErrorFormat("Export failed: " + e.Message);
-                errorLog += string.Format("Export failed: {0}{1}", e.Message, Environment.NewLine);
+                errorLog.Append($"Export failed: {e.Message}{Environment.NewLine}");
                 return false;
             }
             finally
             {
                 UnInitialize();
-                if (!string.IsNullOrEmpty(errorLog))
+                if (!string.IsNullOrEmpty(errorLog.ToString()))
                 {
                     string errorFile = exportPath.Replace(".xml", ".err");
-                    File.WriteAllText(errorFile, errorLog);
+                    File.WriteAllText(errorFile, errorLog.ToString());
                     Log.InfoFormat("Export error log written: {0} ", errorFile);
                 }
             }
@@ -153,7 +154,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 
         private static string ValidateDimrModels(List<IDimrModel> dimrModels)
         {
-            var validationReportMessages = string.Empty;
+            var validationReportMessages = new StringBuilder();
 
             foreach (IDimrModel dimrModel in dimrModels)
             {
@@ -164,11 +165,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
                                                         string.Join("\n", validationReport.GetAllIssuesRecursive()
                                                                                           .Where(i => i.Severity == ValidationSeverity.Error)
                                                                                           .Select(i => string.Format("\t{0}: {1}", i.Subject, i.Message)).ToArray()));
-                    validationReportMessages += errorMessage + Environment.NewLine;
+                    validationReportMessages.Append(errorMessage + Environment.NewLine);
                 }
             }
 
-            return validationReportMessages;
+            return validationReportMessages.ToString();
         }
 
         private ICompositeActivity GetWorkflow(object item)

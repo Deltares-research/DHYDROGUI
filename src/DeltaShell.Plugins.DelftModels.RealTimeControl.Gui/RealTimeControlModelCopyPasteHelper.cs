@@ -168,16 +168,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
             List<T> currentObjects = controllerData.ToList();
             var existingNames = new HashSet<string>(currentObjects.Select(d => d.Name));
-            foreach (T copy in copiedData)
+            foreach (T copy in copiedData.Where(copy => existingNames.Contains(copy.Name)))
             {
-                if (existingNames.Contains(copy.Name))
-                {
-                    string uniqueName = RealTimeControlModelHelper.GetUniqueName(objName + " - Copy {0}",
-                                                                                 currentObjects, "Copy");
-                    copy.Name = uniqueName;
-                    existingNames.Add(uniqueName);
-                    currentObjects.Add(copy);
-                }
+                string uniqueName = RealTimeControlModelHelper.GetUniqueName(objName + " - Copy {0}",
+                                                                             currentObjects, "Copy");
+                copy.Name = uniqueName;
+                existingNames.Add(uniqueName);
+                currentObjects.Add(copy);
             }
         }
 
@@ -368,12 +365,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             where T : RtcBaseObject
         {
             var itemsToAdd = new List<T>();
-            foreach (T item in items)
+            foreach (T item in items.Where(mapping.ContainsKey))
             {
-                if (mapping.ContainsKey(item))
-                {
-                    itemsToAdd.Add(mapping[item]);
-                }
+                itemsToAdd.Add(mapping[item]);
             }
 
             return itemsToAdd;

@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Extensions
             //         +--- boundary_data_tables         (Folder storing DataTables for boundaries)
             //         +--- load_data_tables             (Folder storing DataTables for loads)
 
-            string name = string.IsNullOrWhiteSpace(model.Name) ? Path.GetTempFileName() : model.Name;
+            string name = string.IsNullOrWhiteSpace(model.Name) ? Path.GetRandomFileName() : model.Name;
             model.ModelDataDirectory = Path.Combine(projectDataDir, name.Replace(" ", "_"));
             if (model.ModelSettings != null)
             {

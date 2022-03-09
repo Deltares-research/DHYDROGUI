@@ -12,7 +12,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public class PIDRule : RuleBase, ITimeDependentRtcObject
     {
-        public enum PIDRuleSetpointType
+        public enum PIDRuleSetpointTypes
         {
             Constant = 0,
             Signal = 1,
@@ -35,7 +35,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             Setting = new Setting {MaxSpeed = 0};
         }
 
-        public PIDRuleSetpointType PidRuleSetpointType { get; set; }
+        public PIDRuleSetpointTypes PidRuleSetpointType { get; set; }
 
         public Setting Setting { get; set; }
         public double Kp { get; set; }
@@ -122,7 +122,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
         {
             var exceptions = new List<ValidationException>();
 
-            if (pidRule.PidRuleSetpointType == PIDRuleSetpointType.TimeSeries && pidRule.TimeSeries.Arguments[0].Values.Count == 0)
+            if (pidRule.PidRuleSetpointType == PIDRuleSetpointTypes.TimeSeries && pidRule.TimeSeries.Arguments[0].Values.Count == 0)
             {
                 exceptions.Add(new ValidationException(string.Format("pid rule '{0}' has empty time series.", pidRule.Name)));
             }
@@ -145,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
         public override bool IsLinkedFromSignal()
         {
-            return PidRuleSetpointType == PIDRuleSetpointType.Signal;
+            return PidRuleSetpointType == PIDRuleSetpointTypes.Signal;
         }
 
         public override object Clone()

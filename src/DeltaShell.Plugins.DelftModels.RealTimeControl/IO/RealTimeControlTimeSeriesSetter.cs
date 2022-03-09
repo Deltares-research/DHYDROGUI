@@ -80,7 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
             }
 
             if (rtcObject is PIDRule pidRule &&
-                pidRule.PidRuleSetpointType != PIDRule.PIDRuleSetpointType.TimeSeries)
+                pidRule.PidRuleSetpointType != PIDRule.PIDRuleSetpointTypes.TimeSeries)
             {
                 return false;
             }

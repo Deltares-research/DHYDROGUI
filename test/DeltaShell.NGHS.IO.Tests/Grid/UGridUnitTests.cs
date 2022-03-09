@@ -21,7 +21,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         {
             DoWithMockedUGridApi(
                 uGridApi => uGridApi
-                            .Expect(api => api.zCoordinateFillValue)
+                            .Expect(api => api.ZCoordinateFillValue)
                             .Return(2).Repeat.Once(),
                 grid =>
                 {

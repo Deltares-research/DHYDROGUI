@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using ValidationAspects;
@@ -33,15 +34,12 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
 
             if (signalBase.RuleBases.Count == 0)
             {
-                exceptions.Add(new ValidationException(string.Format("signal '{0}' has no rule.", signalBase.Name)));
+                exceptions.Add(new ValidationException($"signal '{signalBase.Name}' has no rule."));
             }
 
-            foreach (RuleBase rulebase in signalBase.RuleBases)
+            if (signalBase.RuleBases.Any(rule => string.IsNullOrEmpty(rule.Name)))
             {
-                if (string.IsNullOrEmpty(rulebase.Name))
-                {
-                    exceptions.Add(new ValidationException(string.Format("signal '{0}' has unlinked rule.", signalBase.Name)));
-                }
+                exceptions.Add(new ValidationException($"signal '{signalBase.Name}' has unlinked rule."));
             }
 
             if (exceptions.Count > 0)

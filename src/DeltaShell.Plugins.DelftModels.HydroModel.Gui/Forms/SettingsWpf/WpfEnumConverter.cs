@@ -22,13 +22,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </returns>
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null || !(value is Type))
+            if (!(value is Type type))
             {
                 return DependencyProperty.UnsetValue;
             }
 
             //Get the enum values.
-            Enum[] enumValues = Enum.GetValues(value as Type).OfType<Enum>().ToArray();
+            Enum[] enumValues = Enum.GetValues(type).OfType<Enum>().ToArray();
             return enumValues;
         }
 

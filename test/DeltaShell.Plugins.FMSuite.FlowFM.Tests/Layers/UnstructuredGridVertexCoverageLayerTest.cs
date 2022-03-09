@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using DelftTools.TestUtils;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -26,7 +26,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
         {
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            string mapFilePath = Path.Combine(Path.GetDirectoryName(mduPath), "bendprof_map.nc");
+            UnstructuredGrid grid = NetFileImporter.ImportModelGrid(mapFilePath);
 
             // build coverage and show on map
             var coverage = new UnstructuredGridVertexCoverage(grid, true);
@@ -116,7 +117,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
 
             string mduPath = TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
             mduPath = TestHelper.CreateLocalCopy(mduPath);
-            UnstructuredGrid grid = MapFileImporter.Import(mduPath, "bendprof_map.nc");
+            string mapFilePath = Path.Combine(Path.GetDirectoryName(mduPath), "bendprof_map.nc");
+            UnstructuredGrid grid = NetFileImporter.ImportModelGrid(mapFilePath);
 
             IEnumerable<double> values = Enumerable.Range(0, grid.Vertices.Count).Select(i => r.NextDouble() * 300.0);
 

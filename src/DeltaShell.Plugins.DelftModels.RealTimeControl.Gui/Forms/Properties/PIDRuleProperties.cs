@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
         [ResourcesDisplayName(typeof(Resources), "SetpointMode")]
         [ResourcesDescription(typeof(Resources), "SetpointMode_Description")]
         [PropertyOrder(5)]
-        public PIDRule.PIDRuleSetpointType SetpointMode
+        public PIDRule.PIDRuleSetpointTypes SetpointMode
         {
             get => data.PidRuleSetpointType;
             set => data.PidRuleSetpointType = value;
@@ -146,13 +146,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             switch (propertyName)
             {
                 case "ConstantSetpoint":
-                    return SetpointMode != PIDRule.PIDRuleSetpointType.Constant;
+                    return SetpointMode != PIDRule.PIDRuleSetpointTypes.Constant;
                 case "Table":
-                    return SetpointMode != PIDRule.PIDRuleSetpointType.TimeSeries;
+                    return SetpointMode != PIDRule.PIDRuleSetpointTypes.TimeSeries;
                 case "Interpolation":
-                    return SetpointMode != PIDRule.PIDRuleSetpointType.TimeSeries;
+                    return SetpointMode != PIDRule.PIDRuleSetpointTypes.TimeSeries;
                 case "Extrapolation":
-                    return SetpointMode != PIDRule.PIDRuleSetpointType.TimeSeries;
+                    return SetpointMode != PIDRule.PIDRuleSetpointTypes.TimeSeries;
                 default:
                     return true;
             }

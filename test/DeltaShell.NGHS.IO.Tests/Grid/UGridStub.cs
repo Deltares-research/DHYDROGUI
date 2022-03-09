@@ -12,7 +12,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             bool isValidViaApi;
             using (IUGridApi gridApi = GridApiFactory.CreateNew())
             {
-                isValidViaApi = gridApi.adherestoConventions(ioncConvUgrid);
+                isValidViaApi = gridApi.AdheresToConventions(ioncConvUgrid);
             }
 
             return isValidViaApi;

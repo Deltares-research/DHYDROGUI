@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using DelftTools.Utils;
@@ -195,10 +196,9 @@ namespace DeltaShell.Plugins.DelftModels.RTCShapes.Shapes
 
                 var rectangles = new RectangleF[connectors.AsList().Count];
                 var countRectangles = 0;
-                foreach (Connector connector in connectors)
+                foreach (PointF connectorLocation in connectors.Select(c=>c.Location))
                 {
-                    var rectangle = new RectangleF(connector.Location.X, connector.Location.Y, 2,
-                                                   2);
+                    var rectangle = new RectangleF(connectorLocation.X, connectorLocation.Y, 2, 2);
                     rectangles[countRectangles] = rectangle;
                     countRectangles++;
                 }

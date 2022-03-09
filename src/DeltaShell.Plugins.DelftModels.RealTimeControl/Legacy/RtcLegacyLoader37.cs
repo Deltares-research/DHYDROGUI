@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Legacy
         /// The <see cref="DbFile"/> represents a row of the resulted table from the query in the
         /// <see cref="RetrieveRestartFileDataQueryForModel"/> method.
         /// </summary>
-        private class DbFile
+        private sealed class DbFile
         {
             /// <summary>
             /// The value of the "name" column, which contains the name of the restart file.

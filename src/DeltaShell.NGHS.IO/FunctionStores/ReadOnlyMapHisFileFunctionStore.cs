@@ -21,7 +21,6 @@ namespace DeltaShell.NGHS.IO.FunctionStores
         private readonly IDictionary<string, double> minValues = new Dictionary<string, double>();
         private readonly IDictionary<string, double> maxValues = new Dictionary<string, double>();
         private readonly IDictionary<string, object> locationLookup = new Dictionary<string, object>();
-        private IEventedList<IFunction> functions = new EventedList<IFunction>();
         private MapHisFileMetaData metaData;
 
         private string path;
@@ -103,17 +102,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
         public long Id { get; set; }
 
-        public IEventedList<IFunction> Functions
-        {
-            get
-            {
-                return functions;
-            }
-            set
-            {
-                functions = value;
-            }
-        }
+        public IEventedList<IFunction> Functions { get; set; }
 
         public bool FireEvents { get; set; }
 

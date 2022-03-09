@@ -17,14 +17,11 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl
         public static IEnumerable<Input> InputItemsForOutput(ControlGroup controlGroup, Output output)
         {
             var inputs = new HashSet<Input>();
-            foreach (RuleBase ruleBase in controlGroup.Rules)
+            foreach (RuleBase ruleBase in controlGroup.Rules.Where(rule => rule.Outputs.Contains(output)))
             {
-                if (ruleBase.Outputs.Contains(output))
+                foreach (Input r in InputsForRule(controlGroup, ruleBase))
                 {
-                    foreach (Input r in InputsForRule(controlGroup, ruleBase))
-                    {
-                        inputs.Add(r);
-                    }
+                    inputs.Add(r);
                 }
             }
 

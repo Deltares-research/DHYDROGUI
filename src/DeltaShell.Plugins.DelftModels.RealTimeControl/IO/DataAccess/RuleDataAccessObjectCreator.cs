@@ -151,13 +151,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.DataAccess
                     return rule;
                 case double doubleValue:
                     rule.ConstantValue = doubleValue;
-                    rule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Constant;
+                    rule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.Constant;
                     break;
                 case string setPointTimeSeries when setPointTimeSeries.Contains(RtcXmlTag.SP):
-                    rule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries;
+                    rule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries;
                     break;
                 default:
-                    rule.PidRuleSetpointType = PIDRule.PIDRuleSetpointType.Signal;
+                    rule.PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.Signal;
                     break;
             }
 

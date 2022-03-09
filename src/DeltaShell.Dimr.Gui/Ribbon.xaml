@@ -17,7 +17,7 @@
         <fluent:RibbonTabItem Header="DIMR" Name="tabDimr" fluent:KeyTip.Keys="D" Group="{Binding ElementName=configContextualGroup}">
             <fluent:RibbonGroupBox Header="DIMR">
                 <fluent:RibbonGroupBox.DataContext>
-                    <viewModels:DIMRConfigRibbonViewModel />
+                    <viewModels:DimrConfigRibbonViewModel />
                 </fluent:RibbonGroupBox.DataContext>
                 <Grid>
                     <Grid.ColumnDefinitions>

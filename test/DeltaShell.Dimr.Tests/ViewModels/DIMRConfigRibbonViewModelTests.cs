@@ -15,7 +15,7 @@ namespace DeltaShell.Dimr.Tests.ViewModels
             Assert.AreEqual(DimrApiDataSet.FeedbackLevel, Level.None);
             Assert.AreEqual(DimrApiDataSet.LogFileLevel, Level.None);
 
-            var viewModel = new DIMRConfigRibbonViewModel();
+            var viewModel = new DimrConfigRibbonViewModel();
             Assert.That(viewModel.Levels.Count(), Is.GreaterThan(0));
 
             // Set values on view model

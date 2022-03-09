@@ -74,7 +74,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             graphControl.NetronGraph.OnGraphDragDrop += OnGraphControlGraphDragDrop;
             graphControl.NetronGraph.OnContextMenu += OnGraphControlContextMenu;
 
-            graphControl.NetronGraph.OnDoubleClick += GraphControlOnDoubleClick;
             graphControl.NetronGraph.MouseUp += OnGraphControlMouseUp;
             graphControl.NetronGraph.MouseDown += OnGraphControlMouseDown;
 
@@ -459,7 +458,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
 
         private void SaveAsImageAction(object sender, EventArgs e)
         {
-            string tempImagePath = Path.GetTempFileName();
+            string tempImagePath = Path.GetRandomFileName();
             graphControl.NetronGraph.SaveImage(tempImagePath, true);
 
             using (Image image = Image.FromFile(tempImagePath))
@@ -693,11 +692,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             target.LinkTo(source);
 
             Model.EndEdit();
-        }
-
-        private void GraphControlOnDoubleClick(object sender, object[] props)
-        {
-            return; //hides the properties of the shape (color, line witdh, font etc.
         }
 
         private static IFeature GetFeatureFromDragEvents(DragEventArgs dragEventArgs)

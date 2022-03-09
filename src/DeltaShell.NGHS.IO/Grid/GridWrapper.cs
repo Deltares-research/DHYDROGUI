@@ -155,7 +155,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_put_node_coordinates_dll(ref ioncId, ref meshId, ref xvaluesPtr, ref yvaluesPtr, ref numberOfNodes);
         }
 
-        public virtual int AddGlobalAttributes(int ioncId, interop_metadata metadata)
+        public virtual int AddGlobalAttributes(int ioncId, InteropMetadata metadata)
         {
             return ionc_add_global_attributes_dll(ref ioncId, ref metadata);
         }
@@ -170,7 +170,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_def_mesh_contact_dll(ref ioncId, ref contactsmesh, contactsmeshname, ref ncontacts, ref mesh1, ref mesh2, ref locationType1Id, ref locationType2Id);
         }
 
-        public virtual int put_mesh_contact(ref int ioncId, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] contactsinfo, ref int ncontacts)
+        public virtual int put_mesh_contact(ref int ioncId, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, InteropCharInfo[] contactsinfo, ref int ncontacts)
         {
             var startindex = 0;
             return ionc_put_mesh_contact_dll(ref ioncId, ref contactsmesh, ref c_mesh1indexes, ref c_mesh2indexes, contactsinfo, ref ncontacts, ref startindex);
@@ -181,7 +181,7 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_get_contacts_count_dll(ref ioncId, ref contactsmesh, ref ncontacts);
         }
 
-        public virtual int get_mesh_contact(ref int ioncId, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, interop_charinfo[] contactsinfo, ref int ncontacts)
+        public virtual int get_mesh_contact(ref int ioncId, ref int contactsmesh, ref IntPtr c_mesh1indexes, ref IntPtr c_mesh2indexes, InteropCharInfo[] contactsinfo, ref int ncontacts)
         {
             var startIndex = 0;
             return ionc_get_mesh_contact_dll(ref ioncId, ref contactsmesh, ref c_mesh1indexes, ref c_mesh2indexes, contactsinfo, ref ncontacts, ref startIndex);
@@ -223,14 +223,14 @@ namespace DeltaShell.NGHS.IO.Grid
             return ionc_ug_get_mesh_ids_dll(ref ioncId, ref mType, ref pointerToMeshIds, ref numberOfMeshes);
         }
         
-        public virtual int get_meshgeom(ref int ioncid, ref int meshId, ref meshgeom meshgeom, bool includeArrays)
+        public virtual int get_meshgeom(ref int ioncid, ref int meshId, ref MeshGeom meshGeom, bool includeArrays)
         {
-            return ionc_get_meshgeom_dll(ref ioncid, ref meshId, ref meshgeom, ref includeArrays);
+            return ionc_get_meshgeom_dll(ref ioncid, ref meshId, ref meshGeom, ref includeArrays);
         }
 
-        public virtual int get_meshgeom_dim(ref int ioncid, ref int meshId, ref meshgeomdim meshgeomdim)
+        public virtual int get_meshgeom_dim(ref int ioncid, ref int meshId, ref MeshGeomDim meshGeomDim)
         {
-            return ionc_get_meshgeom_dim_dll(ref ioncid, ref meshId, ref meshgeomdim);
+            return ionc_get_meshgeom_dim_dll(ref ioncid, ref meshId, ref meshGeomDim);
         }
 
         /// <summary>
@@ -427,25 +427,25 @@ namespace DeltaShell.NGHS.IO.Grid
         /// </summary>
         /// <param name="ioncid"></param>
         /// <param name="meshId"></param>
-        /// <param name="meshgeom"></param>
+        /// <param name="meshGeom"></param>
         /// <param name="includeArrays"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom",
                    CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_meshgeom_dll(ref int ioncid, ref int meshid, [In] [Out] ref meshgeom meshgeom, ref bool includeArrays);
+        private static extern int ionc_get_meshgeom_dll(ref int ioncid, ref int meshid, [In] [Out] ref MeshGeom meshGeom, ref bool includeArrays);
 
         /// <summary>
         /// Gets the dimension of the 1d2d grid.
         /// </summary>
         /// <param name="ioncid"></param>
         /// <param name="meshId"></param>
-        /// <param name="meshgeomdim"></param>
+        /// <param name="meshGeomDim"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_meshgeom_dim", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_meshgeom_dim_dll([In] ref int ioncid, [In] ref int meshid, [In] [Out] ref meshgeomdim meshgeomdim);
+        private static extern int ionc_get_meshgeom_dim_dll([In] ref int ioncid, [In] ref int meshid, [In] [Out] ref MeshGeomDim meshGeomDim);
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct meshgeom
+        public struct MeshGeom
         {
             public IntPtr edge_nodes;
             public IntPtr face_nodes;
@@ -477,7 +477,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct meshgeomdim
+        public struct MeshGeomDim
         {
             public char[] meshname;
             public int dim;
@@ -503,7 +503,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public const int longnamessize = 80;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct interop_charinfo
+        public struct InteropCharInfo
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = idssize)]
             public char[] ids;
@@ -515,7 +515,7 @@ namespace DeltaShell.NGHS.IO.Grid
         public const int metadatasize = 100;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct interop_metadata
+        public struct InteropMetadata
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = metadatasize)]
             public char[] institution;
@@ -539,7 +539,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="metadata"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_add_global_attributes", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_add_global_attributes_dll([In] ref int ioncid, ref interop_metadata metadata);
+        private static extern int ionc_add_global_attributes_dll([In] ref int ioncid, ref InteropMetadata metadata);
 
         /// <summary>
         /// This function creates a new netCDF file
@@ -578,7 +578,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="startIndex"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_put_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_put_mesh_contact_dll([In] ref int ioncid, [In] ref int contactsmesh, [In] ref IntPtr c_mesh1indexes, [In] ref IntPtr c_mesh2indexes, [In] [Out] interop_charinfo[] contactsinfo, [In] ref int ncontacts, [In] ref int startIndex);
+        private static extern int ionc_put_mesh_contact_dll([In] ref int ioncid, [In] ref int contactsmesh, [In] ref IntPtr c_mesh1indexes, [In] ref IntPtr c_mesh2indexes, [In] [Out] InteropCharInfo[] contactsinfo, [In] ref int ncontacts, [In] ref int startIndex);
 
         /// <summary>
         /// Get the number of contacts from a specific contactsmesh
@@ -602,7 +602,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="startIndex"></param>
         /// <returns></returns>
         [DllImport(GridApiDataSet.GRIDDLL_NAME, EntryPoint = "ionc_get_mesh_contact", CallingConvention = CallingConvention.Cdecl)]
-        private static extern int ionc_get_mesh_contact_dll([In] ref int ioncid, [In] ref int contactsmesh, [In] [Out] ref IntPtr c_mesh1indexes, [In] [Out] ref IntPtr c_mesh2indexes, [In] [Out] interop_charinfo[] contactsinfo, [In] ref int ncontacts, [In] ref int startIndex);
+        private static extern int ionc_get_mesh_contact_dll([In] ref int ioncid, [In] ref int contactsmesh, [In] [Out] ref IntPtr c_mesh1indexes, [In] [Out] ref IntPtr c_mesh2indexes, [In] [Out] InteropCharInfo[] contactsinfo, [In] ref int ncontacts, [In] ref int startIndex);
 
         /// <summary>
         /// Clone the definitions specific mesh from one netCDF file to another netCDF.

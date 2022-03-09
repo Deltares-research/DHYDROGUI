@@ -18,7 +18,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         // UGridApi field names
         private const string WrapperVarName = "wrapper";
         private const string ApiVarName = "api";
-        private const string FillValueVarName = "fillValue";
+        private const string FillValueVarName = "zCoordinateFillValue";
 
         [Test]
         public void UGridApiTest()
@@ -2655,7 +2655,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     }
 
                     IntPtr zPtr = IntPtr.Zero;
-                    double fillValue = uGridApi.zCoordinateFillValue;
+                    double fillValue = uGridApi.ZCoordinateFillValue;
 
                     wrapper.Expect(w => w.GetVariable(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything,
                                                       ref Arg<IntPtr>.Ref(new Anything(), zPtr).Dummy, Arg<int>.Is.Anything, ref Arg<double>.Ref(new Anything(), fillValue).Dummy))
@@ -2706,7 +2706,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     }
 
                     IntPtr zPtr = IntPtr.Zero;
-                    double fillValue = uGridApi.zCoordinateFillValue;
+                    double fillValue = uGridApi.ZCoordinateFillValue;
 
                     wrapper.Expect(w => w.GetVariable(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<string>.Is.Anything,
                                                       ref Arg<IntPtr>.Ref(new Anything(), zPtr).Dummy, Arg<int>.Is.Anything, ref Arg<double>.Ref(new Anything(), fillValue).Dummy))

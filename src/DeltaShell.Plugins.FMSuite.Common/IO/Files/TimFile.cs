@@ -211,7 +211,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO.Files
 
         private static DateTime? GetDateTime(double value, DateTime? reference)
         {
-            if (value > 189912312359.0d) // TODO: remove magic number... ?
+            // 31-12-1899 23:59
+            const double minimalAbsoluteDate = 189912312359.0d;
+            if (value > minimalAbsoluteDate)
             {
                 // parse as absolute time
                 var remainder = (long) value;

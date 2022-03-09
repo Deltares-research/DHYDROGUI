@@ -17,19 +17,19 @@ namespace DeltaShell.NGHS.IO.Grid
         int GetConvention(string file, out GridApiDataSet.DataSetConventions convention);
 
         /// <summary>
+        /// Read the convention from the initialized grid nc file
+        /// </summary>
+        /// <returns>The convention in the initialized grid nc file (or other)</returns>
+        GridApiDataSet.DataSetConventions GetConvention();
+
+        /// <summary>
         /// Checks whether the specified data set adheres to a specific set of conventions.
         /// Datasets may adhere to multiple conventions at the same time, so use this method
         /// to check for individual conventions.
         /// </summary>
         /// <param name="convtype">The NetCDF conventions type to check for.</param>
         /// <returns>Whether or not the file adheres to the specified conventions.</returns>
-        bool adherestoConventions(GridApiDataSet.DataSetConventions convtype);
-
-        /// <summary>
-        /// Read the convention from the initialized grid nc file
-        /// </summary>
-        /// <returns>The convention in the initialized grid nc file (or other)</returns>
-        GridApiDataSet.DataSetConventions GetConvention();
+        bool AdheresToConventions(GridApiDataSet.DataSetConventions convtype);
 
         /// <summary>
         /// Tries to create a NetCDF file.

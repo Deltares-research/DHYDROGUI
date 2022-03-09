@@ -7,7 +7,7 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <summary>
         /// contains the fill value for z-Coordinates
         /// </summary>
-        double zCoordinateFillValue { get; set; }
+        double ZCoordinateFillValue { get; set; }
 
         /// <summary>
         /// Gets the number of nodes in a single mesh from a data set.

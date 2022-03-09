@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                 Setting = setting,
                 Inputs = new EventedList<IInput> {input},
                 Outputs = new EventedList<Output> {output},
-                PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries
+                PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries
             };
 
             pidRule.TimeSeries.Components[0].DefaultValue = constantSetpointValue;
@@ -139,7 +139,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             var pidrule = new PIDRule("pid")
             {
                 TimeSeries = timeSeries,
-                PidRuleSetpointType = PIDRule.PIDRuleSetpointType.TimeSeries
+                PidRuleSetpointType = PIDRule.PIDRuleSetpointTypes.TimeSeries
             };
 
             var serializer = new PidRuleSerializer(pidrule);
@@ -182,15 +182,15 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
                    "</ruleReference></trigger>";
         }
 
-        [TestCase(PIDRule.PIDRuleSetpointType.TimeSeries, 1)]
-        [TestCase(PIDRule.PIDRuleSetpointType.Constant, 0)]
-        [TestCase(PIDRule.PIDRuleSetpointType.Signal, 0)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.TimeSeries, 1)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Constant, 0)]
+        [TestCase(PIDRule.PIDRuleSetpointTypes.Signal, 0)]
         public void
             GivenAPidRuleWithASetPointType_WhenXmlImportTimeSeriesIsCalled_ThenExpectedNumberOfXmlTimeSeriesIsReturned(
-                PIDRule.PIDRuleSetpointType setPointType, int expectedNumber)
+                PIDRule.PIDRuleSetpointTypes setPointTypes, int expectedNumber)
         {
             // Given
-            var pidRule = new PIDRule {PidRuleSetpointType = setPointType};
+            var pidRule = new PIDRule {PidRuleSetpointType = setPointTypes};
 
             var serializer = new PidRuleSerializer(pidRule);
 
