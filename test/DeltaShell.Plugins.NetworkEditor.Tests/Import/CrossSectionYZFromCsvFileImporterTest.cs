@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Import
             Assert.AreEqual(785.5002577, chainages[3], 1e-06);
             Assert.AreEqual(2200.894605, chainages[4], 1e-06);
 
-            var profile = HydroNetwork.CrossSections.First(cs => cs.Name == "CrossSection3").Definition.Profile.ToList();
+            var profile = HydroNetwork.CrossSections.First(cs => cs.Name == "CrossSection3").Definition.GetProfile().ToList();
             Assert.AreEqual(7, profile.Count);
             Assert.AreEqual(0, profile[0].X, 1e-06);
             Assert.AreEqual(12.18181818, profile[1].X, 1e-06);

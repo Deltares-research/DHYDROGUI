@@ -406,7 +406,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
             bridge.EffectiveCrossSectionDefinition.ZWDataTable.Select(v => v.Z = double.NaN);
             bridge.YZCrossSectionDefinition.YZDataTable.Select(v => v.Z = double.NaN);
             culvert.CrossSectionDefinitionAtInletAbsolute.ZWDataTable.Select(v => v.Z = double.NaN);
-            crossSection.Definition.Profile.ForEach(c => c.Y = double.NaN);
+            crossSection.Definition.GetProfile().ForEach(c => c.Y = double.NaN);
 
             CompositeStructureViewHelper.UpdateMinMaxForBranchFeatures(new IBranchFeature[]
             {

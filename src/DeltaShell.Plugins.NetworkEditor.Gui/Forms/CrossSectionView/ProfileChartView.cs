@@ -353,7 +353,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
 
             if (viewModel.IsCurrentlyOnChannel)
             {
-                var profile = crossSectionDefinition.Profile.ToList();
+                var profile = crossSectionDefinition.GetProfile().ToList();
                 var profileSeries = CreateLineSeries("Total profile", profile, Color.DarkBlue, DashStyle.Solid);
                 editProfileTool.Series = profileSeries;
                 addPointTool.Series = profileSeries;

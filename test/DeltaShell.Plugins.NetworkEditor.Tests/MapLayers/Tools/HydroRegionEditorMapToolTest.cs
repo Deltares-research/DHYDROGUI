@@ -86,7 +86,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             clipboard.Dispose();
         }
 
-        private void Add2BranchesUsingGeometry(HydroRegionMapLayer hydroNetworkLayer)
+        private void Add2BranchesUsingGeometry()
         {
             // Generate a simple network with 2 branches that have a common start node
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 30 40, 70 40, 100 100)"));
@@ -97,7 +97,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         public void NodeSnapping()
         {
             SetUp();
-            Add2BranchesUsingGeometry(hydroNetworkLayer);
+            Add2BranchesUsingGeometry();
 
             var node = network.Nodes.First();
             var branch2 = network.Branches.Skip(1).First();
@@ -117,7 +117,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         public void BranchTopology()
         {
             SetUp();
-            Add2BranchesUsingGeometry(hydroNetworkLayer);
+            Add2BranchesUsingGeometry();
             
             Assert.AreEqual(2, network.Branches.Count);
 
@@ -131,7 +131,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         public void InsertNodeWithContextMenuTools9599()
         {
             SetUp();
-            Add2BranchesUsingGeometry(hydroNetworkLayer);
+            Add2BranchesUsingGeometry();
 
             var hydroNetworkEditorMapTool = (HydroRegionEditorMapTool)mapControl.Tools.First(t => t is HydroRegionEditorMapTool);
 
@@ -195,7 +195,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         public void CrossSectionTopology()
         {
             SetUp();
-            Add2BranchesUsingGeometry(hydroNetworkLayer);
+            Add2BranchesUsingGeometry();
 
             // NB A coordinate cross section will be treated as not geometry based.
             crossSectionLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING(50 45, 50 35)"));
@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
         public void AddCrossSectionWithGeometryThatDoesNotOverlapWithBranch()
         {
             //CrossSection.ApplyDefaultValues() uses different component types in assignment hence error.
-            Add2BranchesUsingGeometry(hydroNetworkLayer);
+            Add2BranchesUsingGeometry();
 
             // Add a second cross section but do not place it at a branch
             // expect exception, geometry doesn't fit, can't find branch
@@ -226,7 +226,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             SetUp();
             // This test checks the implicit adding and deleting of StructureFeature objects
             // when structures are added and deleted.
-            Add2BranchesUsingGeometry(hydroNetworkLayer);
+            Add2BranchesUsingGeometry();
 
             pumpLayer.DataSource.Add(GeometryFromWKT.Parse("POINT(40 40)"));
             Assert.AreEqual(2, network.Structures.Count());

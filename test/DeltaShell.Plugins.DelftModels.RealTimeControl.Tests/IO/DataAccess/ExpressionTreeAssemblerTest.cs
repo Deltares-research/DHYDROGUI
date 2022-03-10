@@ -115,7 +115,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
         }
 
         private static Tuple<ExpressionObject, BranchNode> ConstructBranchNodeItems(string id,
-                                                                                    string groupName,
                                                                                     Operator opp,
                                                                                     string yValue)
         {
@@ -147,7 +146,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             var id = $"[{groupName}]twoLeavesOneBranch_{postFix}";
             const Operator opp = Operator.Add;
 
-            Tuple<ExpressionObject, BranchNode> results = ConstructBranchNodeItems(id, groupName, opp, id);
+            Tuple<ExpressionObject, BranchNode> results = ConstructBranchNodeItems(id, opp, id);
 
             BranchNode rootBranch = results.Item2;
             var expectedResult = new ExpressionTree(rootBranch, groupName, id,
@@ -183,7 +182,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             var idBottom = $"[{groupName}]oneLeafOneBranch_{postFix}";
             const Operator opp = Operator.Add;
 
-            Tuple<ExpressionObject, BranchNode> results = ConstructBranchNodeItems(idBottom, groupName, opp, idBottom);
+            Tuple<ExpressionObject, BranchNode> results = ConstructBranchNodeItems(idBottom, opp, idBottom);
 
             var idTop = $"[{groupName}]parentBranch{postFix}";
             var parentLeafParam = $"[{groupName}]parentLeaf{postFix}";
@@ -233,10 +232,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.DataAccess
             var idBottom1 = $"[{groupName}]twoLeavesOneBranch1_{postFix}";
             const Operator opp = Operator.Add;
 
-            Tuple<ExpressionObject, BranchNode> results1 = ConstructBranchNodeItems(idBottom1, groupName, opp, idBottom1);
+            Tuple<ExpressionObject, BranchNode> results1 = ConstructBranchNodeItems(idBottom1, opp, idBottom1);
 
             var idBottom2 = $"[{groupName}]twoLeavesOneBranch2_{postFix}";
-            Tuple<ExpressionObject, BranchNode> results2 = ConstructBranchNodeItems(idBottom2, groupName, opp, idBottom2);
+            Tuple<ExpressionObject, BranchNode> results2 = ConstructBranchNodeItems(idBottom2, opp, idBottom2);
 
             var idTop = $"[{groupName}]ParentBranch_{postFix}";
             var rootBranch = new BranchNode(Operator.Multiply, idTop)

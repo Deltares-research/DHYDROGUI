@@ -25,7 +25,6 @@ using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using log4net;
 using Mono.Addins;
-using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Extensions.Grids;
@@ -581,11 +580,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         private WaterFlowFMModel GetModelForGrid(UnstructuredGrid grid)
         {
             return FlowModels.FirstOrDefault(m => m.Grid.Equals(grid));
-        }
-
-        private WaterFlowFMModel GetModelForBathymetry(UnstructuredGridCoverage bathymetry)
-        {
-            return FlowModels.FirstOrDefault(m => m.Bathymetry.Equals(bathymetry));
         }
 
         private IEnumerable<WaterFlowFMModel> FlowModels

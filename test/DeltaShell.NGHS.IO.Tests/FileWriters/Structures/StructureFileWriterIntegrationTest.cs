@@ -34,7 +34,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedCategoryName = "Structure";
             var pumpName = "myPump";
             var expectedType = "pump";
-            var expectedPliFileName = pumpName + ".pli";
             var expectedCapacity = 25.08;
 
             var fmModel = new WaterFlowFMModel
@@ -59,7 +58,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
 
-                CheckCommon2DDelftIniProperties(structureCategory, pumpName, expectedType, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, pumpName, expectedType);
                 CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacity);
             }
             finally
@@ -78,7 +77,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedCategoryName = "Structure";
             var pumpName = "myPump";
             var expectedType = "pump";
-            var expectedPliFileName = pumpName + ".pli";
             var expectedCapacityString = $"{pumpName}_{StructureRegion.Capacity.Key}.tim";
 
             var fmModel = new WaterFlowFMModel
@@ -103,7 +101,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(6));
 
-                CheckCommon2DDelftIniProperties(structureCategory, pumpName, expectedType, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, pumpName, expectedType);
                 CheckKeyValuePair(structureCategory, StructureRegion.Capacity.Key, expectedCapacityString);
             }
             finally
@@ -126,7 +124,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedCategoryName = "Structure";
             var weirName = "myWeir";
             var expectedType = "weir";
-            var expectedPliFileName = weirName + ".pli";
             var expectedCrestLevelString = $"{weirName}_crest_level.tim";
             var expectedCrestWidth = 2.58;
             var expectedCorrectionCoeff = 0.34;
@@ -154,7 +151,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
 
-                CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevelString);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
                 CheckKeyValuePair(structureCategory, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoeff);
@@ -175,7 +172,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedCategoryName = "Structure";
             var weirName = "myWeir";
             var expectedType = "weir";
-            var expectedPliFileName = weirName + ".pli";
             var expectedCrestLevel = 1.12;
             var expectedCrestWidth = 2.58;
             var expectedCorrectionCoef = 0.34;
@@ -203,7 +199,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(9));
 
-                CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, weirName, expectedType);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestLevel.Key, expectedCrestLevel);
                 CheckKeyValuePair(structureCategory, StructureRegion.CrestWidth.Key, expectedCrestWidth);
                 CheckKeyValuePair(structureCategory, StructureRegion.CorrectionCoeff.Key, expectedCorrectionCoef);
@@ -228,7 +224,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedCategoryName = "Structure";
             var generalStructureName = "myGeneralStructure";
             var expectedType = "generalstructure";
-            var expectedPliFileName = generalStructureName + ".pli";
             var expectedCrestLevel = 1.12;
             var expectedCrestWidth = 2.58;
 
@@ -256,7 +251,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(32));
 
-                CheckCommon2DDelftIniProperties(structureCategory, generalStructureName, expectedType, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, generalStructureName, expectedType);
             }
             finally
             {
@@ -278,7 +273,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
             var expectedCategoryName = "Structure";
             var gateName = "myGate";
             var expectedType = "gate";
-            var expectedPliFileName = gateName + ".pli";
             var expectedSillLevel = 1.12;
             var expectedSillWidth = 1.23;
             var expectedLowerEdgeLevel = 0.01;
@@ -310,7 +304,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
                 Assert.IsNotNull(structureCategory);
                 Assert.That(structureCategory.Properties.Count, Is.EqualTo(11));
 
-                CheckCommon2DDelftIniProperties(structureCategory, gateName, expectedType, expectedPliFileName);
+                CheckCommon2DDelftIniProperties(structureCategory, gateName, expectedType);
                 CheckKeyValuePair(structureCategory, StructureRegion.GateCrestLevel.Key, expectedSillLevel);
                 CheckKeyValuePair(structureCategory, StructureRegion.GateCrestWidth.Key, expectedSillWidth);
                 CheckKeyValuePair(structureCategory, StructureRegion.GateLowerEdgeLevel.Key, expectedLowerEdgeLevel);
@@ -609,7 +603,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 
         #endregion
 
-        private static void CheckCommon2DDelftIniProperties(DelftIniCategory structureCategory, string structureName, string expectedType, string expectedPliFileName)
+        private static void CheckCommon2DDelftIniProperties(DelftIniCategory structureCategory, string structureName, string expectedType)
         {
             CheckKeyValuePair(structureCategory, StructureRegion.Id.Key, structureName);
             CheckKeyValuePair(structureCategory, StructureRegion.DefinitionType.Key, expectedType);

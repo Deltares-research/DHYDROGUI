@@ -392,25 +392,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             AfterSetDataType();
         }
 
-        /// <summary>
-        /// Returns the value (Q or H) for a given time. Returns constant if DataType is constant
-        /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public virtual Double GetValue(DateTime time)
-        {
-            if (DataType == Model1DLateralDataType.FlowTimeSeries)
-            {
-                IVariable timeArgument = Data.Arguments[0];
-                return Data.Evaluate<double>(new VariableValueFilter<DateTime>(timeArgument, time));
-            }
-            if (DataType == Model1DLateralDataType.FlowConstant)
-            {
-                return Flow;
-            }
-            throw new NotImplementedException("BoundaryNodeDataType not supported.");
-        }
-
         private string GetNameForDataType()
         {
             switch (DataType)

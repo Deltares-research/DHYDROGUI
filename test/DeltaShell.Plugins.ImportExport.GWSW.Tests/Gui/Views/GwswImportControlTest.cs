@@ -75,8 +75,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.Gui.Views
             var item3 = new GwswFeatureViewItem { FullPath = "test3", Selected = false };
 
             viewModel.GwswFeatureFiles = new ObservableCollection<GwswFeatureViewItem> { item1, item2, item3 };
-            
-            var filePath = GetValidDirectoryPath();
 
             viewModel.OnConfigureImporter.Execute(null);
             var importerFilesToImport = viewModel.Importer.FilesToImport;

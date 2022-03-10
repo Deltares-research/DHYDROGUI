@@ -10,8 +10,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views
     /// <summary>
     /// Interaction logic for DimrTemplateView.xaml
     /// </summary>
-    public partial class DimrTemplateView : UserControl, IProjectTemplateSettingsView
+    public sealed partial class DimrTemplateView : UserControl, IProjectTemplateSettingsView
     {
+        private bool disposed;
         public DimrTemplateView()
         {
             InitializeComponent();
@@ -67,12 +68,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Views
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
+            if (disposed)
+            {
+                return;
+            }
+
             if (disposing)
             {
                 Image?.Dispose();
             }
+
+            disposed = true;
         }
     }
 }

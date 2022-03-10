@@ -1,13 +1,11 @@
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 {
-    public class DuplicateCalculationPointsViewModel : INotifyPropertyChanged
+    public class DuplicateCalculationPointsViewModel
     {
         private readonly Coordinate coordinate;
         private readonly INetworkLocation mainNetworkLocation;
@@ -38,14 +36,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         public INetworkLocation MainNetworkLocation
         {
             get { return mainNetworkLocation; }
-        }
-
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

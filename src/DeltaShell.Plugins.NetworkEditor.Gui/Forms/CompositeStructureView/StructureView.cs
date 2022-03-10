@@ -365,7 +365,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 // Add crossSection definition series to chartView
                 crossSectionDefinitionSeries.XValuesDataMember = XValuesDataMember;
                 crossSectionDefinitionSeries.YValuesDataMember = YValuesDataMember;
-                crossSectionDefinitionSeries.DataSource = crossSectionDefinition.Profile.OfType<ICoordinate>().ToList();
+                crossSectionDefinitionSeries.DataSource = crossSectionDefinition.GetProfile().OfType<ICoordinate>().ToList();
             }
 
             return crossSectionDefinitionSeries;
@@ -388,7 +388,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
         {
             if (sectionDefinition != null)
             {
-                envelope.ExpandToInclude(GetEnvelope(sectionDefinition.Profile, 0));
+                envelope.ExpandToInclude(GetEnvelope(sectionDefinition.GetProfile(), 0));
             }
         }
 
@@ -493,13 +493,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 }
             }
         }
-
-        private void AddThalWayToChart()
-        {
-            var line = new ThalWegInStructureView(chart);
-            shapeModifyTool.AddShape(line);
-        }
-
 
         private void AddCulvert(ICulvert culvert)
         {
@@ -778,7 +771,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
                 chartView.Chart.Series.Clear();
                 AddStructuresToChart(CompositeStructure);
                 AddCrossSectionsOrBoundingSeriesToChart();
-                //AddThalWayToChart(); //thalweg does nothing here
                 chartView.Invalidate();
             }
             UpdateLeftAxis();
@@ -805,13 +797,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
 
             if (predecessorCrossSectionDefinition != null)
             {
-                var yz = predecessorCrossSectionDefinition.Profile;
+                var yz = predecessorCrossSectionDefinition.GetProfile();
                 profileMin = Math.Min(profileMin, yz.First().X);
                 profileMax = Math.Max(profileMax, yz.Last().X);
             }
             if (successorCrossSectionDefinition != null)
             {
-                var yz = successorCrossSectionDefinition.Profile;
+                var yz = successorCrossSectionDefinition.GetProfile();
                 profileMin = Math.Min(profileMin, yz.First().X);
                 profileMax = Math.Max(profileMax, yz.Last().X);
             }
@@ -850,10 +842,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView
             NetworkHelper.GetNeighboursOnBranch(CompositeStructure.Branch, CompositeStructure.Chainage,
                                                 out predecessor, out successor);
 
-            predecessorCrossSectionDefinition = (predecessor != null && predecessor.Definition.Profile.Any())
+            predecessorCrossSectionDefinition = (predecessor != null && predecessor.Definition.GetProfile().Any())
                                                     ? predecessor.Definition
                                                     : null;
-            successorCrossSectionDefinition = (successor != null && successor.Definition.Profile.Any())
+            successorCrossSectionDefinition = (successor != null && successor.Definition.GetProfile().Any())
                                                   ? successor.Definition
                                                   : null;
             

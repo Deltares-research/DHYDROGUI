@@ -118,8 +118,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
                 return true;
             }
 
-            double value;
-            if (!Double.TryParse(textBox.Text, out value))
+            if (!Double.TryParse(textBox.Text, out double _))
             {
                 editor.ErrorProvider.SetError(textBox, "Cannot parse text to value");
                 return false;

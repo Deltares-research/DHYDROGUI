@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
-using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
@@ -494,17 +493,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 
             NetworkHelper.AddBranchFeatureToBranch(compositeStructure, branch, compositeStructure.Chainage);
             return compositeStructure;
-        }
-
-        private static void GetCrossSectionDimensions(ICrossSectionDefinition crossSectionDefinition, ref float crossSectionOffset, ref float crossSectionWidth)
-        {
-            var yzValues = crossSectionDefinition.Profile;
-            if (yzValues.Count() <= 0)
-            {
-                return;
-            }
-            crossSectionWidth = (float)(yzValues.Max(yz => yz.X) - yzValues.Min(yz => yz.X));
-            crossSectionOffset = (float)yzValues.Min(yz => yz.X);
         }
     }
 }

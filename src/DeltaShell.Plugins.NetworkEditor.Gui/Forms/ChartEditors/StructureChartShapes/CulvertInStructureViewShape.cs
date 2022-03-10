@@ -141,7 +141,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             if (!culvert.IsGated)
                 throw new ArgumentException("No gate defined.");
 
-            IList<Coordinate> coordinates = culvert.CrossSectionDefinitionAtInletAbsolute.Profile.ToList();
+            IList<Coordinate> coordinates = culvert.CrossSectionDefinitionAtInletAbsolute.GetProfile().ToList();
             if (!coordinates.Any())
                 return null;
 
@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
 
         private PolygonShapeFeature GetCrossSectionFeature()
         {
-            IList<Coordinate> coordinates = culvert.CrossSectionDefinitionAtInletAbsolute.Profile.ToList();
+            IList<Coordinate> coordinates = culvert.CrossSectionDefinitionAtInletAbsolute.GetProfile().ToList();
 
             if (coordinates.Count <= 2)
                 return null;

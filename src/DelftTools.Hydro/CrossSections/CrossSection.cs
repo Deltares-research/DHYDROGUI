@@ -57,10 +57,7 @@ namespace DelftTools.Hydro.CrossSections
         [NoNotifyPropertyChange] // already handled in base class
         public override double Chainage
         {
-            get
-            {
-                return base.Chainage;
-            }
+            get => base.Chainage;
             set
             {
                 base.Chainage = value;

@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
     /// doesn't contain these data items and therefore the <see cref="ProjectExplorer.NodePresenters.TreeFolderNodePresenter"/>
     /// is not able to show exclamations if the output is out of sync.
     /// </summary>
-    public class OutputTreeFolder 
+    public sealed class OutputTreeFolder 
     {
         public OutputTreeFolder(IModel parent, IEnumerable childItems, string text)
         {
@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
 
         public string Text { get; }
 
-        public virtual IEnumerable ChildItems { get; }
+        public IEnumerable ChildItems { get; }
         
         public IModel Parent { get;}
     }

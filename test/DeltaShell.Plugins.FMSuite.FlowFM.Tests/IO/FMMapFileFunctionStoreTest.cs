@@ -14,7 +14,6 @@ using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
 using SharpMap.Extensions.CoordinateSystems;
-using TemporaryDirectory = DeltaShell.NGHS.IO.TestUtils.TemporaryDirectory;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

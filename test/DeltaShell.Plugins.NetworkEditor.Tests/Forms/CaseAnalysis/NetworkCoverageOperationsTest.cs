@@ -557,69 +557,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CaseAnalysis
         #region DurationMeasured operation (linearly interpolated over time)
 
         [Test]
-        public void GreaterThanDurationOperationLinear()
-        {
-            var dates = new[] { new DateTime(2000, 1, 1), new DateTime(2001, 1, 1), new DateTime(2003, 1, 1) };
-            var branchChainages = new[] { 0.0, 100.0 / 10.0, 200.0 / 10.0, 300.0 / 10.0, 400.0 / 10.0, 500.0 / 10.0, 600.0 / 10.0, 700.0 / 10.0, 800.0 / 10.0, 900.0 / 10.0, 100.0 };
-
-            var networkCoverage = CreateNetworkCoverage(dates, branchChainages);
-            networkCoverage.Components[0].NoDataValues = new List<double> { -999.0 };
-
-            var values = new[]
-                {
-                    0, 9, 5, 11, 8, 14, 2, 18,   21,      -5,    -999.0,
-                    1, 3, 10, 12, 0, 1, 16, 19, -999.0, -999.0, -999.0,
-                    2, 4, 6, 7, 13, 15, 17, 20,  -4,     22,     -999.0
-                };
-
-            networkCoverage.Components[0].SetValues(values);
-
-            var coverageOperation = new NetworkCoverageOperations.CoverageGreaterThanDurationOperation { TimeInterpolationType = InterpolationType.Linear };
-
-            INetworkCoverage result = coverageOperation.Perform(networkCoverage, 8.5);
-
-            // Expected output for GreaterThan operation
-            //  0       9      5      11     8      14     2      18    21     -5    -999.0
-            // {false, true,  false, true,  false, true,  false, true, true,  false,  ?}
-            //  1       3      10     12     0      1      16    19    -999.0 -999.0 -999.0
-            // {false, false, true,  true,  false, false, true,  true, ?,     ?,     ?}
-            //  2       4      6      7      13     15     17    20     -4    22     -999.0
-            // {false, false, false, false, true,  true,  true,  true, false,  true, ?}
-
-            var dt1 = dates[1] - dates[0];
-            var dt2 = dates[2] - dates[1];
-
-            var span1 = new TimeSpan(0);
-            var span2 = new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt1, 8.5, 9,3, true));
-            var span3 = new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt1, 8.5, 5, 10, false)) + new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt2, 8.5, 10,6, true));
-            var span4 = dt1 + new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt2, 8.5, 12,7, true));
-            var span5 = new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt2, 8.5, 0,13, false));
-            var span6 = new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt1, 8.5, 14,1, true)) + new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt2, 8.5, 1,15, false));
-            var span7 = new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt1, 8.5, 2,16, false)) + dt2;
-            var span8 = dt1 + dt2;
-            var span9 = new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt1 + dt2, 8.5, 21, -4, true));
-            var span10 = new TimeSpan(GetLinearlyInterpolatedTimeTicks(dt1 + dt2, 8.5, -5, 22, false));
-            var span11 = new TimeSpan(0);
-
-            var expectedValues = new[]
-                {
-                    span1, span2, span3, span4, span5, span6, span7, span8, span9, span10, span11
-                };
-
-            int networkLocationCounter = 0;
-            foreach (var networkLocation in networkCoverage.Locations.Values)
-            {
-                Assert.AreEqual(expectedValues[networkLocationCounter], result[networkLocation],
-                    String.Format("Expected value for location = {0} not matching", networkLocation));
-                networkLocationCounter++;
-            }
-
-            Assert.IsFalse(ReferenceEquals(result, networkCoverage));
-            Assert.AreEqual("", result.Components[0].Unit.Name);
-            Assert.AreEqual("", result.Components[0].Unit.Symbol);
-        }
-
-        [Test]
         public void GreaterThanDurationAsDoubleOperationLinear()
         {
             var dates = new[] { new DateTime(2000, 1, 1), new DateTime(2001, 1, 1), new DateTime(2003, 1, 1) };

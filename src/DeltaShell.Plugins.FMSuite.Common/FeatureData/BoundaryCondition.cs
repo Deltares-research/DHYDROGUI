@@ -24,15 +24,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         NetTopologySuite.Extensions.Features.Generic.FeatureData<IEventedList<IFunction>, Feature2D>, IBoundaryCondition
     {
         private BoundaryConditionDataType dataType;
-        private IEventedList<int> dataPointIndices;
         private IEventedList<VerticalProfileDefinition> pointDepthLayerDefinitions;
 
         protected BoundaryCondition(BoundaryConditionDataType type)
         {
             dataType = type;
 
-            dataPointIndices = new EventedList<int>();
-            dataPointIndices.CollectionChanged += DataPointIndicesCollectionChanged;
+            DataPointIndices = new EventedList<int>();
+            DataPointIndices.CollectionChanged += DataPointIndicesCollectionChanged;
 
             PointData = new EventedList<IFunction>();
             PointData.CollectionChanged += PointDataCollectionChanged;
@@ -110,11 +109,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             }
         }
 
-        public IEventedList<int> DataPointIndices
-        {
-            get { return dataPointIndices; }
-            private set { dataPointIndices = value; }
-        }
+        public IEventedList<int> DataPointIndices { get; private set; }
 
         public IEventedList<IFunction> PointData
         {

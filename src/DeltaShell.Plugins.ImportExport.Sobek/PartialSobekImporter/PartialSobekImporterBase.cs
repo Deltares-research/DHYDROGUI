@@ -50,7 +50,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                     SobekFileNames.SobekType = DeltaShell.Sobek.Readers.SobekReaderHelper.GetSobekType(pathSobek);
                     SobekType = DeltaShell.Sobek.Readers.SobekReaderHelper.GetSobekType(pathSobek);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     SobekFileNames.SobekType = SobekType.Sobek212;
                     SobekType = SobekType.Sobek212;

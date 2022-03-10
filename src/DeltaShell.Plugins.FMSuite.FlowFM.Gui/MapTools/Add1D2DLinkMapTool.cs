@@ -203,12 +203,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
             {
                 log.Error("No 2D grid available for 1D2D links");
                 return;
-            };
+            }
             if (fmModel.NetworkDiscretization == null || !fmModel.NetworkDiscretization.Locations.AllValues.Any())
             {
                 log.Error("No discretizazion/ 1D mesh available for 1D2D links");
                 return;
-            };
+            }
             MapTool1D2DLinksHelper.AddNew1D2DLink(fmModel, LinkType, startPoint, endPoint, snapTolerance);
         }
 

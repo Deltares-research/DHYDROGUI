@@ -225,7 +225,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
                     crossSection.Geometry = CrossSectionHelper.ComputeDefaultCrossSectionGeometry(crossSection.Branch.Geometry,
                         mapChainage,
                         crossSectionDefinition.Width, crossSectionDefinition.Thalweg,
-                        crossSectionDefinition.Profile.First().X);
+                        crossSectionDefinition.GetProfile().First().X);
                 }
             }
             else
@@ -259,10 +259,10 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             var defaultSectionType = hydroNetwork.CrossSectionSectionTypes[0];
 
-            if (crossSectionDefinition.Profile != null && crossSectionDefinition.Profile.Count() > 0)
+            if (crossSectionDefinition.GetProfile() != null && crossSectionDefinition.GetProfile().Count() > 0)
             {
-                minY = crossSectionDefinition.Profile.First().X;
-                maxY = crossSectionDefinition.Profile.Last().X;
+                minY = crossSectionDefinition.GetProfile().First().X;
+                maxY = crossSectionDefinition.GetProfile().Last().X;
             }
 
             if (crossSectionDefinition.Sections.Count == 0)

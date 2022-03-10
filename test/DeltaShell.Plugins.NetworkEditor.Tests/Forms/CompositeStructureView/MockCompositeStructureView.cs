@@ -62,11 +62,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CompositeStructureView
 
         public ViewInfo ViewInfo { get; set; }
 
-        public IEnumerable<IView> ChildViews
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         public bool HandlesChildViews { get; private set; }
         
         public void ActivateChildView(IView childView) { }

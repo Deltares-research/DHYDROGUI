@@ -37,13 +37,13 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             var csd1 = CrossSectionDefinitionYZ.CreateDefault("csd1");
             var cs1 = new CrossSection(csd1) {Name = "cs1"};
             var csd2 = CrossSectionDefinitionYZ.CreateDefault("csd2");
-            foreach (var coordinate in csd2.Profile)
+            foreach (var coordinate in csd2.GetProfile())
             {
                 coordinate.Y = coordinate.Y + 1/(coordinate.X*coordinate.X + 1);
             }
             var cs2 = new CrossSection(csd2) { Name = "cs2"};
             var csd3 = CrossSectionDefinitionYZ.CreateDefault("csd3");
-            foreach (var coordinate in csd3.Profile)
+            foreach (var coordinate in csd3.GetProfile())
             {
                 coordinate.Y = coordinate.Y - 1 / (coordinate.X * coordinate.X + 4);
             }
@@ -281,8 +281,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             def1.YZDataTable.AddCrossSectionYZRow(9, 9);
             def2.ZWDataTable.AddCrossSectionZWRow(9, 9, 9);
             //end modify
-            var newProfileYZ = cs1.Definition.Profile.ToList();
-            var newProfileZW = cs2.Definition.Profile.ToList();
+            var newProfileYZ = cs1.Definition.GetProfile().ToList();
+            var newProfileZW = cs2.Definition.GetProfile().ToList();
 
             //import
             var csvFileImporter = new CrossSectionYZFromCsvFileImporter { FilePath = path };
@@ -296,8 +296,8 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             Assert.AreNotEqual(originalOffsetZW, cs2.Chainage);
 
             //make sure definition changes are overwritten by import (yz)
-            Assert.AreNotEqual(newProfileYZ, cs1.Definition.Profile.ToList());
-            Assert.AreEqual(newProfileZW, cs2.Definition.Profile.ToList());
+            Assert.AreNotEqual(newProfileYZ, cs1.Definition.GetProfile().ToList());
+            Assert.AreEqual(newProfileZW, cs2.Definition.GetProfile().ToList());
         }
     }
 }

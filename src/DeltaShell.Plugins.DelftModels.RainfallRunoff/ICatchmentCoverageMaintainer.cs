@@ -14,10 +14,5 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// </summary>
         /// <param name="featureCoverage"></param>
         void Initialize(IFeatureCoverage featureCoverage);
-
-        /// <summary>
-        /// Allows maintainer to do any event unsubscribtion
-        /// </summary>
-        void Cleanup();
     }
 }

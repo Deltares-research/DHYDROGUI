@@ -11,10 +11,8 @@ using DelftTools.Utils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.FeatureCoverageProviders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
-using DeltaShell.Plugins.DelftModels.RainfallRunoff.FeatureCoverageProviders;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls;
@@ -211,7 +209,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                                 ? GetModelForCatchment(o.First(), rainfallRunoffGuiPlugin.Gui)
                                 : rainfallRunoffGuiPlugin.Gui.Application.GetAllModelsInProject()
                                     .OfType<RainfallRunoffModel>()
-                                    .FirstOrDefault(rrm => rrm.Basin.Catchments == o);;
+                                    .FirstOrDefault(rrm => rrm.Basin.Catchments == o);
                             if (!ReferenceEquals(multipleDataEditorData.Item1, model))
                             {
                                 multipleDataEditorData = Tuple.Create(model, RainfallRunoffDataRowProviderFactory.GetDataRowProviders(model, new Catchment[] { }).AsEnumerable());
@@ -225,7 +223,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                             ? GetModelForCatchment(o.First(), rainfallRunoffGuiPlugin.Gui)
                             : rainfallRunoffGuiPlugin.Gui.Application.GetAllModelsInProject()
                                 .OfType<RainfallRunoffModel>()
-                                .FirstOrDefault(rrm => rrm.Basin.Catchments == o); ;
+                                .FirstOrDefault(rrm => rrm.Basin.Catchments == o);
                         if (model != null)
                             model.GetRainfallRunoffMDEData = () => Enumerable.Repeat(multipleDataEditorData.Item2, 1);
                         DefaultAfterCreate(v, o, rainfallRunoffGuiPlugin.Gui);

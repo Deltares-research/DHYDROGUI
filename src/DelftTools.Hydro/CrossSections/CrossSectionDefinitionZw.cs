@@ -72,12 +72,9 @@ namespace DelftTools.Hydro.CrossSections
             get { return false; }
         }
 
-        public override IEnumerable<Coordinate> Profile
+        public override IEnumerable<Coordinate> GetProfile()
         {
-            get 
-            {
-                return GetProfile(ZWDataTable);
-            }
+            return GetProfile(ZWDataTable);
         }
 
         public override IEnumerable<Coordinate> FlowProfile
@@ -186,7 +183,7 @@ namespace DelftTools.Hydro.CrossSections
         {
             var unMirroredIndex = profileIndex;
             var numRows = ZWDataTable.Rows.Count;
-            var maxProfileIndex = Profile.Count() - 1;
+            var maxProfileIndex = GetProfile().Count() - 1;
 
             if (unMirroredIndex >= numRows)
             {

@@ -268,9 +268,9 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             //check formula
             var formula = (GatedWeirFormula) weir.WeirFormula;
             Assert.AreEqual(FlowDirection.Positive, weir.FlowDirection);
-            Assert.AreEqual(0.1f, formula.ContractionCoefficient);
+            Assert.AreEqual(0.06, formula.ContractionCoefficient, 0.001);
             Assert.AreEqual(1.5f, formula.GateOpening, 0.001);
-            Assert.AreEqual(0.6f, formula.LateralContraction);
+            Assert.AreEqual(1.0f, formula.LateralContraction);
             Assert.AreEqual(0.7f, formula.MaxFlowNeg);
             Assert.AreEqual(0.8f, formula.MaxFlowPos);
         }

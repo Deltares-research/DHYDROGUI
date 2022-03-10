@@ -17,7 +17,6 @@ using GeoAPI.Geometries;
 using log4net;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.Operation.Overlay;
 using SharpMap.Api.Layers;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Data.Providers;
@@ -225,20 +224,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools
 
             // todo: add check if polygon intersects itself
             return new Polygon(new LinearRing(closedUserCoordinates.ToCoordinateArray()));
-        }
-
-        private static T DoWithoutNodingValidator<T>(Func<T> function)
-        {
-            // This noding validator has a dramatic effect on the performance. Disable it here temporarily. 
-            var oldNodingValidatorDisabled = OverlayOp.NodingValidatorDisabled;
-            OverlayOp.NodingValidatorDisabled = true;
-
-            var result = function();
-
-            // Set the noding validator to the value it had before. 
-            OverlayOp.NodingValidatorDisabled = oldNodingValidatorDisabled;
-
-            return result;
         }
 
         private VectorLayer SelectPolygonLayer

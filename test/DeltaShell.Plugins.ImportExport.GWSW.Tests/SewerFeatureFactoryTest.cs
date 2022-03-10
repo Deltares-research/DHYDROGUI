@@ -19,9 +19,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var network = new HydroNetwork();
             try
             {
-                var allHydroObjectsInNetwork = network.AllHydroObjects.ToList();
+                network.AllHydroObjects.ToList();
                 network.Nodes.Add(new Manhole("ManholeTest"));
-                allHydroObjectsInNetwork = network.AllHydroObjects.ToList();
+                network.AllHydroObjects.ToList();
             }
             catch (Exception e)
             {
@@ -32,9 +32,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         [Test]
         public void SewerFeatureTypeCanBeRetrievedWithAStringValue()
         {
-            SewerFeatureType testValue;
-            Assert.IsFalse(Enum.TryParse("failValue", out testValue));
-            Assert.IsTrue(Enum.TryParse(SewerFeatureType.Connection.ToString(), out testValue));
+            Assert.IsFalse(Enum.TryParse("failValue", out SewerFeatureType _));
+            Assert.IsTrue(Enum.TryParse(SewerFeatureType.Connection.ToString(), out SewerFeatureType _));
         }
 
         [Test]
@@ -81,7 +80,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var network = new HydroNetwork();
             var createdElement = CreateSewerFeature<ISewerFeature>(structureGwswElement);
             Assert.IsNotNull(createdElement);
         }

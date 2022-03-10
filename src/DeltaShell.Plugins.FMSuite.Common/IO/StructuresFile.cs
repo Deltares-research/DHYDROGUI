@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var categories = new DelftIniReader().ReadDelftIniFile(filePath);
             if(!((IEnumerable<IDelftIniCategory>) categories).Any(c => c.ValidGeneralRegion(GeneralRegion.StructureDefinitionsMajorVersion,
                 GeneralRegion.StructureDefinitionsMinorVersion, GeneralRegion.FileTypeName.StructureDefinition))) yield break;
-            ;
+
             foreach (var category in categories.Where(c => c.ReadProperty<string>(StructureRegion.BranchId.Key, true)  == null)) // only write 2d features
             {
                 // Filter out unexpected .ini categories:

@@ -380,7 +380,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                     {GwswAttributeType = gwswAttributeType, ValueAsString = valueAsString, LineNumber = 2};
                 Assert.IsNotNull(attribute);
 
-                var auxValue = 0.0;
                 var logError =
                     string.Format(
                         (string) Resources
@@ -389,8 +388,8 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
                         gwswAttributeType.Name, attribute.ValueAsString, gwswAttributeType.AttributeType,
                         typeof(double));
 
-                Assert.IsFalse(attribute.TryGetValueAsDouble(out auxValue));
-                TestHelper.AssertAtLeastOneLogMessagesContains(() => attribute.TryGetValueAsDouble(out auxValue),
+                Assert.IsFalse(attribute.TryGetValueAsDouble(out double _));
+                TestHelper.AssertAtLeastOneLogMessagesContains(() => attribute.TryGetValueAsDouble(out double _),
                     logError);
             }
             catch (Exception e)
@@ -986,7 +985,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
 
             // Now Load connections.
             var compartmentsPath = GetFileAndCreateLocalCopy(@"gwswFiles\Knooppunt.csv");
-            var test = gwswImporter.ImportItem(compartmentsPath, model);
+            gwswImporter.ImportItem(compartmentsPath, model);
 
             foreach (var compartment in outletCompartments)
             {
@@ -1060,7 +1059,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
         public void WhenImportingSewerConnectionsToNetworkAndThenImportingSewerProfilesToNetwork_ThenSewerConnectionsHaveTheCorrectSewerProfiles()
         {
             const string csdName = "PRO2";
-            const string csdNameForAddedProfile = "PRO6";
 
             var model = new WaterFlowFMModel();
             var network = model.Network;
@@ -1291,7 +1289,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests.IO.Importers
             Assert.IsNull(model);
 
             gwswImporter = new GwswFileImporter(new DefinitionsProvider());
-            var rrModel = new RainfallRunoffModel();
             model = gwswImporter.ImportItem(null, fmModel);
             Assert.IsNull(model);
         }

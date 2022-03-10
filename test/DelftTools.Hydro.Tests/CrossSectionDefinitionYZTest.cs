@@ -21,7 +21,7 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionYZ();
 
-            var profile = crossSection.Profile;
+            var profile = crossSection.GetProfile();
             var flowProfile = crossSection.FlowProfile;
 
             Assert.AreEqual(0, profile.Count());
@@ -61,7 +61,7 @@ namespace DelftTools.Hydro.Tests
 
             crossSection.ShiftLevel(111);
 
-            var yValues = crossSection.Profile.Select(p => p.Y).ToList();
+            var yValues = crossSection.GetProfile().Select(p => p.Y).ToList();
             Assert.AreEqual(111.0, yValues[0], 1.0e-6);
             Assert.AreEqual(101.0, yValues[1], 1.0e-6);
             Assert.AreEqual(101.0, yValues[2], 1.0e-6);
@@ -86,8 +86,8 @@ namespace DelftTools.Hydro.Tests
             var flowProfileY = new double[] { 0, 5, 10 };
             var flowProfileZ = new double[] { 10, 0, 10 };
 
-            Assert.AreEqual(profileY, crossSection.Profile.Select(c => c.X).ToArray());
-            Assert.AreEqual(profileZ, crossSection.Profile.Select(c => c.Y).ToArray());
+            Assert.AreEqual(profileY, crossSection.GetProfile().Select(c => c.X).ToArray());
+            Assert.AreEqual(profileZ, crossSection.GetProfile().Select(c => c.Y).ToArray());
             Assert.AreEqual(flowProfileY, crossSection.FlowProfile.Select(c => c.X).ToArray());
             Assert.AreEqual(flowProfileZ, crossSection.FlowProfile.Select(c => c.Y).ToArray());
         }
@@ -110,8 +110,8 @@ namespace DelftTools.Hydro.Tests
             var flowProfileY = new double[] { 0, 5, 10 };
             var flowProfileZ = new double[] { 12, 1, 12 };
 
-            Assert.AreEqual(profileY, csClone.Profile.Select(c => c.X).ToArray());
-            Assert.AreEqual(profileZ, csClone.Profile.Select(c => c.Y).ToArray());
+            Assert.AreEqual(profileY, csClone.GetProfile().Select(c => c.X).ToArray());
+            Assert.AreEqual(profileZ, csClone.GetProfile().Select(c => c.Y).ToArray());
             Assert.AreEqual(flowProfileY, csClone.FlowProfile.Select(c => c.X).ToArray());
             Assert.AreEqual(flowProfileZ, csClone.FlowProfile.Select(c => c.Y).ToArray());
         }

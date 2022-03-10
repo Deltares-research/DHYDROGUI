@@ -27,7 +27,7 @@ namespace DelftTools.Hydro.Helpers
         /// <param name="crossSectionDefinition"></param>
         public static void AddDefaultZToGeometry(CrossSectionDefinitionXYZ crossSectionDefinition)
         {
-            var chainages = crossSectionDefinition.Profile.Select(c => c.X).ToArray();
+            var chainages = crossSectionDefinition.GetProfile().Select(c => c.X).ToArray();
             var length = chainages.Last();
             for (int i = 0; i < crossSectionDefinition.Geometry.Coordinates.Length;i++ )
             {
@@ -319,7 +319,7 @@ namespace DelftTools.Hydro.Helpers
         public static double ValidateThalWay(ICrossSectionDefinition crossSectionDefinition, double thalWeg)
         {
             double validated = thalWeg;
-            var yzValues = crossSectionDefinition.Profile;
+            var yzValues = crossSectionDefinition.GetProfile();
             validated = Math.Max(validated, yzValues.Min(yz => yz.X));
             validated = Math.Min(validated, yzValues.Max(yz => yz.X));
             return validated;
@@ -348,7 +348,7 @@ namespace DelftTools.Hydro.Helpers
 
         public static void SetDefaultThalweg(ICrossSectionDefinition crossSectionDefinition)
         {
-            var profileValues = crossSectionDefinition.Profile.ToList();
+            var profileValues = crossSectionDefinition.GetProfile().ToList();
 
             if (profileValues.Count > 0)
             {

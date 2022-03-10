@@ -10,8 +10,8 @@ using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Features;
 using NetTopologySuite.Geometries;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
 
@@ -345,7 +345,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
         [Test]
         public void TestGetSnappedFeaturesWorksAfterFailure()
         {
-            MockRepository mocks = new MockRepository();
             var mduPath = TestHelper.GetTestFilePath(@"harlingen\har.mdu");
             DoWithLocalModelVersion(mduPath, (model) =>
             {
@@ -379,17 +378,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Api
                     yin.Add(MissingValue);
                 }
                 /**/
-                var fmModelApi = mocks.StrictMock<FlexibleMeshModelApi>();
-                fmModelApi
-                    .Expect(
-                        fma => fma.GetSnappedFeature(UnstrucGridOperationApi.ThinDams, xin.ToArray(), yin.ToArray(), ref xout, ref yout, ref featureIds))
-                    .Return(false).Repeat.Any();
-                //The inner calls will trigger the mocked api
-                var mockedUgridApi = mocks.StrictMock<UnstrucGridOperationApi>(fmModelApi);
-                mocks.ReplayAll();
+                var fmModelApi = Substitute.For<IFlexibleMeshModelApi>();
+                fmModelApi.GetSnappedFeature(UnstrucGridOperationApi.ThinDams, xin.ToArray(), yin.ToArray(), ref xout, ref yout, ref featureIds).Returns(false);
 
-                // Try to snap with a 'failed' mocked process.
-                var snappedThinDamGeometries = mockedUgridApi.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams, new[] { thinDamGeom1, thinDamGeom2 }).ToList();
+                //The inner calls will trigger the mocked api
+                var uGridApi = new UnstrucGridOperationApi(fmModelApi);
+
+                // Try to snap with a 'failed' process.
+                var snappedThinDamGeometries = uGridApi.GetGridSnappedGeometry(UnstrucGridOperationApi.ThinDams, new[] { thinDamGeom1, thinDamGeom2 }).ToList();
 
                 //If it returns the same geometry means nothing has actually been snapped.
                 Assert.AreEqual(thinDamGeom1, snappedThinDamGeometries.First());

@@ -16,7 +16,7 @@ namespace DelftTools.Hydro.Tests.TestObjects
         {
             
         }
-        public TestCrossSectionDefinition(string name, double offset) : base(name)
+        public TestCrossSectionDefinition(string name) : base(name)
         {
         }
         
@@ -41,9 +41,9 @@ namespace DelftTools.Hydro.Tests.TestObjects
             get { return null; }
         }
 
-        public override IEnumerable<Coordinate> Profile
+        public override IEnumerable<Coordinate> GetProfile()
         {
-            get { return profile ?? new List<Coordinate>(); }
+            return profile ?? new List<Coordinate>();
         }
 
         public override void ShiftLevel(double delta)

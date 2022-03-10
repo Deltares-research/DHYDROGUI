@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             controlGroup1.Conditions.Add(hydraulicCondition1B);
 
             realTimeControlModel.ControlGroups.Add(controlGroup1);
-            RealTimeControlTestHelper.AddDummyLinksToGroup(null, controlGroup1);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup1);
 
             ControlGroup controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             controlGroup2.Name = "controlGroup2";
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var hydraulicCondition2A = (StandardCondition) controlGroup2.Conditions[0];
             hydraulicRule2A.Function[0.0] = 1.0;
             realTimeControlModel.ControlGroups.Add(controlGroup2);
-            RealTimeControlTestHelper.AddDummyLinksToGroup(null, controlGroup2);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup2);
 
             hydraulicRule1A.Name = "rule1";
             hydraulicCondition1A.Name = "condition1";
@@ -189,7 +189,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             controlGroup1.Rules.Add(hydraulicRule1B);
             controlGroup1.Conditions.Add(hydraulicCondition1B);
             model.ControlGroups.Add(controlGroup1);
-            RealTimeControlTestHelper.AddDummyLinksToGroup(null, controlGroup1);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup1);
 
             ControlGroup controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             controlGroup2.Name = "controlGroup2";
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             var hydraulicCondition2A = (StandardCondition) controlGroup2.Conditions[0];
             hydraulicRule2A.Function[0.0] = 1.0;
             model.ControlGroups.Add(controlGroup2);
-            RealTimeControlTestHelper.AddDummyLinksToGroup(null, controlGroup2);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup2);
 
             hydraulicRule1A.Name = "rule1";
             hydraulicCondition1A.Name = "condition1";

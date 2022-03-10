@@ -708,7 +708,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var testWorkingFolder = TestHelper.CreateLocalCopy(originalFolderPath);
             var mduPath = Path.Combine(testWorkingFolder, relativeMduFilePath);
 
-            CheckIfFilesWereCopied(originalFolderPath, testWorkingFolder, false);
+            CheckIfFilesWereCopied(originalFolderPath, testWorkingFolder);
 
             var modelName = Path.GetFileNameWithoutExtension(mduPath);
             var area = new HydroArea();
@@ -731,7 +731,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
             Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
 
-            CheckIfFilesWereCopied(originalFolderPath, testWorkingFolder, true);
+            CheckIfFilesWereCopied(originalFolderPath, testWorkingFolder);
         }
 
         [Test]
@@ -769,7 +769,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.That(area.ObservationCrossSections.Count, Is.EqualTo(1));
             Assert.That(area.LandBoundaries.Count, Is.EqualTo(1));
 
-            CheckIfFilesWereCopied(featureFileDirectory, Path.GetDirectoryName(mduPath), false);
+            CheckIfFilesWereCopied(featureFileDirectory, Path.GetDirectoryName(mduPath));
         }
 
         [Test]
@@ -1591,7 +1591,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             }
         }
 
-        private static void CheckIfFilesWereCopied(string fromFolder, string toFolder, bool checkIfTrue)
+        private static void CheckIfFilesWereCopied(string fromFolder, string toFolder)
         {
             var toFolderFileNames = new DirectoryInfo(toFolder).GetFiles().Select(f => f.Name);
             var fromFolderFileNames = new DirectoryInfo(fromFolder).GetFiles().Select(f => f.Name);

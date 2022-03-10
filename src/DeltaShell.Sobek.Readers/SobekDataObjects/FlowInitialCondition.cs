@@ -35,26 +35,4 @@
         public InitialCondition Discharge { get; private set; }
         public InitialCondition Level { get; private set; }
     }
-
-    public enum SaltConcentrationType
-    {
-        Salt = 0,
-        Choride = 1
-    }
-    public class SaltInitialCondition
-    {
-        public string BranchId { get; set; }
-        public string Id { get; set; }
-        public string Name { get; set; }
-
-        public bool IsGlobalDefinition { get; set; }
-        public SaltConcentrationType SaltConcentrationType { get; set; }
-        public InitialCondition Salt { get; set; }
-
-        public SaltInitialCondition()
-        {
-            Salt = new InitialCondition();
-        }
-
-    }
 }

@@ -279,41 +279,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         }
 
-        private IEnumerable<UnstructuredGridCoverage> SpatialData
-        {
-            get
-            {
-                yield return Bathymetry;
-                yield return InitialWaterLevel;
-                if (InitialSalinity != null)
-                {
-                    foreach (var initialSalinity in InitialSalinity.Coverages.OfType<UnstructuredGridCoverage>())
-                    {
-                        yield return initialSalinity;
-                    }
-                }
-                if (InitialTracers != null)
-                {
-                    foreach (var tracer in InitialTracers)
-                    {
-                        yield return tracer;
-                    }
-                }
-                if (InitialFractions != null)
-                {
-                    foreach (var fraction in InitialFractions)
-                    {
-                        yield return fraction;
-                    }
-                }
-                yield return InitialTemperature;
-                yield return Roughness;
-                yield return Viscosity;
-                yield return Diffusivity;
-                yield return Infiltration;
-            }
-        }
-
         private void InitializeUnstructuredGridCoverages()
         {
             var bedLevelLocationsForUnstructuredGridCellCoverage = new List<UGridFileHelper.BedLevelLocation>

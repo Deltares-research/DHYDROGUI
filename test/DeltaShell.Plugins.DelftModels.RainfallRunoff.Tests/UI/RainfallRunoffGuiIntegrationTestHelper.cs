@@ -41,10 +41,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI
             }
             return compositeModel;
         }
-        private static IEnumerable<IFileExporter> GetFileExporters()
-        {
-            yield return new RainfallRunoffModelExporter();
-        }
 
         public static void RunModel(IActivity model)
         {

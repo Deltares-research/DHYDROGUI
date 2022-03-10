@@ -16,11 +16,11 @@ namespace DelftTools.Hydro.Tests
             trapezium.MaximumFlowWidth = 10;
             trapezium.Slope = 1;
 
-            Assert.AreEqual(4, trapezium.GetTabulatedDefinition().Profile.Count());
+            Assert.AreEqual(4, trapezium.GetTabulatedDefinition().GetProfile().Count());
 
             trapezium.MaximumFlowWidth = 8;
 
-            Assert.AreEqual(4, trapezium.GetTabulatedDefinition().Profile.Count());
+            Assert.AreEqual(4, trapezium.GetTabulatedDefinition().GetProfile().Count());
         }
     }
 }

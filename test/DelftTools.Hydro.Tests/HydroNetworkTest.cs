@@ -97,12 +97,8 @@ namespace DelftTools.Hydro.Tests
                                                                                                     0);
                                                          }
 
-                                                         int crossSectionCount = 0;
-                                                         foreach (var crossSection in network.CrossSections)
-                                                         {
-                                                             // access all CrossSections should be also fast
-                                                             crossSectionCount++;
-                                                         }
+                                                         // access all CrossSections should be also fast
+                                                         network.CrossSections.ToArray();
                                                      });
         }
 
@@ -133,10 +129,8 @@ namespace DelftTools.Hydro.Tests
                                         network.Branches.Add(channel);
                                     }
 
-                                    foreach (IWeir weir in network.Weirs) // access all Weirs should be also fast
-                                    {
-                                        weirCount++;
-                                    }
+                                    // access all Weirs should be also fast
+                                    weirCount = network.Weirs.Count();
                                 };
 
             TestHelper.AssertIsFasterThan(2750, string.Format("Added {0} branches with {1} weirs", count, weirCount), action);

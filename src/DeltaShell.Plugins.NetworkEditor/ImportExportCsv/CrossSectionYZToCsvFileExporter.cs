@@ -31,7 +31,7 @@ namespace DeltaShell.Plugins.NetworkEditor.ImportExportCsv
 
         protected override IEnumerable<object[]> CreateDataRows(ICrossSection crossSection)
         {
-            var yzValues = crossSection.Definition.Profile.ToList();
+            var yzValues = crossSection.Definition.GetProfile().ToList();
             var flowValues = crossSection.Definition.FlowProfile.ToList();
             var name = crossSection.Name;
             var channel = crossSection.Branch.Name;

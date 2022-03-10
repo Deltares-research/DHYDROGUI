@@ -155,27 +155,5 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
             TabulatedProfile.Add(new SobekTabulatedProfileRow
                                      {Height = height, TotalWidth = totalWidth, FlowWidth = flowWidth});
         }
-
-        /// <summary>
-        /// Adds row to the ty=10 yz table cross section
-        /// with storage width on surface level as tabulated function 
-        /// This storage width is extra info in addition to the YZ table; not supported
-        /// </summary>
-        /// <param name="surfaceLevel"></param>
-        /// <param name="storageWidth"></param>
-        public void AddSurfaceLevelStorageWidthRow(double surfaceLevel, double storageWidth)
-        {
-        }
-
-        /// <summary>
-        /// Adds row to the ty=10 yz table cross section
-        /// with table for y-z values
-        /// </summary>
-        /// <param name="y"></param>
-        /// <param name="z"></param>
-        public void AddYZTableRow(double y, double z)
-        {
-            YZ.Add(new Coordinate { X = y, Y = z });
-        }
     }
 }

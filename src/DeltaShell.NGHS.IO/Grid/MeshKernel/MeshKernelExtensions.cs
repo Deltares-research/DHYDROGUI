@@ -92,7 +92,7 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
             {
                 var segment = segments[i];
 
-                locationIdxBySegment[segment] = HydroUGridExtensions.GetLocationIndices(discretization, segment, locationIdLookup,logHandler, out var doNotWriteTheseSegments);
+                locationIdxBySegment[segment] = HydroUGridExtensions.GetLocationIndices(discretization, segment, locationIdLookup,logHandler, out IList<INetworkSegment> _);
             }
 
             var edgeNodeIndex = 0;

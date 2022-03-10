@@ -5,7 +5,7 @@ using DelftTools.Hydro.Structures.WeirFormula;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
 {
-    public class GwswConnectionOrifice : Orifice
+    public sealed class GwswConnectionOrifice : Orifice
     {
         public GwswConnectionOrifice(string name) : base(name)
         {
@@ -17,7 +17,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures
         public double LevelTarget { get; set; }
         public SewerConnectionWaterType WaterType { get; set; }
         
-        public virtual string CrossSectionDefinitionName { get; set; }
+        public string CrossSectionDefinitionName { get; set; }
 
         protected override void SetSewerConnectionProperties(ISewerConnection sewerConnection, IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {

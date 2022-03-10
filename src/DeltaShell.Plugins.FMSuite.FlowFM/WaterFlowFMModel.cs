@@ -1763,8 +1763,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         public virtual FouFileFunctionStore OutputFouFileStore { get; protected set; }
 
-        private string WaqHydFilePath { get; set; }
-
         public const string DiaFileDataItemTag = "DiaFile";
 
         private string currentOutputDirectoryPath;
@@ -2548,7 +2546,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             if (feature is IPump)
             {
-                return Model1DParametersCategories.Pumps; ;
+                return Model1DParametersCategories.Pumps;
             }
             if (feature is IWeir weir)
             {

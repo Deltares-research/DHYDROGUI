@@ -148,11 +148,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         {
             DateTime startTime;
             TimeSpan timeStep;
-            DateTime irregularTimeStep;
             ControlGroup controlGroup;
 
             TimeSeries timeSeries =
-                SetRealTimeControllerControlGroup(out startTime, out timeStep, out irregularTimeStep, out controlGroup);
+                SetRealTimeControllerControlGroup(out startTime, out timeStep, out controlGroup);
             var model = new RealTimeControlModel
             {
                 TimeStep = timeStep,
@@ -182,10 +181,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         {
             DateTime startTime;
             TimeSpan timeStep;
-            DateTime irregularTimeStep;
             ControlGroup controlGroup;
             TimeSeries timeSeries =
-                SetRealTimeControllerControlGroup(out startTime, out timeStep, out irregularTimeStep, out controlGroup);
+                SetRealTimeControllerControlGroup(out startTime, out timeStep, out controlGroup);
 
             var model = new RealTimeControlModel()
             {
@@ -213,10 +211,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
         {
             DateTime startTime;
             TimeSpan timeStep;
-            DateTime irregularTimeStep;
             ControlGroup controlGroup;
             TimeSeries timeSeries =
-                SetRealTimeControllerControlGroup(out startTime, out timeStep, out irregularTimeStep, out controlGroup);
+                SetRealTimeControllerControlGroup(out startTime, out timeStep, out controlGroup);
 
             var model = new RealTimeControlModel()
             {
@@ -465,8 +462,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
             return new Tuple<RealTimeControlModel, TimeSeries>(rtcModel, timeSeries);
         }
 
-        private static TimeSeries SetRealTimeControllerControlGroup(out DateTime startTime, out TimeSpan timeStep,
-                                                                    out DateTime irregularTimeStep, out ControlGroup controlGroup)
+        private static TimeSeries SetRealTimeControllerControlGroup(out DateTime startTime, out TimeSpan timeStep, 
+                                                                    out ControlGroup controlGroup)
         {
             var timeSeries = new TimeSeries()
             {
@@ -483,7 +480,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Validation
 
             timeSeries[startTime] = 3.0;
             timeSeries[startTime.AddSeconds(timeStep.TotalSeconds)] = 3.5;
-            irregularTimeStep = startTime.AddSeconds(timeStep.TotalSeconds + 1);
+            DateTime irregularTimeStep = startTime.AddSeconds(timeStep.TotalSeconds + 1);
             timeSeries[irregularTimeStep] = 3.5; //Irregular time series, timestep not multiple.
             controlGroup = new ControlGroup();
             controlGroup.Outputs.Add(new Output());

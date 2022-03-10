@@ -61,7 +61,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             var path = TestHelper.GetTestDataDirectoryPathForAssembly(typeof(SobekWaterFlowFMModelImporterTest).Assembly, @"SW_max_1.lit\3\NETWORK.TP"); 
             Assert.Throws<IniException>(() =>
             {
-                var sobekCaseSettings = SobekCaseSettingsReader.GetSobekCaseSettings(path);
+                SobekCaseSettingsReader.GetSobekCaseSettings(path);
             });
         }
 

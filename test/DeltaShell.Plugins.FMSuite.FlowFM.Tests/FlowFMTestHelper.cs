@@ -78,11 +78,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return ContainsValidationIssue(report, errorMessage, ValidationSeverity.Error);
         }
 
-        public static bool ContainsWarning(this ValidationReport report, string errorMessage)
-        {
-            return report.ContainsValidationIssue(errorMessage, ValidationSeverity.Warning);
-        }
-
         private static bool ContainsValidationIssue(this ValidationReport report, string errorMessage, ValidationSeverity severity)
         {
             foreach (var issue in report.Issues.Where(i => i.Severity == severity))

@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             shapes.AddRange(CreatePipeShapes(manhole, shapes));
 
             // Connection shapes
-            shapes.AddRange(CreateConnectionShapes(manhole, shapes));
+            shapes.AddRange(CreateConnectionShapes(manhole));
             return shapes;
         }
 
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.SewerFeatureViews
             return compartments;
         }
 
-        private static IEnumerable<IDrawingShape> CreateConnectionShapes(Manhole manhole, ICollection<IDrawingShape> shapes)
+        private static IEnumerable<IDrawingShape> CreateConnectionShapes(Manhole manhole)
         {
             var connectionShapes = new List<IDrawingShape>();
             if (manhole == null) return connectionShapes;

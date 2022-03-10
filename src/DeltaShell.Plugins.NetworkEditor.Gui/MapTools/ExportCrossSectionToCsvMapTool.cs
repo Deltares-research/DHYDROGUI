@@ -56,7 +56,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
                             Priority = 3,
                             MenuItem = new ToolStripMenuItem("Export selected cross section(s) ...", null, ExportSelectedCrossSectionEventHandler)
                         };
-            };
+            }
         }
 
         private void ExportAllCrossSectionEventHandler(object sender, EventArgs e)

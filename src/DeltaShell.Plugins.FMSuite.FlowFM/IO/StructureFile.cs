@@ -9,7 +9,6 @@ using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
-using NetTopologySuite.Extensions.Features;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -78,21 +77,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 var structureCategory = definitionGeneratorStructure.CreateStructureRegion(structure2D);
                 yield return structureCategory;
             }
-        }
-
-        private static void WritePolylineFile(string fileName, string mduFilePath, DateTime referenceTime, IStructure2D structure2D)
-        {
-            var pliFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(mduFilePath, fileName); 
-
-            var geometryObjectsToBeWritten = new[]
-            {
-                new Feature2D
-                {
-                    Name = structure2D.Name,
-                    Geometry = structure2D.Geometry
-                }
-            };
-            new PliFile<Feature2D>().Write(pliFilePath, geometryObjectsToBeWritten);
         }
 
         private static void WriteTimeSeriesFile(string fileName, string mduFilePath, DateTime referenceTime, IStructure2D structure2D)

@@ -126,15 +126,5 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         {
             return sections.FirstOrDefault(s => s.Name == RoughnessDataSet.MainSectionTypeName);
         }
-
-        private static RoughnessSection GetFloodplain1(IEnumerable<RoughnessSection> sections)
-        {
-            return sections.FirstOrDefault(s => s.Name == RoughnessDataSet.Floodplain1SectionTypeName);
-        }
-
-        private static RoughnessSection GetFloodplain2(IEnumerable<RoughnessSection> sections)
-        {
-            return sections.FirstOrDefault(s => s.Name == RoughnessDataSet.Floodplain2SectionTypeName);
-        }
     }
 }

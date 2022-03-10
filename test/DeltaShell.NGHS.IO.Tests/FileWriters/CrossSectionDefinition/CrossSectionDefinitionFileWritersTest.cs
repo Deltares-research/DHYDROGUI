@@ -8,7 +8,6 @@ using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;
 using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Location;
-using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
 
@@ -38,21 +37,21 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionYz(branch, 1, 20.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionXyz(branch, 2, 80.0,
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionYz(branch, 20.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionXyz(branch, 80.0,
                                new[] { 585.0, 610.0, 635.0, 660.0, 685.0, 710.0 },
                                new[] { 950.0, 910.0, 870.0, 830.0, 790.0, 750.0 },
                                new[] { 10.0, 6.5, 2.5, 2.5, 6.5, 10.0 });
 
             CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionZw(branch, 30.0, -2.0, 100.0, 200.0, 0.5);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 4, 30.0, 100.0, 80.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionElliptical(branch, 5, 30.0, 100.0, 80.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCircle(branch, 6, 30.0, 200.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionEgg(branch, 7, 30.0, 100.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionArch(branch, 8, 30.0, 100.0, 200.0, 150.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCunette(branch, 9, 30.0, 100.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionSteelCunette(branch, 10, 30.0, 100.0, 50.0, 100.0, 50.0, 100.0, 45.0, 135.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 11, 30.0, 100.0, 200.0, 150.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 30.0, 100.0, 80.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionElliptical(branch, 30.0, 100.0, 80.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCircle(branch, 30.0, 200.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionEgg(branch, 30.0, 100.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionArch(branch, 30.0, 100.0, 200.0, 150.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCunette(branch, 30.0, 100.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionSteelCunette(branch, 30.0, 100.0, 50.0, 100.0, 50.0, 100.0, 45.0, 135.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 30.0, 100.0, 200.0, 150.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
@@ -74,7 +73,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionYz(branch, 1, 20.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionYz(branch, 20.0);
             FileWriterTestHelper.AddCrossSection(branch, CrossSectionType.YZ, 80.0, 1.5, true);//+ a shift to check if z values ARE NOT shifted
             
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
@@ -144,12 +143,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionXyz(branch, 1, 20.0, 
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionXyz(branch, 20.0, 
                                new[] { 585.0, 610.0, 635.0, 660.0, 685.0, 710.0 }, 
                                new[] { 950.0, 910.0, 870.0, 830.0, 790.0, 750.0 }, 
                                new[] { 10.0, 6.5, 2.5, 2.5, 6.5, 10.0 });
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionXyz(branch, 2, 60.0,
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionXyz(branch, 60.0,
                                new[] { 485.0, 510.0, 535.0, 560.0, 585.0, 610.0 },
                                new[] { 1050.0, 1010.0, 970.0, 930.0, 890.0, 850.0 },
                                new[] { 10.5, 7.0, 3.0, 3.0, 7.0, 10.5 });
@@ -411,9 +410,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 1, 30.0, 100.0, 80.0, false);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 30.0, 100.0, 80.0, false);
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 2, 30.0, 200.0, 160.0, true);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionRectangle(branch, 30.0, 200.0, 160.0, true);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
             
@@ -446,8 +445,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var isClosed = content.GetPropertyValue(DefinitionPropertySettings.Closed.Key);
             Assert.AreEqual("no", isClosed);
 
-            CheckCrossSectionStandardPropertyValues(content);
-
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(7, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
@@ -467,8 +464,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             isClosed = content.GetPropertyValue(DefinitionPropertySettings.Closed.Key);
             Assert.AreEqual("yes", isClosed);
-
-            CheckCrossSectionStandardPropertyValues(content);
         }
         [Test]
         public void TestCrossSectionDefinitionFileWriterGivesExpectedResults_Elliptical()
@@ -476,9 +471,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionElliptical(branch, 1, 30.0, 100.0, 80.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionElliptical(branch, 30.0, 100.0, 80.0);
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionElliptical(branch, 2, 30.0, 200.0, 160.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionElliptical(branch, 30.0, 200.0, 160.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
@@ -516,8 +511,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
-            CheckCrossSectionStandardPropertyValues(content);
-
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
@@ -545,8 +538,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
-
-            CheckCrossSectionStandardPropertyValues(content);
         }
 
         [Test]
@@ -555,9 +546,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCircle(branch, 1, 30.0, 100.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCircle(branch, 30.0, 100.0);
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCircle(branch, 2, 30.0, 200.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCircle(branch, 30.0, 200.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
@@ -583,8 +574,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             var diameterValue = content.GetPropertyValue(DefinitionPropertySettings.Diameter.Key);
             Assert.AreEqual("100.000", diameterValue);
-
-            CheckCrossSectionStandardPropertyValues(content);
             
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(5, content.Properties.Count);
@@ -602,8 +591,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             diameterValue = content.GetPropertyValue(DefinitionPropertySettings.Diameter.Key);
             Assert.AreEqual("200.000", diameterValue);
-
-            CheckCrossSectionStandardPropertyValues(content);
         }
 
         [Test]
@@ -612,9 +599,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionEgg(branch, 1, 30.0, 100.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionEgg(branch, 30.0, 100.0);
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionEgg(branch, 2, 40.0, 200.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionEgg(branch, 40.0, 200.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
             
@@ -651,8 +638,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
-
-            CheckCrossSectionStandardPropertyValues(content);
             
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count);
@@ -681,8 +666,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
-
-            CheckCrossSectionStandardPropertyValues(content);
         }
 
         [Test]
@@ -691,9 +674,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionArch(branch, 1, 30.0, 100.0, 200.0, 150.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionArch(branch, 30.0, 100.0, 200.0, 150.0);
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionArch(branch, 2, 40.0, 200.0, 400.0, 300.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionArch(branch, 40.0, 200.0, 400.0, 300.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
@@ -710,7 +693,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
 
             var typeValue = content.GetPropertyValue(DefinitionPropertySettings.DefinitionType.Key);
             Assert.AreEqual(CrossSectionRegion.CrossSectionDefinitionType.Zw_Template, typeValue);
-            
+
             var thalwegValue = content.GetPropertyValue(DefinitionPropertySettings.Thalweg.Key);
             Assert.AreEqual("0.000", thalwegValue);
 
@@ -734,8 +717,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
-            CheckCrossSectionStandardPropertyValues(content);
-            
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(12, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
@@ -762,20 +743,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             archHeightValue = content.GetPropertyValue(DefinitionPropertySettings.ArchHeight.Key);
             Assert.AreEqual("300.000", archHeightValue);
 
-            CheckCrossSectionStandardPropertyValues(content);
-
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
-
-        }
-
-        private static void CheckCrossSectionStandardPropertyValues(DelftIniCategory category)
-        {
-            //closed key is not used anymore in fm 1d rural or urban... is part of branch attribute list, not of cs def
-            //var closedValue = category.GetPropertyValue(DefinitionPropertySettings.Closed.Key);
-            //Assert.That(closedValue, Is.EqualTo("1"));
         }
 
         [Test]
@@ -784,9 +755,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCunette(branch, 1, 30.0, 100.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCunette(branch, 30.0, 100.0);
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCunette(branch, 2, 40.0, 200.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionCunette(branch, 40.0, 200.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
@@ -825,8 +796,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
-            CheckCrossSectionStandardPropertyValues(content);
-
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(11, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
@@ -850,8 +819,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             heightValue = content.GetPropertyValue(DefinitionPropertySettings.CunetteHeight.Key);
             Assert.AreEqual("126.800", heightValue);
 
-            CheckCrossSectionStandardPropertyValues(content);
-
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.NumLevels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
@@ -864,9 +831,9 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionSteelCunette(branch, 1, 30.0, 100.0, 50.0, 100.0, 50.0, 100.0, 45.0, 135.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionSteelCunette(branch, 30.0, 100.0, 50.0, 100.0, 50.0, 100.0, 45.0, 135.0);
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionSteelCunette(branch, 2, 40.0, 200.0, 100.0, 200.0, 100.0, 200.0, 30.0, 120.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionSteelCunette(branch, 40.0, 200.0, 100.0, 200.0, 100.0, 200.0, 30.0, 120.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
@@ -918,8 +885,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
-
-            CheckCrossSectionStandardPropertyValues(content);
             
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(16, content.Properties.Count);
@@ -963,8 +928,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
-
-            CheckCrossSectionStandardPropertyValues(content);
         }
         
         [Test]
@@ -973,8 +936,8 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var branch = network.Branches.FirstOrDefault();
             Assert.NotNull(branch, "No branched added to the network");
 
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 1, 30.0, 100.0, 200.0, 150.0);
-            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 2, 40.0, 200.0, 400.0, 300.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 30.0, 100.0, 200.0, 150.0);
+            CrossSectionDefinitionFileWritersTestHelper.AddCrossSectionTrapezium(branch, 40.0, 200.0, 400.0, 300.0);
 
             CrossSectionDefinitionFileWritersTestHelper.WriteCrossSectionsToIni(network.CrossSections);
 
@@ -1015,8 +978,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
 
-            CheckCrossSectionStandardPropertyValues(content);
-
             content = categories.Where(c => c.Name == DefinitionPropertySettings.Header).ToList().Last();
             Assert.AreEqual(12, content.Properties.Count);
             idValue = content.GetPropertyValue(DefinitionPropertySettings.Id.Key);
@@ -1047,8 +1008,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.Levels.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.FlowWidths.Key));
             Assert.IsNotNull(content.Properties.FirstOrDefault(p => p.Name == DefinitionPropertySettings.TotalWidths.Key));
-
-            CheckCrossSectionStandardPropertyValues(content);
         }
 
     }

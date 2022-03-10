@@ -162,7 +162,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
                 Assert.IsFalse(comboBox.HasItems);
 
                 /* add simple branch and add a route to the hydroregion */
-                var b1 = AddBranch(new[] { new Coordinate(0, 0, 0), new Coordinate(1000, 0, 0) });
+                AddBranch(new[] { new Coordinate(0, 0, 0), new Coordinate(1000, 0, 0) });
                 new AddNewNetworkRouteCommand().Execute();
                 
                 /* check if the route (route_1) is added to the combobox as ONLY one */

@@ -2,9 +2,6 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
 {
     public class SobekRRGreenhouseSiloDefinition
     {
-        public SobekRRGreenhouseSiloDefinition()
-        {
-       }
         public string Id { get; set; }
 
         public string Name { get; set; }

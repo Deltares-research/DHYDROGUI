@@ -86,7 +86,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 var code = File.ReadAllText(file);
                 var scriptOutput = app.ScriptRunner.RunScript(code, variables);
 
-                var currentProject = scriptOutput.FirstOrDefault(kvp => kvp.Key == "CurrentProject");
                 Assert.That(scriptOutput, Is.Not.Null);
 
                 if (checks != null)

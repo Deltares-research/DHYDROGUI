@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\ReModels\20110331_NDB.sbk\6\DEFTOP.1";
             var waterFlowFmModel = new WaterFlowFMModel();
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(),new SobekLateralSourcesImporter(), new SobekBoundaryConditionsImporter(), new SobekLateralSourcesDataImporter(), new SobekSaltImporter() });
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(),new SobekLateralSourcesImporter(), new SobekBoundaryConditionsImporter(), new SobekLateralSourcesDataImporter()});
 
             importer.Import();
 
@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\SW_max_1.lit\3\Network.TP";
             var waterFlowFmModel = new WaterFlowFMModel("waterflowfm");
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekBoundaryConditionsImporter(), new SobekLateralSourcesDataImporter(), new SobekSaltImporter() });
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekBoundaryConditionsImporter(), new SobekLateralSourcesDataImporter()});
 
             importer.Import();
 
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
         {
             var pathToSobekNetwork = TestHelper.GetTestDataDirectory() + @"\301_00.lit\2\Network.TP";
             var waterFlowFmModel = new WaterFlowFMModel("water flow fm");
-            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekBoundaryConditionsImporter(), new SobekLateralSourcesDataImporter(), new SobekSaltImporter() });
+            var importer = PartialSobekImporterBuilder.BuildPartialSobekImporter(pathToSobekNetwork, waterFlowFmModel, new IPartialSobekImporter[] { new SobekBranchesImporter(), new SobekLateralSourcesImporter(), new SobekBoundaryConditionsImporter(), new SobekLateralSourcesDataImporter()});
 
             importer.Import();
 

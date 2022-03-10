@@ -2238,7 +2238,6 @@ namespace DelftTools.Hydro.Tests.Helpers
 
             var region = new HydroRegion();
             region.Links.Add(link);
-            var subRegion = new HydroRegion() {Parent = region};
 
             var name = HydroNetworkHelper.GetUniqueFeatureName(region, new HydroLink(Substitute.For<IHydroObject>(), Substitute.For<IHydroObject>()));
 

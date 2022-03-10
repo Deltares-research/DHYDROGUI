@@ -39,8 +39,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Acceptance.Persistence
         private static bool CompareFiles(string filePathExpected, string filePathActual, ref string errorMessage)
         {
             var linesToIgnore = new string[0]; 
-            FileComparerHelper.ParseFile(filePathExpected, linesToIgnore,out List<Tuple<int, string>> linesInExpectedText, out List<Tuple<int, string>> ignoredLinesInExpectedText);
-            FileComparerHelper.ParseFile(filePathActual, linesToIgnore, out List<Tuple<int, string>> linesInActualText, out var ignoredLinesInActualText);
+            FileComparerHelper.ParseFile(filePathExpected, linesToIgnore,out List<Tuple<int, string>> linesInExpectedText, out List<Tuple<int, string>> _);
+            FileComparerHelper.ParseFile(filePathActual, linesToIgnore, out List<Tuple<int, string>> linesInActualText, out var _);
             
             FileComparerHelper.GetMismatchingLines(linesInExpectedText,linesInActualText, out List<Tuple<int, string>> mismatchingLinesInExpected, out List<Tuple<int, string>> mismatchingLinesInActual);
             FileComparerHelper.RemoveEquivalentLines(mismatchingLinesInExpected, mismatchingLinesInActual);

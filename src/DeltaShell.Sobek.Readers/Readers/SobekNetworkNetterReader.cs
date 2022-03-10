@@ -22,7 +22,6 @@ namespace DeltaShell.Sobek.Readers.Readers
         private static IDictionary<string, int> ParseNodeTypes(IEnumerable<string> lines)
         {
             var nodes = new Dictionary<string, int>();
-            var lineIndex = 1; //first row is general info
             foreach (var line in lines)
             {
                 if (line == "*" || line == "")
@@ -45,7 +44,6 @@ namespace DeltaShell.Sobek.Readers.Readers
                     }
                     valueIndex += 13;
                 }
-                lineIndex++;
             }
             return nodes;
         }
@@ -58,16 +56,6 @@ namespace DeltaShell.Sobek.Readers.Readers
         public static bool IsPreasurePipe(int typeNo)
         {
             return typeNo >= 10 && typeNo <= 13;
-        }
-
-        public static bool IsPreasurePipeWithPump(int typeNo)
-        {
-            return typeNo == 13;
-        }
-
-        public static bool IsPreasurePipeWithWeir(int typeNo)
-        {
-            return typeNo == 10 || typeNo == 11;
         }
 
         public static bool IsDryWeatherPipe(int typeNo)
@@ -100,20 +88,9 @@ namespace DeltaShell.Sobek.Readers.Readers
             return typeNo >= 7 && typeNo <= 11;
         }
 
-        public static bool IsBoundaryNode(int typeNo)
-        {
-            return typeNo == 14;
-        }
-
         public static IDictionary<string, int> ReadBranchTypes(string filePath)
         {
             return ParseBranchTypes(File.ReadLines(filePath));
-        }
-
-        public static IDictionary<string, int> ParseBranchTypes(string datFileText)
-        {
-            var lines = datFileText.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            return ParseBranchTypes(lines);
         }
 
         private static IDictionary<string, int> ParseBranchTypes(IEnumerable<string> lines)

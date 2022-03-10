@@ -27,7 +27,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                 }
             };
 
-            var network = new HydroNetwork();
             var element = new SewerConnectionPipeGenerator().Generate(pipeGwswElement);
 
             //A pipe is created.

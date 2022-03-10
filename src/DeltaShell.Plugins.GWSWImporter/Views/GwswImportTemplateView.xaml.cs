@@ -7,8 +7,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Views
     /// <summary>
     /// Interaction logic for GwswImportTemplateView.xaml
     /// </summary>
-    public partial class GwswImportTemplateView : IProjectTemplateSettingsView
+    public sealed partial class GwswImportTemplateView : IProjectTemplateSettingsView
     {
+        private bool disposed;
+
         public GwswImportTemplateView()
         {
             InitializeComponent();
@@ -50,12 +52,19 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Views
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
+            if (disposed)
+            {
+                return;
+            }
+
             if (disposing)
             {
                 Image?.Dispose();
             }
+
+            disposed = true;
         }
     }
 }

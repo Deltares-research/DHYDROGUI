@@ -83,7 +83,7 @@ namespace DelftTools.Hydro
             bool editDisabled = EditActionSettings.Disabled;
             EditActionSettings.Disabled = false;
                 // HACK: switch off edit action attribute in set values in function to allow updating during undo/redo.
-            foreach (NetworkLocation location in route.Locations.Values)
+            foreach (INetworkLocation location in route.Locations.Values)
             {
                 var networkLocation = (NetworkLocation) location.Clone();
                 if (!networkCoverage.Locations.Values.Contains(networkLocation))

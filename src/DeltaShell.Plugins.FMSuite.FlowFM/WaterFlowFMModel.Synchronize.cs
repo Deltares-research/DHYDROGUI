@@ -382,7 +382,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private void BoundaryConditionSetsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            var tracerBoundaryConditions = Enumerable.Empty<FlowBoundaryCondition>(); ;
+            var tracerBoundaryConditions = Enumerable.Empty<FlowBoundaryCondition>();
 
             var boundaryConditionSet = e.GetRemovedOrAddedItem() as BoundaryConditionSet;
             if (boundaryConditionSet == null)

@@ -23,17 +23,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
         {
             var profileType = sewerProfileType.GetDescription();
             var profileGwswElement = GetSewerProfileGwswElement(ProfileId, profileType, "400", "600", "3.0", "1.0");
-            CreateProfileAndCheckProperties(profileGwswElement, ProfileId, 0.4, expectedHeight, expectedSlope);
-        }
-
-        [Test]
-        public void GivenGwswElementWithoutIdDefined_WhenCreatingSewerProfile_ThenLogMessageIsGiven()
-        {
-            var sewerProfileGwswElement = new GwswElement
-            {
-                ElementTypeName = SewerFeatureType.Crosssection.ToString()
-            };
-            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Cannot import sewer profile(s) without profile id. Please check 'Profiel.csv' for empty profile id's");
+            CreateProfileAndCheckProperties(profileGwswElement, 0.4, expectedHeight, expectedSlope);
         }
 
         [Test]
@@ -86,7 +76,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, "UnrecognizedShape", "RND")
                 }
             };
-            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Shape was not defined for sewer profile 'MyProfile' in 'Profiel.csv'. A default round profile with diameter of 400 mm is used for this profile.");
         }
 
         [TestCase(SewerProfileMapping.SewerProfileType.Rectangle)]
@@ -107,7 +96,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileShape, profileType, string.Empty)
                 }
             };
-            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Default profile property values are used for this profile.");
         }
 
         [TestCase(SewerProfileMapping.SewerProfileType.Rectangle)]
@@ -126,7 +114,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileWidth, "4000", string.Empty)
                 }
             };
-            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Default profile property values are used for this profile.");
         }
         
         [TestCase(SewerProfileMapping.SewerProfileType.Trapezoid)]
@@ -144,12 +131,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerProfileMapping.PropertyKeys.SewerProfileHeight, "2000", string.Empty)
                 }
             };
-            CreateProfileAndCheckForLogMessage(sewerProfileGwswElement, "Default profile property values are used for this profile.");
         }
 
         #region Test helpers
 
-        private static void CreateProfileAndCheckProperties(GwswElement profileGwswElement, string expectedProfileId,
+        private static void CreateProfileAndCheckProperties(GwswElement profileGwswElement,
             double expectedWidth, double expectedHeight, double expectedSlope)
         {
             //var element = SewerFeatureFactory.CreateSewerEntities(new List<GwswElement>{ profileGwswElement });
@@ -191,12 +177,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     break;
                 }
             }
-        }
-
-        private static void CreateProfileAndCheckForLogMessage(GwswElement sewerProfileGwswElement, string expectedMessage)
-        {
-            /*TestHelper.AssertAtLeastOneLogMessagesContains(() => SewerFeatureFactory.CreateSewerEntities(new List<GwswElement>{ sewerProfileGwswElement }).ToList(),
-                expectedMessage);*/
         }
 
         private static void CheckWidthHeightBasedShapeProperties(CrossSectionStandardShapeBase shape, double expectedWidth, double expectedHeight)

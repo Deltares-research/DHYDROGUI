@@ -145,26 +145,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
             }
         }
 
-        public class CoverageGreaterThanDurationOperation : NetworkCoverageScalarOperation
-        {
-            public CoverageGreaterThanDurationOperation()
-            {
-                TimeInterpolationType = InterpolationType.None;
-            }
-
-            public InterpolationType TimeInterpolationType { get; set; }
-
-            public override INetworkCoverage Perform(INetworkCoverage networkCoverage, double referenceValue)
-            {
-                return networkCoverage.MeasureDurationWhereTrue(referenceValue, (coverageValue, refValue) => coverageValue > refValue, TimeInterpolationType);
-            }
-
-            public override string ToString()
-            {
-                return "Greater than duration [days]";
-            }
-        }
-
         public class CoverageGreaterThanDurationAsDoubleOperation : NetworkCoverageScalarOperation
         {
             public CoverageGreaterThanDurationAsDoubleOperation()

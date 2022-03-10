@@ -356,8 +356,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Readers
                                                        () => new List<IDimrModelFileImporter>(), () => null);
 
             // When | Then
-            HydroModel result = null;
-            void Call() => result = (HydroModel)importer.ImportItem(path);
+            void Call() => importer.ImportItem(path);
 
             string error = TestHelper.GetAllRenderedMessages(Call, Level.Error).Single();
             Assert.That(error, Does.StartWith($"An error occurred while trying to import a {importer.Name}:"));

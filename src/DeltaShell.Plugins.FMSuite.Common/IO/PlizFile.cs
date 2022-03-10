@@ -111,20 +111,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
             return newFeature;
         }
-
-        private List<double> RetrieveColumn3Values(T f)
-        {
-            List<double> column3;
-            try
-            {
-                column3 = ((GeometryPointsSyncedList<double>) f.Attributes[NumericColumnAttributesKeys[0]])
-                    .ToList();
-            }
-            catch (Exception e)
-            {
-                column3 = (List<double>) f.Attributes[NumericColumnAttributesKeys[0]];
-            }
-            return column3;
-        }
     }
 }

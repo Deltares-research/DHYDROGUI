@@ -7,7 +7,7 @@ using SharpMap;
 
 namespace DeltaShell.NGHS.Common.Gui
 {
-    public class CoordinateSystemPickerViewModel : INotifyPropertyChanged
+    public sealed class CoordinateSystemPickerViewModel : INotifyPropertyChanged
     {
         private ICoordinateSystem selectedCoordinateSystem;
         private string filterText;
@@ -54,7 +54,7 @@ namespace DeltaShell.NGHS.Common.Gui
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

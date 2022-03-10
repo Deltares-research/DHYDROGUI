@@ -277,7 +277,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var network = (HydroNetwork) importer.ImportItem(pathToSobekNetwork);
 
             IBridge bridge = network.Bridges.First(br => br.Name == "brug_27");
-            Assert.AreEqual(StructureFrictionType.StricklerKs, (StructureFrictionType) bridge.FrictionType);
+            Assert.AreEqual(BridgeFrictionType.StricklerKs, bridge.FrictionType);
             Assert.AreEqual(30, bridge.Friction);
         }
 
@@ -866,17 +866,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             var importer = new SobekNetworkImporter();
             var network = (HydroNetwork) importer.ImportItem(path);
             return network;
-        }
-
-        private void CheckRoughnessInCoverage(WaterFlowFMModel model, ICrossSection crossSection, CrossSectionSection crossSectionSection,
-                                              RoughnessType roughnessType, double roughness)
-        {
-            RoughnessSection roughnessSection =
-                model.RoughnessSections.Where(rs => rs.CrossSectionSectionType == crossSectionSection.SectionType).FirstOrDefault();
-            Assert.AreEqual(roughnessType,
-                            roughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessType(new NetworkLocation(crossSection.Branch, crossSection.Chainage)));
-            Assert.AreEqual(roughness,
-                            roughnessSection.RoughnessNetworkCoverage.EvaluateRoughnessValue(new NetworkLocation(crossSection.Branch, crossSection.Chainage)), 1.0e-6);
         }
 
         private static void RunModel(WaterFlowFMModel flowFMModel)

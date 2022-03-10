@@ -20,8 +20,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public class TimeCondition : StandardCondition, IItemContainer, ITimeDependentRtcObject
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(StandardCondition));
-
         private TimeSeries timeSeries;
 
         public TimeCondition() : base(false)

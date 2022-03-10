@@ -122,9 +122,4 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
         public bool UseTatcherHarlemanTimeLag { get; set; }
         public int TatcherHarlemanTimeLag { get; set; }
     }
-
-    public class SobekReIniSettings
-    {
-        public bool Salt { get; set; }
-    }
 }

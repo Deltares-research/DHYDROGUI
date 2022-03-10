@@ -30,7 +30,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                 {
                     sobekController = GetSobekController(controllerMatch.Groups["row"].Value);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Log.ErrorFormat("Error while parsing controller string: {0}, skipping ...", controllerMatch.Groups["row"].Value);
                     continue;

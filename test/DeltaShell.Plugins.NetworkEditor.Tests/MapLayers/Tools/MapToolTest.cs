@@ -63,11 +63,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             var selectTool = mapControl.SelectTool;
             var selectedFeature = new Dictionary<IFeature, int>();
 
-            ILayer outLayer;
             IFeature nextFeature = null;
-            nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out outLayer, nextFeature, ol => ol.Visible);
+            nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out ILayer _, nextFeature, ol => ol.Visible);
             selectedFeature.Add(nextFeature, 1);
-            nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out outLayer, nextFeature, ol => ol.Visible);
+            nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out ILayer _, nextFeature, ol => ol.Visible);
             selectedFeature.Add(nextFeature, 1);
             //nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out outLayer, nextFeature, ol => ol.IsVisible);
             //selectedFeature.Add(nextFeature, 1);
@@ -84,17 +83,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
             channelLayer.DataSource.Add(GeometryFromWKT.Parse("LINESTRING (0 0, 30 40, 70 40, 100 100)"));
             
             var selectTool = mapControl.SelectTool;
-            var selectedFeature = new Dictionary<IFeature, int>();
 
-            ILayer outLayer;
             IFeature nextFeature = null;
 
-            nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out outLayer, nextFeature, ol => ol.Visible);
+            nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out ILayer _, nextFeature, ol => ol.Visible);
             Assert.IsNotNull(nextFeature);
 
             networkMapLayer.Visible = false;
             
-            nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out outLayer, nextFeature, ol => ol.Visible);
+            nextFeature = selectTool.GetNextFeatureAtPosition(new Coordinate(0, 0), 1, out ILayer _, nextFeature, ol => ol.Visible);
             Assert.IsNull(nextFeature);
         }
 
@@ -106,14 +103,12 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.MapLayers.Tools
 
             var selectTool = mapControl.SelectTool;
 
-            ILayer outLayer;
-
-            var feature = selectTool.FindNearestFeature(new Coordinate(0, 0), 1f, out outLayer, ol => ol.Visible);
+            var feature = selectTool.FindNearestFeature(new Coordinate(0, 0), 1f, out ILayer _, ol => ol.Visible);
             Assert.IsNotNull(feature);
 
             networkMapLayer.Visible = false;
 
-            feature = selectTool.FindNearestFeature(new Coordinate(0, 0), 1f, out outLayer, ol => ol.Visible);
+            feature = selectTool.FindNearestFeature(new Coordinate(0, 0), 1f, out ILayer _, ol => ol.Visible);
             Assert.IsNull(feature);
         }
     }

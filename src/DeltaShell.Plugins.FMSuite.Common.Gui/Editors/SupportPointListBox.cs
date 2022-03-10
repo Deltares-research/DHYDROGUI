@@ -137,11 +137,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             ignoreCheck = false;
             base.SetItemChecked(index, value);
         }
-
-        public new void SetItemCheckState(int index, CheckState checkState)
-        {
-            ignoreCheck = false;
-            base.SetItemCheckState(index, checkState);
-        }
     }
 }

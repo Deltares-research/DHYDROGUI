@@ -18,11 +18,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private void SetStructureType(string type)
         {
-            try
+            object result = typeof(Structure2DType).GetEnumValueFromDescription(type);
+            if (result != null)
             {
-                Structure2DType =  (Structure2DType)typeof(Structure2DType).GetEnumValueFromDescription(type); // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
+                Structure2DType = (Structure2DType)result; // TODO: This is also a ModelProperty! Should this refer to the ModelProperty of should we remove that one from Properties?
             }
-            catch(Exception e)
+            else
             {
                 Structure2DType = Structure2DType.InvalidType;
                 InvalidStructureType = type;

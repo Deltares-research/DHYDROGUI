@@ -24,37 +24,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             factory.AddPlugin(new NetworkEditorApplicationPlugin());
             factory.AddPlugin(new NetworkEditorGuiPlugin());
         }
-            
-        protected T SaveLoadBranchFeature<T>(T branchFeature, string projectPath) where T : BranchFeature
-        {
-            // construct a simple network
-            var network = HydroNetworkHelper.GetSnakeHydroNetwork(1);
-            
-            IChannel channel = network.Channels.First();
-            channel.BranchFeatures.Add(branchFeature);
-            branchFeature.Branch = channel;
-            if (branchFeature is ICompositeBranchStructure)
-            {
-                var comp = branchFeature as ICompositeBranchStructure;
-                foreach (var structure in comp.Structures)
-                {
-                    if (!channel.BranchFeatures.Contains(structure))
-                    {
-                        channel.BranchFeatures.Add(structure);
-                        structure.Branch = channel;
-                    }
-                }
-            }
-
-            var retrievedNetwork = SaveLoadObject(network, projectPath);
-
-            var retrievedObject = (T)Enumerable.First(retrievedNetwork.Channels).BranchFeatures.FirstOrDefault();
-            if (retrievedObject == null)
-            {
-                Assert.Fail("Object not found. ");
-            }
-            return retrievedObject;
-        }
 
         /// <summary>
         /// Saves and retrieves an object by wrapping it in a dataitem in the rootfolder

@@ -28,9 +28,9 @@ namespace DelftTools.Hydro.CrossSections
             get { return InnerDefinition.GeometryBased; }
         }
 
-        public virtual IEnumerable<Coordinate> Profile
+        public virtual IEnumerable<Coordinate> GetProfile()
         {
-            get { return InnerDefinition.Profile.Select(c => new Coordinate(c.X, c.Y + LevelShift)); }
+            return InnerDefinition.GetProfile().Select(c => new Coordinate(c.X, c.Y + LevelShift));
         }
 
         public virtual IEnumerable<Coordinate> FlowProfile

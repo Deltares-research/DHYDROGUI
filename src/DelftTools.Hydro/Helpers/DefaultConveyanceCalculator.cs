@@ -13,7 +13,7 @@ namespace DelftTools.Hydro.Helpers
         public override IFunction GetConveyance(ICrossSection crossSection)
         {
             var crossSectionDefinition = crossSection.Definition;
-            var yzValues = crossSectionDefinition.Profile;
+            var yzValues = crossSectionDefinition.GetProfile();
             double[] y = yzValues.Select(yz => yz.X).ToArray();
             double[] z = yzValues.Select(yz => yz.Y).ToArray();
 

@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             {
                 date = DateTime.ParseExact(value, format, CultureInfo.InvariantCulture);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 log.Error("Could not load the reference time correctly, check the format. Using Now as a time reference instead.");
                 date = DateTime.Now;
@@ -223,10 +223,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         {
             string contentsValue = null;
             string locationValue = blockName;
-            string timeFunctionValue = "timeseries"; //time-function
+            string timeFunctionValue = "timeseries";      //time-function
             DateTime referenceTimeValue = new DateTime(); //with the timeUnitValue helps determine the time reference and time steps for each entry.
-            string timeUnitValue = null;
-            string interpolationValue = null; //timeInterpolationType
+            string interpolationValue = null;             //timeInterpolationType
             string parameterValue = null;
 
             var parameterCount = 0;
@@ -270,10 +269,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 if (split[0] == ReferenceTimeKey)
                 {
                     referenceTimeValue = StringDateToDateTime(split[1], "yyyyMMdd");
-                }
-                if (split[0] == TimeUnitKey)
-                {
-                    timeUnitValue = split[1];
                 }
                 if (split[0] == RecordsInTableKey && split.Length == 2)
                 {

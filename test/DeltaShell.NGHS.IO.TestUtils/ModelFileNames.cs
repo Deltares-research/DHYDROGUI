@@ -243,8 +243,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
             private set { structures = value; }
         }
 
-        public string TargetPath { get { return targetPath; } }
-
         public string NetCdf
         {
             get { return Path.Combine(targetPath, netCdf); }

@@ -27,8 +27,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
             var flowProfileY = new double[] { -30, -10, 0, 10, 30 };
             var flowProfileZ = new double[] { 10, 7, 0, 7, 10 };
 
-            Assert.AreEqual(profileY, crossSection.Profile.Select(c => c.X).ToArray());
-            Assert.AreEqual(profileZ, crossSection.Profile.Select(c => c.Y).ToArray());
+            Assert.AreEqual(profileY, crossSection.GetProfile().Select(c => c.X).ToArray());
+            Assert.AreEqual(profileZ, crossSection.GetProfile().Select(c => c.Y).ToArray());
             Assert.AreEqual(flowProfileY, crossSection.FlowProfile.Select(c => c.X).ToArray());
             Assert.AreEqual(flowProfileZ, crossSection.FlowProfile.Select(c => c.Y).ToArray());
         }
@@ -93,8 +93,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
             var flowProfileY = new double[] { -30, -10, 0, 10, 30 };
             var flowProfileZ = new double[] { 10, 7, 0, 7, 10 };
 
-            Assert.AreEqual(profileY, crossSection.Profile.Select(c => c.X).ToArray());
-            Assert.AreEqual(profileZ, crossSection.Profile.Select(c => c.Y).ToArray());
+            Assert.AreEqual(profileY, crossSection.GetProfile().Select(c => c.X).ToArray());
+            Assert.AreEqual(profileZ, crossSection.GetProfile().Select(c => c.Y).ToArray());
             Assert.AreEqual(flowProfileY, crossSection.FlowProfile.Select(c => c.X).ToArray());
             Assert.AreEqual(flowProfileZ, crossSection.FlowProfile.Select(c => c.Y).ToArray());
         }
@@ -116,8 +116,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
             var profileY = new double[] { -90, -75, -50, -25, 0, 25, 50, 75, 90 };
             var profileZ = new double[] { 20, 15, 10, 5, 0, 5, 10, 15, 20 };
 
-            Assert.AreEqual(profileY, crossSection.Profile.Select(c => c.X).ToArray());
-            Assert.AreEqual(profileZ, crossSection.Profile.Select(c => c.Y).ToArray());
+            Assert.AreEqual(profileY, crossSection.GetProfile().Select(c => c.X).ToArray());
+            Assert.AreEqual(profileZ, crossSection.GetProfile().Select(c => c.Y).ToArray());
         }
 
         [Test]
@@ -130,7 +130,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
             crossSection.ZWDataTable.AddCrossSectionZWRow(15, 150, 40);
             crossSection.ZWDataTable.AddCrossSectionZWRow(10, 100, 40);
 
-            Assert.AreEqual(6, crossSection.Profile.Count());
+            Assert.AreEqual(6, crossSection.GetProfile().Count());
             Assert.AreEqual(6, crossSection.FlowProfile.Count());
 
             Assert.AreEqual(0, crossSection.GetRawDataTableIndex(5));
@@ -142,8 +142,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
             var profileY = new double[] { -90, -75, -50, 50, 75, 90 };
             var profileZ = new double[] { 20, 15, 10, 10, 15, 20 };
 
-            Assert.AreEqual(profileY, crossSection.Profile.Select(c => c.X).ToArray());
-            Assert.AreEqual(profileZ, crossSection.Profile.Select(c => c.Y).ToArray());
+            Assert.AreEqual(profileY, crossSection.GetProfile().Select(c => c.X).ToArray());
+            Assert.AreEqual(profileZ, crossSection.GetProfile().Select(c => c.Y).ToArray());
         }
 
         [Test]
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.CrossSectionView.ProfileM
 
             crossSection.GetProfileMutator().MovePoint(5, 0, 20);
 
-            Assert.AreNotEqual(0.0, crossSection.Profile.Select(c => c.X).ElementAt(0));
+            Assert.AreNotEqual(0.0, crossSection.GetProfile().Select(c => c.X).ElementAt(0));
         }
 
         [Test]

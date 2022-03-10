@@ -15,7 +15,7 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionZW();
 
-            var profile = crossSection.Profile;
+            var profile = crossSection.GetProfile();
             var flowProfile = crossSection.FlowProfile;
 
             Assert.AreEqual(0, profile.Count());
@@ -81,8 +81,8 @@ namespace DelftTools.Hydro.Tests
             var flowProfileY = new double[] { -30, -5, 0, 5, 30 };
             var flowProfileZ = new double[] { 10, 6, 0, 6, 10 };
 
-            Assert.AreEqual(profileY, crossSection.Profile.Select(c => c.X).ToArray());
-            Assert.AreEqual(profileZ, crossSection.Profile.Select(c => c.Y).ToArray());
+            Assert.AreEqual(profileY, crossSection.GetProfile().Select(c => c.X).ToArray());
+            Assert.AreEqual(profileZ, crossSection.GetProfile().Select(c => c.Y).ToArray());
             Assert.AreEqual(flowProfileY, crossSection.FlowProfile.Select(c => c.X).ToArray());
             Assert.AreEqual(flowProfileZ, crossSection.FlowProfile.Select(c => c.Y).ToArray());
         }

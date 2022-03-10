@@ -30,7 +30,7 @@ namespace DelftTools.Hydro.Tests
 
             Assert.IsFalse(crossSection.Definition.IsProxy);
             Assert.IsTrue(crossSection.Definition is CrossSectionDefinitionYZ);
-            Assert.AreEqual(crossSection.Definition.Profile,innerDefinition.Profile.Select(c=>new Coordinate(c.X,c.Y+levelShift)).ToList());
+            Assert.AreEqual(crossSection.Definition.GetProfile(),innerDefinition.GetProfile().Select(c=>new Coordinate(c.X,c.Y+levelShift)).ToList());
         }
         
         [Test]
@@ -88,7 +88,7 @@ namespace DelftTools.Hydro.Tests
         [Test]
         public void Clone()
         {
-            var crossSection = new TestCrossSectionDefinition("Test",0)
+            var crossSection = new TestCrossSectionDefinition("Test")
             {
                 Thalweg = 3.0,
             };
@@ -125,7 +125,7 @@ namespace DelftTools.Hydro.Tests
 
 
             //since the profile is defined on the y/z plane we can ignore the x values
-            Assert.AreEqual(coordinates, crossSection.Profile);
+            Assert.AreEqual(coordinates, crossSection.GetProfile());
         }
 
         [Test]

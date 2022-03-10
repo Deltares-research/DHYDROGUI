@@ -15,7 +15,7 @@ using PropertyInfo = System.Reflection.PropertyInfo;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.Controls
 {
-    public partial class MultipleDataEditor : UserControl, IView, IReusableView, ILayerEditorView
+    public partial class MultipleDataEditor : UserControl, IReusableView, ILayerEditorView
     {
         private IEnumerable<IDataRowProvider> data;
         private bool locked;

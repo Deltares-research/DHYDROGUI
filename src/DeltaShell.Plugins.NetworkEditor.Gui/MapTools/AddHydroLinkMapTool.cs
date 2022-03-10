@@ -23,27 +23,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
     public sealed class AddHydroLinkMapTool : NewArrowLineTool
     {
         /// <summary>
-        /// Enum for requesting the user input when linking a <see cref="HydroLink"/> to a <see cref="LateralSource"/>.
-        /// </summary>
-        private enum UserInput
-        {
-            /// <summary>
-            /// The user continues.
-            /// </summary>
-            Continue,
-
-            /// <summary>
-            /// The user cancels.
-            /// </summary>
-            Cancel
-        }
-
-        /// <summary>
         /// The name of the tool.
         /// </summary>
         public const string ToolName = "add hydro link";
 
-        private static readonly IRequestUserInputService<UserInput> userInputService = new RequestUserInputService<UserInput>();
         private static readonly Cursor cursor = MapCursors.CreateArrowOverlayCuror(Resources.Link);
 
         /// <summary>
@@ -63,15 +46,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
 
         private static void AddNewHydroLink(IGeometry geometry, ICoordinateSystem coordinateSystem, SnapResult snappedSource, SnapResult snappedTarget, NewArrowLineTool tool)
         {
-            // TODO (FM1D2D-1487): A dialog should only be prompted when the Lateral Source has data, but we do not have that information on this level.
-            // if (snappedSource.SnappedFeature is Catchment && snappedTarget.SnappedFeature is LateralSource)
-            // {
-            //     if (UserCancels())
-            //     {
-            //         return;
-            //     }
-            // }
-
             if (!TryGetLinksLayer(snappedSource, snappedTarget, tool, out ILayer layer))
             {
                 return;
@@ -87,16 +61,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             IHydroRegion region = HydroRegion.GetCommonRegion((IHydroObject) snappedSource.SnappedFeature, (IHydroObject) snappedTarget.SnappedFeature);
             layer = tool.Layers.FirstOrDefault(l => Equals(l.DataSource.Features, region.Links));
             return layer != null;
-        }
-
-        private static bool UserCancels()
-        {
-            UserInput? userInput = userInputService.RequestUserInput(
-                Resources.HydroRegionEditorMapTool_Overwriting_existing_lateral_source_flow_data,
-                Resources.HydroRegionEditorMapTool_Connecting_hydro_link_removes_existing_data + Environment.NewLine +
-                Resources.HydroRegionEditorMapTool_Do_you_want_to_continue);
-
-            return userInput != UserInput.Continue;
         }
 
         private static IGeometry GetTransformedGeometry(IGeometry geometry, ICoordinateSystem sourceCoordinateSystem, ICoordinateSystem targetCoordinateSystem)

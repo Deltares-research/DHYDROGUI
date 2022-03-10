@@ -69,11 +69,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FeatureData
         {
             var result = new FlowBoundaryCondition(flowBoundaryQuantityType, dataType) {Feature = feature, SedimentFractionNames = sedimentFractionNames };
             if (flowBoundaryQuantityType == FlowBoundaryQuantityType.SedimentConcentration)
+            {
                 result.SedimentFractionName = tracerName;
-            if (flowBoundaryQuantityType == FlowBoundaryQuantityType.Tracer)
-                result.TracerName = tracerName;
+            }
 
-                result.Name = feature.Name + "-" + result.VariableDescription;
+            if (flowBoundaryQuantityType == FlowBoundaryQuantityType.Tracer)
+            {
+                result.TracerName = tracerName;
+            }
+
+            result.Name = feature.Name + "-" + result.VariableDescription;
 
             if (result.IsHorizontallyUniform)
             {

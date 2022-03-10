@@ -115,44 +115,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapeEdit
             CurrentTracker = points[closestLocations[0].SegmentIndex + 1];
             ShapeFeature.Invalidate();
         }
-
-        public virtual void KeyEvent(KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Delete && CurrentTracker != null)
-            {
-                if (points.Count < 4)
-                {
-                    return; // smallest valid polygon has 4 vertices. 0 1 2 3=0
-                }
-                int index = points.IndexOf(CurrentTracker);
-                if (-1 == index)
-                    return; // centertracker
-                List<Coordinate> vertices = new List<Coordinate>();
-                for (int i = 0; i < ShapeFeature.Geometry.Coordinates.Length; i++)
-                {
-                    Coordinate coordinate = ShapeFeature.Geometry.Coordinates[i];
-                    vertices.Add((Coordinate)coordinate.Clone());
-                }
-                if (0 == index) // note that first and last vertex share tracker
-                {
-                    vertices.RemoveAt(0);
-                    vertices.RemoveAt(vertices.Count - 1);
-                    vertices.Add((Coordinate)vertices[0].Clone());
-                }
-                else
-                {
-                    vertices.RemoveAt(index);
-                }
-                ILinearRing linearRing = GeometryFactory.CreateLinearRing(vertices.ToArray());
-                IPolygon polygon = GeometryFactory.CreatePolygon(linearRing, null);
-                ShapeFeature.Geometry = polygon;
-                Initialize();
-                if (index > (points.Count - 1))
-                    CurrentTracker = points[0];
-                else
-                    CurrentTracker = points[index];
-                ShapeFeature.Invalidate();
-            }
-        }   
     }
 }

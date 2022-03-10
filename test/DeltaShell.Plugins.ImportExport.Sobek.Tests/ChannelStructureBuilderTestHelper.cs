@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Hydro;
+using DeltaShell.Plugins.ImportExport.Sobek.Builders;
 using DeltaShell.Sobek.Readers.Readers;
 using DeltaShell.Sobek.Readers.SobekDataObjects;
+using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 
@@ -28,7 +30,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests
             channel.Geometry = geometryFactory.CreateLineString(vertices.ToArray());
 
             string branchId = "1";
-            Dictionary<string, IChannel> channels = new Dictionary<string, IChannel>
+            Dictionary<string, IBranch> channels = new Dictionary<string, IBranch>
                                                         {
                                                             {branchId, channel}
                                                         };

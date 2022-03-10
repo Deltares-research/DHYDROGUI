@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils;
@@ -15,7 +14,6 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers.Concepts;
-using DeltaShell.Plugins.NetCDF;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
@@ -135,14 +133,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
         private static void WriteFixedFile(TextDocument textDocument)
         {
             File.WriteAllText(textDocument.Name, textDocument.Content);
-        }
-
-        private void ResetControllers()
-        {
-            foreach (IConceptModelController controller in conceptControllers)
-            {
-                controller.Reset();
-            }
         }
 
         private void SendMeteoToModel()
@@ -356,70 +346,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             throw new InvalidOperationException("Unexpected feature");
         }
 
-        private static void TryAddToLog(string path)
-        {
-            if (File.Exists(path))
-            {
-                try
-                {
-                    log.InfoFormat("==== Log file {0} =====", path);
-                    var info = new FileInfo(path);
-                    if (info.Length > 1024*512) //512kb
-                        log.InfoFormat("<Log file too large to be included. Temporary log file location: {0}>",
-                            Path.GetFullPath(path));
-                    else
-                        log.Info(File.ReadAllText(path));
-                    log.InfoFormat("==== End of {0} =====", path);
-                }
-                catch (Exception e)
-                {
-                    log.InfoFormat("==== Error reading {0}: {1} ====", path, e.Message);
-                }
-            }
-            else
-            {
-                log.InfoFormat("Not found: {0}", path);
-            }
-        }
-        
-
-        private static void AddSobekLogFilesToLog()
-        {
-            TryAddToLog("SIMULATE.REP");
-            TryAddToLog("sobek_3b.log");
-            TryAddToLog("3B_GENER.OUT");
-            TryAddToLog("BOUND3B.OUT");
-            TryAddToLog("3b_bal.out");
-            TryAddToLog("PAVED.OUT");
-            TryAddToLog("UNPAVED.OUT");
-        }
-
-        private static void ClearLogFiles()
-        {
-            DeleteLogFile("SIMULATE.REP");
-            DeleteLogFile("sobek_3b.log");
-            DeleteLogFile("3B_GENER.OUT");
-            DeleteLogFile("BOUND3B.OUT");
-            DeleteLogFile("3b_bal.out");
-            DeleteLogFile("PAVED.OUT");
-            DeleteLogFile("UNPAVED.OUT");
-        }
-
-        private static void DeleteLogFile(string logFilePath)
-        {
-            try
-            {
-                if (File.Exists(logFilePath))
-                {
-                    File.Delete(logFilePath);
-                }
-            }
-            catch (Exception)
-            {
-                log.WarnFormat("Failed to delete logfile: {0}", logFilePath);
-            }
-        }
-
         public bool WriteFiles()
         {
             PrepareWorkingDirectory();
@@ -615,16 +541,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
             Coordinate coord = hydroObject.LinkingCoordinate;
             return new LineString(new[] {coord, new Coordinate(coord.X, coord.Y + 100)});
-        }
-
-        // replace in creating and loading of output functions when using Dimr run 
-
-        private void ChangeToNetCdfFunctionStore(IFunction outputFunction)
-        {
-            var path = Path.Combine(WorkingDirectory, outputFunction.Name + ".nc");
-            var netCdfFunctionStore = NetCdfFunctionStore.CreateNewNetCdfFunctionStore(path);
-            
-            netCdfFunctionStore.Functions.Add(outputFunction);
         }
     }
 

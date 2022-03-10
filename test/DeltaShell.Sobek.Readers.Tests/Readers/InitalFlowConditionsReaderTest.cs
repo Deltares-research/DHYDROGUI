@@ -16,8 +16,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
     [TestFixture]
     public class InitalFlowConditionsReaderTest
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(InitalFlowConditionsReaderTest));
-
         [SetUp]
         public void SetUp()
         {

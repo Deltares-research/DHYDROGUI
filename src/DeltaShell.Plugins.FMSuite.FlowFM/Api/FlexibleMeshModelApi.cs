@@ -11,7 +11,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
     /// Do not use directly (mixing x86 and x64 dlls not possible, and unstruct.dll = 64bit).
     /// Instead use RemoteFlexibleMeshModelApi (and don't forget to dispose)
     /// </summary>
-    public class FlexibleMeshModelApi : IFlexibleMeshModelApi
+    public sealed class FlexibleMeshModelApi : IFlexibleMeshModelApi
     {
         private readonly FlexibleMeshBasicModelInterface flexibleMeshBasicModelInterface; //BMI strategy
 
@@ -179,7 +179,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Api
             // nothing to do here
         }
 
-        public virtual bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout, ref double[] yout, ref int[] featureIds)
+        public bool GetSnappedFeature(string featureType, double[] xin, double[] yin, ref double[] xout, ref double[] yout, ref int[] featureIds)
         {
             var numInputs = xin.Length;
 

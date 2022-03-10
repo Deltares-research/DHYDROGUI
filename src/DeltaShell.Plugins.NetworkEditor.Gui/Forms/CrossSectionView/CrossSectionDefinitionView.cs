@@ -399,7 +399,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
         
         private ChartRectangle GetProfileRectangle()
         {
-            var profile = CrossSectionDefinition.Profile.ToList();
+            var profile = CrossSectionDefinition.GetProfile().ToList();
 
             if (profile.Any())
             {

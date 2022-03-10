@@ -74,7 +74,7 @@ namespace DelftTools.Hydro.CrossSections
         /// <summary>
         /// Y`Z, along the cross-section
         /// </summary>
-        public abstract IEnumerable<Coordinate> Profile { get; }
+        public abstract IEnumerable<Coordinate> GetProfile();
 
         /// <summary>
         /// Y`Z, along the cross-section
@@ -92,31 +92,31 @@ namespace DelftTools.Hydro.CrossSections
         {
             get
             {
-                IEnumerable<Coordinate> coordinates = Profile.ToList();
+                IEnumerable<Coordinate> coordinates = GetProfile().ToList();
                 return !coordinates.Any() ? 0.0 : coordinates.Max(c => c.X) - coordinates.Min(c => c.X);
             }
         }
 
         public virtual double Left
         {
-            get { return Profile.Select(c => c.X).DefaultIfEmpty().Min(); }
+            get { return GetProfile().Select(c => c.X).DefaultIfEmpty().Min(); }
         }
 
         public virtual double Right
         {
-            get { return Profile.Select(c => c.X).DefaultIfEmpty().Max(); }
+            get { return GetProfile().Select(c => c.X).DefaultIfEmpty().Max(); }
         }
 
         [FeatureAttribute]
         public virtual double LowestPoint
         {
-            get { return Profile.Select(c => c.Y).DefaultIfEmpty().Min(); }
+            get { return GetProfile().Select(c => c.Y).DefaultIfEmpty().Min(); }
         }
 
         [FeatureAttribute]
         public virtual double HighestPoint
         {
-            get { return Profile.Select(c => c.Y).DefaultIfEmpty().Max(); }
+            get { return GetProfile().Select(c => c.Y).DefaultIfEmpty().Max(); }
         }
 
         [FeatureAttribute]
@@ -124,7 +124,7 @@ namespace DelftTools.Hydro.CrossSections
         {
             get 
             { 
-                var sortedProfile = Profile.OrderBy(c => c.X);
+                var sortedProfile = GetProfile().OrderBy(c => c.X);
                 return sortedProfile.Any() ? sortedProfile.First().Y : double.NaN;
             }
         }
@@ -134,7 +134,7 @@ namespace DelftTools.Hydro.CrossSections
         {
             get
             {
-                var sortedProfile = Profile.OrderBy(c => c.X);
+                var sortedProfile = GetProfile().OrderBy(c => c.X);
                 return sortedProfile.Any() ? sortedProfile.Last().Y : double.NaN;
             }
         }
@@ -448,17 +448,17 @@ namespace DelftTools.Hydro.CrossSections
         [EditAction]
         private void FixThalweg()
         {
-            if (!Profile.Any())
+            if (!GetProfile().Any())
             {
                 return;
             }
-            var max = Profile.Max(c => c.X);
+            var max = GetProfile().Max(c => c.X);
             if (thalweg > max)
             {
                 thalweg = max;
                 return;
             }
-            var min = Profile.Min(c => c.X);
+            var min = GetProfile().Min(c => c.X);
             if (thalweg < min)
             {
                 thalweg = min;

@@ -247,7 +247,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             {
                 CompositeViewType = typeof(CompositeStructureView),
                 GetCompositeViewData = o => o.ParentStructure,
-            }; ;
+            };
             yield return new ViewInfo<ICulvert, CulvertViewWpf>
             {
                 CompositeViewType = typeof(CompositeStructureView),
@@ -293,7 +293,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                             v.OpenViewMethod = ob => Gui.CommandHandler.OpenView(ob);
                             v.ZoomToFeature = feature => centralMap.MapView.EnsureVisible(feature);
                             v.SetCreateFeatureRowFunction(feature => new WeirPropertiesRow((IWeir)feature));
-                            if(o is IEnumerable<IOrifice> orifices)
+                            if(o is IEnumerable<IOrifice>)
                                 v.TableView.Columns.ToDictionary(c => c.Name, c => c)[nameof(WeirPropertiesRow.Formula)].Visible = false;
                         }
                 };
@@ -476,10 +476,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             attributeTableSewerConnectionsData.AfterCreate = (view, datas) =>
             {
                 baseAfterCreateSewerConnectionsData(view, datas);
-                var networkModel = Gui.Application.GetAllModelsInProject().OfType<IModelWithNetwork>().FirstOrDefault(m => m.Network.Pipes.Equals(datas));
-                SetCompartmentComboBoxTypeEditor(view, networkModel);
+                SetCompartmentComboBoxTypeEditor(view);
 
-                view.TableView.FocusedRowChanged += (sender, args) => { SetCompartmentComboBoxTypeEditor(view, networkModel); };
+                view.TableView.FocusedRowChanged += (sender, args) => { SetCompartmentComboBoxTypeEditor(view); };
             };
             
             yield return attributeTableSewerConnectionsData;
@@ -559,7 +558,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                     ItemsMandatory = false
                 };
         }
-        private void SetCompartmentComboBoxTypeEditor(VectorLayerAttributeTableView view, IModelWithNetwork networkModel)
+        private void SetCompartmentComboBoxTypeEditor(VectorLayerAttributeTableView view)
         {
             var sewerConnection = view.TableView.CurrentFocusedRowObject as SewerConnection;
             if (!(sewerConnection?.Source is IManhole sourceManhole) ||

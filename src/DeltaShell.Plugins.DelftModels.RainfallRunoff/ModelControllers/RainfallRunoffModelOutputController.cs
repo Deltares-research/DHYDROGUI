@@ -10,8 +10,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 {
     public class RainfallRunoffModelOutputController
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModelOutputController));
-
         private IDictionary<string, ITimeBasedFunction> functionLookUp;
         private Queue<DateTime> outputWriteTimesQueue = new Queue<DateTime>();
         private RainfallRunoffModel model;

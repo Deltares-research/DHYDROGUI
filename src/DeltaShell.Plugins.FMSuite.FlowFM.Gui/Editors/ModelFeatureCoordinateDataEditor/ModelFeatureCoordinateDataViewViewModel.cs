@@ -119,8 +119,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
         private void OnGeometryChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(modelFeatureCoordinateData.Feature.Geometry))
-
-            UpdateRowsForGeometry();
+            {
+                UpdateRowsForGeometry();
+            }
         }
 
         private void OnModelFeatureCoordinateDataCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

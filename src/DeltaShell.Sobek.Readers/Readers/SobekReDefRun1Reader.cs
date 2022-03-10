@@ -8,7 +8,7 @@ using DeltaShell.Sobek.Readers.SobekDataObjects;
 
 namespace DeltaShell.Sobek.Readers.Readers
 {
-    public class SobekReDefRun1Reader : SobekReader<SobekCaseSettings>
+    public sealed class SobekReDefRun1Reader : SobekReader<SobekCaseSettings>
     {
         public override IEnumerable<SobekCaseSettings> Parse(string text)
         {
@@ -47,11 +47,6 @@ namespace DeltaShell.Sobek.Readers.Readers
                 }
             }
             return sobekCaseSettings;
-        }
-
-        public virtual IEnumerable<string> GetTags()
-        {
-            yield return "fltm";
         }
     }
 }

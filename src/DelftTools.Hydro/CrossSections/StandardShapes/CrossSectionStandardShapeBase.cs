@@ -18,18 +18,14 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
         public virtual string Name { get; set; }
 
         public virtual string MaterialName { get; set; }
-        public virtual bool Closed
-        {
-            get { return false; }
-            set { }
-        }
+
         public abstract CrossSectionStandardShapeType Type { get; }
         
         public virtual IEnumerable<Coordinate> Profile
         {
             get
             {
-                return GetTabulatedDefinition().Profile;
+                return GetTabulatedDefinition().GetProfile();
             }
         }
 
@@ -60,8 +56,7 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
                     hydroNetwork.CrossSectionSectionTypes.Add(sewerSectionType);
                 }
             }
-
-            Closed = this is ICrossSectionStandardShapeOpenClosed;
+            
             var crossSectionDefinitionToAdd = new CrossSectionDefinitionStandard(this)
             {
                 Name = Name,

@@ -102,7 +102,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             //19877.043946651 0 '1_14' 'C3' '1_15' 19877.043946651 0 <
             //20000 0 '1_16' '2' '' 20000 0 <
             //tble grid
-            const string pattern = @"TBLE\s(" + RegularExpression.CharactersAndQuote + ")tble"; ;
+            const string pattern = @"TBLE\s(" + RegularExpression.CharactersAndQuote + ")tble";
             
             var calcGrid = new CalcGrid
             {
@@ -174,7 +174,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                 BranchID = RegularExpression.ParseFieldAsString("ci", record)
             };
 
-            const string pattern = @"TBLE\s(" + RegularExpression.CharactersAndQuote + ")tble"; ;
+            const string pattern = @"TBLE\s(" + RegularExpression.CharactersAndQuote + ")tble";
             var match = RegularExpression.GetFirstMatch(pattern, record);
             if (match == null)
             {
@@ -219,7 +219,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                 BranchID = RegularExpression.ParseFieldAsString("ci", record)
             };
 
-            const string pattern = @"TBLE\s(" + RegularExpression.CharactersAndQuote + ")tble"; ;
+            const string pattern = @"TBLE\s(" + RegularExpression.CharactersAndQuote + ")tble";
             var match = RegularExpression.GetFirstMatch(pattern, record);
             if (match == null)
             {
@@ -272,7 +272,7 @@ namespace DeltaShell.Sobek.Readers.Readers
             }
 
 
-            const string pattern = @"TBLE\s(" + RegularExpression.CharactersAndQuote + ")tble"; ;
+            const string pattern = @"TBLE\s(" + RegularExpression.CharactersAndQuote + ")tble";
             var match = RegularExpression.GetFirstMatch(pattern, record);
             if (match == null)
             {

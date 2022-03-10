@@ -54,7 +54,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters.CrossSectionDefinition
             var stdCsdCoordinates = csdStd.Shape.Profile.ToArray();
             var readCsdCoordinates = readCsd.Shape.Profile.ToArray();
             Assert.That(stdCsdCoordinates,Is.EqualTo(readCsdCoordinates));
-            Assert.That(csdStd.Profile.ToArray(),Is.EqualTo(readCsdCoordinates));
+            Assert.That(csdStd.GetProfile().ToArray(),Is.EqualTo(readCsdCoordinates));
             Assert.That(stdCsdCoordinates.Length, Is.EqualTo(isClosed ? 6 : 4));
             Assert.That(readCsdCoordinates.Length, Is.EqualTo(isClosed ? 6 : 4));
         }

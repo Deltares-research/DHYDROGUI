@@ -52,7 +52,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             exporter.Export(network.CrossSections, path);
             //end export
 
-            var oldProfileZW = cs2.Definition.Profile.ToList();
+            var oldProfileZW = cs2.Definition.GetProfile().ToList();
             //modify
             def2.SummerDike.Active = true;
             def2.ZWDataTable.AddCrossSectionZWRow(9, 9, 9);
@@ -64,7 +64,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             //make sure definition changes are reverted by import
             Assert.AreEqual(false, def2.SummerDike.Active);
 
-            Assert.IsTrue(CoordinatesEqual(oldProfileZW, def2.Profile.ToList()));
+            Assert.IsTrue(CoordinatesEqual(oldProfileZW, def2.GetProfile().ToList()));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             //modify
             def2.SummerDike.Active = true;
             def2.ZWDataTable.AddCrossSectionZWRow(9, 9, 9);
-            var newProfileZW = cs2.Definition.Profile.ToList();
+            var newProfileZW = cs2.Definition.GetProfile().ToList();
 
             //import
             var csvFileImporter = new CrossSectionZWFromCsvFileImporter();
@@ -103,7 +103,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.ImportExport
             
             //make sure definition changes are overwritten by import
             Assert.AreEqual(false, def2.SummerDike.Active);
-            Assert.AreNotEqual(newProfileZW.Count, def2.Profile.Count());
+            Assert.AreNotEqual(newProfileZW.Count, def2.GetProfile().Count());
         }
    
         [Test]

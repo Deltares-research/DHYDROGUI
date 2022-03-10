@@ -54,18 +54,5 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
         /// </summary>
         /// <returns></returns>
         public abstract object Clone();
-
-        protected void InitLastEnvelope(ILayer layer)
-        {
-            if ((null == lastEnvelope)
-                || (lastEnvelope.Width != layer.Map.Envelope.Width)
-                || (lastEnvelope.Height != layer.Map.Envelope.Height))
-            {
-                lastEnvelope = layer.Map.Envelope.Clone();
-                updatedBranchFeatures.Clear();
-            }
-        }
-
-
     }
 }

@@ -15,7 +15,7 @@ using NetTopologySuite.Extensions.Grids;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 {
-    public class RasterFile
+    public static class RasterFile
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RasterFile));
 
@@ -85,7 +85,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
             var cellToVertex = new List<IList<int>>();
             var previousHorizontalEdges = new List<Edge>();
             Edge previousVerticalEdge = null;
-            var currentCellIndex = 0;
 
             var xValues = gridCoverage.X.Values;
             var yValues = gridCoverage.Y.Values;
@@ -137,8 +136,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                         currentPointIndex,
                         currentPointIndex - 1,
                     });
-
-                    currentCellIndex++;
                 }
             }
 
@@ -150,44 +147,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
 
             grid.Cells = cellToVertex.Select(c => new Cell(c.ToArray(), vertices)).ToList();
             return grid;
-        }
-
-        /// <summary>
-        /// Write the xyValuePoints to the filePath provided
-        /// </summary>
-        /// <param name="filePath">The FilePath to write the xyValuePoints to</param>
-        /// <param name="xyValuePoints">The xyValues to write to the FilePath</param>
-        public void Write(string filePath, IEnumerable<IPointValue> xyValuePoints)
-        {
-
-            var importer = new GdalFileExporter();
-            var builder = new RegularGridCoverageBuilder();
-
-            IList<IVariable> variables = new List<IVariable>();
-
-            var variable = new Variable<int>();
-            variable.Attributes["coordinates"] = "y x";
-            var pointValues = xyValuePoints.ToList();
-            variable.SetValues(pointValues.Select(xyValuePoint => xyValuePoint.Value));
-
-            var x = new Variable<double>();
-            x.Attributes["standard_name"] = "projection_x_coordinate";
-            x.SetValues(pointValues.Select(xyValuePoint => xyValuePoint.X));
-
-            var y = new Variable<double>();
-            y.Attributes["standard_name"] = "projection_y_coordinate";
-            y.SetValues(pointValues.Select(xyValuePoint => xyValuePoint.Y));
-
-            variable.Arguments.AddRange(new[] { x, y });
-
-            variables.Add(variable);
-            variables.Add(x);
-            variables.Add(y);
-
-
-            var grid = builder.CreateFunction(variables);
-
-            importer.Export(grid, filePath) ;
         }
 
         /// <summary>

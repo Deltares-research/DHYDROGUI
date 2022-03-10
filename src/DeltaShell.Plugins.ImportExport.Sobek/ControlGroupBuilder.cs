@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                 SetUniqueName(rule, controlGroup);
                 controlGroup.Rules.Add(rule);
 
-                Input input = AddInputItemToControlGroup(structure, sobekController, controlGroup, model, rtcModel);
+                Input input = AddInputItemToControlGroup(sobekController, controlGroup, model, rtcModel);
 
                 if (input != null)
                 {
@@ -87,27 +87,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
                     MergeLastRowWithSameOutput(controlGroup, rule, conditionsOfLastRuleWithSameOutput);
                 }
             }
-        }
-
-        public static IEnumerable<ConditionBase> ConditionsOfRule(ControlGroup controlGroup, RuleBase rule)
-        {
-            var conditions = new HashSet<ConditionBase>();
-            foreach (ConditionBase condition in controlGroup.Conditions)
-            {
-                if (condition.TrueOutputs.Contains(rule))
-                {
-                    conditions.Add(condition);
-                    ConditionsOfCondition(controlGroup, condition, conditions);
-                }
-
-                if (condition.FalseOutputs.Contains(rule))
-                {
-                    conditions.Add(condition);
-                    ConditionsOfCondition(controlGroup, condition, conditions);
-                }
-            }
-
-            return conditions;
         }
 
         public static RuleBase GetRule(SobekController controller)
@@ -295,29 +274,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
 
             return returnList;
-        }
-
-        private static void ConditionsOfCondition(ControlGroup controlGroup, ConditionBase currentCondition, HashSet<ConditionBase> conditions)
-        {
-            foreach (ConditionBase condition in controlGroup.Conditions)
-            {
-                if (conditions.Contains(condition))
-                {
-                    continue; //breaks the recursive method
-                }
-
-                if (condition.TrueOutputs.Contains(currentCondition))
-                {
-                    conditions.Add(condition);
-                    ConditionsOfCondition(controlGroup, condition, conditions);
-                }
-
-                if (condition.FalseOutputs.Contains(currentCondition))
-                {
-                    conditions.Add(condition);
-                    ConditionsOfCondition(controlGroup, currentCondition, conditions);
-                }
-            }
         }
 
         private static void AddConditionsToControlGroup(IStructure1D structure, IEnumerable<Trigger> sobekControllerTriggers, IDictionary<string, SobekTrigger> sobekTriggers, IModel model, RealTimeControlModel rtcModel, RuleBase rule, ControlGroup controlGroup)
@@ -563,7 +519,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             return input;
         }
 
-        private static Input AddInputItemToControlGroup(IStructure1D structure, SobekController sobekController, ControlGroup controlGroup, IModel model, RealTimeControlModel rtcModel)
+        private static Input AddInputItemToControlGroup(SobekController sobekController, ControlGroup controlGroup, IModel model, RealTimeControlModel rtcModel)
         {
             IDataItem outputDataItem;
             if (!string.IsNullOrEmpty(sobekController.MeasurementStationId))

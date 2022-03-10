@@ -6,8 +6,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public abstract class ASewerCompartmentGenerator : IGwswFeatureGenerator<ISewerFeature>
     {
-        private static ILog Log = LogManager.GetLogger(typeof(ASewerCompartmentGenerator));
-
         public abstract ISewerFeature Generate(GwswElement gwswElement);
 
         protected ISewerFeature CreateCompartment<T>(GwswElement gwswElement) 

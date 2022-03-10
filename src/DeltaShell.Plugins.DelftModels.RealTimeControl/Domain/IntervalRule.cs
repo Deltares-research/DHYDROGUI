@@ -44,8 +44,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             Signal = 2
         }
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(IntervalRule));
-
         /// <summary>
         /// Time series or constant that is used as input for the interval rule. The RTC will try to achieve
         /// that input will have the values set in TimeSeries by controlling the output.

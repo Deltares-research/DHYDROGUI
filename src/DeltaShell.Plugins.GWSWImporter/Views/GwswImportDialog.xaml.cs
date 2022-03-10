@@ -9,8 +9,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Views
     /// <summary>
     /// Interaction logic for UserControl1.xaml
     /// </summary>
-    public partial class GwswImportDialog : Window, IDialog, IView
+    public sealed partial class GwswImportDialog : Window, IDialog, IView
     {
+        private bool disposed;
+
         public GwswImportDialog()
         {
             InitializeComponent();
@@ -60,12 +62,19 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Views
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
+            if (disposed)
+            {
+                return;
+            }
+
             if (disposing)
             {
                 Image?.Dispose();
             }
+
+            disposed = true;
         }
     }
 }

@@ -172,10 +172,8 @@ namespace DelftTools.Hydro.Tests
         public void CanNotLinkItemsOfTwoIndependentRegions()
         {
             var catchment = new Catchment();
-            var basin1 = new DrainageBasin { Catchments = { catchment } };
 
             var wasteWaterTreatmentPlant = new WasteWaterTreatmentPlant();
-            var basin2 = new DrainageBasin { WasteWaterTreatmentPlants = { wasteWaterTreatmentPlant } };
 
             HydroRegion.CanLinkTo(catchment, wasteWaterTreatmentPlant)
                 .Should().Be.False();

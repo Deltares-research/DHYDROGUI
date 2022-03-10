@@ -306,15 +306,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         // is coverage
                         //check if there are multidimensional sedimentnames
                         var indexOfSedimentToRender = string.Empty;
-                        if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
+                        if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender) && 
+                            int.TryParse(indexOfSedimentToRender, out int _))
                         {
-                            int nIndex = -1;
-                            if (int.TryParse(indexOfSedimentToRender, out nIndex))
-                            {
-                                var filter = new VariableIndexFilter(function.Components[0], 0);
-                                Array.Resize(ref filters, filters.Length + 1);
-                                filters[filters.Length - 1] = filter;
-                            }
+                            var filter = new VariableIndexFilter(function.Components[0], 0);
+                            Array.Resize(ref filters, filters.Length + 1);
+                            filters[filters.Length - 1] = filter;
                         }
                     }
                 }
@@ -323,15 +320,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     // is component
                     //check if there are multidimensional sedimentnames
                     var indexOfSedimentToRender = string.Empty;
-                    if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender))
+                    if (coverage.Attributes.TryGetValue(SedIndexAttributeName, out indexOfSedimentToRender) && 
+                        int.TryParse(indexOfSedimentToRender, out int _))
                     {
-                        int nIndex = -1;
-                        if (int.TryParse(indexOfSedimentToRender, out nIndex))
-                        {
-                            var filter = new VariableIndexFilter(function, 0);
-                            Array.Resize(ref filters, filters.Length + 1);
-                            filters[filters.Length - 1] = filter;
-                        }
+                        var filter = new VariableIndexFilter(function, 0);
+                        Array.Resize(ref filters, filters.Length + 1);
+                        filters[filters.Length - 1] = filter;
                     }
                 }
             }

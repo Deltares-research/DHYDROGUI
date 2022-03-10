@@ -21,7 +21,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
                 return System.IO.Path.Combine(apwxwyDir, fname);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

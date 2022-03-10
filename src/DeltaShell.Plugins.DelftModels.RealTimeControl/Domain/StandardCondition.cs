@@ -18,7 +18,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity(FireOnCollectionChange = false)]
     public class StandardCondition : ConditionBase
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(StandardCondition));
         private bool inputRequired;
 
         public StandardCondition() : this(true) {}

@@ -10,8 +10,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils.Domain
     [Entity(FireOnCollectionChange = false)]
     public class RtcTestFeature : Unique<long>, IFeature, INameable
     {
-        public double Value { get; set; }
-
         public IGeometry Geometry { get; set; }
 
         public IFeatureAttributeCollection Attributes { get; set; }

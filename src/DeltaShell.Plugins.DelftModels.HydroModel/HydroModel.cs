@@ -637,12 +637,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         }
 
         [InvokeRequired]
-        private void LogInvalidWorkflow()
-        {
-            Log.ErrorFormat(Resources.HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell, CurrentWorkflow.Name);
-        }
-
-        [InvokeRequired]
         private void LogInvalidActivities()
         {
             Log.ErrorFormat(Resources.HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__Please_check_the_validation_report_, Name);

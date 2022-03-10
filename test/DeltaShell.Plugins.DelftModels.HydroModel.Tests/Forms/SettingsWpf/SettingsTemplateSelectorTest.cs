@@ -103,11 +103,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.SettingsWpf
             {
                 ValueType = null
             });
-            DataTemplate selectedTemplate = null;
             var frameworkElement = new WpfSettingsView();
             var selector = new SettingsTemplateSelector();
 
-            Assert.DoesNotThrow(() => selectedTemplate = selector.SelectTemplate(item, frameworkElement));
+            Assert.DoesNotThrow(() => selector.SelectTemplate(item, frameworkElement));
         }
 
         private static void GetAndCheckDataTemplate(object item)

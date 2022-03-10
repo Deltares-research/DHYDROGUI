@@ -600,61 +600,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             AfterSetDataType();
         }
 
-        /// <summary>
-        /// Returns the value (Q or H) for a given time. Returns constant if DataType is constant
-        /// </summary>
-        /// <param name="time"></param>
-        /// <returns></returns>
-        public virtual double GetValue(DateTime time)
-        {
-            if ((DataType == Model1DBoundaryNodeDataType.WaterLevelTimeSeries) ||
-                (DataType == Model1DBoundaryNodeDataType.FlowTimeSeries))
-            {
-                return Data.Evaluate<double>(time);
-            }
-            if (DataType == Model1DBoundaryNodeDataType.WaterLevelConstant)
-            {
-                return WaterLevel;
-            }
-            if (DataType == Model1DBoundaryNodeDataType.FlowConstant)
-            {
-                return Flow;
-            }
-            throw new NotImplementedException("BoundaryNodeDataType not supported.");
-        }
-
-        public virtual double GetSaltValue(DateTime time)
-        {
-            switch (SaltConditionType)
-            {
-                case SaltBoundaryConditionType.Constant:
-                    return SaltConcentrationConstant;
-                case SaltBoundaryConditionType.TimeDependent:
-                    IVariable timeArgument = SaltConcentrationTimeSeries.Arguments[0];
-                    var variableValueFilter = new VariableValueFilter<DateTime>(timeArgument, time);
-                    return
-                        SaltConcentrationTimeSeries.Evaluate<double>(variableValueFilter);
-                default:
-                    throw new ArgumentOutOfRangeException("time", "No boundary condition data defined");
-            }
-        }
-
-        public virtual double GetTemperatureValue(DateTime time)
-        {
-            switch (TemperatureConditionType)
-            {
-                case TemperatureBoundaryConditionType.Constant:
-                    return TemperatureConstant;
-                case TemperatureBoundaryConditionType.TimeDependent:
-                    IVariable timeArgument = TemperatureTimeSeries.Arguments[0];
-                    return
-                        TemperatureTimeSeries.Evaluate<double>(new VariableValueFilter<DateTime>(timeArgument,
-                                                                                                       time));
-                default:
-                    throw new ArgumentOutOfRangeException("time", "No boundary condition data defined");
-            }
-        }
-
         private string GetNameForDataType()
         {
             switch (DataType)

@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// <seealso cref="System.Windows.Controls.UserControl" />
     /// <seealso cref="System.Windows.Markup.IComponentConnector" />
     /// <seealso cref="DelftTools.Controls.IView" />
-    public partial class WpfSettingsView : IView, IAdditionalView
+    public partial class WpfSettingsView : IAdditionalView
     {
         public WpfSettingsView()
         {

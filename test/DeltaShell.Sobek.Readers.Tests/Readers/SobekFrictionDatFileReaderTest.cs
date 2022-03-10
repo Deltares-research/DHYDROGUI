@@ -277,7 +277,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             Assert.AreEqual(3, sobekStructureFriction.MainFrictionType);
             Assert.AreEqual(30, sobekStructureFriction.MainFrictionConst);
             var structure3 = sobekFriction.StructureFrictionList.First(br => br.ID == "3");
-            Assert.AreEqual(StructureFrictionType.Manning, (StructureFrictionType)structure3.MainFrictionType);
+            Assert.AreEqual(1, structure3.MainFrictionType);
             Assert.AreEqual(0.042, structure3.MainFrictionConst);
         }
 

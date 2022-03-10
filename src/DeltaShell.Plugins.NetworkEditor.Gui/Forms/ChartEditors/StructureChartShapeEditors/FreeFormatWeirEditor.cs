@@ -205,12 +205,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             ShapeFeature.Invalidate();
         }
 
-
-        public virtual bool CanInsertCoordinate(Coordinate worldPosition)
-        {
-            return true;
-        }
-
         public override void DeleteTracker(IPoint trackerFeature)
         {
             if (CanDeleteTracker(trackerFeature))

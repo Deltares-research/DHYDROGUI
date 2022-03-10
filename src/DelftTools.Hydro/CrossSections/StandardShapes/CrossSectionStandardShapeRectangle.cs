@@ -1,4 +1,5 @@
 ﻿using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Aop;
 
 namespace DelftTools.Hydro.CrossSections.StandardShapes
@@ -24,6 +25,12 @@ namespace DelftTools.Hydro.CrossSections.StandardShapes
             return StandardCrossSectionsFactory.GetTabulatedCrossSectionFromRectangle(Width, Height, Closed);
         }
 
-        public override bool Closed { get; set; }
+        public override void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
+        {
+            Closed = true;
+            base.AddToHydroNetwork(hydroNetwork, helper);
+        }
+
+        public virtual bool Closed { get; set; }
     }
 }

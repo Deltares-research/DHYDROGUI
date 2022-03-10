@@ -417,8 +417,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CaseAnalysis
         {
             if (requiresScalarArgument)
             {
-                double referenceValue;
-                return !Double.TryParse(referenceValueTextBox.Text, out referenceValue);
+                return !Double.TryParse(referenceValueTextBox.Text, out double _);
             }
             return false;
         }

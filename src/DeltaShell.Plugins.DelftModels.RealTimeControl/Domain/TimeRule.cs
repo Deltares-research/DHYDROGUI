@@ -15,8 +15,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
     [Entity]
     public class TimeRule : RuleBase, ITimeDependentRtcObject
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(TimeRule));
-
         private TimeSeries timeSeries;
 
         public TimeRule() : this(null) {}

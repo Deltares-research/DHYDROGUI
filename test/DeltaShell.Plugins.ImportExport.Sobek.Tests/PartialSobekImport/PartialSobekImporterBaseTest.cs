@@ -83,7 +83,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
 
     public class PartialSobekImporterBaseTestClass: PartialSobekImporterBase
     {
-        private int partialImportCount = 0;
+        private int partialImportCount;
  
         protected override void PartialImport()
         {

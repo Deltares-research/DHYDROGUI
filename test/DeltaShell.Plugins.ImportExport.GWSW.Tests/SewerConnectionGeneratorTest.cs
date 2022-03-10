@@ -102,7 +102,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
                     GetDefaultGwswAttribute(SewerConnectionMapping.PropertyKeys.TargetCompartmentId, endNode, string.Empty)
                 }
             };
-            var network = new HydroNetwork();
             var sewerConnection = CreateSewerFeature<ISewerFeature>(connectionGwswElement);
             Assert.IsNotNull(sewerConnection);
             Assert.AreEqual(expectedType, sewerConnection.GetType(), "Created Sewer Connection is not of the expected type.");

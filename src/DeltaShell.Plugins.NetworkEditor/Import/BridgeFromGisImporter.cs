@@ -101,7 +101,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             {
                 ImportBridge(feature,
                            propertyMappingName.MappingColumn.Alias,
-                           propertyMappingLongName.MappingColumn.Alias,
                            propertyMappingDescription.MappingColumn.Alias
                     );
 
@@ -109,7 +108,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             return HydroNetwork;
         }
 
-        private void ImportBridge(IFeature feature, string columnNameName, string columnNameLongName, string columnNameDescription)
+        private void ImportBridge(IFeature feature, string columnNameName, string columnNameDescription)
         {
             IBridge bridge = AddOrUpdateBranchFeatureFromNetwork<IBridge>(feature, columnNameName, Bridge.CreateDefault);
 

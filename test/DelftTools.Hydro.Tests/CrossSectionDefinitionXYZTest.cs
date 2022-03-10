@@ -17,7 +17,7 @@ namespace DelftTools.Hydro.Tests
         {
             var crossSection = new CrossSectionDefinitionXYZ {Geometry = new LineString(new Coordinate[] {})};
 
-            var profile = crossSection.Profile;
+            var profile = crossSection.GetProfile();
             var flowProfile = crossSection.FlowProfile;
 
             Assert.AreEqual(0, profile.Count());
@@ -43,8 +43,8 @@ namespace DelftTools.Hydro.Tests
             var expectedProfileY = new[] { 0.0, diag, diag+2, 2*diag+2};
             var expectedProfileZ = new[] { 0.0, -2.0, -2.0, 0.0};
 
-            var profileY = crossSection.Profile.Select(p => p.X).ToList();
-            var profileZ = crossSection.Profile.Select(p => p.Y).ToList();
+            var profileY = crossSection.GetProfile().Select(p => p.X).ToList();
+            var profileZ = crossSection.GetProfile().Select(p => p.Y).ToList();
 
             for (int i = 0; i < expectedProfileY.Length; i++)
             {

@@ -737,8 +737,10 @@ namespace DelftTools.Hydro.Tests.SewerFeatures
 
             var sourceCompartment = new Compartment { Geometry = sourceGeometry};
             var targetCompartment = new Compartment { Geometry = targetGeometry};
-            var sourceManhole = new Manhole("sourceManhole") {Compartments = new EventedList<ICompartment> {sourceCompartment}};
-            var targetManhole = new Manhole("targetManhole") {Compartments = new EventedList<ICompartment> {targetCompartment}};
+            var sourceManhole = new Manhole("sourceManhole");
+            sourceManhole.Compartments.Add(sourceCompartment);
+            var targetManhole = new Manhole("targetManhole");
+            targetManhole.Compartments.Add(targetCompartment);
 
             var sewerConnection = new SewerConnection
             {

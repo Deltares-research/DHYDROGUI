@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
             AddCommonProperties(crossSectionDefinition);
 
             IniCategory.AddProperty(DefinitionPropertySettings.SingleValuedZ, DefinitionPropertySettings.SingleValuedZ.DefaultValue);
-            IniCategory.AddProperty(DefinitionPropertySettings.YZCount, crossSectionDefinition.Profile.ToList().Count);
+            IniCategory.AddProperty(DefinitionPropertySettings.YZCount, crossSectionDefinition.GetProfile().ToList().Count);
             
             AddCoordinates(crossSectionDefinition);
             
@@ -59,10 +59,10 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
         private void AddCoordinates(ICrossSectionDefinition crossSectionDefinition)
         {
             var zCoordinates = crossSectionDefinition.IsProxy
-                ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition.Profile.Select(p => p.Y)
-                : crossSectionDefinition.Profile.Select(p => p.Y);
+                ? ((CrossSectionDefinitionProxy)crossSectionDefinition).InnerDefinition.GetProfile().Select(p => p.Y)
+                : crossSectionDefinition.GetProfile().Select(p => p.Y);
 
-            var yCoordinates = crossSectionDefinition.Profile.Select(p => p.X);
+            var yCoordinates = crossSectionDefinition.GetProfile().Select(p => p.X);
 
             IniCategory.AddProperty(DefinitionPropertySettings.YCoors, yCoordinates);
             IniCategory.AddProperty(DefinitionPropertySettings.ZCoors, zCoordinates);

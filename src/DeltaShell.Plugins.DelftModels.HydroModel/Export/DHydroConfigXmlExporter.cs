@@ -195,12 +195,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
             return workflow;
         }
 
-        private static IActivity UnwrapActivity(IActivity activity)
-        {
-            var activityWrapper = activity as ActivityWrapper;
-            return activityWrapper == null ? activity : activityWrapper.Activity;
-        }
-
         private static IEnumerable<IDimrModel> GetDimrModelsFromItem(object item)
         {
             var hydroModel = item as HydroModel;

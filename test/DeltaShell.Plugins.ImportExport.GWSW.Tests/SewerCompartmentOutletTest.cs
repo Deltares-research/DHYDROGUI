@@ -51,11 +51,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
 
             #endregion
 
-            var network = new HydroNetwork();
             var outletCompartment = CreateSewerFeature<OutletCompartment>(nodeGwswElement);
             Assert.IsNotNull(outletCompartment);
             
-            CheckCompartmentPropertyValues(outletCompartment, uniqueId, manholeId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel);
+            CheckCompartmentPropertyValues(outletCompartment, uniqueId, nodeLength, nodeWidth, nodeShape, floodableArea, bottomLevel, surfaceLevel);
         }
         
         [Test]
@@ -70,7 +69,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
             var structureGwswElement = GetStructureGwswElement(uniqueId, structureType, defaultDouble, defaultDouble,
                 defaultDouble, defaultDouble, defaultDouble, surfaceWaterLevel);
 
-            var network = new HydroNetwork();
             var outletCompartment = CreateSewerFeature<OutletCompartment>(structureGwswElement);
             Assert.IsNotNull(outletCompartment);
             Assert.That(outletCompartment.SurfaceWaterLevel, Is.EqualTo(surfaceWaterLevel));

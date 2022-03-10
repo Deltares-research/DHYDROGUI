@@ -20,23 +20,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
 {
     public static class StructureFileWriterTestHelper
     {
-        public static void AddMultipleStructures(this IBranch branch)
-        {
-            AddRiverWeir(branch,
-                RIVER_WEIR_ID,
-                RIVER_WEIR_NAME,
-                RIVER_WEIR_CHAINAGE,
-                RIVER_WEIR_CREST_LEVEL,
-                RIVER_WEIR_CREST_WIDTH,
-                RIVER_WEIR_POS_CW_COEFF,
-                RIVER_WEIR_POS_SLIM_LIMIT,
-                RIVER_WEIR_NEG_CW_COEFF,
-                RIVER_WEIR_NEG_SLIM_LIMIT,
-                RIVER_WEIR_POS_SF.ToArray(),
-                RIVER_WEIR_POS_RED.ToArray(),
-                RIVER_WEIR_NEG_SF.ToArray(),
-                RIVER_WEIR_NEG_RED.ToArray());
-        }
         #region Const TestValues
 
         public const int PUMP_ID = 1;
@@ -461,7 +444,7 @@ namespace DeltaShell.NGHS.IO.TestUtils
             return culvert;
         }
 
-        public static ICulvert AddInvertedSiphon(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection, double inletLevel, double outletLevel,
+        public static void AddInvertedSiphon(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection, double inletLevel, double outletLevel,
                                           double length, double inletLossCoefficient, double outletLossCoefficient, bool isGated, double gateInitialOpening,
                                           double[] relOpening, double[] lossCoeff, double friction, bool groundLayerEnabled, double groundLayerRoughness, double bendLossCoefficient)
         {
@@ -470,7 +453,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
                                           relOpening, lossCoeff, friction, groundLayerEnabled, groundLayerRoughness);
             culvert.CulvertType = CulvertType.InvertedSiphon;
             culvert.BendLossCoefficient = bendLossCoefficient; // this value should not be zero, otherwise you're actually creating a culvert
-            return culvert;
         }
         
         private static IBridge AddBridge(this IBranch branch, long id, string name, double chainage, FlowDirection flowDirection, double shift, long crossSectionId)
@@ -548,7 +530,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
                                                              GeneralRegion.FileTypeName.StructureDefinition)
             };
 
-            var compoundStructureId = 0;
             structures.ForEach(structure =>
             {
                 var definitionGeneratorStructure = DefinitionGeneratorFactory.GetDefinitionGeneratorStructure(structure.GetStructureType());
@@ -577,7 +558,6 @@ namespace DeltaShell.NGHS.IO.TestUtils
                             break;
                     }
                     categories.Add(structureCategory);
-                    compoundStructureId++;
                 }
             });
             

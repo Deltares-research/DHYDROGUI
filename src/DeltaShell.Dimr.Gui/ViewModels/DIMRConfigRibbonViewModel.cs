@@ -9,8 +9,6 @@ namespace DeltaShell.Dimr.Gui.ViewModels
     [Entity]
     public class DIMRConfigRibbonViewModel
     {
-        public DIMRConfigRibbonViewModel() {}
-
         public Level CurrentLogfileLevel
         {
             get

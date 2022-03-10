@@ -88,7 +88,7 @@ namespace DeltaShell.Sobek.Readers.Readers
                             {
                                 yield return sobekLateralFlow;
                             }
-                            sb.Remove(0, sb.Length); ;
+                            sb.Remove(0, sb.Length);
                         }
                     }
     

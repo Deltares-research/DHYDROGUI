@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml.Schema;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
@@ -17,8 +16,9 @@ using log4net;
 
 namespace DeltaShell.Dimr
 {
-    public class DimrRunner : IDisposable
+    public sealed class DimrRunner : IDisposable
     {
+        private const bool runRemote = true;
         private const decimal fileVersion = 1;
         private const string createdBy = "Deltares, Coupling Team";
         private static readonly ILog log = LogManager.GetLogger(typeof(DimrRunner));
@@ -34,7 +34,6 @@ namespace DeltaShell.Dimr
 
         private readonly IDimrModel model;
         private readonly IDimrApiFactory dimrApiFactory;
-        protected bool runLocal;
         private bool disposed;
         private string dimrFile;
 
@@ -237,7 +236,7 @@ namespace DeltaShell.Dimr
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposed)
             {
@@ -311,7 +310,7 @@ namespace DeltaShell.Dimr
             dimrFile = GenerateDimrXML(model, exportPath);
 
             // initialize dimr
-            Api = dimrApiFactory.CreateNew(!runLocal);
+            Api = dimrApiFactory.CreateNew(runRemote);
             
             if (Api == null)
             {
@@ -344,20 +343,6 @@ namespace DeltaShell.Dimr
                                                 new HashSet<string>(model.IgnoredFilePathsWhenCleaningWorkingDirectory));
             exporter.Export(modelObject, model.GetExporterPath(exportDir));
             model.SuspendClearOutputOnInputChange = orgSuspendClearOutputOnInputChange;
-        }
-
-        // Display any warnings or errors.
-        [InvokeRequired]
-        private static void ValidationCallBack(object sender, ValidationEventArgs args)
-        {
-            if (args.Severity == XmlSeverityType.Warning)
-            {
-                log.Info(args.Message);
-            }
-            else
-            {
-                log.Error(args.Message);
-            }
         }
 
         // Display any warnings or errors.

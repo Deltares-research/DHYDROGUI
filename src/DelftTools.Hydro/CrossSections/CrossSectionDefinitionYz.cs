@@ -61,14 +61,9 @@ namespace DelftTools.Hydro.CrossSections
             get { return false; }
         }
 
-        public override IEnumerable<Coordinate> Profile
+        public override IEnumerable<Coordinate> GetProfile()
         {
-            get
-            {
-                return
-                    YZDataTable.Rows.Select(row => new Coordinate(row.Yq, row.Z)).OrderBy(c => c.X).
-                        ToList();
-            }
+            return YZDataTable.Rows.Select(row => new Coordinate(row.Yq, row.Z)).OrderBy(c => c.X).ToList();
         }
 
         public override IEnumerable<Coordinate> FlowProfile
@@ -137,7 +132,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public override IGeometry CalculateGeometry(IGeometry branchGeometry, double mapChainage)
         {
-            if (!Profile.Any())
+            if (!GetProfile().Any())
             {
                 var lengthIndexedLine = new LengthIndexedLine(branchGeometry);
 

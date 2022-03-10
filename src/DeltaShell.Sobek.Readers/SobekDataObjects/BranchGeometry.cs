@@ -22,12 +22,5 @@ namespace DeltaShell.Sobek.Readers.SobekDataObjects
             get { return branchID; }
             set { branchID = value; }
         }
-
-        public void AddPoint(string offset, string angle)
-        {
-            CurvingPoint curvingPoint = new CurvingPoint(NumUtils.ConvertToDouble(offset),
-                                                         NumUtils.ConvertToDouble(angle));
-            curvingPoints.Add(curvingPoint);
-        }
     }
 }

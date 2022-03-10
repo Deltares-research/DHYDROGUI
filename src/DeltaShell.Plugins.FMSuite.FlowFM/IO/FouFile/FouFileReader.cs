@@ -88,9 +88,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
             using (StreamReader sr = OpenFile(path))
             {
                 // ignore the first line, this is the header.
-                string ignoredHeaderLine = sr.ReadLine();
+                sr.ReadLine();
 
-                string line = null;
+                string line;
                 while ((line = sr.ReadLine()) != null)
                 {
                     IEnumerable<string> tokens = Tokenize(line);

@@ -38,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView
             {
                 //Align by thalweg
                 var deltaThalweg = currentThalweg - oldCrossSection.Thalweg;
-                var shiftedProfile = oldCrossSection.Profile.Select(c => new Coordinate(c.X + deltaThalweg, c.Y)).ToList();
+                var shiftedProfile = oldCrossSection.GetProfile().Select(c => new Coordinate(c.X + deltaThalweg, c.Y)).ToList();
                 var series = CreateHistoryLineSeries(oldCrossSection.Name, shiftedProfile);
                 series.ShowInLegend = false;
                 historyTool.Add(series);

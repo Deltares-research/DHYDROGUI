@@ -184,20 +184,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.Roughness
             }
             return branchProperties;
         }
-
-        private static DelftIniCategory GenerateRoughnessDefinition(RoughnessSection roughnessSection, IBranch branch, double location)
-        {
-            var definition = new DelftIniCategory(RoughnessDataRegion.DefinitionIniHeader);
-            definition.AddProperty(SpatialDataRegion.BranchId.Key, branch.Name);
-            definition.AddProperty(SpatialDataRegion.Chainage.Key, location, null, SpatialDataRegion.Chainage.Format);
-            var levels = GetLevels(roughnessSection, branch);
-            if (levels == null) return definition;
-
-            var values = GetValues(roughnessSection, branch, location, levels);
-            definition.AddProperty(RoughnessDataRegion.Values.Key, values, null, RoughnessDataRegion.Values.Format);
-
-            return definition;
-        }
         
         private static IEnumerable<double> GetValues(RoughnessSection roughnessSection, IBranch branch, double location, List<double> levels)
         {

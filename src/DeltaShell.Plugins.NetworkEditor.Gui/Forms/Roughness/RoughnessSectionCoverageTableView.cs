@@ -285,8 +285,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
         private bool RoughnessDisplayCellFilter(TableViewCellStyle tableViewCellStyle)
         {
             bool visible;
-            bool editable;
-            GetCellProperties(tableViewCellStyle.RowIndex, tableViewCellStyle.Column.AbsoluteIndex, out visible, out editable);
+            GetCellProperties(tableViewCellStyle.RowIndex, tableViewCellStyle.Column.AbsoluteIndex, out visible, out bool _);
             if (!visible)
             {
                 var color = ((TableView) coverageTableView.TableView).ReadOnlyCellBackColor;
@@ -308,9 +307,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.Roughness
         /// <returns></returns>
         private bool RoughnessReadOnlyCellFilter(TableViewCell arg)
         {
-            bool visible;
             bool editable;
-            GetCellProperties(arg.RowIndex, arg.Column.AbsoluteIndex, out visible, out editable);
+            GetCellProperties(arg.RowIndex, arg.Column.AbsoluteIndex, out bool _, out editable);
             return !editable;
         }
 

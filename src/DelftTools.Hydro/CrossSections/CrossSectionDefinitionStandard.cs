@@ -30,17 +30,14 @@ namespace DelftTools.Hydro.CrossSections
             get { return false; }
         }
 
-        public override IEnumerable<Coordinate> Profile
+        public override IEnumerable<Coordinate> GetProfile()
         {
-            get
-            {
-                return Shape.Profile.Select(c => new Coordinate(c.X, c.Y + LevelShift));
-            }
+            return Shape.Profile.Select(c => new Coordinate(c.X, c.Y + LevelShift));
         }
 
         public override IEnumerable<Coordinate> FlowProfile
         {
-            get { return Profile; }
+            get { return GetProfile(); }
         }
 
         public override CrossSectionType CrossSectionType

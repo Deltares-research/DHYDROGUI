@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Ribbon
                 fileFilter += "|" + "Arc/Info ASCII Grid (*.asc)|*.asc";
                 fileFilter += "|" + "ESRI .hdr Labelled (*.bil)|*.bil";
                 fileFilter += "|" + "TIF Tagget Image File Format (*.tif)|*.tif;*.tiff";
-                fileFilter += "|" + "PCRaster raster file format (*.map)|*.map"; ;
+                fileFilter += "|" + "PCRaster raster file format (*.map)|*.map";
                 return fileFilter;
             }
         }

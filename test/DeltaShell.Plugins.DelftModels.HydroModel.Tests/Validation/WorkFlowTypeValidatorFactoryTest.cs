@@ -15,11 +15,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Validation
             Assert.That(
                 WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.OfType<IWorkFlowTypeValidatorProvider>().Count(),
                 Is.EqualTo(0));
-            var rainfallRunoffModelJustToInjectWorkflowTypeValidator = new RainfallRunoffModel();
+            new RainfallRunoffModel();
             Assert.That(
                 WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.OfType<IWorkFlowTypeValidatorProvider>().Count(),
                 Is.EqualTo(1));
-            var rainfallRunoffModelJustToInjectWorkflowTypeValidator2 = new RainfallRunoffModel();
+            new RainfallRunoffModel();
             Assert.That(
                 WorkFlowTypeValidatorFactory.WorkFlowTypeValidators.OfType<IWorkFlowTypeValidatorProvider>().Count(),
                 Is.EqualTo(1));

@@ -56,11 +56,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 throw new ArgumentException("FeatureCoverage should be null");
             }
         }
-
-        public void Cleanup()
-        {
-            //unsubscribe
-        }
         
         private void SubscribeToModel()
         {

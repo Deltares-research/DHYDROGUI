@@ -254,18 +254,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Test]
         public void SaveAndRetrieveCondition()
         {
-            var retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateCondition(null));
+            var retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateCondition());
             Assert.IsNotNull(retrievedEntity);
-            Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfStandardConditions(RealTimeControlTestHelper.GenerateCondition(null), retrievedEntity));
+            Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfStandardConditions(RealTimeControlTestHelper.GenerateCondition(), retrievedEntity));
         }
 
         [Test]
         public void SaveAndRetrieveDirectionalCondition()
         {
-            var retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateDirectionalCondition(null));
+            var retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateDirectionalCondition());
             Assert.IsNotNull(retrievedEntity);
             Assert.IsInstanceOf<DirectionalCondition>(retrievedEntity);
-            Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfConditions(RealTimeControlTestHelper.GenerateDirectionalCondition(null), retrievedEntity));
+            Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfConditions(RealTimeControlTestHelper.GenerateDirectionalCondition(), retrievedEntity));
         }
 
         [Test]

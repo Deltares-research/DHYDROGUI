@@ -6,8 +6,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 {
     public static class DiaFileReader
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(DiaFileReader));
-
         public static string Read(string diaFilePath)
         {
             var diaFileContent = string.Empty;

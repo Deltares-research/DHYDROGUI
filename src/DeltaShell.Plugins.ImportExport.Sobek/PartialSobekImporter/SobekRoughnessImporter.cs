@@ -174,9 +174,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
         private void SetMainAndFloodPlainRoughness(CrossSectionSectionType main, CrossSectionSectionType floodPlain1, CrossSectionSectionType floodPlain2, SobekFriction sobekFriction)
         {
-            var defaultRoughnessType = DefaultRoughnessType;
-            var defaultRoughnessValue = DefaultRoughnessValue;
-
             var waterFlowFMModel = GetModel<WaterFlowFMModel>();
 
             var sectionMain = GetRoughnessSection(main.Name);
@@ -199,8 +196,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 
             }
             SetGlobalFrictionToRoughnessCoverages(globalSobekFriction, sectionMain, sectionFloodplain1,
-                                                      sectionFloodplain2, out defaultRoughnessValue,
-                                                      out defaultRoughnessType, true);
+                                                      sectionFloodplain2, true);
 
             if (waterFlowFMModel.UseReverseRoughness)
             {
@@ -208,8 +204,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                 var reverseFp1 = waterFlowFMModel.RoughnessSections.GetApplicableReverseRoughnessSection(sectionFloodplain1);
                 var reverseFp2 = waterFlowFMModel.RoughnessSections.GetApplicableReverseRoughnessSection(sectionFloodplain2);
                 SetGlobalFrictionToRoughnessCoverages(globalSobekFriction, reverseMain, reverseFp1,
-                                                      reverseFp2, out defaultRoughnessValue,
-                                                      out defaultRoughnessType, false);
+                                                      reverseFp2, false);
             }
 
             var warningList = new Dictionary<string, IList<string>>();
@@ -371,11 +366,10 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
         }
 
         private static void SetGlobalFrictionToRoughnessCoverages(SobekFriction sobekFriction, RoughnessSection sectionMain,
-            RoughnessSection sectionFloodplain1, RoughnessSection sectionFloodplain2, out double defaultRoughness,
-            out RoughnessType defaultRoughnessType, bool usePositive)
+            RoughnessSection sectionFloodplain1, RoughnessSection sectionFloodplain2, bool usePositive)
         {
-            defaultRoughness = DefaultRoughnessValue;
-            defaultRoughnessType = DefaultRoughnessType;
+            double defaultRoughness = DefaultRoughnessValue;
+            RoughnessType defaultRoughnessType = DefaultRoughnessType;
 
             if ((sectionMain == null) || (sectionFloodplain1 == null) || (sectionFloodplain2 == null))
             {

@@ -470,67 +470,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             return fmModel;
         }
 
-        private void AssertTimeseriesAreEqual(string variableName, string ncFileNameLeft, string ncFileNameRight, double minimumAbsError)
-        {
-            Assert.IsTrue(File.Exists(ncFileNameLeft),"NetCDF file not found: " + ncFileNameLeft);
-            Assert.IsTrue(File.Exists(ncFileNameRight),"NetCDF file not found: " + ncFileNameRight);
-
-            var arrayLeft = GetDataForVariable(variableName, ncFileNameLeft);
-            Assert.IsNotNull(arrayLeft, "variable " + variableName + " not found in NetCDF file " + ncFileNameLeft);
-
-            var arrayRight = GetDataForVariable(variableName, ncFileNameRight);
-            Assert.IsNotNull(arrayRight, "variable " + variableName + " not found in NetCDF file " + ncFileNameRight);
-
-            var nTimesLeft = arrayLeft.GetLength(0);
-            var nValuesLeft = arrayLeft.GetLength(1);
-            var nTimesRight = arrayRight.GetLength(0);
-            var nValuesRight = arrayRight.GetLength(1);
-            Assert.AreEqual(nTimesLeft, nTimesRight, "number of timesteps");
-            Assert.AreEqual(nValuesLeft, nValuesRight, "number of values in timeseries");
-
-            double max = 0.0;
-
-            for (int i = 0; i < nTimesLeft; ++i)
-            {
-                for (int j = 0; j < nValuesLeft; ++j)
-                {
-                    var left = (double)arrayLeft.GetValue(i, j);
-                    var right = (double)arrayRight.GetValue(i, j);
-
-                    Assert.AreEqual(left, right, Math.Max(1.0e-07 * Math.Abs(left), minimumAbsError), string.Format("value with index {0} at time index {1}", j, i));
-
-                    var err = Math.Abs(left - right);
-                    if (err > max) max = err;
-                }
-            }
-
-            Console.WriteLine("Timeseries '{0}' are equivalent, largest difference equal to {1}", variableName, max);
-        }
-
-        private Array GetDataForVariable(string varName, string ncFileName)
-        {
-            Array data = null;
-            NetCdfFile ncFile = null;
-            try
-            {
-                ncFile = NetCdfFile.OpenExisting(ncFileName);
-                var ncVariable = ncFile.GetVariableByName(varName);
-
-                if (ncVariable != null)
-                {
-                    data = ncFile.Read(ncVariable);
-                }
-            }
-            finally
-            {
-                if (ncFile != null)
-                {
-                    ncFile.Close();
-                }
-            }
-            return data;
-        }
-
         [Test]
         [Category(TestCategory.DataAccess)]
         [Category(TestCategory.Integration)]

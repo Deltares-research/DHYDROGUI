@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using DelftTools.Functions.Generic;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter;
-using DeltaShell.Sobek.Readers.Readers;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
@@ -30,68 +27,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var boundaryConditions = waterFlowFmModel.BoundaryConditions1D;
             Assert.AreEqual(34, boundaryConditions.Count());
             Assert.AreEqual(9, boundaryConditions.Count(bc => bc.DataType != Model1DBoundaryNodeDataType.None));
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void ReadBoundaryConditionsAndBuildWithInterpolationTypeConstant()
-        {
-            // PDIN ..pdin = period and interpolation method, 0 0 or 0 1 = interpolation continuous, 1 0 or 1 1 = interpolation block 
-            var initialConditionsText = @"FLBO id '1' st 0 ty 0 h_ wt 1 0 0 PDIN 1 0  pdin" + Environment.NewLine +
-                @"TBLE" + Environment.NewLine +
-                @"'1996/01/01;00:00:00' 10 < " + Environment.NewLine +
-                @"'1996/01/01;06:00:00' 15 < " + Environment.NewLine +
-                @"'1996/01/01;12:00:00' 10 < " + Environment.NewLine +
-                @"'1996/01/01;18:00:00' 20 < " + Environment.NewLine +
-                @"'1996/01/02;00:00:00' 10 < " + Environment.NewLine +
-                @"tble flbo";
-
-            var boundaryConditions = new SobekBoundaryConditionReader();
-            var sobekFlowBoundaryCondition = boundaryConditions.GetFlowBoundaryCondition(initialConditionsText);
-            var flowBoundaryCondition = WaterFlowModel1DBoundaryNodeDataBuilder.ToFlowBoundaryNodeData(sobekFlowBoundaryCondition);
-            
-            Assert.AreEqual(InterpolationType.Constant, flowBoundaryCondition.Data.Arguments[0].InterpolationType);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void ReadBoundaryConditionsAndBuildWithPeriodicExtrapolation()
-        {
-            //PDIN 0 1 '43200' pdin = extrapolation periodic 43200 sec (12 hours) (source sobek 2.12)
-            var initialConditionsText = @"FLBO id '1' st 0 ty 0 h_ wt 1 0 0 PDIN 0 1 '43200' pdin" + Environment.NewLine +
-                @"TBLE" + Environment.NewLine +
-                @"'1996/01/01;00:00:00' 10 < " + Environment.NewLine +
-                @"'1996/01/01;06:00:00' 15 < " + Environment.NewLine +
-                @"'1996/01/01;12:00:00' 10 < " + Environment.NewLine +
-                @"tble flbo";
-
-            var boundaryConditions = new SobekBoundaryConditionReader();
-            var sobekFlowBoundaryCondition = boundaryConditions.GetFlowBoundaryCondition(initialConditionsText);
-            var flowBoundaryCondition = WaterFlowModel1DBoundaryNodeDataBuilder.ToFlowBoundaryNodeData(sobekFlowBoundaryCondition);
-            
-            Assert.AreEqual(ExtrapolationType.Periodic, flowBoundaryCondition.Data.Arguments[0].ExtrapolationType);
-        }
-
-        [Test]
-        [Category(TestCategory.DataAccess)]
-        [Category(TestCategory.Slow)]
-        public void ReadBoundaryConditionsAndBuildWithPeriodicExtrapolation2()
-        {
-            //PDIN 0 1 365;00:00:00 means linear interpolation, period one year (source manual)
-            var initialConditionsText = @"FLBO id '1' st 0 ty 0 h_ wt 1 0 0 PDIN 0 1 365;00:00:00 pdin" + Environment.NewLine +
-                @"TBLE" + Environment.NewLine +
-                @"'1996/01/01;00:00:00' 10 < " + Environment.NewLine +
-                @"'1996/01/01;06:00:00' 15 < " + Environment.NewLine +
-                @"'1996/01/01;12:00:00' 10 < " + Environment.NewLine +
-                @"tble flbo";
-
-            var boundaryConditions = new SobekBoundaryConditionReader();
-            var sobekFlowBoundaryCondition = boundaryConditions.GetFlowBoundaryCondition(initialConditionsText);
-            var flowBoundaryCondition = WaterFlowModel1DBoundaryNodeDataBuilder.ToFlowBoundaryNodeData(sobekFlowBoundaryCondition);
-            
-            Assert.AreEqual(ExtrapolationType.Periodic, flowBoundaryCondition.Data.Arguments[0].ExtrapolationType);
         }
 
         [Test]

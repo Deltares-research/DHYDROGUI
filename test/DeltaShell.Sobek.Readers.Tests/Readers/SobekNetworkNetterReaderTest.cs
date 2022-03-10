@@ -15,7 +15,6 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
             var fileText = GetTestFile();
             var dictionary = SobekNetworkNetterReader.ParseNodeTypes(fileText);
 
-            var keys = dictionary.Keys.ToList();
             Assert.IsTrue(dictionary.ContainsKey("T1_h1"));
             Assert.AreEqual("SBK_BOUNDARY",dictionary["T1_h1"]);
 

@@ -1081,51 +1081,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             }
         }
 
-        private static SnappedFeatureCollection GetSnappedFeatureCollectionFromLayers(IList<ILayer> layers, string layerName)
-        {
-            var layer = layers.FirstOrDefault(l => l.Name == layerName);
-            return layer?.DataSource as SnappedFeatureCollection;
-        }
-
-        private static WaterFlowFMModel ImportLdbAndGrid(IApplication app, string landBoundaryPath, string netFile)
-        {
-            var targetModel = AddFMModelToProject(app);
-
-            // Import Land boundaries
-            var importerLDB = app.FileImporters.OfType<LdbFileImporterExporter>().FirstOrDefault();
-            Assert.IsNotNull(importerLDB);
-
-            var ldbImported = importerLDB.ImportItem(landBoundaryPath, targetModel.Area.LandBoundaries);
-            Assert.IsNotNull(ldbImported as IList<LandBoundary2D>);
-            Assert.IsTrue((ldbImported as IList<LandBoundary2D>).Any());
-            Assert.IsTrue(targetModel.Area.LandBoundaries.Any());
-
-            ImportGrid(app, netFile, targetModel);
-
-            return targetModel;
-        }
-
-        private static WaterFlowFMModel AddFMModelToProject(IApplication app)
-        {
-            // Add water flow model to project
-            var project = app.Project;
-            project.RootFolder.Add(new WaterFlowFMModel());
-
-            // Check model name
-            var targetModel = project.RootFolder.Models.OfType<WaterFlowFMModel>().FirstOrDefault();
-            Assert.IsNotNull(targetModel);
-            Assert.IsFalse(targetModel.Area.LandBoundaries.Any());
-            return targetModel;
-        }
-
-        private static void ImportGrid(IApplication app, string netFile, WaterFlowFMModel targetModel)
-        {
-            //Import grid
-            var importerGrid = app.FileImporters.OfType<FlowFMNetFileImporter>().FirstOrDefault();
-            Assert.IsNotNull(importerGrid);
-            var gridImported = importerGrid.ImportItem(netFile, targetModel.Grid);
-            Assert.IsNotNull(gridImported);
-        }
         [Test]
         [Category(TestCategory.WindowsForms)]
         public void DrawingPipeCorrectlyAddsCompartmentsToCompartmentLayer()

@@ -68,8 +68,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             crossSection1Def.Sections.Add(new CrossSectionSection
                                               {
-                                                  MinY = crossSection1Def.Profile.Select(yz => yz.X).Min(),
-                                                  MaxY = crossSection1Def.Profile.Select(yz => yz.X).Max(),
+                                                  MinY = crossSection1Def.GetProfile().Select(yz => yz.X).Min(),
+                                                  MaxY = crossSection1Def.GetProfile().Select(yz => yz.X).Max(),
                                                   SectionType = crossSectionSectionType
                                               });
 
@@ -90,8 +90,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
 
             crossSection2Def.Sections.Add(new CrossSectionSection
                                               {
-                                                  MinY = crossSection2Def.Profile.Select(yz => yz.X).Min(),
-                                                  MaxY = crossSection2Def.Profile.Select(yz => yz.X).Max(),
+                                                  MinY = crossSection2Def.GetProfile().Select(yz => yz.X).Min(),
+                                                  MaxY = crossSection2Def.GetProfile().Select(yz => yz.X).Max(),
                                                   SectionType = crossSectionSectionType
                                               });
 

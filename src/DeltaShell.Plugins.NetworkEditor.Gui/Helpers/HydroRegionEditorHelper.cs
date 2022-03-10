@@ -212,16 +212,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
             }
         }
 
-        public static IHydroRegion RootGetHydroRegion(MapView view)
-        {
-            return view.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region).FirstOrDefault(r => r != null && r.Parent == null);
-        }
-
-        public static INetwork GetNetwork(MapView view)
-        {
-            return view.Map.GetAllVisibleLayers(true).OfType<HydroRegionMapLayer>().Select(l => l.Region).OfType<INetwork>().FirstOrDefault();
-        }
-
         /// <summary>
         /// Move node to a new position
         /// MoveNodeTo uses the HydroNetworkMapLayer of the mapcontrol and 

@@ -111,33 +111,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
             return feature;
         }
 
-        /// <summary>
-        /// Draws horizontal line at the location of the culvert.
-        /// </summary>
-        /// <param name="level"></param>
-        /// <param name="normalStyle"></param>
-        /// <param name="selectedStyle"></param>
-        /// <returns></returns>
-        private IShapeFeature GetCenteredHorizontalLine(double level, VectorStyle normalStyle, VectorStyle selectedStyle)
-        {
-            //pixel width and height
-            const int height = 3;
-            const int width = 10;
-
-            //lower level line at YOffset of 6 pixels wide
-            var x = OffsetInSideView - (GetWorldWidth(width) / 2);
-
-
-
-            var feature = new FixedRectangleShapeFeature(Chart, x, level, width, height, false, false)
-            {
-                NormalStyle = normalStyle,
-                SelectedStyle = selectedStyle
-            };
-
-            return feature;
-        }
-
         private IShapeFeature GetGroundLayerLine()
         {
             VectorStyle normalStyle = CulvertStyling.NormalInletStyle;
@@ -164,7 +137,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.StructureChart
         /// <returns></returns>
         private PolygonShapeFeature GetTube()
         {
-            var yzvalues = Structure.CrossSectionDefinitionAtInletAbsolute.Profile;
+            var yzvalues = Structure.CrossSectionDefinitionAtInletAbsolute.GetProfile();
             if (yzvalues.Count() == 0)
                 return null;
 

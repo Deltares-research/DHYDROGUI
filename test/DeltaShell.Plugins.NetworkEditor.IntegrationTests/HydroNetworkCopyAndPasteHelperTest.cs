@@ -243,8 +243,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
         [Test]
         public void PasteBranchFeatureToBranchInSameNetwork()
         {
-            string errorMessage;
-
             var network = HydroNetworkHelper.GetSnakeHydroNetwork(new Point(0, 0), new Point(100, 0), new Point(100, 100));
             var channel1 = network.Channels.First();
             var channel2 = network.Channels.ElementAt(1);
@@ -256,10 +254,10 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             channel1.BranchFeatures.Add(CrossSection.CreateDefault(CrossSectionType.YZ, channel1));
 
             HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(network.Pumps.ElementAt(0));
-            Assert.IsTrue(HydroNetworkCopyAndPasteHelper.PasteBranchFeatureFromClipboardToBranch(channel1, 10, out errorMessage));
+            Assert.IsTrue(HydroNetworkCopyAndPasteHelper.PasteBranchFeatureFromClipboardToBranch(channel1, 10, out string _));
 
             HydroNetworkCopyAndPasteHelper.SetNetworkFeatureToClipBoard(network.CrossSections.ElementAt(0));
-            Assert.IsTrue(HydroNetworkCopyAndPasteHelper.PasteBranchFeatureFromClipboardToBranch(channel2, 10, out errorMessage));
+            Assert.IsTrue(HydroNetworkCopyAndPasteHelper.PasteBranchFeatureFromClipboardToBranch(channel2, 10, out string _));
 
             // Check the number of features in the network
             Assert.AreEqual(2, network.Pumps.Count());
@@ -474,8 +472,7 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests
             
             NetworkHelper.AddBranchFeatureToBranch(crossSection,channel, 10);
 
-            string message = "";
-            HydroNetworkCopyAndPasteHelper.PastBranchFeatureToBranch(channel, crossSection, 10, out message);
+            HydroNetworkCopyAndPasteHelper.PastBranchFeatureToBranch(channel, crossSection, 10, out string _);
 
             Assert.AreEqual(2, channel.CrossSections.Count());
             var copy = channel.CrossSections.First(c => c.Name != "kees");

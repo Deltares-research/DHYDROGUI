@@ -161,12 +161,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             ImportModelAndRun(@"\RRMiniTestModels\DRRSA.lit\16\NETWORK.TP");
         }
 
-        public static void Main(string[] args)
-        {
-            var tests = new RainfallRunoffImportRunTests();
-            tests.RunTholen3mm4mndPerformance();
-        }
-
         [Test]
         [Category(TestCategory.Performance)]
         [Category(TestCategory.WorkInProgress)]

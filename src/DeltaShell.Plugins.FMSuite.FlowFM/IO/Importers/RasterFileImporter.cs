@@ -80,9 +80,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 return bathymetry;
             }
 
-            bool linksEqual;
             var grid = RasterFile.ReadUnstructuredGrid(netFilePath, out var gridCoverage);
-            UnstructuredGridHelper.CompareGrids(flowModel.Grid, grid, out var verticesEqual, out var cellsEqual, out linksEqual);
+            UnstructuredGridHelper.CompareGrids(flowModel.Grid, grid, out var verticesEqual, out var cellsEqual, out bool _);
             if (!verticesEqual || !cellsEqual)
             {
                 Log.Error($"Import of bed level canceled. The file at '{netFilePath}' does not contain the same grid data as the grid you currently have in your model.\nImport this file as a spatial operation instead and interpolate.");
@@ -104,8 +103,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                     return grid;
                 }
 
-                IRegularGridCoverage gridCoverage;
-                SetGrid(path, flowModel, out gridCoverage);
+                SetGrid(path, flowModel, out IRegularGridCoverage _);
                 makeLayerVisibleAction?.Invoke(flowModel.Grid);
                 return flowModel.Grid;
             }
@@ -212,7 +210,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers
                 fileFilter += "|" + "Arc/Info ASCII Grid (*.asc)|*.asc";
                 fileFilter += "|" + "ESRI .hdr Labelled (*.bil)|*.bil";
                 fileFilter += "|" + "TIF Tagget Image File Format (*.tif)|*.tif;*.tiff";
-                fileFilter += "|" + "PCRaster raster file format (*.map)|*.map"; ;
+                fileFilter += "|" + "PCRaster raster file format (*.map)|*.map";
                 return fileFilter;
             }
            

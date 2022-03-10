@@ -58,7 +58,7 @@ namespace DelftTools.Hydro.CrossSections
 
         public static bool IsProfileMonotonous(this CrossSectionDefinitionZW crossSectionDefinitionZw)
         {
-            var profile = crossSectionDefinitionZw.Profile.ToList();
+            var profile = crossSectionDefinitionZw.GetProfile().ToList();
             var midPoint = (int) Math.Ceiling(profile.Count/2.0);
             
             for(int i = 1; i < midPoint; i++)

@@ -3,7 +3,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO
 {
-    public class DelftBcWriter : DelftIniWriter
+    public sealed class DelftBcWriter : DelftIniWriter
     {
         public void WriteBcFile(IEnumerable<IDelftIniCategory> categories, string iniFile)
         {
@@ -29,7 +29,7 @@ namespace DeltaShell.NGHS.IO
             }
         }
 
-        protected virtual void WriteTable(IList<IDelftBcQuantityData> table)
+        private void WriteTable(IList<IDelftBcQuantityData> table)
         {
             if (table.Count == 0) return;
             var tableRows = new string[table[0].Values.Count]; // there will be as many rows as there are quantity values

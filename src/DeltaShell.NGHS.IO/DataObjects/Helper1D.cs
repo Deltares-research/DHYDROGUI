@@ -40,37 +40,6 @@ namespace DeltaShell.NGHS.IO.DataObjects
             return bc;
         }
 
-        public static BoundaryType GetBoundaryType(Model1DBoundaryNodeData boundaryNodeData)
-        {
-            switch (boundaryNodeData.DataType)
-            {
-                case Model1DBoundaryNodeDataType.WaterLevelTimeSeries:
-                    return BoundaryType.Level;
-                case Model1DBoundaryNodeDataType.FlowTimeSeries:
-                    return BoundaryType.Discharge;
-                case Model1DBoundaryNodeDataType.FlowConstant:
-                    return BoundaryType.Discharge;
-                case Model1DBoundaryNodeDataType.WaterLevelConstant:
-                    return BoundaryType.Level;
-                case Model1DBoundaryNodeDataType.FlowWaterLevelTable:
-                    // SOBEK3-1035
-                    if (boundaryNodeData.Data != null &&
-                        boundaryNodeData.Data.Components.Any() &&
-                        boundaryNodeData.Data.Components[0].ValueType == typeof(double) &&
-                        boundaryNodeData.Data.Components[0].Values.Count > 0 &&
-                        (double)boundaryNodeData.Data.Components[0].MinValue <= 0 &&
-                        (double)boundaryNodeData.Data.Components[0].MaxValue <= 0)
-                    {
-                        // if Q <= 0 return WaterLevel type
-                        return BoundaryType.Level;
-                    }
-                    // if Q >= 0 return Discharge type (returned by default)
-                    return BoundaryType.Discharge;
-                default:
-                    throw new ArgumentOutOfRangeException(String.Format("BoundaryNodeDataType {0} is not supported by the ModelApi", boundaryNodeData.DataType));
-            }
-        }
-
         public static IEnumerable<Model1DBoundaryNodeDataType> GetTimeSeriesDataTypes(IFunction series)
         {
             var isDischargeSeries = false;

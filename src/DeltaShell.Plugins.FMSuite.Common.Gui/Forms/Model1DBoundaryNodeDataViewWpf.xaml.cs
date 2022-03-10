@@ -62,8 +62,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Forms
             var tb = ((TextBox) sender);
             bool dot = tb.Text.IndexOf(".") < 0 && e.Text.Equals(".") && tb.Text.Length > 0;
             bool neg = tb.Text.IndexOf("-") < 0 && e.Text.Equals("-") && tb.Text.Length >= 0;
-            double num = 0.0;
-            e.Handled = !double.TryParse(e.Text, out num) && !dot && !neg;
+            e.Handled = !double.TryParse(e.Text, out double _) && !dot && !neg;
         }
 
         private void ProhibitSpaceKey(object sender, KeyEventArgs e)

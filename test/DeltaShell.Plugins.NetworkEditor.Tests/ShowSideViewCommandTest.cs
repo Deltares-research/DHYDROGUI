@@ -197,11 +197,5 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests
             Func5
                 <INetworkCoverage, ICoverage, IEnumerable<INetworkCoverage>, IEnumerable<IFeatureCoverage>, IEnumerable<INetworkCoverage>,
                     NetworkSideViewDataController> GetSideViewDataFunction;
-
-        public NetworkSideViewDataController GetSideViewData(INetworkCoverage route, ICoverage waterLevel, IEnumerable<INetworkCoverage> allNetworkCoverages, 
-            IEnumerable<IFeatureCoverage> allFeatureCoverages, IEnumerable<INetworkCoverage> renderedCoverages)
-        {
-            return GetSideViewDataFunction(route, waterLevel, allNetworkCoverages, allFeatureCoverages, renderedCoverages);
-        }
     }
 }

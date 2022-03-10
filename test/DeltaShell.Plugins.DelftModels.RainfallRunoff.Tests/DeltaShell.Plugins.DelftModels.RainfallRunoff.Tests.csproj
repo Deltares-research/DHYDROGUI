@@ -132,6 +132,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="FeatureCoverageProviders" />
 	  <Folder Include="Properties\" />
 	</ItemGroup>
 </Project>

@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui
                 }
                 wizard.ShowDialog();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
             }
         }

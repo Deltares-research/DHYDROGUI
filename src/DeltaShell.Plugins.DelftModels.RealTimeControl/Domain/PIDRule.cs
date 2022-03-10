@@ -19,8 +19,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Domain
             TimeSeries = 2
         }
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(PIDRule));
-
         private TimeSeries timeSeries;
 
         public PIDRule() : this(null) {}

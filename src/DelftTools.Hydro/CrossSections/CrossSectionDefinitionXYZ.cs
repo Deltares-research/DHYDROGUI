@@ -162,7 +162,7 @@ namespace DelftTools.Hydro.CrossSections
         [EditAction]
         private void FixProfile(IGeometry oldGeometry, IGeometry newGeometry)
         {
-            var profileCoordinates = Profile.ToList();
+            var profileCoordinates = GetProfile().ToList();
 
             bool fullRebuild = false;
 
@@ -249,7 +249,7 @@ namespace DelftTools.Hydro.CrossSections
 
             XYZDataTable.BeginLoadData();
             XYZDataTable.Clear();
-            var profile = Profile.ToList();
+            var profile = GetProfile().ToList();
 
             foreach (var t in profile)
             {
@@ -274,13 +274,10 @@ namespace DelftTools.Hydro.CrossSections
             get { return true; }
         }
 
-        public override IEnumerable<Coordinate> Profile
+        public override IEnumerable<Coordinate> GetProfile()
         {
-            get
-            {
-                return CrossSectionHelper.CalculateYZProfileFromGeometry(Geometry).ToList();
-            }
-        }
+            return CrossSectionHelper.CalculateYZProfileFromGeometry(Geometry).ToList();
+    }
 
         public override IEnumerable<Coordinate> FlowProfile
         {
@@ -289,7 +286,7 @@ namespace DelftTools.Hydro.CrossSections
                 //take coordinates from profile, but adjust Y (Z) values with storage. StorageMapping is based on Geometry 
                 //coordinates not profile coordinates, but indices match.
 
-                return Profile.Select((c, index) => new Coordinate(c.X, c.Y + xyzDataTable[index].DeltaZStorage, 0.0));
+                return GetProfile().Select((c, index) => new Coordinate(c.X, c.Y + xyzDataTable[index].DeltaZStorage, 0.0));
             }
         }
 

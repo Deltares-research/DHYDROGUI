@@ -8,11 +8,6 @@ namespace DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition
     {
         protected BinaryWriter BinFileForLevelTables;
 
-        public void SetBinFileForLevelTables(BinaryWriter binaryWriter)
-        {
-            BinFileForLevelTables = binaryWriter;
-        }
-
         protected DelftIniCategory IniCategory { get; }
         private readonly string definitiontype;
 

@@ -14,7 +14,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW.Tests
     {
         protected const string TypeDouble = "double";
         
-        protected void CheckCompartmentPropertyValues(Compartment compartment, string uniqueId, string manholeId, double manholeLength, double manholeWidth, CompartmentShape shape, double floodableArea, double bottomLevel, double surfaceLevel)
+        protected void CheckCompartmentPropertyValues(Compartment compartment, string uniqueId, double manholeLength, double manholeWidth, CompartmentShape shape, double floodableArea, double bottomLevel, double surfaceLevel)
         {
             Assert.NotNull(compartment.ParentManholeName);
             

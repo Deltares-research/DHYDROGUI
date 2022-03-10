@@ -513,7 +513,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                     return (IList<T>)locationData.OfType<object>().Select(o => (T)Convert.ChangeType(o,typeof(T))).ToList();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 shape = new[] { 0, 0 };
                 return new List<T>();

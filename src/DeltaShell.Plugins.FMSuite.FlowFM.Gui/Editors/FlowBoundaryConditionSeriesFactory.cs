@@ -94,16 +94,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 Color.Gold, Color.DarkGreen, Color.Tomato
             };
 
-        private static readonly Color[] backGroundColors = new[] { Color.Gray, Color.Black, Color.LightGray };
 
         private static Color GetSignalColor(int i)
         {
             return signalColors[i % signalColors.Length];
-        }
-
-        private static Color GetBackgroundColor(int i)
-        {
-            return backGroundColors[i % backGroundColors.Length];
         }
 
         private readonly List<IFunction> backgroundTimeSeries;

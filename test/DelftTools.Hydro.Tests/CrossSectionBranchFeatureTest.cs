@@ -24,7 +24,7 @@ namespace DelftTools.Hydro.Tests
 
             // the total delta x; used as y for the crosssectional view should be 100.
             double length =
-                Math.Abs((double) (crossSection.Definition.Profile.Last().X - crossSection.Definition.Profile.First().X));
+                Math.Abs((double) (crossSection.Definition.GetProfile().Last().X - crossSection.Definition.GetProfile().First().X));
             Assert.AreEqual(100.0, length, 1.0e-6);
         }
         

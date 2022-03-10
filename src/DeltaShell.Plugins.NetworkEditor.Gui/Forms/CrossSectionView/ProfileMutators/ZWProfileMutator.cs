@@ -39,7 +39,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
                     row.Width = newWidth;
                 }
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
                 Log.Error("Attempt to add invalid point to ZW-profile has been ignored.");
             }

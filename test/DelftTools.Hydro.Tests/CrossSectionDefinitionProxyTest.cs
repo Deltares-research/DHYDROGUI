@@ -110,7 +110,7 @@ namespace DelftTools.Hydro.Tests
 
         private static void AssertLevelShiftsWork(ICrossSectionDefinition innerDefinition)
         {
-            Assert.IsTrue(innerDefinition.Profile.Count()>0);
+            Assert.IsTrue(innerDefinition.GetProfile().Count()>0);
 
             var proxyDefinition = new CrossSectionDefinitionProxy(innerDefinition);
             CheckWithShift(innerDefinition, proxyDefinition, 3.3);
@@ -120,7 +120,7 @@ namespace DelftTools.Hydro.Tests
         private static void CheckWithShift(ICrossSectionDefinition innerDefinition, CrossSectionDefinitionProxy proxyDefinition, double levelShift)
         {
             proxyDefinition.LevelShift = levelShift;
-            Assert.AreEqual(innerDefinition.Profile.Select(c => new Coordinate(c.X, c.Y + levelShift)).ToList(),proxyDefinition.Profile.ToList());
+            Assert.AreEqual(innerDefinition.GetProfile().Select(c => new Coordinate(c.X, c.Y + levelShift)).ToList(),proxyDefinition.GetProfile().ToList());
             Assert.AreEqual(innerDefinition.FlowProfile.Select(c => new Coordinate(c.X, c.Y + levelShift)).ToList(), proxyDefinition.FlowProfile.ToList());
         }
     }

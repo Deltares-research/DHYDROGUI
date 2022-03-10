@@ -273,7 +273,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var reader = new PliFile<Feature2D>();
             IEnumerable<Feature2D> features = reader.Read(pliFilePath);
-            if (!features.Any()) return Enumerable.Empty<Feature2D>(); ;
+            if (!features.Any()) return Enumerable.Empty<Feature2D>();
             foreach (var feature in features)
             {
                 modelDefinition.Boundaries.Add(feature);

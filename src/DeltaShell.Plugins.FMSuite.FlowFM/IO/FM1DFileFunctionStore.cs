@@ -180,7 +180,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 if (filters == null  || filters.Length == 0)
                 {
-                    return GetValuesForTimeSeriesAtAllLocations<T>(variable, ncVariableName); ;
+                    return GetValuesForTimeSeriesAtAllLocations<T>(variable, ncVariableName);
                 }
 
                 var dateTimeFilter = filters.OfType<VariableValueFilter<DateTime>>().FirstOrDefault(f => f.Variable == coverage.Time);
@@ -223,7 +223,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return new MultiDimensionalArray<T>(new List<T>(), new[] { 0, 0 });
                 }
@@ -344,7 +344,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     return (IList<T>)locationData.OfType<object>().Select(Convert.ToDouble).ToList();
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 shape = new[] { 0, 0 };
                 return new List<T>();

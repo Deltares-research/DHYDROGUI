@@ -58,7 +58,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers
                 @"FLBO id 'ND_7' st 0 ty 0 h_ wt 11 'BC_9' flbo";
             var boundaryConditions = new SobekBoundaryConditionReader();
 
-            var boundaryCondition = boundaryConditions.GetFlowBoundaryCondition(text);
+            Assert.DoesNotThrow(() => boundaryConditions.GetFlowBoundaryCondition(text));
         }
 
         [Test] public void TableLevelTime()

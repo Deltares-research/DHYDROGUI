@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Sobek.Readers.Readers;
 using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
 {
@@ -125,56 +123,6 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
                         }
                     }
                 }
-            }
-        }
-
-        private static void UpdateDiscretization(IDiscretization discretization, IEnumerable<NetworkLocation> lstCalcPointsToAddToDiscretization)
-        {
-            foreach (var networkLocation in lstCalcPointsToAddToDiscretization)
-            {
-                if (Math.Abs(networkLocation.Chainage) < BranchFeature.Epsilon)
-                {
-                    AddOrMoveFirstCalculationPoint(discretization, networkLocation);
-                }
-                else
-                {
-                    AddOrMoveLastCalculationPoint(discretization, networkLocation);
-                }
-            }
-
-            discretization.SegmentGenerationMethod = SegmentGenerationMethod.SegmentBetweenLocationsFullyCovered;
-        }
-
-        private static void AddOrMoveLastCalculationPoint(IDiscretization discretization, NetworkLocation networkLocation)
-        {
-            // add an extra calc point to the end of the original branch or move last to end
-            var branch = networkLocation.Branch;
-            var gridPoints = discretization.Locations.Values.Where(nl => nl.Branch == branch).ToArray();
-            var n = gridPoints.Length - 1;
-
-            if (n < 1 || branch.Length - gridPoints[n].Chainage > 0.25) // at least 2 grid points per branch (begin & end), validation minimum distance validation criteria
-            {
-                discretization[new NetworkLocation(branch, branch.Length)] = 1.0;
-            }
-            else
-            {
-                gridPoints[n].Chainage = branch.Length;
-            }
-        }
-
-        private static void AddOrMoveFirstCalculationPoint(IDiscretization discretization, NetworkLocation networkLocation)
-        {
-            // add an extra calc point to the begin of the new branch or move first to begin
-            var branch = networkLocation.Branch;
-            var gridPoints = discretization.Locations.Values.Where(nl => nl.Branch == branch).ToArray();
-
-            if (gridPoints.Length < 2 || gridPoints[0].Chainage > 0.25) //at least 2 grid points per branch (begin & end), validation minimum distance validation criteria
-            {
-                discretization[new NetworkLocation(branch, 0.0)] = 1.0;
-            }
-            else
-            {
-                gridPoints[0].Chainage = 0.0;
             }
         }
     }

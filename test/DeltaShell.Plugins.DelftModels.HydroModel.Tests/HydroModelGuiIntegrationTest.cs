@@ -135,8 +135,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         public void ShowFMModelRunCoupledToRTC()
         {
             WaterFlowFMModel flow;
-            RealTimeControlModel rtc;
-            var hydroModel = CreateFMRTCModel(out rtc, out flow, app);
+            var hydroModel = CreateFMRTCModel(out flow, app);
 
             // wait until gui starts
             Action mainWindowShown = delegate
@@ -248,10 +247,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 }
             }
         }
-        private static HydroModel CreateFMRTCModel(out RealTimeControlModel rtc, out WaterFlowFMModel flow, IApplication application)
+        private static HydroModel CreateFMRTCModel(out WaterFlowFMModel flow, IApplication application)
         {
             flow = new WaterFlowFMModel { Name = "flow" };
-            rtc = new RealTimeControlModel("rtc");
+            var rtc = new RealTimeControlModel("rtc");
 
             var hydroModel = new HydroModel { Activities = { rtc, flow } };
             application.Project.RootFolder.Add(hydroModel);

@@ -675,8 +675,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
                 // check what type of polyline to read
                 bool isSourceAndSink = Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink);
-                FlowBoundaryQuantityType quantityType;
-                if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out quantityType) &&
+                if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out FlowBoundaryQuantityType _) &&
                     !isSourceAndSink)
                 {
                     log.ErrorFormat(Resources.ExtForceFile_ReadPolyLineData_Unsupported_quantity_type___0___in_the__ext_file__1__detected__It_will_not_be_imported_, extForceFileItem.Quantity, FilePath);

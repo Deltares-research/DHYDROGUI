@@ -18,11 +18,11 @@ namespace DelftTools.Hydro.CrossSections
         /// as a linestring in the network/map.
         /// </summary>
         bool GeometryBased { get; }
-        
+
         ///<summary>
         /// YZ representation of the current geometry. Y is distance perpendicular to the branch
         ///</summary>
-        IEnumerable<Coordinate> Profile { get; }
+        IEnumerable<Coordinate> GetProfile();
 
         /// <summary>
         /// YZ representation of the current flow geometry.

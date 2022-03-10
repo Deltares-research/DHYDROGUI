@@ -13,7 +13,6 @@ using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Drawing;
 using DelftTools.Utils.Editing;
-using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms;
 using DeltaShell.Plugins.NetworkEditor.Gui.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
@@ -677,23 +676,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             MapControl.SelectTool.OnMouseDown(worldPosition, e);
         }
 
-
-        /// <summary>
-        /// returns the first discretization on the map
-        /// todo ad support for muiltiple discretizations
-        /// </summary>
-        /// <returns></returns>
-        private IDiscretization GetDiscretization(bool makeLayerVisible = false)
-        {
-            var firstDiscretizationLayer = MapControl.Map.GetAllLayers(true).OfType<INetworkCoverageGroupLayer>().FirstOrDefault(cl => cl.Coverage is Discretization);
-            if (firstDiscretizationLayer != null)
-            {
-                return (IDiscretization) firstDiscretizationLayer.Coverage;
-            }
-
-            return null;
-        }
-
         private void RemoveBranchSegments(IDiscretization discretization, IEnumerable<IChannel> channels)
         {
             foreach (var channel in channels)
@@ -957,19 +939,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.MapTools
             {
                 HydroNetworkHelper.ReverseBranch(channel);
             }
-            MapControl.Refresh();
-        }
-
-        public void ReverseBranch(IChannel branch)
-        {
-            if (branch.BranchFeatures.OfType<IStructure1D>().Any(IsOriented))
-            {
-                var result = MessageBox.Show(
-                    "Your branch contains oriented structures and cross sections, which will not be reversed upon reversal of the flow direction. Continue?",
-                    "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                if (result != DialogResult.Yes) return;
-            }
-            HydroNetworkHelper.ReverseBranch(branch);
             MapControl.Refresh();
         }
 

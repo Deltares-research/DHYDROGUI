@@ -52,12 +52,11 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             if (typeof(T) == typeof(ISewerFeature))
                 return (IGwswFeatureGenerator<T>) GetSewerFeatureGenerator(featureType, gwswElement);
             if (typeof(T) == typeof(INwrwFeature))
-                return (IGwswFeatureGenerator<T>) GetNwrwFeatureGenerator(featureType, gwswElement);
+                return (IGwswFeatureGenerator<T>) GetNwrwFeatureGenerator(featureType);
             return null;
         }
 
-        private static IGwswFeatureGenerator<INwrwFeature> GetNwrwFeatureGenerator(SewerFeatureType elementType,
-            GwswElement gwswElement)
+        private static IGwswFeatureGenerator<INwrwFeature> GetNwrwFeatureGenerator(SewerFeatureType elementType)
         {
             IGwswFeatureGenerator<INwrwFeature> generator;
             switch (elementType)
@@ -186,24 +185,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             return basicGenerator;
         }
 
-        #region Helpers
-
-        private static double GetAverageCoordinate(IEnumerable<GwswAttribute> xCoords)
-        {
-            var cSum = 0.0;
-            var validCoords = 0;
-            foreach (var xCoord in xCoords)
-            {
-                var auxDouble = 0.0;
-                if (xCoord.TryGetValueAsDouble(out auxDouble)) ++validCoords;
-                cSum += auxDouble;
-            }
-            var xAvgCoord = cSum / validCoords;
-            return xAvgCoord;
-        }
-
-        #endregion
-
         public static IEnumerable<INwrwFeature> CreateNwrwEntities(
             ILookup<SewerFeatureType, GwswElement> elementTypesList, GwswFileImporter importer,
             List<string> errorsDuringImport)
@@ -233,25 +214,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
     internal static class GwswElementValidationExtensions
     {
         private static ILog Log = LogManager.GetLogger(typeof(GwswElementValidationExtensions));
-
-        public static bool IsAuxGwswManhole(this GwswAttribute sewerTypeAttribute)
-        {
-            var nodeType = sewerTypeAttribute.GetValueFromDescription<ManholeMapping.NodeType>();
-            return nodeType == ManholeMapping.NodeType.Manhole;
-        }
-
-        public static bool IsValidGwswManhole(this GwswElement gwswElement)
-        {
-            if (gwswElement == null) return false;
-            var manholeName = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.ManholeId);
-
-            //No need for log message because as per now, GwswManholes are our own creation (check CreateAuxiliarGwswElements)
-            if (!manholeName.IsValidAttribute()) return false;
-
-            var typeAttr = gwswElement.GetAttributeFromList(ManholeMapping.PropertyKeys.NodeType);
-            var manholeType = typeAttr.GetValueFromDescription<ManholeMapping.NodeType>();
-            return manholeType == ManholeMapping.NodeType.Manhole;
-        }
 
         public static bool IsGwswOutlet(this GwswAttribute sewerTypeAttribute)
         {

@@ -199,9 +199,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
             if (length > 4)
             {
                 var dateTimeString = string.Concat(splitFileName[length - 4], splitFileName[length - 3]);
-                DateTime dateTime;
                 if (!DateTime.TryParseExact(dateTimeString, "yyyyMMddhhmmss", CultureInfo.InvariantCulture,
-                    DateTimeStyles.None, out dateTime))
+                                            DateTimeStyles.None, out DateTime _))
                 {
                     nameOK = false;
                 }

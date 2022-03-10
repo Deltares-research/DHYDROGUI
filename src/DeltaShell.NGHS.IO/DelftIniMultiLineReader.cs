@@ -6,7 +6,7 @@ using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO
 {
-    public class DelftIniMultiLineReader : DelftIniReader
+    public sealed class DelftIniMultiLineReader : DelftIniReader
     {
         /// <summary>
         /// Regular expression for a value/comment line, where value can be anything and
@@ -23,7 +23,7 @@ namespace DeltaShell.NGHS.IO
         {
             if (IsMultiLineValue(line, out var multiLineMatches))
             {
-                (string value, string comment) valueAndComment = GetValueComment(line, multiLineMatches);
+                (string value, string comment) valueAndComment = GetValueComment(multiLineMatches);
                 var properties = currentCategory.Properties.LastOrDefault();
                 if (properties == null)
                     throw new FormatException(String.Format("Invalid value-comment line on line {0} in file {1}",
@@ -54,11 +54,10 @@ namespace DeltaShell.NGHS.IO
         /// <summary>
         /// Parses a line expecting a value-comment pattern.
         /// </summary>
-        /// <param name="line">Line to be parsed.</param>
         /// <param name="matches">The matches found by the regular expression.</param>
         /// <returns>A size 2 array of strings, where first item is the value and second item the comment.</returns>
-        /// <exception cref="FormatException">When <paramref name="line"/> does not match to <see cref="ValueCommentPattern"/></exception>
-        protected virtual (string,string) GetValueComment(string line, MatchCollection matches)
+        /// <exception cref="FormatException">When <paramref name="matches"/> does not contain any matches.</exception>
+        private (string,string) GetValueComment(MatchCollection matches)
         {
             (string value, string comment) valueAndComment = (String.Empty, String.Empty);
 

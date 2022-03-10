@@ -7,7 +7,7 @@ using ProtoBufRemote;
 
 namespace DeltaShell.Dimr
 {
-    public class RemoteDimrApi : IDimrApi
+    public sealed class RemoteDimrApi : IDimrApi
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(RemoteDimrApi));
         private bool disposed;
@@ -38,7 +38,7 @@ namespace DeltaShell.Dimr
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposed)
             {

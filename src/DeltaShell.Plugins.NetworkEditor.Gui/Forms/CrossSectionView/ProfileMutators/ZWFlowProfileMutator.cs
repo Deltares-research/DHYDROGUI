@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.CrossSectionView.ProfileMut
                 row.Z = z;
                 row.StorageWidth = Math.Min(row.Width, deltaStorage*2.0);
             }
-            catch (ArgumentException e)
+            catch (ArgumentException)
             {
                 Log.Error("Attempt to add invalid point to ZW-flow profile has been ignored.");
             }

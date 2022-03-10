@@ -7,7 +7,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
 {
     public class SewerOrificeGenerator : IGwswFeatureGenerator<ISewerFeature>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(SewerOrificeGenerator));
         public ISewerFeature Generate(GwswElement gwswElement)
         {
             var orifice = CreateNewOrifice(gwswElement);

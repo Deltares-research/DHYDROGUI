@@ -123,7 +123,5 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.NodePresenters
 
             return false;
         }
-
-        protected abstract void OpenGridEditor(T shortcut);
     }
 }

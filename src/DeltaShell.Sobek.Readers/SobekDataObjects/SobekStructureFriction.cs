@@ -5,15 +5,6 @@ using DelftTools.Units;
 
 namespace DeltaShell.Sobek.Readers.SobekDataObjects
 {
-    public enum StructureFrictionType
-    {
-        Chezy = 0,
-        Manning = 1,
-        StricklerKn = 2,
-        StricklerKs = 3,
-        WhiteColebrook = 4
-    }
-
     public class SobekStructureFriction
     {
         internal readonly IFunction mainFrictionFuncPositive;

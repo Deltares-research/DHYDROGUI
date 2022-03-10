@@ -12,7 +12,7 @@ using log4net;
 
 namespace DeltaShell.Dimr
 {
-    public class DimrApi : IDimrApi
+    public sealed class DimrApi : IDimrApi
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(DimrApi));
 
@@ -22,6 +22,7 @@ namespace DeltaShell.Dimr
             NativeLibrary.LoadNativeDll(DimrApiDataSet.DimrDllName, DimrApiDataSet.DimrDllPath);
         }
 
+        private bool disposed;
         private readonly bool useMessagesBuffering;
         private double tStart;
         private double tEnd;
@@ -80,19 +81,26 @@ namespace DeltaShell.Dimr
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
+            if (disposed)
+            {
+                return;
+            }
+
             if (disposing)
             {
                 DimrApiWrapper.set_logger_callback(null);
             }
+
+            disposed = true;
         }
 
         #endregion
 
         #region Implementation of IDimrApi
 
-        public virtual DateTime DimrRefDate
+        public DateTime DimrRefDate
         {
             get
             {
