@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 using DelftTools.Functions;
 using DelftTools.Functions.Filters;
 using DelftTools.Hydro;
@@ -13,7 +14,10 @@ using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
 using GeoAPI.Extensions.Coverages;
+using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
+using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
@@ -182,6 +186,36 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         }
 
         [Test]
+        public void GivenFM1DFileFunctionStore_ReadingAnOutputMapFileWithCustomLengthBranches_ShouldNotLeadToErrors()
+        {
+            //Arrange
+            var path = TestHelper.GetTestFilePath("output_mapfiles\\CustomLengthFlowFM_map.nc");
+
+            var network = new HydroNetwork();
+            var node1 = new HydroNode{Geometry = new Point(0,0)};
+            var node2 = new HydroNode { Geometry = new Point(10, 10) };
+            var branch = new Branch("Channel_1D_1", node1, node2, 3600)
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(10, 10)
+                })
+            };
+
+            network.Branches.Add(branch);
+
+            var store = new FM1DFileFunctionStore(network);
+
+            // Act
+            // throws error if custom length of branch from input network is not applied to output network branch
+            store.Path = path; 
+            
+            // Assert
+            Assert.IsTrue(store.OutputNetwork.Branches[0].IsLengthCustom);
+        }
+
+        [Test]
         [Category(TestCategory.DataAccess)]
         public void OpenClassMapFileWithTimeZones_ShouldSetReferenceDateInFunctionsCorrectly()
         {
@@ -242,7 +276,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var discretization = new Discretization();
             var network = new HydroNetwork();
             UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, compartmentData,
-                                                         branchData);
+                                                         branchData, true);
             switch (fm1DObjectType)
             {
                 case OutputFM1DObjectType.Network:

@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
                 network = new HydroNetwork();
                 discretization = new Discretization();
                 discretization.Locations.IsAutoSorted = false;
-                UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, compartmentData, branchData);
+                UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, discretization, network, compartmentData, branchData, true);
 
                 foreach (var hydroObject in network.AllHydroObjects)
                 {

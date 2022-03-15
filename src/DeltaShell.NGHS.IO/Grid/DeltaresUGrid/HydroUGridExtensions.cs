@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
@@ -412,10 +412,11 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
         /// <param name="networkGeometry"><see cref="DisposableNetworkGeometry"/> containing the network data</param>
         /// <param name="branchProperties">Additional branch properties</param>
         /// <param name="compartmentProperties">Additional compartment properties</param>
-        public static void SetNetworkGeometry(this IHydroNetwork network, DisposableNetworkGeometry networkGeometry, IEnumerable<BranchProperties> branchProperties = null, ICollection<CompartmentProperties> compartmentProperties = null)
+        /// <param name="forceCustomLengths">Force all branches in the network to have custom lengths and use the lengths that are read from file</param>s
+        public static void SetNetworkGeometry(this IHydroNetwork network, DisposableNetworkGeometry networkGeometry, IEnumerable<BranchProperties> branchProperties = null, ICollection<CompartmentProperties> compartmentProperties = null, bool forceCustomLengths = false)
         {
             var nodes = CreateNetworkNodes(network, networkGeometry, compartmentProperties);
-            var branches = CreateBranches(networkGeometry, nodes, branchProperties);
+            var branches = CreateBranches(networkGeometry, nodes, branchProperties, forceCustomLengths);
 
             network.Nodes.AddRange(nodes.Distinct());
             network.Branches.AddRange(branches);
@@ -576,71 +577,84 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
         }
 
-        private static IBranch[] CreateBranches(DisposableNetworkGeometry networkGeometry, INode[] nodes, IEnumerable<BranchProperties> branchProperties)
+        private static IBranch[] CreateBranches(DisposableNetworkGeometry networkGeometry, INode[] nodes, IEnumerable<BranchProperties> branchProperties, bool forceCustomLengths)
         {
-            var numberOfBranches = networkGeometry.BranchIds.Length;
             var nodeLookup = nodes
-                .SelectMany(n => GetNodeLookupNames(n)
-                    .Select(name => new {key = name, node = n}))
-                .ToDictionary(n => n.key, m => m.node);
+                             .SelectMany(n => GetNodeLookupNames(n)
+                                             .Select(name => new {key = name, node = n}))
+                             .ToDictionary(n => n.key, m => m.node);
 
-            var propertiesLookup = branchProperties?.ToDictionary(p => p.Name);
-            var compartments = nodes.OfType<IManhole>().SelectMany(m => m.Compartments).ToDictionary(c => c.Name);
+            var propertiesLookup = branchProperties?.ToDictionary(p => p.Name) ?? new Dictionary<string, BranchProperties>();
+            var compartments = nodes
+                               .OfType<IManhole>()
+                               .SelectMany(m => m.Compartments)
+                               .ToDictionary(c => c.Name);
 
             var branches = new List<IBranch>();
 
             var geometryOffset = 0;
 
-            for (int i = 0; i < numberOfBranches; i++)
+            for (int i = 0; i < networkGeometry.BranchIds.Length; i++)
             {
-                var toNodeId = networkGeometry.NodeIds[networkGeometry.NodesTo[i]];
-                var fromNodeId = networkGeometry.NodeIds[networkGeometry.NodesFrom[i]];
-
-                // todo: find out what to do with branch type from file.
-                // Currently the branch type from the properties is used
-                INode source = nodeLookup[fromNodeId];
-                INode target = nodeLookup[toNodeId];
-                var branch = GetBranch(propertiesLookup, networkGeometry.BranchIds[i], source, target);
-
-                branch.Source = source;
-                branch.Target = target;
-                branch.Name = networkGeometry.BranchIds[i];
-                ((IHydroNetworkFeature)branch).LongName = networkGeometry.BranchLongNames[i];
-                if (branch.IsLengthCustom)
-                {
-                    branch.Length = 0;
-                    branch.Length = networkGeometry.BranchLengths[i];
-                }
-
-                branch.OrderNumber = networkGeometry.BranchOrder[i];
-
-                if (branch is ISewerConnection sewerConnection)
-                {
-                    // compartment can be null when coupled to rural network
-                    sewerConnection.SourceCompartment = compartments.ContainsKey(fromNodeId) ? compartments[fromNodeId] : null;
-                    sewerConnection.TargetCompartment = compartments.ContainsKey(toNodeId) ? compartments[toNodeId] : null;
-                }
-
-                if (branch is IPipe pipe)
-                {
-                    pipe.WaterType = ToPipeWaterType((BranchType)networkGeometry.BranchTypes[i]);
-                }
-                var nodeCount = networkGeometry.BranchGeometryNodesCount[i];
-                var coordinates = new Coordinate[nodeCount];
-
-                for (int j = 0; j < nodeCount; j++)
-                {
-                    var geometryIndex = j + geometryOffset;
-                    coordinates[j] = new Coordinate(networkGeometry.BranchGeometryX[geometryIndex], networkGeometry.BranchGeometryY[geometryIndex]);
-                }
-
-                geometryOffset += nodeCount;
-                branch.Geometry = new LineString(coordinates);
-
-                branches.Add(branch);
+                propertiesLookup.TryGetValue(networkGeometry.BranchIds[i], out var properties);
+                branches.Add(CreateBranchByIndex(networkGeometry, i, properties, nodeLookup, compartments, ref geometryOffset, forceCustomLengths));
             }
 
             return branches.ToArray();
+        }
+
+        private static IBranch CreateBranchByIndex(DisposableNetworkGeometry networkGeometry, int branchIndex, BranchProperties branchProperties, Dictionary<string, INode> nodeLookup, Dictionary<string, ICompartment> compartments, ref int geometryOffset, bool forceCustomLengths)
+        {
+            var toNodeId = networkGeometry.NodeIds[networkGeometry.NodesTo[branchIndex]];
+            var fromNodeId = networkGeometry.NodeIds[networkGeometry.NodesFrom[branchIndex]];
+            var branchId = networkGeometry.BranchIds[branchIndex];
+
+            INode source = nodeLookup[fromNodeId];
+            INode target = nodeLookup[toNodeId];
+            var branch = GetBranch(branchProperties, source, target);
+
+            branch.Name = branchId;
+            branch.OrderNumber = networkGeometry.BranchOrder[branchIndex];
+
+            var nodeCount = networkGeometry.BranchGeometryNodesCount[branchIndex];
+            branch.Geometry = GetLineStringForBranch(networkGeometry, nodeCount, geometryOffset);
+            geometryOffset += nodeCount;
+
+            ((IHydroNetworkFeature)branch).LongName = networkGeometry.BranchLongNames[branchIndex];
+
+            if (forceCustomLengths || (branchProperties?.IsCustomLength ?? false))
+            {
+                branch.Length = 0;
+                branch.Length = networkGeometry.BranchLengths[branchIndex];
+                branch.IsLengthCustom = true;
+            }
+
+            if (branch is IPipe pipe)
+            {
+                pipe.WaterType = ToPipeWaterType((BranchType)networkGeometry.BranchTypes[branchIndex]);
+            }
+
+            if (branch is ISewerConnection sewerConnection)
+            {
+                // compartment can be null when coupled to rural network
+                sewerConnection.SourceCompartment = compartments.ContainsKey(fromNodeId) ? compartments[fromNodeId] : null;
+                sewerConnection.TargetCompartment = compartments.ContainsKey(toNodeId) ? compartments[toNodeId] : null;
+            }
+
+            return branch;
+        }
+
+        private static LineString GetLineStringForBranch(DisposableNetworkGeometry networkGeometry, int nodeCount, int geometryOffset)
+        {
+            var coordinates = new Coordinate[nodeCount];
+
+            for (int j = 0; j < nodeCount; j++)
+            {
+                var geometryIndex = j + geometryOffset;
+                coordinates[j] = new Coordinate(networkGeometry.BranchGeometryX[geometryIndex], networkGeometry.BranchGeometryY[geometryIndex]);
+            }
+
+            return new LineString(coordinates);
         }
 
         private static SewerConnectionWaterType ToPipeWaterType(BranchType networkGeometryBranchType)
@@ -672,37 +686,33 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             yield return node.Name;
         }
 
-        private static IBranch GetBranch(IReadOnlyDictionary<string, BranchProperties> propertiesLookup, string branchName, INode source, INode target)
+        private static IBranch GetBranch(BranchProperties branchProperties, INode source, INode target)
         {
-            if (propertiesLookup == null || !propertiesLookup.ContainsKey(branchName))
+            if (branchProperties == null)
             {
                 if (source is Manhole || target is Manhole)
                 {
-                    return new Pipe();
+                    return new Pipe{Source = source, Target = target};
                 }
 
-                return new Channel();
+                return new Channel(source, target);
             }
 
-            var branchProperties = propertiesLookup[branchName];
             var branchType = branchProperties.BranchType;
 
-            IBranch branch = null;
-            
+            IBranch branch;
             switch (branchType)
             {
                 case BranchFile.BranchType.SewerConnection:
-                    branch = new SewerConnection { WaterType = branchProperties.WaterType };
+                    branch = new SewerConnection { Source = source, Target = target, WaterType = branchProperties.WaterType };
                     break;
                 case BranchFile.BranchType.Pipe:
-                    branch = new Pipe { WaterType = branchProperties.WaterType, Material = branchProperties.Material };
+                    branch = new Pipe { Source = source, Target = target, WaterType = branchProperties.WaterType, Material = branchProperties.Material };
                     break;
                 default:
-                    branch = new Channel();
+                    branch = new Channel(source, target);
                     break;
             }
-
-            branch.IsLengthCustom = branchProperties.IsCustomLength;
 
             return branch;
         }

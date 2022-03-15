@@ -8,6 +8,8 @@ using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Grid;
 using GeoAPI.Extensions.Networks;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
@@ -100,6 +102,102 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.IO
             };
             
             WriteAndCheckBranchTypeFileContent(branches);
+        }
+
+        [Test]
+        public void GivenChannel_GettingBranchProperties_ShouldGiveCorrectPropertiesValues()
+        {
+            //Arrange
+            var node1 = new HydroNode("Node 1"){Geometry = new Point(0,0)};
+            var node2 = new HydroNode("Node 2") { Geometry = new Point(10, 10) };
+
+            var branch = new Channel("channel",node1, node2)
+            {
+                Geometry = new LineString(new []{new Coordinate(0,0), new Coordinate(10,10)}),
+                Length = 100,
+                IsLengthCustom = true
+            };
+
+            // Act
+            var properties = branch.GetBranchProperties();
+
+            // Assert
+            Assert.AreEqual(BranchFile.BranchType.Channel, properties.BranchType);
+            Assert.AreEqual(true, properties.IsCustomLength);
+        }
+
+        [Test]
+        public void GivenPipe_GettingBranchProperties_ShouldGiveCorrectPropertiesValues()
+        {
+            //Arrange
+            var manhole1 = new Manhole("Node 1") { Geometry = new Point(0, 0) };
+            var manhole2 = new Manhole("Node 2") { Geometry = new Point(10, 10) };
+
+            var compartment1 = new Compartment("Compartment 1");
+            var compartment2 = new Compartment("Compartment 2");
+
+            manhole1.Compartments.Add(compartment1);
+            manhole2.Compartments.Add(compartment2);
+
+            var pipe = new Pipe
+            {
+                Name = "Pipe 1",
+                Source = manhole1,
+                Target = manhole2,
+                SourceCompartment = compartment1,
+                TargetCompartment = compartment2,
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 10) }),
+                Length = 100,
+                IsLengthCustom = true
+            };
+
+            // Act
+            var properties = pipe.GetBranchProperties();
+
+            // Assert
+            Assert.AreEqual(BranchFile.BranchType.Pipe, properties.BranchType);
+            Assert.AreEqual(pipe.Name, properties.Name);
+            Assert.AreEqual(true, properties.IsCustomLength);
+            Assert.AreEqual(compartment1.Name ,properties.SourceCompartmentName);
+            Assert.AreEqual(compartment2.Name , properties.TargetCompartmentName);
+            Assert.AreEqual(pipe.WaterType, properties.WaterType);
+            Assert.AreEqual(pipe.Material, properties.Material);
+        }
+
+        [Test]
+        public void GivenSewerConnection_GettingBranchProperties_ShouldGiveCorrectPropertiesValues()
+        {
+            //Arrange
+            var manhole1 = new Manhole("Node 1") { Geometry = new Point(0, 0) };
+            var manhole2 = new Manhole("Node 2") { Geometry = new Point(10, 10) };
+
+            var compartment1 = new Compartment("Compartment 1");
+            var compartment2 = new Compartment("Compartment 2");
+
+            manhole1.Compartments.Add(compartment1);
+            manhole2.Compartments.Add(compartment2);
+
+            var sewerConnection = new SewerConnection("SewerConnection 1")
+            {
+                Source = manhole1,
+                Target = manhole2,
+                SourceCompartment = compartment1,
+                TargetCompartment = compartment2,
+                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 10) }),
+                Length = 100,
+                IsLengthCustom = true
+            };
+
+            // Act
+            var properties = sewerConnection.GetBranchProperties();
+
+            // Assert
+            Assert.AreEqual(BranchFile.BranchType.SewerConnection, properties.BranchType);
+            Assert.AreEqual(sewerConnection.Name, properties.Name);
+            Assert.AreEqual(true, properties.IsCustomLength);
+            Assert.AreEqual(compartment1.Name, properties.SourceCompartmentName);
+            Assert.AreEqual(compartment2.Name, properties.TargetCompartmentName);
+            Assert.AreEqual(sewerConnection.WaterType, properties.WaterType);
         }
 
         private void WriteAndCheckBranchTypeFileContent(List<IBranch> branches)

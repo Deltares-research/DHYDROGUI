@@ -261,13 +261,14 @@ namespace DeltaShell.NGHS.IO.Grid
         /// <param name="discretization">Instance of a <see cref="IDiscretization"/> to clear and fill with newly read data</param>
         /// <param name="network">Instance of a <see cref="IHydroNetwork"/> to add the newly read data to</param>
         /// <param name="compartmentPropertiesList">List of <see cref="BranchProperties"/> to use when constructing branches</param>
-        /// <param name="branchPropertiesList">List of <see cref="NodeFile.CompartmentProperties"/> to use when constructing compartments</param>
+        /// <param name="branchPropertiesList">List of <see cref="CompartmentProperties"/> to use when constructing compartments</param>
+        /// <param name="forceCustomLengths">Force all branches in the network to have custom lengths and use the lengths that are read from file</param>
         /// <exception cref="IoNetCdfNativeError">This error is thrown when an error code is
         /// returned from a native function</exception>
         public static void ReadNetworkAndDiscretisation(string path, IDiscretization discretization,
-            IHydroNetwork network,
-            IList<CompartmentProperties> compartmentPropertiesList = null,
-            IList<BranchProperties> branchPropertiesList = null)
+                                                        IHydroNetwork network,
+                                                        IList<CompartmentProperties> compartmentPropertiesList = null,
+                                                        IList<BranchProperties> branchPropertiesList = null, bool forceCustomLengths = false)
         {
             var errorMessage = $"Could not load network and computational grid from {path}";
             if (network == null || !IsValidPath(path))
@@ -286,7 +287,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     return;
                 }
 
-                ReadNetwork(api, network, compartmentPropertiesList, branchPropertiesList);
+                ReadNetwork(api, network, compartmentPropertiesList, branchPropertiesList, forceCustomLengths);
 
                 network.CoordinateSystem = GetCoordinateSystemFromApi(api);
                 network.UpdateGeodeticDistancesOfChannels();
@@ -623,7 +624,7 @@ namespace DeltaShell.NGHS.IO.Grid
         }
 
         private static void ReadNetwork(IUGridApi api, IHydroNetwork network, IList<CompartmentProperties> compartmentPropertiesList,
-            IList<BranchProperties> branchPropertiesList)
+                                        IList<BranchProperties> branchPropertiesList, bool forceCustomLengths = false)
         {
             var networkIds = api.GetNetworkIds();
             if (networkIds.Length == 0)
@@ -631,7 +632,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 return;
             }
 
-            network.SetNetworkGeometry(api.GetNetworkGeometry(networkIds[0]), branchPropertiesList, compartmentPropertiesList);
+            network.SetNetworkGeometry(api.GetNetworkGeometry(networkIds[0]), branchPropertiesList, compartmentPropertiesList, forceCustomLengths);
         }
 
         private static void UpdateNodeZVariables(NetCdfFile file)

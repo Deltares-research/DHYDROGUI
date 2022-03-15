@@ -19,19 +19,31 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         {
             Channel = 0, SewerConnection = 1, Pipe = 2
         }
-        private static string GetBranchType(IBranch branch)
+
+        public static BranchProperties GetBranchProperties(this IBranch branch)
         {
-            var value = BranchType.Channel;
-            if (branch is IPipe)
+            var branchProperties = new BranchProperties
             {
-                value = BranchType.Pipe;
-            }
-            else if (branch is ISewerConnection)
+                Name = branch.Name,
+                IsCustomLength = branch.IsLengthCustom
+            };
+
+            switch (branch)
             {
-                value = BranchType.SewerConnection;
+                case Channel _:
+                    branchProperties.BranchType = BranchType.Channel;
+                    break;
+                case IPipe pipe:
+                    SetSewerConnectionProperties(branchProperties, pipe);
+                    branchProperties.BranchType = BranchType.Pipe;
+                    branchProperties.Material = pipe.Material;
+                    break;
+                case ISewerConnection sewerConnection:
+                    SetSewerConnectionProperties(branchProperties, sewerConnection);
+                    break;
             }
 
-            return ((int)value).ToString();
+            return branchProperties;
         }
 
         public static void Write(string filePath, IEnumerable<IBranch> branches)
@@ -39,32 +51,34 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
             var categories = new List<DelftIniCategory>();
             foreach (var branch in branches)
             {
+                var properties = branch.GetBranchProperties();
+
                 var iniCategory = new DelftIniCategory(NetworkRegion.BranchIniHeader);
-                iniCategory.AddProperty(NetworkRegion.BranchId, branch.Name);
+                iniCategory.AddProperty(NetworkRegion.BranchId, properties.Name);
                 
-                iniCategory.AddProperty(NetworkRegion.BranchType, GetBranchType(branch));
-                iniCategory.AddProperty(NetworkRegion.IsLengthCustom, branch.IsLengthCustom);
-                
-                var sewerConnection = branch as ISewerConnection;
-                if (sewerConnection == null)
-                {
-                    if (branch.IsLengthCustom)
-                    {
-                        categories.Add(iniCategory);
-                    }
-                    continue;
-                }
-                iniCategory.AddProperty(NetworkRegion.SourceCompartmentName, sewerConnection.SourceCompartment?.Name);
-                iniCategory.AddProperty(NetworkRegion.TargetCompartmentName, sewerConnection.TargetCompartment?.Name);
+                iniCategory.AddProperty(NetworkRegion.BranchType, ((int)properties.BranchType).ToString());
+                iniCategory.AddProperty(NetworkRegion.IsLengthCustom, properties.IsCustomLength);
 
-                var pipe = branch as Pipe;
-                if (pipe == null)
+                if (properties.BranchType == BranchType.Channel && !properties.IsCustomLength)
                 {
-                    categories.Add(iniCategory);
+                    // do not write channels without custom length (no special properties need to be saved)
                     continue;
                 }
 
-                iniCategory.AddProperty(NetworkRegion.BranchMaterial, (int) pipe.Material);
+                if (properties.SourceCompartmentName != null)
+                {
+                    iniCategory.AddProperty(NetworkRegion.SourceCompartmentName, properties.SourceCompartmentName);
+                }
+
+                if (properties.TargetCompartmentName != null)
+                {
+                    iniCategory.AddProperty(NetworkRegion.TargetCompartmentName, properties.TargetCompartmentName);
+                }
+
+                if (properties.BranchType == BranchType.Pipe)
+                {
+                    iniCategory.AddProperty(NetworkRegion.BranchMaterial, (int) properties.Material);
+                }
 
                 categories.Add(iniCategory);
             }
@@ -146,6 +160,14 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         private static T GetEnumValueByKey<T>(this IDelftIniCategory category, string propertyKey)
         {
             return (T) Enum.Parse(typeof(T), category.ReadProperty<int>(propertyKey, true).ToString());
+        }
+
+        private static void SetSewerConnectionProperties(BranchProperties branchProperties, ISewerConnection pipe)
+        {
+            branchProperties.BranchType = BranchType.SewerConnection;
+            branchProperties.WaterType = pipe.WaterType;
+            branchProperties.SourceCompartmentName = pipe.SourceCompartmentName;
+            branchProperties.TargetCompartmentName = pipe.TargetCompartmentName;
         }
     }
 }

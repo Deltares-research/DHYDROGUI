@@ -8,6 +8,7 @@ using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
 using DelftTools.Units;
 using DelftTools.Utils;
+using DelftTools.Utils.Collections;
 using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DeltaShell.NGHS.IO.Grid;
@@ -83,23 +84,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                 outputNetwork.Branches.Clear();
                 outputDiscretization.Clear();
 
-                UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, outputDiscretization, outputNetwork, compartmentData, branchData);
+                UGridFileHelper.ReadNetworkAndDiscretisation(netFilePath, outputDiscretization, outputNetwork, compartmentData, branchData, true);
 
-                foreach (var hydroObject in outputNetwork.AllHydroObjects)
-                {
-                    hydroObject.Name = hydroObject.Name + "_output";
-                }
-                foreach (var outputNetworkLocation in outputDiscretization.Locations.AllValues)
-                {
-                    outputNetworkLocation.Name = outputNetworkLocation.Name + "_output";
-                }
-
+                outputNetwork.AllHydroObjects.ForEach(o => o.Name += "_output");
+                outputDiscretization.Locations.AllValues.ForEach(l => l.Name += "_output");
             }
         }
+
         private bool HasValidFile
         {
             get { return !string.IsNullOrEmpty(Path) && File.Exists(Path); }
         }
+
         private static IMultiDimensionalArray CreateEmptyArrayForType(Type type)
         {
             var listType = typeof(List<>).MakeGenericType(type);

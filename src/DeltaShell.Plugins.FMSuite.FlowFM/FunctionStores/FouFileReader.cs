@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.FunctionStores
 
             var hydroNetwork = new HydroNetwork();
             var discretization = new Discretization { Network = hydroNetwork };
-            UGridFileHelper.ReadNetworkAndDiscretisation(path, discretization, hydroNetwork, null, null);
+            UGridFileHelper.ReadNetworkAndDiscretisation(path, discretization, hydroNetwork, null, null, true);
 
             string[] variables1D = GetMeshDependentVariables(path, MeshType.Mesh1d);
             string[] variables2D = GetMeshDependentVariables(path, MeshType.Mesh2d);
