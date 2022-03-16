@@ -23,10 +23,6 @@
         #region Pump
 
         public const string Capacity = "capacity";
-        public const string StartSuctionSide = "start_level_suction_side";
-        public const string StopSuctionSide = "stop_level_suction_side";
-        public const string StartDeliverySide = "start_level_delivery_side";
-        public const string StopDeliverySide = "stop_level_delivery_side";
         public const string NrOfReductionFactors = "reduction_factor_no_levels";
         public const string ReductionFactor = "reduction_factor";
         public const string Head = "head";

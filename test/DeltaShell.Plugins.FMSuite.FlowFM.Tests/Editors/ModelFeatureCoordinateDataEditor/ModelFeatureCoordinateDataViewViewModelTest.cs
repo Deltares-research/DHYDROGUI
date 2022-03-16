@@ -331,7 +331,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors.ModelFeatureCoordinate
                 "Test"
             };
 
-            var viewModel = new ModelFeatureCoordinateDataViewViewModel
+            var _ = new ModelFeatureCoordinateDataViewViewModel
             {
                 ClearColumns = () => clearColumnsCount++,
                 AddColumn = (path, displayName, isReadOnly, format) =>

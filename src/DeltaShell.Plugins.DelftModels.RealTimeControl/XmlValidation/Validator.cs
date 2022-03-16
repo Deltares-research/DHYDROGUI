@@ -12,11 +12,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.XmlValidation
         private static readonly ILog Log = LogManager.GetLogger(typeof(Validator));
         private XmlSchemaSet xmlSchemaSet;
 
-        public Validator(XmlSchemaSet schemaSet)
-        {
-            xmlSchemaSet = schemaSet;
-        }
-
         public Validator(IEnumerable<string> xmlSchemaPaths)
         {
             xmlSchemaSet = new XmlSchemaSet();

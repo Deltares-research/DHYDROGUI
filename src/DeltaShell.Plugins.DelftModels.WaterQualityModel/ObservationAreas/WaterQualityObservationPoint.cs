@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.ComponentModel;
-using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using GeoAPI.Extensions.Feature;
 
@@ -27,7 +26,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.ObservationAreas
         [DynamicReadOnlyValidationMethod]
         public virtual bool CheckReadOnly(string propertyName)
         {
-            if (propertyName == TypeUtils.GetMemberDescription(() => Z))
+            if (propertyName == nameof(Z))
             {
                 return ObservationPointType != ObservationPointType.SinglePoint;
             }

@@ -162,7 +162,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false);
             bathymetry.SetValues(values);
 
-            var gridLayer = new UnstructuredGridLayer {Grid = grid};
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
             {
                 Coverage = bathymetry,
@@ -206,7 +205,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Layers
             var bathymetry = new UnstructuredGridVertexCoverage(grid, false);
             bathymetry.SetValues(values);
 
-            var gridLayer = new UnstructuredGridLayer {Grid = grid};
             var coverageLayer = new UnstructuredGridVertexCoverageLayer
             {
                 Coverage = bathymetry,

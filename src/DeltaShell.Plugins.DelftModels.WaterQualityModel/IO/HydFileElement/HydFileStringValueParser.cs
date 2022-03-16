@@ -49,7 +49,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
 
             if (typeof(T) == typeof(string))
             {
-                result = ParseString(textToParse, culture);
+                result = ParseString(textToParse);
             }
 
             if (typeof(T) == typeof(int[]))
@@ -69,23 +69,23 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
 
             if (typeof(T) == typeof(TimeSpan))
             {
-                result = ParseTimeSpan(textToParse, culture);
+                result = ParseTimeSpan(textToParse);
             }
 
             if (typeof(T) == typeof(HydroDynamicModelType))
             {
-                result = ParseHydFileGeometryDefinition(textToParse, culture);
+                result = ParseHydFileGeometryDefinition(textToParse);
             }
 
             if (typeof(T) == typeof(LayerType))
             {
-                result = ParseHydFileLayerType(textToParse, culture);
+                result = ParseHydFileLayerType(textToParse);
             }
 
             return (T) result;
         }
 
-        private static LayerType ParseHydFileLayerType(string textToParse, CultureInfo culture)
+        private static LayerType ParseHydFileLayerType(string textToParse)
         {
             if (string.IsNullOrWhiteSpace(textToParse))
             {
@@ -106,7 +106,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
                                                     textToParse));
         }
 
-        private static HydroDynamicModelType ParseHydFileGeometryDefinition(string textToParse, CultureInfo culture)
+        private static HydroDynamicModelType ParseHydFileGeometryDefinition(string textToParse)
         {
             if (string.IsNullOrWhiteSpace(textToParse))
             {
@@ -127,7 +127,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
                                                     textToParse));
         }
 
-        private static TimeSpan ParseTimeSpan(string textToParse, CultureInfo culture)
+        private static TimeSpan ParseTimeSpan(string textToParse)
         {
             if (string.IsNullOrWhiteSpace(textToParse))
             {
@@ -197,7 +197,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO.HydFileElement
             return array;
         }
 
-        private static string ParseString(string textToParse, CultureInfo culture)
+        private static string ParseString(string textToParse)
         {
             if (string.IsNullOrWhiteSpace(textToParse) || textToParse.Equals("none"))
             {

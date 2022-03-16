@@ -73,18 +73,23 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 }
             }
 
-            var modelFolder = data as ModelFolder;
-            if (modelFolder != null && modelFolder.Model is HydroModel)
+            if (data is ModelFolder modelFolder && modelFolder.Model is HydroModel folderHydroModel)
             {
-                var folderHydroModel = (HydroModel) modelFolder.Model;
-
-                List<IHydroModelWorkFlow> modelWorkFlows = folderHydroModel.CurrentWorkflow.GetActivitiesOfType<IHydroModelWorkFlow>().Where(wf => wf != null && wf.Data != null).ToList();
-                foreach (IHydroModelWorkFlow modelWorkFlow in modelWorkFlows)
+                foreach (IFeatureCoverage coverage in GetFeatureCoverages(folderHydroModel))
                 {
-                    foreach (IFeatureCoverage coverage in modelWorkFlow.Data.OutputDataItems.Select(di => di.Value).OfType<IFeatureCoverage>())
-                    {
-                        yield return coverage;
-                    }
+                    yield return coverage;
+                }
+            }
+        }
+
+        private static IEnumerable<IFeatureCoverage> GetFeatureCoverages(ICompositeActivity compositeActivity)
+        {
+            List<IHydroModelWorkFlow> modelWorkFlows = compositeActivity.CurrentWorkflow.GetActivitiesOfType<IHydroModelWorkFlow>().Where(wf => wf != null && wf.Data != null).ToList();
+            foreach (IHydroModelWorkFlow modelWorkFlow in modelWorkFlows)
+            {
+                foreach (IFeatureCoverage coverage in modelWorkFlow.Data.OutputDataItems.Select(di => di.Value).OfType<IFeatureCoverage>())
+                {
+                    yield return coverage;
                 }
             }
         }

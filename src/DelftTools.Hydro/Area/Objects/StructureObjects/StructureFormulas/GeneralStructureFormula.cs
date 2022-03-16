@@ -4,6 +4,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
+using DelftTools.Utils.Guards;
 
 namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
 {
@@ -218,15 +219,34 @@ namespace DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas
         /// </summary>
         public virtual double GateOpening { get; set; }
 
-        public virtual void SetPropertyValue(KnownGeneralStructureProperties propertyName, double value)
+        /// <summary>
+        /// Sets a general structure weir formula property.
+        /// </summary>
+        /// <param name="property"> The property to be set. </param>
+        /// <param name="value"> The new value of the property. </param>
+        /// <exception cref="System.ComponentModel.InvalidEnumArgumentException">
+        /// Thrown when <paramref name="property"/> is not a defined <see cref="KnownGeneralStructureProperties"/>.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="property"/> is not a valid property.
+        /// This includes:
+        /// - <see cref="KnownGeneralStructureProperties.CrestWidth"/>
+        /// - <see cref="KnownGeneralStructureProperties.CrestLevel"/>
+        /// - <see cref="KnownGeneralStructureProperties.GateLowerEdgeLevel"/>
+        /// - <see cref="KnownGeneralStructureProperties.GateOpeningHorizontalDirection"/>
+        /// - <see cref="KnownGeneralStructureProperties.GateOpeningWidth"/>
+        /// </exception>
+        public virtual void SetPropertyValue(KnownGeneralStructureProperties property, double value)
         {
-            if (SetKnownGeneralStructureProperty.ContainsKey(propertyName))
+            Ensure.IsDefined(property, nameof(property));
+
+            if (SetKnownGeneralStructureProperty.ContainsKey(property))
             {
-                SetKnownGeneralStructureProperty[propertyName](this, value);
+                SetKnownGeneralStructureProperty[property](this, value);
             }
             else
             {
-                throw new Exception("property name : {0} cannot be set for general structure weir formula");
+                throw new ArgumentOutOfRangeException(nameof(property), $"Property {property} is not a valid property of a general structure weir formula.");
             }
         }
 

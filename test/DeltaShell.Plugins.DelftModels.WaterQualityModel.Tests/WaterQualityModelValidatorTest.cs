@@ -122,25 +122,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                                     report.GetAllIssuesRecursive().Select(i => string.Format("{0}: {1}", i.Severity, i.Message))));
         }
 
-        private static void ExpectValidationIssue(ValidationReport report, string text)
-        {
-            AssertExpectedValidationIssue(report, text, i => true);
-        }
-
-        private static WaterQualityModel CreateValidFractionsWaterQualityModel()
-        {
-            var waterQualityModel = new WaterQualityModel();
-            var hydroData = MockRepository.GenerateStub<IHydroData>();
-
-            hydroData.Stub(d => d.FilePath).Return(TestHelper.GetTestFilePath(@"ValidWaqModels\\Flow1D\\sobek.hyd")).Repeat.Any();
-
-            TypeUtils.SetPrivatePropertyValue(waterQualityModel, nameof(waterQualityModel.HydroData), hydroData);
-
-            waterQualityModel.SubstanceProcessLibrary.Substances.Add(new WaterQualitySubstance {Name = "substance"});
-
-            return waterQualityModel;
-        }
-
         #region Observation Point / Areas
 
         [Test]

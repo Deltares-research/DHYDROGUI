@@ -46,11 +46,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             }
         }
 
-        public IEnumerable<string> Paths => new[]
-        {
-            Path
-        };
-
         public long Id { get; set; }
 
         public IEventedList<IFunction> Functions
@@ -60,12 +55,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
         }
 
         public bool FireEvents { get; set; }
-
-        public void CreateNew(string path)
-        {
-            FileUtils.DeleteIfExists(path);
-            Path = path;
-        }
 
         public void CopyTo(string destinationPath)
         {
@@ -79,16 +68,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
             FileUtils.CreateDirectoryIfNotExists(destinationFileInfo.DirectoryName);
 
             FileUtils.CopyFile(path, destinationPath);
-        }
-
-        public void SwitchTo(string newPath)
-        {
-            path = newPath;
-        }
-
-        public void Delete()
-        {
-            FileUtils.DeleteIfExists(path);
         }
 
         public Type GetEntityType()

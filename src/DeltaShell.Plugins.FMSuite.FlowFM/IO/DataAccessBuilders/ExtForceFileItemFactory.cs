@@ -26,7 +26,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// <summary>
         /// Gets the collection of <see cref="ExtForceFileItem"/> based of the specified <paramref name="modelDefinition"/>.
         /// </summary>
-        /// <param name="path">The external forcing file path.</param>
         /// <param name="modelDefinition">The model definition.</param>
         /// <param name="writeBoundaryConditions"> Whether or not the boundary conditions should be written.</param>
         /// <param name="polyLineForceFileItems">The poly line external force file items.</param>
@@ -34,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// <returns>
         /// A collection of <see cref="ExtForceFileItem"/> from the specified <paramref name="modelDefinition"/>.
         /// </returns>
-        public static IEnumerable<ExtForceFileItem> GetItems(string path, WaterFlowFMModelDefinition modelDefinition,
+        public static IEnumerable<ExtForceFileItem> GetItems(WaterFlowFMModelDefinition modelDefinition,
                                                              bool writeBoundaryConditions,
                                                              IDictionary<IFeatureData, ExtForceFileItem> polyLineForceFileItems,
                                                              IDictionary<ExtForceFileItem, object> existingForceFileItems)
@@ -50,14 +49,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             var uniqueFileNameProvider = new UniqueFileNameProvider();
             items.AddRange(GetSourceAndSinkItems(modelDefinition, polyLineForceFileItems).Values);
-            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialWaterLevel, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName), existingForceFileItems, path, uniqueFileNameProvider).Values);
-            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialSalinity, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName), existingForceFileItems, path, uniqueFileNameProvider).Values);
-            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialSalinity, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName), existingForceFileItems, path, uniqueFileNameProvider, " (layer 1)").Values);
-            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialSalinityTop, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName), existingForceFileItems, path, uniqueFileNameProvider, " (layer 2)").Values);
-            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialTemperature, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialTemperatureDataItemName), existingForceFileItems, path, uniqueFileNameProvider).Values);
-            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.FrictCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName), existingForceFileItems, path, uniqueFileNameProvider).Values);
-            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.HorEddyViscCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName), existingForceFileItems, path, uniqueFileNameProvider).Values);
-            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.HorEddyDiffCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName), existingForceFileItems, path, uniqueFileNameProvider).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialWaterLevel, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialWaterLevelDataItemName), existingForceFileItems, uniqueFileNameProvider).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialSalinity, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName), existingForceFileItems, uniqueFileNameProvider).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialSalinity, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName), existingForceFileItems, uniqueFileNameProvider, " (layer 1)").Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialSalinityTop, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialSalinityDataItemName), existingForceFileItems, uniqueFileNameProvider, " (layer 2)").Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.InitialTemperature, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.InitialTemperatureDataItemName), existingForceFileItems, uniqueFileNameProvider).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.FrictCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.RoughnessDataItemName), existingForceFileItems, uniqueFileNameProvider).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.HorEddyViscCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.ViscosityDataItemName), existingForceFileItems, uniqueFileNameProvider).Values);
+            items.AddRange(GetSpatialDataItems(ExtForceQuantNames.HorEddyDiffCoef, modelDefinition.GetSpatialOperations(WaterFlowFMModelDefinition.DiffusivityDataItemName), existingForceFileItems, uniqueFileNameProvider).Values);
 
             items.AddRange(GetWindFieldItems(modelDefinition, existingForceFileItems).Values);
 
@@ -71,7 +70,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
 
             foreach (string tracerName in modelDefinition.InitialTracerNames)
             {
-                items.AddRange(GetSpatialDataItems($"{ExtForceQuantNames.InitialTracerPrefix}{tracerName}", modelDefinition.GetSpatialOperations(tracerName), existingForceFileItems, path, uniqueFileNameProvider).Values);
+                items.AddRange(GetSpatialDataItems($"{ExtForceQuantNames.InitialTracerPrefix}{tracerName}", modelDefinition.GetSpatialOperations(tracerName), existingForceFileItems, uniqueFileNameProvider).Values);
             }
 
             /* DELFT3DFM-1112
@@ -90,7 +89,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
                 }
 
                 List<ExtForceFileItem> forceFileItems =
-                    GetSpatialDataItems(spatiallyVaryingSedimentPropertyName, spatialOperations, existingForceFileItems, path, uniqueFileNameProvider,
+                    GetSpatialDataItems(spatiallyVaryingSedimentPropertyName, spatialOperations, existingForceFileItems, uniqueFileNameProvider,
                                         ExtForceQuantNames.InitialSpatialVaryingSedimentPrefix).Values.ToList();
 
                 //Remove the postfix from the quantity (it is not accepted by the kernel)
@@ -194,7 +193,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// <param name="quantity">The quantity name related to these <paramref name="spatialOperations"/>.</param>
         /// <param name="spatialOperations">The spatial operations.</param>
         /// <param name="existingForceFileItems">The existing external force file items.</param>
-        /// <param name="filePath">The external forcing file path.</param>
         /// <param name="uniqueFileNameProvider"> A unique file name provider </param>
         /// <param name="prefix">The optional prefix to be written before the quantity.</param>
         /// <returns>
@@ -206,7 +204,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.DataAccessBuilders
         /// </exception>
         public static IDictionary<ISpatialOperation, ExtForceFileItem> GetSpatialDataItems(
             string quantity, IEnumerable<ISpatialOperation> spatialOperations,
-            IDictionary<ExtForceFileItem, object> existingForceFileItems, string filePath,
+            IDictionary<ExtForceFileItem, object> existingForceFileItems,
             UniqueFileNameProvider uniqueFileNameProvider, string prefix = null)
         {
             var dictionary = new Dictionary<ISpatialOperation, ExtForceFileItem>();

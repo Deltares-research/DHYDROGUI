@@ -593,15 +593,11 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.FeatureProviders
             Assert.That(adapter, Has.Count.EqualTo(0),
                         "Expected the adapter to empty.");
 
-            object lastSender = null;
-            NotifyCollectionChangedEventArgs lastArgs = null;
             var nCalls = 0;
 
             void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
             {
                 nCalls += 1;
-                lastSender = sender;
-                lastArgs = args;
             }
 
             adapter.CollectionChanged += OnCollectionChanged;

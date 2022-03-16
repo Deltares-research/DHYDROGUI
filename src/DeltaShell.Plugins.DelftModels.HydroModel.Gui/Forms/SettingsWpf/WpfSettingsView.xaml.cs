@@ -28,8 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             InitializeComponent();
         }
 
-        public bool Visible { get; }
-
         public ObservableCollection<WpfGuiCategory> SettingsCategories
         {
             get

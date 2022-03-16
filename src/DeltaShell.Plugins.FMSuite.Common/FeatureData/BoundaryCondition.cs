@@ -25,7 +25,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
         FeatureData<IEventedList<IFunction>, Feature2D>, IBoundaryCondition
     {
         private BoundaryConditionDataType dataType;
-        private IEventedList<VerticalProfileDefinition> pointDepthLayerDefinitions;
 
         private bool syncing;
 
@@ -41,8 +40,8 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             PointData = new EventedList<IFunction>();
             PointData.CollectionChanged += PointDataCollectionChanged;
 
-            pointDepthLayerDefinitions = new EventedList<VerticalProfileDefinition>();
-            pointDepthLayerDefinitions.CollectionChanged += PointDepthLayerDefinitionsCollectionChanged;
+            PointDepthLayerDefinitions = new EventedList<VerticalProfileDefinition>();
+            PointDepthLayerDefinitions.CollectionChanged += PointDepthLayerDefinitionsCollectionChanged;
         }
 
         [Aggregation]
@@ -115,29 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             private set => Data = value;
         }
 
-        public IEventedList<VerticalProfileDefinition> PointDepthLayerDefinitions
-        {
-            get => pointDepthLayerDefinitions;
-            private set
-            {
-                if (pointDepthLayerDefinitions != null)
-                {
-                    foreach (VerticalProfileDefinition verticalProfileDefinition in pointDepthLayerDefinitions)
-                    {
-                        verticalProfileDefinition.PointDepths.CollectionChanged -= VerticalProfilePointsChanged;
-                    }
-                }
-
-                pointDepthLayerDefinitions = value;
-                if (pointDepthLayerDefinitions != null)
-                {
-                    foreach (VerticalProfileDefinition verticalProfileDefinition in pointDepthLayerDefinitions)
-                    {
-                        verticalProfileDefinition.PointDepths.CollectionChanged += VerticalProfilePointsChanged;
-                    }
-                }
-            }
-        }
+        public IEventedList<VerticalProfileDefinition> PointDepthLayerDefinitions { get; }
 
         public bool IsEditing { get; private set; }
 

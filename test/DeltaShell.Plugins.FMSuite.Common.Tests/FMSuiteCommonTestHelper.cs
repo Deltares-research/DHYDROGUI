@@ -19,29 +19,6 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests
             return new Polygon(GetJustLinearRing());
         }
 
-        public static Polygon GetInvalidGeometryForEnclosureExample()
-        {
-            /* Wrapper emulating the Interior ring. */
-            return new Polygon(new LinearRing(new[]
-            {
-                /* 
-                       (10.0, 20.0)   O------O (20.0, 20.0)             
-                                       \    /   
-                                        \  /   
-                                         \/   
-                                         /\
-                                        /  \
-                                       /    \
-                     (10.0, 10.0)     O------O (20.0, 10.0)
-                */
-                new Coordinate(10.0, 10.0),
-                new Coordinate(20.0, 20.0),
-                new Coordinate(10.0, 20.0),
-                new Coordinate(20.0, 10.0),
-                new Coordinate(10.0, 10.0)
-            }));
-        }
-
         public static LinearRing GetJustLinearRing()
         {
             return new LinearRing(new[]

@@ -174,8 +174,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.IO
 
                 var substance = (string) row[2];
                 var substanceValue = (string) row[3];
-                var buffer = 0.0;
-                if (!double.TryParse(substanceValue, NumberStyles.Any, CultureInfo.InvariantCulture, out buffer))
+                if (!double.TryParse(substanceValue, NumberStyles.Any, CultureInfo.InvariantCulture, out double _))
                 {
                     Log.ErrorFormat(
                         Resources

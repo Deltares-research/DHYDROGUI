@@ -695,37 +695,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO
         {
             var names = new HashSet<string>(); // skip duplicates
             var states = new List<XElement>();
-            foreach (ControlGroup group in controlGroups)
+            foreach (Output output in controlGroups.SelectMany(controlGroup => controlGroup.Outputs))
             {
-                foreach (Output output in group.Outputs)
+                if (names.Contains(output.Name))
                 {
-                    if (names.Contains(output.Name))
-                    {
-                        continue;
-                    }
-
-                    names.Add(output.Name);
-                    var serializer = new OutputSerializer(output);
-                    states.Add(new XElement(OpenDa + "treeVectorLeaf",
-                                            new XAttribute("id", serializer.GetXmlName()),
-                                            new XElement(OpenDa + "vector", output.Value)));
+                    continue;
                 }
-
-                foreach (RuleBase ruleBase in group.Rules)
-                {
-                    var serializer = SerializerCreator.CreateSerializerType<RuleSerializerBase>(ruleBase);
-                    foreach (XElement state in serializer.ToImportState(OpenDa))
-                    {
-                        string name = state.Attributes().First(a => a.Name == "id").Value;
-                        if (names.Contains(name))
-                        {
-                            continue;
-                        }
-
-                        names.Add(name);
-                        states.Add(state);
-                    }
-                }
+                
+                names.Add(output.Name);
+                var serializer = new OutputSerializer(output);
+                states.Add(new XElement(OpenDa + "treeVectorLeaf",
+                                        new XAttribute("id", serializer.GetXmlName()),
+                                        new XElement(OpenDa + "vector", output.Value)));
             }
 
             return states;

@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         }
 
         protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(
-            ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+            ModelProperty evaluatedProperty, string dependencyExpression)
         {
             return properties =>
             {
@@ -91,12 +91,12 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                 string leftPart = canHandleExpression[0].Groups["left"].Value.Trim();
                 DependencyExpressionBase leftMatch = dependencies.First(d => d.CanHandleExpression(leftPart));
                 Func<IEnumerable<ModelProperty>, bool> leftIsEnabled =
-                    leftMatch.OnCompile(evaluatedProperty, properties, leftPart);
+                    leftMatch.OnCompile(evaluatedProperty, leftPart);
 
                 string rightPart = canHandleExpression[0].Groups["right"].Value.Trim();
                 DependencyExpressionBase rightMatch = dependencies.First(d => d.CanHandleExpression(rightPart));
                 Func<IEnumerable<ModelProperty>, bool> rightIsEnabled =
-                    rightMatch.OnCompile(evaluatedProperty, properties, rightPart);
+                    rightMatch.OnCompile(evaluatedProperty, rightPart);
 
                 return leftIsEnabled(properties) && rightIsEnabled(properties);
             };

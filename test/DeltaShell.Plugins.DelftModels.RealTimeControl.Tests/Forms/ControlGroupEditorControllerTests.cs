@@ -702,7 +702,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new StandardCondition();
             var target = new StandardCondition();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
-            ControlGroupEditorController.Connect(source, ConnectorType.Right, target, ConnectorType.Left);
+            ControlGroupEditorController.Connect(source, ConnectorType.Right, target);
             var secondRuie = new HydraulicRule();
             Assert.IsFalse(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, secondRuie, ConnectorType.Left));
             var secondCondition = new StandardCondition();
@@ -715,7 +715,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new StandardCondition();
             var target = new HydraulicRule();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
-            ControlGroupEditorController.Connect(source, ConnectorType.Right, target, ConnectorType.Left);
+            ControlGroupEditorController.Connect(source, ConnectorType.Right, target);
             var secondRuie = new HydraulicRule();
             Assert.IsFalse(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, secondRuie, ConnectorType.Left));
             var secondCondition = new StandardCondition();
@@ -728,13 +728,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new Input();
             var target = new HydraulicRule();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Bottom, target, ConnectorType.Top));
-            ControlGroupEditorController.Connect(source, ConnectorType.Bottom, target, ConnectorType.Left);
+            ControlGroupEditorController.Connect(source, ConnectorType.Bottom, target);
             var secondRuie = new HydraulicRule();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Bottom, secondRuie, ConnectorType.Top));
-            ControlGroupEditorController.Connect(source, ConnectorType.Bottom, secondRuie, ConnectorType.Left);
+            ControlGroupEditorController.Connect(source, ConnectorType.Bottom, secondRuie);
             var secondCondition = new StandardCondition();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Bottom, secondCondition, ConnectorType.Top));
-            ControlGroupEditorController.Connect(source, ConnectorType.Bottom, secondCondition, ConnectorType.Left);
+            ControlGroupEditorController.Connect(source, ConnectorType.Bottom, secondCondition);
         }
 
         [Test]
@@ -743,13 +743,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new HydraulicRule();
             var target = new Output();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
-            ControlGroupEditorController.Connect(source, ConnectorType.Right, target, ConnectorType.Left);
+            ControlGroupEditorController.Connect(source, ConnectorType.Right, target);
             var secondRuie = new HydraulicRule();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(secondRuie, ConnectorType.Right, target, ConnectorType.Left));
-            ControlGroupEditorController.Connect(secondRuie, ConnectorType.Right, target, ConnectorType.Left);
+            ControlGroupEditorController.Connect(secondRuie, ConnectorType.Right, target);
             var thirdRule = new HydraulicRule();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(thirdRule, ConnectorType.Right, target, ConnectorType.Left));
-            ControlGroupEditorController.Connect(thirdRule, ConnectorType.Right, target, ConnectorType.Left);
+            ControlGroupEditorController.Connect(thirdRule, ConnectorType.Right, target);
         }
 
         [Test]
@@ -758,7 +758,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var source = new StandardCondition();
             var target = new HydraulicRule();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
-            ControlGroupEditorController.Connect(source, ConnectorType.Right, target, ConnectorType.Left);
+            ControlGroupEditorController.Connect(source, ConnectorType.Right, target);
 
             // can not connect the same condition again
             Assert.IsFalse(ControlGroupEditorController.IsConnectionAllowed(source, ConnectorType.Right, target, ConnectorType.Left));
@@ -766,7 +766,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
 
             var secondCondition = new StandardCondition();
             Assert.IsTrue(ControlGroupEditorController.IsConnectionAllowed(secondCondition, ConnectorType.Right, target, ConnectorType.Left));
-            ControlGroupEditorController.Connect(secondCondition, ConnectorType.Right, target, ConnectorType.Left);
+            ControlGroupEditorController.Connect(secondCondition, ConnectorType.Right, target);
         }
 
         [Test]

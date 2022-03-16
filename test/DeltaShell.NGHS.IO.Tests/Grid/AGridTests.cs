@@ -102,7 +102,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
 
             mocks.ReplayAll();
 
-            Assert.That(() => grid.Initialize(), Throws.Exception.With.Message.StartsWith("Couldn't open grid nc file: "));
+            Assert.That(() => grid.Initialize(), Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't open grid nc file: "));
 
             mocks.VerifyAll();
         }

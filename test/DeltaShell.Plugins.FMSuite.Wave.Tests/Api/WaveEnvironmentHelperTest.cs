@@ -45,7 +45,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
             // Call | Update
             using (var tempDir = new TemporaryDirectory())
             {
-                using (var _ = new WaveEnvironmentHelper(tempDir.Path, environment))
+                using (new WaveEnvironmentHelper(tempDir.Path, environment))
                 {
                     // Assert | Update
                     Assert.That(Directory.GetCurrentDirectory(),
@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Api
             environment.GetVariable(WaveEnvironmentConstants.ArchKey)
                        .Returns(expectedArch);
 
-            using (var _ = new WaveEnvironmentHelper(null, environment))
+            using (new WaveEnvironmentHelper(null, environment))
             {
                 WaveEnvironmentHelper.DimrRun = true;
 

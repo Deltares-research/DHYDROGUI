@@ -77,7 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
         [Category(TestCategory.Slow)]
         public void ShowFmModelRunCoupledToRtc()
         {
-            HydroModel hydroModel = CreateFmRtcModel(out RealTimeControlModel _, out WaterFlowFMModel flow, app);
+            HydroModel hydroModel = CreateFmRtcModel(out WaterFlowFMModel flow, app);
             var mainWindow = (MainWindow) gui.MainWindow;
 
             // wait until gui starts
@@ -324,10 +324,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static HydroModel CreateFmRtcModel(out RealTimeControlModel rtc, out WaterFlowFMModel flow, IApplication application)
+        private static HydroModel CreateFmRtcModel(out WaterFlowFMModel flow, IApplication application)
         {
             flow = new WaterFlowFMModel {Name = "flow"};
-            rtc = new RealTimeControlModel("rtc");
+            var rtc = new RealTimeControlModel("rtc");
 
             var hydroModel = new HydroModel
             {

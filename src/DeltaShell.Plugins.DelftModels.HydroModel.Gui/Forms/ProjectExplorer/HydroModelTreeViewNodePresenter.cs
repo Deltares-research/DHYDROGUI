@@ -22,13 +22,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
 {
     public class HydroModelTreeViewNodePresenter : TreeViewNodePresenterBaseForPluginGui<HydroModel>
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(HydroModelTreeViewNodePresenter));
         private readonly IGui gui;
 
         public HydroModelTreeViewNodePresenter(GuiPlugin guiPlugin) : base(guiPlugin)
         {
             gui = guiPlugin.Gui;
-            InitializeComponent();
         }
 
         public override Type NodeTagType
@@ -240,8 +238,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer
                     throw new NotImplementedException();
             }
         }
-
-        private void InitializeComponent() {}
 
         private static void UpdateNodeImage(ITreeNode node, HydroModel model)
         {

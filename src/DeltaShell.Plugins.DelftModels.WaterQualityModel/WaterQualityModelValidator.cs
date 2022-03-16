@@ -178,20 +178,17 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             IEnumerable<ValidationIssue> vi1 = CheckTimers(model, "balance output", settings.BalanceStartTime,
                                                            settings.BalanceStopTime, settings.BalanceTimeStep,
                                                            "simulation", referenceStartTime, referenceStopTime,
-                                                           referenceTimeStep,
-                                                           false, false);
+                                                           referenceTimeStep, false);
 
             IEnumerable<ValidationIssue> vi2 = CheckTimers(model, "monitoring locations output", settings.HisStartTime,
                                                            settings.HisStopTime, settings.HisTimeStep,
                                                            "simulation", referenceStartTime, referenceStopTime,
-                                                           referenceTimeStep,
-                                                           false, false);
+                                                           referenceTimeStep, false);
 
             IEnumerable<ValidationIssue> vi3 = CheckTimers(model, "cells output", settings.MapStartTime,
                                                            settings.MapStopTime, settings.MapTimeStep,
                                                            "simulation", referenceStartTime, referenceStopTime,
-                                                           referenceTimeStep,
-                                                           false, false);
+                                                           referenceTimeStep, false);
 
             foreach (ValidationIssue vi in vi1.Concat(vi2).Concat(vi3))
             {
@@ -211,7 +208,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// <param name="referenceStartTime"> The reference start time </param>
         /// <param name="referenceStopTime"> The reference stop time </param>
         /// <param name="referenceTimeStep"> The reference time step </param>
-        /// <param name="referenceIsFromLinkedFlowModel"> Indicates if the reference comes from a linked flow model </param>
         /// <param name="timeStepTwoWayMultiple"> Indicates if the timestep integer multiple is allowed to be two-way </param>
         private static IEnumerable<ValidationIssue> CheckTimers(IModel model, string description,
                                                                 DateTime toBeCheckedStartTime,
@@ -220,7 +216,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                                                                 string referenceDescription,
                                                                 DateTime referenceStartTime, DateTime referenceStopTime,
                                                                 TimeSpan referenceTimeStep,
-                                                                bool referenceIsFromLinkedFlowModel,
                                                                 bool timeStepTwoWayMultiple)
         {
             // 'toBeChecked' cannot have start time after stop time
@@ -426,7 +421,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         private IEnumerable<ValidationIssue> ValidateSimulationTimer(WaterQualityModel model)
         {
             return CheckTimers(model, "simulation", model.StartTime, model.StopTime,
-                               model.TimeStep, "simulation", model.StartTime, model.StopTime, model.TimeStep, false,
+                               model.TimeStep, "simulation", model.StartTime, model.StopTime, model.TimeStep,
                                true);
         }
 

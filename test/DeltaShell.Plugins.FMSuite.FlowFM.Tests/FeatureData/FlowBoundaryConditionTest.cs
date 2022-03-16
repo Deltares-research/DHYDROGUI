@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.FeatureData
             var bc3 = new FlowBoundaryCondition(FlowBoundaryQuantityType.SedimentConcentration, BoundaryConditionDataType.TimeSeries);
             try
             {
-                IUnit ru = bc3.ReflectionUnit;
+                IUnit _ = bc3.ReflectionUnit;
                 Assert.Fail("Get reflection unit should have thrown an exception");
             }
             catch (ArgumentOutOfRangeException)

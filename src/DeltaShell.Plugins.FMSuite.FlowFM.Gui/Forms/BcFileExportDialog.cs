@@ -93,7 +93,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
             }
         }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
         protected string FilePath { get; set; }
 

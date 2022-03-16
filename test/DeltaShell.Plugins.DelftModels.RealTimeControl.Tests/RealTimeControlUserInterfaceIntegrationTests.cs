@@ -24,7 +24,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         public void SaveAndLoadModelResultsInValidModel()
         {
             // next line is a hack to force loading of RTCShapes.dll
-            var shape = new InputItemShape();
+            var _ = new InputItemShape();
 
             var path = "SaveAndLoad.dsproj";
             using (var gui = new DeltaShellGui())

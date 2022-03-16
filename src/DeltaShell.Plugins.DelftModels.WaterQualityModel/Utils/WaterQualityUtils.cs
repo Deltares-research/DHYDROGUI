@@ -124,19 +124,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
         }
 
         /// <summary>
-        /// Writes a resource if it not exists yet
-        /// </summary>
-        /// <param name="path"> The path to write the resource to </param>
-        /// <param name="resource"> The resource to write to the file system </param>
-        public static void WriteFileIfNotExists(string path, byte[] resource)
-        {
-            if (!File.Exists(path))
-            {
-                File.WriteAllBytes(path, resource);
-            }
-        }
-
-        /// <summary>
         /// Trims all white space characters from the front and back of <paramref name="toBeTrimmed"/>
         /// </summary>
         /// <param name="toBeTrimmed"> The string to be trimmed </param>

@@ -10,7 +10,6 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.NetCdf;
 using DelftTools.Utils.Reflection;
 using DelftTools.Utils.Validation;
 using DeltaShell.Core;
@@ -659,71 +658,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             }
 
             return fmModel;
-        }
-
-        private void AssertTimeseriesAreEqual(string variableName, string ncFileNameLeft, string ncFileNameRight, double minimumAbsError)
-        {
-            Assert.IsTrue(File.Exists(ncFileNameLeft), "NetCDF file not found: " + ncFileNameLeft);
-            Assert.IsTrue(File.Exists(ncFileNameRight), "NetCDF file not found: " + ncFileNameRight);
-
-            Array arrayLeft = GetDataForVariable(variableName, ncFileNameLeft);
-            Assert.IsNotNull(arrayLeft, "variable " + variableName + " not found in NetCDF file " + ncFileNameLeft);
-
-            Array arrayRight = GetDataForVariable(variableName, ncFileNameRight);
-            Assert.IsNotNull(arrayRight, "variable " + variableName + " not found in NetCDF file " + ncFileNameRight);
-
-            int nTimesLeft = arrayLeft.GetLength(0);
-            int nValuesLeft = arrayLeft.GetLength(1);
-            int nTimesRight = arrayRight.GetLength(0);
-            int nValuesRight = arrayRight.GetLength(1);
-            Assert.AreEqual(nTimesLeft, nTimesRight, "number of timesteps");
-            Assert.AreEqual(nValuesLeft, nValuesRight, "number of values in timeseries");
-
-            var max = 0.0;
-
-            for (var i = 0; i < nTimesLeft; ++i)
-            {
-                for (var j = 0; j < nValuesLeft; ++j)
-                {
-                    var left = (double) arrayLeft.GetValue(i, j);
-                    var right = (double) arrayRight.GetValue(i, j);
-
-                    Assert.AreEqual(left, right, Math.Max(1.0e-07 * Math.Abs(left), minimumAbsError), string.Format("value with index {0} at time index {1}", j, i));
-
-                    double err = Math.Abs(left - right);
-                    if (err > max)
-                    {
-                        max = err;
-                    }
-                }
-            }
-
-            Console.WriteLine("Timeseries '{0}' are equivalent, largest difference equal to {1}", variableName, max);
-        }
-
-        private Array GetDataForVariable(string varName, string ncFileName)
-        {
-            Array data = null;
-            NetCdfFile ncFile = null;
-            try
-            {
-                ncFile = NetCdfFile.OpenExisting(ncFileName);
-                NetCdfVariable ncVariable = ncFile.GetVariableByName(varName);
-
-                if (ncVariable != null)
-                {
-                    data = ncFile.Read(ncVariable);
-                }
-            }
-            finally
-            {
-                if (ncFile != null)
-                {
-                    ncFile.Close();
-                }
-            }
-
-            return data;
         }
     }
 }

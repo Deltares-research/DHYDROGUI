@@ -1288,7 +1288,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             // Act
             void Call()
             {
-                string dimrExportDirectory = model.DimrExportDirectoryPath;
+                string _ = model.DimrExportDirectoryPath;
             }
 
             // Assert
@@ -2121,6 +2121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
                 SimulateRun(rtcModel, workingDirectoryForRunning);
 
                 ReadOnlyTextFileData[] outputDocumentsBeforeClear = rtcModel.OutputDocuments.ToArray();
+                Assert.That(outputDocumentsBeforeClear, Has.Length.AtLeast(1));
 
                 rtcModel.ClearOutput(true);
                 frameworkSimulator.FirstSave(pathAfterSave);

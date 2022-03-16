@@ -20,7 +20,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
         public void ObsFileExportImportForGroupableFeaturesTest()
         {
             string filePath = string.Concat(Path.GetTempFileName(), ".xyn");
-            string groupName = Path.GetFileName(filePath);
 
             List<GroupableFeature2DPoint> points = CreateObservationPoints<GroupableFeature2DPoint>(10);
 

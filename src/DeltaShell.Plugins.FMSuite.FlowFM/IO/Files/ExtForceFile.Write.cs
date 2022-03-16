@@ -402,7 +402,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                                string prefix = null)
         {
             IDictionary<ISpatialOperation, ExtForceFileItem> spatialDataItems =
-                ExtForceFileItemFactory.GetSpatialDataItems(quantity, spatialOperations, ExistingForceFileItems, extFilePath, uniqueFileNameProvider,
+                ExtForceFileItemFactory.GetSpatialDataItems(quantity, spatialOperations, ExistingForceFileItems, uniqueFileNameProvider,
                                                             prefix);
 
             foreach (KeyValuePair<ISpatialOperation, ExtForceFileItem> spatialDataItem in spatialDataItems)

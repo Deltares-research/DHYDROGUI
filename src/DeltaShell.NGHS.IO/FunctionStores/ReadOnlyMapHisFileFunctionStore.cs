@@ -106,11 +106,20 @@ namespace DeltaShell.NGHS.IO.FunctionStores
 
         public bool FireEvents { get; set; }
 
-        public void CreateNew(string path) {}
+        public void CreateNew(string path)
+        {
+            // Nothing to be done, is enforced through IFileBased.
+        }
 
-        public void Close() {}
+        public void Close()
+        {
+            // Nothing to be done, is enforced through IFileBased.
+        }
 
-        public void Open(string path) {}
+        public void Open(string path)
+        {
+            // Nothing to be done, is enforced through IFileBased.
+        }
 
         public void CopyTo(string destinationPath)
         {
@@ -177,7 +186,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             IVariable timeVariable = variable.Arguments.FirstOrDefault(a => a.ValueType == typeof(DateTime));
 
             // should be time dependent component with single value filters
-            if (variable.ValueType != typeof(double) || variable.IsIndependent || timeVariable == null || filters.OfType<IVariableValueFilter>().Any(f => f.Values.Count > 1))
+            if (IsValidVariable(variable, filters, timeVariable))
             {
                 throw new NotImplementedException();
             }
@@ -188,117 +197,148 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                 return CreateEmptyArrayForType(variable.ValueType);
             }
 
-            List<double> data = null;
-            var shape = new int[]
-            {
-                1
-            };
-
             VariableValueFilter<DateTime> timeFilter = filters.Where(f => f.Variable == timeVariable).OfType<VariableValueFilter<DateTime>>().FirstOrDefault();
 
-            // UnstructuredCoverage
             IVariable locationIndexVariable = variable.Arguments.FirstOrDefault(a => a.ValueType == typeof(int));
             if (locationIndexVariable != null)
             {
-                VariableValueFilter<int> locationFilter = filters.Where(f => f.Variable == locationIndexVariable).OfType<VariableValueFilter<int>>().FirstOrDefault();
-
-                if (locationFilter == null && timeFilter == null)
-                {
-                    throw new NotImplementedException();
-                }
-
-                int locationIndex = locationFilter != null ? locationFilter.Values[0] : -1;
-                int timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
-
-                data = timeIndex != -1
-                           ? MapHisFileReader.GetTimeStepData(path, MetaData, timeIndex, parameterName, locationIndex)
-                           : MapHisFileReader.GetTimeSeriesData(path, MetaData, parameterName, locationIndex);
-
-                if (data != null)
-                {
-                    shape = timeIndex != -1
-                                ? new[]
-                                {
-                                    1,
-                                    data.Count
-                                }
-                                : new[]
-                                {
-                                    MetaData.NumberOfTimeSteps,
-                                    1
-                                };
-                }
+                return CreateMultiDimensionalArrayForUnstructuredGridCoverage(filters, locationIndexVariable, timeFilter, parameterName, variable);
             }
 
-            // FeatureCoverage
             IVariable featureVariable = variable.Arguments.FirstOrDefault(a => a.ValueType.Implements(typeof(IFeature)));
             if (featureVariable != null)
             {
-                if (!filters.Any())
-                {
-                    Func<IMultiDimensionalArray<double>> realGetFunction = () =>
-                    {
-                        List<double> values = Enumerable.Range(0, MetaData.Times.Count)
-                                                        .SelectMany(i => MapHisFileReader.GetTimeStepData(path, MetaData, i, parameterName))
-                                                        .ToList();
-                        UpdateMinMax(values, parameterName, variable);
-                        return new MultiDimensionalArray<double>(values, MetaData.NumberOfTimeSteps, MetaData.NumberOfLocations);
-                    };
-                    return new LazyMultiDimensionalArray<double>(realGetFunction, () => MetaData.NumberOfTimeSteps * MetaData.NumberOfLocations);
-                }
-
-                List<VariableValueFilter<IFeature>> featureVariableFilters = filters.Where(f => f.Variable == featureVariable).OfType<VariableValueFilter<IFeature>>().ToList();
-                int locationIndex = featureVariableFilters.Count == 1
-                                        ? MetaData.Locations.IndexOf(LocationFromObjectToString(featureVariableFilters[0].Values[0]))
-                                        : -1;
-                int timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
-
-                data = timeIndex != -1
-                           ? MapHisFileReader.GetTimeStepData(path, MetaData, timeIndex, parameterName, locationIndex)
-                           : MapHisFileReader.GetTimeSeriesData(path, MetaData, parameterName, locationIndex);
-
-                if (data != null)
-                {
-                    shape = timeIndex != -1
-                                ? new[]
-                                {
-                                    1,
-                                    data.Count
-                                }
-                                : new[]
-                                {
-                                    MetaData.NumberOfTimeSteps,
-                                    1
-                                };
-                }
+                return CreateMultiDimensionalArrayForFeatureCoverage(filters, featureVariable, timeFilter, parameterName, variable);
             }
 
-            // TimeSeries
             if (variable.Arguments.Count == 1 && !filters.Any() && MetaData.NumberOfLocations == 1)
             {
-                data = MapHisFileReader.GetTimeSeriesData(path, MetaData, parameterName, 0);
-                shape = new[]
-                {
-                    MetaData.NumberOfTimeSteps
-                };
+                return CreateMultiDimensionalArrayForTimeSeries(variable, parameterName);
             }
 
-            if (data == null)
-            {
-                return new MultiDimensionalArray<double>(new List<double>(), new[]
-                {
-                    0,
-                    0
-                });
-            }
-
-            UpdateMinMax(data, parameterName, variable);
-            return new MultiDimensionalArray<double>(data, shape);
+            return CreateEmptyMultiDimensionalArray();
         }
 
         public IMultiDimensionalArray<T> GetVariableValues<T>(IVariable variable, params IVariableFilter[] filters)
         {
             return (IMultiDimensionalArray<T>) GetVariableValues(variable, filters);
+        }
+
+        private IMultiDimensionalArray CreateMultiDimensionalArrayForTimeSeries(IVariable variable, string parameterName)
+        {
+            List<double> data = MapHisFileReader.GetTimeSeriesData(path, MetaData, parameterName, 0);
+            if (!data.Any())
+            {
+                return CreateEmptyMultiDimensionalArray();
+            }
+
+            int[] shape =
+            {
+                MetaData.NumberOfTimeSteps
+            };
+
+            UpdateMinMax(data, parameterName, variable);
+            return new MultiDimensionalArray<double>(data, shape);
+        }
+
+        private IMultiDimensionalArray CreateMultiDimensionalArrayForFeatureCoverage(IVariableFilter[] filters, IVariable featureVariable, VariableValueFilter<DateTime> timeFilter, string parameterName, IVariable variable)
+        {
+            if (!filters.Any())
+            {
+                Func<IMultiDimensionalArray<double>> realGetFunction = () =>
+                {
+                    List<double> values = Enumerable.Range(0, MetaData.Times.Count)
+                                                    .SelectMany(i => MapHisFileReader.GetTimeStepData(path, MetaData, i, parameterName))
+                                                    .ToList();
+                    UpdateMinMax(values, parameterName, variable);
+                    return new MultiDimensionalArray<double>(values, MetaData.NumberOfTimeSteps, MetaData.NumberOfLocations);
+                };
+                return new LazyMultiDimensionalArray<double>(realGetFunction, () => MetaData.NumberOfTimeSteps * MetaData.NumberOfLocations);
+            }
+
+            List<VariableValueFilter<IFeature>> featureVariableFilters = filters.Where(f => f.Variable == featureVariable).OfType<VariableValueFilter<IFeature>>().ToList();
+            int locationIndex = featureVariableFilters.Count == 1
+                                    ? MetaData.Locations.IndexOf(LocationFromObjectToString(featureVariableFilters[0].Values[0]))
+                                    : -1;
+            int timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
+
+            List<double> data = timeIndex != -1
+                                    ? MapHisFileReader.GetTimeStepData(path, MetaData, timeIndex, parameterName, locationIndex)
+                                    : MapHisFileReader.GetTimeSeriesData(path, MetaData, parameterName, locationIndex);
+
+            if (!data.Any())
+            {
+                return CreateEmptyMultiDimensionalArray();
+            }
+
+            int[] shape = timeIndex != -1
+                              ? new[]
+                              {
+                                  1,
+                                  data.Count
+                              }
+                              : new[]
+                              {
+                                  MetaData.NumberOfTimeSteps,
+                                  1
+                              };
+
+            UpdateMinMax(data, parameterName, variable);
+            return new MultiDimensionalArray<double>(data, shape);
+        }
+
+        private IMultiDimensionalArray CreateMultiDimensionalArrayForUnstructuredGridCoverage(IVariableFilter[] filters, IVariable locationIndexVariable, VariableValueFilter<DateTime> timeFilter, string parameterName, IVariable variable)
+        {
+            VariableValueFilter<int> locationFilter = filters.Where(f => f.Variable == locationIndexVariable).OfType<VariableValueFilter<int>>().FirstOrDefault();
+
+            if (locationFilter == null && timeFilter == null)
+            {
+                throw new NotImplementedException();
+            }
+
+            int locationIndex = locationFilter != null ? locationFilter.Values[0] : -1;
+            int timeIndex = timeFilter != null ? MetaData.Times.IndexOf(timeFilter.Values[0]) : -1;
+
+            List<double> data = timeIndex != -1
+                                    ? MapHisFileReader.GetTimeStepData(path, MetaData, timeIndex, parameterName, locationIndex)
+                                    : MapHisFileReader.GetTimeSeriesData(path, MetaData, parameterName, locationIndex);
+
+            if (!data.Any())
+            {
+                return CreateEmptyMultiDimensionalArray();
+            }
+
+            int[] shape = timeIndex != -1
+                              ? new[]
+                              {
+                                  1,
+                                  data.Count
+                              }
+                              : new[]
+                              {
+                                  MetaData.NumberOfTimeSteps,
+                                  1
+                              };
+
+            UpdateMinMax(data, parameterName, variable);
+            return new MultiDimensionalArray<double>(data, shape);
+        }
+
+        private static IMultiDimensionalArray CreateEmptyMultiDimensionalArray()
+        {
+            return new MultiDimensionalArray<double>(new List<double>(), new[]
+            {
+                0,
+                0
+            });
+        }
+
+        private static bool IsValidVariable(IVariable variable, IVariableFilter[] filters, IVariable timeVariable)
+        {
+            return variable.ValueType != typeof(double) ||
+                   variable.IsIndependent ||
+                   timeVariable == null ||
+                   filters.OfType<IVariableValueFilter>().Any(f => f.Values.Count > 1);
         }
 
         public T GetMaxValue<T>(IVariable variable)
@@ -456,15 +496,8 @@ namespace DeltaShell.NGHS.IO.FunctionStores
                     continue;
                 }
 
-                if (min == null || min.Value > value)
-                {
-                    min = value;
-                }
-
-                if (max == null || max.Value < value)
-                {
-                    max = value;
-                }
+                min = GetMin(min, value);
+                max = GetMax(max, value);
             }
 
             var minMaxChanged = false;
@@ -486,6 +519,26 @@ namespace DeltaShell.NGHS.IO.FunctionStores
             }
 
             FireFunctionValuesChanged(this, new FunctionValuesChangingEventArgs {Function = function});
+        }
+
+        private static double? GetMax(double? newValue, double currentValue)
+        {
+            if (newValue == null || newValue.Value < currentValue)
+            {
+                return currentValue;
+            }
+
+            return newValue;
+        }
+
+        private static double? GetMin(double? newValue, double currentValue)
+        {
+            if (newValue == null || newValue.Value > currentValue)
+            {
+                return currentValue;
+            }
+
+            return newValue;
         }
 
         private void FireFunctionValuesChanged(object sender, FunctionValuesChangingEventArgs e)

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 
 namespace DeltaShell.NGHS.IO
@@ -168,40 +169,52 @@ namespace DeltaShell.NGHS.IO
 
             while (CurrentLine != null)
             {
-                string trimmedLine = CurrentLine.Trim();
-
-                if (CheckAndProcessCommentInputLine(CurrentLine, trimmedLine))
+                if (TryGetLine(out string nextLine1))
                 {
-                    CurrentLine = GetNextLine();
-                }
-                else if (CheckAndProcessEmptyInputLine(CurrentLine, trimmedLine))
-                {
-                    CurrentLine = GetNextLine();
-                }
-                else
-                {
-                    string nextLine = trimmedLine.Replace('\t', ' '); // avoid having to parse or split on tabs
-                    if (currentCommentBlock != null)
-                    {
-                        if (!fileContentHasStarted)
-                        {
-                            headingCommentBlocks.Add(currentCommentBlock);
-                            currentCommentBlock = null;
-                        }
-                        else
-                        {
-                            CreateCommonBlock();
-                        }
-
-                        currentCommentBlock = null;
-                    }
-
-                    fileContentHasStarted = true;
-                    return nextLine;
+                    return nextLine1;
                 }
             }
 
             return null;
+        }
+
+        private bool TryGetLine(out string line)
+        {
+            string trimmedLine = CurrentLine.Trim();
+
+            if (CheckAndProcessCommentInputLine(CurrentLine, trimmedLine))
+            {
+                CurrentLine = GetNextLine();
+            }
+            else if (CheckAndProcessEmptyInputLine(CurrentLine, trimmedLine))
+            {
+                CurrentLine = GetNextLine();
+            }
+            else
+            {
+                string nextLine = trimmedLine.Replace('\t', ' '); // avoid having to parse or split on tabs
+                if (currentCommentBlock != null)
+                {
+                    if (!fileContentHasStarted)
+                    {
+                        headingCommentBlocks.Add(currentCommentBlock);
+                        currentCommentBlock = null;
+                    }
+                    else
+                    {
+                        CreateCommonBlock();
+                    }
+
+                    currentCommentBlock = null;
+                }
+
+                fileContentHasStarted = true;
+                line = nextLine;
+                return true;
+            }
+
+            line = null;
+            return false;
         }
 
         protected virtual void CreateCommonBlock()
@@ -215,10 +228,7 @@ namespace DeltaShell.NGHS.IO
 
         protected static IEnumerable<string> SplitLine(string inputLine)
         {
-            if (inputLine == null)
-            {
-                throw new ArgumentNullException(nameof(inputLine));
-            }
+            Ensure.NotNull(inputLine, nameof(inputLine));
 
             string trimmedInputLine = inputLine.Trim();
 

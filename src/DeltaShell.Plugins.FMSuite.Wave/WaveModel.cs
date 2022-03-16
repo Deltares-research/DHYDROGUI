@@ -1492,7 +1492,10 @@ namespace DeltaShell.Plugins.FMSuite.Wave
             IsOpen = true;
         }
 
-        void IFileBased.Delete() { }
+        void IFileBased.Delete()
+        {
+            // Nothing to be done, enforced through IFileBased
+        }
 
         private string GetMdwPathFromDeltaShellPath(string dsPath)
         {
@@ -1540,7 +1543,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave
         {
             get
             {
-                using (var waveDllHelper = new WaveEnvironmentHelper(string.Empty))
+                using (new WaveEnvironmentHelper(string.Empty))
                 {
                     WaveEnvironmentHelper.DimrRun = true;
 

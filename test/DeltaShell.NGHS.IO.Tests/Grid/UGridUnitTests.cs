@@ -12,7 +12,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
     public class UGridUnitTests
     {
         private const string UGRID_TEST_FILE = @"ugrid\Dummy.nc";
-        private const string standardErrorMessage = ", because of error number: -1";
         private int errorValue = -1;
         private int noErrorValue = GridApiDataSet.GridConstants.NOERR;
 
@@ -44,7 +43,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetNumberOf2DMeshes(); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of 2D meshes" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get the number of 2D meshes"));
         }
 
         [Test]
@@ -76,7 +75,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetNumberOfNodesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of nodes" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get the number of nodes"));
         }
 
         [Test]
@@ -108,7 +107,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetNumberOfEdgesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get number of edges" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get number of edges"));
         }
 
         [Test]
@@ -140,7 +139,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetNumberOfFacesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get number of faces" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get number of faces"));
         }
 
         [Test]
@@ -172,7 +171,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetNumberOfMaxFaceNodesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get max face nodes" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get max face nodes"));
         }
 
         [Test]
@@ -210,7 +209,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetAllNodeCoordinatesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get x node coordinates" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get x node coordinates"));
         }
 
         [Test]
@@ -236,7 +235,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetAllNodeCoordinatesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get y node coordinates" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get y node coordinates"));
         }
 
         [Test]
@@ -265,7 +264,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetAllNodeCoordinatesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get z node coordinates" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get z node coordinates"));
         }
 
         [Test]
@@ -335,7 +334,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetEdgeNodesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get edge nodes of the mesh" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get edge nodes of the mesh"));
         }
 
         [Test]
@@ -383,7 +382,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetFaceNodesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get face nodes of the mesh" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get face nodes of the mesh"));
         }
 
         [Test]
@@ -432,7 +431,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.NumberOfNamesForLocationType(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the number of names for location type" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get the number of names for location type"));
         }
 
         [Test]
@@ -468,7 +467,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetNamesAtLocation(Arg<int>.Is.Anything, Arg<GridApiDataSet.LocationType>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get the names at location" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get the names at location"));
         }
 
         [Test]
@@ -509,7 +508,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.RewriteGridCoordinatesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything, Arg<double[]>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't rewrite grid coordinates" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't rewrite grid coordinates"));
         }
 
         [Test]
@@ -540,7 +539,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.GetMeshName(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Couldn't get meshname" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Couldn't get meshname"));
         }
 
         [Test]
@@ -607,7 +606,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.WriteZValuesAtFacesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Error writing z values at mesh faces" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Error writing z values at mesh faces"));
         }
 
         [Test]
@@ -638,7 +637,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.WriteZValuesAtNodesForMeshId(Arg<int>.Is.Anything, Arg<double[]>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Error writing z values at mesh nodes" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Error writing z values at mesh nodes"));
         }
 
         [Test]
@@ -675,7 +674,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.ReadZValuesAtFacesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Error reading z values at mesh faces" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Error reading z values at mesh faces"));
         }
 
         [Test]
@@ -710,7 +709,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                     grid => { grid.ReadZValuesAtNodesForMeshId(Arg<int>.Is.Anything); });
             }
 
-            Assert.That(Test, Throws.Exception.With.Message.EqualTo("Error reading z values at mesh nodes" + standardErrorMessage));
+            Assert.That(Test, Throws.TypeOf<GridApiException>().With.Message.Contains("Error reading z values at mesh nodes"));
         }
 
         [Test]

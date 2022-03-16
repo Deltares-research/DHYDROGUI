@@ -95,54 +95,51 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
         [TestCase(false, 1)] // RTC Inputs greater than limit
         public void TestRtcInputsGenerateExpectedContextMenu(bool expectedResult, int additionalValues = 0)
         {
-            using (var clipboardStub = new ClipboardStub())
+            var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
+
+            var controlGroupEditor = new ControlGroupEditor
             {
-                var rtcModel = mocks.DynamicMock<IRealTimeControlModel>();
+                Data = new ControlGroup(),
+                Model = rtcModel
+            };
 
-                var controlGroupEditor = new ControlGroupEditor
-                {
-                    Data = new ControlGroup(),
-                    Model = rtcModel
-                };
+            var maxValues = (int)TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
 
-                var maxValues = (int) TypeUtils.GetField(controlGroupEditor, "MaxLocationsToDisplayIndividually");
+            rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output))
+                    .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
+                    .Repeat.Once();
 
-                rtcModel.Expect(m => m.GetChildDataItemLocationsFromControlledModels(DataItemRole.Output))
-                        .Return(Enumerable.Range(0, maxValues + additionalValues).Select(i => new Feature()))
-                        .Repeat.Once();
+            rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
+                    .Return(new List<DataItem> { new DataItem() { Role = DataItemRole.Output } })
+                    .Repeat.Any();
 
-                rtcModel.Expect(m => m.GetChildDataItemsFromControlledModelsForLocation(null)).IgnoreArguments()
-                        .Return(new List<DataItem> {new DataItem() {Role = DataItemRole.Output}})
-                        .Repeat.Any();
+            mocks.ReplayAll();
 
-                mocks.ReplayAll();
+            var shape = new InputItemShape()
+            {
+                Tag = new Input(),
+                IsSelected = true
+            };
+            controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
 
-                var shape = new InputItemShape()
-                {
-                    Tag = new Input(),
-                    IsSelected = true
-                };
-                controlGroupEditor.GraphControl.NetronGraph.Shapes.Add(shape);
+            TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[]
+            {
+                null,
+                null
+            });
 
-                TypeUtils.CallPrivateMethod(controlGroupEditor, "OnGraphControlContextMenu", new object[]
-                {
-                    null,
-                    null
-                });
+            var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
+            controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
 
-                var menuItems = new MenuItem[controlGroupEditor.GraphControl.ContextMenuItems.Count];
-                controlGroupEditor.GraphControl.ContextMenuItems.CopyTo(menuItems, 0);
+            List<string> menuItemNames = menuItems.Select(b => b.Text).ToList();
 
-                List<string> menuItemNames = menuItems.Select(b => b.Text).ToList();
+            Assert.AreEqual(expectedResult, menuItemNames.Contains("Input locations"),
+                            "Context menu differs from what was expected");
 
-                Assert.AreEqual(expectedResult, menuItemNames.Contains("Input locations"),
-                                "Context menu differs from what was expected");
+            Assert.IsTrue(menuItemNames.Contains("Choose input locations..."),
+                          "Users should always have the option to 'choose input location...' for RTC Outputs");
 
-                Assert.IsTrue(menuItemNames.Contains("Choose input locations..."),
-                              "Users should always have the option to 'choose input location...' for RTC Outputs");
-
-                mocks.VerifyAll();
-            }
+            mocks.VerifyAll();
         }
 
         [Test]
@@ -593,7 +590,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Forms
             var mockModel = mocks.Stub<IRealTimeControlModel>();
             var shape = mocks.Stub<Shape>();
             var dataItem = mocks.Stub<IDataItem>();
-            var diLink = mocks.Stub<IDataItem>();
 
             shape.Tag = new Input();
             dataItem.Role = DataItemRole.Output;

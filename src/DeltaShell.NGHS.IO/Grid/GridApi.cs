@@ -21,7 +21,7 @@ namespace DeltaShell.NGHS.IO.Grid
         protected GridApiDataSet.DataSetConventions iconvtype;
         protected GridWrapper wrapper;
 
-        public GridApi()
+        protected GridApi()
         {
             wrapper = new GridWrapper();
         }
@@ -100,7 +100,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
-                throw new Exception();
+                throw new GridApiException(GridApiExceptionMessage.Format(ierr));
             }
         }
 

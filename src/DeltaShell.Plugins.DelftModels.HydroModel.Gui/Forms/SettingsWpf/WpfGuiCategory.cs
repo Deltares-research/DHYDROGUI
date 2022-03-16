@@ -167,7 +167,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 
             //Notify to all properties within this category that they need to be updated.
             Properties.ForEach(p => p.RaisePropertyChangedEvents());
-            SubCategories.ForEach(sc => sc.IsVisible = true);
+            SubCategories.ForEach(sc => sc.UpdateIsVisible());
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsVisible"));
             UpdatingProperties = false;
         }

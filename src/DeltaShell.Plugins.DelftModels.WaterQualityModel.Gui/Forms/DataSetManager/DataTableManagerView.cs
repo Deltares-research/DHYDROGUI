@@ -62,7 +62,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.DataSetMana
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public ViewInfo ViewInfo { get; set; }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
         private void InitTableView()
         {

@@ -67,7 +67,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.ModelFeatureCoordinateDa
             (component as CoordinateDataRow)?.SetDataValue(columnIndex, value);
         }
 
-        public override void ResetValue(object component) {}
+        public override void ResetValue(object component)
+        {
+            // Nothing to be done, enforced through PropertyDescriptor
+        }
 
         public override bool ShouldSerializeValue(object component)
         {

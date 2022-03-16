@@ -148,14 +148,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             modelExchangeInfos.AddRange(couplingFile.Read(couplingFile.FilePath));
         }
 
-        public virtual string CouplingFilePath
-        {
-            get
-            {
-                return couplingFile?.FilePath;
-            }
-        }
-
         private bool TryGetFmAndRtcModel(out IModel flowModel, out IModel rtcModel)
         {
             flowModel = null;
@@ -505,7 +497,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             IsOpen = true;
         }
 
-        void IFileBased.Delete() { }
+        void IFileBased.Delete()
+        {
+            // Nothing to be done, enforced through IFileBased
+        }
 
         private string GetJSONPathFromDeltaShellPath(string dsPath)
         {

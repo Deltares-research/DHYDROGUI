@@ -108,9 +108,9 @@ namespace DeltaShell.Dimr
         /// <summary>
         /// Updates this <see cref="RemoteDimrApi"/> with the specified time step <paramref name="dt"/>.
         /// </summary>
-        /// <param name="dt">The time step dt.</param>
+        /// <param name="dt">Optional; the time step dt. Default value is -1D.</param>
         /// <returns>The exit code of the Update call.</returns>
-        public int Update(double dt)
+        public int Update(double dt = -1D)
         {
             return api?.Update(dt) ?? 1;
         }
@@ -134,12 +134,12 @@ namespace DeltaShell.Dimr
 
         public Array GetValues(string variable, int[] index)
         {
-            return null;
+            return Array.Empty<double>();
         }
 
         public Array GetValues(string variable, int[] start, int[] count)
         {
-            return null;
+            return Array.Empty<double>();
         }
 
         public void SetValues(string variable, Array values)

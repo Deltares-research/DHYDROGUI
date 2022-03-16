@@ -76,7 +76,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
 
         public ViewInfo ViewInfo { get; set; }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
         /// <summary>
         /// Clean up any resources being used.

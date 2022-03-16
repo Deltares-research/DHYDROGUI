@@ -40,7 +40,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                 throw new ArgumentException(errorMessage);
             }
 
-            return OnCompile(evaluatedProperty, allProperties, dependencyExpression);
+            return OnCompile(evaluatedProperty, dependencyExpression);
         }
 
         /// <summary>
@@ -61,14 +61,13 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         /// Compiles the dependency expression into a method that determines the enabled state.
         /// </summary>
         /// <param name="evaluatedProperty"> Property whose dependencyExpression are to be compiled. </param>
-        /// <param name="allProperties"> Dictionary of all available model properties. </param>
         /// <param name="dependencyExpression">
         /// A substring from <see cref="ModelPropertyDefinition.EnabledDependencies"/>, to be
         /// determined by combinatory expressions.
         /// </param>
         /// <returns> The method returning the enabled state. </returns>
         protected internal abstract Func<IEnumerable<ModelProperty>, bool> OnCompile(
-            ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression);
+            ModelProperty evaluatedProperty, string dependencyExpression);
 
         /// <summary>
         /// Regular expression used to determine if this class can handle the dependency expression.

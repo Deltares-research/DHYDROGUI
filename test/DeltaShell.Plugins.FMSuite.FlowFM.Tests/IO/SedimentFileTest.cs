@@ -558,7 +558,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                         }
                     }
                 });
-                ISpatialOperation sp = valueConverter.SpatialOperationSet.AddOperation(samples);
+                valueConverter.SpatialOperationSet.AddOperation(samples);
                 valueConverter.SpatialOperationSet.Execute();
 
                 // update model definition (called during export)

@@ -582,7 +582,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
             app.Expect(a => a.GetAllModelsInProject()).Return(waqModels);
             mocks.ReplayAll();
 
-            var waqAppPlugin = new WaterQualityModelApplicationPlugin {Application = app};
+            var _ = new WaterQualityModelApplicationPlugin {Application = app};
 
             string commonFilePath = Path.Combine(TestHelper.GetTestDataDirectory(), "IO");
 

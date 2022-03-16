@@ -370,10 +370,9 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 int numberOfNodes;
-                double[] yCoordinates;
                 int ierr = GetNumberOfNodes(meshId, out numberOfNodes);
                 ThrowIfError(ierr);
-                return GetNodeXYCoordinates(meshId, numberOfNodes, out xCoordinates, out yCoordinates);
+                return GetNodeXYCoordinates(meshId, numberOfNodes, out xCoordinates, out double[] _);
             }
             catch
             {
@@ -392,10 +391,9 @@ namespace DeltaShell.NGHS.IO.Grid
             try
             {
                 int numberOfNodes;
-                double[] xCoordinates;
                 int ierr = GetNumberOfNodes(meshId, out numberOfNodes);
                 ThrowIfError(ierr);
-                return GetNodeXYCoordinates(meshId, numberOfNodes, out xCoordinates, out yCoordinates);
+                return GetNodeXYCoordinates(meshId, numberOfNodes, out double[] _, out yCoordinates);
             }
             catch
             {

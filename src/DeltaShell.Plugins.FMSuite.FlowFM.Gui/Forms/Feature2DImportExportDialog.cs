@@ -121,7 +121,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
 
         public Image Image { get; set; }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
         public ViewInfo ViewInfo { get; set; }
 

@@ -35,7 +35,7 @@ namespace DeltaShell.NGHS.Common.Utils
 
             if (!enumsFromDescription.Any())
             {
-                throw new NotSupportedException($"The value {description} is not a valid description for {typeof(T)}.");
+                throw new NotSupportedException($"No enum value exists described with {description} for enum type {typeof(T)}.");
             }
 
             return enumsFromDescription.First();

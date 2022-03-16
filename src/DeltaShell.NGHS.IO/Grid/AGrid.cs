@@ -16,18 +16,18 @@ namespace DeltaShell.NGHS.IO.Grid
         private bool disposed;
         private T gridApi;
 
-        public AGrid()
+        protected AGrid()
         {
             GlobalMetaData = new UGridGlobalMetaData();
         }
 
-        public AGrid(string filename, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : this()
+        protected AGrid(string filename, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : this()
         {
             this.filename = filename;
             this.mode = mode;
         }
 
-        public AGrid(string filename, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : this(filename, mode)
+        protected AGrid(string filename, UGridGlobalMetaData globalMetaData, GridApiDataSet.NetcdfOpenMode mode = GridApiDataSet.NetcdfOpenMode.nf90_nowrite) : this(filename, mode)
         {
             if (GlobalMetaData != null)
             {
@@ -82,7 +82,7 @@ namespace DeltaShell.NGHS.IO.Grid
                     if (ierr != GridApiDataSet.GridConstants.NOERR)
                     {
                         CoordinateSystem = null;
-                        throw new Exception(Resources.AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___ + ierr);
+                        throw new GridApiException(GridApiExceptionMessage.Format(ierr, Resources.AGrid_Initialize_Couldn_t_get_coordinate_system_code));
                     }
 
                     CoordinateSystem = epsg_code > 0 ? new OgrCoordinateSystemFactory().CreateFromEPSG(epsg_code) : null;
@@ -150,7 +150,7 @@ namespace DeltaShell.NGHS.IO.Grid
             bool isValid = uGridApi != null && IsValid();
             if (!isValid)
             {
-                throw new Exception(errormessage + Resources.AGrid___because_the_API_was_not_instantiated_);
+                throw new GridApiException(errormessage + Resources.AGrid___because_the_API_was_not_instantiated_);
             }
 
             return uGridApi;
@@ -179,7 +179,7 @@ namespace DeltaShell.NGHS.IO.Grid
         {
             if (ierr != GridApiDataSet.GridConstants.NOERR)
             {
-                throw new Exception(string.Format(exceptionText + Resources.AGrid_ThrowIfError__because_of_error_number___0_, ierr));
+                throw new GridApiException(GridApiExceptionMessage.Format(ierr, exceptionText));
             }
         }
 

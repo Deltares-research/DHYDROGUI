@@ -50,7 +50,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
         {
             if (!mapHisFileMetaData.Parameters.Contains(parameterName))
             {
-                return null;
+                return new List<double>();
             }
 
             var data = new List<double>();
@@ -78,7 +78,7 @@ namespace DeltaShell.NGHS.IO.FunctionStores
         {
             if (!mapHisFileMetaData.Parameters.Contains(parameterName))
             {
-                return null;
+                return new List<double>();
             }
 
             var data = new List<double>();

@@ -106,8 +106,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
 
                 string goalDir = tempDir.CreateDirectory(goalDirName);
 
-                string expectedPath = Path.Combine(goalDir, fileName);
-
                 const string propertyName = "key";
                 const string propertyComment = "Comment";
                 var property = new DelftIniProperty(propertyName, oldPath, propertyComment);
@@ -157,8 +155,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Migrations._1._1._0._0
                 tempDir.CreateFile(Path.Combine(subDirectory, fileName), fileContent);
 
                 string goalDir = tempDir.CreateDirectory(goalDirName);
-
-                string expectedPath = Path.Combine(goalDir, fileName);
 
                 const string propertyName = "key";
                 const string propertyComment = "Comment";

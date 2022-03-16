@@ -43,7 +43,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public ViewInfo ViewInfo { get; set; }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
         private IWindField WindField
         {

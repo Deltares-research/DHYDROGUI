@@ -84,7 +84,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             //Everything already done in ShowModal
         }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView.
+        }
 
         protected virtual DialogResult ShowSaveFileDialog()
         {
@@ -151,35 +154,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
                 return DelftDialogResult.Cancel;
             }
 
-            /*  Sobek3-641
-            *  Disabled until it's clear what to do.
-            */
             Exporter.CoreCountDictionary[dimrModel] = 0;
             return DelftDialogResult.OK;
-            if (dimrModel.CanRunParallel)
-            {
-                var dialog = new InputTextDialog
-                {
-                    InitialText = "1",
-                    Text = dimrModel.ShortName + " nr. of cores",
-                    ValidationMethod = ValidateCoreCount,
-                    ValidationErrorMsg = "Enter a valid number of cores",
-                    CausesValidation = true,
-                    StartPosition = FormStartPosition.CenterScreen
-                };
-                if (dialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    int cores;
-                    if (int.TryParse(dialog.EnteredText, out cores))
-                    {
-                        Exporter.CoreCountDictionary[dimrModel] = cores;
-                    }
-                }
-                else
-                {
-                    return DelftDialogResult.Cancel;
-                }
-            }
         }
 
         private static IActivity UnwrapActivity(IActivity activity)
@@ -191,17 +167,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             }
 
             return result;
-        }
-
-        private static bool ValidateCoreCount(string text)
-        {
-            int coreCount;
-            if (int.TryParse(text, out coreCount))
-            {
-                return coreCount > 0;
-            }
-
-            return false;
         }
     }
 }

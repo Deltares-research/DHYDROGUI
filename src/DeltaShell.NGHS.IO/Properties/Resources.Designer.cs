@@ -106,11 +106,11 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Couldn&apos;t get coordinate system code because of err nr : .
+        ///   Looks up a localized string similar to Couldn&apos;t get coordinate system code.
         /// </summary>
-        public static string AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___ {
+        public static string AGrid_Initialize_Couldn_t_get_coordinate_system_code {
             get {
-                return ResourceManager.GetString("AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___", resourceCulture);
+                return ResourceManager.GetString("AGrid_Initialize_Couldn_t_get_coordinate_system_code", resourceCulture);
             }
         }
         
@@ -166,6 +166,24 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string GridApi_Initialize_Progress_0_Message_1_ {
             get {
                 return ResourceManager.GetString("GridApi_Initialize_Progress_0_Message_1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GridApi returned error code {0}.
+        /// </summary>
+        public static string GridApiException_Message_ErrorCode {
+            get {
+                return ResourceManager.GetString("GridApiException_Message_ErrorCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to GridApi returned error code {0}: {1}.
+        /// </summary>
+        public static string GridApiException_Message_ErrorCodeWithMessage {
+            get {
+                return ResourceManager.GetString("GridApiException_Message_ErrorCodeWithMessage", resourceCulture);
             }
         }
         

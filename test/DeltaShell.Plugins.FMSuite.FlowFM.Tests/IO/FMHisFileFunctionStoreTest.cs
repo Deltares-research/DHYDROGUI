@@ -343,11 +343,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             var waterLevelFunction = model.OutputHisFileStore.Functions.FirstOrDefault(f => f.Components[0].Name == "waterlevel") as FeatureCoverage;
             Assert.IsNotNull(waterLevelFunction);
 
-            for (var i = 0; i < 5; ++i)
-            {
-                List<IFeature> timeSeries = waterLevelFunction.Arguments[1].GetValues<IFeature>().ToList();
-            }
-
             int numEventsAfter = TestReferenceHelper.FindEventSubscriptions(observationPoint, true);
 
             Assert.IsTrue(numEventsAfter <= numEventsBefore + 2);

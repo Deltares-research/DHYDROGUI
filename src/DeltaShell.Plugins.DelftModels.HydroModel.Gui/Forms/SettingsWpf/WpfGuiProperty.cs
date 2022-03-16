@@ -15,7 +15,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
     /// </summary>
     /// <seealso cref="System.ComponentModel.INotifyPropertyChanged"/>
     /// <seealso cref="System.ComponentModel.IDataErrorInfo"/>
-    public class WpfGuiProperty : INotifyPropertyChanged, IDataErrorInfo
+    public sealed class WpfGuiProperty : INotifyPropertyChanged, IDataErrorInfo
     {
         private readonly FieldUIDescription description;
         private Func<object> getModel;
@@ -248,7 +248,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             OnPropertyChanged(nameof(ValueCollection));
         }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

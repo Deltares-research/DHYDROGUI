@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(dataAccessObjects, Has.Length.EqualTo(1));
 
             ExpressionTree tree = AssertExpressionTree(dataAccessObjects.OfType<ExpressionTree>().ToArray(), idA,
-                                                       ControlGroupName, nameA);
+                                                       ControlGroupName);
             BranchNode branchNode = AssertCorrectBranchNode(tree.RootNode, nameA, operatorA);
             AssertCorrectBranchNodeWithTwoLeafNodes(branchNode.FirstNode, nameB, operatorB, leafInput, leafInput);
             AssertCorrectLeafNode(branchNode.SecondNode, leafInput);
@@ -162,13 +162,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(dataAccessObjects, Has.Length.EqualTo(2));
             ExpressionTree[] trees = dataAccessObjects.OfType<ExpressionTree>().ToArray();
 
-            ExpressionTree tree = AssertExpressionTree(trees, idA1, controlGroup1, expressionNameA);
+            ExpressionTree tree = AssertExpressionTree(trees, idA1, controlGroup1);
             BranchNode branchNode = AssertCorrectBranchNode(tree.RootNode, expressionNameA, operatorA);
             AssertCorrectBranchNodeWithTwoLeafNodes(branchNode.FirstNode, expressionNameB, operatorB, leafInput,
                                                     leafInput);
             AssertCorrectLeafNode(branchNode.SecondNode, leafInput);
 
-            tree = AssertExpressionTree(trees, idA2, controlGroup2, expressionNameA);
+            tree = AssertExpressionTree(trees, idA2, controlGroup2);
             branchNode = AssertCorrectBranchNode(tree.RootNode, expressionNameA, operatorA);
             AssertCorrectBranchNodeWithTwoLeafNodes(branchNode.FirstNode, expressionNameB, operatorB, leafInput,
                                                     leafInput);
@@ -262,26 +262,26 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             Assert.That(dataAccessObjects, Has.Length.EqualTo(8));
             ExpressionTree[] trees = dataAccessObjects.OfType<ExpressionTree>().ToArray();
 
-            ExpressionTree treeC = AssertExpressionTree(trees, idC, ControlGroupName, nameC);
+            ExpressionTree treeC = AssertExpressionTree(trees, idC, ControlGroupName);
             BranchNode rootNode = AssertCorrectBranchNode(treeC.RootNode, nameC, @operator);
             AssertCorrectBranchNodeWithTwoLeafNodes(rootNode.FirstNode, nameA, @operator, leafInput, leafInput);
             AssertCorrectBranchNodeWithTwoLeafNodes(rootNode.SecondNode, nameB, @operator, leafInput, leafInput);
 
-            ExpressionTree treeD = AssertExpressionTree(trees, idD, ControlGroupName, nameD);
+            ExpressionTree treeD = AssertExpressionTree(trees, idD, ControlGroupName);
             AssertCorrectBranchNodeWithTwoLeafNodes(treeD.RootNode, nameD, @operator, leafInput, leafInput);
 
-            ExpressionTree treeE = AssertExpressionTree(trees, idE, ControlGroupName, nameE);
+            ExpressionTree treeE = AssertExpressionTree(trees, idE, ControlGroupName);
             AssertCorrectBranchNodeWithTwoLeafNodes(treeE.RootNode, nameE, @operator, nameF, leafInput);
 
-            ExpressionTree treeF1 = AssertExpressionTree(trees, idF1, ControlGroupName, nameF);
+            ExpressionTree treeF1 = AssertExpressionTree(trees, idF1, ControlGroupName);
             rootNode = AssertCorrectBranchNode(treeF1.RootNode, nameF, @operator);
             AssertCorrectLeafNode(rootNode.FirstNode, nameD);
             AssertCorrectBranchNodeWithTwoLeafNodes(rootNode.SecondNode, nameG, @operator, leafInput, leafInput);
 
-            ExpressionTree treeF2 = AssertExpressionTree(trees, idF2, ControlGroupName, nameF);
+            ExpressionTree treeF2 = AssertExpressionTree(trees, idF2, ControlGroupName);
             AssertCorrectBranchNodeWithTwoLeafNodes(treeF2.RootNode, nameF, @operator, nameD, leafInput);
 
-            ExpressionTree treeH = AssertExpressionTree(trees, idH, ControlGroupName, nameH);
+            ExpressionTree treeH = AssertExpressionTree(trees, idH, ControlGroupName);
             AssertCorrectBranchNodeWithTwoLeafNodes(treeH.RootNode, nameH, @operator, leafInput, leafInput);
         }
 
@@ -1161,8 +1161,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO
             AssertCorrectLeafNode(branchNode.SecondNode, secondLeafValue);
         }
 
-        private static ExpressionTree AssertExpressionTree(ExpressionTree[] result, string id, string controlGroup,
-                                                           string name)
+        private static ExpressionTree AssertExpressionTree(ExpressionTree[] result, string id, string controlGroup)
         {
             ExpressionTree tree = result.FirstOrDefault(t => t.Id == id);
 

@@ -182,11 +182,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
         /// <returns> A new <see cref="IMenuItem"/> for the specified parameters. </returns>
         public override IMenuItem GetContextMenu(object sender, object data)
         {
+            IMenuItem projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
             IMenuItem mergeMenu = SetupMergeMenu(data);
             var model = data as HydroModel;
             if (model == null)
             {
-                IMenuItem projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
                 if (projectExplorerContextMenu != null)
                 {
                     ContextMenuStrip projectExplorerContextMenuStrip =
@@ -212,101 +212,99 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                     Folder folder = GetFolderContaining(hydroModel);
                     if (folder != null && !isChildModel)
                     {
-                        var topItem = new ClonableToolStripMenuItem {Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model};
-
-                        var upgradeItem = new ClonableToolStripMenuItem {Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model};
-                        upgradeItem.Click += (s, e) => hydroModel.UpgradeModelIntoIntegratedModel(folder);
-                        topItem.DropDownItems.Add(upgradeItem);
-
-                        if (allCompositeHydroModels.Length > 0)
-                        {
-                            topItem.DropDownItems.Add(new ToolStripSeparator());
-                        }
-
-                        foreach (HydroModel compositeHydroModel in allCompositeHydroModels)
-                        {
-                            var moveItem = new ClonableToolStripMenuItem
-                            {
-                                Text =
-                                    HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Move_into_ +
-                                    compositeHydroModel.Name
-                            };
-                            moveItem.Click += (s, e) =>
-                            {
-                                if (
-                                    compositeHydroModel.Activities.Any(a => a.GetType().Implements(hydroModel.GetType())) &&
-                                    MessageBox.Show(HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_This_will_overwrite_the_existing_model__Are_you_sure_,
-                                                    HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Overwrite_existing_model_,
-                                                    MessageBoxButtons.YesNo) != DialogResult.Yes)
-                                {
-                                    return;
-                                }
-
-                                hydroModel.MoveModelIntoIntegratedModel(folder, compositeHydroModel);
-                            };
-                            topItem.DropDownItems.Add(moveItem);
-                        }
-
-                        var strip = new ContextMenuStrip();
-                        strip.Items.Add(topItem);
-                        var contextMenu = new MenuItemContextMenuStripAdapter(strip);
-
-                        if (modelMergeMenu != null)
-                        {
-                            CleanFileExplorerContextMenu(data);
-                            contextMenu.Insert(0, new MenuItemContextMenuStripAdapter(modelMergeMenu));
-                        }
-
+                        MenuItemContextMenuStripAdapter contextMenu = CreateTurnIntoOrMoveToIntegratedModelMenuItem(hydroModel, folder, allCompositeHydroModels);
+                        CleanFileExplorerContextMenu(data);
+                        contextMenu.Insert(0, new MenuItemContextMenuStripAdapter(modelMergeMenu));
                         return contextMenu;
                     }
-                    else
-                    {
-                        if (modelMergeMenu != null)
-                        {
-                            CleanFileExplorerContextMenu(data);
-                        }
-
-                        return mergeMenu;
-                    }
+                    
+                    CleanFileExplorerContextMenu(data);
+                    return mergeMenu;
                 }
 
                 CleanFileExplorerContextMenu(data);
                 return null;
             }
-            else
-            {
-                IMenuItem projectExplorerContextMenu = Gui.MainWindow.ProjectExplorer.GetContextMenu(null, data);
-                if (projectExplorerContextMenu != null)
-                {
-                    if (projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>()
-                                                  .All(mi => mi.Text != HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___))
-                    {
-                        var subMenu = new ContextMenuStrip();
-                        var validateItem = new ClonableToolStripMenuItem
-                        {
-                            Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___,
-                            Tag = model,
-                            Image = HydroModelGuiProperties.Resources.validation
-                        };
-                        validateItem.Click += OnValidateClicked;
-                        subMenu.Items.Add(validateItem);
-                        projectExplorerContextMenu.Add(new MenuItemContextMenuStripAdapter(subMenu));
-                    }
-                    else
-                    {
-                        // Data item is persistent, but the Tag is lost. Resetting validation tag item again.
-                        IEnumerable<ClonableToolStripMenuItem> validateItems =
-                            projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>()
-                                                      .Where(mi => mi.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ &&
-                                                                   mi.Tag != data);
 
-                        validateItems.ForEach(menuItem => menuItem.Tag = model);
-                    }
-                }
+            if (projectExplorerContextMenu != null)
+            {
+                AddValidateMenuItems(data, projectExplorerContextMenu, model);
             }
 
             CleanFileExplorerContextMenu(data);
             return mergeMenu;
+        }
+
+        private void AddValidateMenuItems(object data, IMenuItem projectExplorerContextMenu, HydroModel model)
+        {
+            bool missesValidateMenuItems = projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>()
+                                                                     .All(mi => mi.Text != HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___);
+            if (missesValidateMenuItems)
+            {
+                var subMenu = new ContextMenuStrip();
+                var validateItem = new ClonableToolStripMenuItem
+                {
+                    Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___,
+                    Tag = model,
+                    Image = HydroModelGuiProperties.Resources.validation
+                };
+                validateItem.Click += OnValidateClicked;
+                subMenu.Items.Add(validateItem);
+                projectExplorerContextMenu.Add(new MenuItemContextMenuStripAdapter(subMenu));
+            }
+            else
+            {
+                // Data item is persistent, but the Tag is lost. Resetting validation tag item again.
+                IEnumerable<ClonableToolStripMenuItem> validateItems =
+                    projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>()
+                                              .Where(mi => mi.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ &&
+                                                           mi.Tag != data);
+
+                validateItems.ForEach(menuItem => menuItem.Tag = model);
+            }
+        }
+
+        private static MenuItemContextMenuStripAdapter CreateTurnIntoOrMoveToIntegratedModelMenuItem(IHydroModel hydroModel, Folder folder, HydroModel[] allCompositeHydroModels)
+        {
+            var topItem = new ClonableToolStripMenuItem { Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model };
+
+            var upgradeItem = new ClonableToolStripMenuItem { Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model };
+            upgradeItem.Click += (s, e) => hydroModel.UpgradeModelIntoIntegratedModel(folder);
+            topItem.DropDownItems.Add(upgradeItem);
+
+            if (allCompositeHydroModels.Length > 0)
+            {
+                topItem.DropDownItems.Add(new ToolStripSeparator());
+            }
+
+            foreach (HydroModel compositeHydroModel in allCompositeHydroModels)
+            {
+                var moveItem = new ClonableToolStripMenuItem
+                {
+                    Text =
+                        HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Move_into_ +
+                        compositeHydroModel.Name
+                };
+                moveItem.Click += (s, e) =>
+                {
+                    if (
+                        compositeHydroModel.Activities.Any(a => a.GetType().Implements(hydroModel.GetType())) &&
+                        MessageBox.Show(HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_This_will_overwrite_the_existing_model__Are_you_sure_,
+                                        HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Overwrite_existing_model_,
+                                        MessageBoxButtons.YesNo) != DialogResult.Yes)
+                    {
+                        return;
+                    }
+
+                    hydroModel.MoveModelIntoIntegratedModel(folder, compositeHydroModel);
+                };
+                topItem.DropDownItems.Add(moveItem);
+            }
+
+            var strip = new ContextMenuStrip();
+            strip.Items.Add(topItem);
+            var contextMenu = new MenuItemContextMenuStripAdapter(strip);
+            return contextMenu;
         }
 
         public override bool CanLink(IDataItem item)

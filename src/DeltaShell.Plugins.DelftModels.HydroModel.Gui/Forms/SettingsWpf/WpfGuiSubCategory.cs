@@ -8,8 +8,9 @@ using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
 {
-    public class WpfGuiSubCategory : INotifyPropertyChanged
+    public sealed class WpfGuiSubCategory : INotifyPropertyChanged
     {
+        private bool isVisible;
         private bool expanded;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -33,6 +34,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
             }
 
             Properties = new ObservableCollection<WpfGuiProperty>(properties.Select(p => new WpfGuiProperty(p)));
+            UpdateIsVisible();
         }
 
         /// <summary>
@@ -65,6 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public FrameworkElement CustomControl { get; set; }
 
+
         /// <summary>
         /// Gets or sets a value indicating whether this instance is visible.
         /// </summary>
@@ -73,19 +76,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public bool IsVisible
         {
-            get
+            get => isVisible;
+            private set
             {
-                if (Properties == null)
-                {
-                    return true;
-                }
-
-                return Properties.Any(p => p.IsVisible);
-            }
-            set
-            {
+                isVisible = value;
                 OnPropertyChanged();
             }
+        }
+
+        /// <summary>
+        /// Updates the <see cref="IsVisible"/> property accordingly.
+        /// </summary>
+        public void UpdateIsVisible()
+        {
+            IsVisible = Properties.Any(p => p.IsVisible);
         }
 
         public bool Expanded
@@ -109,7 +113,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf
         /// </value>
         public ObservableCollection<WpfGuiProperty> Properties { get; }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

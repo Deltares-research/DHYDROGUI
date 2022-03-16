@@ -7,8 +7,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Utils
     {
         public const string DELWAQ1_EXE = "delwaq1.exe";
         public const string DELWAQ2_EXE = "delwaq2.exe";
-        public const string DELWAQ2LIB = "delwaq2_lib";
-        public const string DELWAQ2LIB_DLL = "delwaq2_lib.dll";
         private const string delwaq_kernel = "dwaq";
         private const string delwaq_plugin = "waq_kernel";
 

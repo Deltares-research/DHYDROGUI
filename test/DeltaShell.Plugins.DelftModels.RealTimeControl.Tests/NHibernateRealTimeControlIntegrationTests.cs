@@ -103,8 +103,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
             var controlGroup = new ControlGroup {Name = "myFirstControlGroup"};
             rtcModel.ControlGroups.Add(controlGroup);
 
-            var input = new Input {ParameterName = "InputParameterName"};
-
             var lookupSignal = new LookupSignal();
 
             controlGroup.Signals.Add(lookupSignal);
@@ -242,18 +240,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests
         [Test]
         public void SaveAndRetrieveCondition()
         {
-            StandardCondition retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateCondition(null));
+            StandardCondition retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateCondition());
             Assert.IsNotNull(retrievedEntity);
-            Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfStandardConditions(RealTimeControlTestHelper.GenerateCondition(null), retrievedEntity));
+            Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfStandardConditions(RealTimeControlTestHelper.GenerateCondition(), retrievedEntity));
         }
 
         [Test]
         public void SaveAndRetrieveDirectionalCondition()
         {
-            DirectionalCondition retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateDirectionalCondition(null));
+            DirectionalCondition retrievedEntity = SaveAndRetrieveObject(RealTimeControlTestHelper.GenerateDirectionalCondition());
             Assert.IsNotNull(retrievedEntity);
             Assert.That(retrievedEntity, Is.InstanceOf<DirectionalCondition>());
-            Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfConditions(RealTimeControlTestHelper.GenerateDirectionalCondition(null), retrievedEntity));
+            Assert.IsTrue(RealTimeControlTestHelper.CompareEqualityOfConditions(RealTimeControlTestHelper.GenerateDirectionalCondition(), retrievedEntity));
         }
 
         [Test]

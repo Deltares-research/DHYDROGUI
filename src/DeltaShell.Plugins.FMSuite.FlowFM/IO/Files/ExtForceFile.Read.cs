@@ -232,7 +232,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                 // check what type of polyLine to read
                 bool isSourceAndSink = Equals(extForceFileItem.Quantity, ExtForceQuantNames.SourceAndSink);
 
-                if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out FlowBoundaryQuantityType quantityType) && !isSourceAndSink)
+                if (!ExtForceQuantNames.TryParseBoundaryQuantityType(extForceFileItem.Quantity, out FlowBoundaryQuantityType _) && !isSourceAndSink)
                 {
                     continue;
                 }

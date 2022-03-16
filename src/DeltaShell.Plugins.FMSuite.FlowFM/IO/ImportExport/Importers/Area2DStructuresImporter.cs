@@ -151,9 +151,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
         [InvokeRequired]
         private static void InsertStructures(IEnumerable<IStructureObject> structures, HydroArea targetHydroArea, StructuresFile structuresFile)
         {
-            int pumpCount = 0,
-                weirCount = 0,
-                simpleWeirIni = 0,
+            int simpleWeirIni = 0,
                 gatedWeirIni = 0,
                 generalFormulaIni = 0,
                 pumpsIni = 0;
@@ -164,11 +162,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.ImportExport.Importers
                 {
                     case Pump pump:
                         targetHydroArea.Pumps.Add(pump);
-                        pumpCount++;
                         break;
                     case Structure weir:
                         targetHydroArea.Structures.Add(weir);
-                        weirCount++;
                         break;
                     default:
                         throw new NotSupportedException();

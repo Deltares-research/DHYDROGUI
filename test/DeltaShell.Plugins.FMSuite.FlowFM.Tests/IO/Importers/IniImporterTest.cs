@@ -28,11 +28,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO.Importers
             var flowFmModel = new WaterFlowFMModel();
             var importer = new Area2DStructuresImporter();
             importer.GetModelForArea = area => flowFmModel;
-            object hydroArea = null;
 
             // Call
 
-            Action call = () => hydroArea = importer.ImportItem(iniPath, targetArea);
+            Action call = () => importer.ImportItem(iniPath, targetArea);
 
             // Assert
             TestHelper.AssertLogMessageIsGenerated(call, "Read: 11 structures (Weirs: 7 Gates : 3 General structures: 1)");

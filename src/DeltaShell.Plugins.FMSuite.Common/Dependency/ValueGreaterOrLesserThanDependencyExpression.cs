@@ -44,7 +44,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
                                                       IEnumerable<ModelProperty> allProperties,
                                                       string dependencyExpression)
         {
-            string dependencyPropertyName = GetDependencyPropertyName(evaluatedProperty, dependencyExpression);
+            string dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
             ModelProperty dependencyProperty = allProperties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
                                                                                                                               StringComparison.InvariantCultureIgnoreCase));
             if (dependencyProperty != null &&
@@ -58,17 +58,17 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         }
 
         protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(
-            ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+            ModelProperty evaluatedProperty, string dependencyExpression)
         {
             return properties =>
             {
-                string dependencyPropertyName = GetDependencyPropertyName(evaluatedProperty, dependencyExpression);
+                string dependencyPropertyName = GetDependencyPropertyName(dependencyExpression);
                 ModelProperty dependencyProperty = properties?.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(dependencyPropertyName,
                                                                                                                                 StringComparison.InvariantCultureIgnoreCase));
                 if (dependencyProperty != null)
                 {
-                    double comparisonValue = GetComparisonValue(evaluatedProperty, dependencyExpression);
-                    ComparisonType comparisonType = GetComparisonType(evaluatedProperty, dependencyExpression);
+                    double comparisonValue = GetComparisonValue(dependencyExpression);
+                    ComparisonType comparisonType = GetComparisonType(dependencyExpression);
 
                     return EvaluateComparison(dependencyProperty, comparisonValue, comparisonType);
                 }
@@ -85,7 +85,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
         /// </summary>
         protected override string Regex => KeywordPart + ComparisonTokenPart + ValuePart;
 
-        private static ComparisonType GetComparisonType(ModelProperty evaluatedProperty, string dependencyExpression)
+        private static ComparisonType GetComparisonType(string dependencyExpression)
         {
             string comparisonToken = RegularExpression.GetFirstMatch(ComparisonTokenPart, dependencyExpression).Value;
             switch (comparisonToken)
@@ -98,7 +98,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             }
         }
 
-        private static double GetComparisonValue(ModelProperty evaluatedProperty, string dependencyExpression)
+        private static double GetComparisonValue(string dependencyExpression)
         {
             string numberValue = RegularExpression.GetFirstMatch(ValuePart, dependencyExpression).Value.Trim();
 
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             }
         }
 
-        private static string GetDependencyPropertyName(ModelProperty evaluatedProperty, string dependencyExpression)
+        private static string GetDependencyPropertyName(string dependencyExpression)
         {
             return RegularExpression.GetFirstMatch(KeywordPart, dependencyExpression).Value.Trim();
         }

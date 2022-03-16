@@ -714,7 +714,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void HydraulicRuleWithTimeLagDataConfigGenerationTest()
         {
             // Setup
-            GetHydraulicRuleWithTimeLagAddedToControlGroup();
+            AddHydraulicRuleWithTimeLagToControlGroup();
 
             string header = "<rtcDataConfig" + FewsXmlheader + RtcDataConfigxsd + ">";
             string strDataConfigWithHydraulicRuleTimeLag =
@@ -745,7 +745,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         public void HydraulicRuleWithTimeLagToolsConfigGenerationTest()
         {
             // Set
-            GetHydraulicRuleWithTimeLagAddedToControlGroup();
+            AddHydraulicRuleWithTimeLagToControlGroup();
 
             string header = "<rtcToolsConfig" + FewsXmlheader + RtcToolsConfigxsd + ">";
             string strHydraulicRuleTimeLag =
@@ -966,14 +966,13 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void ValidateGenerate2IdenticalHydraulicRulesAgainstXsds()
         {
-            var controlledModel = new ControlledTestModel();
             ControlGroup controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup1.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup1);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup1);
 
             ControlGroup controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup2.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup2);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup2);
 
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
@@ -996,10 +995,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void ValidateGenerateHydraulicRuleAgainstXsds()
         {
-            var controlledModel = new ControlledTestModel();
             ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup);
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
@@ -1013,10 +1011,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void ValidateGenerateHydraulicRuleWithoutTriggerAgainstXsds()
         {
-            var controlledModel = new ControlledTestModel();
             ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup);
 
             //delete conditions
             controlGroup.Conditions.Clear();
@@ -1030,10 +1027,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void ValidateGenerateIntervalRuleAgainstXsds()
         {
-            var controlledModel = new ControlledTestModel();
             ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupIntervalRule();
 
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup);
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
@@ -1047,10 +1043,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void ValidateGeneratePidRuleAgainstXsds()
         {
-            var controlledModel = new ControlledTestModel();
             ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupPidRule(true);
 
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup);
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
@@ -1064,10 +1059,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void ValidateGenerateRelativeTimeRuleAgainstXsds()
         {
-            var controlledModel = new ControlledTestModel();
             ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupRelativeTimeRule();
             ((RelativeTimeRule) controlGroup.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup);
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
@@ -1081,10 +1075,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         [Category(TestCategory.Integration)]
         public void ValidateGenerateTimeRuleAgainstXsds()
         {
-            var controlledModel = new ControlledTestModel();
             ControlGroup controlGroup = RealTimeControlModelHelper.CreateGroupTimeRuleWithCondition();
 
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup);
             // As last step of the generation process an exception will be thrown if
             // validation against the internal xsd fails.
             RealTimeControlXmlWriter.GetToolsConfigXml(XsdPath,
@@ -1227,7 +1220,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             return newPidRule;
         }
 
-        private HydraulicRule GetHydraulicRuleWithTimeLagAddedToControlGroup()
+        private void AddHydraulicRuleWithTimeLagToControlGroup()
         {
             var hydraulicRule = new HydraulicRule();
             hydraulicRule.Name = "HydraulicRule";
@@ -1248,8 +1241,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
             controlGroup.Rules.Add(hydraulicRule);
             controlGroup.Outputs.Add(output);
             controlGroup.Inputs.Add(input);
-
-            return hydraulicRule;
         }
 
         private string DataResultXml(Input testInput, Output testOutput, bool addLookupSignal)
@@ -1321,19 +1312,18 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.Engine
         private static IList<ControlGroup> CreateModelWithDuplicateInputOutputItems()
         {
             var controlGroups = new List<ControlGroup>();
-            var controlledModel = new ControlledTestModel();
             ControlGroup controlGroup1 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup1.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
             controlGroup1.Rules[0].Name = "Rule1";
             controlGroup1.Conditions[0].Name = "Condition1";
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup1);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup1);
             controlGroups.Add(controlGroup1);
 
             ControlGroup controlGroup2 = RealTimeControlModelHelper.CreateGroupHydraulicRule(true);
             ((HydraulicRule) controlGroup2.Rules[0]).Function[0.0] = -1.0; // empy lookupTable is not allowed
             controlGroup2.Rules[0].Name = "Rule2";
             controlGroup2.Conditions[0].Name = "Condition2";
-            RealTimeControlTestHelper.AddDummyLinksToGroup(controlledModel, controlGroup2);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup2);
             controlGroups.Add(controlGroup2);
 
             // all rules and condition now have as input an input item linked to: location Waterlevel

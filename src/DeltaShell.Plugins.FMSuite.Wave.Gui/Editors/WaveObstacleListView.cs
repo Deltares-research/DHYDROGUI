@@ -110,10 +110,21 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Gui.Editors
         }
 
         public ILayer Layer { get; set; }
-        public void EnsureVisible(object item) {}
 
-        public void OnActivated() {}
-        public void OnDeactivated() {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
+
+        public void OnActivated()
+        {
+            // Nothing to be done, enforced through ILayerEditorView
+        }
+
+        public void OnDeactivated()
+        {
+            // Nothing to be done, enforced through ILayerEditorView
+        }
 
         private void TableViewOnSelectionChanged(object sender, TableSelectionChangedEventArgs e)
         {

@@ -733,7 +733,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
 
         public Image Image { get; set; }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
         public ViewInfo ViewInfo { get; set; }
 
@@ -970,7 +973,10 @@ namespace DeltaShell.Plugins.FMSuite.Common.Gui.Editors
             }
         }
 
-        public void ActivateChildView(IView childView) {}
+        public void ActivateChildView(IView childView)
+        {
+            // Nothing to be done, enforced through ICompositeView
+        }
 
         #endregion
 

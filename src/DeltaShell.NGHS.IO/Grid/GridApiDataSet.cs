@@ -39,10 +39,6 @@ namespace DeltaShell.NGHS.IO.Grid
 
         public const string GRIDDLL_NAME = "io_netcdf.dll";
 
-        public static string DllDirectory => Path.Combine(Path.GetDirectoryName(typeof(UGridApi).Assembly.Location), "Kernels");
-
-        public static string DllPath => Path.Combine(DllDirectory, "x64", GRIDDLL_NAME);
-
         public static class GridConstants
         {
             public const int MAXDIMS = 6;

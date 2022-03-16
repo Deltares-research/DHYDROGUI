@@ -81,7 +81,10 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
 
         public ViewInfo ViewInfo { get; set; }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
         public void SuspendUpdates()
         {

@@ -262,7 +262,6 @@ namespace DeltaShell.Plugins.NetworkEditor.IntegrationTests.NHibernate
             store.CreateNew(TestHelper.GetCurrentMethodName() + ".nc");
 
             //grid
-            var component = new Variable<double>("pressure");
             IRegularGridCoverage regularGridCoverage = new RegularGridCoverage();
             store.Functions.Add(regularGridCoverage);
             regularGridCoverage.Resize(100, 100, 1, 1);

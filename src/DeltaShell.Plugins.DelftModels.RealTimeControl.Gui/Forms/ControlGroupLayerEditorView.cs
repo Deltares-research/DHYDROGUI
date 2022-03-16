@@ -95,9 +95,20 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
         public ViewInfo ViewInfo { get; set; }
         public ILayer Layer { set; get; }
 
-        public void EnsureVisible(object item) {}
-        public void OnActivated() {}
-        public void OnDeactivated() {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
+
+        public void OnActivated()
+        {
+            // Nothing to be done, enforced through ILayerEditorView
+        }
+
+        public void OnDeactivated()
+        {
+            // Nothing to be done, enforced through ILayerEditorView
+        }
 
         private void ModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

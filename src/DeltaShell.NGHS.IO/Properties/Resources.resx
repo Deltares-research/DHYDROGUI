@@ -123,8 +123,8 @@
   <data name="AGrid_Initialize_Couldn_t_open_grid_nc_file__" xml:space="preserve">
     <value>Couldn't open grid nc file: </value>
   </data>
-  <data name="AGrid_Initialize_Couldn_t_get_coordinate_system_code_because_of_err_nr___" xml:space="preserve">
-    <value>Couldn't get coordinate system code because of err nr : </value>
+  <data name="AGrid_Initialize_Couldn_t_get_coordinate_system_code" xml:space="preserve">
+    <value>Couldn't get coordinate system code</value>
   </data>
   <data name="AGrid_Couldn_t_get_the_number_of_networks" xml:space="preserve">
     <value>Couldn't get the number of networks</value>
@@ -251,5 +251,11 @@
   </data>
   <data name="DelftIniReader_Invalid_group_on_line__0__in_file__1_" xml:space="preserve">
     <value>Invalid group on line {0} in file {1}</value>
+  </data>
+  <data name="GridApiException_Message_ErrorCodeWithMessage" xml:space="preserve">
+    <value>GridApi returned error code {0}: {1}</value>
+  </data>
+  <data name="GridApiException_Message_ErrorCode" xml:space="preserve">
+    <value>GridApi returned error code {0}</value>
   </data>
 </root>

@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui
             mainWindow.Expect(mw => mw.ProjectExplorer).Return(projectExplorer).Repeat.Any();
             projectExplorer.Expect(pe => pe.TreeView).Return(treeView).Repeat.Any();
 
-            using (var gisPlugin = new SharpMapGisGuiPlugin())
+            using (new SharpMapGisGuiPlugin())
             {
                 using (var waveGuiPlugin = new WaveGuiPlugin())
                 {

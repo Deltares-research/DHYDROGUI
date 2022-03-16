@@ -140,10 +140,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
         /// Imports the contents of a HydFile into the WAQ model.
         /// </summary>
         /// <param name="data"> Contents from a HydFile (or generated HydroData). </param>
-        /// <param name="importCoordinateSystem"> Optional parameter (default False). </param>
         /// <param name="skipImportTimers"> Optional parameter (default False). </param>
         /// <param name="markOutputOutOfSync"> Optional parameter (default True). </param>
-        public virtual void ImportHydroData(IHydroData data, bool importCoordinateSystem = false,
+        public virtual void ImportHydroData(IHydroData data,
                                             bool skipImportTimers = false, bool markOutputOutOfSync = true)
         {
             if (data == null)
@@ -428,7 +427,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
                 return;
             }
 
-            this.InputCollectionChanged(sender, e);
+            this.InputCollectionChanged(e);
 
             MarkOutputOutOfSync();
         }

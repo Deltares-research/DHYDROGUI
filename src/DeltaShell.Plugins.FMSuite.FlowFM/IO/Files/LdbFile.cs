@@ -107,7 +107,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
                                                      ? baseName + counter++
                                                      : firstName + "_" + counter++;
 
-                            AddNewFeature(featureName, points, features, filePath);
+                            AddNewFeature(featureName, points, features);
                             points.Clear();
                         }
                         else
@@ -118,7 +118,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
 
                     string lastFeatureName = counter == 1 ? firstName :
                                              baseName != null ? baseName + counter : firstName + "_" + counter;
-                    AddNewFeature(lastFeatureName, points, features, filePath);
+                    AddNewFeature(lastFeatureName, points, features);
                     line = GetNextLine();
                 }
             }
@@ -130,8 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.Files
             return features;
         }
 
-        private static void AddNewFeature(string name, List<Coordinate> points, ICollection<LandBoundary2D> features,
-                                          string ldbFilePath)
+        private static void AddNewFeature(string name, List<Coordinate> points, ICollection<LandBoundary2D> features)
         {
             if (!points.Any())
             {

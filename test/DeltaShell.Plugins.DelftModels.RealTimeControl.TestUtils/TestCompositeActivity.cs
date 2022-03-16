@@ -17,8 +17,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.TestUtils
             Activities = new EventedList<IActivity>();
         }
 
-        public IEventedList<CompositeActivity> Workflows { get; set; }
-
         public IEventedList<IActivity> Activities
         {
             get

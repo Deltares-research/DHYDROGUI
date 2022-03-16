@@ -544,7 +544,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.Tests.Gui.Editors.Boundaries.ViewModel
 
             var mediator = Substitute.For<IAnnounceSupportPointDataChanged>();
             var viewModel = new SupportPointDataComponentViewModel(conditionDefinition, parametersFactory, mediator);
-            SupportPoint supportPoint = GetDefaultSupportPoint();
 
             // Call | Assert
             void Call() => viewModel.ReplaceSupportPoint(GetDefaultSupportPoint(),

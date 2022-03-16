@@ -28,8 +28,7 @@ namespace DeltaShell.Dimr
         private double tStep;
         private double tCurrent;
         private List<string> messages;
-        private bool reduceLogging = false;
-        private DimrDll.Message_Callback cMessageCallback; // keep the callback so it doesn't get garbage collected!
+        private readonly DimrDll.Message_Callback cMessageCallback; // keep the callback so it doesn't get garbage collected!
         private DateTime currentTime;
         private DateTime dimrRefDate;
         private double relativeStartTime;
@@ -189,7 +188,6 @@ namespace DeltaShell.Dimr
         public int Initialize(string path)
         {
             string previousDir = Environment.CurrentDirectory;
-            reduceLogging = false;
 
             try
             {
@@ -360,12 +358,12 @@ namespace DeltaShell.Dimr
 
         public Array GetValues(string variable, int[] index)
         {
-            return null;
+            return Array.Empty<double>();
         }
 
         public Array GetValues(string variable, int[] start, int[] count)
         {
-            return null;
+            return Array.Empty<double>();
         }
 
         public void SetValuesInt(string variable, int[] values)

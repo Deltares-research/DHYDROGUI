@@ -194,8 +194,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             using (var tempDir = new TemporaryDirectory())
             {
                 // Create the actual .mor file.
-                var modelDefinitionWrite = new WaterFlowFMModelDefinition();
-
                 string fileContent = "[Morphology]" + Environment.NewLine +
                                      "NeuBcSand = 1" + Environment.NewLine +
                                      "NeuBcMud  = 1" + Environment.NewLine +
@@ -423,18 +421,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             WaterFlowFMProperty customStringProperty = properties.FirstOrDefault(p => p.PropertyDefinition.FilePropertyName.Equals(propertyName));
             Assert.NotNull(customStringProperty);
             Assert.AreEqual(propertyValue, customStringProperty.Value);
-        }
-
-        private static WaterFlowFMProperty CreateProperty(string name, string value)
-        {
-            WaterFlowFMPropertyDefinition propertyDefinition =
-                WaterFlowFMPropertyDefinitionCreator.CreateForCustomProperty(
-                    KnownProperties.morphology,
-                    name,
-                    "",
-                    PropertySource.MorphologyFile);
-
-            return new WaterFlowFMProperty(propertyDefinition, value);
         }
 
         private static WaterFlowFMModelDefinition CreateModelDefinitionWithCustomCategoryAndProperties(string customPropertyName, string customCategoryName, string value1, string value2)

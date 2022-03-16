@@ -5,14 +5,15 @@ using ProtoBufRemote;
 
 namespace DeltaShell.NGHS.IO.Grid
 {
-    public abstract class RemoteGridApi : IGridApi
+    public abstract class RemoteGridApi : IGridApi, IDisposable
     {
+        private bool disposed;
+
         static RemoteGridApi()
         {
             RemotingTypeConverters.RegisterTypeConverter(new UgridGlobalMetaDataToProtoConverter());
         }
 
-        protected bool disposed;
         protected IGridApi api;
 
         public bool Initialized
@@ -21,12 +22,6 @@ namespace DeltaShell.NGHS.IO.Grid
             {
                 return api != null && api.Initialized;
             }
-        }
-
-        public virtual void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         public int GetConvention(string file, out GridApiDataSet.DataSetConventions convention)
@@ -97,25 +92,33 @@ namespace DeltaShell.NGHS.IO.Grid
                        ? api.GetMeshIdsByMeshType(meshType, numberOfMeshes, out meshIds)
                        : GridApiDataSet.GridConstants.GENERAL_FATAL_ERR;
         }
+        
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (disposed)
             {
-                if (disposing)
-                {
-                    if (api != null)
-                    {
-                        Close();
-                        RemoteInstanceContainer.RemoveInstance(api);
-                        Thread.Sleep(100); // wait for process to truly exit
-                    }
+                return;
+            }
 
-                    api = null;
+            if (disposing)
+            {
+                if (api != null)
+                {
+                    Close();
+                    RemoteInstanceContainer.RemoveInstance(api);
+                    Thread.Sleep(100); // wait for process to truly exit
                 }
 
-                disposed = true;
+                api = null;
             }
+
+            disposed = true;
         }
 
         ~RemoteGridApi()

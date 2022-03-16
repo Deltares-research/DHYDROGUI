@@ -14,11 +14,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
         /// is called when a mapview gains or looses focus.
         /// </summary>
         /// <param name="mapControl">The map control from which the tools are obtained.</param>
-        public static HydroRegionEditorMapTool AddHydroRegionEditorMapTool(IMapControl mapControl)
+        public static void AddHydroRegionEditorMapTool(IMapControl mapControl)
         {
             if (mapControl?.Map == null)
             {
-                return null;
+                return;
             }
 
             var hydroRegionEditorMapTool = mapControl.GetToolByType<HydroRegionEditorMapTool>();
@@ -26,7 +26,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
             // networkeditor already present; nothing to do.
             if (hydroRegionEditorMapTool != null)
             {
-                return hydroRegionEditorMapTool;
+                return;
             }
 
             hydroRegionEditorMapTool = new HydroRegionEditorMapTool
@@ -36,8 +36,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Helpers
             };
 
             mapControl.Tools.Add(hydroRegionEditorMapTool);
-
-            return hydroRegionEditorMapTool;
         }
 
         public static void RemoveHydroRegionEditorMapTool(IMapControl mapControl)

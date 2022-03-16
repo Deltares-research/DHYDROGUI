@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
 using DelftTools.Controls;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Shell.Gui.Forms;
 using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
-using DelftTools.Utils.UndoRedo;
 using DeltaShell.Gui;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.DataObjects;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui;
@@ -147,7 +145,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 gisPlugin.InitializeSpatialOperationSetLayerView();
 
                 // initialize the ribbon
-                IRibbonCommandHandler ribbon = guiPlugin.RibbonCommandHandler;
+                IRibbonCommandHandler _ = guiPlugin.RibbonCommandHandler;
 
                 // instantiate the ribbon command handler of the waq gui plugin
                 SpatialOperationCommandBase command = gisPlugin.RibbonCommandHandler.Commands.OfType<SetLabelCommand>().First();
@@ -253,27 +251,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
                 Assert.That(viewInfo.Description, Is.EqualTo("Boundary Data Wizard Dialog"));
                 Assert.That(viewInfo.AdditionalDataCheck, Is.Not.Null);
             }
-        }
-
-        private static WaterQualityModelGuiPlugin CreateFullyConfiguredGuiPluginWithHydFileModel(
-            string hydFilePath,
-            string hydFileModelName)
-        {
-            var hydFileModel = MockRepository.GenerateStub<IHydFileModel>();
-            hydFileModel.Stub(m => m.HydFilePath).Return(hydFilePath);
-            hydFileModel.Name = hydFileModelName;
-
-            var app = MockRepository.GenerateStub<IApplication>();
-            app.Stub(a => a.ActivityRunner).Return(MockRepository.GenerateStub<IActivityRunner>());
-            app.Stub(a => a.Plugins).Return(new List<ApplicationPlugin>());
-            app.Stub(a => a.GetAllModelsInProject()).Return(new List<IModel> {hydFileModel});
-
-            var gui = MockRepository.GenerateStub<IGui>();
-            gui.Stub(g => g.Plugins).Return(new List<GuiPlugin>());
-            gui.Stub(g => g.UndoRedoManager).Return(MockRepository.GenerateStub<IUndoRedoManager>());
-            gui.Application = app;
-
-            return new WaterQualityModelGuiPlugin {Gui = gui};
         }
 
         private static WaterQualityModel AddWaterQualityModelToProject(IApplication app)

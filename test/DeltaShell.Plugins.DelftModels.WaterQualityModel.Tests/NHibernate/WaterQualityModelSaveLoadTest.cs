@@ -816,9 +816,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.NHibernate
 
                 Assert.AreEqual(1, models.Count);
 
-                //check some validation on model?
-                WaterQualityModel retrievedModel = models[0];
-
                 app.SaveProjectAs(savePath);
                 app.CloseProject();
             }

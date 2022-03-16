@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using DelftTools.Hydro.Area.Objects.StructureObjects.KnownProperties;
 using DelftTools.Hydro.Area.Objects.StructureObjects.StructureFormulas;
 using NUnit.Framework;
@@ -221,6 +222,26 @@ namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects.StructureFormulas
         }
 
         [Test]
+        [TestCase(KnownGeneralStructureProperties.CrestWidth)]
+        [TestCase(KnownGeneralStructureProperties.CrestLevel)]
+        [TestCase(KnownGeneralStructureProperties.GateLowerEdgeLevel)]
+        [TestCase(KnownGeneralStructureProperties.GateOpeningHorizontalDirection)]
+        [TestCase(KnownGeneralStructureProperties.GateOpeningWidth)]
+        public void SetPropertyValue_InvalidKnownGeneralStructureProperty_ThrowsArgumentOutOfRangeException(KnownGeneralStructureProperties property)
+        {
+            // Setup
+            var formula = new GeneralStructureFormula();
+
+            // Call
+            void Call() => formula.SetPropertyValue(property, 1.23);
+
+            // Assert
+            var e = Assert.Throws<ArgumentOutOfRangeException>(Call);
+            Assert.That(e.ParamName, Is.EqualTo("property"));
+            Assert.That(e.Message, Does.StartWith($"Property {property} is not a valid property of a general structure weir formula."));
+        }
+
+        [Test]
         public void SetPropertyValue_UndefinedKnownGeneralStructureProperty_ThrowsException()
         {
             // Setup
@@ -229,8 +250,8 @@ namespace DelftTools.Hydro.Tests.Area.Objects.StructureObjects.StructureFormulas
             // Call | Assert
             void Call() => formula.SetPropertyValue((KnownGeneralStructureProperties)int.MaxValue, 5.0);
 
-            var exception = Assert.Throws<Exception>(Call);
-            Assert.That(exception.Message, Is.EqualTo("property name : {0} cannot be set for general structure weir formula"));
+            var exception = Assert.Throws<InvalidEnumArgumentException>(Call);
+            Assert.That(exception.Message, Is.EqualTo("property"));
         }
     }
 }

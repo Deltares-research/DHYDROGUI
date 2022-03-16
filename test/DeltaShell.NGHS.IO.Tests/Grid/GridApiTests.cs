@@ -515,7 +515,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         [Test]
         public void GetMeshCountUninitializedTest()
         {
-            int numberOfMeshes;
             DoWithMockedGridApi(
                 gridApi =>
                 {
@@ -534,9 +533,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                            .Repeat.Never();
                     TypeUtils.SetField(gridApi, WrapperVarName, wrapper);
 
-                    Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, gridApi.GetMeshCount(out numberOfMeshes));
+                    Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, gridApi.GetMeshCount(out int _));
                 },
-                remoteGridApi => { Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteGridApi.GetMeshCount(out numberOfMeshes)); });
+                remoteGridApi => { Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteGridApi.GetMeshCount(out int _)); });
         }
 
         [Test]
@@ -626,8 +625,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
                 },
                 remoteGridApi =>
                 {
-                    int numberOfMeshes;
-                    Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteGridApi.GetMeshCount(out numberOfMeshes));
+                    Assert.AreEqual(GridApiDataSet.GridConstants.GENERAL_FATAL_ERR, remoteGridApi.GetMeshCount(out int _));
                 });
         }
 

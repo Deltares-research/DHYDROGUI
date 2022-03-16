@@ -106,9 +106,9 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             string testFilePath =
                 TestHelper.GetTestFilePath(UGRID_TEST_FILE);
             string localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
-            using (var uGrid = new UGridStub(localCopyOfTestFile))
+            using (var uGrid = new UGrid(localCopyOfTestFile))
             {
-                Assert.IsTrue(uGrid.IsValidViaApi());
+                Assert.IsTrue(uGrid.IsValid());
             }
         }
 
@@ -166,14 +166,13 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [Ignore("doesn't work yet, should check with arthur van dam")]
         [Category(TestCategory.DataAccess)]
         public void TestCallGetDataSetConventionViaApi()
         {
             string testFilePath =
                 TestHelper.GetTestFilePath(UGRID_TEST_FILE);
             string localCopyOfTestFile = TestHelper.CreateLocalCopy(testFilePath);
-            using (var uGrid = new UGridStub(localCopyOfTestFile))
+            using (var uGrid = new UGrid(localCopyOfTestFile))
             {
                 Assert.AreEqual(GridApiDataSet.DataSetConventions.CONV_UGRID, uGrid.GetDataSetConvention());
             }
@@ -457,26 +456,6 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
         }
 
         [Test]
-        [Ignore("Ignored.")]
-        [Category(TestCategory.DataAccess)]
-        public void TestCallWriteGeometry()
-        {
-            string testDir = FileUtils.CreateTempDirectory();
-            string testFilePath = Path.Combine(testDir, "Custom_Ugrid.nc");
-            UGridStub.TestWrite(testFilePath);
-        }
-
-        [Test]
-        [Ignore("Ignored.")]
-        [Category(TestCategory.DataAccess)]
-        public void TestCallWriteMapFile()
-        {
-            string testDir = FileUtils.CreateTempDirectory();
-            string testFilePath = Path.Combine(testDir, "Custom_Ugrid_map.nc");
-            UGridStub.TestWriteMap(testFilePath);
-        }
-
-        [Test]
         [Category(TestCategory.DataAccess)]
         public void TestWriteGeomUGrid()
         {
@@ -534,7 +513,7 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             const int meshId = 1;
             try
             {
-                using (var uGrid = new UGridStub(testFilePath))
+                using (var uGrid = new UGrid(testFilePath))
                 {
                     uGrid.Initialize();
                     Assert.That(uGrid.CoordinateSystem, Is.EqualTo(new OgrCoordinateSystemFactory().CreateFromEPSG(4326))); // mag dit?

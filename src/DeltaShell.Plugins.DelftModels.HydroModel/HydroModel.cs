@@ -989,14 +989,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
-        public virtual Type SupportedRegionType
-        {
-            get
-            {
-                return typeof(HydroRegion);
-            }
-        }
-
         [EditAction]
         private void OnHydroRegionCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {

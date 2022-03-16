@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui.Forms;
 
@@ -28,7 +29,10 @@ namespace DeltaShell.Dimr.Gui
             return tabGroupName == configContextualGroup.Name && tabName == tabDimr.Name && DimrGuiPlugin.Instance != null && DimrGuiPlugin.Instance.IsOnlyDimrModelSelected;
         }
 
-        public void ValidateItems() {}
+        public void ValidateItems()
+        {
+            // There is nothing to validate, but is enforced through IRibbonCommandHandler.
+        }
 
         public object GetRibbonControl()
         {

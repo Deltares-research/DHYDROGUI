@@ -94,7 +94,7 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel
             }
         }
 
-        public static void InputCollectionChanged(this WaterQualityModel waterQualityModel, object sender,
+        public static void InputCollectionChanged(this WaterQualityModel waterQualityModel,
                                                   NotifyCollectionChangedEventArgs e)
         {
             if (syncing)

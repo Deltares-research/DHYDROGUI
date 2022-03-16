@@ -1621,24 +1621,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             }
         }
 
-        private static void AssertThatOutputExists(string modelDirImport,
-                                                   string relativeImportOutputPath,
-                                                   string modelDirSave,
-                                                   WaterFlowFMModel importedModel)
-        {
-            string importOutputPath = Path.Combine(modelDirImport, relativeImportOutputPath);
-            Dictionary<string, Tuple<Tuple<string, string>[], string[]>> importOutputDirStructure = GetDirectoryStructure(importOutputPath, ".");
-
-            string saveOutputPath = Path.Combine(modelDirSave, "output");
-            Dictionary<string, Tuple<Tuple<string, string>[], string[]>> saveOutputDirStructure = GetDirectoryStructure(saveOutputPath, ".");
-
-            AssertEqualDirectoryStructure(".", ref saveOutputDirStructure, ref importOutputDirStructure);
-
-            Assert.That(importedModel.OutputHisFileStore, Is.Not.Null, "Expected an OutputHisFileStore to not be null.");
-            Assert.That(importedModel.OutputMapFileStore, Is.Not.Null, "Expected an OutputMapFileStore to not be null.");
-            Assert.That(importedModel.OutputClassMapFileStore, Is.Not.Null, "Expected an OutputClassFileStore to not be null.");
-        }
-
         private static void AssertThatOutputNotExists(string modelDirSave,
                                                       WaterFlowFMModel importedModel)
         {

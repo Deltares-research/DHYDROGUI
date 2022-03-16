@@ -186,8 +186,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.FeatureData
             if (locationName.StartsWith(featureName + "_"))
             {
                 string numString = locationName.Substring(featureName.Length + 1);
-                int number;
-                return numString.Length == 4 && int.TryParse(numString, out number);
+                return numString.Length == 4 && int.TryParse(numString, out int _);
             }
 
             return false;

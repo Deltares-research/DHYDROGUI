@@ -27,16 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.IO.Export
         }
 
         /// <summary>
-        /// implement this if the rule needs to write some state to the
-        /// state_import.xml file, eg. Integral part for PID rule.
-        /// </summary>
-        /// <returns> The collection of <see cref="XElement"/>. </returns>
-        public virtual IEnumerable<XElement> ToImportState(XNamespace xNamespace)
-        {
-            yield break;
-        }
-
-        /// <summary>
         /// Converts the rule to a collection of <see cref="XElement"/>
         /// to be written to the tools config xml file.
         /// </summary>

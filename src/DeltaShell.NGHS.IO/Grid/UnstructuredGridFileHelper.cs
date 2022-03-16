@@ -477,7 +477,7 @@ namespace DeltaShell.NGHS.IO.Grid
                 int ierr = gridApi.GetConvention(path, out convention);
                 if (ierr != GridApiDataSet.GridConstants.NOERR)
                 {
-                    throw new Exception("Couldn't get the grid convention because of error number: " + ierr);
+                    throw new GridApiException(GridApiExceptionMessage.Format(ierr, "Couldn't get the grid convention"));
                 }
 
                 return convention;

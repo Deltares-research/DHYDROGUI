@@ -32,8 +32,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
 
         public bool HandlesChildViews => true;
 
-        public void EnsureVisible(object item) {}
-        public void ActivateChildView(IView childView) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
+
+        public void ActivateChildView(IView childView)
+        {
+            // Nothing to be done, enforced through ICompositeView
+        }
 
         private HeatFluxModel HeatFluxModel
         {

@@ -215,7 +215,10 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.FunctionLis
             }
         }
 
-        public void EnsureVisible(object item) { }
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
         protected override void Dispose(bool disposing)
         {

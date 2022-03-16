@@ -1577,8 +1577,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
         [Test]
         public void Test_GuiPropertyGroups_GetUniqueGuiPropertyGroupsFromModelAndMorphologyPropertyGroups()
         {
-            Dictionary<string, ModelPropertyGroup> dummyVar;
-            Assert.DoesNotThrow(() => dummyVar = WaterFlowFMModelDefinition.GuiPropertyGroups);
+            Dictionary<string, ModelPropertyGroup> _;
+            Assert.DoesNotThrow(() => _ = WaterFlowFMModelDefinition.GuiPropertyGroups);
         }
 
         [Test]

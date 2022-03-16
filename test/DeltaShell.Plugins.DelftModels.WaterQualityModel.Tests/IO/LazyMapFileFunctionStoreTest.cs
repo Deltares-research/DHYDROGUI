@@ -115,15 +115,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
                 }
             };
 
-            var timeFilter = new VariableValueFilter<DateTime>
-            {
-                Values = new[]
-                {
-                    timeStep7,
-                    lastTimeStep
-                }
-            };
-
             var component = new Variable<double>("Salinity");
             var funtion = new Function("Salinity");
 

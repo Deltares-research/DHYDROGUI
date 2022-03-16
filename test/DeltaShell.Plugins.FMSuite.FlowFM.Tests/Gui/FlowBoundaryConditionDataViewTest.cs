@@ -234,20 +234,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
             var expectedC5 = 1.25;
             try
             {
-                var result = (bool) TypeUtils.CallPrivateStaticMethod(typeof(FlowBoundaryConditionDataView),
-                                                                      "ApplyHarmonicComponentValues", new object[]
-                                                                      {
-                                                                          new[]
-                                                                          {
-                                                                              expectedA1,
-                                                                              expectedC1,
-                                                                              expectedC2,
-                                                                              expectedC3,
-                                                                              expectedC4,
-                                                                              expectedC5
-                                                                          },
-                                                                          function
-                                                                      });
+                TypeUtils.CallPrivateStaticMethod(typeof(FlowBoundaryConditionDataView),
+                                                  "ApplyHarmonicComponentValues", new object[]
+                                                  {
+                                                      new[]
+                                                      {
+                                                          expectedA1,
+                                                          expectedC1,
+                                                          expectedC2,
+                                                          expectedC3,
+                                                          expectedC4,
+                                                          expectedC5
+                                                      },
+                                                      function
+                                                  });
             }
 
             catch (Exception ex)

@@ -957,6 +957,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Gui.Editors.Structures.ViewMode
             }
         }
 
+        [Test]
         public void GateOpeningDirection_SameValue_DoesNotFirePropertyChanged()
         {
             // Setup

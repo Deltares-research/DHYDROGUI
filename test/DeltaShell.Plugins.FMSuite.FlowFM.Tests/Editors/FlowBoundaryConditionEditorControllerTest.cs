@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             model.ModelDefinition.GetModelProperty(KnownProperties.UseSalinity).Value = false;
 
             // Controller should call BoundaryConditionEditor.RefreshAvailableCategories on 
-            var controller = new FlowBoundaryConditionEditorController
+            var _ = new FlowBoundaryConditionEditorController
             {
                 Model = model,
                 Editor = editor
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Editors
             model.ModelDefinition.UseMorphologySediment = false;
 
             // Controller should call BoundaryConditionEditor.RefreshAvailableCategories on 
-            var controller = new FlowBoundaryConditionEditorController
+            var _ = new FlowBoundaryConditionEditorController
             {
                 Model = model,
                 Editor = editor

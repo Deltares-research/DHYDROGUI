@@ -88,9 +88,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             }
         }
 
-        public void ActivateChildView(IView childView) {}
+        public void ActivateChildView(IView childView)
+        {
+            // Nothing to be done, enforced through ICompositeView
+        }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
         private SourceAndSink SourceAndSink
         {

@@ -50,7 +50,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.CustomRenderers
         {
             var model = new WaterFlowFMModel();
 
-            Polygon originalGeometry = FlowFMTestHelper.GetValidGeometryForEnclosureExample();
             GroupableFeature2DPolygon enclosureFeature =
                 FlowFMTestHelper.CreateFeature2DPolygonFromGeometry("Enclosure01",
                                                                     FlowFMTestHelper.GetValidGeometryForEnclosureExample());

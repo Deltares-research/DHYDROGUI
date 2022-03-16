@@ -110,8 +110,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
             SuspendClearOutputOnInputChange = true;
         }
 
-        public Type SupportedRegionType => typeof(HydroArea);
-
         /// <summary>
         /// Make a copy of the file if it is located in the DeltaShell working directory
         /// </summary>

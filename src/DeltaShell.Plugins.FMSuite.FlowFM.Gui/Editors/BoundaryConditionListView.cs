@@ -130,9 +130,15 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             boundaryConditionTableView.EnsureVisible(item);
         }
 
-        public void OnActivated() {}
+        public void OnActivated()
+        {
+            // Nothing to be done, enforced through ILayerEditorView
+        }
 
-        public void OnDeactivated() {}
+        public void OnDeactivated()
+        {
+            // Nothing to be done, enforced through ILayerEditorView
+        }
 
         private void TableViewOnSelectionChanged(object sender, TableSelectionChangedEventArgs e)
         {

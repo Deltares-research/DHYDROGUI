@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
         {
             if (Gui.DocumentViews.ActiveView != null)
             {
-                GetRegionFromActiveView();
+                AddHydroRegionEditorMapTool();
             }
 
             Gui.SelectionChanged += GuiSelectionChanged;
@@ -237,7 +237,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
 
         public override void OnActiveViewChanged(IView view)
         {
-            GetRegionFromActiveView();
+            AddHydroRegionEditorMapTool();
         }
 
         internal static MapView GetFocusedMapView()
@@ -472,17 +472,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                        : matchingRegion;
         }
 
-        private IHydroRegion GetRegionFromActiveView()
+        private void AddHydroRegionEditorMapTool()
         {
             IView activeView = Gui.DocumentViews.ActiveView;
             if (activeView?.Data == null)
             {
-                return null; // strange bug
+                return; // strange bug
             }
-
-            // in case active view is view of network such as cross section editor, 
-            // network editor or map that contains a network set the network to treeview
-            IHydroRegion region = null;
 
             if (activeView is MapView || activeView is ProjectItemMapView)
             {
@@ -492,10 +488,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
                                       : (MapView)activeView;
 
                 HydroRegionEditorHelper.AddHydroRegionEditorMapTool(mapView.MapControl);
-                region = HydroRegionEditorHelper.RootGetHydroRegion(mapView);
             }
-
-            return region;
         }
 
         private void GuiSelectionChanged(object sender, SelectedItemChangedEventArgs e)
@@ -507,7 +500,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             }
 
             //no network selected, so get it from the active view
-            GetRegionFromActiveView();
+            AddHydroRegionEditorMapTool();
         }
     }
 }

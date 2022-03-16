@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Tests.IO.Export
             controlGroup1.Conditions.Add(hydraulicCondition1B);
 
             model.ControlGroups.Add(controlGroup1);
-            RealTimeControlTestHelper.AddDummyLinksToGroup(null, controlGroup1);
+            RealTimeControlTestHelper.AddDummyLinksToGroup(controlGroup1);
         }
     }
 }

@@ -138,11 +138,20 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms
             bindingSourceHydroModel.ResumeBinding();
         }
 
-        public void EnsureVisible(object item) {}
+        public void EnsureVisible(object item)
+        {
+            // Nothing to be done, enforced through IView
+        }
 
-        public void OnActivated() {}
+        public void OnActivated()
+        {
+            // Nothing to be done, enforced through ILayerEditorView
+        }
 
-        public void OnDeactivated() {}
+        public void OnDeactivated()
+        {
+            // Nothing to be done, enforced through ILayerEditorView
+        }
 
         private void HydroModelSettingsBackColorChanged(object sender, EventArgs e)
         {

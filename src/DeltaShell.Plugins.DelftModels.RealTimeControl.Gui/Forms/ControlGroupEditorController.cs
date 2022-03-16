@@ -410,7 +410,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
             throw new ArgumentException("Connection does not contain True or False outputs");
         }
 
-        public static void Connect(object from, ConnectorType fromConnector, object to, ConnectorType toConnector)
+        public static void Connect(object from, ConnectorType fromConnector, object to)
         {
             if (refreshingConnections)
             {
@@ -1195,7 +1195,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms
                 return false;
             }
 
-            Connect(from, fromConnector, to, toConnector);
+            Connect(from, fromConnector, to);
             SetConnectionStyle(e.Connection);
             return true;
         }

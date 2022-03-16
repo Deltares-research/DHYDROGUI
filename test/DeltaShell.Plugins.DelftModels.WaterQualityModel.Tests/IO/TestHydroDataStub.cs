@@ -435,16 +435,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
             }
         }
 
-        public bool IsSegmentFunction(string functionName)
-        {
-            return false;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
         public IEventedList<WaterQualityBoundary> GetBoundaries()
         {
             return boundaries;

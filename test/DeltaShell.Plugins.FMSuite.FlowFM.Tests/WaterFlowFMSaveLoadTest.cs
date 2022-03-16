@@ -415,15 +415,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             var model = new WaterFlowFMModel();
             app.Project.RootFolder.Add(model);
 
-            var polygon = new Polygon(new LinearRing(new[]
-            {
-                new Coordinate(-135, -105),
-                new Coordinate(-85, -100),
-                new Coordinate(-75, -205),
-                new Coordinate(-125, -200),
-                new Coordinate(-135, -105)
-            }));
-
             app.SaveProjectAs(path);
 
             app.CloseProject();

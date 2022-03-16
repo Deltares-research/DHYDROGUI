@@ -298,21 +298,5 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui
         {
             return TestHelper.GetTestFilePath(@"data\f04_bottomfriction\c016_2DConveyance_bend\input\bendprof.mdu");
         }
-
-        private static WeakReference GetWeakLayerRef(MapView mapview)
-        {
-            UnstructuredBaseLayer layer = mapview.Map.GetAllVisibleLayers(false).OfType<UnstructuredBaseLayer>().First();
-            return new WeakReference(layer);
-        }
-
-        private static WeakReference AddMduToProject(Project project, string mduPath)
-        {
-            var model = new WaterFlowFMModel();
-            model.ImportFromMdu(mduPath);
-
-            var weakRef = new WeakReference(model);
-            project.RootFolder.Add(model);
-            return weakRef;
-        }
     }
 }

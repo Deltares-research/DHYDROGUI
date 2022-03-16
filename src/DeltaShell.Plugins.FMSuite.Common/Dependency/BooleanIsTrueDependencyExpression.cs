@@ -30,7 +30,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.Dependency
             return null;
         }
 
-        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(ModelProperty evaluatedProperty, IEnumerable<ModelProperty> allProperties, string dependencyExpression)
+        protected internal override Func<IEnumerable<ModelProperty>, bool> OnCompile(ModelProperty evaluatedProperty, string dependencyExpression)
         {
             return properties =>
             {

@@ -22,7 +22,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             using (IUGridApi gridApi = GridApiFactory.CreateNew())
             {
                 GridApiDataSet.DataSetConventions convention;
-                int ierr = gridApi.GetConvention(netFilePath, out convention);
+                gridApi.GetConvention(netFilePath, out convention);
                 Assert.That(convention, Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_OTHER));
             }
 
@@ -57,7 +57,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests
             using (IUGridApi gridApi = GridApiFactory.CreateNew())
             {
                 GridApiDataSet.DataSetConventions convention;
-                int ierr = gridApi.GetConvention(netFilePath, out convention);
+                gridApi.GetConvention(netFilePath, out convention);
                 Assert.That(convention, Is.EqualTo(GridApiDataSet.DataSetConventions.CONV_UGRID));
             }
 

@@ -51,11 +51,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Model
         /// this one can be null and then the DimrRunner will create a new working directory and the setter
         /// is then needed.
         /// </summary>
-        public virtual string WorkingDirectoryPath
-        {
-            get => Path.Combine(WorkingDirectoryPathFunc(), Name);
-            set => throw new NotSupportedException("The working directory for running the model is not set");
-        }
+        public virtual string WorkingDirectoryPath => Path.Combine(WorkingDirectoryPathFunc(), Name);
 
         public string ModelDirectoryPath => Path.GetDirectoryName(Path.GetDirectoryName(MduFilePath));
 

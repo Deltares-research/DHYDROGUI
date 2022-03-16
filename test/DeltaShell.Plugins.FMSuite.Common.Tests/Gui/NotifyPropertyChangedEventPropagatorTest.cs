@@ -49,9 +49,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui
             void PropertyChanged(string prop) { calledProperties.Add(prop); }
             var propertyMapping = new Dictionary<string, string>() { { key, value } };
 
-            using (var propagator = new NotifyPropertyChangedEventPropagator(observedObject,
-                                                                             PropertyChanged,
-                                                                             propertyMapping))
+            using (new NotifyPropertyChangedEventPropagator(observedObject,
+                                                            PropertyChanged,
+                                                            propertyMapping))
             {
                 // Call
                 observedObject.PropertyChanged += Raise.Event<PropertyChangedEventHandler>(observedObject,
@@ -76,9 +76,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui
             void PropertyChanged(string prop) { calledProperties.Add(prop); }
             var propertyMapping = new Dictionary<string, string>() { { key, value } };
 
-            using (var propagator = new NotifyPropertyChangedEventPropagator(observedObject,
-                                                                             PropertyChanged,
-                                                                             propertyMapping))
+            using (new NotifyPropertyChangedEventPropagator(observedObject,
+                                                            PropertyChanged,
+                                                            propertyMapping))
 
             {
                 // Call
@@ -103,9 +103,9 @@ namespace DeltaShell.Plugins.FMSuite.Common.Tests.Gui
             void PropertyChanged(string prop) { calledProperties.Add(prop); }
             var propertyMapping = new Dictionary<string, string>() { { key, value } };
 
-            using (var propagator = new NotifyPropertyChangedEventPropagator(observedObject,
-                                                                             PropertyChanged,
-                                                                             propertyMapping))
+            using (new NotifyPropertyChangedEventPropagator(observedObject,
+                                                            PropertyChanged,
+                                                            propertyMapping))
 
             {
                 // Call

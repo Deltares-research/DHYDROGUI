@@ -70,31 +70,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Forms.ActivityShapes
             private IEventedList<IActivity> activities = new EventedList<IActivity>();
             private ICompositeActivity currentWorkflow;
 
-            public IEventedList<IActivity> Activities
-            {
-                get
-                {
-                    return activities;
-                }
-                set
-                {
-                    activities = value;
-                }
-            }
+            public IEventedList<IActivity> Activities => activities;
 
             public bool ReadOnly { get; set; }
 
-            public ICompositeActivity CurrentWorkflow
-            {
-                get
-                {
-                    return currentWorkflow;
-                }
-                set
-                {
-                    currentWorkflow = value;
-                }
-            }
+            public ICompositeActivity CurrentWorkflow => currentWorkflow;
 
             public override string ToString()
             {

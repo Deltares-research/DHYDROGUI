@@ -99,8 +99,7 @@ namespace DeltaShell.Plugins.FMSuite.Common
                     }
 
                     // if int enum, cast to int, otherwise keep as string
-                    int tryOutValue;
-                    int[] typeChoicesInts = int.TryParse(typeChoices[0], out tryOutValue)
+                    int[] typeChoicesInts = int.TryParse(typeChoices[0], out int _)
                                                 ? typeChoices.Select(int.Parse).ToArray()
                                                 : Enumerable.Range(0, typeChoices.Length).ToArray();
 

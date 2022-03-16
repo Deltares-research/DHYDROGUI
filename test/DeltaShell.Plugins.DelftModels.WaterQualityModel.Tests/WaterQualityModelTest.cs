@@ -644,8 +644,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests
             var model = new WaterQualityModel();
             model.ImportHydroData(hydroData);
 
-            double z = (model.ZTop + model.ZBot) / 2;
-
             // Grid:
             //  (0,20)    (20,20)
             //     O---O---O

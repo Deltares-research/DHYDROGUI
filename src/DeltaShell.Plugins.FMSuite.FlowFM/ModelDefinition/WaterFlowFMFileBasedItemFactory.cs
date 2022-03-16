@@ -34,7 +34,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition
                 if (subFile.Key.Equals(model.ModelDefinition.GetModelProperty(KnownProperties.ExtForceFile)))
                 {
                     IEnumerable<ExtForceFileItem> newExtForceFileItems =
-                        ExtForceFileItemFactory.GetItems(model.ExtFilePath, model.ModelDefinition, !newFormatBoundaryConditions,
+                        ExtForceFileItemFactory.GetItems(model.ModelDefinition, !newFormatBoundaryConditions,
                                                          extForceFile.PolyLineForceFileItems, extForceFile.ExistingForceFileItems);
 
                     foreach (ExtForceFileItem extForceFileItem in newExtForceFileItems)

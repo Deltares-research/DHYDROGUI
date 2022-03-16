@@ -218,7 +218,6 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
 
             ITimeFrameData timeFrameData = CreateTimePointData(mdwCategories,
                                                                modelDefinition.ModelReferenceDateTime,
-                                                               out IList<DateTime> _,
                                                                logHandler);
 
             ReadWaveBoundaries(modelDefinition, mdwCategories, mdwDir, logHandler);
@@ -807,7 +806,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
         }
 
         private ITimeFrameData CreateTimePointData(IEnumerable<DelftIniCategory> mdwCategories,
-                                                       DateTime referenceDate, out IList<DateTime> times,
+                                                       DateTime referenceDate,
                                                        ILogHandler logHandler)
         {
             var timePointData = new TimeFrameData
@@ -816,7 +815,7 @@ namespace DeltaShell.Plugins.FMSuite.Wave.DataAccess
                 WindInputDataType = WindInputDataType.Constant
             };
 
-            times = new List<DateTime>();
+            IList<DateTime> times = new List<DateTime>();
             List<DelftIniCategory> timePointCategories = mdwCategories.Where(c => c.Name == KnownWaveCategories.TimePointCategory).ToList();
 
             if (timePointCategories.Any(c => c.GetPropertyValue(KnownWaveProperties.WaterLevel) != null))
