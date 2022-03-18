@@ -1,15 +1,25 @@
-﻿using DeltaShell.NGHS.Utils;
-using GeoAPI.Extensions.Networks;
+﻿using GeoAPI.Extensions.Networks;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {
     public static class BranchChainageExtensions
     {
-        public static double CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(this IBranch branch, double readChainageProperty)
+        /// <summary>
+        /// Makes sure that the chainage is not passed the length of then branch
+        /// </summary>
+        /// <param name="branch">Branch to snap to</param>
+        /// <param name="chainage"></param>
+        /// <returns></returns>
+        public static double GetBranchSnappedChainage(this IBranch branch, double chainage)
         {
-            var branchLength = branch.IsLengthCustom ? branch.Length : branch.Length.TruncateByDigits();
-            var chainage = readChainageProperty <= branchLength ? readChainageProperty : branchLength;
-            return chainage;
+            if (chainage > branch.Length)
+            {
+                return branch.Length;
+            }
+
+            return chainage > 0
+                       ? chainage
+                       : 0;
         }
     }
 }

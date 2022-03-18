@@ -17,6 +17,7 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.Operation.Valid;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
@@ -527,6 +528,96 @@ namespace DeltaShell.NGHS.IO.Tests.Grid.DeltaresUGrid
 
             // Assert
             Assert.AreEqual(5, mesh.NodeIds.Length);
+        }
+
+        [Test]
+        public void GivenHydroUGridExtensions_CreateDisposableNetworkGeometry_ShouldGiveCorrectCoordinates()
+        {
+            //Arrange
+            var delta = 25e-9;
+            var network = new HydroNetwork();
+            var startNode = new HydroNode("Node 1") { Geometry = new Point(0, delta) };
+            var endNode = new HydroNode("Node 2") { Geometry = new Point(10 + delta, delta) };
+            var branch = new Channel("Channel 1", startNode, endNode)
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, delta),
+                    new Coordinate(10 + delta, delta)
+                })
+            };
+
+            network.Nodes.AddRange(new[] { startNode, endNode });
+            network.Branches.Add(branch);
+
+            // Act
+            var networkGeometry = network.CreateDisposableNetworkGeometry();
+
+            // Assert
+            Assert.AreEqual(2, networkGeometry.NodesX.Length);
+            Assert.AreEqual(0, networkGeometry.NodesX[0]);
+            Assert.AreEqual(10 + delta, networkGeometry.NodesX[1]);
+
+            Assert.AreEqual(2, networkGeometry.NodesY.Length);
+            Assert.AreEqual(delta, networkGeometry.NodesY[0]);
+            Assert.AreEqual(delta, networkGeometry.NodesY[1]);
+
+            Assert.AreEqual(10 + delta, networkGeometry.BranchLengths[0]);
+            
+            Assert.AreEqual(2, networkGeometry.BranchGeometryX.Length);
+            Assert.AreEqual(0, networkGeometry.BranchGeometryX[0]);
+            Assert.AreEqual(10 + delta, networkGeometry.BranchGeometryX[1]);
+
+            Assert.AreEqual(2, networkGeometry.BranchGeometryY.Length);
+            Assert.AreEqual(delta, networkGeometry.BranchGeometryY[0]);
+            Assert.AreEqual(delta, networkGeometry.BranchGeometryY[1]);
+        }
+
+
+        [Test]
+        public void GivenHydroUGridExtensions_CreateDisposable1DMeshGeometry_ShouldGiveCorrect1dMeshCoordinates()
+        {
+            //Arrange
+            var delta = 25e-9;
+            var network = new HydroNetwork();
+            var startNode = new HydroNode("Node 1") { Geometry = new Point(0, delta) };
+            var endNode = new HydroNode("Node 2") { Geometry = new Point(10 + delta, delta) };
+            var branch = new Channel("Channel 1", startNode, endNode)
+            {
+                Geometry = new LineString(new[]
+                {
+                    new Coordinate(0, delta),
+                    new Coordinate(10 + delta, delta)
+                })
+            };
+            
+            network.Nodes.AddRange(new []{startNode, endNode});
+            network.Branches.Add(branch);
+            
+            var discretization = new Discretization { Network = network };
+
+            var locations = new[]
+            {
+                new NetworkLocation(branch, 0.0),
+                new NetworkLocation(branch, 5 + delta),
+                new NetworkLocation(branch, 10 + delta)
+            };
+
+            discretization.Locations.AddValues(locations);
+
+            // Act
+            var mesh = discretization.CreateDisposable1DMeshGeometry();
+
+            // Assert
+            Assert.AreEqual(3, mesh.NodesX.Length);
+            Assert.AreEqual(0, mesh.NodesX[0]);
+            Assert.AreEqual(5 + delta, mesh.NodesX[1]);
+            Assert.AreEqual(10 + delta, mesh.NodesX[2]);
+
+            Assert.AreEqual(3, mesh.NodesY.Length);
+            Assert.AreEqual(delta, mesh.NodesY[0]);
+            Assert.AreEqual(delta, mesh.NodesY[1]);
+            Assert.AreEqual(delta, mesh.NodesY[2]);
         }
 
         [Test, Category(TestCategory.Integration)]

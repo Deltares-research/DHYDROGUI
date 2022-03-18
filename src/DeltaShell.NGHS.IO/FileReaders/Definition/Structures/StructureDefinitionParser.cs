@@ -67,7 +67,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
-                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
+                Chainage = branch.GetBranchSnappedChainage(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 Tag = category.ReadProperty<string>(StructureRegion.StructureIds.Key, true) // optional if numStructures == 0
             };
         }
@@ -101,7 +101,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Name = name,
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
-                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
+                Chainage = branch.GetBranchSnappedChainage(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 BridgeType = definition?.CrossSectionType == CrossSectionType.ZW ? BridgeType.Tabulated : definition?.CrossSectionType == CrossSectionType.YZ ? BridgeType.YzProfile : BridgeType.Rectangle,
                 FlowDirection = (FlowDirection) EnumUtils.GetEnumValueFromDisplayName(category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key),typeof(FlowDirection)),
                 Shift = shift,
@@ -135,7 +135,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
-                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
+                Chainage = branch.GetBranchSnappedChainage(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
             };
 
             var levels = category.ReadProperty<string>(StructureRegion.Levels.Key).ToDoubleArray();
@@ -153,7 +153,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
-                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
+                Chainage = branch.GetBranchSnappedChainage(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 DirectionIsPositive = category.ReadProperty<string>(StructureRegion.Orientation.Key, true, "positive")?.ToLower() == "positive",
                 ControlDirection = GetControlDirectionFromString(category.ReadProperty<string>(StructureRegion.Direction.Key)),
                 Capacity = category.ReadProperty<double>(StructureRegion.Capacity.Key),
@@ -204,7 +204,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
                 FlowDirection = allowedFlowDir,
                 Branch = branch,
-                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
+                Chainage = branch.GetBranchSnappedChainage(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 UseVelocityHeight = category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true, true)
             };
 
@@ -228,7 +228,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 CrestWidth = category.ReadProperty<double>(StructureRegion.CrestWidth.Key, true),
                 FlowDirection = allowedFlowDir,
                 Branch = branch,
-                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
+                Chainage = branch.GetBranchSnappedChainage(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 UseVelocityHeight = category.ReadProperty<bool>(StructureRegion.UseVelocityHeight.Key, true, true)
             };
 
@@ -383,7 +383,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                 Name = category.ReadProperty<string>(StructureRegion.Id.Key),
                 LongName = category.ReadProperty<string>(StructureRegion.Name.Key, true),
                 Branch = branch,
-                Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
+                Chainage = branch.GetBranchSnappedChainage(category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 GeometryType = GetGeometryType(standardCrossSectionDefinition?.ShapeType),
                 TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW
                     ? definition as CrossSectionDefinitionZW

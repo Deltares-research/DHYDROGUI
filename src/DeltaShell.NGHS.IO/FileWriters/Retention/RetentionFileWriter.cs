@@ -43,7 +43,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
                 definition.AddProperty(RetentionRegion.NodeId.Key, retention.Branch.Source.Name, RetentionRegion.BranchId.Description);
             }
 
-            definition.AddProperty(RetentionRegion.Chainage.Key, retention.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(retention.Chainage), RetentionRegion.Chainage.Description, RetentionRegion.Chainage.Format);
+            definition.AddProperty(RetentionRegion.Chainage.Key, retention.Branch.GetBranchSnappedChainage(retention.Chainage), RetentionRegion.Chainage.Description, RetentionRegion.Chainage.Format);
             
             definition.AddProperty(RetentionRegion.UseTable.Key, true, RetentionRegion.UseTable.Description);
             if (retention.UseTable)

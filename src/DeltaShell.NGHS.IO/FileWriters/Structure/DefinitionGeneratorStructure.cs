@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             if(hydroNetworkFeature != null) IniCategory.AddProperty(StructureRegion.Name.Key, hydroNetworkFeature.LongName, StructureRegion.Name.Description);
 
             IniCategory.AddProperty(StructureRegion.BranchId.Key, branchFeature.Branch.Name, StructureRegion.BranchId.Description);
-            IniCategory.AddProperty(StructureRegion.Chainage.Key, branchFeature.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(branchFeature.Chainage), StructureRegion.Chainage.Description, StructureRegion.Chainage.Format);
+            IniCategory.AddProperty(StructureRegion.Chainage.Key, branchFeature.Branch.GetBranchSnappedChainage(branchFeature.Chainage), StructureRegion.Chainage.Description, StructureRegion.Chainage.Format);
 
             AddDefinitionTypePropertyToIniCategory(definitionType);
         }

@@ -7,12 +7,12 @@ namespace DeltaShell.NGHS.IO.FileWriters.Location
         // Common Location Properties
         public static readonly ConfigurationSetting Id = new ConfigurationSetting(key: "Id", description: "Unique branch feature id");
         public static readonly ConfigurationSetting ObsId = new ConfigurationSetting(key: "name", description: "Unique branch feature id");
-        public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "Location on the branch (m)", format:"F6");
+        public static readonly ConfigurationSetting Chainage = new ConfigurationSetting(key: "chainage", description: "Location on the branch (m)", format: "G17");
         public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "name", description: "Long name in the user interface");
 
         public static readonly ConfigurationSetting PipeId = new ConfigurationSetting(key: "Id", description: "Unique location id for pipe cross sections");
         public static readonly ConfigurationSetting BranchId = new ConfigurationSetting(key: "branchId", description: "Unique pipe id");
-        public static readonly ConfigurationSetting PipeChainage = new ConfigurationSetting(key: "chainage", description: "Location on the branch (m)", format:"F6");
+        public static readonly ConfigurationSetting PipeChainage = new ConfigurationSetting(key: "chainage", description: "Location on the branch (m)", format:"G17");
         public static readonly ConfigurationSetting Shift = new ConfigurationSetting(key: "shift", description: "Level shift of the cross section definition (m)");
         public static readonly ConfigurationSetting Definition = new ConfigurationSetting(key: "definitionId", description: "Id of cross section definition");
     }

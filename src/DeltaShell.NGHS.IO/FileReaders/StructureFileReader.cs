@@ -74,7 +74,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
         {
             compoundStructures.ForEach(c =>
             {
-                c.Chainage = c.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(c.Chainage);
+                c.Chainage = c.Branch.GetBranchSnappedChainage(c.Chainage);
                 c.Geometry = HydroNetworkHelper.GetStructureGeometry(c.Branch, c.Chainage);
                 c.Branch.BranchFeatures.Add(c);
             });

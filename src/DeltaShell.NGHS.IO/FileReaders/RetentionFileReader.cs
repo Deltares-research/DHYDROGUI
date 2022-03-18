@@ -52,7 +52,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 return retention;
 
             retention.Branch = branch;
-            retention.Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(RetentionRegion.Chainage.Key));
+            retention.Chainage = branch.GetBranchSnappedChainage(category.ReadProperty<double>(RetentionRegion.Chainage.Key));
 
             if (retention.Chainage > 0)
             {

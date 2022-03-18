@@ -54,7 +54,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 {
                     Name = locationPropertyValue.name,
                     LongName = locationPropertyValue.longName,
-                    Chainage = locationPropertyValue.branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(locationPropertyValue.chainage),
+                    Chainage = locationPropertyValue.branch.GetBranchSnappedChainage(locationPropertyValue.chainage),
                 };
                 observationPoint.Geometry = HydroNetworkHelper.GetStructureGeometry(locationPropertyValue.branch, observationPoint.Chainage);
                 locationPropertyValue.branch.BranchFeatures.Add(observationPoint);                
@@ -97,7 +97,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                     Branch = locationPropertyValue.branch,
                     Name = locationPropertyValue.name,
                     LongName = locationPropertyValue.longName,
-                    Chainage = locationPropertyValue.branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(locationPropertyValue.chainage)
+                    Chainage = locationPropertyValue.branch.GetBranchSnappedChainage(locationPropertyValue.chainage)
                 };
                 if (locationPropertyValue.diffuseLength.HasValue)
                     lateralSource.Length = locationPropertyValue.diffuseLength.Value;
@@ -126,7 +126,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Location
                 throw new FileReadingException(errorMessage);
             }
 
-            locationPropertyValues.chainage = locationPropertyValues.branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(category.ReadProperty<double>(LocationRegion.Chainage.Key));
+            locationPropertyValues.chainage = locationPropertyValues.branch.GetBranchSnappedChainage(category.ReadProperty<double>(LocationRegion.Chainage.Key));
             
             // Optional Properties (an error will not be generated if these fail) 
             locationPropertyValues.longName = category.ReadProperty<string>(LocationRegion.Name.Key, true) ?? string.Empty;

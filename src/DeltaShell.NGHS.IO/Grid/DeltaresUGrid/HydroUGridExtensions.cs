@@ -322,10 +322,10 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
             {
                 var location = locations[i];
 
-                mesh.NodesX[i] = location.Geometry?.Coordinate.X.TruncateByDigits() ?? 0;
-                mesh.NodesY[i] = location.Geometry?.Coordinate.Y.TruncateByDigits() ?? 0;
+                mesh.NodesX[i] = location.Geometry?.Coordinate.X ?? 0;
+                mesh.NodesY[i] = location.Geometry?.Coordinate.Y ?? 0;
                 mesh.BranchIDs[i] = branchIdLookup[location.Branch];
-                mesh.BranchOffsets[i] = location.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(location.Chainage);
+                mesh.BranchOffsets[i] = location.Branch.GetBranchSnappedChainage(location.Chainage);
                 mesh.NodeIds[i] = location.Name;
                 mesh.NodeLongNames[i] = location.LongName ?? "";
             }
@@ -337,8 +337,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
 
                 mesh.EdgeBranchIds[i] = branchIdLookup[segment.Branch];
                 mesh.EdgeCenterPointOffset[i] = segment.Chainage + segment.Length / 2.0;
-                mesh.EdgeCenterPointX[i] = segment.Geometry.Centroid.X.TruncateByDigits();
-                mesh.EdgeCenterPointY[i] = segment.Geometry.Centroid.Y.TruncateByDigits();
+                mesh.EdgeCenterPointX[i] = segment.Geometry.Centroid.X;
+                mesh.EdgeCenterPointY[i] = segment.Geometry.Centroid.Y;
                 
                 mesh.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][0];
                 mesh.EdgeNodes[edgeNodeIndex++] = locationIdxBySegment[segment][1];
@@ -464,7 +464,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 mesh.BranchIds[i] = branch.Name;
                 mesh.BranchLongNames[i] = branch.Description ?? "";
                 mesh.BranchGeometryNodesCount[i] = branch.Geometry.Coordinates.Length;
-                mesh.BranchLengths[i] = branch.IsLengthCustom ? branch.Length : branch.Length.TruncateByDigits();
+                mesh.BranchLengths[i] = branch.Length;
                 mesh.BranchOrder[i] = branch.OrderNumber;
                 mesh.BranchTypes[i] = (int) branch.GetBranchType();
 
@@ -487,8 +487,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 for (int j = 0; j < coordinates.Length; j++)
                 {
                     var coordinate = coordinates[j];
-                    geometryXData.Add(coordinate.X.TruncateByDigits());
-                    geometryYData.Add(coordinate.Y.TruncateByDigits());
+                    geometryXData.Add(coordinate.X);
+                    geometryYData.Add(coordinate.Y);
                 }
             }
 
@@ -524,8 +524,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                         var offset = (manhole.Compartments.Count - 1) * 0.5;
                         var compartmentX = manhole.Geometry.Coordinate.X - offset + j;
 
-                        mesh.NodesX[addedNodeIndex] = compartmentX.TruncateByDigits();
-                        mesh.NodesY[addedNodeIndex] = manhole.Geometry.Coordinate.Y.TruncateByDigits();
+                        mesh.NodesX[addedNodeIndex] = compartmentX;
+                        mesh.NodesY[addedNodeIndex] = manhole.Geometry.Coordinate.Y;
                         mesh.NodeIds[addedNodeIndex] = compartment.Name;
                         mesh.NodeLongNames[addedNodeIndex] = manhole.LongName ?? "";
 
@@ -535,8 +535,8 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                     continue;
                 }
 
-                mesh.NodesX[addedNodeIndex] = node.Geometry.Coordinate.X.TruncateByDigits();
-                mesh.NodesY[addedNodeIndex] = node.Geometry.Coordinate.Y.TruncateByDigits();
+                mesh.NodesX[addedNodeIndex] = node.Geometry.Coordinate.X;
+                mesh.NodesY[addedNodeIndex] = node.Geometry.Coordinate.Y;
                 mesh.NodeIds[addedNodeIndex] = node.Name;
 
                 if (node is IHydroNode hydroNode)
@@ -599,7 +599,7 @@ namespace DeltaShell.NGHS.IO.Grid.DeltaresUGrid
                 propertiesLookup.TryGetValue(networkGeometry.BranchIds[i], out var properties);
                 branches.Add(CreateBranchByIndex(networkGeometry, i, properties, nodeLookup, compartments, ref geometryOffset, forceCustomLengths));
             }
-
+            
             return branches.ToArray();
         }
 

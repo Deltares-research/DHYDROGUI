@@ -9,7 +9,6 @@ using DelftTools.TestUtils;
 using DelftTools.Utils.IO;
 using DeltaShell.NGHS.IO.Grid;
 using DeltaShell.NGHS.IO.Grid.DeltaresUGrid;
-using GeoAPI.Extensions.Networks;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Grids;
@@ -21,6 +20,7 @@ using SharpMapTestUtils;
 namespace DeltaShell.NGHS.IO.Tests.Grid
 {
     [TestFixture]
+    [Category(TestCategory.DataAccess)]
     public class UGridFileHelperTest
     {
         [TestCase("fileDoesNotExist.nc", false)]
@@ -301,6 +301,34 @@ namespace DeltaShell.NGHS.IO.Tests.Grid
             UGridFileHelper.RewriteGridCoordinates(localtestFile, grid);
 
             FileUtils.DeleteIfExists(localtestFile);
+        }
+
+        [Test]
+        public void GivenUGridFileHelper_WriteRead_ShouldGiveTheSameCoordinates()
+        {
+            //Arrange
+            var network = HydroNetworkHelper.GetSnakeHydroNetwork(2);
+            var mesh1d = new Discretization();
+            HydroNetworkHelper.GenerateDiscretization(mesh1d, true, true, 0, true, 0, true, true, true, 100);
+            
+            var path = TestHelper.GetTestWorkingDirectoryGeneratedTestFilePath("nc");
+
+            // Act
+            UGridFileHelper.WriteGridToFile(path, null, network, mesh1d, null, "model1", "myPlugin", "1.0", UGridFileHelper.BedLevelLocation.Faces, null);
+            
+            var readNetwork = new HydroNetwork();
+            var readMesh1d = new Discretization();
+            UGridFileHelper.ReadNetworkAndDiscretisation(path, readMesh1d, readNetwork);
+
+            // Assert
+            var networkBranch = network.Branches[0];
+            var readNetworkBranch = readNetwork.Branches[0];
+
+            Assert.AreEqual(networkBranch.Geometry.Coordinates, readNetworkBranch.Geometry.Coordinates);
+            Assert.AreEqual(networkBranch.Length, readNetworkBranch.Length);
+            Assert.AreEqual(network.Nodes[0].Geometry.Coordinate, readNetwork.Nodes[0].Geometry.Coordinate);
+
+            Assert.AreEqual(mesh1d.GetLocationsForBranch(networkBranch), readMesh1d.GetLocationsForBranch(readNetworkBranch));
         }
 
         [Test]

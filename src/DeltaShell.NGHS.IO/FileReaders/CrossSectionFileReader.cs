@@ -89,7 +89,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 var crossSection = new CrossSection(definition)
                 {
                     LongName = crossSectionLongName,
-                    Chainage = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(chainage)
+                    Chainage = branch.GetBranchSnappedChainage(chainage)
                 };
 
                 crossSection.SetNameWithoutUpdatingDefinition(name);

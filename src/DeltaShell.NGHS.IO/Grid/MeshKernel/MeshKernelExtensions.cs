@@ -81,8 +81,8 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
             {
                 var location = locations[i];
 
-                mesh1D.NodeX[i] = location.Geometry?.Coordinate.X.TruncateByDigits() ?? 0;
-                mesh1D.NodeY[i] = location.Geometry?.Coordinate.Y.TruncateByDigits() ?? 0;
+                mesh1D.NodeX[i] = location.Geometry?.Coordinate.X ?? 0;
+                mesh1D.NodeY[i] = location.Geometry?.Coordinate.Y ?? 0;
             }
 
             var locationIdLookup = locations.ToIndexDictionary();

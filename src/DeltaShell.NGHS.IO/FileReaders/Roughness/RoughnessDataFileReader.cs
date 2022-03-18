@@ -66,7 +66,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
 
                             for (int i = 0; i < roughnessBranchData.Chainages.Length; i++)
                             {
-                                var offset = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(roughnessBranchData.Chainages[i]);
+                                var offset = branch.GetBranchSnappedChainage(roughnessBranchData.Chainages[i]);
                                 roughnessSection.RoughnessNetworkCoverage[new NetworkLocation(branch, offset)] = new object[] {roughnessBranchData.Values[0][i], roughnessBranchData.RoughnessType};
                             }
                             break;
@@ -111,7 +111,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                     var level = levels[levelIndex];
                     for(int chainageIndex =0; chainageIndex < roughnessBranchData.Chainages.Length; chainageIndex++)
                     {
-                        var chainage = branchData.Branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(roughnessBranchData.Chainages[chainageIndex]);
+                        var chainage = branchData.Branch.GetBranchSnappedChainage(roughnessBranchData.Chainages[chainageIndex]);
                         function[chainage, level] = roughnessBranchData.Values[levelIndex][chainageIndex];
                     }
                 }
@@ -150,7 +150,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Roughness
                     var chainages = branchCategory.ReadPropertiesToListOfType<double>(SpatialDataRegion.Chainage.Key).ToArray();
                     for (int i = 0; i < chainages.Length; i++)
                     {
-                        chainages[i] = branch.CorrectlyRoundOffChainageIfChainageIsOnEndOfBranch(chainages[i]);
+                        chainages[i] = branch.GetBranchSnappedChainage(chainages[i]);
                     }
                     
                     var numLocations = branchCategory.ReadProperty<int>(RoughnessDataRegion.NumberOfLocations.Key);
