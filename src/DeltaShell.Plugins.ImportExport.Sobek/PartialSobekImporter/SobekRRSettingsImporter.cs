@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.FileWriter;
@@ -100,8 +101,23 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.PartialSobekImporter
             model.SaveStateStopTime = model.StopTime;
             model.SaveStateTimeStep = model.TimeStep;
 
-            model.CapSim = settings.UnsaturatedZone != 0;
+            if (settings.GreenhouseYear.IsInRange(RainfallRunoffModel.MinGreenhouseYear, RainfallRunoffModel.MaxGreenhouseYear))
+            {
+                model.GreenhouseYear = settings.GreenhouseYear;
+            }
+            else
+            {
+                string message = $"Greenhouse year must be in the period between {RainfallRunoffModel.MinGreenhouseYear} and " 
+                                 + $"{RainfallRunoffModel.MaxGreenhouseYear} but is {settings.GreenhouseYear}{Environment.NewLine}" 
+                                 + $"Resetting to the default year ({RainfallRunoffModel.MaxGreenhouseYear}).";
 
+
+                log.Warn(message);
+                model.GreenhouseYear = RainfallRunoffModel.MaxGreenhouseYear;
+            }
+
+            model.CapSim = settings.UnsaturatedZone != 0;
+            
             if (settings.CapsimPerCropAreaIsDefined)
             {
                 if (Enum.IsDefined(typeof (RainfallRunoffEnums.CapsimCropAreaOptions), settings.CapsimPerCropArea))

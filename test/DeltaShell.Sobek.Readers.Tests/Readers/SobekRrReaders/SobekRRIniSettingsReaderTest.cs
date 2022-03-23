@@ -23,6 +23,7 @@ namespace DeltaShell.Sobek.Readers.Tests.Readers.SobekRrReaders
             Assert.AreEqual(-1, settings.UnsaturatedZone);
             Assert.AreEqual(1, settings.InitCapsimOption);
             Assert.AreEqual(0, settings.CapsimPerCropArea);
+            Assert.AreEqual(1994, settings.GreenhouseYear);
         }
     }
 }

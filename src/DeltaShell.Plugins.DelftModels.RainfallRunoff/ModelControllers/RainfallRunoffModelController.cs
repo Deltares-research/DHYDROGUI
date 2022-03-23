@@ -378,7 +378,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                 Writer.AddIniOption("Options", "RestartIn", model.UseRestart ? "1" : "0");
                 Writer.AddIniOption("Options", "RestartOut", model.WriteRestart ? "1" : "0");
                 Writer.AddIniOption("Options", "RestartFileEachTimestep", model.UseSaveStateTimeRange ? "1" : "0");
-                
+                Writer.AddIniOption("Options", "GreenhouseYear", model.GreenhouseYear.ToString());
+
                 SetOutputOptions(model.OutputSettings);
 
                 if (model.CapSim)

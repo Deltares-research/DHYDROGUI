@@ -11,6 +11,7 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
         public bool PeriodFromEvent { get; set; }
         public double OutputTimestepMultiplier { get; set; }
         public int UnsaturatedZone { get; set; }
+        public short GreenhouseYear { get; set; }
         public int InitCapsimOption { get; set; }
         public bool CapsimPerCropAreaIsDefined { get; set; }
         public int CapsimPerCropArea { get; set; }

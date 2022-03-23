@@ -49,6 +49,13 @@ namespace DeltaShell.Sobek.Readers.Readers.SobekRrReaders
                     settings.UnsaturatedZone = unsaturatedZone;
                 }
 
+                if (optionSettings.Contains("GreenhouseYear"))
+                {
+                    var greenhouseYearOption = optionSettings.GetInt("GreenhouseYear");
+                    var settingsGreenhouseYear = Convert.ToInt16(greenhouseYearOption);
+                    settings.GreenhouseYear = settingsGreenhouseYear;
+                }
+
                 if (optionSettings.Contains("InitCapsimOption"))
                 {
                     var initCapsimOption = optionSettings.GetInt("InitCapsimOption");

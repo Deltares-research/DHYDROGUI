@@ -217,6 +217,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
         }
 
         [PropertyOrder(20)]
+        [Category("Greenhouse")]
+        [DisplayName("Greenhouse year")]
+        [Description("Fill in historic year for data KasInit and Kasgebr (1951-1994)")]
+        public short GreenhouseYear
+        {
+            get { return data.GreenhouseYear; }
+            set
+            {
+                if (!value.IsInRange(RainfallRunoffModel.MinGreenhouseYear, RainfallRunoffModel.MaxGreenhouseYear))
+                {
+                    throw new ArgumentOutOfRangeException(nameof(GreenhouseYear), "Greenhouse year must be in the period between 1951 and 1994 (1994 is the default year).");
+                }
+
+                data.GreenhouseYear = value;
+            }
+        }
+
+        [PropertyOrder(21)]
         [Category("Evaporation")]
         [DisplayName("Start active period")]
         public int EvaporationStartActivePeriod
@@ -225,7 +243,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
             set { data.EvaporationStartActivePeriod = value; }
         }
 
-        [PropertyOrder(21)]
+        [PropertyOrder(22)]
         [Category("Evaporation")]
         [DisplayName("End active period")]
         public int EvaporationEndActivePeriod
@@ -234,7 +252,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
             set { data.EvaporationEndActivePeriod = value; }
         }
 
-        [PropertyOrder(22)]
+        [PropertyOrder(23)]
         [Category("CapSim")]
         [DisplayName("CapSim calculation")]
         public bool Capsim
@@ -243,7 +261,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
             set { data.CapSim = value; }
         }
 
-        [PropertyOrder(23)]
+        [PropertyOrder(24)]
         [Category("CapSim")]
         [DisplayName("Initial option")]
         [DynamicReadOnly]
@@ -253,7 +271,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
             set { data.CapSimInitOption = value; }
         }
 
-        [PropertyOrder(24)]
+        [PropertyOrder(25)]
         [Category("CapSim")]
         [DisplayName("Crop area option")]
         [DynamicReadOnly]

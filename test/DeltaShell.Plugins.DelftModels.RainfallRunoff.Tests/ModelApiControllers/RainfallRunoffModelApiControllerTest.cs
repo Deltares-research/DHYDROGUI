@@ -540,6 +540,22 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
         }
 
         [Test]
+        [Category(TestCategory.Slow)]
+        public void ModelWritesGreenhouseYearToFile()
+        {
+            var model = new RainfallRunoffModel();
+
+            string testWorkingDirectory = Path.Combine(TestHelper.GetTestWorkingDirectory(), TestHelper.GetCurrentMethodName());
+            model.ModelController.GetWorkingDirectoryDelegate = () => testWorkingDirectory;
+            model.ModelController.WriteFiles();
+            model.Dispose();
+
+            var contents = File.ReadAllText(Path.Combine(testWorkingDirectory, "DELFT_3B.INI"));
+            
+            Assert.True(contents.Contains("GreenhouseYear=1994"));
+        }
+
+        [Test]
         public void InitializeModelWritesCapsimToIniFile()
         {
             var model = new RainfallRunoffModel();

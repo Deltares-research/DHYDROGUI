@@ -48,6 +48,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
     [Entity(FireOnCollectionChange=false)]
     public partial class RainfallRunoffModel : TimeDependentModelBase, IRainfallRunoffAreaUnitManager, IRainfallRunoffModel, IDisposable
     {
+        public static readonly short MinGreenhouseYear = 1951;
+        public static readonly short MaxGreenhouseYear = 1994;
+
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModel));
         private readonly DimrRunner runner;
 
@@ -473,6 +476,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         /// CapSim for each crop area seperately otherwise CapSim with crop area averaged data once per unpaved area
         /// </summary>
         public RainfallRunoffEnums.CapsimCropAreaOptions CapSimCropAreaOption { get; set; }
+
+        /// <summary>
+        /// Historic year for data KasInit and Kasgebr
+        /// </summary>
+        public short GreenhouseYear { get; set; } = 1994;
 
         protected virtual void BuildInputWaterLevelCoverage()
         {
