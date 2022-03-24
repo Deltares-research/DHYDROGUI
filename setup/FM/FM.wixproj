@@ -6,9 +6,9 @@
     <!-- This version is wix specific -->
     <ProductVersion>3.5</ProductVersion>
     <!-- This is our release version -->
-    <ReleaseVersion>1.1.0</ReleaseVersion>
+    <ReleaseVersion>1.3.0</ReleaseVersion>
     <!-- Distribution Specific settings -->
-    <PublicReleaseVersion>2022.02</PublicReleaseVersion>
+    <PublicReleaseVersion>2022.04</PublicReleaseVersion>
     <DistributionName>1D2D</DistributionName>
     <ApplicationName>Delft3D FM Suite</ApplicationName>
     <ProductName>$(ApplicationName) $(PublicReleaseVersion) $(DistributionName)</ProductName>
@@ -16,7 +16,7 @@
     <RegistrationFeature>Delft3D_FM_1D2D</RegistrationFeature>
     <RegistrationVersion>2022</RegistrationVersion>
     <SplashScreenCompany>Deltares</SplashScreenCompany>
-    <SplashScreenLicense>Valid until 3 nov 2015</SplashScreenLicense>
+    <SplashScreenLicense>Valid until 30 oct 2022</SplashScreenLicense>
     <ProjectGuid>{1dd62dbb-f7d3-40be-8063-b7b80cec8b9f}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
     <!-- $(BUILD_NUMBER) is an TC environment variable: https://www.jetbrains.com/help/teamcity/predefined-build-parameters.html#Server+Build+Properties -->
