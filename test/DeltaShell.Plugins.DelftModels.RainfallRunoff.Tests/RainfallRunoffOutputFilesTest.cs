@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
@@ -113,6 +114,82 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         public void FileNames_AreCorrect(string result, string expResult)
         {
             Assert.That(result, Is.EqualTo(expResult));
+        }
+        
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(@"D:\test|")]
+        public void DeleteOutputFiles_DirectoryPathNullOrEmptyOrInvalid_ThrowsArgumentException(string directoryPath)
+        {
+            // Setup
+            var outputFiles = new RainfallRunoffOutputFiles();
+
+            // Call
+            TestDelegate call = () => outputFiles.DeleteOutputFiles(directoryPath);
+
+            // Assert
+            Assert.That(call, Throws.ArgumentException);
+        }
+
+        [Test]
+        public void DeleteOutputFiles_DeletesOutput()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                AddFilesIncludedByExtension(temp);
+                AddFilesIncludedByName(temp);
+
+                // Precondition
+                var tempDir = new DirectoryInfo(temp.Path);
+                FileInfo[] files = tempDir.GetFiles();
+                Assert.That(files, Is.Not.Empty);
+
+                var outputFiles = new RainfallRunoffOutputFiles();
+                outputFiles.SetDirectory(temp.Path);
+
+                // Call
+                outputFiles.DeleteOutputFiles(temp.Path);
+
+                // Assert
+                files = tempDir.GetFiles();
+                Assert.That(files, Is.Empty);
+            }
+        }
+
+        [Test]
+        public void DeleteOutputFiles_OutputFileIsLocked_AddsErrorToLog()
+        {
+            using (var temp = new TemporaryDirectory())
+            {
+                // Setup
+                AddFilesIncludedByExtension(temp);
+                AddFilesIncludedByName(temp);
+                
+                var outputFiles = new RainfallRunoffOutputFiles();
+                outputFiles.SetDirectory(temp.Path);
+
+                // Precondition
+                var tempDir = new DirectoryInfo(temp.Path);
+                FileInfo[] files = tempDir.GetFiles();
+                Assert.That(files, Is.Not.Empty);
+                
+                FileInfo fileToLock = files[0];
+                using (FileStream lockedFile = File.Open(fileToLock.FullName, FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    // Call
+                    Action action = () => outputFiles.DeleteOutputFiles(temp.Path);
+
+                    // Assert
+                    string expectedMessage = string.Format(Resources.RainfallRunoffOutputFiles_Could_not_delete_file,
+                                                           fileToLock.FullName);
+                    TestHelper.AssertAtLeastOneLogMessagesContains(action, expectedMessage);
+                    
+                    files = tempDir.GetFiles();
+                    Assert.That(files, Has.Length.EqualTo(1));
+                }
+            }
         }
 
         private static void AddRandomExcludedFiles(TemporaryDirectory temp)

@@ -25,8 +25,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             var importer = Sobek2ModelImporters.GetImportersForType(typeof(RainfallRunoffModel)).FirstOrDefault();
             importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
+
             rainfallRunoffModel.RestoreOutputSettings();
-            rainfallRunoffModel.ConnectOutput(Path.GetDirectoryName(rainfallRunoffModel.Path));
+            if (!rainfallRunoffModel.OutputIsEmpty)
+            {
+                rainfallRunoffModel.ConnectOutput(Path.GetDirectoryName(rainfallRunoffModel.Path));
+            }
         }
 
         public override void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)

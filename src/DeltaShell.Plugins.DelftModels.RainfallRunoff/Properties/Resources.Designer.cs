@@ -70,6 +70,15 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unsupported data distribution type for meteo: {0}.
+        /// </summary>
+        public static string Exception_UnsupportedDataDistributionType {
+            get {
+                return ResourceManager.GetString("Exception_UnsupportedDataDistributionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allows to simulate lumped rainfall runoff models, such as Sacramento and HBV..
         /// </summary>
         public static string RainfallRunoffApplicationPlugin_Description {
@@ -79,11 +88,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unsupported data distribution type for meteo: {0}.
+        ///   Looks up a localized string similar to Could not delete &apos;{0}&apos;. The file may be locked by another program..
         /// </summary>
-        public static string Exception_UnsupportedDataDistributionType {
+        public static string RainfallRunoffOutputFiles_Could_not_delete_file {
             get {
-                return ResourceManager.GetString("Exception_UnsupportedDataDistributionType", resourceCulture);
+                return ResourceManager.GetString("RainfallRunoffOutputFiles_Could_not_delete_file", resourceCulture);
             }
         }
     }

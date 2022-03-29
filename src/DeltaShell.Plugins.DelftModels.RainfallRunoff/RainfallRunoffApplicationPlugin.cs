@@ -97,6 +97,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 var savePath = Path.Combine(projectDataFolderDirectory, rainfallRunoffModel.Name);
                 
                 exporter.Export(rainfallRunoffModel, savePath);
+
+                if (rainfallRunoffModel.OutputIsEmpty && Directory.Exists(savePath))
+                {
+                    rainfallRunoffModel.OutputFiles.DeleteOutputFiles(savePath);
+                }
                 MoveOutputFromWorkingDirectory(rainfallRunoffModel, savePath);
             }
         }

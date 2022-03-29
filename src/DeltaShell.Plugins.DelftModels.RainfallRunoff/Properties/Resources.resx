@@ -126,4 +126,7 @@
   <data name="Exception_UnsupportedDataDistributionType" xml:space="preserve">
     <value>Unsupported data distribution type for meteo: {0}</value>
   </data>
+  <data name="RainfallRunoffOutputFiles_Could_not_delete_file" xml:space="preserve">
+    <value>Could not delete '{0}'. The file may be locked by another program.</value>
+  </data>
 </root>
