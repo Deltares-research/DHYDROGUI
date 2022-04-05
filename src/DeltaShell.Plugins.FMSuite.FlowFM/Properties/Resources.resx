@@ -235,8 +235,8 @@
   <data name="WaterFlowFMBoundaryConditionValidator_ValidateBoundaryConditionPointIndex_Time_series_contains_forbidden_negative_values_for__0__at_point__1_" xml:space="preserve">
     <value>Time series contains forbidden negative values for {0} at point {1}</value>
   </data>
-  <data name="WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_" xml:space="preserve">
-    <value>Custom support point name {0} is not yet supported by the dflow-fm kernel, please change it to {1}</value>
+  <data name="WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_names_are_not_supported_by_gui" xml:space="preserve">
+    <value>Support point number {0} has a name of '{1}', but '{2}' was expected. Custom names are not yet supported in the GUI.</value>
   </data>
   <data name="UnstructuredGridCoverageExtensions_ToPointCloud_Converting_time_dependent_spatial_data_to_samples_is_not_supported" xml:space="preserve">
     <value>Converting time dependent spatial data to samples is not supported</value>

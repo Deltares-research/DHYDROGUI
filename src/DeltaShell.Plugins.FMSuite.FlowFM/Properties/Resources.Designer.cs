@@ -401,6 +401,43 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import either cancelled or an error occured when reading the CSV file.
+        /// </summary>
+        public static string LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import {
+            get {
+                return ResourceManager.GetString("LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SeriesCsvFileImporter does not support importer mode SeveralFunctionsBasedOnDiscriminator.
+        /// </summary>
+        public static string LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBasedOnDiscriminator {
+            get {
+                return ResourceManager.GetString("LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBased" +
+                        "OnDiscriminator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find suitable target for: {0}.
+        /// </summary>
+        public static string LateralSourceImporter_Could_Not_Find_Suitable_Target_For__0_ {
+            get {
+                return ResourceManager.GetString("LateralSourceImporter_Could_Not_Find_Suitable_Target_For__0_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred while setting {0} to target {1}.
+        /// </summary>
+        public static string LateralSourceImporter_Error_Occured_While_Setting__0__to_target__1_ {
+            get {
+                return ResourceManager.GetString("LateralSourceImporter_Error_Occured_While_Setting__0__to_target__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap lines {
@@ -919,13 +956,12 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Custom support point name {0} is not yet supported by the dflow-fm kernel, please change it to {1}.
+        ///   Looks up a localized string similar to Support point number {0} has a name of &apos;{1}&apos;, but &apos;{2}&apos; was expected. Custom names are not yet supported in the GUI..
         /// </summary>
-        public static string WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_ {
+        public static string WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_names_are_not_supported_by_gui {
             get {
                 return ResourceManager.GetString("WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_po" +
-                        "int_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1" +
-                        "_", resourceCulture);
+                        "int_names_are_not_supported_by_gui", resourceCulture);
             }
         }
         
@@ -1258,50 +1294,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
             get {
                 object obj = ResourceManager.GetObject("WeirSmall", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-
-        /// <summary>
-        /// Looks up string similar to not supported CsvFileImporterMode SeveralFunctionsBasedOnDiscriminator
-        /// </summary>
-        public static string LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBasedOnDiscriminator
-        {
-            get
-            {
-                return ResourceManager.GetString("LateralSourceFileImporter_Not_Supported_CsvFileImporterMode_SeveralFunctionsBasedOnDiscriminator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Looks up string similar to Import cancelled or error occured on import
-        /// </summary>
-        public static string LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import
-        {
-            get
-            {
-                return ResourceManager.GetString("LateralSourceFileImporter_Import_Cancelled_Or_Error_Occured_On_Import", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// Looks up string similar to error occured while setting {0} to target {1}
-        /// </summary>
-        public static string LateralSourceImporter_Error_Occured_While_Setting__0__to_target__1_
-        {
-            get
-            {
-                return ResourceManager.GetString("LateralSourceImporter_Error_Occured_While_Setting__0__to_target__1_", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        /// looks up string similar to could not find suitable target for {0}
-        /// </summary>
-        public static string LateralSourceImporter_Could_Not_Find_Suitable_Target_For__0_
-        {
-            get
-            {
-                return ResourceManager.GetString("LateralSourceImporter_Could_Not_Find_Suitable_Target_For__0_", resourceCulture);
             }
         }
     }

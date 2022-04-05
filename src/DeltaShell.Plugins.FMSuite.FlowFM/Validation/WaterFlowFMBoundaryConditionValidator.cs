@@ -212,8 +212,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
                         yield return
                             new ValidationIssue(boundaryConditionSet, ValidationSeverity.Error,
                                 string.Format(
-                                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_,
-                                    boundaryConditionSet.SupportPointNames[i], expectedName),
+                                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_names_are_not_supported_by_gui,
+                                    i + 1, boundaryConditionSet.SupportPointNames[i], expectedName),
                                 boundaryConditionSet);
                     }
                 }

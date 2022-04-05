@@ -482,12 +482,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Validation
             timeSeries[model.StartTime] = 0.5;
             timeSeries[model.StopTime] = 0.5;
 
+            const int expectedIndex = 1;
             var report = WaterFlowFMBoundaryConditionValidator.Validate(model);
             Assert.AreEqual(1, report.ErrorCount);
             Assert.That(report.Issues.First(i => i.Severity == ValidationSeverity.Error).Message,
                 Is.EqualTo(String.Format(
-                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_name__0__is_not_yet_supported_by_the_dflow_fm_kernel__please_change_it_to__1_,
-                    model.BoundaryConditionSets[0].SupportPointNames[0], expectedName)));
+                    Resources.WaterFlowFMBoundaryConditionValidator_ValidateSupportPointNames_Custom_support_point_names_are_not_supported_by_gui,
+                    expectedIndex, model.BoundaryConditionSets[0].SupportPointNames[0], expectedName)));
         }
     }
 }
