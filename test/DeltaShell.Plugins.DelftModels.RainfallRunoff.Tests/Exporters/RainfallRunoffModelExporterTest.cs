@@ -20,7 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         [SetUp]
         public void Setup()
         {
-            exporter = new RainfallRunoffModelExporter();
+            exporter = new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer());
             rainfallRunoffModel = new RainfallRunoffModel();
         }
 

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
-using DelftTools.Utils.Editing;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
 {
@@ -39,6 +38,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
         public void Add(T key, double value)
         {
             internalDictionary.Add(key, value);
+            OnSumChanged();
         }
 
         [NoNotifyPropertyChange]
@@ -51,10 +51,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
 
                 if (internalDictionary.TryGetValue(key, out currentValue) && !(Math.Abs(currentValue - value) > 0.00001))
                     return;
-                
-                BeginEdit(new AreaDictionaryModificationEditAction(this));
+
                 internalDictionary[key] = value;
-                EndEdit();
+                OnSumChanged();
             }
         }
         
@@ -71,11 +70,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
         public void Add(KeyValuePair<T, double> item)
         {
             internalDictionary.Add(item);
+            OnSumChanged();
         }
 
         public void Clear()
         {
             internalDictionary.Clear();
+            OnSumChanged();
         }
 
         public bool Contains(KeyValuePair<T, double> item)
@@ -90,7 +91,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
 
         public bool Remove(KeyValuePair<T, double> item)
         {
-            return internalDictionary.Remove(item);
+            bool remove = internalDictionary.Remove(item);
+            OnSumChanged();
+            return remove;
         }
 
         public int Count
@@ -110,7 +113,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
 
         public bool Remove(T key)
         {
-            return internalDictionary.Remove(key);
+            bool remove = internalDictionary.Remove(key);
+            OnSumChanged();
+            return remove;
         }
 
         public bool TryGetValue(T key, out double value)
@@ -126,6 +131,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
         public ICollection<double> Values
         {
             get { return internalDictionary.Values; }
+        }
+
+        public double Sum
+        {
+            get
+            {
+                return Values.Sum();
+            }
         }
 
         #endregion
@@ -147,49 +160,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain
 
         public void Reset(T resetType, double value)
         {
-            BeginEdit(new AreaDictionaryModificationEditAction(this));
-
             foreach (var key in internalDictionary.Keys.ToList())
             {
                 internalDictionary[key] = 0.0;
             }
             internalDictionary[resetType] = value;
-
-            EndEdit();
         }
 
-        #region Undo/redo stuff
+        public event EventHandler<AreaSumChangedEventArgs> SumChanged;
 
-        private class AreaDictionaryModificationEditAction : EditActionBase
+
+        protected virtual void OnSumChanged()
         {
-            private readonly IDictionary<T, double> valuesBefore = new Dictionary<T, double>();
-            private readonly AreaDictionary<T> instance;
-
-            private AreaDictionaryModificationEditAction() : base("Area dictionary modification") { }
-
-            public AreaDictionaryModificationEditAction(AreaDictionary<T> instance) : this()
-            {
-                this.instance = instance;
-
-                //remember state
-                valuesBefore = new Dictionary<T, double>(instance);
-            }
-
-            public override bool HandlesRestore { get { return true; } }
-            
-            public override void Restore()
-            {
-                instance.BeginEdit(new AreaDictionaryModificationEditAction(instance));
-
-                foreach (var key in valuesBefore.Keys)
-                {
-                    instance.internalDictionary[key] = valuesBefore[key];
-                }
-
-                instance.EndEdit();
-            }
+            SumChanged?.Invoke(this, new AreaSumChangedEventArgs(Sum));
         }
-
-        #endregion
     }
 }

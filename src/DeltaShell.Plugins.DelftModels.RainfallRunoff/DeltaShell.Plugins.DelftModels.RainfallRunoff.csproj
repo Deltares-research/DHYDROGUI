@@ -56,6 +56,10 @@
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.NetCDF\DeltaShell.Plugins.NetCDF.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
+		<Reference Include="DeltaShell.Plugins.SharpMapGis">
+			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\plugins\DeltaShell.Plugins.SharpMapGis\DeltaShell.Plugins.SharpMapGis.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
 		<Reference Include="GeoAPI">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\GeoAPI.dll</HintPath>
 			<Private>False</Private>

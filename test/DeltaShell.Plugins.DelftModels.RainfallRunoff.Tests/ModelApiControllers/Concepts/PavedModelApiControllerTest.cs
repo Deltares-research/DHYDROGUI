@@ -40,6 +40,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             mocks.ReplayAll();
 
+            pavedData.Catchment.Geometry = null;
             controller.Writer = writer;
             controller.AddArea(null, pavedData, links, new List<IFeature>());
 
@@ -76,6 +77,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                                                  0.0, "", 0.8, 0d, 0d)).Return(1).Repeat.Once();
             mocks.ReplayAll();
 
+            pavedData.Catchment.Geometry = null;
             controller.Writer = writer;
             controller.AddArea(model, pavedData, links, new List<IFeature>());
 
@@ -109,6 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             mocks.ReplayAll();
 
+            pavedData.Catchment.Geometry = null;
             controller.Writer = writer;
             controller.AddArea(null, pavedData, links, new List<IFeature>());
 
@@ -180,6 +183,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
                
             mocks.ReplayAll();
 
+            pavedData.Catchment.Geometry = null;
             controller.Writer = writer;
             controller.AddArea(null, pavedData, links, new List<IFeature>());
 

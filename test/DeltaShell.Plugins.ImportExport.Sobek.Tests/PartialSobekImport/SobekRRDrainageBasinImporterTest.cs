@@ -89,12 +89,12 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var firstWWTP = basin.WasteWaterTreatmentPlants.First();
 
             //get values
-            var firstCatchmentArea = firstCatchment.AreaSize;
+            var firstCatchmentArea = firstCatchment.GeometryArea;
             var hundredthCatchmentName = hundredthCatchment.Name;
             var firstWWTPLongName = firstWWTP.LongName;
 
             //do mutations
-            firstCatchment.SetAreaSize(firstCatchment.AreaSize + 1111111);
+            firstCatchment.SetAreaSize(firstCatchment.GeometryArea + 1111111);
             basin.Catchments.Remove(hundredthCatchment);
             firstWWTP.LongName = "hahahahihihihohoho";
 
@@ -102,7 +102,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             rrNetworkImporter.TargetObject = basin;
             rrNetworkImporter.Import();
 
-            Assert.AreEqual(firstCatchmentArea,basin.Catchments.First().AreaSize);
+            Assert.AreEqual(firstCatchmentArea,basin.Catchments.First().GeometryArea);
             Assert.IsNotNull(basin.Catchments.FirstOrDefault(c => c.Name == hundredthCatchmentName));
             Assert.AreEqual(firstWWTPLongName, basin.WasteWaterTreatmentPlants.First().LongName);
         }

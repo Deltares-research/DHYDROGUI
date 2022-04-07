@@ -41,6 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
             
             mocks.ReplayAll();
 
+            sacramentoData.Catchment.Geometry = null;
             controller.Writer = writer;
             controller.AddArea(null, sacramentoData, links, new List<IFeature>());
 
@@ -106,6 +107,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             mocks.ReplayAll();
 
+            sacramentoData.Catchment.Geometry = null;
             controller.Writer = writer;
             controller.AddArea(null, sacramentoData, links, new List<IFeature>());
 

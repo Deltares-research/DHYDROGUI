@@ -37,6 +37,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
 
             var c = Catchment.CreateDefault();
             c.CatchmentType = CatchmentType.Unpaved;
+            c.IsGeometryDerivedFromAreaSize = false;
             model.Basin.Catchments.Add(c);
 
             var boundary = new RunoffBoundary();
@@ -46,13 +47,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             var unpavedData = model.GetCatchmentModelData(c);
             
             // larger
-            unpavedData.CalculationArea = c.AreaSize*3.0;
+            unpavedData.CalculationArea = c.GeometryArea*3.0;
             var report = validator.Validate(model, null);
             var issue = report.GetAllIssuesRecursive().First(i => i.Severity == ValidationSeverity.Info);
             Assert.IsTrue(issue.Message.Contains("significantly larger"));
 
             // smaller
-            unpavedData.CalculationArea = c.AreaSize * 0.4;
+            unpavedData.CalculationArea = c.GeometryArea * 0.4;
             report = validator.Validate(model, null);
             issue = report.GetAllIssuesRecursive().First(i => i.Severity == ValidationSeverity.Info);
             Assert.IsTrue(issue.Message.Contains("significantly smaller"));

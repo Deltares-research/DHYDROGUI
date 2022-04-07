@@ -36,10 +36,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.DataRows
             dataRow.PropertyChanged += (s, e) => called++;
 
             unpavedData.CalculationArea = 500;
-            Assert.AreEqual(3, called);
+            Assert.AreEqual(2, called);
 
             unpavedData.AreaPerCrop[UnpavedEnums.CropType.Corn] = 15.0;
-            Assert.AreEqual(5, called);
+            Assert.AreEqual(3, called);
         }
     }
 }

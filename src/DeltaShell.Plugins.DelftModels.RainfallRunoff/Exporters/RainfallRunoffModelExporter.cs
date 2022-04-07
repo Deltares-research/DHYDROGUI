@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.IO;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
@@ -12,6 +14,19 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
 {
     public class RainfallRunoffModelExporter : IFileExporter
     {
+        private readonly IBasinGeometrySerializer serializer;
+
+        public RainfallRunoffModelExporter(): this(new BasinGeometryShapeFileSerializer())
+        {
+            
+        }
+
+        public RainfallRunoffModelExporter(IBasinGeometrySerializer serializer)
+        {
+            Ensure.NotNull(serializer, nameof(serializer));
+            this.serializer = serializer;
+        }
+
         [ExcludeFromCodeCoverage]
         public string Name
         {
@@ -65,23 +80,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters
             nwrwWriter.WriteNwrwFiles(path);
             model.ModelController.GetWorkingDirectoryDelegate = () => Path.GetFullPath(path);
             model.ModelController.WriteFiles();
+
             var meteoWriter = new MeteoDataExporter();
             if (model.Evaporation.DataDistributionType != MeteoDataDistributionType.Global)
             {
-                var evapFile = Path.Combine(Path.GetFullPath(path), "default.evp");
-                FileUtils.DeleteIfExists(evapFile);
-                meteoWriter.Export(model.Evaporation, evapFile);
+                WriteToFile(path, "default.evp", p => meteoWriter.Export(model.Evaporation, p));
             }
-
-            var precipitationFile = Path.Combine(Path.GetFullPath(path), "default.bui");
-            FileUtils.DeleteIfExists(precipitationFile);
-            meteoWriter.Export(model.Precipitation, precipitationFile);
-
-            var temperatureFile = Path.Combine(Path.GetFullPath(path), "default.tmp");
-            FileUtils.DeleteIfExists(temperatureFile);
-            meteoWriter.Export(model.Temperature, temperatureFile);
-
+            
+            WriteToFile(path, "default.bui", p => meteoWriter.Export(model.Precipitation, p));
+            WriteToFile(path, "default.tmp", p => meteoWriter.Export(model.Temperature, p));
+            WriteToFile(path, "basinGeometry.shp", p =>  serializer.WriteCatchmentGeometry(model.Basin, p));
+            
             return true;
+        }
+
+        private static void WriteToFile(string path, string fileName, Action<string> writeAction)
+        {
+            var filePath = Path.Combine(Path.GetFullPath(path), fileName);
+            FileUtils.DeleteIfExists(filePath);
+            writeAction(filePath);
         }
     }
 }

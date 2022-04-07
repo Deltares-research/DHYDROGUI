@@ -19,6 +19,7 @@ namespace DelftTools.Hydro
         private IPoint interiorPointCache;
         private string longName = String.Empty;
         private string description = String.Empty;
+        private bool settingDerivedGeometry;
 
         public Catchment()
         {
@@ -52,7 +53,7 @@ namespace DelftTools.Hydro
             set { description = value; }
         }
 
-        public virtual bool IsGeometryDerivedFromAreaSize { get; set; }
+        public virtual bool IsGeometryDerivedFromAreaSize { get; set; } = true;
 
         public override IGeometry Geometry
         {
@@ -62,17 +63,22 @@ namespace DelftTools.Hydro
             }
             set
             {
-                if (Equals(CatchmentType, CatchmentType.NWRW) && value is IPoint point)
+                if (value is IPoint point)
                 {
-                    UpdateDerivedGeometry(AreaSize, point);
+                    UpdateDerivedGeometry(GeometryArea, point);
+                    return;
                 }
-                else
-                {
-                    base.Geometry = value is ILineString && value.Coordinates.Length >= 3 
-                                        ? new Polygon(new LinearRing(value.Coordinates)) 
-                                        : value;
-                }
+
+                base.Geometry = value is ILineString && value.Coordinates.Length >= 3 
+                                    ? new Polygon(new LinearRing(value.Coordinates)) 
+                                    : value;
+
                 interiorPointCache = null;
+
+                if (!settingDerivedGeometry)
+                {
+                    IsGeometryDerivedFromAreaSize = false;
+                }
             }
         }
 
@@ -93,16 +99,16 @@ namespace DelftTools.Hydro
             }
         }
 
-        public virtual double AreaSize
+        public virtual double GeometryArea
         {
-            get { return Geometry != null ? Geometry.Area : 0.0; }
+            get { return Geometry?.Area ?? 0.0; }
         }
 
         public override object Clone()
         {
             var clone = new Catchment
                 {
-                    Geometry = Geometry != null ? (IGeometry) Geometry.Clone() : null,
+                    Geometry = (IGeometry)Geometry?.Clone(),
                     IsGeometryDerivedFromAreaSize = IsGeometryDerivedFromAreaSize,
                     Name = Name,
                     Attributes = (IFeatureAttributeCollection) Attributes.Clone(),
@@ -203,19 +209,20 @@ namespace DelftTools.Hydro
                               : Geometry.Centroid);
         }
 
-        private void UpdateDerivedGeometry(double newAreaSize)
+        private void UpdateDerivedGeometry(double newAreaSize, IPoint center = null)
         {
-            IPoint center = GetCenter();
-            UpdateDerivedGeometry(newAreaSize, center);
-        }
-        private void UpdateDerivedGeometry(double newAreaSize, IPoint center)
-        {
+            center = center ?? GetCenter();
+
+            settingDerivedGeometry = true;
+
             const double factorToAdjustForCircleApproximation = 1.0006582768034465388390272364538;
             newAreaSize *= factorToAdjustForCircleApproximation;
 
             double diameter = Math.Sqrt(4.0*newAreaSize/Math.PI);
             var factory = new GeometricShapeFactory {Centre = center.Coordinate, Size = diameter};
             Geometry = factory.CreateCircle();
+
+            settingDerivedGeometry = false;
         }
 
         private IPoint GetCenter()

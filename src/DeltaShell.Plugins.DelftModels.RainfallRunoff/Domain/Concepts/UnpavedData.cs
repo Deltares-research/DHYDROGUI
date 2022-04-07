@@ -26,16 +26,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         //nhib
         protected UnpavedData():base(null)
         {
-            InitializeAreaCrops();
-        }
-
-        private void InitializeAreaCrops()
-        {
-            AreaPerCrop = new CropAreaDictionary();
-            foreach (UnpavedEnums.CropType croptype in Enum.GetValues(typeof (UnpavedEnums.CropType)))
-            {
-                AreaPerCrop.Add(croptype, 0.0);
-            }
         }
 
         public RainfallRunoffBoundaryData BoundaryData { get; set; }
@@ -44,11 +34,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         private UnpavedEnums.SeepageSourceType seepageSource;
         private double totalAreaForGroundWaterCalculations;
         private bool useDifferentAreaForGroundWaterCalculations;
+        private CropAreaDictionary areaPerCrop;
 
         public UnpavedData(Catchment catchment) : base(catchment)
         {
-            InitializeAreaCrops();
-            CalculationArea = catchment.AreaSize;
             SurfaceLevel = 1.5;
             SoilType = UnpavedEnums.SoilType.sand_maximum;
             SoilTypeCapsim = UnpavedEnums.SoilTypeCapsim.soiltype_capsim_1;
@@ -64,7 +53,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             };
         }
 
-        public CropAreaDictionary AreaPerCrop { get; private set; } // m2
+        public CropAreaDictionary AreaPerCrop
+        {
+            get
+            {
+                if (areaPerCrop == null)
+                {
+                    areaPerCrop = CreateInitializedAreaCropsDictionary();
+                }
+                return areaPerCrop;
+            }
+        } // m2
 
         [Description("Area for groundwater calculations")]
         public double TotalAreaForGroundWaterCalculations // m2
@@ -82,20 +81,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 
         public override double CalculationArea
         {
-            get { return AreaPerCrop.Values.Sum(); }
+            get { return AreaPerCrop?.Sum ?? 0.0; }
             set
             {
-                if (value == CalculationArea)
+                if (Math.Abs(value - base.CalculationArea) < 1e-10)
                     return;
 
-                AfterCalculationAreaSet(value);
-            }
-        }
+                AreaPerCrop.Reset(UnpavedEnums.CropType.Grass, value);
 
-        [EditAction]
-        private void AfterCalculationAreaSet(double value)
-        {
-            AreaPerCrop.Reset(UnpavedEnums.CropType.Grass, value);
+                base.CalculationArea = value;
+            }
         }
 
         public bool UseDifferentAreaForGroundWaterCalculations
@@ -203,7 +198,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
         public override object Clone()
         {
             var clone = (UnpavedData)base.Clone();
-            clone.AreaPerCrop = (CropAreaDictionary) AreaPerCrop.Clone();
+            clone.areaPerCrop = (CropAreaDictionary) AreaPerCrop.Clone();
             clone.DrainageFormula = (IDrainageFormula) DrainageFormula.Clone();
             clone.SeepageSeries = SeepageSeries != null ? (TimeSeries) SeepageSeries.Clone() : null;
             clone.InitialGroundWaterLevelSeries = InitialGroundWaterLevelSeries != null
@@ -281,5 +276,21 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
             }
         }
 
+        private CropAreaDictionary CreateInitializedAreaCropsDictionary()
+        {
+            var areaPerCropDictionary = new CropAreaDictionary();
+            foreach (UnpavedEnums.CropType cropType in Enum.GetValues(typeof(UnpavedEnums.CropType)))
+            {
+                areaPerCropDictionary.Add(cropType, 0.0);
+            }
+
+            areaPerCropDictionary.SumChanged += (s, e) =>
+            {
+                // Synchronizes the sum of the area's with the calculation area.
+                // This also sets the correct geometry
+                base.CalculationArea = e.Sum;
+            };
+            return areaPerCropDictionary;
+        }
     }
 }

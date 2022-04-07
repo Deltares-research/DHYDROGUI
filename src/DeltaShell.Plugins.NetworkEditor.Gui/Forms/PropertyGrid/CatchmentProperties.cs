@@ -26,14 +26,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.PropertyGrid
             set { data.LongName = value; }
         }
 
-        [Description("Catchment area size.")]
+        [Description("Catchment area based on geometry.")]
         [Category("General")]
-        [DisplayName("AreaSize")]
+        [DisplayName("Geometry area (m²)")]
         [PropertyOrder(2)]
         [DynamicReadOnly]
         public double Area
         {
-            get { return data.AreaSize; }
+            get { return data.GeometryArea; }
             set
             {
                 if (data.IsGeometryDerivedFromAreaSize)

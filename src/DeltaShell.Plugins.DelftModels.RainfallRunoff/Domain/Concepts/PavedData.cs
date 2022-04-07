@@ -30,7 +30,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts
 
         public PavedData(Catchment catchment) : base(catchment)
         {
-            CalculationArea = catchment.AreaSize;
             double defaultPerc = 100.0 / 24.0;
             VariableWaterUseFunction = new Function
             {

@@ -23,7 +23,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Tests.PartialSobekImport
             var basin = (DrainageBasin)rrDrainageBasinImporter.TargetObject;
         
             Assert.AreEqual(8, basin.Catchments.Count(c => Equals(c.CatchmentType, CatchmentType.Sacramento)));
-            Assert.AreEqual(1e+06, basin.Catchments.First(c => c.Name == "2").AreaSize, 0.1);
+            Assert.AreEqual(1e+06, basin.Catchments.First(c => c.Name == "2").GeometryArea, 0.1);
         }
 
         [Test]

@@ -90,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             var projectDataFolderDirectory = Application.ProjectDataDirectory;
             var rrModels = GetModels(project);
-            var exporter = new RainfallRunoffModelExporter();
+            var exporter = new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer());
 
             foreach (var rainfallRunoffModel in rrModels)
             {
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public override IEnumerable<IFileExporter> GetFileExporters()
         {
             yield return new MeteoDataExporter(); 
-            yield return new RainfallRunoffModelExporter(); 
+            yield return new RainfallRunoffModelExporter(new BasinGeometryShapeFileSerializer()); 
         }
 
         public override IEnumerable<Assembly> GetPersistentAssemblies()
@@ -158,7 +158,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public IEnumerable<IDataAccessListener> CreateDataAccessListeners()
         {
-            yield return new RainfallRunoffDataAccessListener();
+            yield return new RainfallRunoffDataAccessListener(new BasinGeometryShapeFileSerializer());
         }
         
         private static IEnumerable<RainfallRunoffModel> GetModels(Project project)

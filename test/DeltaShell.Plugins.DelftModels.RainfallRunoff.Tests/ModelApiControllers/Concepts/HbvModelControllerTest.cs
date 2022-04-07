@@ -46,6 +46,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             mocks.ReplayAll();
 
+            HbvData.Catchment.Geometry = null;
             controller.Writer = writer;
             controller.AddArea(null, HbvData, links, new List<IFeature>());
 
@@ -114,6 +115,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             mocks.ReplayAll();
 
+            HbvData.Catchment.Geometry = null;
             controller.Writer = writer;
             controller.AddArea(null, HbvData, links, new List<IFeature>());
 

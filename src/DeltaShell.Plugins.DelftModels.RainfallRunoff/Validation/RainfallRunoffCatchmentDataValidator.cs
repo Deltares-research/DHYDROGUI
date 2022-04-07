@@ -49,12 +49,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
                     if (catchmentData.Catchment.Geometry is IPoint)
                         continue; // don't check for point catchments
 
-                    if (calculationArea > 2.0*catchmentData.Catchment.AreaSize)
+                    if (calculationArea > 2.0*catchmentData.Catchment.GeometryArea)
                     {
                         issues.Add(new ValidationIssue(catchmentData, ValidationSeverity.Info,
                                                        "Calculation area significantly larger than area of map geometry"));
                     }
-                    else if (calculationArea < 0.5*catchmentData.Catchment.AreaSize)
+                    else if (calculationArea < 0.5*catchmentData.Catchment.GeometryArea)
                     {
                         issues.Add(new ValidationIssue(catchmentData, ValidationSeverity.Info,
                                                        "Calculation area significantly smaller than area of map geometry"));

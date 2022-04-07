@@ -3,16 +3,26 @@ using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Dao;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
     public class RainfallRunoffDataAccessListener : DataAccessListenerBase
     {
+        private readonly IBasinGeometrySerializer serializer;
+
+        public RainfallRunoffDataAccessListener(IBasinGeometrySerializer serializer)
+        {
+            Ensure.NotNull(serializer, nameof(serializer));
+            this.serializer = serializer;
+        }
+
         public override object Clone()
         {
-            return new RainfallRunoffDataAccessListener {ProjectRepository = ProjectRepository};
+            return new RainfallRunoffDataAccessListener(new BasinGeometryShapeFileSerializer()) {ProjectRepository = ProjectRepository};
         }
 
         private bool firstBasin = true;
@@ -27,10 +37,17 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             importer?.ImportItem(rainfallRunoffModel.Path, rainfallRunoffModel);
 
             rainfallRunoffModel.RestoreOutputSettings();
+            
             if (!rainfallRunoffModel.OutputIsEmpty)
             {
                 rainfallRunoffModel.ConnectOutput(Path.GetDirectoryName(rainfallRunoffModel.Path));
             }
+
+            var basinShapeFilePath = Path.Combine(Path.GetDirectoryName(rainfallRunoffModel.Path), "basinGeometry.shp");
+            if (File.Exists(basinShapeFilePath))
+            {
+                serializer.ReadCatchmentGeometry(rainfallRunoffModel.Basin, basinShapeFilePath);
+            }            
         }
 
         public override void OnPreLoad(object entity, object[] loadedState, string[] propertyNames)

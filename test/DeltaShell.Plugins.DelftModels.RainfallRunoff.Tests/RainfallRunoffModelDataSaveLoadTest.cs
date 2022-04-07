@@ -850,7 +850,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
                 Assert.AreEqual(catchment.Geometry.Coordinates[i].Y, retrievedCatchment.Geometry.Coordinates[i].Y, 1 );
             }
             
-            Assert.AreEqual(catchment.AreaSize, retrievedCatchment.AreaSize, 0.001);
+            Assert.AreEqual(catchment.GeometryArea, retrievedCatchment.GeometryArea, 0.001);
             Assert.AreEqual(catchment.CatchmentType, retrievedCatchment.CatchmentType);
         }
 
@@ -876,7 +876,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
 
             var oldArea = retrievedCatchment.Geometry.Area;
 
-            retrievedCatchment.SetAreaSize(retrievedCatchment.AreaSize * 2);
+            retrievedCatchment.SetAreaSize(retrievedCatchment.GeometryArea * 2);
 
             Assert.AreNotEqual(oldArea, retrievedCatchment.Geometry.Area); //check if change in area, changes geometry (when IsGeometryDerivedFromAreaSize)
         }

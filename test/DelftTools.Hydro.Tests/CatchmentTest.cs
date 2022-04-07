@@ -13,6 +13,7 @@ namespace DelftTools.Hydro.Tests
         {
             var catchment = new Catchment();
             Assert.IsNotNull(catchment);
+            Assert.IsTrue(catchment.IsGeometryDerivedFromAreaSize, "Catchment should have IsGeometryDerivedFromAreaSize set to true by default");
         }
 
         [Test]
@@ -32,7 +33,46 @@ namespace DelftTools.Hydro.Tests
             catchment.SetAreaSize(expected);
 
             Assert.AreEqual(expected, catchment.Geometry.Area, 0.01);
-            Assert.AreEqual(expected, catchment.AreaSize, 0.01);
+            Assert.AreEqual(expected, catchment.GeometryArea, 0.01);
+        }
+
+        [Test]
+        public void GivenCatchment_SettingPointGeometry_ShouldResultInDefaultPolygon()
+        {
+            //Arrange
+            var catchment = new Catchment { IsGeometryDerivedFromAreaSize = true };
+            var expected = 500;
+            catchment.SetAreaSize(expected);
+
+            // Act
+            catchment.Geometry = new Point(0, 0);
+
+            // Assert
+            Assert.AreEqual(expected, catchment.GeometryArea, 0.01);
+            Assert.IsInstanceOf<IPolygon>(catchment.Geometry);
+        }
+
+        [Test]
+        public void GivenCatchment_ChangingComputingArea_ShouldNotChangeGeometryIfUserSet()
+        {
+            //Arrange
+            var catchment = new Catchment
+            {
+                Geometry = new Polygon(new LinearRing(new[]
+                {
+                    new Coordinate(0, 0),
+                    new Coordinate(5, 5),
+                    new Coordinate(10, 0),
+                    new Coordinate(0, 0)
+                }))
+            };
+
+            var expected = 500;
+            Assert.IsFalse(catchment.IsGeometryDerivedFromAreaSize, "If user sets geometry it should not be set as derived");
+
+            // Act & Assert
+            Assert.Throws<InvalidOperationException>(() => catchment.SetAreaSize(expected));
+            Assert.AreNotEqual(expected, catchment.GeometryArea);
         }
 
         [Test]
@@ -43,7 +83,7 @@ namespace DelftTools.Hydro.Tests
             catchment.SetAreaSize(expected);
 
             Assert.AreEqual(expected, catchment.Geometry.Area, 0.01);
-            Assert.AreEqual(expected, catchment.AreaSize, 0.01);
+            Assert.AreEqual(expected, catchment.GeometryArea, 0.01);
         }
 
         [Test]
@@ -54,7 +94,7 @@ namespace DelftTools.Hydro.Tests
             catchment.SetAreaSize(expected);
 
             Assert.AreEqual(expected, catchment.Geometry.Area, 1.0);
-            Assert.AreEqual(expected, catchment.AreaSize);
+            Assert.AreEqual(expected, catchment.GeometryArea);
         }
 
         [Test]

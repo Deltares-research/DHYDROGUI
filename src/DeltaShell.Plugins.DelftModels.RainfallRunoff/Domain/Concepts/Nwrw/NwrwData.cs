@@ -53,7 +53,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
                 Catchment.SetAreaSize(100);
             }
 
-            CalculationArea = Catchment.AreaSize;
+            CalculationArea = Catchment.GeometryArea;
         }
 
         public static Dictionary<string, NwrwData> CreateNewNwrwDataAndCatchments(IHydroModel model, string[] names)
