@@ -134,6 +134,15 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provided geometry type &apos;{0}&apos; is not supported..
+        /// </summary>
+        public static string CulvertDefinitionParser_Unsupported_culvert_geometry_type {
+            get {
+                return ResourceManager.GetString("CulvertDefinitionParser_Unsupported_culvert_geometry_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to °C.
         /// </summary>
         public static string degreeCelcius {
@@ -420,6 +429,51 @@ namespace DeltaShell.NGHS.IO.Properties {
             get {
                 return ResourceManager.GetString("SnappedFeatureCollection_GetSnappedFeature_No_snapped_geometry_was_generated_for_" +
                         "type__0__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Couldn&apos;t parse this type &apos;{0}&apos; to an element of the structure type enum..
+        /// </summary>
+        public static string StructureDefinitionParser_Could_not_parse_structure_type {
+            get {
+                return ResourceManager.GetString("StructureDefinitionParser_Could_not_parse_structure_type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not read structure..
+        /// </summary>
+        public static string StructureFileReader_Could_not_read_structure {
+            get {
+                return ResourceManager.GetString("StructureFileReader_Could_not_read_structure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While creating structures the following error(s) occured:{0}{1}.
+        /// </summary>
+        public static string StructureFileReader_Errors_while_creating_structures {
+            get {
+                return ResourceManager.GetString("StructureFileReader_Errors_while_creating_structures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} {1} skipped during import as property &apos;{2}&apos; is not found in the &apos;{3}&apos; file on line {4}..
+        /// </summary>
+        public static string StructureParserBase_Missing_structure_property {
+            get {
+                return ResourceManager.GetString("StructureParserBase_Missing_structure_property", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No definition parser available for this structure definition: {0}.{1} This structure is not yet supported in the kernel..
+        /// </summary>
+        public static string StructureParserProvider_No_parser_available {
+            get {
+                return ResourceManager.GetString("StructureParserProvider_No_parser_available", resourceCulture);
             }
         }
         
@@ -964,6 +1018,24 @@ namespace DeltaShell.NGHS.IO.Properties {
             get {
                 return ResourceManager.GetString("WaterFlowFMModel_UpdateBathymetryCoverage_Unstructured_grid_edge_coverages_are_no" +
                         "t_currently_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not parse horizontal_opening_direction of type &apos;{0}&apos;.
+        /// </summary>
+        public static string WeirFormulaParser_Could_not_parse_horizontal_gate_opening {
+            get {
+                return ResourceManager.GetString("WeirFormulaParser_Could_not_parse_horizontal_gate_opening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided weir formula type &apos;{0}&apos; is unknown..
+        /// </summary>
+        public static string WeirFormulaParser_Unknow_formula_type {
+            get {
+                return ResourceManager.GetString("WeirFormulaParser_Unknow_formula_type", resourceCulture);
             }
         }
     }

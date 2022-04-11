@@ -405,4 +405,28 @@
   <data name="RemoteUGridApi_ProblemWhileReadingConvention" xml:space="preserve">
     <value>While reading Deltares netcdf file version type from file {0} we encounter the following problem: {1}</value>
   </data>
+  <data name="StructureParserBase_Missing_structure_property" xml:space="preserve">
+    <value>{0} {1} skipped during import as property '{2}' is not found in the '{3}' file on line {4}.</value>
+  </data>
+  <data name="StructureFileReader_Errors_while_creating_structures" xml:space="preserve">
+    <value>While creating structures the following error(s) occured:{0}{1}</value>
+  </data>
+  <data name="StructureFileReader_Could_not_read_structure" xml:space="preserve">
+    <value>Could not read structure.</value>
+  </data>
+  <data name="StructureParserProvider_No_parser_available" xml:space="preserve">
+    <value>No definition parser available for this structure definition: {0}.{1} This structure is not yet supported in the kernel.</value>
+  </data>
+  <data name="StructureDefinitionParser_Could_not_parse_structure_type" xml:space="preserve">
+    <value>Couldn't parse this type '{0}' to an element of the structure type enum.</value>
+  </data>
+  <data name="WeirFormulaParser_Unknow_formula_type" xml:space="preserve">
+    <value>The provided weir formula type '{0}' is unknown.</value>
+  </data>
+  <data name="WeirFormulaParser_Could_not_parse_horizontal_gate_opening" xml:space="preserve">
+    <value>Could not parse horizontal_opening_direction of type '{0}'</value>
+  </data>
+  <data name="CulvertDefinitionParser_Unsupported_culvert_geometry_type" xml:space="preserve">
+    <value>The provided geometry type '{0}' is not supported.</value>
+  </data>
 </root>

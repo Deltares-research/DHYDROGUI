@@ -10,6 +10,7 @@ using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.Properties;
 using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders
@@ -25,12 +26,13 @@ namespace DeltaShell.NGHS.IO.FileReaders
             if (structuresCategories.Count == 0)
                 throw new FileReadingException($"Could not read file {structureFilename} properly, it seems empty");
 
-            var structures = GetAllStructuresFromCategories(structuresCategories, crossSectionDefinitions, network, fileReadingExceptions);
+            var structures = GetAllStructuresFromCategories(structuresCategories, crossSectionDefinitions, network, 
+                                                            Path.GetFileName(structureFilename), fileReadingExceptions);
             if (fileReadingExceptions.Count > 0)
             {
                 //Do not throw because we want to add the successful structures to the model
                 var errors = string.Join(Environment.NewLine, fileReadingExceptions.Select(fileReadingException => fileReadingException.InnerException.Message + Environment.NewLine));
-                log.Warn($"While creating structures an error occured :{Environment.NewLine} {errors}");
+                log.Error(string.Format(Resources.StructureFileReader_Errors_while_creating_structures, Environment.NewLine, errors));
                 fileReadingExceptions.Clear();
             }
 
@@ -93,7 +95,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
         }
 
         private static IList<IStructure1D> GetAllStructuresFromCategories(IList<DelftIniCategory> structuresCategories,
-            IList<ICrossSectionDefinition> crossSectionDefinitions, IHydroNetwork network, IList<FileReadingException> fileReadingExceptions)
+            IList<ICrossSectionDefinition> crossSectionDefinitions, IHydroNetwork network, string structuresFilename,
+            IList<FileReadingException> fileReadingExceptions)
         {
             IList<IStructure1D> structure1Ds = new List<IStructure1D>();
             var branchLookup = network.Branches.Where(b => !string.IsNullOrEmpty(b.Name)).ToDictionary(b => b.Name);
@@ -110,7 +113,8 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     }
 
                     var type = structureDefinitionCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
-                    var structure1D = structureDefinitionCategory.ReadStructure(crossSectionDefinitions, branch, type);
+                    var structure1D = structureDefinitionCategory.ReadStructure(crossSectionDefinitions, branch, 
+                                                                                type, structuresFilename);
                     if (structure1D == null)
                     {
                         continue;
@@ -128,7 +132,7 @@ namespace DeltaShell.NGHS.IO.FileReaders
                 }
                 catch (FileReadingException fileReadingException)
                 {
-                    fileReadingExceptions.Add(new FileReadingException("Could not structure.",
+                    fileReadingExceptions.Add(new FileReadingException(Resources.StructureFileReader_Could_not_read_structure,
                         fileReadingException));
                 }
             }
