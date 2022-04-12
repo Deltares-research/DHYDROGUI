@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager {
+        internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeltaShell.Plugins.DelftModels.HydroModel.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture {
+        internal static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -72,7 +72,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         ///      &lt;parallel&gt;
         ///          Within [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string DHydroConfigDescription {
+        internal static string DHydroConfigDescription {
             get {
                 return ResourceManager.GetString("DHydroConfigDescription", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Empty model cannot generate a configuration file..
         /// </summary>
-        public static string DHydroConfigWriter_CreateConfigDocument_Empty_model_cannot_generate_a_configuration_file_ {
+        internal static string DHydroConfigWriter_CreateConfigDocument_Empty_model_cannot_generate_a_configuration_file_ {
             get {
                 return ResourceManager.GetString("DHydroConfigWriter_CreateConfigDocument_Empty_model_cannot_generate_a_configurati" +
                         "on_file_", resourceCulture);
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to An error occurred while trying to import a {0}; .
         /// </summary>
-        public static string DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__ {
+        internal static string DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0__ {
             get {
                 return ResourceManager.GetString("DHydroConfigXmlImporter_ImportItem_An_error_occurred_while_trying_to_import_a__0_" +
                         "_", resourceCulture);
@@ -111,7 +111,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &apos;{0}&apos; is not a valid number of seconds..
         /// </summary>
-        public static string DimrXmlTimeParser_not_a_valid_number_of_seconds {
+        internal static string DimrXmlTimeParser_not_a_valid_number_of_seconds {
             get {
                 return ResourceManager.GetString("DimrXmlTimeParser_not_a_valid_number_of_seconds", resourceCulture);
             }
@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The time element should contain three timers: the start time, the time step, and the stop time..
         /// </summary>
-        public static string DimrXmlTimeParser_The_time_element_should_contain_three_timers {
+        internal static string DimrXmlTimeParser_The_time_element_should_contain_three_timers {
             get {
                 return ResourceManager.GetString("DimrXmlTimeParser_The_time_element_should_contain_three_timers", resourceCulture);
             }
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The time element should not be empty..
         /// </summary>
-        public static string DimrXmlTimeParser_The_time_element_should_not_be_empty {
+        internal static string DimrXmlTimeParser_The_time_element_should_not_be_empty {
             get {
                 return ResourceManager.GetString("DimrXmlTimeParser_The_time_element_should_not_be_empty", resourceCulture);
             }
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The workflow &apos;{0}&apos; is currently not supported in DeltaShell.
         /// </summary>
-        public static string HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell {
+        internal static string HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_supported_in_DeltaShell {
             get {
                 return ResourceManager.GetString("HydroModel_LogErrorsWhenUnsupportedWorkflow_The_workflow___0___is_currently_not_s" +
                         "upported_in_DeltaShell", resourceCulture);
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The integrated model &apos;{0}&apos; could not initialize. Please check the validation report..
         /// </summary>
-        public static string HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__Please_check_the_validation_report_ {
+        internal static string HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__Please_check_the_validation_report_ {
             get {
                 return ResourceManager.GetString("HydroModel_LogInvalidActivities_The_integrated_model___0___could_not_initialize__" +
                         "Please_check_the_validation_report_", resourceCulture);
@@ -165,9 +165,54 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hydro Model Plugin.
+        /// </summary>
+        internal static string HydroModelApplicationPlugin_DisplayName_Hydro_Model_Plugin {
+            get {
+                return ResourceManager.GetString("HydroModelApplicationPlugin_DisplayName_Hydro_Model_Plugin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1D / 2D / 3D Integrated Models.
+        /// </summary>
+        internal static string HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models {
+            get {
+                return ResourceManager.GetString("HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2D-3D Integrated Model.
+        /// </summary>
+        internal static string HydroModelApplicationPlugin_GetModelInfos_2D_3D_Integrated_Model {
+            get {
+                return ResourceManager.GetString("HydroModelApplicationPlugin_GetModelInfos_2D_3D_Integrated_Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty Integrated Model.
+        /// </summary>
+        internal static string HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model {
+            get {
+                return ResourceManager.GetString("HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hydro Model.
+        /// </summary>
+        internal static string HydroModelApplicationPlugin_Name_Hydro_Model {
+            get {
+                return ResourceManager.GetString("HydroModelApplicationPlugin_Name_Hydro_Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not import sub model defined at location {0} to integrated model..
         /// </summary>
-        public static string HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_ {
+        internal static string HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__to_integrated_model_ {
             get {
                 return ResourceManager.GetString("HydroModelConverter_AddModels_Could_not_import_sub_model_defined_at_location__0__" +
                         "to_integrated_model_", resourceCulture);
@@ -177,7 +222,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Renamed model {0} to {1}..
         /// </summary>
-        public static string HydroModelConverter_AddModels_Renamed_model__0__to__1_ {
+        internal static string HydroModelConverter_AddModels_Renamed_model__0__to__1_ {
             get {
                 return ResourceManager.GetString("HydroModelConverter_AddModels_Renamed_model__0__to__1_", resourceCulture);
             }
@@ -186,7 +231,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The input file is missing for component {0} in the dimr xml..
         /// </summary>
-        public static string HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_ {
+        internal static string HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_dimr_xml_ {
             get {
                 return ResourceManager.GetString("HydroModelConverter_AddModels_The_input_file_is_missing_for_component__0__in_the_" +
                         "dimr_xml_", resourceCulture);
@@ -196,17 +241,27 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The working directory is missing for component {0} in the dimr xml..
         /// </summary>
-        public static string HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_ {
+        internal static string HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__in_the_dimr_xml_ {
             get {
                 return ResourceManager.GetString("HydroModelConverter_AddModels_The_working_directory_is_missing_for_component__0__" +
                         "in_the_dimr_xml_", resourceCulture);
             }
         }
-
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not import RTC model, the settings.json file should contain an xml directory..
+        /// </summary>
+        internal static string HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_file_should_contain_an_xml_directory_ {
+            get {
+                return ResourceManager.GetString("HydroModelConverter_ComposeFilePath_Could_not_import_RTC_model_the_settings_json_" +
+                        "file_should_contain_an_xml_directory_", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Cannot convert empty dimr data object..
         /// </summary>
-        public static string HydroModelConverter_Convert_Cannot_convert_empty_dimr_data_object {
+        internal static string HydroModelConverter_Convert_Cannot_convert_empty_dimr_data_object {
             get {
                 return ResourceManager.GetString("HydroModelConverter_Convert_Cannot_convert_empty_dimr_data_object", resourceCulture);
             }
@@ -215,7 +270,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Could not link {0} to {1}.
         /// </summary>
-        public static string HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__ {
+        internal static string HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__ {
             get {
                 return ResourceManager.GetString("HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link__0__to__1__", resourceCulture);
             }
@@ -224,7 +279,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Could not link an item from {0} to {1}.
         /// </summary>
-        public static string HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__to__1__ {
+        internal static string HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__to__1__ {
             get {
                 return ResourceManager.GetString("HydroModelConverter_CoupleModelsByDimrCouplerXml_Could_not_link_an_item_from__0__" +
                         "to__1__", resourceCulture);
@@ -234,7 +289,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Could not couple models: &apos;{0}&apos; to &apos;{1}&apos;..
         /// </summary>
-        public static string HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___ {
+        internal static string HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___ {
             get {
                 return ResourceManager.GetString("HydroModelConverter_CoupleSubModels_Could_not_couple_models____0___to___1___", resourceCulture);
             }
@@ -243,7 +298,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The imported model &apos;{0}&apos; is not a dimr model..
         /// </summary>
-        public static string HydroModelConverter_The_imported_model_is_not_a_dimr_model {
+        internal static string HydroModelConverter_The_imported_model_is_not_a_dimr_model {
             get {
                 return ResourceManager.GetString("HydroModelConverter_The_imported_model_is_not_a_dimr_model", resourceCulture);
             }
@@ -252,7 +307,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The &lt;startGroup&gt; element is missing from the dimr config..
         /// </summary>
-        public static string HydroModelConverter_The_startGroup_element_is_missing {
+        internal static string HydroModelConverter_The_startGroup_element_is_missing {
             get {
                 return ResourceManager.GetString("HydroModelConverter_The_startGroup_element_is_missing", resourceCulture);
             }
@@ -290,7 +345,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Workflow.
         /// </summary>
-        public static string HydroModelValidator_ConstructCurrentWorkflowReport_Workflow {
+        internal static string HydroModelValidator_ConstructCurrentWorkflowReport_Workflow {
             get {
                 return ResourceManager.GetString("HydroModelValidator_ConstructCurrentWorkflowReport_Workflow", resourceCulture);
             }
@@ -299,7 +354,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Grid Coordinate System type.
         /// </summary>
-        public static string HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type {
+        internal static string HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type {
             get {
                 return ResourceManager.GetString("HydroModelValidator_ConstructModelGridReport_Grid_Coordinate_System_type", resourceCulture);
             }
@@ -308,7 +363,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Wave model and FlowFM model, have grids with a different coordinate system . These coordinate systems have to be of the same type (Cartesian or spherical) to run the integrated model.
         /// </summary>
-        public static string HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__ {
+        internal static string HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_be_of_the_same_type__either_Spherical_or_Cartesian__ {
             get {
                 return ResourceManager.GetString("HydroModelValidator_ConstructModelGridReport_Wave_and_WaterFlowFM_Grids_need_to_b" +
                         "e_of_the_same_type__either_Spherical_or_Cartesian__", resourceCulture);
@@ -318,7 +373,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Model structure.
         /// </summary>
-        public static string HydroModelValidator_ConstructModelStructureReport_Model_structure {
+        internal static string HydroModelValidator_ConstructModelStructureReport_Model_structure {
             get {
                 return ResourceManager.GetString("HydroModelValidator_ConstructModelStructureReport_Model_structure", resourceCulture);
             }
@@ -327,7 +382,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Current Workflow cannot be empty.
         /// </summary>
-        public static string HydroModelValidator_Validate_Current_Workflow_cannot_be_empty {
+        internal static string HydroModelValidator_Validate_Current_Workflow_cannot_be_empty {
             get {
                 return ResourceManager.GetString("HydroModelValidator_Validate_Current_Workflow_cannot_be_empty", resourceCulture);
             }
@@ -336,7 +391,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to HydroModel Specific.
         /// </summary>
-        public static string HydroModelValidator_Validate_HydroModel_Specific {
+        internal static string HydroModelValidator_Validate_HydroModel_Specific {
             get {
                 return ResourceManager.GetString("HydroModelValidator_Validate_HydroModel_Specific", resourceCulture);
             }
@@ -345,7 +400,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Two or more activities in the current workflow have the same name &apos;{0}&apos;, possibly only differing by uppercase letters. Please make sure that these activity names are uniquely named..
         /// </summary>
-        public static string HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____possibly_only_differing_by_uppercase_letters__Please_make_sure_that_these_activity_names_are_uniquely_named_ {
+        internal static string HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_current_workflow_have_the_same_name___0____possibly_only_differing_by_uppercase_letters__Please_make_sure_that_these_activity_names_are_uniquely_named_ {
             get {
                 return ResourceManager.GetString("HydroModelValidator_ValidateIfModelNamesAreUnique_Two_or_more_activities_in_the_c" +
                         "urrent_workflow_have_the_same_name___0____possibly_only_differing_by_uppercase_l" +

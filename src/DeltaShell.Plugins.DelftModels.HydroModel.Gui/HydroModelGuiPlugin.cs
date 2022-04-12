@@ -20,7 +20,6 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.ProjectExplorer;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using Mono.Addins;
-using HydroModelGuiProperties = DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties;
 using MessageBox = DelftTools.Controls.Swf.MessageBox;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
@@ -37,46 +36,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             InitializeComponent();
         }
 
-        public override string Name
-        {
-            get
-            {
-                return "Hydro Model (UI)";
-            }
-        }
+        public override string Name => Properties.Resources.HydroModelGuiPlugin_Name_Hydro_Model_UI_;
 
-        public override string DisplayName
-        {
-            get
-            {
-                return "Hydro Model Plugin (UI)";
-            }
-        }
+        public override string DisplayName => Properties.Resources.HydroModelGuiPlugin_DisplayName_Hydro_Model_Plugin__UI_;
 
-        public override string Description
-        {
-            get
-            {
-                return DelftModels.HydroModel.Properties.Resources.HydroModelApplicationPlugin_Description;
-            }
-        }
+        public override string Description => Properties.Resources.HydroModelGuiPlugin_Description_Provides_functionality_to_create_and_run_integrated_models_;
 
-        public override string Version
-        {
-            get
-            {
-                return AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
-            }
-        }
+        public override string Version => AssemblyUtils.GetAssemblyInfo(GetType().Assembly).Version;
 
         public override string FileFormatVersion => "1.1.0.0";
 
         public override IGui Gui
         {
-            get
-            {
-                return base.Gui;
-            }
+            get => base.Gui;
             set
             {
                 if (base.Gui != null)
@@ -95,13 +67,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             }
         }
 
-        public override IMapLayerProvider MapLayerProvider
-        {
-            get
-            {
-                return hydroModelMapLayerProvider;
-            }
-        }
+        public override IMapLayerProvider MapLayerProvider => hydroModelMapLayerProvider;
 
         public override IEnumerable<PropertyInfo> GetPropertyInfos()
         {
@@ -194,7 +160,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 
                     List<ClonableToolStripMenuItem> contextMenuItems =
                         projectExplorerContextMenuStrip.Items.OfType<ClonableToolStripMenuItem>()
-                                                       .Where(i => i.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___)
+                                                       .Where(i => i.Text == Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___)
                                                        .ToList();
 
                     foreach (ClonableToolStripMenuItem menuItem in contextMenuItems)
@@ -238,15 +204,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
         private void AddValidateMenuItems(object data, IMenuItem projectExplorerContextMenu, HydroModel model)
         {
             bool missesValidateMenuItems = projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>()
-                                                                     .All(mi => mi.Text != HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___);
+                                                                     .All(mi => mi.Text != Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___);
             if (missesValidateMenuItems)
             {
                 var subMenu = new ContextMenuStrip();
                 var validateItem = new ClonableToolStripMenuItem
                 {
-                    Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___,
+                    Text = Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___,
                     Tag = model,
-                    Image = HydroModelGuiProperties.Resources.validation
+                    Image = Properties.Resources.validation
                 };
                 validateItem.Click += OnValidateClicked;
                 subMenu.Items.Add(validateItem);
@@ -257,7 +223,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 // Data item is persistent, but the Tag is lost. Resetting validation tag item again.
                 IEnumerable<ClonableToolStripMenuItem> validateItems =
                     projectExplorerContextMenu.OfType<ClonableToolStripMenuItem>()
-                                              .Where(mi => mi.Text == HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ &&
+                                              .Where(mi => mi.Text == Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Validate___ &&
                                                            mi.Tag != data);
 
                 validateItems.ForEach(menuItem => menuItem.Tag = model);
@@ -266,9 +232,9 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
 
         private static MenuItemContextMenuStripAdapter CreateTurnIntoOrMoveToIntegratedModelMenuItem(IHydroModel hydroModel, Folder folder, HydroModel[] allCompositeHydroModels)
         {
-            var topItem = new ClonableToolStripMenuItem { Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model };
+            var topItem = new ClonableToolStripMenuItem { Text = Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_or_Move_to_Integrated_Model };
 
-            var upgradeItem = new ClonableToolStripMenuItem { Text = HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model };
+            var upgradeItem = new ClonableToolStripMenuItem { Text = Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Turn_into_Integrated_Model };
             upgradeItem.Click += (s, e) => hydroModel.UpgradeModelIntoIntegratedModel(folder);
             topItem.DropDownItems.Add(upgradeItem);
 
@@ -282,15 +248,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
                 var moveItem = new ClonableToolStripMenuItem
                 {
                     Text =
-                        HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Move_into_ +
+                        Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Move_into_ +
                         compositeHydroModel.Name
                 };
                 moveItem.Click += (s, e) =>
                 {
                     if (
                         compositeHydroModel.Activities.Any(a => a.GetType().Implements(hydroModel.GetType())) &&
-                        MessageBox.Show(HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_This_will_overwrite_the_existing_model__Are_you_sure_,
-                                        HydroModelGuiProperties.Resources.HydroModelGuiPlugin_GetContextMenu_Overwrite_existing_model_,
+                        MessageBox.Show(Properties.Resources.HydroModelGuiPlugin_GetContextMenu_This_will_overwrite_the_existing_model__Are_you_sure_,
+                                        Properties.Resources.HydroModelGuiPlugin_GetContextMenu_Overwrite_existing_model_,
                                         MessageBoxButtons.YesNo) != DialogResult.Yes)
                     {
                         return;

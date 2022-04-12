@@ -233,4 +233,19 @@
   <data name="DimrXmlTimeParser_not_a_valid_number_of_seconds" xml:space="preserve">
     <value>'{0}' is not a valid number of seconds.</value>
   </data>
+  <data name="HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models" xml:space="preserve">
+    <value>1D / 2D / 3D Integrated Models</value>
+  </data>
+  <data name="HydroModelApplicationPlugin_GetModelInfos_2D_3D_Integrated_Model" xml:space="preserve">
+    <value>2D-3D Integrated Model</value>
+  </data>
+  <data name="HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model" xml:space="preserve">
+    <value>Empty Integrated Model</value>
+  </data>
+  <data name="HydroModelApplicationPlugin_DisplayName_Hydro_Model_Plugin" xml:space="preserve">
+    <value>Hydro Model Plugin</value>
+  </data>
+  <data name="HydroModelApplicationPlugin_Name_Hydro_Model" xml:space="preserve">
+    <value>Hydro Model</value>
+  </data>
 </root>

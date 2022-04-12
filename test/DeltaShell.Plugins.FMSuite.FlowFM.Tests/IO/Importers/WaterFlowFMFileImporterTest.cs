@@ -1,8 +1,6 @@
-﻿using System;
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro.Properties;
 using DelftTools.TestUtils;
 using DeltaShell.Dimr;
 using DelftTools.Hydro;

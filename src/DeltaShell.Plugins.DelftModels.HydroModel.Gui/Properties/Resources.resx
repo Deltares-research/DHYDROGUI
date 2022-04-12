@@ -175,4 +175,13 @@
   <data name="MergeModelValidationView_Merge_successful" xml:space="preserve">
     <value>Merge successful</value>
   </data>
+  <data name="HydroModelGuiPlugin_Description_Provides_functionality_to_create_and_run_integrated_models_" xml:space="preserve">
+    <value>Provides functionality to create and run integrated models.</value>
+  </data>
+  <data name="HydroModelGuiPlugin_DisplayName_Hydro_Model_Plugin__UI_" xml:space="preserve">
+    <value>Hydro Model Plugin (UI)</value>
+  </data>
+  <data name="HydroModelGuiPlugin_Name_Hydro_Model_UI_" xml:space="preserve">
+    <value>Hydro Model (UI)</value>
+  </data>
 </root>

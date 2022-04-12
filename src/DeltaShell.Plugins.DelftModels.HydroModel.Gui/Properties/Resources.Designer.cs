@@ -128,6 +128,25 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Provides functionality to create and run integrated models..
+        /// </summary>
+        internal static string HydroModelGuiPlugin_Description_Provides_functionality_to_create_and_run_integrated_models_ {
+            get {
+                return ResourceManager.GetString("HydroModelGuiPlugin_Description_Provides_functionality_to_create_and_run_integrat" +
+                        "ed_models_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hydro Model Plugin (UI).
+        /// </summary>
+        internal static string HydroModelGuiPlugin_DisplayName_Hydro_Model_Plugin__UI_ {
+            get {
+                return ResourceManager.GetString("HydroModelGuiPlugin_DisplayName_Hydro_Model_Plugin__UI_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move into .
         /// </summary>
         internal static string HydroModelGuiPlugin_GetContextMenu_Move_into_ {
@@ -179,6 +198,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties {
         internal static string HydroModelGuiPlugin_GetContextMenu_Validate___ {
             get {
                 return ResourceManager.GetString("HydroModelGuiPlugin_GetContextMenu_Validate___", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hydro Model (UI).
+        /// </summary>
+        internal static string HydroModelGuiPlugin_Name_Hydro_Model_UI_ {
+            get {
+                return ResourceManager.GetString("HydroModelGuiPlugin_Name_Hydro_Model_UI_", resourceCulture);
             }
         }
         
