@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using System.Windows.Media;
+using DelftTools.Hydro.Properties;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
@@ -28,7 +29,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
         {
             if (item is ModelInfo modelInfo)
             {
-                return modelInfo.Name == DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_2D_Integrated_Model + " (RHU)";
+                return modelInfo.Name == Resources.HydroModelGuiGraphicsProvider_CanProvideDrawingGroupFor_1D_2D_Integrated_Model_RHU;
             }
 
             if (item is ProjectTemplate projectTemplate)
@@ -47,7 +48,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders
 
         public DrawingGroup CreateDrawingGroupFor(object item)
         {
-            if (item is ModelInfo modelInfo && modelInfo.Name == DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_2D_Integrated_Model + " (RHU)")
+            if (item is ModelInfo modelInfo && modelInfo.Name == Resources.HydroModelGuiGraphicsProvider_CanProvideDrawingGroupFor_1D_2D_Integrated_Model_RHU)
             {
                 return (DrawingGroup) resources["HydroModelDrawingGroup"];
             }

@@ -22,7 +22,7 @@ namespace DelftTools.Hydro.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace DelftTools.Hydro.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DelftTools.Hydro.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace DelftTools.Hydro.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Could not add CrossSectionSection with duplicate name &apos;{0}&apos;.
         /// </summary>
-        internal static string CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_duplicate_name___0__ {
+        public static string CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_duplicate_name___0__ {
             get {
                 return ResourceManager.GetString("CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectio" +
                         "nSection_with_duplicate_name___0__", resourceCulture);
@@ -73,7 +73,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Could not add CrossSectionSection with negative length {0} to cross section definition &apos;{1}&apos; .
         /// </summary>
-        internal static string CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_negative_length__0__to_cross_section_definition___1___ {
+        public static string CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectionSection_with_negative_length__0__to_cross_section_definition___1___ {
             get {
                 return ResourceManager.GetString("CrossSectionDefinitionExtensions_AddCrossSectionSection_Could_not_add_CrossSectio" +
                         "nSection_with_negative_length__0__to_cross_section_definition___1___", resourceCulture);
@@ -83,7 +83,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The {0} section width of cross section {1} has been changed from {2}m to {3}m.
         /// </summary>
-        internal static string CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cross_section__1__has_been_changed_from__2_m_to__3_m {
+        public static string CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cross_section__1__has_been_changed_from__2_m_to__3_m {
             get {
                 return ResourceManager.GetString("CrossSectionDefinitionExtensions_AdjustSectionWidths_The__0__section_width_of_cro" +
                         "ss_section__1__has_been_changed_from__2_m_to__3_m", resourceCulture);
@@ -93,7 +93,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The Main section width of cross section {0} has been changed from {1} m to {2} m..
         /// </summary>
-        internal static string CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_section__0__has_been_changed_from__1__m_to__2__m_ {
+        public static string CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_section__0__has_been_changed_from__1__m_to__2__m_ {
             get {
                 return ResourceManager.GetString("CrossSectionDefinitionZW_RefreshSectionsWidths_The_Main_section_width_of_cross_se" +
                         "ction__0__has_been_changed_from__1__m_to__2__m_", resourceCulture);
@@ -103,7 +103,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap greenhouse {
+        public static System.Drawing.Bitmap greenhouse {
             get {
                 object obj = ResourceManager.GetObject("greenhouse", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -113,7 +113,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap hbv {
+        public static System.Drawing.Bitmap hbv {
             get {
                 object obj = ResourceManager.GetObject("hbv", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -121,9 +121,37 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1D / 2D / 3D Integrated Models.
+        /// </summary>
+        public static string HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models {
+            get {
+                return ResourceManager.GetString("HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Empty Integrated Model.
+        /// </summary>
+        public static string HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model {
+            get {
+                return ResourceManager.GetString("HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1D-2D Integrated Model (RHU).
+        /// </summary>
+        public static string HydroModelGuiGraphicsProvider_CanProvideDrawingGroupFor_1D_2D_Integrated_Model_RHU {
+            get {
+                return ResourceManager.GetString("HydroModelGuiGraphicsProvider_CanProvideDrawingGroupFor_1D_2D_Integrated_Model_RH" +
+                        "U", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Branch feature names must be unique, the following Branch features have been renamed:.
         /// </summary>
-        internal static string HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_ {
+        public static string HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_following_Branch_features_have_been_renamed_ {
             get {
                 return ResourceManager.GetString("HydroNetworkExtensions_MakeNamesUnique_Branch_feature_names_must_be_unique__the_f" +
                         "ollowing_Branch_features_have_been_renamed_", resourceCulture);
@@ -133,7 +161,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Remove group.
         /// </summary>
-        internal static string NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Remove_group {
+        public static string NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Remove_group {
             get {
                 return ResourceManager.GetString("NetworkEditorGuiPlugin_GetViewInfoForHydroAreaFeatureCollection_Remove_group", resourceCulture);
             }
@@ -142,7 +170,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap nwrw {
+        public static System.Drawing.Bitmap nwrw {
             get {
                 object obj = ResourceManager.GetObject("nwrw", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -152,7 +180,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap openwater {
+        public static System.Drawing.Bitmap openwater {
             get {
                 object obj = ResourceManager.GetObject("openwater", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -162,7 +190,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap paved {
+        public static System.Drawing.Bitmap paved {
             get {
                 object obj = ResourceManager.GetObject("paved", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -172,7 +200,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Pipe {0} does not allow any branch feature on it..
         /// </summary>
-        internal static string Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_ {
+        public static string Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_feature_on_it_ {
             get {
                 return ResourceManager.GetString("Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_featur" +
                         "e_on_it_", resourceCulture);
@@ -182,7 +210,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap sacramento {
+        public static System.Drawing.Bitmap sacramento {
             get {
                 object obj = ResourceManager.GetObject("sacramento", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -192,7 +220,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Sewer connection {0} does not accept more than one branch feature..
         /// </summary>
-        internal static string SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_ {
+        public static string SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one_branch_feature_ {
             get {
                 return ResourceManager.GetString("SewerConnection_BranchFeatures_Sewer_connection__0__does_not_accept_more_than_one" +
                         "_branch_feature_", resourceCulture);
@@ -202,7 +230,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to We cannot add compartment {0} as source of sewer connection {1}, because it has no parent manhole..
         /// </summary>
-        internal static string SewerConnection_TargetCompartment_We_cannot_add_compartment_as_source {
+        public static string SewerConnection_TargetCompartment_We_cannot_add_compartment_as_source {
             get {
                 return ResourceManager.GetString("SewerConnection_TargetCompartment_We_cannot_add_compartment_as_source", resourceCulture);
             }
@@ -211,7 +239,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized string similar to We cannot add compartment {0} as target of sewer connection {1}, because it has no parent manhole..
         /// </summary>
-        internal static string SewerConnection_TargetCompartment_We_cannot_add_compartment_as_target {
+        public static string SewerConnection_TargetCompartment_We_cannot_add_compartment_as_target {
             get {
                 return ResourceManager.GetString("SewerConnection_TargetCompartment_We_cannot_add_compartment_as_target", resourceCulture);
             }
@@ -220,7 +248,7 @@ namespace DelftTools.Hydro.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap unpaved {
+        public static System.Drawing.Bitmap unpaved {
             get {
                 object obj = ResourceManager.GetObject("unpaved", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));

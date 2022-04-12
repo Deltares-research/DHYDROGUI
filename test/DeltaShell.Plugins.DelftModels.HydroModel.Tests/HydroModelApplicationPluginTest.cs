@@ -1,9 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
@@ -104,5 +108,40 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
                 Assert.AreEqual(modelInfos.AdditionalOwnerCheck(new SequentialActivity()), true);
             }
         }
+
+        [Test]
+        public void Constructor_DefaultsCorrectlyInitialized()
+        {
+            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
+            
+            StringAssert.AreEqualIgnoringCase("Hydro Model",hydroModelApplicationPlugin.Name);
+            StringAssert.AreEqualIgnoringCase("Hydro Model Plugin",hydroModelApplicationPlugin.DisplayName);
+            StringAssert.AreEqualIgnoringCase(hydroModelApplicationPlugin.Description,"Provides functionality to create and run integrated models.");
+            StringAssert.AreEqualIgnoringCase(hydroModelApplicationPlugin.FileFormatVersion, "1.1.1.0");
+
+            List<ModelInfo> modelInfos = hydroModelApplicationPlugin.GetModelInfos().ToList();
+            Assert.AreEqual(2, modelInfos.Count);
+
+            ModelInfo first = modelInfos[0];
+            StringAssert.AreEqualIgnoringCase(first.Name, "Empty Integrated Model");
+
+            ModelInfo second = modelInfos[1];
+            StringAssert.AreEqualIgnoringCase(second.Name, "1D-2D Integrated Model (RHU)");
+
+            List<ProjectTemplate> projectTemplates = hydroModelApplicationPlugin.ProjectTemplates().ToList();
+            Assert.AreEqual(2,projectTemplates.Count);
+
+            ProjectTemplate firstProjectTemplate = projectTemplates[0];
+            StringAssert.AreEqualIgnoringCase("Integrated model", firstProjectTemplate.Name);
+            
+            ProjectTemplate secondProjectTemplate = projectTemplates[1];
+            StringAssert.AreEqualIgnoringCase("Dimr import", secondProjectTemplate.Name);
+            
+            Assert.AreEqual(1, hydroModelApplicationPlugin.GetFileExporters().ToList().Count);
+            Assert.AreEqual(1, hydroModelApplicationPlugin.GetFileImporters().ToList().Count);
+            Assert.IsInstanceOf<DHydroConfigXmlExporter>(hydroModelApplicationPlugin.GetFileExporters().First());
+            Assert.IsInstanceOf<DHydroConfigXmlImporter>(hydroModelApplicationPlugin.GetFileImporters().First());
+        }
+        
     }
 }

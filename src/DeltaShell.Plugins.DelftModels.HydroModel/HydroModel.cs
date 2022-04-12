@@ -1146,11 +1146,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             builder.RefreshDefaultModelWorkflows(this);
         }
 
-        public virtual void SetDefaultActivityName(IActivity activity)
-        {
-            builder.SetDefaultActivityName(activity);
-        }
-
         public virtual void AutoAddRequiredLinks(IActivity activity, bool relinking = false)
         {
             builder.AutoAddRequiredLinks(this, activity, relinking);
@@ -1308,16 +1303,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         #endregion
 
         #region Other
-
-        public static IEnumerable<IDataItem> GetDataItemsUsedForCouplingModel(IModel model, DataItemRole role)
-        {
-            if (model is ICoupledModel coupledModel)
-            {
-                return coupledModel.GetDataItemsUsedForCouplingModel(role);
-            }
-
-            return Enumerable.Empty<IDataItem>();
-        }
 
         protected override void OnClearOutput()
         {

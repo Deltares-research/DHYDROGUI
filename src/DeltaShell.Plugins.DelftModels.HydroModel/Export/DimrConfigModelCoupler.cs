@@ -4,6 +4,7 @@ using System.Linq;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DeltaShell.Dimr;
+using DeltaShell.NGHS.Common;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
 {
@@ -76,11 +77,21 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Export
         {
             return coupler != null ? coupler.ShortName : model != null ? model.ShortName : string.Empty;
         }
+        
+        private static IEnumerable<IDataItem> GetDataItemsUsedForCouplingModel(IModel model, DataItemRole role)
+        {
+            if (model is ICoupledModel coupledModel)
+            {
+                return coupledModel.GetDataItemsUsedForCouplingModel(role);
+            }
+        
+            return Enumerable.Empty<IDataItem>();
+        }
 
         private IEnumerable<DimrCoupleInfo> GetCoupleInfos(IModel sourceModel, IModel targetModel)
         {
-            List<IDataItem> outputItems = HydroModel.GetDataItemsUsedForCouplingModel(sourceModel, DataItemRole.Output).ToList();
-            List<IDataItem> inputItems = HydroModel.GetDataItemsUsedForCouplingModel(targetModel, DataItemRole.Input).ToList();
+            List<IDataItem> outputItems = GetDataItemsUsedForCouplingModel(sourceModel, DataItemRole.Output).ToList();
+            List<IDataItem> inputItems = GetDataItemsUsedForCouplingModel(targetModel, DataItemRole.Input).ToList();
 
             var coupledDataItems = new List<DimrCoupleInfo>();
 

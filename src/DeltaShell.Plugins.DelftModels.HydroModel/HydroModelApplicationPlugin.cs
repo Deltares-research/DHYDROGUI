@@ -29,25 +29,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModelApplicationPlugin));
 
-        public override string Name
-        {
-            get { return DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_Name_Hydro_Model; }
-        }
+        public override string Name => "Hydro Model";
 
-        public override string DisplayName
-        {
-            get { return DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_DisplayName_Hydro_Model_Plugin; }
-        }
+        public override string DisplayName => "Hydro Model Plugin";
 
-        public override string Description
-        {
-            get { return Properties.Resources.HydroModelApplicationPlugin_Description; }
-        }
+        public override string Description => Properties.Resources.HydroModelApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
-        }
+        public override string Version => GetType().Assembly.GetName().Version.ToString();
 
         public override string FileFormatVersion => "1.1.1.0";
 
@@ -90,8 +78,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         {
             var modelGroupNameLookUp = new Dictionary<ModelGroup, string>
                 {
-                    {ModelGroup.Empty, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model},
-                    {ModelGroup.RHUModels, DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D_2D_Integrated_Model + " (RHU)"},
+                    {ModelGroup.Empty, DelftTools.Hydro.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model},
+                    {ModelGroup.RHUModels, DelftTools.Hydro.Properties.Resources.HydroModelGuiGraphicsProvider_CanProvideDrawingGroupFor_1D_2D_Integrated_Model_RHU},
                 };
 
             foreach (ModelGroup modelGroup in modelGroupNameLookUp.Keys)
@@ -101,7 +89,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 yield return new ModelInfo
                 {
                     Name = modelGroupNameLookUp[modelGroup],
-                    Category = DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos__1D___2D___3D_Integrated_Models,
+                    Category = DelftTools.Hydro.Properties.Resources.HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models,
                     AdditionalOwnerCheck = owner => (Application.Project != null && !Application.GetAllModelsInProject().Any()) &&
                         !(owner is ICompositeActivity), // Don't allow creation of sub-hydro models
                     CreateModel = owner =>
@@ -245,7 +233,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             var hydroModel = sender as HydroModel;
             if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing && hydroModel != null)
             {
-                Log.Info(string.Format(DelftTools.Shell.Core.Properties.Resources.HydroModelApplicationPlugin_ActivityRunnerOnActivityStatusChanged_DeltaShell_version___0_, Application.Version));
+                Log.Info($"DeltaShell version: {Application.Version}");
                 Log.Info(Application.PluginVersions);
             }
         }

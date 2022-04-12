@@ -65,33 +65,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             modelMergeMenu.Items.AddRange(new ToolStripItem[] { modelMergeMenuItem });
         }
 
-        public override string Name
-        {
-            get { return "Hydro Model (UI)"; }
-        }
+        public override string Name => "Hydro Model (UI)";
 
-        public override string DisplayName
-        {
-            get { return "Hydro Model Plugin (UI)"; }
-        }
+        public override string DisplayName => "Hydro Model Plugin (UI)";
 
-        public override string Description
-        {
-            get { return DelftModels.HydroModel.Properties.Resources.HydroModelApplicationPlugin_Description; }
-        }
+        public override string Description => DelftModels.HydroModel.Properties.Resources.HydroModelApplicationPlugin_Description;
 
-        public override string Version
-        {
-            get { return GetType().Assembly.GetName().Version.ToString(); }
-        }
+        public override string Version => GetType().Assembly.GetName().Version.ToString();
 
         public override string FileFormatVersion => "1.1.0.0";
 
-        public override IGraphicsProvider GraphicsProvider
-        {
-            get { return graphicsProvider; }
-        }
-        
+        public override IGraphicsProvider GraphicsProvider => graphicsProvider;
+
         public override IGui Gui 
         { 
             get { return base.Gui; }

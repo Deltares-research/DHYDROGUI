@@ -169,4 +169,13 @@
   <data name="nwrw" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\nwrw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="HydroModelGuiGraphicsProvider_CanProvideDrawingGroupFor_1D_2D_Integrated_Model_RHU" xml:space="preserve">
+    <value>1D-2D Integrated Model (RHU)</value>
+  </data>
+  <data name="HydroModelApplicationPlugin_GetModelInfos_Empty_Integrated_Model" xml:space="preserve">
+    <value>Empty Integrated Model</value>
+  </data>
+  <data name="HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models" xml:space="preserve">
+    <value>1D / 2D / 3D Integrated Models</value>
+  </data>
 </root>
