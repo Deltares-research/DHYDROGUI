@@ -49,6 +49,12 @@
     <Content Include="..\Dimr\DimrDefines.wxi">
       <Link>DimrDefines.wxi</Link>
     </Content>
+    <Content Include="..\Dimr\Manuals\DIMRManuals.wxi">
+      <Link>Manuals\DIMRManuals.wxi</Link>
+    </Content>
+    <Content Include="..\Dimr\Manuals\DIMRManualShortcuts.wxi">
+      <Link>Manuals\DIMRManualShortcuts.wxi</Link>
+    </Content>
     <Content Include="..\HydroModel\HydroModelPlugin.wxi">
       <Link>HydroModelPlugin.wxi</Link>
     </Content>
