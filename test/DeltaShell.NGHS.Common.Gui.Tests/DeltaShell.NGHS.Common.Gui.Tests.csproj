@@ -2,8 +2,8 @@
 	<Import Project="$(SolutionDir)\Build\targets\Test.targets" />
 
 	<ItemGroup>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1303" />
-		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1303" PrivateAssets="all" />
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1304" />
+		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1304" PrivateAssets="all" />
 		<PackageReference Include="GeoAPI.Core" Version="1.7.5" />
 		<PackageReference Include="NUnit" Version="3.12.0" />
 		<PackageReference Include="RhinoMocks">
