@@ -4,7 +4,7 @@
 	<ItemGroup>
 		<PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1304" PrivateAssets="all" />
 		<PackageReference Include="MeshKernelNET" Version="1.0.0.56-Beta" IncludeAssets="compile" PrivateAssets="all" />
-		<PackageReference Include="NUnit" Version="3.12.0" />
+		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="Deltares.UGrid">
 			<Version>1.0.69569</Version>
 			<IncludeAssets>compile</IncludeAssets>

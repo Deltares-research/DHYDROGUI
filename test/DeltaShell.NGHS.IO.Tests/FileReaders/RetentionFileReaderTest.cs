@@ -135,13 +135,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
                 Assert.That(retention.Geometry, Is.EqualTo(new Point(0, 50)));
                 Assert.That(retention.UseTable, Is.True);
                 Assert.That(retention.Data.Arguments[0].InterpolationType, Is.EqualTo(InterpolationType.Linear));
-                Assert.That(retention.Data.Arguments[0].Values, Is.EquivalentTo(new[]
+                Assert.That(retention.Data.Arguments[0].GetValues<double>().ToArray(), Is.EquivalentTo(new[]
                 {
                     1.11,
                     2.22,
                     3.33
                 }));
-                Assert.That(retention.Data.Components[0].Values, Is.EquivalentTo(new[]
+                Assert.That(retention.Data.Components[0].GetValues<double>().ToArray(), Is.EquivalentTo(new[]
                 {
                     4.44,
                     5.55,
