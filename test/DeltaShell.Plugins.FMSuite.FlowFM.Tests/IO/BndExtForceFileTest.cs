@@ -1202,16 +1202,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             Assert.AreEqual(TimeSpan.Zero, waterlevelBoundaryCondition.ThatcherHarlemanTimeLag);
             Assert.AreEqual(FlowBoundaryQuantityType.WaterLevel, waterlevelBoundaryCondition.FlowQuantity);
 
-            CollectionAssert.AreEquivalent(new[]
+            CollectionAssert.AreEquivalent(new []
             {
                 3,
                 4
-            }, waterlevelBoundaryCondition.GetDataAtPoint(0).GetValues<double>());
-            CollectionAssert.AreEquivalent(new[]
+            }, waterlevelBoundaryCondition.GetDataAtPoint(0).GetValues<double>().ToArray());
+            CollectionAssert.AreEquivalent(new []
             {
                 5,
                 6
-            }, waterlevelBoundaryCondition.GetDataAtPoint(1).GetValues<double>());
+            }, waterlevelBoundaryCondition.GetDataAtPoint(1).GetValues<double>().ToArray());
         }
 
         [TestCase(

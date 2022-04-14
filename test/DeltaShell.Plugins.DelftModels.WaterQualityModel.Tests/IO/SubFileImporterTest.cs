@@ -56,7 +56,9 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Tests.IO
         [Test]
         public void ImporterShouldThrowOnSubstanceProcessLibraryIsNull()
         {
-            Assert.That(() => new SubFileImporter().Import(null, Path.Combine(TestHelper.GetTestDataDirectory(), "ValidWaqModels", "Eutrof_simple_sobek.sub")),
+            string combine = TestHelper.GetTestFilePath("ValidWaqModels\\Eutrof_simple_sobek.sub");
+
+            Assert.That(() => new SubFileImporter().Import(null, combine),
                 Throws.InvalidOperationException.With.Message.EqualTo("Substance process library is not set"));
         }
 

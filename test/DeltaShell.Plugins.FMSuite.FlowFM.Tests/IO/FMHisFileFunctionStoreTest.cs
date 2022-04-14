@@ -201,7 +201,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
                 201511154.33547282
             };
 
-            CollectionAssert.AreEquivalent(expectedSeries, waterbalancetimeseries.GetValues<double>());
+            CollectionAssert.AreEquivalent(expectedSeries, waterbalancetimeseries.GetValues<double>().ToArray());
         }
 
         [Test]
