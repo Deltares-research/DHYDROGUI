@@ -9,7 +9,7 @@
         <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
         <NoWarn>1591</NoWarn>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <TargetFramework>net461</TargetFramework>
+        <TargetFramework>net48</TargetFramework>
         <LangVersion>7.3</LangVersion>
         <Company>Deltares</Company>
         <Copyright>Copyright © Deltares 2022</Copyright>

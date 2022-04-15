@@ -72,19 +72,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO.Restart
             Assert.Throws<ArgumentException>(Call);
         }
 
-        [Test]
-        public void Constructor_PathTooLong_ThrowsPathTooLongException()
-        {
-            // Setup
-            var path = new StringBuilder().Append('p', 248).ToString();
-
-            // Call
-            void Call() => new RestartFile(path);
-
-            // Assert
-            Assert.Throws<PathTooLongException>(Call);
-        }
-
         [TestCase(true, null)]
         [TestCase(true, "")]
         [TestCase(false, null)]

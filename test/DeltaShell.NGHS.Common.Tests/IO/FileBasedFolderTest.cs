@@ -207,19 +207,6 @@ namespace DeltaShell.NGHS.Common.Tests.IO
         }
 
         [Test]
-        public void SetPath_WhenPathIsTooLong_ThenPathTooLongExceptionExceptionIsThrown()
-        {
-            // Setup
-            var path = new StringBuilder().Append('p', 248).ToString();
-
-            // Call
-            void Call() => new FileBasedFolder().Path = path;
-
-            // Assert
-            Assert.That(Call, Throws.TypeOf<PathTooLongException>());
-        }
-
-        [Test]
         public void Exists_WhenFolderExists_ThenTrueIsReturned()
         {
             using (var tempDirectory = new TemporaryDirectory())
