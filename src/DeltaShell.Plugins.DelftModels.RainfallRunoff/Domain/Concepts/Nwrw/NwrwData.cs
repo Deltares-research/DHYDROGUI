@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils;
 using DelftTools.Utils.Aop;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
@@ -134,9 +135,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts.Nwrw
 
         private static ConcurrentDictionary<string, NwrwData> CurrentNwrwCatchmentModelDataByNodeOrBranchId { get; set; }
 
-        private static void RrModelOnModelDataAdded(object sender, EventArgs e)
+        private static void RrModelOnModelDataAdded(object sender, EventArgs<CatchmentModelData> eventArgs)
         {
-            if (!(sender is NwrwData nwrwData)) 
+            if (!(eventArgs.Value is NwrwData nwrwData)) 
                 return;
 
             CurrentNwrwCatchmentModelDataByNodeOrBranchId?.TryAdd(nwrwData.Name, nwrwData);

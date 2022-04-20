@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.DataRows
         {
             Model = model;
             Name = name;
-            Filter = new Catchment[0];
+            Filter = Array.Empty<Catchment>();
 
             synchronizer = customSynchronizer ?? new CatchmentModelDataSynchronizer<TConceptData>(model);
             synchronizer.OnAreaAddedOrModified = OnAreaChanged;

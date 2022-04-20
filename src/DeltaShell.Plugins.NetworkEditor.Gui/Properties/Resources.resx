@@ -365,9 +365,6 @@
   <data name="BridgeProperties_DisplayName" xml:space="preserve">
     <value>Bridge</value>
   </data>
-  <data name="CatchmentProperties_DisplayName" xml:space="preserve">
-    <value>Catchment</value>
-  </data>
   <data name="ChannelProperties_DisplayName" xml:space="preserve">
     <value>Channel</value>
   </data>

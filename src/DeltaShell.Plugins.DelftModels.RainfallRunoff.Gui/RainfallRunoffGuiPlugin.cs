@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Controls;
+using DelftTools.Hydro;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
@@ -58,6 +60,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             yield return new PropertyInfo<SacramentoData, SacramentoDataProperties>();
             yield return new PropertyInfo<HbvData, HbvDataProperties>();
             yield return new PropertyInfo<MeteoData, MeteoDataProperties>();
+            yield return new PropertyInfo<Catchment, CatchmentProperties>
+            {
+                AfterCreate = cp =>
+                {
+                    cp.CatchmentData = Gui.Application.GetAllModelsInProject()
+                                          .OfType<IRainfallRunoffModel>()
+                                          .SelectMany(m => m.ModelData)
+                                          .FirstOrDefault(d => ReferenceEquals(d.Catchment, cp.Data));
+                }
+            };
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()

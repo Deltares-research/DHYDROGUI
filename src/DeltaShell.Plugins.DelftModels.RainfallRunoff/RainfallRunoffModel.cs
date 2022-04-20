@@ -54,7 +54,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffModel));
         private readonly DimrRunner runner;
 
-        private readonly RainfallRunoffBasinSynchronizer basinSyncer;
+        private readonly RainfallRunoffBasinSynchronizer basinSynchronizer;
         private RainfallRunoffChildDataItemProvider childDataItemProvider;
         private RainfallRunoffModelController modelController;
         private RainfallRunoffOutputSettingData outputSettings;
@@ -65,21 +65,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         
         public RainfallRunoffModel() : base("Rainfall Runoff")
         {
-            ((INotifyPropertyChanged) this).PropertyChanged += (s, e) =>
-                {
-                    if (ModelPropertyChanged != null)
-                    {
-                        ModelPropertyChanged(s, e);
-                    }
-                };
-
             AddDataItem(new DrainageBasin {Name = "Basin"}, DataItemRole.Input, RainfallRunoffModelDataSet.BasinTag);
 
             CapSim = false;
             CapSimInitOption = RainfallRunoffEnums.CapsimInitOptions.AtEquilibriumMoisture;
             CapSimCropAreaOption = RainfallRunoffEnums.CapsimCropAreaOptions.PerCropArea;
 
-            basinSyncer = new RainfallRunoffBasinSynchronizer(this);
+            basinSynchronizer = new RainfallRunoffBasinSynchronizer(this);
 
             // evaporation
             var globalEvaporation = new MeteoData(MeteoDataAggregationType.Cumulative)
@@ -273,7 +265,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             get { return (IDrainageBasin) GetDataItemValueByTag(RainfallRunoffModelDataSet.BasinTag); }
             set
             {
-                if (!basinSyncer.IsDifferentBasin(value))
+                if (!basinSynchronizer.IsDifferentBasin(value))
                 {
                     return;
                 }
@@ -462,9 +454,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             }
         }
 
-        /// <summary>
-        /// Set CapSim calculation on or off
-        /// </summary>
+        /// <inheritdoc/>
         public bool CapSim { get; set; }
 
         /// <summary>
@@ -637,9 +627,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         #endregion
         
-        public event EventHandler ModelDataAdded;
-        public event EventHandler ModelDataRemoved;
-        public event PropertyChangedEventHandler ModelPropertyChanged;
+        public event EventHandler<EventArgs<CatchmentModelData>> ModelDataAdded;
+        
+        public event EventHandler<EventArgs<CatchmentModelData>> ModelDataRemoved;
 
         public virtual IHydroRegion Region
         {
@@ -665,6 +655,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             return ModelData;
         }
 
+        /// <inheritdoc cref="IRainfallRunoffModel.ModelData"/>
+        IEnumerable<CatchmentModelData> IRainfallRunoffModel.ModelData
+        {
+            get { return ModelData; }
+        }
+        
         public IEventedList<CatchmentModelData> ModelData
         {
             get { return modelData; }
@@ -835,13 +831,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         protected override void OnBeforeDataItemsSet()
         {
             base.OnBeforeDataItemsSet();
-            basinSyncer.BeforeDataItemsSet();
+            basinSynchronizer.BeforeDataItemsSet();
         }
 
         protected override void OnAfterDataItemsSet()
         {
             base.OnAfterDataItemsSet();
-            basinSyncer.AfterDataItemsSet();
+            basinSynchronizer.AfterDataItemsSet();
 
             OutputFunctions.ForEach(SetReadOnlyMapHisFileFunctionStoreLookups);
         }
@@ -871,18 +867,12 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         
         public void FireModelDataAdded(CatchmentModelData catchmentModelData)
         {
-            if (ModelDataAdded != null)
-            {
-                ModelDataAdded(catchmentModelData, EventArgs.Empty);
-            }
+            ModelDataAdded?.Invoke(this, new EventArgs<CatchmentModelData>(catchmentModelData));
         }
 
         public void FireModelDataRemoved(CatchmentModelData removedModelData)
         {
-            if (ModelDataRemoved != null)
-            {
-                ModelDataRemoved(removedModelData, EventArgs.Empty);
-            }
+            ModelDataRemoved?.Invoke(this, new EventArgs<CatchmentModelData>(removedModelData));
         }
         
         public override IEnumerable<IFeature> GetChildDataItemLocations(DataItemRole role)
@@ -911,8 +901,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             var clone = (RainfallRunoffModel) base.DeepClone();
 
             // refresh basin syncer
-            clone.basinSyncer.BeforeDataItemsSet();
-            clone.basinSyncer.AfterDataItemsSet();
+            clone.basinSynchronizer.BeforeDataItemsSet();
+            clone.basinSynchronizer.AfterDataItemsSet();
 
             // copy output settings
             clone.OutputSettings = (RainfallRunoffOutputSettingData)OutputSettings.Clone();
@@ -1329,27 +1319,5 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 return dimrCoupling;
             }
         }
-    }
-
-    public interface IRainfallRunoffModel : IHydroModel, IDimrModel
-    {
-        DateTime StartTime { get; }
-        
-        bool CapSim { get; }
-
-        IEventedList<RunoffBoundaryData> BoundaryData { get; }
-        IDrainageBasin Basin { get; set; }
-
-        //duplicates PostSharps PropertyChanged, but that one cannot be included on the interface
-        event PropertyChangedEventHandler ModelPropertyChanged;
-        
-        event EventHandler ModelDataAdded;
-        
-        event EventHandler ModelDataRemoved;
-        
-        /// <summary>
-        /// The output files of the model.
-        /// </summary>
-        RainfallRunoffOutputFiles OutputFiles { get; }
     }
 }

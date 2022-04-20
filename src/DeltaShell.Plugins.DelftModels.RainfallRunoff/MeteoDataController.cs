@@ -25,8 +25,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         private readonly string meteoDataTypePropertyName;
         private readonly string meteoEditingPropertyName;
 
-        public MeteoDataController(RainfallRunoffModel model,
-                                            ICatchmentModelDataSynchronizer customSynchronizer = null)
+        public MeteoDataController(RainfallRunoffModel model, ICatchmentModelDataSynchronizer customSynchronizer = null)
         {
             Model = model;
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using DelftTools.Hydro;
+using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using NUnit.Framework;
@@ -46,7 +47,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         public void AreaAdded()
         {
-            areaAddedEvent.Raise(area, EventArgs.Empty);
+            areaAddedEvent.Raise(null, new EventArgs<CatchmentModelData>(area));
             Assert.AreEqual(1, addCalled);
             Assert.AreEqual(0, removeCalled);
         }
@@ -54,7 +55,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
         [Test]
         public void AreaRemoved()
         {
-            areaRemovedEvent.Raise(area, EventArgs.Empty);
+            areaRemovedEvent.Raise(null, new EventArgs<CatchmentModelData>(area));
             Assert.AreEqual(0, addCalled);
             Assert.AreEqual(1, removeCalled);
         }

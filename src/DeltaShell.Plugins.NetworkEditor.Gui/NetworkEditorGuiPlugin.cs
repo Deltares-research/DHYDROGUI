@@ -191,7 +191,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui
             yield return new PropertyInfo<IExtraResistance, ExtraResistanceProperties>();
             yield return new PropertyInfo<LateralSource, LateralSourceProperties>();
             yield return new PropertyInfo<ObservationPoint, ObservationPointProperties>();
-            yield return new PropertyInfo<Catchment, CatchmentProperties>();
             yield return new PropertyInfo<WasteWaterTreatmentPlant, WasteWaterTreatmentPlantProperties>();
             yield return new PropertyInfo<RunoffBoundary, RunoffBoundaryProperties>();
             yield return new PropertyInfo<NetworkLocation, NetworkLocationProperties>();

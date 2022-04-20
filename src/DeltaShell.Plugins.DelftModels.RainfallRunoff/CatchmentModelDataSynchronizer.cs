@@ -1,69 +1,62 @@
 ﻿using System;
 using System.ComponentModel;
+using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
     public class CatchmentModelDataSynchronizer<TConceptFilter> : ICatchmentModelDataSynchronizer where TConceptFilter : CatchmentModelData
     {
-        private IRainfallRunoffModel model;
+        private readonly IRainfallRunoffModel model;
 
         public CatchmentModelDataSynchronizer(IRainfallRunoffModel model)
         {
-            Model = model;
-        }
+            this.model = model;
 
-        private IRainfallRunoffModel Model
-        {
-            get { return model; }
-            set
+            if (model == null)
             {
-                if (model != null)
-                {
-                    model.ModelPropertyChanged -= ModelPropertyChanged;
-                    model.ModelDataAdded -= ModelDataAdded;
-                    model.ModelDataRemoved -= ModelAreaRemoved;
-                }
-                model = value;
-                if (model != null)
-                {
-                    model.ModelPropertyChanged += ModelPropertyChanged;
-                    model.ModelDataAdded += ModelDataAdded;
-                    model.ModelDataRemoved += ModelAreaRemoved;
-                }
+                return;
             }
+
+            model.PropertyChanged += ModelPropertyChanged;
+            model.ModelDataAdded += ModelDataAdded;
+            model.ModelDataRemoved += ModelAreaRemoved;
         }
         
         public void Disconnect()
         {
-            Model = null; //unsubscribes
+            if (model != null)
+            {
+                model.PropertyChanged -= ModelPropertyChanged;
+                model.ModelDataAdded -= ModelDataAdded;
+                model.ModelDataRemoved -= ModelAreaRemoved;
+            }
+
             OnAreaAddedOrModified = null;
             OnAreaRemoved = null;
         }
 
         public Action<CatchmentModelData> OnAreaAddedOrModified { get; set; }
+        
         public Action<CatchmentModelData> OnAreaRemoved { get; set; }
-
-        private bool ShouldBeInIncluded(CatchmentModelData area)
+        
+        private static bool ShouldBeInIncluded(CatchmentModelData area)
         {
             return area is TConceptFilter;
         }
 
-        private void ModelAreaRemoved(object sender, EventArgs e)
+        private void ModelAreaRemoved(object sender, EventArgs<CatchmentModelData> eventArgs)
         {
-            var area = sender as CatchmentModelData;
-            if (OnAreaRemoved != null)
-            {
-                OnAreaRemoved(area);
-            }
+            if (!ShouldBeInIncluded(eventArgs.Value)) return;
+
+            OnAreaRemoved?.Invoke(eventArgs.Value);
         }
 
-        private void ModelDataAdded(object sender, EventArgs e)
+        private void ModelDataAdded(object sender, EventArgs<CatchmentModelData> eventArgs)
         {
-            var area = sender as CatchmentModelData;
-            if (!ShouldBeInIncluded(area)) return;
+            if (!ShouldBeInIncluded(eventArgs.Value)) return;
 
-            OnAreaAddedOrModified?.Invoke(area);
+            OnAreaAddedOrModified?.Invoke(eventArgs.Value);
         }
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -73,17 +66,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 return;
             }
 
-            var modelData = catchmentModelData;
-
-            bool shouldBeIncluded = ShouldBeInIncluded(modelData);
-
-            if (shouldBeIncluded)
+            if (ShouldBeInIncluded(catchmentModelData))
             {
-                OnAreaAddedOrModified(modelData);
+                OnAreaAddedOrModified(catchmentModelData);
             }
             else
             {
-                OnAreaRemoved(modelData);
+                OnAreaRemoved(catchmentModelData);
             }
         }
     }
