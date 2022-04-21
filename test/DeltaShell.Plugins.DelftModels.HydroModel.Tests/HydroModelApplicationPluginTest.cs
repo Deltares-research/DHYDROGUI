@@ -7,6 +7,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.NGHS.TestUtils;
+using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.DelftModels.WaterQualityModel;
@@ -22,6 +23,33 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [Category(TestCategory.Integration)]
     public class HydroModelApplicationPluginTest
     {
+        [Test]
+        public void Constructor_DefaultsCorrectlyInitialized()
+        {
+            var hydroModelApplicationPlugin = new HydroModelApplicationPlugin();
+            
+            StringAssert.AreEqualIgnoringCase("Hydro Model",hydroModelApplicationPlugin.Name);
+            StringAssert.AreEqualIgnoringCase("Hydro Model Plugin",hydroModelApplicationPlugin.DisplayName);
+            StringAssert.AreEqualIgnoringCase(hydroModelApplicationPlugin.Description,"Provides functionality to create and run integrated models.");
+            StringAssert.AreEqualIgnoringCase(hydroModelApplicationPlugin.FileFormatVersion, "1.3.0.0");
+
+            List<ModelInfo> modelInfos = hydroModelApplicationPlugin.GetModelInfos().ToList();
+            Assert.AreEqual(2, modelInfos.Count);
+
+            ModelInfo first = modelInfos[0];
+            StringAssert.AreEqualIgnoringCase(first.Name, "Empty Integrated Model");
+
+            ModelInfo second = modelInfos[1];
+            StringAssert.AreEqualIgnoringCase(second.Name, "2D-3D Integrated Model");
+
+            List<ProjectTemplate> projectTemplates = hydroModelApplicationPlugin.ProjectTemplates().ToList();
+            Assert.AreEqual(0,projectTemplates.Count);
+
+            Assert.AreEqual(1, hydroModelApplicationPlugin.GetFileExporters().ToList().Count);
+            Assert.AreEqual(1, hydroModelApplicationPlugin.GetFileImporters().ToList().Count);
+            Assert.IsInstanceOf<DHydroConfigXmlExporter>(hydroModelApplicationPlugin.GetFileExporters().First());
+            Assert.IsInstanceOf<DHydroConfigXmlImporter>(hydroModelApplicationPlugin.GetFileImporters().First());
+        }
         [Test]
         public void AdditionalOwnerCheckTest_HydroModel()
         {

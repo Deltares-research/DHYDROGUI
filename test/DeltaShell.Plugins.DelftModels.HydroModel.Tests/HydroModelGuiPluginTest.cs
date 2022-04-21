@@ -26,6 +26,18 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
     [TestFixture]
     public class HydroModelGuiPluginTest
     {
+        [Test]
+        public void Constructor_DefaultsCorrectlyInitialized()
+        {
+            var hydroModelGuiPlugin = new HydroModelGuiPlugin();
+            
+            StringAssert.AreEqualIgnoringCase("Hydro Model (UI)",hydroModelGuiPlugin.Name);
+            StringAssert.AreEqualIgnoringCase("Hydro Model Plugin (UI)",hydroModelGuiPlugin.DisplayName);
+            StringAssert.AreEqualIgnoringCase("Provides functionality to create and run integrated models.",hydroModelGuiPlugin.Description);
+            StringAssert.AreEqualIgnoringCase("1.1.0.0",hydroModelGuiPlugin.FileFormatVersion);
+        }
+
+
         private static IEnumerable<TestCaseData> BeforeTagTestCaseData
         {
             get
