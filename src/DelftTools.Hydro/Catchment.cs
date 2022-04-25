@@ -264,13 +264,5 @@ namespace DelftTools.Hydro
             }
             throw new InvalidOperationException();
         }
-        
-        //nhib ;-) \-)
-        [NoNotifyPropertyChange]
-        protected virtual string CatchmentTypeString
-        {
-            get { return CatchmentType != null ? CatchmentType.Name : CatchmentType.PavedTypeName; }
-            set { CatchmentType = CatchmentType.LoadFromString(value); }
-        }
     }
 }

@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro;
+using DelftTools.Utils.Collections;
+using DeltaShell.NGHS.Utils;
 using GeoAPI.CoordinateSystems.Transformations;
+using GeoAPI.Extensions.CoordinateSystems;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
+using log4net;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Extensions.CoordinateSystems;
 
 namespace DeltaShell.Plugins.NetworkEditor.Import
 {
-    public class CatchmentFromGisImporter : BasinFeatureFromGisImporterBase
+    public class CatchmentFromGisImporter : FeatureFromGisImporterBase
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CatchmentFromGisImporter));
+
         private readonly PropertyMapping propertyMappingName;
         private readonly PropertyMapping propertyMappingLongName;
         private readonly PropertyMapping propertyMappingDescription;
@@ -32,7 +38,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
             base.FeatureFromGisImporterSettings.FeatureType = "Catchments";
             base.FeatureFromGisImporterSettings.FeatureImporterFromGisImporterType = GetType().ToString();
         }
-
+        
         public override string Name
         {
             get { return "Catchment from GIS importer"; }
@@ -41,84 +47,128 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         public override object ImportItem(string path, object target = null)
         {
             var features = GetFeatures();
-            var drainageBasin = target as IDrainageBasin ?? DrainageBasin;
-
-            ICoordinateTransformation coordinateTransformation = null;
             var sourceCoordinateSystem = GetCoordinateSystem();
-            if (sourceCoordinateSystem != null)
+
+            var drainageBasin = target as IDrainageBasin ?? GetDrainageBasin();
+            if (drainageBasin == null)
             {
-                if (drainageBasin.CoordinateSystem != null)
-                {
-                    coordinateTransformation =
-                        new OgrCoordinateSystemFactory().CreateTransformation(sourceCoordinateSystem,
-                            drainageBasin.CoordinateSystem);
-                }
-                else if (drainageBasin.Catchments.Count == 0)
-                {
-                    drainageBasin.CoordinateSystem = sourceCoordinateSystem;
-                }
+                log.Error("Could not find drainage basin to import on.");
+                return null;
             }
 
-            CatchmentToGisFeatureMapping.Clear();
-
-            var nameColumnName = propertyMappingName.MappingColumn.Alias;
-
-            var orderedFeatures = features.OrderBy(f => f.Attributes[nameColumnName].ToString());
-
-            foreach (var feature in orderedFeatures)
+            if (sourceCoordinateSystem != null && drainageBasin.Catchments.Count == 0)
             {
-                if (coordinateTransformation != null)
-                {
-                    feature.Geometry = GeometryTransform.TransformGeometry(feature.Geometry,coordinateTransformation.MathTransform);
-                }
-
-                ImportCatchment(feature, drainageBasin, feature.Attributes[nameColumnName].ToString(), propertyMappingLongName.MappingColumn.Alias, propertyMappingDescription.MappingColumn.Alias, propertyMappingCatchmentType.MappingColumn.Alias);
+                drainageBasin.CoordinateSystem = sourceCoordinateSystem;
             }
+
+            var coordinateTransformation = GetCoordinateTransformation(sourceCoordinateSystem, drainageBasin);
+            
+            var catchmentLookup = drainageBasin.Catchments
+                                               .ToDictionaryWithErrorDetails(drainageBasin.Name, catchment => catchment.Name);
+            
+            features.ForEach(feature => ImportCatchment(feature, drainageBasin, catchmentLookup, coordinateTransformation));
 
             return drainageBasin;
         }
 
-        public readonly IDictionary<Catchment, IFeature> CatchmentToGisFeatureMapping = new Dictionary<Catchment, IFeature>();
-
-        private void ImportCatchment(IFeature feature, IDrainageBasin drainageBasin, string catchmentName, string columnNameLongName, string columnNameDescription, string columnNameCatchmentType)
+        private static ICoordinateTransformation GetCoordinateTransformation(ICoordinateSystem sourceCoordinateSystem, IDrainageBasin drainageBasin)
         {
-            var catchment = drainageBasin.Catchments.FirstOrDefault(c => c.Name == catchmentName);
-
-            if (catchment == null)
+            if (sourceCoordinateSystem == null 
+                || drainageBasin.CoordinateSystem == null 
+                || sourceCoordinateSystem == drainageBasin.CoordinateSystem)
             {
-                catchment = new Catchment {Name = catchmentName};
+                return null;
+            }
+
+            return new OgrCoordinateSystemFactory().CreateTransformation(sourceCoordinateSystem, drainageBasin.CoordinateSystem);
+        }
+
+        private void ImportCatchment(IFeature feature, IDrainageBasin drainageBasin, IDictionary<string, Catchment> catchmentLookup, ICoordinateTransformation coordinateTransformation)
+        {
+            var catchmentName = GetAttributeValue(propertyMappingName, feature);
+            if (!IsFeatureValid(feature, catchmentName))
+            {
+                return;
+            }
+
+            var isExistingCatchment = catchmentLookup.TryGetValue(catchmentName, out Catchment catchment);
+
+            if (!isExistingCatchment)
+            {
+                catchment = new Catchment { Name = catchmentName };
+            }
+
+            catchment.Geometry = coordinateTransformation != null
+                                     ? GeometryTransform.TransformGeometry(feature.Geometry, coordinateTransformation.MathTransform)
+                                     : (IGeometry)feature.Geometry.Clone();
+
+            catchment.LongName = GetAttributeValue(propertyMappingLongName, feature) ?? catchment.LongName;
+            catchment.Description = GetAttributeValue(propertyMappingDescription, feature) ?? catchment.Description;
+
+            var catchmentTypeText = GetAttributeValue(propertyMappingCatchmentType, feature);
+            if (catchmentTypeText != null)
+            {
+                var catchmentType = GetCatchmentType(catchmentTypeText, catchmentName);
+                if (!Equals(catchmentType, catchment.CatchmentType))
+                {
+                    catchment.CatchmentType = catchmentType;
+                }
+            }
+
+            if (!isExistingCatchment)
+            {
                 drainageBasin.Catchments.Add(catchment);
-            }
-
-            if (!string.IsNullOrEmpty(columnNameCatchmentType) && feature.Attributes.ContainsKey(columnNameCatchmentType))
-            {
-                try
-                {
-                    catchment.CatchmentType = CatchmentType.LoadFromString(feature.Attributes[columnNameCatchmentType].ToString());
-                }
-                catch (ArgumentException)
-                {
-                    catchment.CatchmentType = CatchmentType.None;
-                }
-            }
-            else if (!string.IsNullOrEmpty(columnNameCatchmentType))
-            {
-                catchment.CatchmentType = CatchmentType.None;
-            }
-            
-            CatchmentToGisFeatureMapping.Add(catchment,feature);
-
-            catchment.Geometry = (IGeometry) feature.Geometry.Clone();
-
-            if (columnNameLongName != null)
-            {
-                catchment.LongName = feature.Attributes[columnNameLongName].ToString();
-            }
-
-            if (columnNameDescription != null)
-            {
-                catchment.Description = feature.Attributes[columnNameDescription].ToString();
+                catchmentLookup.Add(catchmentName, catchment);
             }
         }
+
+        private static bool IsFeatureValid(IFeature feature, string catchmentName)
+        {
+            if (catchmentName == null)
+            {
+                log.Error("Could not import feature catchment name is not set.");
+                return false;
+            }
+
+            if (feature.Geometry == null)
+            {
+                log.Error($"Could not import feature {catchmentName}, geometry is missing");
+                return false;
+            }
+
+            return true;
+        }
+
+        private static CatchmentType GetCatchmentType(string catchmentTypeText, string catchmentName)
+        {
+            try
+            {
+                return CatchmentType.LoadFromString(catchmentTypeText);
+            }
+            catch (ArgumentException)
+            {
+                log.Error($"Could not convert \"{catchmentTypeText}\" to a catchment type for catchment {catchmentName}. Reverting to default catchment type None");
+                return CatchmentType.None;
+            }
+        }
+
+        private static string GetAttributeValue(PropertyMapping propertyMapping, IFeature feature)
+        {
+            // get mapped attribute name
+            var attributeName = propertyMapping?.MappingColumn?.Alias;
+
+            if (string.IsNullOrEmpty(attributeName) 
+                || !feature.Attributes.TryGetValue(attributeName, out var attributeObject)) return null;
+
+            return attributeObject.ToString();
+        }
+
+        private IDrainageBasin GetDrainageBasin()
+        {
+            return HydroRegion as IDrainageBasin ?? HydroRegion.SubRegions
+                                                               .OfType<IDrainageBasin>()
+                                                               .FirstOrDefault();
+        }
+
     }
 }
