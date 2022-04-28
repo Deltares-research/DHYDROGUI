@@ -170,7 +170,7 @@
     <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.13.0" />
     <PackageReference Include="AutoFixture.NUnit3" Version="4.13.0" />    
     <PackageReference Include="Castle.Core" Version="4.4.0" />
-    <PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1319" PrivateAssets="all" />
+    <PackageReference Include="DeltaShell.TestProject" Version="2.0.0.1342" PrivateAssets="all" />
     <PackageReference Include="DHYDRO.TestModels.Common" Version="1.0.1" />
     <PackageReference Include="DHYDRO.TestModels.DFlowFM" Version="1.1.0" />    
     <PackageReference Include="Fare" Version="2.1.1" />
