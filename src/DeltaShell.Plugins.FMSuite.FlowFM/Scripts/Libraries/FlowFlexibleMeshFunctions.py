@@ -16,8 +16,8 @@ from NetTopologySuite.Extensions.Grids import Edge as _Edge
 from SharpMap.Extensions.Layers import DelftDashboardTileLayer as _DelftDashboardTileLayer
 
 from NetTopologySuite.Extensions.Features import Feature2D,Feature2DPoint
-from DelftTools.Hydro import ObservationCrossSection2D, LandBoundary2D
-from DelftTools.Hydro.Structures import ThinDam2D
+from DelftTools.Hydro.Area.Objects import ObservationCrossSection2D, LandBoundary2D
+from DelftTools.Hydro.Area.Objects import ThinDam2D
 from GeoAPI.Geometries import ICoordinate as _ICoordinate
 from GeoAPI.Geometries import Coordinate as _Coordinate
 
