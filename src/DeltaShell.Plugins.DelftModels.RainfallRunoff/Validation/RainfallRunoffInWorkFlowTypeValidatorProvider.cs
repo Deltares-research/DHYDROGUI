@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Workflow;
-using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
+using DeltaShell.NGHS.Common.Validation;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {

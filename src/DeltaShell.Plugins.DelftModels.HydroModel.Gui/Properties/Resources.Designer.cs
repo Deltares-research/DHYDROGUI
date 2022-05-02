@@ -282,14 +282,5 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This value must be between {0} and {1}.
-        /// </summary>
-        internal static string WpfGuiProperty_this_This_value_must_be_between__0__and__1_ {
-            get {
-                return ResourceManager.GetString("WpfGuiProperty_this_This_value_must_be_between__0__and__1_", resourceCulture);
-            }
-        }
     }
 }

@@ -5,6 +5,7 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
 using DelftTools.Utils.Collections.Generic;
 using DeltaShell.Dimr;
+using DeltaShell.Dimr.Export;
 using DeltaShell.NGHS.Common;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using NSubstitute;

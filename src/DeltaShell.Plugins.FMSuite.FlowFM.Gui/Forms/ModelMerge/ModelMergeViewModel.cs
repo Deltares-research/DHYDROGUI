@@ -9,7 +9,6 @@ using System.Windows;
 using DelftTools.Controls;
 using DelftTools.Controls.Wpf.Commands;
 using DelftTools.Utils.Collections.Extensions;
-using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO.Importers;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelMerge;
 using log4net;
@@ -25,7 +24,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge
     /// </summary>
     public class ModelMergeViewModel : INotifyPropertyChanged, IDisposable
     {
-        private HydroModel newModel;
+        private WaterFlowFMModel newModel;
         private bool modelCanBeMerged;
         private readonly ModelMergeViewLogAppender logAppender;
         private string buttonText;
@@ -67,13 +66,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge
         /// <summary>
         /// Gets the new model to be merged with the original model.
         /// </summary>
-        private HydroModel NewModel
+        private WaterFlowFMModel NewModel
         {
             get
             {
                 if (newModel == null)
                 {
-                    newModel = new HydroModel();
+                    newModel = new WaterFlowFMModel();
                 }
 
                 return newModel;
@@ -234,7 +233,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge
             ValidationProgressText = "Validating merge...";
             
             var modelMergeValidator = new ModelMergeValidator();
-            bool canMerge = modelMergeValidator.Validate(OriginalModel, NewModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault());
+            bool canMerge = modelMergeValidator.Validate(OriginalModel, NewModel);
             
             DuplicateNames.AddRange(modelMergeValidator.DuplicateNames);
 
@@ -276,7 +275,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms.ModelMerge
                 return;
             }
 
-            ModelMerger.Merge(OriginalModel, NewModel.Activities.OfType<WaterFlowFMModel>().FirstOrDefault());
+            ModelMerger.Merge(OriginalModel, NewModel);
             MergeProgressText = "Done merging.";
             ModelCanBeMerged = false;
             ButtonText = "Close";

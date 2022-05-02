@@ -17,9 +17,9 @@ using DelftTools.Shell.Gui.Swf.Validation;
 using DelftTools.Utils;
 using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common.Gui;
+using DeltaShell.NGHS.Common.Gui.WPF.SettingsView;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.FileWriters.Roughness;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Properties;
@@ -338,7 +338,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.NodePresenters
         private void OnSettingsClicked(object sender, EventArgs args)
         {
             var model = (WaterFlowFMModel)((ToolStripItem)sender).Tag;
-            Gui.DocumentViewsResolver.OpenViewForData(model, typeof(WpfSettingsView));
+            Gui.DocumentViewsResolver.OpenViewForData(model, typeof(SettingsView));
         }
 
         private void OnValidateClicked(object sender, EventArgs args)

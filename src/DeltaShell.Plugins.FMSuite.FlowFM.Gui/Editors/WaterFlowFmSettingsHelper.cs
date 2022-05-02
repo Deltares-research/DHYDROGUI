@@ -7,7 +7,7 @@ using DelftTools.Controls.Swf.DataEditorGenerator.Metadata;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Gui;
 using DelftTools.Utils.Collections;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
+using DeltaShell.NGHS.Common.Gui.WPF.SettingsView;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors.Buttons;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
@@ -17,24 +17,24 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
     public class WaterFlowFmSettingsHelper
     {
         /// <summary>
-        /// Gets the WPF GUI categories <seealso cref="WpfGuiCategory"/>.
+        /// Gets the WPF GUI categories <seealso cref="GuiCategory"/>.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="gui">The GUI.</param>
         /// <returns></returns>
-        public static ObservableCollection<WpfGuiCategory> GetWpfGuiCategories(WaterFlowFMModel model, IGui gui)
+        public static ObservableCollection<GuiCategory> GetWpfGuiCategories(WaterFlowFMModel model, IGui gui)
         {
-            var wpfGuiCategories = new List<WpfGuiCategory>();
+            var wpfGuiCategories = new List<GuiCategory>();
             if (model != null)
             {
                 wpfGuiCategories = GetWaterFlowFmSettings(model)?.FieldDescriptions
                     .GroupBy(fd => fd.Category)
-                    .Select(gp => new WpfGuiCategory(gp.Key, gp.ToList())).ToList();
+                    .Select(gp => new GuiCategory(gp.Key, gp.ToList())).ToList();
                 wpfGuiCategories?.SelectMany(gp => gp.Properties).Distinct().ForEach(p => p.GetModel = () => model);
                 if (wpfGuiCategories == null) return null;
                 SetFlowFmExtraSettings(model, gui, wpfGuiCategories);
             }
-            return new ObservableCollection<WpfGuiCategory>(wpfGuiCategories);
+            return new ObservableCollection<GuiCategory>(wpfGuiCategories);
         }
 
         private static ObjectUIDescription GetWaterFlowFmSettings(WaterFlowFMModel model)
@@ -46,7 +46,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             return ExtendedUiProperties(model, uiProperties);
         }
 
-        private static void SetFlowFmExtraSettings(IModel model, IGui gui, IList<WpfGuiCategory> wpfCategories)
+        private static void SetFlowFmExtraSettings(IModel model, IGui gui, IList<GuiCategory> wpfCategories)
         {
             if (!(model is WaterFlowFMModel)) return;
 
@@ -55,7 +55,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var generalCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("general"));
             if (generalCategory != null)
             {
-                var depthlayers = new WpfGuiProperty(new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, o => false, o => false)
+                var depthlayers = new GuiProperty(new FieldUIDescription(d => fmModel.DepthLayerDefinition?.Description, null, o => false, o => false)
                 {
                     Category = "General",
                     SubCategory = "Layers",
@@ -71,7 +71,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 generalCategory.AddWpfGuiProperty(depthlayers);
 
                 //Gui Coordinate
-                var coordSys = new WpfGuiProperty(new FieldUIDescription(d => SetCoordinateSystemButton.CoordinateSystemName(fmModel), null)
+                var coordSys = new GuiProperty(new FieldUIDescription(d => SetCoordinateSystemButton.CoordinateSystemName(fmModel), null)
                 {
                     Category = "General",
                     SubCategory = "Global Position",
@@ -110,7 +110,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var icCategory = wpfCategories.FirstOrDefault(c => c.CategoryName.ToLower().Equals("initial conditions"));
             if (icCategory != null)
             {
-                var coverageLayers = new WpfGuiProperty(new FieldUIDescription(d => EditCoverageLayersHelper.DepthLayersToString(model), null, o => false, o => false)
+                var coverageLayers = new GuiProperty(new FieldUIDescription(d => EditCoverageLayersHelper.DepthLayersToString(model), null, o => false, o => false)
                 {
                     Category = "Initial Conditions",
                     SubCategory = "Salinity",
@@ -134,7 +134,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var fieldUiDescriptions = new List<FieldUIDescription>();
             fieldUiDescriptions.Add(fieldUi);
 
-            var sedimentCategory = new WpfGuiCategory("Sediment", fieldUiDescriptions)
+            var sedimentCategory = new GuiCategory("Sediment", fieldUiDescriptions)
             {
                 CategoryVisibility = () => fmModel.UseMorSed,
                 CustomControl = new SedimentFractionsEditor(fmModel.SedimentFractions, fmModel.SedimentOverallProperties)
@@ -148,7 +148,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 morphologyCategory.CategoryVisibility = () => fmModel.UseMorSed;
             }
 
-            var tracersCategory = new WpfGuiSubCategory("Tracers", new List<FieldUIDescription>{ new FieldUIDescription(null,null, o => true, o => true)})
+            var tracersCategory = new GuiSubCategory("Tracers", new List<FieldUIDescription>{ new FieldUIDescription(null,null, o => true, o => true)})
             {
                 CustomControl = new TracerDefinitionsEditorWpf
                 {

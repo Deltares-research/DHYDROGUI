@@ -190,7 +190,4 @@
   <data name="HydroModelGuiPlugin_GetContextMenu_Validate___" xml:space="preserve">
     <value>Validate...</value>
   </data>
-  <data name="WpfGuiProperty_this_This_value_must_be_between__0__and__1_" xml:space="preserve">
-    <value>This value must be between {0} and {1}</value>
-  </data>
 </root>

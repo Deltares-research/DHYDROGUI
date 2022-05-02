@@ -7,6 +7,7 @@ using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core.Extensions;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
+using DeltaShell.Dimr.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Export

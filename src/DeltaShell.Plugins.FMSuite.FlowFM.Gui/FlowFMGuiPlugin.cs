@@ -25,11 +25,11 @@ using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Validation;
 using DeltaShell.NGHS.Common.Gui;
 using DeltaShell.NGHS.Common.Gui.MapLayers;
+using DeltaShell.NGHS.Common.Gui.WPF.SettingsView;
 using DeltaShell.NGHS.IO.DataObjects;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
-using DeltaShell.Plugins.DelftModels.HydroModel.Gui.Forms.SettingsWpf;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.Gui;
 using DeltaShell.Plugins.FMSuite.Common.Gui.Editors;
@@ -182,7 +182,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             yield return GetLateralSourceViewInfo();
 
-            yield return new ViewInfo<WaterFlowFMModel, WpfSettingsView>
+            yield return new ViewInfo<WaterFlowFMModel, SettingsView>
             {
                 Description = "FM Settings",
                 GetViewName = (v, o) => o.Name + _fmModelSettingsSuffix,
@@ -194,7 +194,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
                 }
             };
 
-            yield return new ViewInfo<FmModelTreeShortcut, WaterFlowFMModel, WpfSettingsView>
+            yield return new ViewInfo<FmModelTreeShortcut, WaterFlowFMModel, SettingsView>
             {
                 Description = "FM Settings",
                 AdditionalDataCheck = o => o.ShortCutType == ShortCutType.SettingsTab,
@@ -286,7 +286,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
                 return null;
             };
-            yield return new ViewInfo<FmValidationShortcut, WaterFlowFMModel, WpfSettingsView>
+            yield return new ViewInfo<FmValidationShortcut, WaterFlowFMModel, SettingsView>
             {
                 Description = "FM Settings",
                 GetViewData = o => o.FlowFmModel,

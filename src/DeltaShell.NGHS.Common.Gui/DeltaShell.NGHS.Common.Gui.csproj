@@ -101,5 +101,10 @@
 			<Private>False</Private>
 		</Reference>
 		<Reference Include="WindowsBase" />
+		<Reference Include="WindowsFormsIntegration" />
+		<Reference Include="Xceed.Wpf.Toolkit">
+		  <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\Xceed.Wpf.Toolkit.dll</HintPath>
+		  <Private>False</Private>
+		</Reference>
 	</ItemGroup>
 </Project>

@@ -4,7 +4,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DeltaShell.Dimr;
-using DeltaShell.Plugins.DelftModels.HydroModel.Export;
+using DeltaShell.Dimr.Export;
 using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Exporters

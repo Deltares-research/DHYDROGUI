@@ -191,6 +191,5 @@
 
 	<ItemGroup>
 	  <Folder Include="Properties\" />
-	  <Folder Include="ValueConverters" />
 	</ItemGroup>
 </Project>
