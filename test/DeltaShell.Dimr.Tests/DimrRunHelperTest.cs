@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Text;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;

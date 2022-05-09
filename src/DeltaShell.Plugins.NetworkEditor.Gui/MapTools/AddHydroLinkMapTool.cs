@@ -3,7 +3,6 @@ using System.Linq;
 using System.Windows.Forms;
 using DelftTools.Hydro;
 using DelftTools.Utils.Guards;
-using DeltaShell.NGHS.Common.Gui.Modals.Helpers;
 using DeltaShell.Plugins.NetworkEditor.Gui.Properties;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Extensions.CoordinateSystems;

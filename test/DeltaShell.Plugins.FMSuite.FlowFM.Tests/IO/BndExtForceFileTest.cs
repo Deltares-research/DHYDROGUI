@@ -27,7 +27,6 @@ using NSubstitute;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;
-using Assert = NUnit.Framework.Assert;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
 {

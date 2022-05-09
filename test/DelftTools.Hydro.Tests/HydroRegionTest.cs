@@ -8,11 +8,11 @@ using DeltaShell.NGHS.TestUtils;
 using GeoAPI.Extensions.Feature;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using NSubstitute;
 using NUnit.Framework;
 using SharpTestsEx;
-using Point = NetTopologySuite.Geometries.Point;
 
 namespace DelftTools.Hydro.Tests
 {

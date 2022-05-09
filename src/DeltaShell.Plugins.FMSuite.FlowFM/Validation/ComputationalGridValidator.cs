@@ -5,7 +5,6 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
-using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using GeoAPI.Extensions.Coverages;

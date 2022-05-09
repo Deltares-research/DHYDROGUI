@@ -4,7 +4,6 @@ using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Properties;
-using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
 

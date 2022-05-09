@@ -17,7 +17,6 @@ using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Geometries;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.Operation.Valid;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Extensions.CoordinateSystems;

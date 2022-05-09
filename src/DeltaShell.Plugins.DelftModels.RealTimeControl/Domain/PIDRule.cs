@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.Aop;
-using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
 

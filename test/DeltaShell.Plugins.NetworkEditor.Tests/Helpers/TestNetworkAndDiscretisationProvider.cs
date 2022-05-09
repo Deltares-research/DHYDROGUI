@@ -1,9 +1,6 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
-using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;
-using NetTopologySuite.Extensions.Coverages;
-using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Helpers

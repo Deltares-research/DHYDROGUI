@@ -4,7 +4,6 @@ using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Coverages;
-using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 {

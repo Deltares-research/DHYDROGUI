@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Hydro;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.IO;
@@ -31,18 +30,17 @@ namespace DeltaShell.NGHS.Common
             return files.Concat(directories).ToArray();
         }
 
-        public static void CleanPersistentDirectories(DirectoryInfo persistedDataDirectory, IHydroModel model)
+        public static void CleanPersistentDirectories(DirectoryInfo persistedDataDirectory, IModel model)
         {
             if (!persistedDataDirectory.Exists)
             {
                 return;
             }
 
-            var compositeActivity = model as ICompositeActivity;
-            if (compositeActivity != null)
+            if (model is ICompositeActivity compositeActivity)
             {
                 string hydroModelDirectory = Path.Combine(persistedDataDirectory.FullName, compositeActivity.Name);
-                List<string> childModelNames = compositeActivity.Activities.OfType<IHydroModel>().Select(a => a.Name).ToList();
+                List<string> childModelNames = compositeActivity.Activities.OfType<IModel>().Select(a => a.Name).ToList();
 
                 CleanPersistentDirectoryForCompositeModel(new DirectoryInfo(hydroModelDirectory), childModelNames);
 

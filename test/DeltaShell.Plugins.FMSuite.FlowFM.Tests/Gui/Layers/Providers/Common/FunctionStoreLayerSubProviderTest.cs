@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Functions;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
-using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers.Common;
 using NSubstitute;
 using NUnit.Framework;

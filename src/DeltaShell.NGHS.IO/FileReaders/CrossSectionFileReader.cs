@@ -7,7 +7,6 @@ using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Utils.Collections;
-using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.FileReaders.Location.CrossSections;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;

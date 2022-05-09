@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using DelftTools.TestUtils;
 using DeltaShell.NGHS.Common.IO.RestartFiles;
 using NUnit.Framework;

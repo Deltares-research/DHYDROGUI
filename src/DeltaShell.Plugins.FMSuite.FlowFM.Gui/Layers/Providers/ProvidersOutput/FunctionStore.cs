@@ -9,7 +9,7 @@ using SharpMap.Api.Layers;
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers.ProvidersOutput
 {
     /// <summary>
-    /// <see cref="FunctionStore"/> defines the 2D <see cref="BaseFunctionStoreDescription{T}"/>
+    /// <see cref="FunctionStore"/> defines the 2D <see cref="BaseFunctionStoreDescription{TStore}"/>
     /// implementations.
     /// </summary>
     internal static class FunctionStore

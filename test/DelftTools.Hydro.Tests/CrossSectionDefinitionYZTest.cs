@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.TestUtils;
-using DelftTools.Utils.Editing;
 using DelftTools.Utils.Reflection;
 using GeoAPI.Geometries;
 using NetTopologySuite.Extensions.Networks;

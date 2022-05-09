@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.TestUtils;
 using DeltaShell.Plugins.ImportExport.GWSW.SewerFeatures;

@@ -1,6 +1,5 @@
 using DelftTools.Hydro.SewerFeatures;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
-using log4net;
 
 namespace DeltaShell.Plugins.ImportExport.GWSW
 {

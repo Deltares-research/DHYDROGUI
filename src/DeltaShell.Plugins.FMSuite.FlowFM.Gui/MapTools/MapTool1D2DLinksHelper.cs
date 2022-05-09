@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Link1d2d;
-using DelftTools.Utils.Collections.Generic;
 using DeltaShell.NGHS.IO.Grid.MeshKernel;
 using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using GeoAPI.Extensions.Coverages;
-using GeoAPI.Extensions.Networks;
 using GeoAPI.Geometries;
 using log4net;
-using NetTopologySuite.Extensions.Grids;
 using NetTopologySuite.Geometries;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.MapTools

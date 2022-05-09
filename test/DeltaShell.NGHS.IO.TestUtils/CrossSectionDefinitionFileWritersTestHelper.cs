@@ -1,11 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
-using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
-using DelftTools.Hydro.Helpers;
-using DelftTools.Hydro.Roughness;
-using DelftTools.Hydro.Structures;
 using DelftTools.Utils.Collections;
 using DeltaShell.NGHS.IO.FileWriters;
 using DeltaShell.NGHS.IO.FileWriters.CrossSectionDefinition;

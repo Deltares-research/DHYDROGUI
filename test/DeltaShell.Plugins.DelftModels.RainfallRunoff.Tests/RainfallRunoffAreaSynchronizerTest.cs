@@ -1,5 +1,4 @@
-﻿using System;
-using DelftTools.Hydro;
+﻿using DelftTools.Hydro;
 using DelftTools.Utils;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;

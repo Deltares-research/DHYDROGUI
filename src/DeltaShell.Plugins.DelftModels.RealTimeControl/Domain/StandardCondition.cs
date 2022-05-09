@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using DelftTools.Utils.Aop;
 using DeltaShell.Plugins.DelftModels.RealTimeControl.Converters;
-using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
 

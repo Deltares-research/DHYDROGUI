@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows.Controls;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Charting.Series;
-using DelftTools.Utils;
 using DelftTools.Utils.Reflection;
 using Steema.TeeChart.Styles;
 

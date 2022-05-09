@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using DelftTools.Utils.Guards;
-using GeoAPI.Geometries;
 
 namespace DeltaShell.NGHS.IO.Helpers
 {

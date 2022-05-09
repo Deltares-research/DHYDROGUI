@@ -1,5 +1,3 @@
-using System;
-
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO.FouFile
 {
     internal class FouFileRow

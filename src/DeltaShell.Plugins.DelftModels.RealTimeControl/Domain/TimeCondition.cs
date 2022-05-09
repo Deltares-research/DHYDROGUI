@@ -4,7 +4,6 @@ using DelftTools.Functions.Generic;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Aop;
-using log4net;
 using ValidationAspects;
 using ValidationAspects.Exceptions;
 

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils.IO;
-using DeltaShell.Plugins.NetCDF.Builders;
 using DeltaShell.Plugins.SharpMapGis.ImportExport;
 using GeoAPI.Extensions.Coverages;
 using GeoAPI.Geometries;

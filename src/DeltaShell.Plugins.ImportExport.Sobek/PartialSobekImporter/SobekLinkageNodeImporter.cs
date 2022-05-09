@@ -2,7 +2,6 @@
 using System.Linq;
 using DelftTools.Hydro.Helpers;
 using DeltaShell.Sobek.Readers.Readers;
-using GeoAPI.Extensions.Coverages;
 using log4net;
 using NetTopologySuite.Extensions.Coverages;
 

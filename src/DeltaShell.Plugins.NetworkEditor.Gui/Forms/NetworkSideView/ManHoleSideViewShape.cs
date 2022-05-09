@@ -1,7 +1,6 @@
 using System.Linq;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Hydro.Structures;
-using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.ChartEditors.ChartShapes;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView

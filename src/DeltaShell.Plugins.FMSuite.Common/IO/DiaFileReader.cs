@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using log4net;
 
 namespace DeltaShell.Plugins.FMSuite.Common.IO
 {

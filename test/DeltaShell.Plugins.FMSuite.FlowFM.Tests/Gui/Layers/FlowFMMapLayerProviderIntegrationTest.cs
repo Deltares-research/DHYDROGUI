@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Windows.Controls;
 using DelftTools.Controls;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -34,7 +35,6 @@ using GeoAPI.Extensions.Networks;
 using log4net.Core;
 using NetTopologySuite.Extensions.Coverages;
 using NUnit.Framework;
-using Control = System.Windows.Controls.Control;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers
 {

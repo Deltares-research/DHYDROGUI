@@ -1,6 +1,5 @@
 ﻿using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures;
-using DelftTools.Utils.Collections.Generic;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
 

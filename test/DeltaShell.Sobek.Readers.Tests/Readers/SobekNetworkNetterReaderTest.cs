@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using DeltaShell.Sobek.Readers.Readers;
 using NUnit.Framework;
 

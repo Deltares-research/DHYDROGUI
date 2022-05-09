@@ -13,7 +13,7 @@ using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using Point = NetTopologySuite.Geometries.Point; 
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace DeltaShell.Plugins.NetworkEditor.MapLayers.CustomRenderers
 {

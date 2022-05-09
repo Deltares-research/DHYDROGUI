@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers;
-using NUnit.Framework;
 using DeltaShell.Plugins.FMSuite.FlowFM.Gui.Layers.Providers;
 using NSubstitute;
+using NUnit.Framework;
 using SharpMap.Api.Layers;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.Gui.Layers.Providers

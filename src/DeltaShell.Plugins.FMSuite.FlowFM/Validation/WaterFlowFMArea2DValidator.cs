@@ -6,7 +6,6 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
-using DeltaShell.NGHS.Common.Validation;
 using ValidationAspects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.Validation
