@@ -24,4 +24,7 @@
     <data name="SobekRRPavedReader_Warning_UnsupportedDischargeTarget" xml:space="preserve">
         <value>Unsupported {0} discharge target for paved data with id {1}. Will be set to lateral source or boundary node.</value>
     </data>
+    <data name="SobekReader_Could_not_read_file_because_it_is_locked" xml:space="preserve">
+        <value>Could not read file {0}: it is locked by another process.</value>
+    </data>
 </root>

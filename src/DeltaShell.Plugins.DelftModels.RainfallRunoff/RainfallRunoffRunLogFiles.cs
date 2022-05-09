@@ -5,6 +5,8 @@ using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.IO.LogFileReading;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
+using log4net;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 {
@@ -14,6 +16,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
     /// </summary>
     public sealed class RainfallRunoffRunLogFiles
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(RainfallRunoffRunLogFiles));
+        
         // The name to display in the project tree
         private const string logFileDataItemDisplayName = "RR Log (sobek_3b.log)";
 
@@ -57,7 +61,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public void ConnectLoggingFiles(string outputPath)
         {
             Ensure.NotNullOrEmpty(outputPath, nameof(outputPath));
-            
+
             ConnectLog(outputPath);
             ConnectRunReport(outputPath);
         }
@@ -98,9 +102,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
                 dataItem = CreateDataItem(fileInfo.Name, displayName);
             }
 
-            using (var fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read))
+            try
             {
-                ((TextDocument)dataItem.Value).Content = logFileReader.ReadCompleteStream(fileStream);
+                using (var fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read))
+                {
+                    ((TextDocument)dataItem.Value).Content = logFileReader.ReadCompleteStream(fileStream);
+                }
+            }
+            catch (IOException e)
+            {
+                log.Warn(string.Format(Resources.RainfallRunoffLogFiles_Could_not_reconnect_log_files, e.Message));
             }
         }
 

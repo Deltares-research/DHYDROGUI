@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DelftTools.Utils.RegularExpressions;
+using DeltaShell.Sobek.Readers.Properties;
+using log4net;
 
 namespace DeltaShell.Sobek.Readers.Readers
 {
@@ -15,10 +17,18 @@ namespace DeltaShell.Sobek.Readers.Readers
     /// <typeparam name="T"></typeparam>
     public abstract class SobekReader<T> where T : class
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(SobekReader<T>));
+
         public virtual IEnumerable<T> Read(string filePath)
         {
             if (!File.Exists(filePath))
             {
+                yield break;
+            }
+
+            if (!IsFileReadable(filePath))
+            {
+                log.Error(string.Format(Resources.SobekReader_Could_not_read_file_because_it_is_locked, filePath));
                 yield break;
             }
 
@@ -186,6 +196,23 @@ namespace DeltaShell.Sobek.Readers.Readers
             // override for error report
         }
 
+        private static bool IsFileReadable(string filepath)
+        {
+            FileStream fileStream = (FileStream) null;
+            try
+            {
+                fileStream = File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                return fileStream.CanRead;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                fileStream?.Close();
+            }
+        }
        
     }
 }

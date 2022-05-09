@@ -17,13 +17,14 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
             var schema = new ModelSchema<TDef>();
 
             OpenInputFile(propertiesDefinitionFile);
+
             try
             {
                 var line = GetNextLine();
                 if (line == null || !line.StartsWith("GUIGroups"))
                 {
                     throw new FormatException(String.Format("Expectation GUIGroups on line {0} of file {1}", LineNumber,
-                                                      propertiesDefinitionFile));
+                                                            propertiesDefinitionFile));
                 }
 
                 // GUI Groups
@@ -40,10 +41,11 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
                     line = GetNextLine();
                 }
+
                 if (line == null || !line.StartsWith(fileGroupName))
                 {
                     throw new FormatException(String.Format("Expectation GUIGroups on line {0} of file {1}", LineNumber,
-                                                      propertiesDefinitionFile));
+                                                            propertiesDefinitionFile));
                 }
 
                 // Mdu Groups
@@ -104,7 +106,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     ParseRevisions(fromRevString, toRevString, out fromRev, out toRev);
 
                     var description = string.Join("",
-                        lineFields.Skip(NumberOfColumnsBeforeDescription).Select(s => s.Trim('"')));
+                                                  lineFields.Skip(NumberOfColumnsBeforeDescription).Select(s => s.Trim('"')));
 
                     var dataType = DataTypeValueParser.GetClrType(mduPropertyName, typeField, ref captionField, propertiesDefinitionFile, LineNumber);
 
@@ -112,7 +114,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     if (!schema.GuiPropertyGroups.ContainsKey(guiGroupId))
                     {
                         throw new FormatException(String.Format("Invalid group id \"{0}\" on line {1} of file {2}",
-                                                          guiGroupId, LineNumber, propertiesDefinitionFile));
+                                                                guiGroupId, LineNumber, propertiesDefinitionFile));
                     }
 
                     if (string.IsNullOrEmpty(captionField)) captionField = mduPropertyName;
@@ -120,27 +122,27 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     var propertyGroup = schema.GuiPropertyGroups[guiGroupId];
 
                     var propertyDefinition = new TDef
-                        {
-                            Category = propertyGroup.Name,
-                            FileCategoryName = mduGroupName,
-                            FilePropertyName = mduPropertyName,
-                            SubCategory = subCategoryField,
-                            Caption = captionField,
-                            DataType = dataType,
-                            DefaultValueAsString = defaultField,
-                            MinValueAsString = minField,
-                            MaxValueAsString = maxField,
-                            IsMultipleFile = typeField.ToLower().Equals("multipleentriesfilename"),
-                            IsFile = typeField.ToLower().Equals("filename") || typeField.ToLower().Equals("multipleentriesfilename"),
-                            ModelFileOnly = isReadOnly.ToLower().Equals("true"),
-                            Description = description,
-                            DocumentationSection = docSection,
-                            EnabledDependencies = enabledDeps.ToLower(),
-                            VisibleDependencies = visibleDeps.ToLower(),
-                            FromRevision = fromRev,
-                            UntilRevision = toRev,
-                            IsDefinedInSchema = true
-                        };
+                    {
+                        Category = propertyGroup.Name,
+                        FileCategoryName = mduGroupName,
+                        FilePropertyName = mduPropertyName,
+                        SubCategory = subCategoryField,
+                        Caption = captionField,
+                        DataType = dataType,
+                        DefaultValueAsString = defaultField,
+                        MinValueAsString = minField,
+                        MaxValueAsString = maxField,
+                        IsMultipleFile = typeField.ToLower().Equals("multipleentriesfilename"),
+                        IsFile = typeField.ToLower().Equals("filename") || typeField.ToLower().Equals("multipleentriesfilename"),
+                        ModelFileOnly = isReadOnly.ToLower().Equals("true"),
+                        Description = description,
+                        DocumentationSection = docSection,
+                        EnabledDependencies = enabledDeps.ToLower(),
+                        VisibleDependencies = visibleDeps.ToLower(),
+                        FromRevision = fromRev,
+                        UntilRevision = toRev,
+                        IsDefinedInSchema = true
+                    };
 
                     propertyGroup.PropertyDefinitions.Add(propertyDefinition);
 
@@ -151,6 +153,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
                     {
                         schema.ModelDefinitionCategory.Add(mduGroupName, new ModelPropertyGroup(mduGroupName));
                     }
+
                     schema.ModelDefinitionCategory[mduGroupName].AddPropertyDefinition(propertyDefinition);
                 }
             }

@@ -12,7 +12,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public CatchmentModelDataSynchronizer(IRainfallRunoffModel model)
         {
             this.model = model;
+            SubscribeToModel();
+        }
 
+        private void SubscribeToModel()
+        {
             if (model == null)
             {
                 return;
@@ -23,15 +27,21 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
             model.ModelDataRemoved += ModelAreaRemoved;
         }
         
-        public void Disconnect()
+        private void UnsubscribeFromModel()
         {
-            if (model != null)
+            if (model == null)
             {
-                model.PropertyChanged -= ModelPropertyChanged;
-                model.ModelDataAdded -= ModelDataAdded;
-                model.ModelDataRemoved -= ModelAreaRemoved;
+                return; 
             }
 
+            model.PropertyChanged -= ModelPropertyChanged;
+            model.ModelDataAdded -= ModelDataAdded;
+            model.ModelDataRemoved -= ModelAreaRemoved;
+        }
+        
+        public void Disconnect()
+        {
+            UnsubscribeFromModel();
             OnAreaAddedOrModified = null;
             OnAreaRemoved = null;
         }
@@ -39,8 +49,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
         public Action<CatchmentModelData> OnAreaAddedOrModified { get; set; }
         
         public Action<CatchmentModelData> OnAreaRemoved { get; set; }
-        
-        private static bool ShouldBeInIncluded(CatchmentModelData area)
+
+        private bool ShouldBeInIncluded(CatchmentModelData area)
         {
             return area is TConceptFilter;
         }

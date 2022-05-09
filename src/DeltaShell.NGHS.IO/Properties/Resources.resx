@@ -405,6 +405,9 @@
   <data name="RemoteUGridApi_ProblemWhileReadingConvention" xml:space="preserve">
     <value>While reading Deltares netcdf file version type from file {0} we encounter the following problem: {1}</value>
   </data>
+  <data name="NGHSFileBase_File_is_locked" xml:space="preserve">
+    <value>Could not open {0} because the file is locked by another process.</value>
+  </data>
   <data name="StructureParserBase_Missing_structure_property" xml:space="preserve">
     <value>{0} {1} skipped during import as property '{2}' is not found in the '{3}' file on line {4}.</value>
   </data>
@@ -428,5 +431,8 @@
   </data>
   <data name="CulvertDefinitionParser_Unsupported_culvert_geometry_type" xml:space="preserve">
     <value>The provided geometry type '{0}' is not supported.</value>
+  </data>
+  <data name="NGHSFileBase_File_could_not_be_found" xml:space="preserve">
+    <value>File {0} could not be found.</value>
   </data>
 </root>

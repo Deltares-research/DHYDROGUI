@@ -206,6 +206,24 @@ namespace DeltaShell.NGHS.IO.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File {0} could not be found..
+        /// </summary>
+        public static string NGHSFileBase_File_could_not_be_found {
+            get {
+                return ResourceManager.GetString("NGHSFileBase_File_could_not_be_found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not open {0} because the file is locked by another process..
+        /// </summary>
+        public static string NGHSFileBase_File_is_locked {
+            get {
+                return ResourceManager.GetString("NGHSFileBase_File_is_locked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The category {0} on line {1} does not contain the {2} property..
         /// </summary>
         public static string NodeFile_The_category_does_not_contain_property {

@@ -129,4 +129,10 @@
   <data name="RainfallRunoffOutputFiles_Could_not_delete_file" xml:space="preserve">
     <value>Could not delete '{0}'. The file may be locked by another program.</value>
   </data>
+  <data name="RainfallRunoffLogFiles_Could_not_reconnect_log_files" xml:space="preserve">
+    <value>Could not reconnect the Rainfall Runoff log files: {0}</value>
+  </data>
+  <data name="RainfallRunoffApplicationPluging_Could_not_save_RR_model" xml:space="preserve">
+    <value>Could not save the Rainfall Runoff model '{0}': {1}</value>
+  </data>
 </root>

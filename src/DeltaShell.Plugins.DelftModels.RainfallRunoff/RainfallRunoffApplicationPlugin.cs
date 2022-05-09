@@ -93,15 +93,25 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
             foreach (var rainfallRunoffModel in rrModels)
             {
-                var savePath = Path.Combine(projectDataFolderDirectory, rainfallRunoffModel.Name);
-                
-                exporter.Export(rainfallRunoffModel, savePath);
-
-                if (rainfallRunoffModel.OutputIsEmpty && Directory.Exists(savePath))
+                try
                 {
-                    rainfallRunoffModel.OutputFiles.DeleteOutputFiles(savePath);
+                    var savePath = Path.Combine(projectDataFolderDirectory, rainfallRunoffModel.Name);
+
+                    exporter.Export(rainfallRunoffModel, savePath);
+
+                    if (rainfallRunoffModel.OutputIsEmpty && Directory.Exists(savePath))
+                    {
+                        rainfallRunoffModel.OutputFiles.DeleteOutputFiles(savePath);
+                    }
+
+                    MoveOutputFromWorkingDirectory(rainfallRunoffModel, savePath);
                 }
-                MoveOutputFromWorkingDirectory(rainfallRunoffModel, savePath);
+                catch (IOException e)
+                {
+                    Log.Error(string.Format(Properties.Resources.RainfallRunoffApplicationPluging_Could_not_save_RR_model,
+                                                rainfallRunoffModel.Name, e.Message));
+                    return;
+                }
             }
         }
 

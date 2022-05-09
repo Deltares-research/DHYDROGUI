@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security;
 using System.Threading;
 using DelftTools.Utils.IO;
+using DeltaShell.NGHS.IO.Properties;
 
 namespace DeltaShell.NGHS.IO
 {
@@ -61,22 +62,32 @@ namespace DeltaShell.NGHS.IO
         /// Opens a FM suite related file.
         /// </summary>
         /// <param name="filePath">Path to the file being referenced.</param>
-        /// <exception cref="ArgumentException"><paramref name="filePath"/> is an empty string ("").</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="filePath"/> is null.</exception>
-        /// <exception cref="FileNotFoundException">The file cannot be found.</exception>
-        /// <exception cref="DirectoryNotFoundException">The specified path is invalid, such as being on an unmapped drive.</exception>
-        /// <exception cref="IOException"><paramref name="filePath"/> includes an incorrect or invalid syntax for file name, directory name, or volume label.</exception>
+        /// <exception cref="FileNotFoundException">Could not find <paramref name="filePath"/>.</exception>
+        /// <exception cref="IOException">Could not open <paramref name="filePath"/>.</exception>
         protected void OpenInputFile(string filePath)
         {
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException(string.Format(Resources.NGHSFileBase_File_could_not_be_found, filePath));
+            }
+
             InputFilePath = filePath;
-            reader = new StreamReader(filePath);
+            try
+            {
+                reader = new StreamReader(filePath);
+            }
+            catch (Exception)
+            {
+                throw new IOException(string.Format(Resources.NGHSFileBase_File_is_locked, filePath));
+            }
+
             fileContentHasStarted = false;
             LineNumber = 0;
         }
 
         protected void CloseInputFile()
         {
-            reader.Close();
+            reader?.Close();
         }
 
         /// <summary>

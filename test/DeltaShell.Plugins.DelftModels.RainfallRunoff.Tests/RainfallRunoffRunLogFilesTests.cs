@@ -176,5 +176,38 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests
             StringAssert.AreEqualIgnoringCase(someData, logFileText.Content);
         }
 
+        [TestCase("3b_bal.out")]
+        [TestCase("sobek_3b.log")]
+        public void ConnectLoggingFiles_LogFileLocked_DoesNotThrowIOException(string logFileName)
+        {
+            // Setup
+            const string someData = "someData";
+            var logFileReader = Substitute.For<ILogFileReader>();
+            logFileReader.ReadCompleteStream(Arg.Any<Stream>()).Returns(someData);
+
+            var rrModel = Substitute.For<IRainfallRunoffModel>();
+
+            var rrLogFiles = new RainfallRunoffRunLogFiles(logFileReader, rrModel);
+
+            using (var tempDir = new TemporaryDirectory())
+            {
+                // create file in temp dir to make the code run for log file
+                string logFile = tempDir.CreateFile(logFileName);
+
+                using (File.Open(logFile, FileMode.Open, FileAccess.Read, FileShare.None))
+                {
+                    // Call
+                    Action action = () => rrLogFiles.ConnectLoggingFiles(tempDir.Path);
+
+                    // Assert
+                    Assert.That(action, Throws.Nothing);
+
+                    string expectedMessage = $"Could not reconnect the Rainfall Runoff log files: The process cannot access " +
+                                             $"the file '{logFile}' because it is being used by another process.";
+                    TestHelper.AssertLogMessageIsGenerated(action, expectedMessage, 1);
+                }
+            }
+        }
+
     }
 }

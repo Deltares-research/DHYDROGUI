@@ -88,6 +88,24 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not save the Rainfall Runoff model &apos;{0}&apos;: {1}.
+        /// </summary>
+        public static string RainfallRunoffApplicationPluging_Could_not_save_RR_model {
+            get {
+                return ResourceManager.GetString("RainfallRunoffApplicationPluging_Could_not_save_RR_model", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not reconnect the Rainfall Runoff log files: {0}.
+        /// </summary>
+        public static string RainfallRunoffLogFiles_Could_not_reconnect_log_files {
+            get {
+                return ResourceManager.GetString("RainfallRunoffLogFiles_Could_not_reconnect_log_files", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not delete &apos;{0}&apos;. The file may be locked by another program..
         /// </summary>
         public static string RainfallRunoffOutputFiles_Could_not_delete_file {

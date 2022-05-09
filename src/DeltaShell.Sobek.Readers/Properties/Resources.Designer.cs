@@ -22,7 +22,7 @@ namespace DeltaShell.Sobek.Readers.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace DeltaShell.Sobek.Readers.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeltaShell.Sobek.Readers.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace DeltaShell.Sobek.Readers.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,16 +63,25 @@ namespace DeltaShell.Sobek.Readers.Properties {
         /// <summary>
         ///   Looks up a localized string similar to {0} ({1}) can not be equal to or higher than {2} ({3})..
         /// </summary>
-        internal static string Exception_IndexEqualToOrHigherThanNumberOfLocations {
+        public static string Exception_IndexEqualToOrHigherThanNumberOfLocations {
             get {
                 return ResourceManager.GetString("Exception_IndexEqualToOrHigherThanNumberOfLocations", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0}: it is locked by another process..
+        /// </summary>
+        public static string SobekReader_Could_not_read_file_because_it_is_locked {
+            get {
+                return ResourceManager.GetString("SobekReader_Could_not_read_file_because_it_is_locked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unsupported {0} discharge target for paved data with id {1}. Will be set to lateral source or boundary node..
         /// </summary>
-        internal static string SobekRRPavedReader_Warning_UnsupportedDischargeTarget {
+        public static string SobekRRPavedReader_Warning_UnsupportedDischargeTarget {
             get {
                 return ResourceManager.GetString("SobekRRPavedReader_Warning_UnsupportedDischargeTarget", resourceCulture);
             }
