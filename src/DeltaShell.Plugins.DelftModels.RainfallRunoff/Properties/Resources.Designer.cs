@@ -79,6 +79,60 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A paved node may not be connected downstream to more then 1 boundary..
+        /// </summary>
+        public static string PavedDataValidation_Cant_link_to_multiple_boundaries {
+            get {
+                return ResourceManager.GetString("PavedDataValidation_Cant_link_to_multiple_boundaries", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A paved node may not be connected downstream to more then 1 Waste Water Treatment Plant..
+        /// </summary>
+        public static string PavedDataValidation_Cant_link_to_multiple_waste_water_treatment_plants {
+            get {
+                return ResourceManager.GetString("PavedDataValidation_Cant_link_to_multiple_waste_water_treatment_plants", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A paved node dry water flow sewer link can only be connected (downstream) to a boundary, lateral or waste water treatment plant..
+        /// </summary>
+        public static string PavedDataValidation_Dry_weather_flow_link_has_no_valid_target {
+            get {
+                return ResourceManager.GetString("PavedDataValidation_Dry_weather_flow_link_has_no_valid_target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A paved node mixed sewer link can only be connected (downstream) to a boundary, open water, lateral or waste water treatment plant..
+        /// </summary>
+        public static string PavedDataValidation_Mixed_runoff_has_no_valid_target_for_link {
+            get {
+                return ResourceManager.GetString("PavedDataValidation_Mixed_runoff_has_no_valid_target_for_link", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No runoff target has been defined for the paved dry water flow..
+        /// </summary>
+        public static string PavedDataValidation_No_target_for_dry_weather_flow {
+            get {
+                return ResourceManager.GetString("PavedDataValidation_No_target_for_dry_weather_flow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No runoff target has been defined for the paved rainfall/mixed flow, or the selected runoff type does not match any of the linked features..
+        /// </summary>
+        public static string PavedDataValidation_No_target_for_mixed_flow {
+            get {
+                return ResourceManager.GetString("PavedDataValidation_No_target_for_mixed_flow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allows to simulate lumped rainfall runoff models, such as Sacramento and HBV..
         /// </summary>
         public static string RainfallRunoffApplicationPlugin_Description {

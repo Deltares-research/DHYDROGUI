@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
@@ -168,5 +169,60 @@ namespace DelftTools.Hydro.Tests
             Assert.AreEqual(10, catchment.InteriorPoint.X);
             Assert.AreEqual(10, catchment.InteriorPoint.Y);
         }
+
+        [Test]
+        public void PavedCatchmentWithLinkToWasteWaterTreatmentPlant_CannotBeLinkedToAnotherWasteWaterTreatmentPlant()
+        {
+            var catchment = new Catchment()
+            {
+                CatchmentType = CatchmentType.Paved
+            };
+
+            var treatmentPlant1 = new WasteWaterTreatmentPlant();
+            var link = new HydroLink(catchment, treatmentPlant1);
+            catchment.Links.Add(link);
+
+            var treatmentPlant2 = new WasteWaterTreatmentPlant();
+
+            // Call
+            bool canLinkTo = catchment.CanLinkTo(treatmentPlant2);
+
+            // Assert
+            Assert.That(canLinkTo, Is.False);
+        }
+        
+        [Test]
+        [TestCaseSource(nameof(CanLinkPavedCatchmentTestCases))]
+        public void PavedCatchmentWithLinkToLateralSourceOrRunoffBoundary_CannotBeLinkedToAnotherLateralSourceOrRunoffBoundary(
+            IHydroObject target1,
+            IHydroObject target2)
+        {
+            var catchment = new Catchment()
+            {
+                CatchmentType = CatchmentType.Paved,
+            };
+
+            var link = new HydroLink(catchment, target1);
+            catchment.Links.Add(link);
+ 
+            // Call
+            bool canLinkTo = catchment.CanLinkTo(target2);
+
+            // Assert
+            Assert.That(canLinkTo, Is.False);
+        }
+
+        private static IEnumerable<TestCaseData> CanLinkPavedCatchmentTestCases()
+        {
+            yield return new TestCaseData(new LateralSource(), new LateralSource())
+                .SetName("Cannot link paved catchment to 2 lateral sources.");
+            yield return new TestCaseData(new LateralSource(), new RunoffBoundary())
+                .SetName("Cannot link paved catchment to a lateral source and a runoff boundary.");
+            yield return new TestCaseData(new RunoffBoundary(), new LateralSource())
+                .SetName("Cannot link paved catchment to a runoff boundary and a lateral source.");
+            yield return new TestCaseData(new RunoffBoundary(), new RunoffBoundary())
+                .SetName("Cannot link paved catchment to 2 runoff boundaries.");
+        }
+
     }
 }

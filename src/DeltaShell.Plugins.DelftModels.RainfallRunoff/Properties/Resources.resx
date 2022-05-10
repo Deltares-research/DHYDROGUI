@@ -135,4 +135,22 @@
   <data name="RainfallRunoffApplicationPluging_Could_not_save_RR_model" xml:space="preserve">
     <value>Could not save the Rainfall Runoff model '{0}': {1}</value>
   </data>
+  <data name="PavedDataValidation_No_target_for_mixed_flow" xml:space="preserve">
+    <value>No runoff target has been defined for the paved rainfall/mixed flow, or the selected runoff type does not match any of the linked features.</value>
+  </data>
+  <data name="PavedDataValidation_Mixed_runoff_has_no_valid_target_for_link" xml:space="preserve">
+    <value>A paved node mixed sewer link can only be connected (downstream) to a boundary, open water, lateral or waste water treatment plant.</value>
+  </data>
+  <data name="PavedDataValidation_No_target_for_dry_weather_flow" xml:space="preserve">
+    <value>No runoff target has been defined for the paved dry water flow.</value>
+  </data>
+  <data name="PavedDataValidation_Dry_weather_flow_link_has_no_valid_target" xml:space="preserve">
+    <value>A paved node dry water flow sewer link can only be connected (downstream) to a boundary, lateral or waste water treatment plant.</value>
+  </data>
+  <data name="PavedDataValidation_Cant_link_to_multiple_waste_water_treatment_plants" xml:space="preserve">
+    <value>A paved node may not be connected downstream to more then 1 Waste Water Treatment Plant.</value>
+  </data>
+  <data name="PavedDataValidation_Cant_link_to_multiple_boundaries" xml:space="preserve">
+    <value>A paved node may not be connected downstream to more then 1 boundary.</value>
+  </data>
 </root>

@@ -4,7 +4,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
     public static class RainfallRunoffValidationHelper
     {
-        public static bool IsConnectedToBoundary(IHydroObject target)
+        public static bool IsConsideredAsBoundary(IHydroObject target)
         {
             return target is LateralSource ||
                    target is HydroNode ||

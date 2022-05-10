@@ -158,14 +158,54 @@ namespace DelftTools.Hydro
 
         public virtual bool CanLinkTo(IHydroObject target)
         {
-            if (CatchmentType.Equals(CatchmentType.Paved)
-                && target is Catchment targetCatchment 
-                && targetCatchment.CatchmentType.Equals(CatchmentType.OpenWater))
+            if (CatchmentType.Equals(CatchmentType.Paved))
+            {
+                return CanLinkPavedCatchmentTo(target);
+            }
+
+            return Region.CanLinkTo(this, target);
+        }
+
+        private bool CanLinkPavedCatchmentTo(IHydroObject target)
+        {
+            if (TargetIsOpenWaterCatchment(target))
             {
                 return true;
             }
 
+            if (AlreadyHasLinkToTargetType(target))
+            {
+                return false;
+            }
+
             return Region.CanLinkTo(this, target);
+        }
+
+        private bool AlreadyHasLinkToTargetType(IHydroObject target)
+        {
+            if (!Links.Any())
+            {
+                return false;
+            }
+
+            switch (target)
+            {
+                case WasteWaterTreatmentPlant _:
+                    return Links.Any(link => link.Target is WasteWaterTreatmentPlant);
+                case LateralSource _:
+                case RunoffBoundary _:
+                {
+                    return Links.Any(link => link.Target is LateralSource || link.Target is RunoffBoundary);
+                }
+            }
+
+            return false;
+        }
+
+        private static bool TargetIsOpenWaterCatchment(IHydroObject target)
+        {
+            return target is Catchment targetCatchment 
+                   && targetCatchment.CatchmentType.Equals(CatchmentType.OpenWater);
         }
 
         public static Catchment CreateDefault()

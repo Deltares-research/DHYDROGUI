@@ -4,106 +4,170 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.Validators;
 using DelftTools.Utils.Validation;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
-    public class PavedDataValidator : IValidator<RainfallRunoffModel, IEnumerable<PavedData>>
+    public class PavedDataValidator : IValidator<IRainfallRunoffModel, IEnumerable<PavedData>>
     {
-        public ValidationReport Validate(RainfallRunoffModel rootObject, IEnumerable<PavedData> target = null)
+        private const string pavedConcept = "Paved concept";
+        
+        public ValidationReport Validate(IRainfallRunoffModel rootObject, IEnumerable<PavedData> dataToValidate = null)
         {
-            if (!target.Any())
+            if (NothingToValidate(dataToValidate))
             {
-                return ValidationReport.Empty("Paved concept"); //nothing to report
+                return ValidationReport.Empty(pavedConcept);
             }
+
             var issues = new List<ValidationIssue>();
 
-            foreach (var pavedData in target)
+            foreach (PavedData pavedData in dataToValidate)
             {
                 issues.AddRange(ValidatePaved(pavedData));
             }
 
-            return new ValidationReport("Paved concept", issues);
+            return new ValidationReport(pavedConcept, issues);
         }
 
-        private static bool IsOpenWater(IHydroObject hydroObject) => 
-            hydroObject is Catchment catchment && catchment.CatchmentType.Equals(CatchmentType.OpenWater);
+        private static bool NothingToValidate(IEnumerable<PavedData> dataToValidate)
+        {
+            return dataToValidate == null 
+                   || !dataToValidate.Any();
+        }
 
         private static IEnumerable<ValidationIssue> ValidatePaved(PavedData pavedData)
         {
-            var pavedMixedSewerLink = pavedData.MixedSewerTarget; //favor boundaries
-            var pavedDwfSewerLink = pavedData.DwfSewerTarget; //favor wwtp?
+            IHydroObject pavedMixedSewerLinkTarget = pavedData.MixedSewerTarget;
+            IHydroObject pavedDwfSewerLinkTarget = pavedData.DwfSewerTarget;
 
-            bool hasMixedLink = pavedMixedSewerLink != null;
-            bool hasDwfLink = pavedDwfSewerLink != null;
-            bool mixedToBoundary = RainfallRunoffValidationHelper.IsConnectedToBoundary(pavedMixedSewerLink);
-            bool mixedToOpenWater = IsOpenWater(pavedMixedSewerLink);
-            bool mixedToWwtp = pavedMixedSewerLink is WasteWaterTreatmentPlant;
-
+            bool hasMixedLink = pavedMixedSewerLinkTarget != null;
+            bool hasDwfLink = pavedDwfSewerLinkTarget != null;
+            
             var issues = new List<ValidationIssue>();
-            if (!hasMixedLink)
+            
+            if(hasMixedLink)
             {
-                issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                                              "No runoff target has been defined for the paved rainfall/mixed flow, or the selected runoff type does not match any of the linked features", 
-                                              new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
+                issues.AddRange(EnsureThatPavedDataHasValidLinkTargetForMixedLink(pavedMixedSewerLinkTarget, pavedData));
+            }
+            else
+            {
+                issues.AddRange(EnsureThatPavedDataHasAMixedLink(pavedData));
             }
 
-            if (hasMixedLink && !(mixedToBoundary || mixedToOpenWater || mixedToWwtp))
-            {
-                issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                                              "A paved node mixed sewer link can only be connected (downstream) to a boundary, open water, lateral or waste water treatment plant", 
-                                              new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
-            }
+            issues.AddRange(EnsureThatPavedCatchmentDoesNotHaveMultipleLinksToSameType(pavedData));
 
-            if (pavedData.SewerType == PavedEnums.SewerType.MixedSystem)
-                return issues; //done
+            if (IsMixedSystem(pavedData.SewerType))
+            {
+                return issues;
+            }
 
             if (!hasDwfLink)
             {
-                issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                                              "No runoff target has been defined for the paved dry water flow",
-                                              new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
-                return issues;
-            }
-            if (!hasMixedLink)
-                return issues; //don't go further, enough errors now
-
-            bool dwfToBoundary = RainfallRunoffValidationHelper.IsConnectedToBoundary(pavedDwfSewerLink);
-            bool dwfToOpenWater = IsOpenWater(pavedDwfSewerLink);
-            bool dwfToWwtp = pavedDwfSewerLink is WasteWaterTreatmentPlant;
-
-            if (!(dwfToBoundary || dwfToOpenWater || dwfToWwtp))
-            {
-                issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                                              "A paved node dry water flow sewer link can only be connected (downstream) to a boundary, lateral or waste water treatment plant",
-                                              new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
+                issues.AddRange(EnsureThatPavedDataHasADryWeatherFlowLink(pavedData));
             }
 
-            if (((dwfToBoundary && mixedToBoundary) || (dwfToOpenWater && mixedToOpenWater) || (dwfToWwtp && mixedToWwtp)) && pavedDwfSewerLink != pavedMixedSewerLink)
-            {
-                //if same type, must be same object
-                issues.Add(new ValidationIssue(pavedData.Catchment, ValidationSeverity.Error,
-                    GetMessage(dwfToBoundary, dwfToOpenWater, dwfToWwtp), new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment)));
-            }
+            issues.AddRange(EnsureThatPavedDataHasValidLinkTargetForDryWeatherFlowLink(pavedDwfSewerLinkTarget, pavedData));
+
             return issues;
         }
 
-        private static string GetMessage(bool toBoundary, bool toOpenWater, bool toWwtp)
+        private static IEnumerable<ValidationIssue> EnsureThatPavedDataHasValidLinkTargetForMixedLink(
+            IHydroObject target, PavedData pavedData)
         {
-            const string start = "A paved node cannot be connected to multiple ";
-            if (toBoundary)
+            if (!HasValidLink(target))
             {
-                return start + "boundaries (both pumps must discharge to the same, or to a waste water treatment plant)";
+                yield return new ValidationIssue(pavedData.Catchment, 
+                                                 ValidationSeverity.Error, 
+                                                 Resources.PavedDataValidation_Mixed_runoff_has_no_valid_target_for_link, 
+                                                 new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment));
             }
-            if (toOpenWater)
+        }
+
+        private static bool HasValidLink(IHydroObject target)
+        {
+            return IsConsideredBoundary(target) 
+                   || IsOpenWaterCatchment(target) 
+                   || IsWasteWaterTreatmentPlant(target);
+        }
+
+        private static bool IsConsideredBoundary(IHydroObject target)
+        {
+            return RainfallRunoffValidationHelper.IsConsideredAsBoundary(target);
+        }
+
+        private static bool IsOpenWaterCatchment(IHydroObject target)
+        {
+            return target is Catchment catchment && catchment.CatchmentType.Equals(CatchmentType.OpenWater);
+        }
+        
+        private static bool IsWasteWaterTreatmentPlant(IHydroObject target)
+        {
+            return target is WasteWaterTreatmentPlant;
+        }
+        
+        private static bool IsMixedSystem(PavedEnums.SewerType sewerType)
+        {
+            return sewerType == PavedEnums.SewerType.MixedSystem;
+        }
+
+        private static IEnumerable<ValidationIssue> EnsureThatPavedDataHasAMixedLink(PavedData pavedData)
+        {
+            yield return new ValidationIssue(pavedData.Catchment, 
+                                             ValidationSeverity.Error,
+                                             Resources.PavedDataValidation_No_target_for_mixed_flow, 
+                                             new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment));
+        }
+
+        private static IEnumerable<ValidationIssue> EnsureThatPavedDataHasADryWeatherFlowLink(PavedData pavedData)
+        {
+            yield return new ValidationIssue(pavedData.Catchment, 
+                                             ValidationSeverity.Error,
+                                             Resources.PavedDataValidation_No_target_for_dry_weather_flow,
+                                             new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment));
+        }
+
+        private static IEnumerable<ValidationIssue> EnsureThatPavedDataHasValidLinkTargetForDryWeatherFlowLink(
+            IHydroObject target, PavedData pavedData)
+        {
+            if (!HasValidLink(target))
             {
-                return start + "open waters";
+                yield return new ValidationIssue(pavedData.Catchment, 
+                                                 ValidationSeverity.Error, 
+                                                 Resources.PavedDataValidation_Dry_weather_flow_link_has_no_valid_target, 
+                                                 new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment));
             }
-            if (toWwtp)
+        }
+        
+        private static IEnumerable<ValidationIssue> EnsureThatPavedCatchmentDoesNotHaveMultipleLinksToSameType(PavedData pavedData)
+        {
+            Catchment catchment = pavedData.Catchment;
+            if (catchment == null)
             {
-                return start + "waste water treatment plants";
+                yield break;
+            }
+            
+            IEnumerable<HydroLink> links = catchment.Links;
+
+            if (!links.Any())
+            {
+                yield break;
             }
 
-            return "targets of the same type";
+            if (links.Count(link => IsWasteWaterTreatmentPlant(link.Target)) > 1)
+            {
+                yield return new ValidationIssue(pavedData.Catchment, 
+                                                 ValidationSeverity.Error,
+                                                 Resources.PavedDataValidation_Cant_link_to_multiple_waste_water_treatment_plants, 
+                                                 new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment));
+            }
+            
+            if (links.Count(link => IsConsideredBoundary(link.Target)) > 1)
+            {
+                yield return new ValidationIssue(pavedData.Catchment, 
+                                                 ValidationSeverity.Error,
+                                                 Resources.PavedDataValidation_Cant_link_to_multiple_boundaries, 
+                                                 new ValidatedFeatures(pavedData.Catchment.Basin, pavedData.Catchment));
+            }
         }
     }
 }
