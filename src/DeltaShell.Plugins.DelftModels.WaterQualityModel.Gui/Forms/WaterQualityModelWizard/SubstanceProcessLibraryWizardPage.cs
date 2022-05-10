@@ -57,6 +57,8 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             return true;
         }
 
+        public event EventHandler PageUpdated;
+
         # endregion
 
         # region Obtaining data
