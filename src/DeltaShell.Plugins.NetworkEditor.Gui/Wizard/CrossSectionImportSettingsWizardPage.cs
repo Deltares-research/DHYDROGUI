@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using DelftTools.Controls.Swf;
 using DeltaShell.Plugins.NetworkEditor.ImportExportCsv;
 
@@ -28,6 +29,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
         {
             return true;
         }
+
+        public event EventHandler PageUpdated;
 
         public CrossSectionImportSettings Settings
         {

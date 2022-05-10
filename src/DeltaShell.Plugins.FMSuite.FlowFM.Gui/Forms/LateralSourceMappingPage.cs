@@ -71,6 +71,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Forms
         /// <returns>True</returns>
         public bool CanDoPrevious() => true;
 
+        public event EventHandler PageUpdated;
+
         private void UpdateAvailableRadioButtons()
         {
             rbH.Visible = ForBoundaryConditions && BatchMode;

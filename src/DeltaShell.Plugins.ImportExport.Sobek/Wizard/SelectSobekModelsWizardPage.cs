@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using DelftTools.Controls.Swf;
 
 namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
@@ -59,5 +60,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
         {
             return true;
         }
+
+        public event EventHandler PageUpdated;
     }
 }

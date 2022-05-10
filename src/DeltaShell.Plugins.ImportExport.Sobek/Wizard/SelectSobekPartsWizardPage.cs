@@ -34,6 +34,8 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
             return true;
         }
 
+        public event EventHandler PageUpdated;
+
         public IPartialSobekImporter PartialSobekImporter
         {
             get
