@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using DelftTools.Controls;
 using DelftTools.Shell.Gui;
@@ -61,12 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.NodePresenters
 
         protected override bool RemoveNodeData(object parentNodeData, ControlGroup nodeData)
         {
-            ITreeNode node = TreeView.GetNodeByTag(nodeData);
-            ITreeNode controlGroupsNode = node.Parent;
-            var model = (RealTimeControlModel) controlGroupsNode.Parent.Parent.Tag;
-            model.ControlGroups.Remove(nodeData);
-
-            return true;
+            return parentNodeData is IList<ControlGroup> controlGroups 
+                   && controlGroups.Remove(nodeData);
         }
     }
 }
