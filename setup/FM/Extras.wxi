@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <Component Id="FMExtras" Guid="9616A194-176B-4C05-9015-CB7CF9A706E3">
-    <File Id="splash_screen" Source='$(var.Delft3DPackageName)_Resources\splash_screen.jpg' />
+  <Component Id="FMExtras" Guid="$(var.MyExtras)">
+    <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedFMExtras" Type="integer" Value="1"/>
+    <File Id="splash_screen" Source='!(loc.Delft3DPackageName)_Resources\splash_screen.jpg' />
   </Component>
 </Include>

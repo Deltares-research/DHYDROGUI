@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="fmo"  xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="INSTALLER_VARIANT">fmo</String>
+  
+  <String Id="ApplicationName">Delft3D FM Suite</String>
+  
+  <String Id="DistributionName">Open1D2D</String>
+  <String Id="HelpLink">https://oss.deltares.nl/web/delft3dfm</String>
+
+  <String Id="Delft3DPackageName">Delft3D FM HMWQ</String>
+
+  <String Id="RegistrationFeature">Delft3D_FM_1D2D_OSS</String>
+  <String Id="RegistrationVersion">2022</String>
+
+  <String Id="SplashScreenCompany">Deltares</String>
+  <String Id="SplashScreenLicense">Valid until 30 oct 2022</String>
+  
+  <String Id="LicenseRtf" Overridable="yes">Delft3D FM HMWQ_Resources\License.rtf</String>
+
+  <String Id="SupportEmail" Overridable="yes">delft3d.support@deltares.nl</String>
+  <String Id="SplashScreenLogoImageFilePath" Overridable="yes">splash_screen.jpg</String>
+  <String Id="ManualFileName" Overridable="yes">Delta_Shell_User_Manual.pdf</String>
+  <String Id="PluginFeatureDescription">The hydrodynamic module D-Flow Flexible Mesh (D-Flow FM) which is part of the Delft3D Flexible Mesh Suite. Without installation of the open source numerical modules / computational cores.</String>
+</WixLocalization>

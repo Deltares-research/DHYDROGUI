@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <?include ..\HydroModel\HydroModel_FeatureContent.wxi?>
-  
   <Feature Id="FMExtrasFeature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
     <ComponentRef Id="FMExtras"/>
-  </Feature>
-  
-  <Feature Id="DimrLibsFeature" Level="1" Absent="disallow" AllowAdvertise="no" Display="hidden">
-    <ComponentGroupRef Id="DimrLibs"/>
-  </Feature>
-
-  <Feature Id="FM" Title="!(loc.FMFeatureName)" Description ="!(loc.FMFeatureDescription)" Level="1" Absent="disallow" AllowAdvertise="no">
-    <?include FMPlugin_FeatureContent.wxi?>
-  </Feature>
-
-  <Feature Id="RTC" Title="!(loc.RTCFeatureName)" Description ="!(loc.RTCFeatureDescription)" Level="1" Absent="allow" AllowAdvertise="no">
-    <?include ..\RealTimeControl\RealTimeControl_FeatureContent.wxi?>
-  </Feature>
-  
-  <Feature Id="RainfallRunoffModel" Title="!(loc.RRFeatureName)" Description="!(loc.RRFeatureDescription)" Level="1" Absent="disallow" AllowAdvertise="no">
-    <?include ..\Sobek\RR_FeatureContent.wxi?>
   </Feature>
 </Include>

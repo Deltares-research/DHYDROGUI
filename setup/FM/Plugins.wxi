@@ -1,17 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
-  <?include ..\HydroModel\HydroModelPlugin.wxi?>
-  <?include ..\NetworkEditor\NetworkEditorPlugin.wxi?>
-  <?include ..\GridEditor\GridEditorPlugin.wxi?>
-  <?include ..\GWSWImporter\GWSWImporterPlugin.wxi?>
-  <?include ..\NGHS.IO\NGHS.IO.wxi?>
-  <?include ..\Dimr\Dimr.wxi?>
-  
-  <?include FMSuiteCommonPlugin.wxi?>
-  <?include ..\Sobek\ImportSobek2NetworkPlugin.wxi?>
-  <?include FMPlugin.wxi?>
-
-
-  <?include ..\RealTimeControl\RealTimeControlPlugin.wxi?>
-  <?include ..\Sobek\RainfallRunoffModelPlugin.wxi?>
+  <!--Include plugin folders not harvested from the build output directory-->
 </Include>

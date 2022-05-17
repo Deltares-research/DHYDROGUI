@@ -24,22 +24,24 @@
  
 
       <Publish Dialog="ExitDialogDeltares" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="ExitDialogDeltares" Control="Finish" Event="DoAction" Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
 
       <Publish Dialog="WelcomeDlgDeltares" Control="Next" Event="NewDialog" Value="LicenseAgreementDlgDeltares">1</Publish>
 
       <Publish Dialog="LicenseAgreementDlgDeltares" Control="Back" Event="NewDialog" Value="WelcomeDlgDeltares">1</Publish>
-      <Publish Dialog="LicenseAgreementDlgDeltares" Control="Next" Event="NewDialog" Value="SetupTypeDlgDeltares" Order="2">LicenseAccepted = "1"</Publish>
+      <Publish Dialog="LicenseAgreementDlgDeltares" Control="Next" Event="NewDialog" Value="FM_SetupTypeDialog" Order="2">LicenseAccepted = "1"</Publish>
 
-      <Publish Dialog="SetupTypeDlgDeltares" Control="Back" Event="NewDialog" Value="LicenseAgreementDlgDeltares">1</Publish>
-      <Publish Dialog="SetupTypeDlgDeltares" Control="TypicalButton" Event="NewDialog" Value="VerifyReadyDlgDeltares">1</Publish>
-      <Publish Dialog="SetupTypeDlgDeltares" Control="CustomButton" Event="NewDialog" Value="CustomizeDlgDeltares">1</Publish>
-      <Publish Dialog="SetupTypeDlgDeltares" Control="CompleteButton" Event="NewDialog" Value="VerifyReadyDlgDeltares">1</Publish>
+      <Publish Dialog="FM_SetupTypeDialog" Control="Back" Event="NewDialog" Value="LicenseAgreementDlgDeltares">1</Publish>
+      <Publish Dialog="FM_SetupTypeDialog" Control="CustomButton" Event="NewDialog" Value="CustomizeDlgDeltares">1</Publish>
+      <Publish Dialog="FM_SetupTypeDialog" Control="CompleteButton" Event="NewDialog" Value="VerifyReadyDlgDeltares">1</Publish>
 
       <Publish Dialog="CustomizeDlgDeltares" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlgDeltares" Order="1">WixUI_InstallMode = "Change"</Publish>
-      <Publish Dialog="CustomizeDlgDeltares" Control="Back" Event="NewDialog" Value="SetupTypeDlgDeltares" Order="2">WixUI_InstallMode = "InstallCustom"</Publish>
+      <Publish Dialog="CustomizeDlgDeltares" Control="Back" Event="NewDialog" Value="FM_SetupTypeDialog" Order="2">WixUI_InstallMode = "InstallCustom"</Publish>
       <Publish Dialog="CustomizeDlgDeltares" Control="Next" Event="NewDialog" Value="VerifyReadyDlgDeltares">1</Publish>
 
-      <Publish Dialog="VerifyReadyDlgDeltares" Control="Back" Event="NewDialog" Value="SetupTypeDlgDeltares">1</Publish>
+      <Publish Dialog="VerifyReadyDlgDeltares" Control="Back" Event="NewDialog" Value="CustomizeDlgDeltares" Order="1">WixUI_InstallMode = "Change" OR WixUI_InstallMode = "Update" Or WixUI_InstallMode = "InstallCustom"</Publish>
+      <Publish Dialog="VerifyReadyDlgDeltares" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlgDeltares" Order="2">WixUI_InstallMode = "Repair" OR WixUI_InstallMode = "Remove"</Publish>
+      <Publish Dialog="VerifyReadyDlgDeltares" Control="Back" Event="NewDialog" Value="FM_SetupTypeDialog" Order="3">WixUI_InstallMode = "InstallComplete" OR WixUI_InstallMode = "InstallTypical"</Publish>
 
       <Publish Dialog="MaintenanceWelcomeDlgDeltares" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlgDeltares">1</Publish>
 

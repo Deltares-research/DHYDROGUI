@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <?define deltashell_output_folder="$(var.SolutionDir)bin\$(var.Configuration)\"?>
+  <?ifndef deltashell_gui_bin?>
+    <?ifndef deltashell_output_folder?>
+      <?define deltashell_output_folder="$(var.SolutionDir)bin\$(var.Configuration)\"?>
+    <?endif?>
+    <?define deltashell_gui_bin="$(var.deltashell_output_folder)DeltaShell"?>
+  <?endif?>
+  <?define deltashell_plugins_files="$(var.SolutionDir)bin\$(var.Configuration)\Plugins"?>
+</Include>

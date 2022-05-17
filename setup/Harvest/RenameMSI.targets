@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="RenameMsi" AfterTargets="AfterBuild" >
+	
+	<WixAssignCulture
+      Cultures="$(Cultures)"
+      Files="@(EmbeddedResource)"
+    >
+      <Output TaskParameter="CultureGroups" ItemName="CultureGroup" />
+    </WixAssignCulture>
+
+    <!-- Build an itemgroup of outputs -->
+    <CreateItem
+      Include="$(TargetDir)%(CultureGroup.OutputFolder)$(TargetName)$(TargetExt)">
+      <Output TaskParameter="Include"
+              ItemName="_TargetPathItems"/>
+    </CreateItem>
+    <!--<Message Text="Current culture outputfolder : %(MyCultureGroup.OutputFolder)"/>-->
+    <MsBuild Projects="$(MSBuildProjectFullPath)" Targets="ChangeTargetName" Properties="MyMSI=%(_TargetPathItems.Identity)" />
+    
+  </Target>  
+
+  <Target Name="ChangeTargetName" Condition="Exists($(MyMSI))" >
+    <ReadMsiPropertyValue MsiFile="$(MyMSI)" MsiProperty="FullProductName" ContinueOnError="WarnAndContinue">
+      <Output TaskParameter="MsiPropertyValue" PropertyName="_FullProductName" />
+    </ReadMsiPropertyValue >
+    <Message Text="My original full product name : $(MyMSI)" Importance="high"/>
+    <Message Text="My new read full product name : $(_FullProductName).msi" Importance="high"/>
+
+    <!--delete destination msi if exist-->
+    <Delete 
+      Files="$([System.IO.Path]::GetDirectoryName('$(MyMSI)'))\$(_FullProductName).msi" 
+      Condition="Exists($([System.IO.Path]::Combine($([System.IO.Path]::GetDirectoryName('$(MyMSI)')), $(_FullProductName).msi)))" 
+      ContinueOnError="WarnAndContinue"/>
+    <!--move original msi to new correctly named destination msi if original msi exist-->
+    <Move 
+      SourceFiles="$(MyMSI)"
+      DestinationFiles="$([System.IO.Path]::GetDirectoryName('$(MyMSI)'))\$(_FullProductName).msi" 
+      ContinueOnError="WarnAndContinue" 
+      Condition="Exists($(MyMSI))" />
+
+    <!--delete destination zip if exist-->
+    <Delete 
+      Files="$([System.IO.Path]::GetDirectoryName('$(MyMSI)'))\$(_FullProductName).zip" 
+      Condition="Exists($([System.IO.Path]::Combine($([System.IO.Path]::GetDirectoryName('$(MyMSI)')), $(_FullProductName).zip)))" 
+      ContinueOnError="WarnAndContinue"/>
+    <!--move original zip to new correctly named destination zip if original zip exist-->
+    <Move 
+      SourceFiles="$([System.IO.Path]::GetDirectoryName('$(MyMSI)'))\$(TargetName).zip"
+      DestinationFiles="$([System.IO.Path]::GetDirectoryName('$(MyMSI)'))\$(_FullProductName).zip" 
+      ContinueOnError="WarnAndContinue"
+      Condition="Exists($([System.IO.Path]::Combine($([System.IO.Path]::GetDirectoryName('$(MyMSI)')), $(TargetName).zip)))"/>
+
+    <!--delete destination log if exist-->
+    <Delete 
+      Files="$([System.IO.Path]::GetDirectoryName('$(MyMSI)'))\$(_FullProductName)_versions.html" 
+      Condition="Exists($([System.IO.Path]::Combine($([System.IO.Path]::GetDirectoryName('$(MyMSI)')), $(_FullProductName)_versions.html)))" 
+      ContinueOnError="WarnAndContinue"/>
+    <!--move original zip to new correctly named destination zip if original zip exist-->
+    <Move 
+      SourceFiles="$([System.IO.Path]::GetDirectoryName('$(MyMSI)'))\$(TargetName)_versions.html"
+      DestinationFiles="$([System.IO.Path]::GetDirectoryName('$(MyMSI)'))\$(_FullProductName)_versions.html" 
+      ContinueOnError="WarnAndContinue" 
+      Condition="Exists($([System.IO.Path]::Combine($([System.IO.Path]::GetDirectoryName('$(MyMSI)')), $(TargetName)_versions.html)))" />
+  </Target>
+</Project>

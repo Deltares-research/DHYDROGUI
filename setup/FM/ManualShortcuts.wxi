@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Include>
   <?include Manuals\FMManualShortcuts.wxi?>
+  <?include Manuals\RGFGridManualShortcuts.wxi?>
   <?include ..\RealTimeControl\Manuals\RTCManualShortcuts.wxi?>
   <?include ..\Sobek\Manuals\RainfallRunoffManualShortcuts.wxi?>
   <?include ..\Dimr\Manuals\DIMRManualShortcuts.wxi?>
