@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
+using DelftTools.Functions.DelftTools.Utils.Tuples;
 using DelftTools.Functions.Filters;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro;
@@ -13,6 +14,7 @@ using DelftTools.Hydro.Structures;
 using DelftTools.Units;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.Threading;
 using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.CompositeStructureView;
@@ -49,6 +51,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public NetworkSideViewDataController(Route route, NetworkSideViewCoverageManager coverageManager, ModelNameForCoverageDelegate modelNameForCoverageDelegate = null)
         {
+            Ensure.NotNull(route, nameof(route));
+            
             // not synchronized? maybe we should change implementation of DelayedEventHandler that it will always used current SynchronizationContext
             delayedCoverageValuesChanged = new DelayedEventHandler<FunctionValuesChangingEventArgs>(CoverageValuesChanged) { Delay = 50, Enabled = false };
             DelayedEventHandlerController.FireEventsChanged += DelayedEventHandlerFireEventsChanged;
@@ -110,8 +114,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public NetworkSideViewCoverageManager NetworkSideViewCoverageManager
         {
-            get { return networkSideViewCoverageManager; }
-            set
+            get => networkSideViewCoverageManager;
+            private set
             {
                 networkSideViewCoverageManager = value;
 
@@ -128,7 +132,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             switch (coverage)
             {
-                case INetworkCoverage networkCoverage when !Equals(networkCoverage.Network, route.Network):
+                case Route _:
+                    return;
+                case INetworkCoverage networkCoverage when !Equals(networkCoverage.Network, Network):
                     return;
                 //special case:
                 case INetworkCoverage networkCoverage when string.Equals(networkCoverage.Name,WaterLevelCoverageNameInMapFile, StringComparison.CurrentCultureIgnoreCase) 
@@ -156,8 +162,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
             if (maxWaterLevelValues == null)
             {
-                var locations = RouteHelper.GetLocationsInRoute(networkCoverage, route);
-                chainagesValues = locations.Select(loc => RouteHelper.GetRouteChainage(route, loc)).ToList();
+                var locations = RouteHelper.GetLocationsInRoute(networkCoverage, NetworkRoute);
+                chainagesValues = locations.Select(loc => RouteHelper.GetRouteChainage(NetworkRoute, loc)).ToList();
 
                 values = locations
                          .Select(l =>
@@ -198,18 +204,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void RemoveCoverageDelegated(ICoverage coverage)
         {
-            if (coverage is INetworkCoverage)
+            if (coverage is INetworkCoverage networkCoverage)
             {
                 if (WaterLevelNetworkCoverage != null && WaterLevelNetworkCoverage.IsEqualOrDescendant(coverage))
                 {
                     WaterLevelNetworkCoverage = null;
                 }
 
-                RemoveCoverageFromLists(AllNetworkCoverages, RenderedNetworkCoverages, coverage as INetworkCoverage);
+                RemoveCoverageFromLists(AllNetworkCoverages, RenderedNetworkCoverages, networkCoverage);
             }
-            else if (coverage is IFeatureCoverage)
+            else if (coverage is IFeatureCoverage featureCoverage)
             {
-                RemoveCoverageFromLists(AllFeatureCoverages, RenderedFeatureCoverages, coverage as IFeatureCoverage);
+                RemoveCoverageFromLists(AllFeatureCoverages, RenderedFeatureCoverages, featureCoverage);
             }
         }
 
@@ -290,7 +296,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// </summary>
         public IEnumerable<System.Tuple<IManhole, double>> ActiveManholes
         {
-            get { return NetworkSideViewHelper.GetNodesInRouteWithChainage<IManhole>(route); }
+            get { return NetworkSideViewHelper.GetNodesInRouteWithChainage<IManhole>(NetworkRoute); }
         }
 
         public IList<IBranchFeature> ActiveBranchFeatures
@@ -298,24 +304,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             get
             {
                 var branchFeatures = new List<IBranchFeature>();
-
-                if (null == route)
-                {
-                    return null;
-                }
+                
                 // Get all structures covered by the route
-                if (!(route.Network is IHydroNetwork))
+                if (!(Network is IHydroNetwork))
                 {
                     return null;
                 }
 
-                var hydroNetwork = (IHydroNetwork) route.Network;
+                var hydroNetwork = (IHydroNetwork) Network;
                 foreach (IStructure1D structure in hydroNetwork.Structures)
                 {
                     if (!(structure is ICompositeBranchStructure))
                         continue;
 
-                    double offset = RouteHelper.GetRouteChainage(route, structure);
+                    double offset = RouteHelper.GetRouteChainage(NetworkRoute, structure);
                     //check if the structure should be active..
                     bool active = (ActiveCompositeStructure == null) ||
                                   (structure == ActiveCompositeStructure);
@@ -325,10 +327,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     }
                 }
 
-                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.LateralSources.Cast<IBranchFeature>(), route));
-                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.Retentions.Cast<IBranchFeature>(), route));
-                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.CrossSections.Cast<IBranchFeature>(), route));
-                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.ObservationPoints.Cast<IBranchFeature>(), route));
+                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.LateralSources.Cast<IBranchFeature>(), NetworkRoute));
+                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.Retentions.Cast<IBranchFeature>(), NetworkRoute));
+                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.CrossSections.Cast<IBranchFeature>(), NetworkRoute));
+                branchFeatures.AddRange(GetFeaturesInRoute(hydroNetwork.ObservationPoints.Cast<IBranchFeature>(), NetworkRoute));
 
                 return branchFeatures;
             }
@@ -358,13 +360,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             get
             {
                 var result = new List<IBranchFeature>();
-                var hydroNetwork = (IHydroNetwork) route.Network;
+                var hydroNetwork = (IHydroNetwork) Network;
                 foreach (IStructure1D structure in hydroNetwork.Structures)
                 {
                     if (!(structure is ICompositeBranchStructure))
                         continue;
 
-                    double offset = RouteHelper.GetRouteChainage(route, structure);
+                    double offset = RouteHelper.GetRouteChainage(NetworkRoute, structure);
                     //check if the structure should be active..
                     bool inActive = (ActiveCompositeStructure != null) &&
                                     (structure != ActiveCompositeStructure);
@@ -393,29 +395,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// <summary>
         /// Gets the route dependend network
         /// </summary>
-        public INetwork Network
-        {
-            get
-            {
-                if (route == null)
-                    return null;
-
-                return route.Network;
-            }
-        }
+        public INetwork Network => NetworkRoute.Network;
 
         /// <summary>
         /// Gets or sets the network route data
         /// </summary>
         public Route NetworkRoute
         {
-            get { return route; }
+            get => route;
             private set
             {
-                UnsubscribeToRouteNetwork();
-                UnsubscribeToRoute();
-                maxWaterLevelValues = null;
-
                 route = value;
                 SubscribeToRoute();
                 SubscribeToRouteNetwork();
@@ -424,21 +413,15 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         
         private void SubscribeToRoute()
         {
-            if (NetworkRoute != null)
-            {
-                //listen to segments, since they are (re-)generated after location changes
-                NetworkRoute.RouteSegmentsUpdated += RouteSegmentsUpdated;
-                ((INotifyPropertyChange)route).PropertyChanged += RoutePropertyChanged;
-            }
+            //listen to segments, since they are (re-)generated after location changes
+            NetworkRoute.RouteSegmentsUpdated += RouteSegmentsUpdated;
+            ((INotifyPropertyChange)NetworkRoute).PropertyChanged += RoutePropertyChanged;
         }
 
         private void UnsubscribeToRoute()
         {
-            if (NetworkRoute != null)
-            {
-                NetworkRoute.RouteSegmentsUpdated -= RouteSegmentsUpdated;
-                ((INotifyPropertyChange)route).PropertyChanged -= RoutePropertyChanged;
-            }
+            NetworkRoute.RouteSegmentsUpdated -= RouteSegmentsUpdated;
+            ((INotifyPropertyChange)NetworkRoute).PropertyChanged -= RoutePropertyChanged;
         }
 
         private void RouteSegmentsUpdated(object sender, EventArgs e)
@@ -532,19 +515,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public IFunction CreateRouteFunctionFromNetworkCoverage(INetworkCoverage coverage, IUnit yUnit)
         {
-            if (route == null || coverage == null || (coverage.Time != null && coverage.Time.Values.Count == 0))
+            if (coverage == null || (coverage.Time != null && coverage.Time.Values.Count == 0))
                 // Last condition: if time-dependent, but no times available, do not create function. 
                 return null;
 
             var locIndex = coverage.Locations.GetValues().ToIndexDictionary();
-            var locationsInRoute = RouteHelper.GetLocationsInRoute(coverage, route).Select(l =>
+            var locationsInRoute = RouteHelper.GetLocationsInRoute(coverage, NetworkRoute).Select(l =>
                                               {
                                                   var found = locIndex.TryGetValue(l, out var currentLocIndex);
                                                   return new
                                                   {
                                                       loc = l,
                                                       index = found ? currentLocIndex : -1,
-                                                      chainage = RouteHelper.GetRouteChainage(route, l)
+                                                      chainage = RouteHelper.GetRouteChainage(NetworkRoute, l)
                                                   };
                                               })
                                               .OrderBy(l => l.chainage)
@@ -586,13 +569,13 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public IFunction CreateRouteFunctionFromFeatureCoverage(IFeatureCoverage coverage, IUnit yUnit)
         {
-            if (route == null || coverage == null || (coverage.Time != null && coverage.Time.Values.Count == 0))
+            if (coverage == null || (coverage.Time != null && coverage.Time.Values.Count == 0))
                 // Last condition: if time-dependent, but no times available, do not create function. 
                 return null;
 
-            IList<IBranchFeature> filteredFeatures = coverage.Features.OfType<IBranchFeature>().Where(f => RouteHelper.GetRouteChainage(route, f) > -1).ToList();
+            IList<IBranchFeature> filteredFeatures = coverage.Features.OfType<IBranchFeature>().Where(f => RouteHelper.GetRouteChainage(NetworkRoute, f) > -1).ToList();
 
-            var chainagesValues = filteredFeatures.Select(f => RouteHelper.GetRouteChainage(route, (IBranchFeature)f));
+            var chainagesValues = filteredFeatures.Select(f => RouteHelper.GetRouteChainage(NetworkRoute, f));
             var chainages = new Variable<double>("Chainage");
             chainages.Unit = new Unit("Chainage", "m");
             FunctionHelper.SetValuesRaw<double>(chainages, chainagesValues);
@@ -613,6 +596,10 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         {
             get
             {
+                if (WaterLevelNetworkCoverageHasNoValues())
+                {
+                    return null;
+                }
                 var function = CreateRouteFunctionFromNetworkCoverage(WaterLevelNetworkCoverage, waterLevelUnit);
 
                 if (function == null)
@@ -634,7 +621,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 }
 
                 // Add the extra data points in the vicinity of the structures. 
-                IList<double> structureRouteChainages = ActiveStructures.Select(struc => RouteHelper.GetRouteChainage(route, struc)).ToList();
+                IList<double> structureRouteChainages = ActiveStructures.Select(struc => RouteHelper.GetRouteChainage(NetworkRoute, struc)).ToList();
                 foreach (double structureChainage in structureRouteChainages)
                 {
                     double chainage = structureChainage - 0.001;
@@ -655,6 +642,20 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
+        private bool WaterLevelNetworkCoverageHasNoValues()
+        {
+            if (waterLevelNetworkCoverage?.Locations?.Values == null
+                || !waterLevelNetworkCoverage.Locations.Values.Any())
+            {
+                return true;
+            }
+
+            var firstNetworkLocationOfWaterLevelNetworkCoverage = new VariableValueFilter<INetworkLocation>(waterLevelNetworkCoverage.Locations, waterLevelNetworkCoverage.Locations.Values[0]);
+
+            // check on first timestep of first network location if there is a value
+            return WaterLevelNetworkCoverage.GetValues(firstNetworkLocationOfWaterLevelNetworkCoverage).Count == 0;
+        }
+
         public IList<INetworkCoverage> ProfileNetworkCoverages { get; private set; }
 
         public IEnumerable<IFunction> ProfileSideViewFunctions
@@ -667,7 +668,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public IEnumerable<IFunction> PipeSideViewFunctions
         {
-            get { return NetworkSideViewHelper.GetPipeSideViewFunctions(route); }
+            get { return NetworkSideViewHelper.GetPipeSideViewFunctions(NetworkRoute); }
         }
 
         public IList<INetworkCoverage> RenderedNetworkCoverages
@@ -701,7 +702,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         public void AddRenderedCoverage(INetworkCoverage networkCoverage)
         {
-            if (networkCoverage.Network == null || networkCoverage.Network != NetworkRoute.Network)
+            if (networkCoverage.Network == null || networkCoverage.Network != Network)
             {
                 throw new InvalidOperationException(Resources.NetworkSideViewDataController_NetworkOfAddedSpatialDataDoesNotMatchNetworkOfRoute);
             }
@@ -793,19 +794,19 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         private void UnsubscribeToRouteNetwork()
         {
-            if (route != null && route.Network != null && route.Network is INotifyPropertyChanged)
+            if (Network is INotifyPropertyChanged)
             {
-                ((INotifyPropertyChanged) route.Network).PropertyChanged -= RouteNetworkPropertyChanged;
-                ((INotifyCollectionChange) route.Network).CollectionChanged -= RouteNetworkCollectionChanged;
+                ((INotifyPropertyChanged) Network).PropertyChanged -= RouteNetworkPropertyChanged;
+                ((INotifyCollectionChange) Network).CollectionChanged -= RouteNetworkCollectionChanged;
             }
         }
 
         private void SubscribeToRouteNetwork()
         {
-            if (route != null && route.Network != null && route.Network is INotifyPropertyChanged)
+            if (Network is INotifyPropertyChanged)
             {
-                ((INotifyPropertyChanged) route.Network).PropertyChanged += RouteNetworkPropertyChanged;
-                ((INotifyCollectionChange) route.Network).CollectionChanged += RouteNetworkCollectionChanged;
+                ((INotifyPropertyChanged) Network).PropertyChanged += RouteNetworkPropertyChanged;
+                ((INotifyCollectionChange) Network).CollectionChanged += RouteNetworkCollectionChanged;
             }
         }
 
@@ -833,7 +834,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             else if (sender is INetwork && e.PropertyName == "IsEditing")
             {
                 // possible optimization: only recreate after collection changed
-                var network = route.Network;
+                var network = Network;
                 if (network != null && !network.IsEditing)
                 {
                     BuildProfileNetworkCoverages();
@@ -856,16 +857,16 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private IEnumerable<INetworkCoverage> CreateProfileNetworkCoverages()
         {
             yield return GetBuildBedLevelCoverage();
-            yield return BedLevelNetworkCoverageBuilder.BuildLeftEmbankmentCoverage(route);
-            yield return BedLevelNetworkCoverageBuilder.BuildRightEmbankmentCoverage(route);
-            yield return BedLevelNetworkCoverageBuilder.BuildLowestEmbankmentCoverage(route);
+            yield return BedLevelNetworkCoverageBuilder.BuildLeftEmbankmentCoverage(NetworkRoute);
+            yield return BedLevelNetworkCoverageBuilder.BuildRightEmbankmentCoverage(NetworkRoute);
+            yield return BedLevelNetworkCoverageBuilder.BuildLowestEmbankmentCoverage(NetworkRoute);
         }
 
         private INetworkCoverage GetBuildBedLevelCoverage()
         {
-            var buildBedLevelCoverage = BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(route);
+            var buildBedLevelCoverage = BedLevelNetworkCoverageBuilder.BuildBedLevelCoverage(NetworkRoute);
 
-            NetworkSideViewHelper.AddPipeSurfaceLevelsInRoute(route, buildBedLevelCoverage);
+            NetworkSideViewHelper.AddPipeSurfaceLevelsInRoute(NetworkRoute, buildBedLevelCoverage);
 
             return buildBedLevelCoverage;
         }
@@ -967,6 +968,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 // If disposing equals true, dispose all managed 
                 // and unmanaged resources.
                 OnDataChanged = null;
+                UnsubscribeToRoute();
                 UnsubscribeToRouteNetwork();
                 NetworkSideViewCoverageManager?.Dispose();
 

@@ -45,6 +45,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
         internal void CreateChartSeries()
         {
+            if (Route == null)
+            {
+                return;
+            }
+            
             seriesActiveCache.Clear();
             seriesActiveCache = Chart.Series.ToDictionaryWithDuplicateLogging("Series",s => s.Title, s => s.Visible, Level.Debug);
             

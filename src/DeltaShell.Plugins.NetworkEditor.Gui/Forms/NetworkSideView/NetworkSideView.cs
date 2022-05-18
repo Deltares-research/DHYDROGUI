@@ -28,7 +28,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
     /// <summary>
     /// </summary>
-    public partial class NetworkSideView : UserControl, INetworkSideView, ITimeNavigatable, ICompositeView
+    public partial class NetworkSideView : UserControl, INetworkSideView, ITimeNavigatable, ICompositeView, ISuspendibleView
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(NetworkSideView));
 
@@ -99,26 +99,44 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         /// </summary>
         public object Data
         {
-            get { return route; }
+            get => route;
             set
             {
-                if (route != null)
-                {
-                    route.ValuesChanged -= RouteValuesChanged;
-                }
-                
-                route = value as Route;
-                
-                chartController.Route = route;
-                shapeHandler.NetworkRoute = route;
-                
-                routeChecked = false;
+                UnsubscribeFromRoute();
 
-                if (route != null)
-                {
-                    route.ValuesChanged += RouteValuesChanged;
-                }
+                route = value as Route;
+
+                InitializeForRoute(route);
+                SubscribeToRoute();
             }
+        }
+
+        private void InitializeForRoute(Route value)
+        {
+            chartController.Route = value;
+            shapeHandler.NetworkRoute = value;
+
+            routeChecked = false;
+        }
+
+        private void SubscribeToRoute()
+        {
+            if (route == null)
+            {
+                return;
+            }
+
+            route.ValuesChanged += RouteValuesChanged;
+        }
+
+        private void UnsubscribeFromRoute()
+        {
+            if (route == null)
+            {
+                return;
+            }
+
+            route.ValuesChanged -= RouteValuesChanged;
         }
 
         private void RouteValuesChanged(object sender, FunctionValuesChangingEventArgs e)
@@ -132,7 +150,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             set
             {
                 //unsubscribe old data
-                UnsubscribeDataController();
+                UnsubscribeAndDisposeDataController();
                 UnsubscribeTimeNavigator();
 
                 networkSideViewDataController = value;
@@ -147,7 +165,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 
                 UpdateChartTitles();
 
-                SubscribeToDataController();
+                SubscribeToAndSetDataController();
 
                 FullUpdate();
 
@@ -278,9 +296,9 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         [InvokeRequired]
         public void OnViewDataChanged(bool computeMinMax)
         {
-            if (null == networkSideViewDataController)
+            if (null == networkSideViewDataController?.NetworkRoute 
+                || null == chartController?.Route)
             {
-                // do not remove; see comment in Data set
                 return;
             }
 
@@ -346,7 +364,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             base.Dispose(true);
 
             chartController.Dispose();
-            UnsubscribeDataController();
+            UnsubscribeAndDisposeDataController();
             UnsubscribeTimeNavigator();
 
             Data = null;
@@ -367,9 +385,14 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
 
             timeNavigator = new TimeArgumentNavigatable((VariableValueFilter<DateTime>)filter);
+            SubscribeTimeNavigator();
+            TimeNavigatorTimesChanged(); //we're new, so times have changed
+        }
+
+        private void SubscribeTimeNavigator()
+        {
             timeNavigator.TimeSelectionChanged += TimeNavigatorPropertyChanged;
             timeNavigator.TimesChanged += TimeNavigatorTimesChanged;
-            TimeNavigatorTimesChanged(); //we're new, so times have changed
         }
 
         private void OnSelectedFeatureChanged()
@@ -403,50 +426,74 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        private void SubscribeToDataController()
+        private void SubscribeToAndSetDataController()
         {
-            ((INotifyPropertyChanged)networkSideViewDataController).PropertyChanged += OnViewDataPropertyChanged;
-            ((INotifyCollectionChanged)networkSideViewDataController.Network).CollectionChanged += NetworkCollectionChanged;
+            SubscribeToDataController();
             sideViewCoveragesContextMenu.NetworkSideViewDataController = DataController;
             CreateAndSubscribeTimeNavigator();
         }
 
-        private void UnsubscribeDataController()
+        private void SubscribeToDataController()
         {
-            if (networkSideViewDataController != null)
+            ((INotifyPropertyChanged)networkSideViewDataController).PropertyChanged += OnViewDataPropertyChanged;
+            ((INotifyCollectionChanged)networkSideViewDataController.Network).CollectionChanged += NetworkCollectionChanged;
+        }
+
+        private void UnsubscribeAndDisposeDataController()
+        {
+            if (networkSideViewDataController == null)
             {
-                // Important this unregistering of handlers can occur in response to a collection changed
-                // NetworkCollectionChanged may still be called after unregistering because the event was 
-                // already fired and there are multiplpe listeners
-                ((INotifyPropertyChanged)networkSideViewDataController).PropertyChanged -= OnViewDataPropertyChanged;
-                if (networkSideViewDataController.Network != null)
-                    ((INotifyCollectionChanged)networkSideViewDataController.Network).CollectionChanged -= NetworkCollectionChanged;
-                sideViewCoveragesContextMenu.NetworkSideViewDataController = null;
-                networkSideViewDataController.Dispose();//need to deregister events..hence dispose.
+                return;
             }
+
+            // Important this unregistering of handlers can occur in response to a collection changed
+            // NetworkCollectionChanged may still be called after unregistering because the event was 
+            // already fired and there are multiplpe listeners
+            UnsubscribeFromDataController();
+                    
+            sideViewCoveragesContextMenu.NetworkSideViewDataController = null;
+            networkSideViewDataController.Dispose(); //need to deregister events..hence dispose.
+        }
+
+        private void UnsubscribeFromDataController()
+        {
+            if (networkSideViewDataController == null)
+            {
+                return;
+            }
+
+            ((INotifyPropertyChanged)networkSideViewDataController).PropertyChanged -= OnViewDataPropertyChanged;
+
+            if (networkSideViewDataController.Network == null)
+            {
+                return;
+            }
+
+            ((INotifyCollectionChanged)networkSideViewDataController.Network).CollectionChanged -= NetworkCollectionChanged;
         }
 
         private void UnsubscribeTimeNavigator()
         {
-            if (timeNavigator != null)
+            if (timeNavigator == null)
             {
-                timeNavigator.TimeSelectionChanged -= TimeNavigatorPropertyChanged;
-                timeNavigator.TimesChanged -= TimeNavigatorTimesChanged;
+                return;
             }
+
+            timeNavigator.TimeSelectionChanged -= TimeNavigatorPropertyChanged;
+            timeNavigator.TimesChanged -= TimeNavigatorTimesChanged;
         }
 
         private void TimeNavigatorTimesChanged()
         {
-            if (TimesChanged != null)
-            {
-                TimesChanged();
-            }
+            TimesChanged?.Invoke();
         }
 
         private void NetworkCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (Data == null)
+            {
                 return; //we're in the process of closing, stop doing anything here
+            }
 
             FullUpdate();
         }
@@ -656,6 +703,23 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
         private void ShowStructuresCheckedChanged(object sender, EventArgs e)
         {
             shapeHandler.ShowStructures = showStructures.Checked;
+            FullUpdate();
+        }
+
+        public void SuspendUpdates()
+        {
+            UnsubscribeFromRoute();
+            UnsubscribeFromDataController();
+            UnsubscribeTimeNavigator();
+            InitializeForRoute(null);
+        }
+
+        public void ResumeUpdates()
+        {
+            InitializeForRoute(route);
+            SubscribeToRoute();
+            SubscribeToDataController();
+            SubscribeTimeNavigator();
             FullUpdate();
         }
     }

@@ -2051,7 +2051,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
 
             FireImportProgressChanged(this, "Reading output files - Reading Map file", 1, 2);
-            BeginEdit(new DefaultEditAction("Reconnect output files"));
+            BeginEdit(new DefaultEditAction(DelftTools.Hydro.Properties.Resources.Reconnect_output_files_edit_action));
 
             ReconnectMapFile(outputDirectory.MapFilePath, switchTo);
             ReconnectHistoryFile(outputDirectory.HisFilePath, switchTo);
@@ -2853,7 +2853,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             if (properties.Any(p => p.GetValue(this) != null))
             {
-                using (this.InEditMode("Disconnecting from output files"))
+                using (this.InEditMode(DelftTools.Hydro.Properties.Resources.Disconnect_output_files_edit_action))
                 {
                     properties.ForEach(ClearFunctionStore);
                 }

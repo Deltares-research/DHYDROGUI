@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Functions.Generic;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.TestUtils;
+using DelftTools.Utils;
 using DelftTools.Utils.Collections;
 using DelftTools.Utils.Collections.Generic;
+using DelftTools.Utils.Editing;
+using DeltaShell.Plugins.FMSuite.FlowFM;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
+using NSubstitute;
 using NUnit.Framework;
 using Rhino.Mocks;
 using SharpTestsEx;
@@ -215,6 +221,72 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
             network.Routes.RemoveAt(0);
 
             called.Should("Delegate not called once!").Be.EqualTo(1);
+        }
+
+        [Test]
+        public void ProjectPropertyChanged_IsEditingTrue_DisconnectingOutFilesEditAction_InvokesOnCoverageRemovedFromProjectDelegate()
+        {
+            // Setup
+            const int numberOfCoverages = 3; // multiple coverages to see if the delegate is called once for each coverage
+            int delegateInvokedCount = 0;
+
+            var model = new WaterFlowFMModel();
+            var initialNumberOfCoverages = model.GetAllItemsRecursive().OfType<ICoverage>().Distinct().Count();
+            
+            for (int i = 0; i < numberOfCoverages; i++)
+            {
+                model.Network.Routes.Add(new Route()); 
+            }
+
+            var project = new Project();
+            project.RootFolder.Add(model);
+
+            var manager = new NetworkSideViewCoverageManager(null, project, Enumerable.Empty<ICoverage>());
+            manager.OnCoverageRemovedFromProject = coverage => delegateInvokedCount++;
+
+            var editAction = Substitute.For<IEditAction>();
+            editAction.Name.Returns("Disconnecting from output files");
+
+            // Call
+            model.BeginEdit(editAction);
+            
+            // Assert
+            int expectedDelegateInvokedCount = numberOfCoverages + initialNumberOfCoverages;
+            Assert.That(delegateInvokedCount, Is.EqualTo(expectedDelegateInvokedCount));
+        }
+        
+        [Test]
+        public void ProjectPropertyChanged_IsEditingFalse_ReconnectingOutputFilesEditAction_InvokesOnCoverageAddedToProjectDelegate()
+        {
+            // Setup
+            const int numberOfCoverages = 3; // multiple coverages to see if the delegate is called once for each coverage
+            int delegateInvokedCount = 0;
+
+            var model = new WaterFlowFMModel();
+            model.Status = ActivityStatus.Cleaning;
+            var initialNumberOfCoverages = model.GetAllItemsRecursive().OfType<ICoverage>().Distinct().Count();
+            
+            for (int i = 0; i < numberOfCoverages; i++)
+            {
+                model.Network.Routes.Add(new Route()); 
+            }
+
+            var project = new Project();
+            project.RootFolder.Add(model);
+
+            var manager = new NetworkSideViewCoverageManager(null, project, Enumerable.Empty<ICoverage>());
+            manager.OnCoverageAddedToProject = coverage => delegateInvokedCount++;
+
+            var editAction = Substitute.For<IEditAction>();
+            editAction.Name.Returns("Reconnect output files");
+            model.BeginEdit(editAction);
+
+            // Call
+            model.EndEdit(); // set IsEditing to false
+            
+            // Assert
+            int expectedDelegateInvokedCount = numberOfCoverages + initialNumberOfCoverages;
+            Assert.That(delegateInvokedCount, Is.EqualTo(expectedDelegateInvokedCount));
         }
     }
 }

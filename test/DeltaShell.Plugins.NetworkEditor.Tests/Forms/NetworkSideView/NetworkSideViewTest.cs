@@ -19,6 +19,7 @@ using NetTopologySuite.Extensions.Coverages;
 using NetTopologySuite.Extensions.Networks;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
 {
@@ -756,6 +757,65 @@ namespace DeltaShell.Plugins.NetworkEditor.Tests.Forms.NetworkSideView
                                };
 
             WindowsFormsTestHelper.ShowModal(sideView);
+        }
+        
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void SuspendingAndResumingTheSideView_DoesNotThrowException()
+        {
+            var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
+            var waterLevelNetworkCoverage = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(network, 3);
+            var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, waterLevelNetworkCoverage);
+            Assert.IsNotNull(viewData.WaterLevelNetworkCoverage);
+
+            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView
+            {
+                Dock = DockStyle.Fill,
+                Data = viewData.NetworkRoute,
+                DataController = viewData
+            };
+
+            
+            var waterLevelNetworkCoverage2 = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(network, 3);
+            var viewData2 = NetworkSideViewTestHelper.CreateDefaultViewData(network, waterLevelNetworkCoverage2);
+            Action<Form> viewAction = delegate
+            {
+                sideView.SuspendUpdates();
+                sideView.DataController = viewData2;
+                sideView.ResumeUpdates();
+            };
+            
+            TestDelegate action = () => WindowsFormsTestHelper.ShowModal(sideView, viewAction, viewData.WaterLevelNetworkCoverage);
+            
+            Assert.That(action, Throws.Nothing);
+        }
+        
+        [Test]
+        [Category(TestCategory.WindowsForms)]
+        public void SuspendingAndResumingTheSideView_TimePropertyChangedNotFired_AndDoesNotThrowException()
+        {
+            var network = NetworkSideViewTestHelper.GetDefaultHydroNetwork();
+            var waterLevelNetworkCoverage = NetworkSideViewTestHelper.CreateTimeDependendWaterLevelCoverage(network, 3);
+            var viewData = NetworkSideViewTestHelper.CreateDefaultViewData(network, waterLevelNetworkCoverage);
+            Assert.IsNotNull(viewData.WaterLevelNetworkCoverage);
+
+            var sideView = new Gui.Forms.NetworkSideView.NetworkSideView
+            {
+                Dock = DockStyle.Fill,
+                Data = viewData.NetworkRoute,
+                DataController = viewData
+            };
+            
+            Action<Form> viewAction = delegate
+            {
+                sideView.SuspendUpdates();
+                sideView.SetCurrentTimeSelection(DateTime.Now, DateTime.Now.AddDays(1));
+                sideView.ResumeUpdates();
+            };
+            
+            TestDelegate action = () => WindowsFormsTestHelper.ShowModal(sideView, viewAction, viewData.WaterLevelNetworkCoverage);
+            
+            Assert.That(action, Throws.Nothing);
         }
     }
 }

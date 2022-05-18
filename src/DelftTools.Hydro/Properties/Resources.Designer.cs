@@ -101,6 +101,15 @@ namespace DelftTools.Hydro.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Disconnecting from output files.
+        /// </summary>
+        public static string Disconnect_output_files_edit_action {
+            get {
+                return ResourceManager.GetString("Disconnect_output_files_edit_action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         public static System.Drawing.Bitmap greenhouse {
@@ -204,6 +213,15 @@ namespace DelftTools.Hydro.Properties {
             get {
                 return ResourceManager.GetString("Pipe_BranchFeaturesOnCollectionChanging_Pipe__0__does_not_allow_any_branch_featur" +
                         "e_on_it_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reconnect output files.
+        /// </summary>
+        public static string Reconnect_output_files_edit_action {
+            get {
+                return ResourceManager.GetString("Reconnect_output_files_edit_action", resourceCulture);
             }
         }
         

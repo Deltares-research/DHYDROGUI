@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro;
@@ -8,8 +9,10 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Shell.Core.Workflow.DataItems;
 using DelftTools.Utils;
 using DelftTools.Utils.Collections;
+using DelftTools.Utils.Editing;
 using GeoAPI.Extensions.Coverages;
 using NetTopologySuite.Extensions.Coverages;
+using IEditableObject = DelftTools.Utils.Editing.IEditableObject;
 
 namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
 {
@@ -37,6 +40,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             if (projectItems != null)
             {
                 projectItems.CollectionChanged += ProjectItemsCollectionChanged;
+                ((INotifyPropertyChanged)projectItems).PropertyChanged += SynchronizeCoverages;
             }
         }
 
@@ -69,6 +73,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             if (projectItems != null)
             {
                 projectItems.CollectionChanged -= ProjectItemsCollectionChanged;
+                ((INotifyPropertyChanged)projectItems).PropertyChanged -= SynchronizeCoverages;
             }
 
             if (coverageQueue != null)
@@ -129,6 +134,60 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                     break;
                 }
             }
+        }
+
+        private void SynchronizeCoverages(object sender, PropertyChangedEventArgs e)
+        {
+            if (!RequireSynchronizationOfCoverages(sender, e))
+            {
+                return;
+            }
+            
+            IEnumerable<ICoverage> coverages = GetAllCoveragesFromModel(sender as IModel);
+
+            AddOrRemoveCoverages(sender as IEditableObject, coverages);
+        }
+        
+        private static bool RequireSynchronizationOfCoverages(object sender, PropertyChangedEventArgs e)
+        {
+            return sender is IModel 
+                   && e.PropertyName == nameof(IEditableObject.IsEditing) 
+                   && !(sender is ICompositeActivity);
+        }
+        
+        private static IEnumerable<ICoverage> GetAllCoveragesFromModel(IItemContainer model)
+        {
+            return model.GetAllItemsRecursive().OfType<ICoverage>().Distinct();
+        }
+
+        private void AddOrRemoveCoverages(IEditableObject model, IEnumerable<ICoverage> coverages)
+        {
+            if (!model.IsEditing && CurrentActionIsReconnectingOutputFiles(model.CurrentEditAction))
+            {
+                foreach (ICoverage coverage in coverages)
+                {
+                    OnCoverageAddedToProject?.Invoke(coverage);
+                }
+            } 
+            else if (model.IsEditing && CurrentActionIsDisconnectingOutputFiles(model.CurrentEditAction))
+            {
+                foreach (ICoverage coverage in coverages)
+                {
+                    OnCoverageRemovedFromProject?.Invoke(coverage);
+                }
+            }
+        }
+
+        private static bool CurrentActionIsReconnectingOutputFiles(IEditAction modelCurrentEditAction)
+        {
+            return modelCurrentEditAction.Name.Equals(
+                DelftTools.Hydro.Properties.Resources.Reconnect_output_files_edit_action);
+        }
+        
+        private static bool CurrentActionIsDisconnectingOutputFiles(IEditAction modelCurrentEditAction)
+        {
+            return modelCurrentEditAction.Name.Equals(
+                DelftTools.Hydro.Properties.Resources.Disconnect_output_files_edit_action);
         }
 
         private void AddCoverage(ICoverage coverage)

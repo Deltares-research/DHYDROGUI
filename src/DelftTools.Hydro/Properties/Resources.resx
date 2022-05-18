@@ -178,4 +178,10 @@
   <data name="HydroModelApplicationPlugin_GetModelInfos_1D_2D_3D_Integrated_Models" xml:space="preserve">
     <value>1D / 2D / 3D Integrated Models</value>
   </data>
+  <data name="Reconnect_output_files_edit_action" xml:space="preserve">
+    <value>Reconnect output files</value>
+  </data>
+  <data name="Disconnect_output_files_edit_action" xml:space="preserve">
+    <value>Disconnecting from output files</value>
+  </data>
 </root>
