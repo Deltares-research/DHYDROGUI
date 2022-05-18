@@ -183,7 +183,7 @@
 
     <DirectoryRef Id="INSTALLDIR">
       <Directory Id="BINDIR" Name="bin">
-        <Component Id="DeltaShellGuiExeConfig" Guid="*">
+        <Component Id="DeltaShellGuiExeConfig" Guid="$(var.DeltaShellGuiExeConfigGUID)">
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDeltaShellGuiExeConfig" Type="integer" Value="1" />
           <CreateFolder/>
           <RemoveFolder Id="RemoveDeltaShellBinDir_Component" Directory="INSTALLDIR" On="uninstall"/>
@@ -198,7 +198,7 @@
     </DirectoryRef>
 
     <DirectoryRef Id="TARGETDIR">
-      <Component Id="UninstallShortcutComponent" Guid="*">
+      <Component Id="UninstallShortcutComponent" Guid="$(var.UninstallShortcutComponentGUID)">
         <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="InstalledUninstallerShortcut" Type="integer" Value="1" />
         <?ifdef env.BUILD_NUMBER?>
         <Shortcut Id="UninstallProduct"
@@ -221,7 +221,7 @@
       <!-- Add shortcuts in the start menu here -->
       <Directory Id="ProgramMenuFolder" Name="Programs">
         <Directory Id="ProgramGroupMenuDir" Name="Deltares !(loc.ProductName)">
-          <Component Id="ProgramGroupMenuDir_Component" Guid="*">
+          <Component Id="ProgramGroupMenuDir_Component" Guid="$(var.ProgramGroupMenuDir_ComponentGUID)">
             <RegistryValue Root="HKLM"  Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDeltaresShortcutFolder" Type="integer" Value="1" />
             <RemoveFolder Id="RemoveProgramGroupMenuDir_Component" Directory="ProgramGroupMenuDir" On="uninstall" />
           </Component>

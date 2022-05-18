@@ -13,6 +13,13 @@
     <MyExtras>{$([System.Guid]::NewGuid())}</MyExtras>
     <MyPluginComponents>{$([System.Guid]::NewGuid())}</MyPluginComponents>
     <MyAdditionalFilesComponents>{$([System.Guid]::NewGuid())}</MyAdditionalFilesComponents>
+    <UtilitiesMenuShortcutsGUID>{$([System.Guid]::NewGuid())}</UtilitiesMenuShortcutsGUID>
+    <ManualsMenuDSTRMShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuDSTRMShortcutGUID>
+    <ManualsMenuDSUMShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuDSUMShortcutGUID>
+    <ManualsMenuShortcutGUID>{$([System.Guid]::NewGuid())}</ManualsMenuShortcutGUID>
+    <ProgramGroupMenuDir_ComponentGUID>{$([System.Guid]::NewGuid())}</ProgramGroupMenuDir_ComponentGUID>
+    <UninstallShortcutComponentGUID>{$([System.Guid]::NewGuid())}</UninstallShortcutComponentGUID>
+    <DeltaShellGuiExeConfigGUID>{$([System.Guid]::NewGuid())}</DeltaShellGuiExeConfigGUID>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Package</OutputType>
     <CabinetCachePath>$(OutputPath)cabcache\</CabinetCachePath>
@@ -41,7 +48,7 @@
   <Import Project="$(WixTargetsPath)" Condition=" '$(WixTargetsPath)' != '' " />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <PropertyGroup>
-    <DefineConstants>$(DefineConstants);MyProductCode=$(MyProductCode);MyExtras=$(MyExtras);MyPluginComponents=$(MyPluginComponents);MyAdditionalFilesComponents=$(MyAdditionalFilesComponents);</DefineConstants>
+    <DefineConstants>$(DefineConstants);MyProductCode=$(MyProductCode);MyExtras=$(MyExtras);MyPluginComponents=$(MyPluginComponents);MyAdditionalFilesComponents=$(MyAdditionalFilesComponents);UtilitiesMenuShortcutsGUID=$(UtilitiesMenuShortcutsGUID);ManualsMenuDSTRMShortcutGUID=$(ManualsMenuDSTRMShortcutGUID);ManualsMenuDSUMShortcutGUID=$(ManualsMenuDSUMShortcutGUID);ManualsMenuShortcutGUID=$(ManualsMenuShortcutGUID);ProgramGroupMenuDir_ComponentGUID=$(ProgramGroupMenuDir_ComponentGUID);UninstallShortcutComponentGUID=$(UninstallShortcutComponentGUID);DeltaShellGuiExeConfigGUID=$(DeltaShellGuiExeConfigGUID);</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="..\Dimr\Manuals\DIMRManuals.wxi">

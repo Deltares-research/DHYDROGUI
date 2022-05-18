@@ -53,7 +53,7 @@
 
     <?ifdef plugin_manualshortcuts?>
       <DirectoryRef Id="ProgramGroupMenuDir">
-        <Component Id="ManualsMenuShortcut" Guid="*">
+        <Component Id="ManualsMenuShortcut" Guid="$(var.ManualsMenuShortcutGUID)">
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedManualsShortcutFolder" Type="integer" Value="1"/>
           <?include $(var.plugin_manualshortcuts)?>
         </Component>
@@ -95,11 +95,11 @@
       </DirectoryRef>
 
       <DirectoryRef Id="ProgramGroupMenuDir">
-        <Component Id="ManualsMenuDSUMShortcut" Guid="*">
+        <Component Id="ManualsMenuDSUMShortcut" Guid="$(var.ManualsMenuDSUMShortcutGUID)">
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDSUMManualShortcutFolder" Type="integer" Value="1"/>
           <Shortcut Id="DeltaShell_User_Manual_Shortcut" Name="DeltaShell User Manual" Target="[BINDIR]Delta_Shell_User_Manual.pdf" WorkingDirectory="BINDIR"/>
         </Component>
-        <Component Id="ManualsMenuDSTRMShortcut" Guid="*">
+        <Component Id="ManualsMenuDSTRMShortcut" Guid="$(var.ManualsMenuDSTRMShortcutGUID)">
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedDSTRMManualShortcutFolder" Type="integer" Value="1"/>
           <Shortcut Id="DeltaShell_Technical_Reference_Manual_Shortcut" Name="DeltaShell Technical Reference Manual" Target="[BINDIR]Delta_Shell_Technical_Reference_Manual.pdf" WorkingDirectory="BINDIR"/>
         </Component>
@@ -110,7 +110,7 @@
   <Fragment Id="AddKernelUtilityShortcutsToTheStartMenu">
     <?ifdef plugin_utilityshortcuts ?>
       <DirectoryRef Id="ProgramGroupMenuDir">
-        <Component Id="UtilitiesMenuShortcuts" Guid="*">
+        <Component Id="UtilitiesMenuShortcuts" Guid="$(var.UtilitiesMenuShortcutsGUID)">
           <Condition>(INSTALLER_VARIANT != "fmo")</Condition> <!-- NO UTILITIES WHEN INSTALLING OPEN --> 
           <RegistryValue Root="HKLM" Key="Software\[Manufacturer]\[ProductName]\[ProductCode]" Name="installedUtilitiesShortcutFolder" Type="integer" Value="1"/>
           <?include $(var.plugin_utilityshortcuts)?>
