@@ -9,11 +9,11 @@ using System.Net;
 using System.Runtime.Remoting;
 using System.Windows.Forms;
 using DelftTools.Controls;
-using DelftTools.Controls.Swf;
 using DelftTools.Controls.Swf.Charting;
 using DelftTools.Controls.Swf.Editors;
 using DelftTools.Controls.Swf.Table;
 using DelftTools.Controls.Swf.Table.Validation;
+using DelftTools.Controls.Wpf.Dialogs;
 using DelftTools.Functions;
 using DelftTools.Functions.Generic;
 using DelftTools.Utils;
@@ -946,7 +946,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             BoundaryCondition.BeginEdit(new DefaultEditAction("Import data from WPS"));
             try
             {
-                ProgressBarDialog.PerformTask("Importing data from WPS...", () => importer.Import(BoundaryConditionSet));
+                ProgressBarDialog.PerformTask("Importing data from WPS...", () => importer.Import(BoundaryConditionSet), null);
             }
             catch (Exception exception)
             {
