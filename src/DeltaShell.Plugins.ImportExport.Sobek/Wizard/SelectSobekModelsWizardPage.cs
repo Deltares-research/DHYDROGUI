@@ -60,7 +60,5 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Wizard
         {
             return true;
         }
-
-        public event EventHandler PageUpdated;
     }
 }

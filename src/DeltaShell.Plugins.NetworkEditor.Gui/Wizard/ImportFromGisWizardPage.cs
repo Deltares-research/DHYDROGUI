@@ -31,8 +31,6 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Wizard
             return true;
         }
 
-        public event EventHandler PageUpdated;
-
         public HydroRegionFromGisImporter HydroRegionFromGisImporter
         {
             get
