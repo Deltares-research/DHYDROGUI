@@ -27,8 +27,6 @@ namespace DeltaShell.Plugins.DelftModels.WaterQualityModel.Gui.Forms.WaterQualit
             return true;
         }
 
-        public event EventHandler PageUpdated;
-
         public bool CanFinish()
         {
             return true;
