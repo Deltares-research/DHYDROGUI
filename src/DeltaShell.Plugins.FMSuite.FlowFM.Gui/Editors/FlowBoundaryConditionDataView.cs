@@ -5,8 +5,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Net;
-using System.Runtime.Remoting;
 using System.Windows.Forms;
 using DelftTools.Controls;
 using DelftTools.Controls.Swf.Charting;
@@ -163,8 +161,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             seriesFactory = new FlowBoundaryConditionSeriesFactory {AstroComponents = AstroComponents};
             functionView.CreateSeriesMethod = seriesFactory.CreateSeries;
             genDataButton.Click += GenerateDataButtonClick;
-            wpsImportButton.Click += WpsImportButtonClick;
-            boundaryDataListBox.CheckOnClick = true;
+             boundaryDataListBox.CheckOnClick = true;
             boundaryDataListBox.Format += boundaryDataListBoxFormat;
             boundaryDataListBox.ItemCheck += BoundaryDataListBoxOnItemCheck;
             var chartView = functionView.ChartView as ChartView;
@@ -418,11 +415,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
         private TimeSpan ModelTimeStep
         {
             get { return Model == null ? new TimeSpan(0, 1, 0, 0) : Model.TimeStep; }
-        }
-
-        private ICoordinateSystem ModelCoordinateSystem
-        {
-            get { return Model == null ? null : Model.CoordinateSystem; }
         }
 
         [InvokeRequired]
@@ -714,10 +706,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
                 }
             }
 
-            wpsImportButton.Enabled = BoundaryCondition != null &&
-                                      BoundaryCondition.DataType == BoundaryConditionDataType.TimeSeries &&
-                                      BoundaryCondition.VariableName == "WaterLevel";
-            
             fileImportButton.Enabled = BoundaryCondition != null && BoundaryCondition.DataType != BoundaryConditionDataType.Empty;
             fileExportButton.Enabled = BoundaryCondition != null && BoundaryCondition.DataType != BoundaryConditionDataType.Empty;
         }
@@ -923,59 +911,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui.Editors
             var selectedComponents = selectDialog.SelectedComponents.Select(kvp => kvp.Key).ToArray();
 
             ApplyBoundaryConditionsForSupportPointMode(selectedComponents, ApplyAstroComponentSelection, "Generate/modify astro component values");
-        }
-
-        private void WpsImportButtonClick(object sender, EventArgs e)
-        {
-            var importDialog = new BoundaryConditionWpsDialog
-                {
-                    AllowCreateNewBoundaryCondition = false,
-                    AllowSelectedSupportPointImport = true,
-                    StartTime = ModelStartTime,
-                    StopTime = ModelStopTime,
-                    TimeStep = ModelTimeStep,
-                    CoordinateSystem = ModelCoordinateSystem,
-                };
-            if (importDialog.ShowModal() != DelftDialogResult.OK)
-            {
-                return;
-            }
-            var importer = importDialog.CreateImporter();
-            importer.SupportPointIndex = SupportPointIndex;
-            ClearFunctionView();
-            BoundaryCondition.BeginEdit(new DefaultEditAction("Import data from WPS"));
-            try
-            {
-                ProgressBarDialog.PerformTask("Importing data from WPS...", () => importer.Import(BoundaryConditionSet), null);
-            }
-            catch (Exception exception)
-            {
-                if (exception is ServerException)
-                {
-                    DelftTools.Controls.Swf.MessageBox.Show(exception.Message.Replace("\\", ""), "Import failed",
-                                                            MessageBoxButtons.OK,
-                                                            MessageBoxIcon.Error);
-                }
-                if (exception is WebException)
-                {
-                    DelftTools.Controls.Swf.MessageBox.Show("Server timeout encountered", "Import failed",
-                                                            MessageBoxButtons.OK,
-                                                            MessageBoxIcon.Error);
-                }
-                if (exception is ArgumentException)
-                {
-                    DelftTools.Controls.Swf.MessageBox.Show(exception.Message, "Import failed",
-                                                            MessageBoxButtons.OK,
-                                                            MessageBoxIcon.Error);
-                }
-            }
-            finally
-            {
-                BoundaryCondition.EndEdit();                
-            }
-            RefreshBoundaryData();
-            ConfigureSeriesFactory();
-            FillFunctionView();
         }
 
         public object Data { get; set; }

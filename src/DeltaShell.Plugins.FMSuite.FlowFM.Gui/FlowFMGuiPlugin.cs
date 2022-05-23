@@ -539,21 +539,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<IPolygon, GroupableFeature2DPolygon>>();
             yield return GetGisToFeature2DImportDialogViewInfo<GisToFeature2DImporter<IPoint, Gully>>();
 
-            yield return new ViewInfo<BoundaryConditionWpsImporter, BoundaryConditionWpsDialog>
-            {
-                AfterCreate = (v, o) =>
-                {
-                    v.AllowSelectedSupportPointImport = false;
-
-                    var model = FlowModels.FirstOrDefault();
-
-                    v.StartTime = model.StartTime;
-                    v.StopTime = model.StopTime;
-                    v.TimeStep = model.TimeStep;
-                    v.CoordinateSystem = model.CoordinateSystem;
-                }
-            };
-
             var channelFrictionDefinitionsViewInfo = new ViewInfo<IEventedList<ChannelFrictionDefinition>, ILayer, ChannelFrictionDefinitionsView>
             {
                 Description = "1D Roughness - Channels",
