@@ -42,9 +42,21 @@ namespace DelftTools.Hydro
         }
 
         [Aggregation]
-        [DisplayName("Type")]
-        [FeatureAttribute]
         public virtual CatchmentType CatchmentType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="CatchmentType"/>.
+        /// </summary>
+        /// <remarks>
+        /// This changes the underlying <see cref="CatchmentType"/>.
+        /// </remarks>
+        [FeatureAttribute]
+        [DisplayName("Type")]
+        public virtual CatchmentTypes CatchmentTypes
+        {
+            get => CatchmentType.Types;
+            set => CatchmentType = CatchmentType.LoadFromEnum(value);
+        }
 
         [FeatureAttribute(Order = 2)]
         public virtual string Description

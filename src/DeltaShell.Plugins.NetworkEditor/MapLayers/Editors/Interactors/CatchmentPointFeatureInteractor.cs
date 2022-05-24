@@ -19,9 +19,7 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
         protected override void CreateTrackers()
         {
-            var symbol = SourceFeature is Catchment catchment
-                             ? catchment.CatchmentType.Icon
-                             : VectorStyle.Symbol;
+            Bitmap symbol = GetValidSymbol();
 
             var generateComposite = VectorStyle != null 
                                         ? TrackerSymbolHelper.GenerateComposite(new Pen(Color.DarkBlue), new SolidBrush(Color.LightSkyBlue), symbol.Width, symbol.Height, 8, 8) 
@@ -35,6 +33,16 @@ namespace DeltaShell.Plugins.NetworkEditor.MapLayers.Editors.Interactors
 
             Trackers.Add(new TrackerFeature(this, coordinate, 0, generateComposite));
             Trackers[0].Selected = true;
+        }
+
+        private Bitmap GetValidSymbol()
+        {
+            if (SourceFeature is Catchment catchment && catchment.CatchmentType.Icon != null)
+            {
+                return catchment.CatchmentType.Icon;
+            }
+
+            return VectorStyle.Symbol;
         }
     }
 }   

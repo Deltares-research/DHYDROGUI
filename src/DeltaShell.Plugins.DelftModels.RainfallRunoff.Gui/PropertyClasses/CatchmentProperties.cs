@@ -31,12 +31,27 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses
             set { data.LongName = value; }
         }
 
+        public CatchmentType CatchmentType
+        {
+            get
+            {
+                return data.CatchmentType;
+            }
+        }
+
         [Category("General")]
         [DisplayName("Catchment type")]
         [PropertyOrder(2)]
-        public CatchmentType CatchmentType
+        public virtual CatchmentTypes CatchmentTypes
         {
-            get { return data.CatchmentType; }
+            get
+            {
+                return data.CatchmentType.Types;
+            }
+            set
+            {
+                data.CatchmentTypes = value;
+            }
         }
         
         [Description("Catchment area based on input data used for computation.\n" +

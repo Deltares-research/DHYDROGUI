@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.Utils.Extensions;
 
 namespace DeltaShell.NGHS.Common.Utils
 {
@@ -13,40 +11,37 @@ namespace DeltaShell.NGHS.Common.Utils
     public static class EnumUtils
     {
         /// <summary>
-        /// Gets the enum value with the specified <paramref name="displayName"/>.
+        /// Gets the enum value with the specified <paramref name="description"/>.
         /// </summary>
         /// <typeparam name="T"> The enum type. </typeparam>
-        /// <param name="displayName"> The description. </param>
-        /// <param name="enumType"></param>
+        /// <param name="description"> The description. </param>
         /// <returns>
-        /// If found, the enum value with the specified <paramref name="displayName"/>;
-        /// otherwise the default <paramref name="enumType"/>.
+        /// If found, the enum value with the specified <paramref name="description"/>.
         /// </returns>
-        /// <exception cref="ArgumentException">
-        /// Thrown when <paramref name="enumType"/> is not an <see cref="Enum"/> type.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="displayName"/> is <c>null</c>.
+        /// Thrown when <paramref name="description"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when there is no enum value for the given <paramref name="description"/>.
         /// </exception>
         /// <remarks>
-        /// The comparison of the display name is case-insensitive.
+        /// The comparison of the description is case-insensitive.
         /// </remarks>
-        public static object GetEnumValueFromDisplayName(string displayName, Type enumType)
+        public static T GetEnumValueByDescription<T>(string description) where T: Enum
         {
-            Ensure.NotNull(displayName, nameof(displayName));
+            Ensure.NotNull(description, nameof(description));
 
-            if (!enumType.IsEnum)
+            T[] enumsFromDescription = Enum.GetValues(typeof(T))
+                                                      .Cast<T>()
+                                                      .Where(v => description.Equals(v.GetDescription(), StringComparison.OrdinalIgnoreCase))
+                                                      .ToArray();
+
+            if (!enumsFromDescription.Any())
             {
-                throw new ArgumentException($"Type {enumType} is not an Enum.");
+                throw new ArgumentException($"No enum value exists described with {description} for enum type {typeof(T)}.");
             }
 
-            IEnumerable<Enum> enumValues = Enum.GetValues(enumType).Cast<Enum>();
-            return enumValues.FirstOrDefault(v => HasDisplayName(displayName, v));
-        }
-
-        private static bool HasDisplayName(string displayName, Enum v)
-        {
-            return v.GetDisplayName().EqualsCaseInsensitive(displayName);
+            return enumsFromDescription.First();
         }
     }
 }

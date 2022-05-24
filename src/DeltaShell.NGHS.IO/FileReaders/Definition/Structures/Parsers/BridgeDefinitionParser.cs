@@ -72,7 +72,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                 Branch = Branch,
                 Chainage = Branch.GetBranchSnappedChainage(Category.ReadProperty<double>(StructureRegion.Chainage.Key)),
                 BridgeType = DetermineBridgeType(definition),
-                FlowDirection = (FlowDirection) EnumUtils.GetEnumValueFromDisplayName(Category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key),typeof(FlowDirection)),
+                FlowDirection = EnumUtils.GetEnumValueByDescription<FlowDirection>(Category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key)),
                 Shift = shift,
                 Width = width,
                 Height = height,

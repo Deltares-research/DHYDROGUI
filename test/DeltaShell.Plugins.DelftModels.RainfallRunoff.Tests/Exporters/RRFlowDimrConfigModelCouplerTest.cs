@@ -33,7 +33,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Exporters
         [TestCase("Unpaved", true)]
         [TestCase("Sacramento", true)]
         [TestCase("HBV", true)]
-        [TestCase("", true)]
+        [TestCase("None", true)]
         public void GenerateRRFlowWithCouplerDimrConfigTest(string catchment, bool parallel)
         {
             var mocks = new MockRepository();

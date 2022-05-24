@@ -57,7 +57,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                 TabulatedCrossSectionDefinition = standardCrossSectionDefinition == null && definition != null && definition.CrossSectionType == CrossSectionType.ZW
                     ? definition as CrossSectionDefinitionZW
                     : standardCrossSectionDefinition?.Shape?.GetTabulatedDefinition() ?? CrossSectionDefinitionZW.CreateDefault(),
-                FlowDirection = (FlowDirection) EnumUtils.GetEnumValueFromDisplayName(Category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key), typeof(FlowDirection)),
+                FlowDirection = EnumUtils.GetEnumValueByDescription<FlowDirection>(Category.ReadProperty<string>(StructureRegion.AllowedFlowDir.Key)),
                 InletLevel = Category.ReadProperty<double>(StructureRegion.LeftLevel.Key),
                 OutletLevel = Category.ReadProperty<double>(StructureRegion.RightLevel.Key),
                 Length = Category.ReadProperty<double>(StructureRegion.Length.Key),

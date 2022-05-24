@@ -1,5 +1,8 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Collections.Generic;
+using DelftTools.Hydro;
 using DelftTools.TestUtils;
+using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Concepts;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui.PropertyClasses;
 using GeoAPI.Geometries;
@@ -77,6 +80,94 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.PropertyClasses
             Assert.AreEqual(catchment.Geometry.Area, properties.GeometryArea);
             Assert.AreEqual(catchment.CatchmentType, properties.CatchmentType);
             Assert.AreEqual(catchment.IsGeometryDerivedFromAreaSize, properties.IsDefaultGeometry);
+            Assert.AreEqual(catchment.CatchmentTypes, properties.CatchmentTypes);
+        }
+
+        [Test]
+        public void CatchmentType_ExpectedDefault()
+        {
+            var catchment = new Catchment();
+            Assert.That(catchment.CatchmentTypes, Is.EqualTo(CatchmentTypes.None));
+        }
+
+        private static IEnumerable<TestCaseData> CatchmentTypesData()
+        {
+            yield return new TestCaseData(CatchmentTypes.Greenhouse, CatchmentType.GreenHouse);
+            yield return new TestCaseData(CatchmentTypes.Hbv, CatchmentType.Hbv);
+            yield return new TestCaseData(CatchmentTypes.NWRW, CatchmentType.NWRW);
+            yield return new TestCaseData(CatchmentTypes.OpenWater, CatchmentType.OpenWater);
+            yield return new TestCaseData(CatchmentTypes.Paved, CatchmentType.Paved);
+            yield return new TestCaseData(CatchmentTypes.Unpaved, CatchmentType.Unpaved);
+            yield return new TestCaseData(CatchmentTypes.Sacramento, CatchmentType.Sacramento);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(CatchmentTypesData))]
+        public void GivenCatchmentTypeEnumProperties_GetSet_CorrectCatchmentTypeEnum(CatchmentTypes value, 
+                                                                                     CatchmentType expectedResult)
+        {
+            var catchment = new Catchment();
+            catchment.CatchmentTypes = value;
+
+            Assert.That(catchment.CatchmentTypes, Is.EqualTo(value));
+            Assert.That(catchment.CatchmentType, Is.EqualTo(expectedResult));
+        }
+        
+        private static IEnumerable<TestCaseData> CatchmentTypeStringData()
+        {
+            yield return new TestCaseData(CatchmentType.NoneTypeName, CatchmentType.None);
+            yield return new TestCaseData(CatchmentType.HbvTypeName, CatchmentType.Hbv);
+            yield return new TestCaseData(CatchmentType.PavedTypeName, CatchmentType.Paved);
+            yield return new TestCaseData(CatchmentType.UnpavedTypeName, CatchmentType.Unpaved);
+            yield return new TestCaseData(CatchmentType.SacramentoTypeName, CatchmentType.Sacramento);
+            yield return new TestCaseData(CatchmentType.GreenhouseTypeName, CatchmentType.GreenHouse);
+            yield return new TestCaseData(CatchmentType.OpenwaterTypeName, CatchmentType.OpenWater);
+            yield return new TestCaseData(CatchmentType.NwrwTypeName, CatchmentType.NWRW);
+        }
+
+        [Test]
+        [TestCaseSource(nameof(CatchmentTypeStringData))]
+        public void GivenCatchmentTypeString_LoadFromStringReturnsCorrectCatchmentType(string typeName, 
+                                                                                       CatchmentType expectedCatchmentType)
+        {
+            Assert.That(CatchmentType.LoadFromString(typeName), Is.EqualTo(expectedCatchmentType));
+        }
+
+        [Test]
+        public void GivenInvalidString_LoadFromStringThrowsArgumentException()
+        {
+            Assert.That(() => CatchmentType.LoadFromString("This throws an exception"), Throws.InstanceOf<ArgumentException>());
+        }
+
+        [Test]
+        public void GivenCatchmentToPropertyCatchmentTypesDataChangesToGivenCatchment()
+        {
+            //Arrange
+            var catchment = new Catchment
+            {
+                CatchmentType = CatchmentType.GreenHouse
+            };
+            
+            CatchmentProperties properties = GetGreenHouseProperties(catchment);
+            Assert.That(catchment.CatchmentTypes, Is.EqualTo(CatchmentTypes.Greenhouse));
+
+            //Act
+            properties.CatchmentTypes = CatchmentTypes.None;
+            
+            //Assert
+            Assert.That(catchment.CatchmentTypes, Is.EqualTo(CatchmentTypes.None));
+        }
+
+        private static CatchmentProperties GetGreenHouseProperties(Catchment catchment)
+        {
+            CatchmentModelData catchmentData = new GreenhouseData(catchment);
+
+            CatchmentProperties properties = new CatchmentProperties
+            {
+                Data = catchment,
+                CatchmentData = catchmentData
+            };
+            return properties;
         }
     }
 }

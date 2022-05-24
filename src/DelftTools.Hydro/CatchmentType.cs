@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
+using DelftTools.Hydro.Properties;
 using DelftTools.Utils;
+using DeltaShell.NGHS.Common.Utils;
 
 namespace DelftTools.Hydro
 {
@@ -13,76 +15,117 @@ namespace DelftTools.Hydro
         public const string SacramentoTypeName = "Sacramento";
         public const string HbvTypeName = "HBV";
         public const string NwrwTypeName = "NWRW";
-        public const string NoneTypeName = "";
+        public const string NoneTypeName = "None";
 
         private CatchmentType() //you shouldn't create one yourself: use the static ones
         {
             
         }
-  
+
         public static readonly CatchmentType GreenHouse = new CatchmentType
-            {
-                Name = GreenhouseTypeName,
-                Icon = Properties.Resources.greenhouse
-            };
+        {
+            Types = CatchmentTypes.Greenhouse,
+            Name = GreenhouseTypeName,
+            Icon = Resources.greenhouse
+        };
+
         public static readonly CatchmentType OpenWater = new CatchmentType
-            {
-                Name = OpenwaterTypeName,
-                Icon = Properties.Resources.openwater
-            };
+        {
+            Types = CatchmentTypes.OpenWater,
+            Name = OpenwaterTypeName,
+            Icon = Resources.openwater
+        };
+
         public static readonly CatchmentType Paved = new CatchmentType
-            {
-                Name = PavedTypeName,
-                Icon = Properties.Resources.paved
-            };
+        {
+            Types = CatchmentTypes.Paved,
+            Name = PavedTypeName,
+            Icon = Resources.paved
+        };
+
         public static readonly CatchmentType Unpaved = new CatchmentType
-            {
-                Name = UnpavedTypeName,
-                Icon = Properties.Resources.unpaved
-            };
+        {
+            Types = CatchmentTypes.Unpaved,
+            Name = UnpavedTypeName,
+            Icon = Resources.unpaved
+        };
+
         public static readonly CatchmentType Sacramento = new CatchmentType
-            {
-                Name = SacramentoTypeName,
-                Icon = Properties.Resources.sacramento
-            };
+        {
+            Types = CatchmentTypes.Sacramento,
+            Name = SacramentoTypeName,
+            Icon = Resources.sacramento
+        };
+
         public static readonly CatchmentType Hbv = new CatchmentType
-            {
-                Name = HbvTypeName,
-                Icon = Properties.Resources.hbv
-            };
+        {
+            Types = CatchmentTypes.Hbv,
+            Name = HbvTypeName,
+            Icon = Resources.hbv
+        };
+
         public static readonly CatchmentType NWRW = new CatchmentType
         {
+            Types = CatchmentTypes.NWRW,
             Name = NwrwTypeName,
-            Icon = Properties.Resources.nwrw //todo: change icon
+            Icon = Resources.nwrw
         };
+
         public static readonly CatchmentType None = new CatchmentType
-            {
-                Name = NoneTypeName
-            };
+        {
+            Types = CatchmentTypes.None,
+            Name = NoneTypeName
+        };
 
         public virtual string Name { get; set; }
 
+        /// <summary>
+        /// CatchmentType as Enum
+        /// </summary>
+        public virtual CatchmentTypes Types { get; set; }
+
         public virtual Bitmap Icon { get; set; }
 
+        /// <summary>
+        /// Get CatchmentType by inputting string
+        /// </summary>
+        /// <param name="value">CatchmentType name</param>
+        /// <returns>CatchmentType</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="value" /> does not correspond with a description of <see cref="CatchmentTypes" />.
+        /// </exception>
         public static CatchmentType LoadFromString(string value)
         {
-            switch(value)
+            return LoadFromEnum(EnumUtils.GetEnumValueByDescription<CatchmentTypes>(value));
+        }
+
+        /// <summary>
+        /// Get CatchmentType by inputting enum of CatchmentType
+        /// </summary>
+        /// <param name="value">Enum of CatchmentType</param>
+        /// <returns>CatchmentType</returns>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="value" /> does not correspond with an enum of <see cref="CatchmentTypes" />.
+        /// </exception>
+        public static CatchmentType LoadFromEnum(CatchmentTypes value)
+        {
+            switch (value)
             {
-                case GreenhouseTypeName:
+                case CatchmentTypes.Greenhouse:
                     return GreenHouse;
-                case OpenwaterTypeName:
-                    return OpenWater;
-                case PavedTypeName:
-                    return Paved;
-                case UnpavedTypeName:
-                    return Unpaved;
-                case SacramentoTypeName:
-                    return Sacramento;
-                case HbvTypeName:
+                case CatchmentTypes.Hbv:
                     return Hbv;
-                case NwrwTypeName:
+                case CatchmentTypes.Sacramento:
+                    return Sacramento;
+                case CatchmentTypes.NWRW:
                     return NWRW;
-                case NoneTypeName:
+                case CatchmentTypes.OpenWater:
+                    return OpenWater;
+                case CatchmentTypes.Paved:
+                    return Paved;
+                case CatchmentTypes.Unpaved:
+                    return Unpaved;
+                case CatchmentTypes.None:
                     return None;
                 default:
                     throw new ArgumentException("Unknown catchment type");

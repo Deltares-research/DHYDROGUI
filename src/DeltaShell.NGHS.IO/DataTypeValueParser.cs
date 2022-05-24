@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DelftTools.Utils.Guards;
 using DelftTools.Utils.Reflection;
-using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using log4net;
 
@@ -258,7 +258,7 @@ namespace DeltaShell.NGHS.IO
             }
             if (dataType.IsEnum)
             {
-                var enumValue = EnumUtils.GetEnumValueFromDisplayName(str, dataType);
+                var enumValue = GetEnumValueFromDisplayName(str, dataType);
                 if (enumValue == null) throw new FormatException(String.Format("Value of '{0}' not valid.", str));
                 return enumValue;
             }
@@ -268,7 +268,7 @@ namespace DeltaShell.NGHS.IO
             }
             throw new NotImplementedException("Unsupported data type " + dataType);
         }
-
+        
         /// <summary>
         /// Parses a string for a given value type.
         /// </summary>
@@ -321,6 +321,20 @@ namespace DeltaShell.NGHS.IO
             var actualString = valuesAsString.Replace("d-", "e-").Replace("d+", "e+");
             actualString = actualString.Replace("d", "e+");
             return Double.Parse(actualString, CultureInfo.InvariantCulture);
+        }
+        
+        private static object GetEnumValueFromDisplayName(string displayName, Type enumType)
+        {
+            Ensure.NotNull(displayName, nameof(displayName));
+
+            // We know dataType is enum, as this method is only called when it is.
+            IEnumerable<Enum> enumValues = Enum.GetValues(enumType).Cast<Enum>();
+            return enumValues.FirstOrDefault(v => HasDisplayName(displayName, v));
+        }
+
+        private static bool HasDisplayName(string displayName, Enum v)
+        {
+            return v.GetDisplayName().EqualsCaseInsensitive(displayName);
         }
     }
 }
