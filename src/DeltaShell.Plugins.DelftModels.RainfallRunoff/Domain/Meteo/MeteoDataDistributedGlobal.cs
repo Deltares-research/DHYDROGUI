@@ -28,7 +28,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             data.Time.InterpolationType = InterpolationType.Constant;
             data.Time.AllowSetInterpolationType = false;
             data.Time.ExtrapolationType = ExtrapolationType.None;
-            data.Time.IsEditable = false;
         }
 
         public IFunction Data

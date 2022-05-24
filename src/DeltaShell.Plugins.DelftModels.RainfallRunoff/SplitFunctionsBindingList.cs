@@ -60,32 +60,32 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public bool IsEditing
         {
-            get { return Function.IsEditing; }
+            get { return Function?.IsEditing ?? false; }
         }
 
         public bool EditWasCancelled
         {
-            get { return Function.EditWasCancelled; }
+            get { return Function?.EditWasCancelled ?? false; }
         }
 
         public IEditAction CurrentEditAction
         {
-            get { return Function.CurrentEditAction; }
+            get { return Function?.CurrentEditAction; }
         }
 
         public void BeginEdit(IEditAction action)
         {
-            Function.BeginEdit(action);
+            Function?.BeginEdit(action);
         }
 
         public void EndEdit()
         {
-            Function.EndEdit();
+            Function?.EndEdit();
         }
 
         public void CancelEdit()
         {
-            Function.CancelEdit();
+            Function?.CancelEdit();
         }
 
         #endregion

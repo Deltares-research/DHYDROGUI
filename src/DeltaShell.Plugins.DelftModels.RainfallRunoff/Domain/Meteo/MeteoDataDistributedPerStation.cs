@@ -20,8 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
                 {
                     InterpolationType = InterpolationType.Constant,
                     AllowSetInterpolationType = false,
-                    ExtrapolationType = ExtrapolationType.None,
-                    IsEditable = false
+                    ExtrapolationType = ExtrapolationType.None
                 });
 
             data.Arguments.Add(new Variable<string>("Meteo Station Name")

@@ -101,47 +101,5 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.UI.Forms
                                         catchment1);
                 });
         }
-
-        [Test]
-        [Category(TestCategory.Integration)]
-        public void AllowAddNewRowIsFalseAndTimeColumnIsReadOnly()
-        {
-            var meteoData = new MeteoData(MeteoDataAggregationType.Cumulative)
-                {
-                    DataDistributionType = MeteoDataDistributionType.PerFeature
-                };
-            var catchment1 = new Catchment { Name = "Catchment1" };
-            var catchment2 = new Catchment { Name = "Catchment2" };
-            var catchment3 = new Catchment { Name = "Catchment3" };
-
-            var basin = new DrainageBasin {Catchments = {catchment1, catchment2, catchment3}};
-            
-            ((IFeatureCoverage)meteoData.Data).Features.Add(catchment1);
-            ((IFeatureCoverage)meteoData.Data).FeatureVariable.Values.Add(catchment1);
-
-            ((IFeatureCoverage)meteoData.Data).Features.Add(catchment2);
-            ((IFeatureCoverage)meteoData.Data).FeatureVariable.Values.Add(catchment2);
-
-            ((IFeatureCoverage)meteoData.Data).Features.Add(catchment3);
-            ((IFeatureCoverage)meteoData.Data).FeatureVariable.Values.Add(catchment3);
-
-            var now = DateTime.Now;
-            meteoData.Data[now] = new[] { 1.0, 2.0, 3.0 };
-
-            var meteoDataView = new MeteoDataView { Data = meteoData };
-
-            //extra check
-            var featureCoverage = meteoData.Data as IFeatureCoverage;
-            Assert.IsNotNull(featureCoverage);
-            Assert.IsFalse(featureCoverage.Time.IsEditable);
-
-            var tableView = meteoDataView.Controls.Find("tableView1", true).OfType<TableView>().FirstOrDefault();
-
-            Assert.IsNotNull(tableView);
-
-            Assert.IsTrue(tableView.Columns[0].ReadOnly);
-            Assert.IsFalse(tableView.AllowAddNewRow);
-            Assert.IsFalse(tableView.AllowDeleteRow);
-        }
     }
 }
