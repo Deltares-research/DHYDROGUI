@@ -9,7 +9,7 @@
 		<PackageReference Include="Deltares.UGrid" Version="1.0.69569">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
-		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1440">
+		<PackageReference Include="DeltaShell.Framework" Version="2.0.0.1441">
 			<IncludeAssets>compile</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
