@@ -7,17 +7,17 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
-    public class RainfallRunoffModelValidator : IValidator<RainfallRunoffModel, RainfallRunoffModel>
+    public class RainfallRunoffModelValidator
     {
-        public ValidationReport Validate(RainfallRunoffModel rootObject, RainfallRunoffModel target = null)
+        public static ValidationReport Validate(RainfallRunoffModel rainfallRunoffModel)
         {
-            return new ValidationReport(rootObject.Name + " (Rainfall Runoff Model)", new[]
+            return new ValidationReport(rainfallRunoffModel.Name + " (Rainfall Runoff Model)", new[]
                 {
-                    new RainfallRunoffBasinValidator().Validate(rootObject, rootObject.Basin),
-                    new RainfallRunoffMeteoValidator().Validate(rootObject, rootObject),
-                    new RainfallRunoffCatchmentDataValidator().Validate(rootObject, rootObject.GetAllModelData()),
-                    ValidateTimers(rootObject),
-                    new RainfallRunoffSettingsValidator().Validate(rootObject, rootObject),
+                    new RainfallRunoffBasinValidator().Validate(rainfallRunoffModel, rainfallRunoffModel.Basin),
+                    RainfallRunoffMeteoValidator.Validate(rainfallRunoffModel),
+                    new RainfallRunoffCatchmentDataValidator().Validate(rainfallRunoffModel, rainfallRunoffModel.GetAllModelData()),
+                    ValidateTimers(rainfallRunoffModel),
+                    new RainfallRunoffSettingsValidator().Validate(rainfallRunoffModel, rainfallRunoffModel),
                 });
         }
 

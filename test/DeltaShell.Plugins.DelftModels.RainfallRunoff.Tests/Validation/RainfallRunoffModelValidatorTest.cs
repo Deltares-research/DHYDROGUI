@@ -20,10 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
         public void ValidateEmptyModel()
         {
             var model = new RainfallRunoffModel();
-
-            var validator = new RainfallRunoffModelValidator();
-
-            var report = validator.Validate(model);
+            var report = RainfallRunoffModelValidator.Validate(model);
 
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             Assert.GreaterOrEqual(report.ErrorCount, 1);
@@ -83,8 +80,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
 
             FillMeteoDataTimes(model);
 
-            var validator = new RainfallRunoffModelValidator();
-            var report = validator.Validate(model);
+            var report = RainfallRunoffModelValidator.Validate(model);
 
             // expect no warning: we're not working with meteo stations
             Assert.AreEqual(ValidationSeverity.None, report.Severity());
@@ -92,11 +88,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             // switch to per-station
             model.Precipitation.DataDistributionType = MeteoDataDistributionType.PerStation;
             FillMeteoDataTimes(model);
-            report = validator.Validate(model);
+            report = RainfallRunoffModelValidator.Validate(model);
             Assert.AreEqual(ValidationSeverity.Warning, report.Severity()); // expect warning: we are working with meteo stations
 
             model.MeteoStations.Add("blah");
-            report = validator.Validate(model);
+            report = RainfallRunoffModelValidator.Validate(model);
             Assert.AreEqual(ValidationSeverity.None, report.Severity()); // expect no more warning: we fix it
         }
 

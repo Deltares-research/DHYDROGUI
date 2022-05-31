@@ -19,8 +19,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             
             //prepare
             
-            var validator = new RainfallRunoffMeteoValidator();
-            var report = validator.Validate(rrm, rrm);
+            var report = RainfallRunoffMeteoValidator.Validate(rrm);
 
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             var issues = report.GetAllIssuesRecursive();
@@ -42,8 +41,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
 
             //prepare
 
-            var validator = new RainfallRunoffMeteoValidator();
-            var report = validator.Validate(rrm, rrm);
+            var report = RainfallRunoffMeteoValidator.Validate(rrm);
 
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             var issues = report.GetAllIssuesRecursive();
@@ -65,17 +63,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
                 };
 
             //prepare
-
             var generator = new TimeSeriesGenerator();
-
             generator.GenerateTimeSeries(rrm.Precipitation.Data, rrm.StartTime, rrm.StopTime,
                                          new TimeSpan(0, 1, 0, 0));
 
             generator.GenerateTimeSeries(rrm.Evaporation.Data, rrm.StartTime, rrm.StopTime,
                                          new TimeSpan(1, 0, 0, 0));
 
-            var validator = new RainfallRunoffMeteoValidator();
-            var report = validator.Validate(rrm, rrm);
+            var report = RainfallRunoffMeteoValidator.Validate(rrm);
 
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             var issues = report.GetAllIssuesRecursive();
@@ -104,6 +99,39 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             Assert.AreEqual(1, issues.Count);
             Assert.AreEqual("The calculation period must be positive.", issues[0].Message);
         }
+        
+        [Test]
+        public void TimeStepNotAMultiple()
+        {
+            var rrm = new RainfallRunoffModel
+            {
+                Precipitation = { DataDistributionType = MeteoDataDistributionType.Global },
+                Temperature = { DataDistributionType = MeteoDataDistributionType.Global },
+                Evaporation = { DataDistributionType = MeteoDataDistributionType.Global},
+                StartTime = new DateTime(2000, 1, 1),
+                StopTime = new DateTime(2000, 1, 2),
+                TimeStep = new TimeSpan(1,0,0)
+            };
+
+            var generator = new TimeSeriesGenerator();
+            generator.GenerateTimeSeries(rrm.Precipitation.Data, rrm.StartTime, rrm.StopTime,
+                                         new TimeSpan(0, 1, 30, 0));
+
+            generator.GenerateTimeSeries(rrm.Evaporation.Data, rrm.StartTime, rrm.StopTime,
+                                         new TimeSpan(0, 0, 10, 0));
+
+            generator.GenerateTimeSeries(rrm.Temperature.Data, rrm.StartTime, rrm.StopTime,
+                                         new TimeSpan(0, 2, 0, 0));
+
+            var report = RainfallRunoffMeteoValidator.Validate(rrm);
+
+            Assert.AreEqual(ValidationSeverity.Error, report.Severity());
+            var issues = report.GetAllIssuesRecursive();
+
+            Assert.AreEqual(2, issues.Count);
+            Assert.AreEqual("Time step of time series (01:30:00) should be a multiple of the computation time step 01:00:00", issues[0].Message);
+            Assert.AreEqual("Time step of time series (00:10:00) should be a multiple of the computation time step 01:00:00", issues[1].Message);
+        }
 
         [Test]
         public void MeteoDoesNotMatchWithModel()
@@ -125,8 +153,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
 
             var effectiveEvapEnd = evapEnd.AddHours(1);
 
-            var validator = new RainfallRunoffMeteoValidator();
-            var report = validator.Validate(rrm, rrm);
+            var report = RainfallRunoffMeteoValidator.Validate(rrm);
 
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             var issues = report.GetAllIssuesRecursive();
@@ -167,14 +194,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             generator.GenerateTimeSeries(rrm.Temperature.Data, start.AddDays(2), end.AddDays(-2),
                                         new TimeSpan(1, 0, 0, 0));
 
-            var validator = new RainfallRunoffMeteoValidator();
-            var report = validator.Validate(rrm, rrm);
+            var report = RainfallRunoffMeteoValidator.Validate(rrm);
             var issues = report.GetAllIssuesRecursive();
             Assert.AreEqual(0, issues.Count());
 
             basin.Catchments.Add(new Catchment() { CatchmentType = CatchmentType.Hbv });
 
-            report = validator.Validate(rrm, rrm);
+            report = RainfallRunoffMeteoValidator.Validate(rrm);
             issues = report.GetAllIssuesRecursive();
             Assert.AreEqual(2, issues.Count());
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
@@ -209,17 +235,14 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.Validation
             generator.GenerateTimeSeries(rrm.Temperature.Data, start, end,
                                         new TimeSpan(1, 0, 0, 0));
 
-            var validator = new RainfallRunoffMeteoValidator();
-            var report = validator.Validate(rrm, rrm);
+            var report = RainfallRunoffMeteoValidator.Validate(rrm);
 
             Assert.AreEqual(ValidationSeverity.Error, report.Severity());
             var issues = report.GetAllIssuesRecursive();
 
             Assert.AreEqual(1, issues.Count);
-            Assert.AreEqual(String.Format("Time series stops ({0}) before end of model ({1})", end, rrm.StopTime),
-                issues[0].Message);
+            Assert.AreEqual($"Time series stops ({end}) before end of model ({rrm.StopTime})", issues[0].Message);
             Assert.AreEqual(rrm.Temperature, issues[0].Subject);
         }
-
     }
 }

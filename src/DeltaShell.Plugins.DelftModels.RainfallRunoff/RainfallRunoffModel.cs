@@ -1076,8 +1076,9 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         public virtual ValidationReport Validate()
         {
-            return new RainfallRunoffModelValidator().Validate(this);
+            return RainfallRunoffModelValidator.Validate(this);
         }
+
         public new virtual ActivityStatus Status
         {
             get { return base.Status; }

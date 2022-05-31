@@ -36,33 +36,36 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             switch (evaporationData.DataDistributionType)
             {
                 case MeteoDataDistributionType.Global:
-                    evapor = GetMeteoForPeriod(evaporationData, startDate, endDate, new TimeSpan(1, 0, 0, 0));
+                    evapor = evaporationData.Data.GetValues<double>().ToArray();
                     writer.AddEvaporationStation("Global", evapor.Concat(new[] {0.0}).ToArray());
                     return true;
                 case MeteoDataDistributionType.PerFeature:
-                    var featureCoverage = evaporationData.Data as IFeatureCoverage;
-                    if (featureCoverage != null)
+                    if (!(evaporationData.Data is IFeatureCoverage featureCoverage))
                     {
-                        foreach (var feature in featureCoverage.Features)
-                        {
-                            evapor = GetMeteoForPeriod(evaporationData, startDate, endDate, new TimeSpan(1, 0, 0, 0), feature);
-                            writer.AddEvaporationStation(((INameable) feature).Name,evapor.Concat(new[] {0.0}).ToArray());
-                        }
-                        return true;
+                        return false;
                     }
-                    return false;
+
+                    foreach (var feature in featureCoverage.Features)
+                    {
+                        string featureName = feature is INameable nameable ? nameable.Name : feature.ToString();
+
+                        evapor = evaporationData.MeteoDataDistributed.GetTimeSeries(feature).GetValues<double>().ToArray();
+                        writer.AddEvaporationStation(featureName,evapor.Concat(new[] {0.0}).ToArray());
+                    }
+                    return true;
                 case MeteoDataDistributionType.PerStation:
                     var function = evaporationData.Data;
-                    if (function != null)
+                    if (function == null)
                     {
-                        foreach (var id in function.Arguments[1].Values.Cast<string>())
-                        {
-                            evapor = GetMeteoForPeriod(evaporationData, startDate, endDate, new TimeSpan(1, 0, 0, 0), id);
-                            writer.AddEvaporationStation(id, evapor.Concat(new[] {0.0}).ToArray());
-                        }
-                        return true;
+                        return false;
                     }
-                    return false;
+
+                    foreach (var id in function.Arguments[1].Values.Cast<string>())
+                    {
+                        evapor = evaporationData.MeteoDataDistributed.GetTimeSeries(id).GetValues<double>().ToArray();
+                        writer.AddEvaporationStation(id, evapor.Concat(new[] {0.0}).ToArray());
+                    }
+                    return true;
                 default:
                     throw new NotSupportedException("Unknown evaporation data type");
             }
@@ -88,11 +91,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             }
 
             return true;
-        }
-
-        private static double[] GetMeteoForPeriod(MeteoData meteoData, DateTime startDate, DateTime endDate, TimeSpan timeStep, object feature = null)
-        {
-            return meteoData.GetMeteoForPeriod(startDate, endDate, timeStep, feature);
         }
     }
 }

@@ -30,8 +30,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
     [Entity]
     public class MeteoData : EditableObjectUnique<long>, INameable, ICloneable
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (MeteoData));
-
         private static IMeteoDataDistributed CreateDataDistributed(MeteoDataDistributionType meteoDataDistributionType)
         {
             switch (meteoDataDistributionType)
@@ -44,19 +42,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
                     return new MeteoDataDistributedPerStation();
                 default:
                     throw new ArgumentException("Meteo data distribution DataDistributionType unknown");
-            }
-        }
-
-        private static IMeteoTimeAggregator CreateDataAggregator(MeteoDataAggregationType type)
-        {
-            switch (type)
-            {
-                case MeteoDataAggregationType.Cumulative:
-                    return new MeteoDataTimeIntegrator();
-                case MeteoDataAggregationType.NonCumulative:
-                    return new MeteoDataTimeInterpolator();
-                default:
-                    throw new ArgumentException("Meteo data aggregation DataDistributionType unknown");
             }
         }
 
@@ -92,16 +77,10 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             {
                 if (dataDistributionType != value)
                 {
-                    SetMeteoDataDistributionFromType(value);
+                    MeteoDataDistributed = CreateDataDistributed(value);
                     dataDistributionType = value;
                 }
             }
-        }
-
-        [EditAction]
-        private void SetMeteoDataDistributionFromType(MeteoDataDistributionType type)
-        {
-            MeteoDataDistributed = CreateDataDistributed(type);
         }
 
         private void SetMeteoDataDistribution(IMeteoDataDistributed data)
@@ -111,7 +90,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             Subscribe();
         }
 
-        public MeteoDataAggregationType DataAggregationType { get; protected set; }
+        public MeteoDataAggregationType DataAggregationType { get; private set; }
 
         #region ICloneable members
 
@@ -141,32 +120,6 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo
             {
                 SetMeteoDataDistribution(value);
             }
-        }
-
-        public double[] GetMeteoForPeriod(DateTime startDate, DateTime endDate, TimeSpan timeStep, object item)
-        {
-            var timeAggregator = CreateDataAggregator(DataAggregationType);
-
-            var timeSeries = meteoDataDistributed.GetTimeSeries(item);
-
-            var valueVariable = timeSeries.Components[0] as Variable<double>;
-            var timeVariable = timeSeries.Arguments[0] as Variable<DateTime>;
-  
-            if (valueVariable != null && timeVariable != null)
-            {
-                try
-                {
-                    return timeAggregator.GetTimeSeriesForPeriod(valueVariable, timeVariable, startDate, endDate,
-                                                                 timeStep);
-                }
-                catch (Exception e)
-                {
-                    log.Error("Fetching meteo data failed, " + e.Message);
-                    return null;
-                }
-            }
-            log.Error("Failed to evaluate meteo data for this DataDistributionType of function");
-            return null;
         }
 
         #region INameable Members

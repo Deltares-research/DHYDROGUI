@@ -7,36 +7,34 @@ using DeltaShell.Plugins.DelftModels.RainfallRunoff.Domain.Meteo;
 
 namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
 {
-    public class RainfallRunoffMeteoValidator : IValidator<RainfallRunoffModel, RainfallRunoffModel>
+    public static class RainfallRunoffMeteoValidator
     {
-        #region IValidator<RainfallRunoffModel,RainfallRunoffModel> Members
-
-        public ValidationReport Validate(RainfallRunoffModel rootObject, RainfallRunoffModel target)
+        public static ValidationReport Validate(RainfallRunoffModel rainfallRunoffModel)
         {
             var reports = new List<ValidationReport>();
 
-            var precipitation = target.Precipitation;
-            var evaporation = target.Evaporation;
-            var temperature = target.Temperature;
+            var precipitation = rainfallRunoffModel.Precipitation;
+            var evaporation = rainfallRunoffModel.Evaporation;
+            var temperature = rainfallRunoffModel.Temperature;
 
             reports.Add(new ValidationReport("Precipitation",
-                                             ValidateMeteoData(precipitation, target.StartTime, target.StopTime, true).ToList()));
+                                             ValidateMeteoData(precipitation, rainfallRunoffModel.StartTime, rainfallRunoffModel.StopTime, rainfallRunoffModel.TimeStep, true).ToList()));
             reports.Add(new ValidationReport("Evaporation",
-                                             ValidateMeteoData(evaporation, target.StartTime, target.StopTime, true).ToList()));
+                                             ValidateMeteoData(evaporation, rainfallRunoffModel.StartTime, rainfallRunoffModel.StopTime, rainfallRunoffModel.TimeStep, true).ToList()));
             
             if (precipitation.DataDistributionType == MeteoDataDistributionType.PerStation) //always for both precip & evap
             {
-                reports.Add(new ValidationReport("Meteo stations", ValidateMeteoStations(target)));
+                reports.Add(new ValidationReport("Meteo stations", ValidateMeteoStations(rainfallRunoffModel)));
             }
 
-            if (target.ModelNeedsTemperatureData)
+            if (rainfallRunoffModel.ModelNeedsTemperatureData)
             {
                 reports.Add(new ValidationReport("Temperature",
-                                                 ValidateMeteoData(temperature, target.StartTime, target.StopTime).ToList()));
+                                                 ValidateMeteoData(temperature, rainfallRunoffModel.StartTime, rainfallRunoffModel.StopTime, rainfallRunoffModel.TimeStep).ToList()));
 
                 if (temperature.DataDistributionType == MeteoDataDistributionType.PerStation)
                 {
-                    reports.Add(new ValidationReport("Temperature stations", ValidateTemperatureStations(target)));
+                    reports.Add(new ValidationReport("Temperature stations", ValidateTemperatureStations(rainfallRunoffModel)));
                 }
             }
 
@@ -63,12 +61,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
             return stationIssues;
         }
 
-        #endregion
-
         private static IEnumerable<ValidationIssue> ValidateMeteoData(
             MeteoData meteoData,
             DateTime startTime,
             DateTime stopTime,
+            TimeSpan timeStep,
             bool addtimestep = false)
         {
             var issues = new List<ValidationIssue>();
@@ -96,17 +93,26 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Validation
                                                $"Time series starts ({meteoStart}) after start of model ({startTime})"));
             }
 
-            if (valuesCount > 1)
+            if (valuesCount <= 1)
             {
-                DateTime timeSeriesEnd = timeArgument.Values[valuesCount - 1];
-                TimeSpan timestep = timeArgument.Values[1] - timeArgument.Values[0];
-                DateTime meteoEnd = addtimestep ? timeSeriesEnd.Add(timestep) : timeSeriesEnd;
+                return issues;
+            }
 
-                if (meteoEnd < stopTime)
-                {
-                    issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error,
-                                                   $"Time series stops ({meteoEnd}) before end of model ({stopTime})"));
-                }
+            DateTime timeSeriesEnd = timeArgument.Values[valuesCount - 1];
+            TimeSpan meteoTimeStep = timeArgument.Values[1] - timeArgument.Values[0];
+            DateTime meteoEnd = addtimestep ? timeSeriesEnd.Add(meteoTimeStep) : timeSeriesEnd;
+
+            if (meteoEnd < stopTime)
+            {
+                issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error,
+                                               $"Time series stops ({meteoEnd}) before end of model ({stopTime})"));
+            }
+
+            if (timeStep.TotalSeconds > 0 && meteoTimeStep.TotalSeconds % timeStep.TotalSeconds != 0)
+            {
+                issues.Add(new ValidationIssue(meteoData, ValidationSeverity.Error,
+                                               $"Time step of time series ({meteoTimeStep}) should be a multiple of the computation time step {timeStep}"));
+
             }
 
             return issues;

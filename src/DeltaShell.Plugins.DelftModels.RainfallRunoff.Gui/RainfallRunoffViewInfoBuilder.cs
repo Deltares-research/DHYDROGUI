@@ -258,7 +258,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
                 AfterCreate = (v, o) =>
                 {
                     v.Gui = rainfallRunoffGuiPlugin.Gui;
-                    v.OnValidate = d => new RainfallRunoffModelValidator().Validate(d as RainfallRunoffModel);
+                    v.OnValidate = d => RainfallRunoffModelValidator.Validate(d as RainfallRunoffModel);
                 }
             };
             yield return new ViewInfo<IFeatureCoverage, CoverageTableView>
