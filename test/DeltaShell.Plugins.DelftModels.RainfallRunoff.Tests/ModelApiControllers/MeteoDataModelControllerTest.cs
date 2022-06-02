@@ -32,7 +32,7 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             var expectedValues = new[]
             {
-                0.0, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 11.0, 0.0
+                0.0, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 11.0
             };
             
             MeteoDataModelController.AddMeteoData(mockedWriter, meteoData, startDate, endDate, timeStepSize);
@@ -69,11 +69,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             var expectedValues1 = new[]
             {
-                0.0, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 11.0, 0.0
+                0.0, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 11.0
             };
             var expectedValues2 = new[]
             {
-                0.0, 1.2, 2.4, 3.6, 4.8, 6.0, 7.2, 8.4, 9.6, 10.8, 12.0, 0.0
+                0.0, 1.2, 2.4, 3.6, 4.8, 6.0, 7.2, 8.4, 9.6, 10.8, 12.0
             };
 
             MeteoDataModelController.AddMeteoData(mockedWriter, meteoData, startDate, endDate, timeStepSize);
@@ -111,11 +111,11 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Tests.ModelApiController
 
             var expectedValues1 = new[]
             {
-                0.0, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 11.0, 0.0
+                0.0, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7, 8.8, 9.9, 11.0
             };
             var expectedValues2 = new[]
             {
-                0.0, 1.2, 2.4, 3.6, 4.8, 6.0, 7.2, 8.4, 9.6, 10.8, 12.0, 0.0
+                0.0, 1.2, 2.4, 3.6, 4.8, 6.0, 7.2, 8.4, 9.6, 10.8, 12.0
             };
 
             MeteoDataModelController.AddMeteoData(mockedWriter, meteoData, startDate, endDate, timeStepSize);

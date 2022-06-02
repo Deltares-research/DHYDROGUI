@@ -31,13 +31,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
             if (!ValidateTimeRangeOfMeteoData(evaporationData, startDate, endDate))
                 return false;
 
-            double[] evapor;
+            double[] evaporationValues;
 
             switch (evaporationData.DataDistributionType)
             {
                 case MeteoDataDistributionType.Global:
-                    evapor = evaporationData.Data.GetValues<double>().ToArray();
-                    writer.AddEvaporationStation("Global", evapor.Concat(new[] {0.0}).ToArray());
+                    evaporationValues = evaporationData.Data.GetValues<double>().ToArray();
+                    writer.AddEvaporationStation("Global", evaporationValues);
                     return true;
                 case MeteoDataDistributionType.PerFeature:
                     if (!(evaporationData.Data is IFeatureCoverage featureCoverage))
@@ -49,8 +49,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
                     {
                         string featureName = feature is INameable nameable ? nameable.Name : feature.ToString();
 
-                        evapor = evaporationData.MeteoDataDistributed.GetTimeSeries(feature).GetValues<double>().ToArray();
-                        writer.AddEvaporationStation(featureName,evapor.Concat(new[] {0.0}).ToArray());
+                        evaporationValues = evaporationData.MeteoDataDistributed.GetTimeSeries(feature).GetValues<double>().ToArray();
+                        writer.AddEvaporationStation(featureName, evaporationValues);
                     }
                     return true;
                 case MeteoDataDistributionType.PerStation:
@@ -62,8 +62,8 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.ModelControllers
 
                     foreach (var id in function.Arguments[1].Values.Cast<string>())
                     {
-                        evapor = evaporationData.MeteoDataDistributed.GetTimeSeries(id).GetValues<double>().ToArray();
-                        writer.AddEvaporationStation(id, evapor.Concat(new[] {0.0}).ToArray());
+                        evaporationValues = evaporationData.MeteoDataDistributed.GetTimeSeries(id).GetValues<double>().ToArray();
+                        writer.AddEvaporationStation(id, evaporationValues);
                     }
                     return true;
                 default:
