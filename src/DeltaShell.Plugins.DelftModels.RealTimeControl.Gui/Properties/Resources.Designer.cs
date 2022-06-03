@@ -19,10 +19,10 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap brick_add {
+        public static System.Drawing.Bitmap brick_add {
             get {
                 object obj = ResourceManager.GetObject("brick_add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -73,7 +73,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
-        internal static string Categories_General {
+        public static string Categories_General {
             get {
                 return ResourceManager.GetString("Categories_General", resourceCulture);
             }
@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Data.
         /// </summary>
-        internal static string Category_Data {
+        public static string Category_Data {
             get {
                 return ResourceManager.GetString("Category_Data", resourceCulture);
             }
@@ -91,7 +91,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Limits.
         /// </summary>
-        internal static string Category_Limits {
+        public static string Category_Limits {
             get {
                 return ResourceManager.GetString("Category_Limits", resourceCulture);
             }
@@ -100,7 +100,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Table.
         /// </summary>
-        internal static string Category_Table {
+        public static string Category_Table {
             get {
                 return ResourceManager.GetString("Category_Table", resourceCulture);
             }
@@ -109,7 +109,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cog_active {
+        public static System.Drawing.Bitmap cog_active {
             get {
                 object obj = ResourceManager.GetObject("cog_active", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -119,7 +119,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cog1 {
+        public static System.Drawing.Bitmap cog1 {
             get {
                 object obj = ResourceManager.GetObject("cog1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -129,7 +129,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Long name.
         /// </summary>
-        internal static string Common_LongName_DisplayName {
+        public static string Common_LongName_DisplayName {
             get {
                 return ResourceManager.GetString("Common_LongName_DisplayName", resourceCulture);
             }
@@ -138,7 +138,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
-        internal static string Common_Name_DisplayName {
+        public static string Common_Name_DisplayName {
             get {
                 return ResourceManager.GetString("Common_Name_DisplayName", resourceCulture);
             }
@@ -147,7 +147,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap condition {
+        public static System.Drawing.Bitmap condition {
             get {
                 object obj = ResourceManager.GetObject("condition", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -157,7 +157,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Long name of the condition..
         /// </summary>
-        internal static string Condition_LongName_Description {
+        public static string Condition_LongName_Description {
             get {
                 return ResourceManager.GetString("Condition_LongName_Description", resourceCulture);
             }
@@ -166,7 +166,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unique Name of the condition..
         /// </summary>
-        internal static string Condition_Name_Description {
+        public static string Condition_Name_Description {
             get {
                 return ResourceManager.GetString("Condition_Name_Description", resourceCulture);
             }
@@ -175,7 +175,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The constant reference value for the PID input..
         /// </summary>
-        internal static string ConstantSetpoint_Description {
+        public static string ConstantSetpoint_Description {
             get {
                 return ResourceManager.GetString("ConstantSetpoint_Description", resourceCulture);
             }
@@ -184,7 +184,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Constant set point.
         /// </summary>
-        internal static string ConstantSetpoint_DisplayName {
+        public static string ConstantSetpoint_DisplayName {
             get {
                 return ResourceManager.GetString("ConstantSetpoint_DisplayName", resourceCulture);
             }
@@ -193,7 +193,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap controlgroup {
+        public static System.Drawing.Bitmap controlgroup {
             get {
                 object obj = ResourceManager.GetObject("controlgroup", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -203,7 +203,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap controlgroup_add {
+        public static System.Drawing.Bitmap controlgroup_add {
             get {
                 object obj = ResourceManager.GetObject("controlgroup_add", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -213,7 +213,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to PNG image|*.png.
         /// </summary>
-        internal static string ControlGroupEditor_SaveAsImageAction_PNG_image___png {
+        public static string ControlGroupEditor_SaveAsImageAction_PNG_image___png {
             get {
                 return ResourceManager.GetString("ControlGroupEditor_SaveAsImageAction_PNG_image___png", resourceCulture);
             }
@@ -222,7 +222,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Save image.
         /// </summary>
-        internal static string ControlGroupEditor_SaveAsImageAction_Save_image {
+        public static string ControlGroupEditor_SaveAsImageAction_Save_image {
             get {
                 return ResourceManager.GetString("ControlGroupEditor_SaveAsImageAction_Save_image", resourceCulture);
             }
@@ -231,7 +231,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Control group.
         /// </summary>
-        internal static string ControlGroupProperties_DisplayName {
+        public static string ControlGroupProperties_DisplayName {
             get {
                 return ResourceManager.GetString("ControlGroupProperties_DisplayName", resourceCulture);
             }
@@ -240,7 +240,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name of the control group..
         /// </summary>
-        internal static string ControlGroupProperties_Name_Description {
+        public static string ControlGroupProperties_Name_Description {
             get {
                 return ResourceManager.GetString("ControlGroupProperties_Name_Description", resourceCulture);
             }
@@ -249,7 +249,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap CopyHS {
+        public static System.Drawing.Bitmap CopyHS {
             get {
                 object obj = ResourceManager.GetObject("CopyHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -259,7 +259,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DeleteHS {
+        public static System.Drawing.Bitmap DeleteHS {
             get {
                 object obj = ResourceManager.GetObject("DeleteHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -269,7 +269,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap directionalcondition {
+        public static System.Drawing.Bitmap directionalcondition {
             get {
                 object obj = ResourceManager.GetObject("directionalcondition", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -279,7 +279,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Input.
         /// </summary>
-        internal static string DirectionalConditionProperties_Category_Input {
+        public static string DirectionalConditionProperties_Category_Input {
             get {
                 return ResourceManager.GetString("DirectionalConditionProperties_Category_Input", resourceCulture);
             }
@@ -288,7 +288,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Standard differential condition.
         /// </summary>
-        internal static string DirectionalConditionProperties_DisplayName {
+        public static string DirectionalConditionProperties_DisplayName {
             get {
                 return ResourceManager.GetString("DirectionalConditionProperties_DisplayName", resourceCulture);
             }
@@ -297,7 +297,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The name of the input to this condition..
         /// </summary>
-        internal static string DirectionalConditionProperties_Input_Description {
+        public static string DirectionalConditionProperties_Input_Description {
             get {
                 return ResourceManager.GetString("DirectionalConditionProperties_Input_Description", resourceCulture);
             }
@@ -306,7 +306,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Input.
         /// </summary>
-        internal static string DirectionalConditionProperties_Input_DisplayName {
+        public static string DirectionalConditionProperties_Input_DisplayName {
             get {
                 return ResourceManager.GetString("DirectionalConditionProperties_Input_DisplayName", resourceCulture);
             }
@@ -315,7 +315,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The operation to be checked by this condition..
         /// </summary>
-        internal static string DirectionalConditionProperties_Operation_Description {
+        public static string DirectionalConditionProperties_Operation_Description {
             get {
                 return ResourceManager.GetString("DirectionalConditionProperties_Operation_Description", resourceCulture);
             }
@@ -324,7 +324,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Operation.
         /// </summary>
-        internal static string DirectionalConditionProperties_Operation_DisplayName {
+        public static string DirectionalConditionProperties_Operation_DisplayName {
             get {
                 return ResourceManager.GetString("DirectionalConditionProperties_Operation_DisplayName", resourceCulture);
             }
@@ -333,7 +333,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap ExclamationOverlay {
+        public static System.Drawing.Bitmap ExclamationOverlay {
             get {
                 object obj = ResourceManager.GetObject("ExclamationOverlay", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -343,7 +343,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Factor rule.
         /// </summary>
-        internal static string FactorRuleProperties_DisplayName {
+        public static string FactorRuleProperties_DisplayName {
             get {
                 return ResourceManager.GetString("FactorRuleProperties_DisplayName", resourceCulture);
             }
@@ -352,7 +352,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap folder {
+        public static System.Drawing.Bitmap folder {
             get {
                 object obj = ResourceManager.GetObject("folder", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -362,7 +362,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap folder_output {
+        public static System.Drawing.Bitmap folder_output {
             get {
                 object obj = ResourceManager.GetObject("folder_output", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -372,7 +372,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Lookup table rule.
         /// </summary>
-        internal static string HydraulicRuleProperties_DisplayName {
+        public static string HydraulicRuleProperties_DisplayName {
             get {
                 return ResourceManager.GetString("HydraulicRuleProperties_DisplayName", resourceCulture);
             }
@@ -381,7 +381,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Time lag (seconds)..
         /// </summary>
-        internal static string HydraulicRuleProperties_TimeLag_Description {
+        public static string HydraulicRuleProperties_TimeLag_Description {
             get {
                 return ResourceManager.GetString("HydraulicRuleProperties_TimeLag_Description", resourceCulture);
             }
@@ -390,7 +390,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Time lag [s].
         /// </summary>
-        internal static string HydraulicRuleProperties_TimeLag_DisplayName {
+        public static string HydraulicRuleProperties_TimeLag_DisplayName {
             get {
                 return ResourceManager.GetString("HydraulicRuleProperties_TimeLag_DisplayName", resourceCulture);
             }
@@ -399,7 +399,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap HydroRegion {
+        public static System.Drawing.Bitmap HydroRegion {
             get {
                 object obj = ResourceManager.GetObject("HydroRegion", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -409,7 +409,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap input {
+        public static System.Drawing.Bitmap input {
             get {
                 object obj = ResourceManager.GetObject("input", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -419,7 +419,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Input.
         /// </summary>
-        internal static string InputProperties_DisplayName {
+        public static string InputProperties_DisplayName {
             get {
                 return ResourceManager.GetString("InputProperties_DisplayName", resourceCulture);
             }
@@ -428,7 +428,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name of the input location..
         /// </summary>
-        internal static string InputProperties_Location_Description {
+        public static string InputProperties_Location_Description {
             get {
                 return ResourceManager.GetString("InputProperties_Location_Description", resourceCulture);
             }
@@ -437,7 +437,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name of the input shown to the user..
         /// </summary>
-        internal static string InputProperties_Name_Description {
+        public static string InputProperties_Name_Description {
             get {
                 return ResourceManager.GetString("InputProperties_Name_Description", resourceCulture);
             }
@@ -446,7 +446,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The parameter being observed..
         /// </summary>
-        internal static string InputProperties_Parameter_Description {
+        public static string InputProperties_Parameter_Description {
             get {
                 return ResourceManager.GetString("InputProperties_Parameter_Description", resourceCulture);
             }
@@ -455,7 +455,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The unit in which the observed value is expressed..
         /// </summary>
-        internal static string InputProperties_Unit_Description {
+        public static string InputProperties_Unit_Description {
             get {
                 return ResourceManager.GetString("InputProperties_Unit_Description", resourceCulture);
             }
@@ -464,7 +464,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Output above deadband.
         /// </summary>
-        internal static string IntervalRuleProperties_AboutOutput_DisplayName {
+        public static string IntervalRuleProperties_AboutOutput_DisplayName {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_AboutOutput_DisplayName", resourceCulture);
             }
@@ -473,7 +473,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value set to the controlled parameter when the input parameter is above the interval..
         /// </summary>
-        internal static string IntervalRuleProperties_Above_Description {
+        public static string IntervalRuleProperties_Above_Description {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_Above_Description", resourceCulture);
             }
@@ -482,7 +482,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The value set to the controlled parameter when the input parameter is below the interval..
         /// </summary>
-        internal static string IntervalRuleProperties_Below_Description {
+        public static string IntervalRuleProperties_Below_Description {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_Below_Description", resourceCulture);
             }
@@ -491,7 +491,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Output below deadband.
         /// </summary>
-        internal static string IntervalRuleProperties_Below_DisplayName {
+        public static string IntervalRuleProperties_Below_DisplayName {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_Below_DisplayName", resourceCulture);
             }
@@ -500,7 +500,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Determines whether the deadband is an absolute value around the setpoint or a relative value (0-100%)..
         /// </summary>
-        internal static string IntervalRuleProperties_DeadbandType_Description {
+        public static string IntervalRuleProperties_DeadbandType_Description {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_DeadbandType_Description", resourceCulture);
             }
@@ -509,7 +509,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Deadband type.
         /// </summary>
-        internal static string IntervalRuleProperties_DeadbandType_DisplayName {
+        public static string IntervalRuleProperties_DeadbandType_DisplayName {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_DeadbandType_DisplayName", resourceCulture);
             }
@@ -518,7 +518,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The margin around the setpoint to avoid unnecessary output parameter changes..
         /// </summary>
-        internal static string IntervalRuleProperties_DeadbankAroundSetpoint_Description {
+        public static string IntervalRuleProperties_DeadbankAroundSetpoint_Description {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_DeadbankAroundSetpoint_Description", resourceCulture);
             }
@@ -527,7 +527,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Deadband around setpoint.
         /// </summary>
-        internal static string IntervalRuleProperties_DeadbankAroundSetpoint_DisplayName {
+        public static string IntervalRuleProperties_DeadbankAroundSetpoint_DisplayName {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_DeadbankAroundSetpoint_DisplayName", resourceCulture);
             }
@@ -536,7 +536,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Interval rule.
         /// </summary>
-        internal static string IntervalRuleProperties_DisplayName {
+        public static string IntervalRuleProperties_DisplayName {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_DisplayName", resourceCulture);
             }
@@ -545,7 +545,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A fixed reference used as interval; Used when the interval type is fixed..
         /// </summary>
-        internal static string IntervalRuleProperties_FixedInterval_Description {
+        public static string IntervalRuleProperties_FixedInterval_Description {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_FixedInterval_Description", resourceCulture);
             }
@@ -554,7 +554,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Fixed interval.
         /// </summary>
-        internal static string IntervalRuleProperties_FixedInterval_DisplayName {
+        public static string IntervalRuleProperties_FixedInterval_DisplayName {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_FixedInterval_DisplayName", resourceCulture);
             }
@@ -563,7 +563,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Determines if the interval is a fixed interval or that a maximum speed is used..
         /// </summary>
-        internal static string IntervalRuleProperties_IntervalType_Descirption {
+        public static string IntervalRuleProperties_IntervalType_Descirption {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_IntervalType_Descirption", resourceCulture);
             }
@@ -572,7 +572,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Interval type.
         /// </summary>
-        internal static string IntervalRuleProperties_IntervalType_DisplayName {
+        public static string IntervalRuleProperties_IntervalType_DisplayName {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_IntervalType_DisplayName", resourceCulture);
             }
@@ -581,7 +581,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The maximum speed used as interval; Used when the interval type is variable..
         /// </summary>
-        internal static string IntervalRuleProperties_MaxSpeed_Description {
+        public static string IntervalRuleProperties_MaxSpeed_Description {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_MaxSpeed_Description", resourceCulture);
             }
@@ -590,7 +590,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Maximum speed.
         /// </summary>
-        internal static string IntervalRuleProperties_MaxSpeed_DisplayName {
+        public static string IntervalRuleProperties_MaxSpeed_DisplayName {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_MaxSpeed_DisplayName", resourceCulture);
             }
@@ -599,7 +599,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The time dependent setpoint of this rule..
         /// </summary>
-        internal static string IntervalRuleProperties_TimeSeries_Description {
+        public static string IntervalRuleProperties_TimeSeries_Description {
             get {
                 return ResourceManager.GetString("IntervalRuleProperties_TimeSeries_Description", resourceCulture);
             }
@@ -608,7 +608,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Interval type.
         /// </summary>
-        internal static string IntervalType {
+        public static string IntervalType {
             get {
                 return ResourceManager.GetString("IntervalType", resourceCulture);
             }
@@ -617,7 +617,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Interval type to use (constant, time series).
         /// </summary>
-        internal static string IntervalType_Description {
+        public static string IntervalType_Description {
             get {
                 return ResourceManager.GetString("IntervalType_Description", resourceCulture);
             }
@@ -626,16 +626,83 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Lookup Signal.
         /// </summary>
-        internal static string LookupSignalProperties_DisplayName {
+        public static string LookupSignalProperties_DisplayName {
             get {
                 return ResourceManager.GetString("LookupSignalProperties_DisplayName", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mathematical Expression.
+        /// </summary>
+        public static string MathematicalExpressionProperties_DisplayName {
+            get {
+                return ResourceManager.GetString("MathematicalExpressionProperties_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A string to compute a value based on the different (input) parameters.
+        ///
+        ///For example: 
+        ///min((A + B) * C, 3.5)
+        ///
+        ///Note that this expression is case sensitive.
+        ///
+        ///The syntax is defined as follows:
+        ///
+        ///Parameter: Any value defined in the Input Parameters. Note that the name of a parameter should match completely (including the casing) with an Input Parameter, e.g. A, B, etc.
+        ///
+        ///Constant: Any floating point value including negative values, e.g. 1, 1.0, 1E-3.
+        ///
+        ///Infix functions: Functions defined as &lt;operand1&gt; &lt; [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string MathematicalExpressionProperties_Expression_Description {
+            get {
+                return ResourceManager.GetString("MathematicalExpressionProperties_Expression_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expression.
+        /// </summary>
+        public static string MathematicalExpressionProperties_Expression_DisplayName {
+            get {
+                return ResourceManager.GetString("MathematicalExpressionProperties_Expression_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The input parameters available in the Mathematical Expression..
+        /// </summary>
+        public static string MathematicalExpressionProperties_InputParameters_Description {
+            get {
+                return ResourceManager.GetString("MathematicalExpressionProperties_InputParameters_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input parameters.
+        /// </summary>
+        public static string MathematicalExpressionProperties_InputParameters_DisplayName {
+            get {
+                return ResourceManager.GetString("MathematicalExpressionProperties_InputParameters_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of the Mathematical Expression shown to the user..
+        /// </summary>
+        public static string MathematicalExpressionProperties_Name_Description {
+            get {
+                return ResourceManager.GetString("MathematicalExpressionProperties_Name_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap output {
+        public static System.Drawing.Bitmap output {
             get {
                 object obj = ResourceManager.GetObject("output", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -645,7 +712,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Output.
         /// </summary>
-        internal static string OutputProperties_DisplayName {
+        public static string OutputProperties_DisplayName {
             get {
                 return ResourceManager.GetString("OutputProperties_DisplayName", resourceCulture);
             }
@@ -654,7 +721,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name of the output location..
         /// </summary>
-        internal static string OutputProperties_Location_Description {
+        public static string OutputProperties_Location_Description {
             get {
                 return ResourceManager.GetString("OutputProperties_Location_Description", resourceCulture);
             }
@@ -663,7 +730,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Location.
         /// </summary>
-        internal static string OutputProperties_Location_DisplayName {
+        public static string OutputProperties_Location_DisplayName {
             get {
                 return ResourceManager.GetString("OutputProperties_Location_DisplayName", resourceCulture);
             }
@@ -672,7 +739,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Name of the output shown to the user.
         /// </summary>
-        internal static string OutputProperties_Name_Description {
+        public static string OutputProperties_Name_Description {
             get {
                 return ResourceManager.GetString("OutputProperties_Name_Description", resourceCulture);
             }
@@ -681,7 +748,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The parameter being controlled..
         /// </summary>
-        internal static string OutputProperties_Parameter_Description {
+        public static string OutputProperties_Parameter_Description {
             get {
                 return ResourceManager.GetString("OutputProperties_Parameter_Description", resourceCulture);
             }
@@ -690,7 +757,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Parameter.
         /// </summary>
-        internal static string OutputProperties_Parameter_DisplayName {
+        public static string OutputProperties_Parameter_DisplayName {
             get {
                 return ResourceManager.GetString("OutputProperties_Parameter_DisplayName", resourceCulture);
             }
@@ -699,7 +766,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The unit in which the controlled value is expressed..
         /// </summary>
-        internal static string OutputProperties_Unit_Description {
+        public static string OutputProperties_Unit_Description {
             get {
                 return ResourceManager.GetString("OutputProperties_Unit_Description", resourceCulture);
             }
@@ -708,7 +775,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unit.
         /// </summary>
-        internal static string OutputProperties_Unit_DisplayName {
+        public static string OutputProperties_Unit_DisplayName {
             get {
                 return ResourceManager.GetString("OutputProperties_Unit_DisplayName", resourceCulture);
             }
@@ -717,7 +784,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Value.
         /// </summary>
-        internal static string OutputProperties_Value_DisplayName {
+        public static string OutputProperties_Value_DisplayName {
             get {
                 return ResourceManager.GetString("OutputProperties_Value_DisplayName", resourceCulture);
             }
@@ -726,7 +793,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Gain factor.
         /// </summary>
-        internal static string PIDRuleProperties_Category_GainFactor {
+        public static string PIDRuleProperties_Category_GainFactor {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Category_GainFactor", resourceCulture);
             }
@@ -735,7 +802,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to PID rule.
         /// </summary>
-        internal static string PIDRuleProperties_DisplayName {
+        public static string PIDRuleProperties_DisplayName {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_DisplayName", resourceCulture);
             }
@@ -744,7 +811,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Derivative gain term for the PID rule..
         /// </summary>
-        internal static string PIDRuleProperties_Kd_Description {
+        public static string PIDRuleProperties_Kd_Description {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Kd_Description", resourceCulture);
             }
@@ -753,7 +820,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Kd.
         /// </summary>
-        internal static string PIDRuleProperties_Kd_DisplayName {
+        public static string PIDRuleProperties_Kd_DisplayName {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Kd_DisplayName", resourceCulture);
             }
@@ -762,7 +829,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Integral gain factor for the PID rule..
         /// </summary>
-        internal static string PIDRuleProperties_Ki_Descirption {
+        public static string PIDRuleProperties_Ki_Descirption {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Ki_Descirption", resourceCulture);
             }
@@ -771,7 +838,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Ki.
         /// </summary>
-        internal static string PIDRuleProperties_Ki_DisplayName {
+        public static string PIDRuleProperties_Ki_DisplayName {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Ki_DisplayName", resourceCulture);
             }
@@ -780,7 +847,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Proportional gain factor for the PID rule..
         /// </summary>
-        internal static string PIDRuleProperties_Kp_Description {
+        public static string PIDRuleProperties_Kp_Description {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Kp_Description", resourceCulture);
             }
@@ -789,7 +856,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Kp.
         /// </summary>
-        internal static string PIDRuleProperties_Kp_DisplayName {
+        public static string PIDRuleProperties_Kp_DisplayName {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Kp_DisplayName", resourceCulture);
             }
@@ -798,7 +865,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The output value of this rule is clipped to this value when it&apos;s higher..
         /// </summary>
-        internal static string PIDRuleProperties_Maximum_Description {
+        public static string PIDRuleProperties_Maximum_Description {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Maximum_Description", resourceCulture);
             }
@@ -807,7 +874,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Maximum.
         /// </summary>
-        internal static string PIDRuleProperties_Maximum_DisplayName {
+        public static string PIDRuleProperties_Maximum_DisplayName {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Maximum_DisplayName", resourceCulture);
             }
@@ -816,7 +883,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The maximum change of the controlled parameter, in 1 second..
         /// </summary>
-        internal static string PIDRuleProperties_MaxSpeed_Description {
+        public static string PIDRuleProperties_MaxSpeed_Description {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_MaxSpeed_Description", resourceCulture);
             }
@@ -825,7 +892,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Maximum speed.
         /// </summary>
-        internal static string PIDRuleProperties_MaxSpeed_DisplayName {
+        public static string PIDRuleProperties_MaxSpeed_DisplayName {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_MaxSpeed_DisplayName", resourceCulture);
             }
@@ -834,7 +901,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The output value of this rule is clipped to this value when it would be less..
         /// </summary>
-        internal static string PIDRuleProperties_Minimum_Description {
+        public static string PIDRuleProperties_Minimum_Description {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Minimum_Description", resourceCulture);
             }
@@ -843,7 +910,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Minimum.
         /// </summary>
-        internal static string PIDRuleProperties_Minimum_DisplayName {
+        public static string PIDRuleProperties_Minimum_DisplayName {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Minimum_DisplayName", resourceCulture);
             }
@@ -852,7 +919,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to A time dependent setpoint for the PID input..
         /// </summary>
-        internal static string PIDRuleProperties_Table_Description {
+        public static string PIDRuleProperties_Table_Description {
             get {
                 return ResourceManager.GetString("PIDRuleProperties_Table_Description", resourceCulture);
             }
@@ -861,7 +928,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap PlayHS {
+        public static System.Drawing.Bitmap PlayHS {
             get {
                 object obj = ResourceManager.GetObject("PlayHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -871,7 +938,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap PropertiesHS {
+        public static System.Drawing.Bitmap PropertiesHS {
             get {
                 object obj = ResourceManager.GetObject("PropertiesHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -881,7 +948,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Open Last Working Directory....
         /// </summary>
-        internal static string RealTimeControlModelNodePresenter_GetContextMenu_Open_Last_Working_Directory___ {
+        public static string RealTimeControlModelNodePresenter_GetContextMenu_Open_Last_Working_Directory___ {
             get {
                 return ResourceManager.GetString("RealTimeControlModelNodePresenter_GetContextMenu_Open_Last_Working_Directory___", resourceCulture);
             }
@@ -890,7 +957,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Validate....
         /// </summary>
-        internal static string RealTimeControlModelNodePresenter_GetContextMenu_Validate___ {
+        public static string RealTimeControlModelNodePresenter_GetContextMenu_Validate___ {
             get {
                 return ResourceManager.GetString("RealTimeControlModelNodePresenter_GetContextMenu_Validate___", resourceCulture);
             }
@@ -899,7 +966,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Cannot open working directory.
         /// </summary>
-        internal static string RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Cannot_open_working_directory {
+        public static string RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Cannot_open_working_directory {
             get {
                 return ResourceManager.GetString("RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Cannot_open_w" +
                         "orking_directory", resourceCulture);
@@ -909,7 +976,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Working directory not created yet. Model must run first..
         /// </summary>
-        internal static string RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Working_directory_not_created_yet__Model_must_run_first_ {
+        public static string RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Working_directory_not_created_yet__Model_must_run_first_ {
             get {
                 return ResourceManager.GetString("RealTimeControlModelNodePresenter_OnOpenLastWorkingDirectoryClicked_Working_direc" +
                         "tory_not_created_yet__Model_must_run_first_", resourceCulture);
@@ -919,7 +986,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Output RTC rule already assigned to a different output. Are you sure you want to assign it?.
         /// </summary>
-        internal static string RealTimeControlModelNodePresenter_OutputLocationWarningMessage {
+        public static string RealTimeControlModelNodePresenter_OutputLocationWarningMessage {
             get {
                 return ResourceManager.GetString("RealTimeControlModelNodePresenter_OutputLocationWarningMessage", resourceCulture);
             }
@@ -928,7 +995,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Interpolation.
         /// </summary>
-        internal static string RelativeTimeRuleProperties_Category_Interpolation {
+        public static string RelativeTimeRuleProperties_Category_Interpolation {
             get {
                 return ResourceManager.GetString("RelativeTimeRuleProperties_Category_Interpolation", resourceCulture);
             }
@@ -937,7 +1004,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Relative time rule.
         /// </summary>
-        internal static string RelativeTimeRuleProperties_DisplayName {
+        public static string RelativeTimeRuleProperties_DisplayName {
             get {
                 return ResourceManager.GetString("RelativeTimeRuleProperties_DisplayName", resourceCulture);
             }
@@ -946,7 +1013,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Determines whether or not the rule uses the current value of the controlled parameter to determine the start position in the relative rule..
         /// </summary>
-        internal static string RelativeTimeRuleProperties_FromValue_Description {
+        public static string RelativeTimeRuleProperties_FromValue_Description {
             get {
                 return ResourceManager.GetString("RelativeTimeRuleProperties_FromValue_Description", resourceCulture);
             }
@@ -955,7 +1022,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to From value.
         /// </summary>
-        internal static string RelativeTimeRuleProperties_FromValue_DisplayName {
+        public static string RelativeTimeRuleProperties_FromValue_DisplayName {
             get {
                 return ResourceManager.GetString("RelativeTimeRuleProperties_FromValue_DisplayName", resourceCulture);
             }
@@ -964,7 +1031,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Interpolation.
         /// </summary>
-        internal static string RelativeTimeRuleProperties_Interpolation_DisplayName {
+        public static string RelativeTimeRuleProperties_Interpolation_DisplayName {
             get {
                 return ResourceManager.GetString("RelativeTimeRuleProperties_Interpolation_DisplayName", resourceCulture);
             }
@@ -973,7 +1040,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Minimum period in seconds between two active periods of the time controller.
         /// </summary>
-        internal static string RelativeTimeRuleProperties_MinimumPeriod_Description {
+        public static string RelativeTimeRuleProperties_MinimumPeriod_Description {
             get {
                 return ResourceManager.GetString("RelativeTimeRuleProperties_MinimumPeriod_Description", resourceCulture);
             }
@@ -982,7 +1049,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Minimum period [s].
         /// </summary>
-        internal static string RelativeTimeRuleProperties_MinimumPeriod_DisplayName {
+        public static string RelativeTimeRuleProperties_MinimumPeriod_DisplayName {
             get {
                 return ResourceManager.GetString("RelativeTimeRuleProperties_MinimumPeriod_DisplayName", resourceCulture);
             }
@@ -991,7 +1058,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Interpolation.
         /// </summary>
-        internal static string RTC_Category_Interpolation {
+        public static string RTC_Category_Interpolation {
             get {
                 return ResourceManager.GetString("RTC_Category_Interpolation", resourceCulture);
             }
@@ -1000,7 +1067,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Interpolation / Extrapolation.
         /// </summary>
-        internal static string RTC_Category_InterpolationExtrapolation {
+        public static string RTC_Category_InterpolationExtrapolation {
             get {
                 return ResourceManager.GetString("RTC_Category_InterpolationExtrapolation", resourceCulture);
             }
@@ -1009,7 +1076,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The extrapolation scheme applied along the argument axis..
         /// </summary>
-        internal static string RTC_Extrapolation_Description {
+        public static string RTC_Extrapolation_Description {
             get {
                 return ResourceManager.GetString("RTC_Extrapolation_Description", resourceCulture);
             }
@@ -1018,7 +1085,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Extrapolation.
         /// </summary>
-        internal static string RTC_Extrapolation_DisplayName {
+        public static string RTC_Extrapolation_DisplayName {
             get {
                 return ResourceManager.GetString("RTC_Extrapolation_DisplayName", resourceCulture);
             }
@@ -1027,7 +1094,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The interpolation scheme applied along the argument axis..
         /// </summary>
-        internal static string RTC_Interpolation_Description {
+        public static string RTC_Interpolation_Description {
             get {
                 return ResourceManager.GetString("RTC_Interpolation_Description", resourceCulture);
             }
@@ -1036,7 +1103,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Interpolation.
         /// </summary>
-        internal static string RTC_Interpolation_DisplayName {
+        public static string RTC_Interpolation_DisplayName {
             get {
                 return ResourceManager.GetString("RTC_Interpolation_DisplayName", resourceCulture);
             }
@@ -1045,7 +1112,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The lookup table mapping input values to output values..
         /// </summary>
-        internal static string RTC_Table_Description {
+        public static string RTC_Table_Description {
             get {
                 return ResourceManager.GetString("RTC_Table_Description", resourceCulture);
             }
@@ -1054,7 +1121,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Time series setpoint.
         /// </summary>
-        internal static string RTC_Table_DisplayName {
+        public static string RTC_Table_DisplayName {
             get {
                 return ResourceManager.GetString("RTC_Table_DisplayName", resourceCulture);
             }
@@ -1063,7 +1130,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The extrapolation scheme applied along the time axis when using a time dependent setpoint..
         /// </summary>
-        internal static string RTC_Time_Extrapolation_Description {
+        public static string RTC_Time_Extrapolation_Description {
             get {
                 return ResourceManager.GetString("RTC_Time_Extrapolation_Description", resourceCulture);
             }
@@ -1072,7 +1139,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The time series used by this rule..
         /// </summary>
-        internal static string RTC_TimeSeries_Description {
+        public static string RTC_TimeSeries_Description {
             get {
                 return ResourceManager.GetString("RTC_TimeSeries_Description", resourceCulture);
             }
@@ -1081,7 +1148,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Time series.
         /// </summary>
-        internal static string RTC_Timeseries_DisplayName {
+        public static string RTC_Timeseries_DisplayName {
             get {
                 return ResourceManager.GetString("RTC_Timeseries_DisplayName", resourceCulture);
             }
@@ -1090,7 +1157,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap rtcmodel {
+        public static System.Drawing.Bitmap rtcmodel {
             get {
                 object obj = ResourceManager.GetObject("rtcmodel", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1100,7 +1167,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap rule {
+        public static System.Drawing.Bitmap rule {
             get {
                 object obj = ResourceManager.GetObject("rule", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1110,7 +1177,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The factor defining the following relation: output = factor * input (e.g. an invertor has a factor equal to -1)..
         /// </summary>
-        internal static string Rule_Factor_Description {
+        public static string Rule_Factor_Description {
             get {
                 return ResourceManager.GetString("Rule_Factor_Description", resourceCulture);
             }
@@ -1119,7 +1186,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Factor.
         /// </summary>
-        internal static string Rule_Factor_DisplayName {
+        public static string Rule_Factor_DisplayName {
             get {
                 return ResourceManager.GetString("Rule_Factor_DisplayName", resourceCulture);
             }
@@ -1128,7 +1195,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Long name of the rule..
         /// </summary>
-        internal static string Rule_LongName_Description {
+        public static string Rule_LongName_Description {
             get {
                 return ResourceManager.GetString("Rule_LongName_Description", resourceCulture);
             }
@@ -1137,7 +1204,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Unique name of the rule shown to the user..
         /// </summary>
-        internal static string Rule_Name_Description {
+        public static string Rule_Name_Description {
             get {
                 return ResourceManager.GetString("Rule_Name_Description", resourceCulture);
             }
@@ -1146,7 +1213,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Setpoint type.
         /// </summary>
-        internal static string Setpoint_Type {
+        public static string Setpoint_Type {
             get {
                 return ResourceManager.GetString("Setpoint_Type", resourceCulture);
             }
@@ -1155,7 +1222,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Setpoint type to use (constant, time series, signal).
         /// </summary>
-        internal static string SetpointType_Description {
+        public static string SetpointType_Description {
             get {
                 return ResourceManager.GetString("SetpointType_Description", resourceCulture);
             }
@@ -1164,7 +1231,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Could not check if source shape is connectable with target shape..
         /// </summary>
-        internal static string ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_with_target_shape_ {
+        public static string ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_with_target_shape_ {
             get {
                 return ResourceManager.GetString("ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_wi" +
                         "th_target_shape_", resourceCulture);
@@ -1174,7 +1241,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap signal {
+        public static System.Drawing.Bitmap signal {
             get {
                 object obj = ResourceManager.GetObject("signal", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1184,7 +1251,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap standardcondition {
+        public static System.Drawing.Bitmap standardcondition {
             get {
                 object obj = ResourceManager.GetObject("standardcondition", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1194,7 +1261,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Standard rule.
         /// </summary>
-        internal static string StandardConditionProperties_DisplayName {
+        public static string StandardConditionProperties_DisplayName {
             get {
                 return ResourceManager.GetString("StandardConditionProperties_DisplayName", resourceCulture);
             }
@@ -1203,7 +1270,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Reference value for the operation of this rule..
         /// </summary>
-        internal static string StandardConditionProperties_Value_Description {
+        public static string StandardConditionProperties_Value_Description {
             get {
                 return ResourceManager.GetString("StandardConditionProperties_Value_Description", resourceCulture);
             }
@@ -1212,7 +1279,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Value.
         /// </summary>
-        internal static string StandardConditionProperties_Value_DisplayName {
+        public static string StandardConditionProperties_Value_DisplayName {
             get {
                 return ResourceManager.GetString("StandardConditionProperties_Value_DisplayName", resourceCulture);
             }
@@ -1221,7 +1288,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap StopHS {
+        public static System.Drawing.Bitmap StopHS {
             get {
                 object obj = ResourceManager.GetObject("StopHS", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1231,7 +1298,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap table {
+        public static System.Drawing.Bitmap table {
             get {
                 object obj = ResourceManager.GetObject("table", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1241,7 +1308,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Table.
         /// </summary>
-        internal static string Table_DisplayName {
+        public static string Table_DisplayName {
             get {
                 return ResourceManager.GetString("Table_DisplayName", resourceCulture);
             }
@@ -1250,7 +1317,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap textdocument {
+        public static System.Drawing.Bitmap textdocument {
             get {
                 object obj = ResourceManager.GetObject("textdocument", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1260,7 +1327,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap timecondition {
+        public static System.Drawing.Bitmap timecondition {
             get {
                 object obj = ResourceManager.GetObject("timecondition", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
@@ -1270,7 +1337,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Time condition.
         /// </summary>
-        internal static string TimeConditionProperties_DisplayName {
+        public static string TimeConditionProperties_DisplayName {
             get {
                 return ResourceManager.GetString("TimeConditionProperties_DisplayName", resourceCulture);
             }
@@ -1279,7 +1346,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The extrapolation scheme applied along the time axis..
         /// </summary>
-        internal static string TimeConditionProperties_Extrapolation_Description {
+        public static string TimeConditionProperties_Extrapolation_Description {
             get {
                 return ResourceManager.GetString("TimeConditionProperties_Extrapolation_Description", resourceCulture);
             }
@@ -1288,7 +1355,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to The time series used by this condition..
         /// </summary>
-        internal static string TimeConditionProperties_TimeSeries_Description {
+        public static string TimeConditionProperties_TimeSeries_Description {
             get {
                 return ResourceManager.GetString("TimeConditionProperties_TimeSeries_Description", resourceCulture);
             }
@@ -1297,7 +1364,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Time rule.
         /// </summary>
-        internal static string TimeRuleProperties_DisplayName {
+        public static string TimeRuleProperties_DisplayName {
             get {
                 return ResourceManager.GetString("TimeRuleProperties_DisplayName", resourceCulture);
             }
@@ -1306,7 +1373,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Determines whether the time series will repeat itself or is as given..
         /// </summary>
-        internal static string TimeRuleProperties_Periodicity_Description {
+        public static string TimeRuleProperties_Periodicity_Description {
             get {
                 return ResourceManager.GetString("TimeRuleProperties_Periodicity_Description", resourceCulture);
             }
@@ -1315,7 +1382,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Periodicity.
         /// </summary>
-        internal static string TimeRuleProperties_Periodicity_DisplayName {
+        public static string TimeRuleProperties_Periodicity_DisplayName {
             get {
                 return ResourceManager.GetString("TimeRuleProperties_Periodicity_DisplayName", resourceCulture);
             }
@@ -1324,7 +1391,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap validation {
+        public static System.Drawing.Bitmap validation {
             get {
                 object obj = ResourceManager.GetObject("validation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));

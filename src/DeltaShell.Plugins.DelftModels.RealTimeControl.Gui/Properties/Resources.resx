@@ -532,4 +532,49 @@
   <data name="ShapeConnectionsRulesController_Could_not_check_if_source_shape_is_connectable_with_target_shape_" xml:space="preserve">
     <value>Could not check if source shape is connectable with target shape.</value>
   </data>
+  <data name="MathematicalExpressionProperties_DisplayName" xml:space="preserve">
+    <value>Mathematical Expression</value>
+  </data>
+  <data name="MathematicalExpressionProperties_Name_Description" xml:space="preserve">
+    <value>Name of the Mathematical Expression shown to the user.</value>
+  </data>
+  <data name="MathematicalExpressionProperties_Expression_Description" xml:space="preserve">
+    <value>A string to compute a value based on the different (input) parameters.
+
+For example: 
+min((A + B) * C, 3.5)
+
+Note that this expression is case sensitive.
+
+The syntax is defined as follows:
+
+Parameter: Any value defined in the Input Parameters. Note that the name of a parameter should match completely (including the casing) with an Input Parameter, e.g. A, B, etc.
+
+Constant: Any floating point value including negative values, e.g. 1, 1.0, 1E-3.
+
+Infix functions: Functions defined as &lt;operand1&gt; &lt;infix-function&gt; &lt;operand2&gt;, e.g. A + B.
+The following infix functions are currently available:
+     - Multiplication: *
+     - Division: /
+     - Addition: +
+     - Subtraction: -
+
+Binary functions: Functions defined as terms starting with a lowercase letter, containing letters, numbers, and/or underscores, followed by a set of parentheses (without white space), e.g. min(A, B).
+The following binary functions are currently available:
+     - Minimum: min
+     - Maximum: max
+
+If no precedence is defined through parentheses, then standard precedence of mathematical operators assumed, i.e. division and multiplication take precedence over subtraction and addition.
+
+Whitespace inbetween terms, as well as at the beginning and end will be ignored, this includes new lines.</value>
+  </data>
+  <data name="MathematicalExpressionProperties_Expression_DisplayName" xml:space="preserve">
+    <value>Expression</value>
+  </data>
+  <data name="MathematicalExpressionProperties_InputParameters_Description" xml:space="preserve">
+    <value>The input parameters available in the Mathematical Expression.</value>
+  </data>
+  <data name="MathematicalExpressionProperties_InputParameters_DisplayName" xml:space="preserve">
+    <value>Input parameters</value>
+  </data>
 </root>

@@ -8,7 +8,7 @@ using DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Properties;
 
 namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 {
-    [DisplayName("Mathematical Expression")]
+    [ResourcesDisplayName(typeof(Resources), "MathematicalExpressionProperties_DisplayName")]
     public class MathematicalExpressionProperties : ObjectProperties<MathematicalExpression>
     {
         [Browsable(false)]
@@ -20,6 +20,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
 
         [ResourcesDisplayName(typeof(Resources), "Common_Name_DisplayName")]
         [ResourcesCategory(typeof(Resources), "Categories_General")]
+        [ResourcesDescription(typeof(Resources), "MathematicalExpressionProperties_Name_Description")]
         [PropertyOrder(1)]
         public string Name
         {
@@ -27,14 +28,16 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui.Forms.Properties
             set => data.Name = value;
         }
 
-        [DisplayName("Input parameters")]
+        [ResourcesDisplayName(typeof(Resources), "MathematicalExpressionProperties_InputParameters_DisplayName")]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
         [TypeConverter(typeof(KeyValuePairArrayConverter<string>))]
+        [ResourcesDescription(typeof(Resources), "MathematicalExpressionProperties_InputParameters_Description")]
         [PropertyOrder(2)]
         public KeyValuePair<string, string>[] Inputs => GetInputs();
 
-        [DisplayName("Expression")]
+        [ResourcesDisplayName(typeof(Resources), "MathematicalExpressionProperties_Expression_DisplayName")]
         [ResourcesCategory(typeof(Resources), "Category_Data")]
+        [ResourcesDescription(typeof(Resources), "MathematicalExpressionProperties_Expression_Description")]
         [PropertyOrder(3)]
         public string MathematicalExpression
         {
