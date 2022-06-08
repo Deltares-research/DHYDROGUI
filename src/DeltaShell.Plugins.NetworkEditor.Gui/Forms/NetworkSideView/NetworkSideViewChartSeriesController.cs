@@ -89,7 +89,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
                 lookup.Add(chartData, chartSeries);
             }
 
-            CreateTools(bedLevelChartDatas, lookup, waterLevelChartData, pipeChartData, waterLevelInPipeChartData);
+            CreateTools(lookup, pipeChartData, waterLevelInPipeChartData);
 
             chartView.Tools.AddRange(addedTools);
 
@@ -102,14 +102,8 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.NetworkSideView
             }
         }
 
-        private void CreateTools(SideViewChartData[] bedLevelChartDatas, Dictionary<SideViewChartData, IChartSeries> lookup, SideViewChartData waterLevelChartData, SideViewChartData[] pipeChartData, SideViewChartData waterLevelInPipeChartData)
+        private void CreateTools(Dictionary<SideViewChartData, IChartSeries> lookup, SideViewChartData[] pipeChartData, SideViewChartData waterLevelInPipeChartData)
         {
-            var bedLevelChartData = bedLevelChartDatas.FirstOrDefault(cd => string.Equals(cd.Function.Name, BedLevelNetworkCoverageBuilder.BedLevelCoverageName));
-            if (waterLevelChartData != null && bedLevelChartData != null && lookup.TryGetValue(bedLevelChartData, out var bedLevelSeries) && lookup.TryGetValue(waterLevelChartData, out var waterLevelChartSeries))
-            {
-                addedTools.Add(chartView.NewSeriesBandTool(waterLevelChartSeries, bedLevelSeries, Color.FromArgb(72, NetworkSideViewStyles.WaterLevelColor)));
-            }
-
             if (pipeChartData.Length <= 1) 
             {
                 return;
