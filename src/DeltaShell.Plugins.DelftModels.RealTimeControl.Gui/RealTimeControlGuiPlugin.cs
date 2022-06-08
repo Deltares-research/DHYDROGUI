@@ -229,8 +229,7 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             yield return GetType().Assembly;
             yield return typeof(ShapeBase).Assembly;
         }
-
-        [InvokeRequired]
+        
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
             if (sender is IModel model && e.NewStatus == ActivityStatus.Initializing)
@@ -238,9 +237,9 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
                 CloseRtcModelOutput(model);
             }
 
-            if (sender is RealTimeControlModel && e.NewStatus == ActivityStatus.Failed)
+            if (sender is RealTimeControlModel realTimeControlModel && e.NewStatus == ActivityStatus.Failed)
             {
-                Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+                OpenValidationView(realTimeControlModel);
             }
         }
 
@@ -258,8 +257,17 @@ namespace DeltaShell.Plugins.DelftModels.RealTimeControl.Gui
             }
         }
 
-        private void CloseOutputFileViews(RealTimeControlModel model) => 
+        [InvokeRequired]
+        private void OpenValidationView(RealTimeControlModel realTimeControlModel)
+        {
+            Gui.CommandHandler.OpenView(realTimeControlModel, typeof(ValidationView));
+        }
+
+        [InvokeRequired]
+        private void CloseOutputFileViews(RealTimeControlModel model)
+        {
             model.OutputDocuments.ForEach(Gui.CommandHandler.RemoveAllViewsForItem);
+        }
 
         private void InitializeComponent()
         {

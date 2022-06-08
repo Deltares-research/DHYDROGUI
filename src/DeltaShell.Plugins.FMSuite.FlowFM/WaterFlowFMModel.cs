@@ -41,12 +41,12 @@ using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.DataObjects.Model1D;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.Common;
 using DeltaShell.Plugins.FMSuite.Common.DepthLayers;
 using DeltaShell.Plugins.FMSuite.Common.FeatureData;
 using DeltaShell.Plugins.FMSuite.Common.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.Api;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Coverages;
 using DeltaShell.Plugins.FMSuite.FlowFM.FeatureData;
@@ -110,6 +110,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
         private readonly Dictionary<IFeature, List<IDataItem>> areaDataItems = new Dictionary<IFeature, List<IDataItem>>();
         private double previousProgress;
+        private DateTime? cachedEndTime;
+        private DateTime? cachedStartTime;
         private string progressText;
         private bool useLocalApi;
 
@@ -796,14 +798,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             UnsupportedFileBasedExtForceFileItems = ModelDefinition.UnsupportedFileBasedExtForceFileItems;
         }
 
-        private void InitializeRunTimeGridOperationApi()
-        {
-            if (runTimeGridOperationApi != null)
-            {
-                runTimeGridOperationApi.Dispose();
-            }
-            runTimeGridOperationApi = new UnstrucGridOperationApi(this);
-        }
         #region TimedependentModelBase
 
         public override IEnumerable<object> GetDirectChildren()
@@ -1062,11 +1056,17 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         {
             get
             {
+                if (cachedStartTime.HasValue)
+                {
+                    return cachedStartTime.Value;
+                }
+
                 return (DateTime)ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value;
             }
             set
             {
                 ModelDefinition.GetModelProperty(GuiProperties.StartTime).Value = value;
+                cachedStartTime = null;
                 // This base model setting is made to make the base logic right
                 base.StartTime = value;
             }
@@ -1075,10 +1075,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         [NoNotifyPropertyChange]
         public override DateTime StopTime
         {
-            get { return (DateTime)ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value; }
+            get
+            {
+                if (cachedEndTime.HasValue)
+                {
+                    return cachedEndTime.Value;
+                }
+                return (DateTime)ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value;
+            }
             set
             {
                 ModelDefinition.GetModelProperty(GuiProperties.StopTime).Value = value;
+                cachedEndTime = null;
                 // This base model setting is made to make the base logic right
                 base.StopTime = value;
             }
@@ -1765,6 +1773,8 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public const string DiaFileDataItemTag = "DiaFile";
 
         private string currentOutputDirectoryPath;
+        private bool runsInIntegratedModel;
+
         public string WorkingOutputDirectoryPath =>
             Path.Combine(WorkingDirectory, DirectoryName, DirectoryNameConstants.OutputDirectoryName);
 
@@ -2924,7 +2934,25 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         }
 
         [EditAction]
-        public virtual bool RunsInIntegratedModel { get; set; }
+        public virtual bool RunsInIntegratedModel
+        {
+            get
+            {
+                return runsInIntegratedModel;
+            }
+            set
+            {
+                runsInIntegratedModel = value;
+                if (runsInIntegratedModel)
+                {
+                    CacheTimes();
+                }
+                else
+                {
+                    CleanCacheTimes();
+                }
+            }
+        }
 
         public virtual string DimrExportDirectoryPath => WorkingDirectory;
 
@@ -2934,10 +2962,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             get { return base.CurrentTime; }
             set
             {
-                base.CurrentTime = value; 
+                // prevent base class event bubbling
+                EventingHelper.DoWithoutEvents(() =>
+                {
+                    base.CurrentTime = value;
+                });
+
                 OnProgressChanged();
             }
         }
+
         public virtual Array GetVar(string category, string itemName = null, string parameter = null)
         {
             if (category == CellsToFeaturesName)
@@ -3009,10 +3043,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         protected override void OnInitialize()
         {
             previousProgress = 0;
+            CacheTimes();
             DataItems.RemoveAllWhere(di => di.Tag == WaterFlowFMModelDataSet.DiaFileDataItemTag);
             boundaryConditionDataList = BoundaryConditions1D.ToList();
 
-            
             ReportProgressText("Initializing");
             SetOutputDirProperty();
             SetWaqOutputDirProperty();
@@ -3025,14 +3059,9 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             runner.OnInitialize();
             
-            if (Status != ActivityStatus.Failed)
-            {
-                InitializeRunTimeGridOperationApi();
-            }
-
             ReportProgressText();
         }
-        
+
         protected override void OnCleanup()
         {
             if (boundaryConditionDataList != null)
@@ -3047,19 +3076,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             boundaryConditionDataList = null;
 
-            if (runTimeGridOperationApi != null)
-            {
-                runTimeGridOperationApi.Dispose();
-                runTimeGridOperationApi = null;
-            }
             snapApiInErrorMode = false;
             base.OnCleanup();
             runner.OnCleanup();
             
             ReportProgressText();
             previousProgress = 0;
+            CleanCacheTimes();
         }
-
 
         protected override void OnExecute()
         {
@@ -3084,9 +3108,11 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         protected override void OnProgressChanged()
         {
             // Only update gui for every 1 percent progress (performance)
-            if (ProgressPercentage - previousProgress < 0.01) return;
+            double percentage = ProgressPercentage;
 
-            previousProgress = ProgressPercentage;
+            if (percentage - previousProgress < 0.01) return;
+
+            previousProgress = percentage;
             runner.OnProgressChanged();
             base.OnProgressChanged();
         }
@@ -3094,6 +3120,18 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public override string ProgressText
         {
             get { return string.IsNullOrEmpty(progressText) ? base.ProgressText : progressText; }
+        }
+
+        private void CacheTimes()
+        {
+            cachedStartTime = StartTime;
+            cachedEndTime = StopTime;
+        }
+
+        private void CleanCacheTimes()
+        {
+            cachedStartTime = null;
+            cachedEndTime = null;
         }
 
         private void ReportProgressText(string text = null)

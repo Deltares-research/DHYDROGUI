@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DelftTools.Shell.Core;
 using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
+using DelftTools.TestUtils;
 using DeltaShell.Core;
 using DeltaShell.Plugins.CommonTools;
 using DeltaShell.Plugins.Data.NHibernate;
@@ -10,11 +13,13 @@ using DeltaShell.Plugins.DelftModels.HydroModel.Import;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
 using DeltaShell.Plugins.DelftModels.RealTimeControl;
 using DeltaShell.Plugins.FMSuite.FlowFM;
+using DeltaShell.Plugins.FMSuite.FlowFM.Gui;
 using DeltaShell.Plugins.NetCDF;
 using DeltaShell.Plugins.NetworkEditor;
 using DeltaShell.Plugins.Scripting;
 using DeltaShell.Plugins.SharpMapGis;
 using DeltaShell.Plugins.Toolbox;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
@@ -141,6 +146,28 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests
             Assert.IsInstanceOf<DHydroConfigXmlExporter>(hydroModelApplicationPlugin.GetFileExporters().First());
             Assert.IsInstanceOf<DHydroConfigXmlImporter>(hydroModelApplicationPlugin.GetFileImporters().First());
         }
-        
+
+        [Test]
+        public void GivenHydroModelApplicationPlugin_HydroModelInitialize_ShouldLogPluginVersion()
+        {
+            //Arrange
+            var plugin = new HydroModelApplicationPlugin();
+            var app = Substitute.For<IApplication>();
+            var activityRunner = Substitute.For<IActivityRunner>();
+
+            var hydroModel = new HydroModel();
+
+            app.ActivityRunner.Returns(activityRunner);
+
+            plugin.Application = app;
+
+            // Act & Assert
+            var messages = TestHelper.GetAllRenderedMessages(() =>
+            {
+                activityRunner.ActivityStatusChanged += Raise.Event<EventHandler<ActivityStatusChangedEventArgs>>(hydroModel, new ActivityStatusChangedEventArgs(ActivityStatus.None, ActivityStatus.Initializing));
+            });
+
+            Assert.IsTrue(messages.Any(m => m.StartsWith("DeltaShell version")), "HydroModel plugin version should be logged");
+        }
     }
 }

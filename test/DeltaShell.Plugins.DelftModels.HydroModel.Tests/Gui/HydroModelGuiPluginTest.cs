@@ -1,8 +1,17 @@
+using System;
+using System.Linq;
 using System.Threading;
+using DelftTools.Controls;
+using DelftTools.Shell.Core;
+using DelftTools.Shell.Core.Workflow;
+using DelftTools.Shell.Gui;
+using DelftTools.TestUtils;
+using DelftTools.Utils.Reflection;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui;
 using DeltaShell.Plugins.DelftModels.HydroModel.Gui.GraphicsProviders;
 using DeltaShell.Plugins.SharpMapGis.Gui.Forms;
 using NetTopologySuite.Extensions.Coverages;
+using NSubstitute;
 using NUnit.Framework;
 using SharpMap.Layers;
 
@@ -61,6 +70,31 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Tests.Gui
             // Assert
             Assert.That(coverageLayer.Coverage, Is.Not.SameAs(coverage));
             Assert.That(coverageLayer.Coverage.Components, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void GivenHydroModelGuiPlugin_HydroModelFails_ShouldShowValidationView()
+        {
+            //Arrange
+            var plugin = new HydroModelGuiPlugin();
+            var gui = Substitute.For<IGui>();
+            var guiCommandHandler = Substitute.For<IGuiCommandHandler>();
+            var app = Substitute.For<IApplication>();
+            var activityRunner = Substitute.For<IActivityRunner>();
+
+            var hydroModel = new HydroModel();
+
+            gui.Application.Returns(app);
+            gui.CommandHandler.Returns(guiCommandHandler);
+            app.ActivityRunner.Returns(activityRunner);
+
+            plugin.Gui = gui;
+
+            // Act
+            activityRunner.ActivityStatusChanged += Raise.Event<EventHandler<ActivityStatusChangedEventArgs>>(hydroModel, new ActivityStatusChangedEventArgs(ActivityStatus.Cleaning, ActivityStatus.Failed));
+
+            // Assert
+            guiCommandHandler.Received().OpenView(hydroModel, Arg.Is<Type>(t => t.Implements(typeof(IView))));
         }
     }
 }

@@ -1036,33 +1036,46 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
 
             return snappedOutputLayer.Layers.Select(l => l.DataSource).OfType<ShapeFile>();
         }
-        private void OnActivityRunnerStatusChanged(object sender,
-            ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
+        
+        private void OnActivityRunnerStatusChanged(object sender, ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
-            if (sender is FileImportActivity fileImportActivity)
+            switch (sender)
             {
-                var importer = fileImportActivity.FileImporter;
-
-                if ((importer is FlowFMNetFileImporter || importer is IFeature2DImporterExporter || importer is RasterFileImporter) &&
-                    activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
+                case FileImportActivity fileImportActivity:
                 {
-                    RefreshTreeViewAndZoomActiveMapViewToExtends();
+                    OnImporterActivityChanged(activityStatusChangedEventArgs, fileImportActivity.FileImporter);
+                    break;
                 }
-                if (importer is WaterFlowFMFileImporter &&
-                    activityStatusChangedEventArgs.NewStatus == ActivityStatus.Finished)
+                case WaterFlowFMModel model:
                 {
-                    RefreshTreeViewAndZoomActiveMapViewToExtends();
+                    if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing && model.WriteSnappedFeatures)
+                    {
+                        CleanOutputSnappedLayersAndReleaseFileLocks(model);
+                    }
+
+                    if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Failed)
+                    {
+                        ShowValidationView(model);
+                    }
+
+                    break;
                 }
             }
+        }
 
-            var model = sender as WaterFlowFMModel;
-            if (model != null && model.WriteSnappedFeatures && activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing)
+        private void OnImporterActivityChanged(ActivityStatusChangedEventArgs activityStatusChangedEventArgs, IFileImporter importer)
+        {
+            if (activityStatusChangedEventArgs.NewStatus != ActivityStatus.Finished) return;
+
+            switch (importer)
             {
-                CleanOutputSnappedLayersAndReleaseFileLocks(model);
+                case IFeature2DImporterExporter _:
+                case FlowFMNetFileImporter _:
+                case RasterFileImporter _:
+                case WaterFlowFMFileImporter _:
+                    RefreshTreeViewAndZoomActiveMapViewToExtends();
+                    break;
             }
-
-            if (!(sender is WaterFlowFMModel) || activityStatusChangedEventArgs.NewStatus != ActivityStatus.Failed) return;
-            ShowValidationView(sender);
         }
 
         [InvokeRequired]
@@ -1133,10 +1146,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Gui
         private void RefreshTreeViewAndZoomActiveMapViewToExtends()
         {
             Gui.MainWindow.ProjectExplorer.TreeView.Refresh();
-            if (ActiveMapView != null)
-            {
-                ActiveMapView.Map.ZoomToExtents();
-            }
+            ActiveMapView?.Map.ZoomToExtents();
         }
 
         [InvokeRequired]

@@ -6,6 +6,7 @@ using DelftTools.Shell.Core.Dao;
 using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
 using DeltaShell.NGHS.IO.Grid;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.FMSuite.FlowFM.CoverageDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
 using DeltaShell.Plugins.FMSuite.FlowFM.Spatial;
@@ -208,16 +209,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
 
             // Enable event bubbling to trigger the copying of last values to ConvertedValue (SpatialOperationSetValueConverter.CopyValuesToConvertedValue)
             //(this will not be triggered during loading if EventSettings.BubblingEnabled is false)
-            var eventBubblingEnabled = EventSettings.BubblingEnabled;
-            try
+            EventingHelper.DoWithEvents(() =>
             {
-                EventSettings.BubblingEnabled = true;
                 sosvc.SpatialOperationSet.Execute();
-            }
-            finally
-            {
-                EventSettings.BubblingEnabled = eventBubblingEnabled;
-            }
+            });
         }
     }
 }

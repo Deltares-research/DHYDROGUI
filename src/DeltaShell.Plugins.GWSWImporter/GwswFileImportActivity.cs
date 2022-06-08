@@ -11,6 +11,7 @@ using DelftTools.Shell.Core.Workflow;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections.Generic;
 using DelftTools.Utils.Csv.Importer;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.ImportExport.GWSW.Properties;
 using log4net;
 
@@ -127,31 +128,25 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 }
 
             }));
-            var bubblingEnabled = EventSettings.BubblingEnabled;
-            try
+
+            t.Start();
+            int step = 0;
+            while (!t.IsCompleted)
             {
-                t.Start();
-                int step = 0;
-                while (!t.IsCompleted)
+                if (stepSize != 0 && current / stepSize > step)
                 {
-                    if (stepSize != 0 && current / stepSize > step)
+                    step = current / stepSize;
+
+                    EventingHelper.DoWithEvents(() =>
                     {
-                        step = current / stepSize;
-
-
-                        EventSettings.BubblingEnabled = true;
                         SetProgressText($"Importing {current} / {nrOfRows}");
-                        EventSettings.BubblingEnabled = false;
-                    }
-                    Thread.Sleep(100);
-                    if (importer != null && importer.ShouldCancel)
-                        cts.Cancel();
+                    });
                 }
+                Thread.Sleep(100);
+                if (importer != null && importer.ShouldCancel)
+                    cts.Cancel();
             }
-            finally
-            {
-                EventSettings.BubblingEnabled = bubblingEnabled;
-            }
+            
             
             Status = ActivityStatus.Done;
         }

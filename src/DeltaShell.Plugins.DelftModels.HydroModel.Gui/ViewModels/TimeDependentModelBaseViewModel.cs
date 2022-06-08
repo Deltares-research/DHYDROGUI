@@ -82,7 +82,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             }
 
             var parameter = sender as Parameter;
-            if (parameter == null || e.PropertyName != nameof(parameter.Name)) return;
+            if (parameter == null || e.PropertyName == nameof(parameter.Name)) return;
 
             SyncTimesAfterAction();
         }

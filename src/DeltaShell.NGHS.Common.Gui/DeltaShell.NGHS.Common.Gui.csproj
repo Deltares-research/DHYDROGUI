@@ -55,7 +55,11 @@
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Shell.Gui.dll</HintPath>
 			<Private>False</Private>
 		</Reference>
-		<Reference Include="DelftTools.Utils">
+    <Reference Include="DelftTools.Units">
+      <HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Units.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="DelftTools.Utils">
 			<HintPath>$(PkgDeltaShell_Framework)\lib\net461\DeltaShell\DelftTools.Utils.dll</HintPath>
 			<Private>False</Private>
 		</Reference>

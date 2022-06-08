@@ -124,11 +124,13 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff
 
         private void ActivityRunnerOnActivityStatusChanged(object sender, ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
-            if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing && sender as RainfallRunoffModel != null)
+            if (activityStatusChangedEventArgs.NewStatus != ActivityStatus.Initializing || sender as RainfallRunoffModel == null)
             {
-                Log.Info("DeltaShell version: " + Application.Version);
-                Log.Info(Application.PluginVersions);
+                return;
             }
+
+            Log.Info("DeltaShell version: " + Application.Version);
+            Log.Info(Application.PluginVersions);
         }
 
         public override IEnumerable<ModelInfo> GetModelInfos()

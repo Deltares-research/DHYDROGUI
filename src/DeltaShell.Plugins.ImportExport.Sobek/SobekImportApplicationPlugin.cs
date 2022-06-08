@@ -83,13 +83,11 @@ namespace DeltaShell.Plugins.ImportExport.Sobek
             }
         }
 
-
-        [InvokeRequired]
-        private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
+        private static void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
-            if (e.NewStatus != ActivityStatus.Cleaning || 
-                !(sender is FileImportActivity fileImportActivity) || 
-                !(fileImportActivity.FileImporter is IPartialSobekImporter partialSobekImporter))
+            if (e.NewStatus != ActivityStatus.Cleaning 
+                || !(sender is FileImportActivity fileImportActivity) 
+                || !(fileImportActivity.FileImporter is IPartialSobekImporter partialSobekImporter))
             {
                 return;
             }

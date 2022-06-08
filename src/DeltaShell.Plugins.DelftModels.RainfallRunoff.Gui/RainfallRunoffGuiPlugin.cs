@@ -121,12 +121,16 @@ namespace DeltaShell.Plugins.DelftModels.RainfallRunoff.Gui
             }
         }
 
-        [InvokeRequired]
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
-            if (!(sender is RainfallRunoffModel) || e.NewStatus != ActivityStatus.Failed) return;
+            if (e.NewStatus != ActivityStatus.Failed || !(sender is RainfallRunoffModel rainfallRunoffModel)) return;
+            OpenValidationView(rainfallRunoffModel);
+        }
 
-            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        [InvokeRequired]
+        private void OpenValidationView(RainfallRunoffModel rainfallRunoffModel)
+        {
+            Gui.CommandHandler.OpenView(rainfallRunoffModel, typeof(ValidationView));
         }
     }
 }

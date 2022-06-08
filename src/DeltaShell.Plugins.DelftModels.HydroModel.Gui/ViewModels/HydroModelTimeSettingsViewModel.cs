@@ -31,8 +31,6 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
         private HydroModel hydroModel;
         private bool isUpdatingModel;
 
-        private readonly string parameterValueName = nameof(Parameter.Value);
-        
         #region Properties
 
         public HydroModel HydroModel
@@ -282,16 +280,22 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
 
         private void OnModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if ((!(sender is Parameter) || e.PropertyName != parameterValueName) &&
-                e.PropertyName != "OverrideStartTime" && 
-                e.PropertyName != "OverrideStopTime" &&
-                e.PropertyName != "OverrideTimeStep")
+            if (isUpdatingModel) return;
+
+            if (sender is HydroModel && (e.PropertyName == nameof(hydroModel.OverrideStartTime)
+                                         || e.PropertyName == nameof(hydroModel.OverrideStopTime)
+                                         || e.PropertyName == nameof(hydroModel.OverrideTimeStep)))
             {
+                SyncTimesAfterAction();
                 return;
             }
 
-            if (isUpdatingModel) return;
-            SyncTimesAfterAction();
+            if (sender is Parameter parameter 
+                && parameter.Name != TimeDependentModelBase.CurrentTimeName
+                && e.PropertyName == nameof(Parameter.Value))
+            {
+                SyncTimesAfterAction();
+            }
         }
 
         [InvokeRequired]
@@ -305,11 +309,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui.ViewModels
             StartTime = HydroModel.StartTime;
             StopTime = HydroModel.StopTime;
             TimeStep = HydroModel.TimeStep;
-
-            if (StartTimeSynchronisationEnabled) Models?.Where(vm => vm.StartTime != StartTime).ForEach(vm => vm.StartTime = StartTime);
-            if (StopTimeSynchronisationEnabled) Models?.Where(vm => vm.StopTime != StopTime).ForEach(vm => vm.StopTime = StopTime);
-            if (TimeStepSynchronisationEnabled) Models?.Where(vm => vm.TimeStep != TimeStep).ForEach(vm => vm.TimeStep = TimeStep);
-
+            
             StartTimeSynchronisationEnabled = HydroModel.OverrideStartTime;
             StopTimeSynchronisationEnabled = HydroModel.OverrideStopTime;
             TimeStepSynchronisationEnabled = HydroModel.OverrideTimeStep;

@@ -47,7 +47,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
         public IEventedList<UnstructuredGridCellCoverage> InitialFractions { get; private set; }
 
         protected virtual IGridOperationApi gridOperationApi { get; set; }
-        protected virtual UnstrucGridOperationApi runTimeGridOperationApi { get; set; } //lives on the worker thread...
         protected virtual bool snapApiInErrorMode { get; set; }
 
         public UnstructuredGrid Grid
@@ -652,10 +651,6 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
             }
             try
             {
-                if (runTimeGridOperationApi != null)
-                {
-                    return runTimeGridOperationApi;
-                }
                 var api =  gridOperationApi ?? (gridOperationApi = new UnstrucGridOperationApi(this, fullExport));
                 snapApiInErrorMode = false;
                 return api;

@@ -189,7 +189,8 @@ namespace DeltaShell.Dimr
 
         public void ProcessMessages()
         {
-            if (!RemoteInstanceContainer.IsProcessAlive(api)) return;
+            if (DimrApiDataSet.FeedbackLevel == Level.None 
+                || !RemoteInstanceContainer.IsProcessAlive(api)) return;
 
             string[] infoMsgs = Messages;
             if (infoMsgs.Length > 0 && !(infoMsgs.Length == 1 && infoMsgs[0] == string.Empty))

@@ -146,19 +146,26 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel.Gui
             Gui.SelectedProjectItem = null;
         }
 
-        [InvokeRequired]
         private void ActivityRunnerActivityStatusChanged(object sender, ActivityStatusChangedEventArgs e)
         {
-            if (sender is FileImportActivity fileImportActivity && e.NewStatus == ActivityStatus.Cleaning)
+            switch (sender)
             {
-                // remove memory leaks
-                fileImportActivity.FileImporter.ProgressChanged = null;
-                TypeUtils.SetField(fileImportActivity, "target", null);
+                case FileImportActivity fileImportActivity when e.NewStatus == ActivityStatus.Cleaning:
+                    // remove memory leaks
+                    fileImportActivity.FileImporter.ProgressChanged = null;
+                    TypeUtils.SetField(fileImportActivity, "target", null);
+                    break;
+
+                case HydroModel hydroModel when e.NewStatus == ActivityStatus.Failed:
+                    OpenValidationView(hydroModel);
+                    break;
             }
+        }
 
-            if (!(sender is HydroModel) || e.NewStatus != ActivityStatus.Failed) return;
-
-            Gui.CommandHandler.OpenView(sender, typeof(ValidationView));
+        [InvokeRequired]
+        private void OpenValidationView(HydroModel hydroModel)
+        {
+            Gui.CommandHandler.OpenView(hydroModel, typeof(ValidationView));
         }
 
         public override IEnumerable<ViewInfo> GetViewInfoObjects()

@@ -84,7 +84,16 @@ namespace DeltaShell.NGHS.Common.Gui.WPF.SettingsView
         private void OnDataPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             var propertyName = GetChangedPropertyName(sender, null);
-            if (string.IsNullOrEmpty(propertyName)) return;
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                propertyName = propertyChangedEventArgs.PropertyName;
+                if(string.IsNullOrEmpty(propertyName) 
+                   || Equals(propertyName, nameof(DelftTools.Utils.Editing.IEditableObject.IsEditing))
+                   || Equals(propertyName, nameof(DelftTools.Utils.INameable.Name))
+                   || Equals(propertyName, nameof(DelftTools.Shell.Core.Workflow.DataItems.DataItem.ComposedValue))
+                   || Equals(propertyName, nameof(DelftTools.Units.Parameter.Value)))
+                    return;
+            }
 
             ViewModel.UpdatePropertyValue(propertyName);
         }

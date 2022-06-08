@@ -205,6 +205,27 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM
                 OnPropertyChanged(nameof(WriteClassMapFile));
                 EndEdit();
             }
+            else if (IsParameter(GuiProperties.StartTime))
+            {
+                BeginEdit(new DefaultEditAction("Changing start time"));
+                base.StartTime = StartTime;
+                OnPropertyChanged(nameof(StartTime));
+                EndEdit();
+            }
+            else if (IsParameter(GuiProperties.StopTime))
+            {
+                BeginEdit(new DefaultEditAction("Changing stop time"));
+                base.StopTime = StopTime;
+                OnPropertyChanged(nameof(StopTime));
+                EndEdit();
+            }
+            else if (IsParameter(KnownProperties.DtUser))
+            {
+                BeginEdit(new DefaultEditAction("Changing timestep"));
+                base.TimeStep = TimeStep;
+                OnPropertyChanged(nameof(TimeStep));
+                EndEdit();
+            }
             else
             {
                 BeginEdit(new DefaultEditAction(""));

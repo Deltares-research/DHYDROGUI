@@ -26,6 +26,7 @@ using DelftTools.Utils.Csv.Importer;
 using DelftTools.Utils.Editing;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.IO.DataObjects;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.DelftModels.HydroModel;
 using DeltaShell.Plugins.DelftModels.RainfallRunoff;
@@ -125,7 +126,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                 hydroModel.CoordinateSystem = fmModel?.CoordinateSystem;
                 SetDefaultModelSettings(fmModel, hydroModel);
             }
-            EventSettings.BubblingEnabled = true;
+            
             watch.Stop();
             Log.Info($"Done importing and generating model in {watch.ElapsedMilliseconds / 1000} sec");
             ProgressChanged?.Invoke($"Done importing and generating model in {watch.ElapsedMilliseconds/1000} sec from gwsw files, loading into DeltaShell", 10, 10);
@@ -135,14 +136,13 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         private void SetDefaultModelSettings(IWaterFlowFMModel fmModel, HydroModel hydroModel)
         {
             var timeStep = new TimeSpan(0, 1, 0);
+            hydroModel.TimeStep = timeStep; 
             double timeStepInSeconds = timeStep.TotalSeconds;
 
             string timeStepValue = timeStepInSeconds.ToString(CultureInfo.InvariantCulture);
             fmModel.ModelDefinition.SetModelProperty(KnownProperties.DtUser, timeStepValue);
             fmModel.ModelDefinition.SetModelProperty(GuiProperties.HisOutputDeltaT, timeStepValue);
             fmModel.ModelDefinition.SetModelProperty(GuiProperties.MapOutputDeltaT, timeStepValue);
-            
-            hydroModel.TimeStep = timeStep;
         }
 
         /// <summary>
@@ -193,7 +193,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
             fmModel.UnSubscribeFromNetwork(network);
             
-            var bubbelingEventSetting = EventSettings.BubblingEnabled;
             var branchesByName = network.Branches.ToDictionary(b => b.Name, b => b, StringComparer.OrdinalIgnoreCase);
             var pipesBySourceCompartmentName = network.Pipes.ToLookup(p => p.SourceCompartmentName, p => p, StringComparer.OrdinalIgnoreCase);
             var pipesByTargetCompartmentName = network.Pipes.ToLookup(p => p.TargetCompartmentName, p => p, StringComparer.OrdinalIgnoreCase);
@@ -270,7 +269,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }
             finally
             {
-                EventSettings.BubblingEnabled = bubbelingEventSetting;
                 fmModel.SubscribeToNetwork(network);
                 network.EndEdit();
             }
@@ -327,26 +325,17 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         private void ImportGwswNetworkInRrModel(
             ILookup<SewerFeatureType, GwswElement> elementTypesList, RainfallRunoffModel rrModel, WaterFlowFMModel fmModel)
         {
-            var bubblingEnabledSetting = EventSettings.BubblingEnabled;
-            try
+            var errorsDuringImport = new List<string>();
+            var importedFeatureElements = SewerFeatureFactory.CreateNwrwEntities(elementTypesList, this, errorsDuringImport);
+            if (errorsDuringImport.Any())
             {
-                var errorsDuringImport = new List<string>();
-                var importedFeatureElements = SewerFeatureFactory.CreateNwrwEntities(elementTypesList, this, errorsDuringImport);
-                if (errorsDuringImport.Any())
-                {
-                    Log.Error(
-                        $"One or more errors occured during the import process: {string.Join(Environment.NewLine, errorsDuringImport)}");
-                }
+                Log.Error(
+                    $"One or more errors occured during the import process: {string.Join(Environment.NewLine, errorsDuringImport)}");
+            }
 
-                if (rrModel == null || fmModel == null || ShouldCancel) return;
-                ProgressChanged?.Invoke("Adding features to Rainfall Runoff Model.", 0, 0);
-                AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel, fmModel);
-            }
-            finally
-            {
-                EventSettings.BubblingEnabled = bubblingEnabledSetting;
-            }
-            
+            if (rrModel == null || fmModel == null || ShouldCancel) return;
+            ProgressChanged?.Invoke("Adding features to Rainfall Runoff Model.", 0, 0);
+            AddNwrwFeaturesToRainfallRunoffModel(importedFeatureElements, rrModel, fmModel);
         }
 
         private void AddNwrwFeaturesToRainfallRunoffModel(IEnumerable<INwrwFeature> importedFeatureElements,
@@ -371,7 +360,7 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             NwrwImporterHelper helper = new NwrwImporterHelper();
             helper.CurrentNwrwCatchmentModelDataByNodeOrBranchId = new ConcurrentDictionary<string, NwrwData>(rrModel.GetAllModelData().OfType<NwrwData>().ToDictionary(md => md.Name, md => md, StringComparer.InvariantCultureIgnoreCase));
             var lateralSourcesDataByLaterSource = new ConcurrentDictionary<LateralSource, Model1DLateralSourceData>();
-            var bubblingEnabled = EventSettings.BubblingEnabled;
+            
             fmModel.UnSubscribeFromNetwork(network);
             try
             {
@@ -470,7 +459,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }
             finally
             {
-                EventSettings.BubblingEnabled = bubblingEnabled;
                 fmModel.SubscribeToNetwork(network);
             }
             
@@ -502,7 +490,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var network = fmModel.Network;
             
             network.BeginEdit(new DefaultEditAction("Importing GWSW database."));
-            var bubblingEnabledSetting = EventSettings.BubblingEnabled;
             fmModel.DisableNetworkSynchronization = true;
             try
             {
@@ -515,9 +502,10 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                     ProgressChanged?.Invoke("Adding discretisation points of sewerconnection to networkdiscretisation.", 0, 0);
                     AddDiscretisationPointsOfSewerConnections(network, fmModel?.NetworkDiscretization);
 
-                    EventSettings.BubblingEnabled = true;
-                    ProgressChanged?.Invoke("Adding roughness sections of sewer connections to roughness 1d list.", 4, 10);
-                    EventSettings.BubblingEnabled = false;
+                    EventingHelper.DoWithEvents(() =>
+                    {
+                        ProgressChanged?.Invoke("Adding roughness sections of sewer connections to roughness 1d list.", 4, 10);
+                    });
 
                     fmModel.UpdateRoughnessSections();
 
@@ -533,7 +521,6 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             }
             finally
             {
-                EventSettings.BubblingEnabled = bubblingEnabledSetting;
                 fmModel.DisableNetworkSynchronization = false;
                 network?.EndEdit();
             }
@@ -559,11 +546,9 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
         {
             var networkManholes = network.Manholes.ToArray();
             var listOfErrors = new List<string>();
-            var bubblingEnabledSetting = EventSettings.BubblingEnabled;
-            try
-            {
-                EventSettings.BubblingEnabled = false;
 
+            EventingHelper.DoWithoutEvents(() =>
+            {
                 ParallelHelper.RunActionInParallel(this, networkManholes, manhole =>
                 {
                     var bc = Helper1D.CreateDefaultBoundaryCondition(manhole, false, false);
@@ -573,16 +558,12 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
                         fmModel.BoundaryConditions1D.Add(bc);
                     }
                 }, "Add Model 1D Boundary Nodes to Fm Model");
-                
+
                 if (listOfErrors.Any())
                     Log.ErrorFormat(
                         $"While adding model1d boundary data nodes to fm model we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
-                        
-            }
-            finally
-            {
-                EventSettings.BubblingEnabled = bubblingEnabledSetting;
-            }
+
+            });
         }
 
         private void AddDiscretisationPointsOfSewerConnections(IHydroNetwork network, IDiscretization networkDiscretization)
@@ -597,47 +578,41 @@ namespace DeltaShell.Plugins.ImportExport.GWSW
             var stepSize = nrOfImportedFeatureElements / 20;
             var listOfErrors = new List<string>();
             var newLocations = new List<NetworkLocation>();
-            var bubblingEnabled = EventSettings.BubblingEnabled;
-            try
-            {
 
-                networkSewerConnections.ForEach((sewerConnection, indexOf) =>
+            networkSewerConnections.ForEach((sewerConnection, indexOf) =>
+            {
+                try
                 {
-                    try
+                    if (ShouldCancel)
+                        return;
+
+                    if (stepSize != 0 && indexOf % stepSize == 0)
                     {
-                        if (ShouldCancel)
-                            return;
-
-                        if (stepSize != 0 && indexOf % stepSize == 0)
+                        EventingHelper.DoWithEvents(() =>
                         {
-                            EventSettings.BubblingEnabled = true;
-                            ProgressChanged?.Invoke($"Adding network discretizations points of sewer connection to model ({((double) ((double) indexOf / (double) nrOfImportedFeatureElements)):P0})", indexOf, nrOfImportedFeatureElements);
-                            EventSettings.BubblingEnabled = false;
-                        }
-
-                        // add location for begin and end of the sewer connection
-                        newLocations.Add(new NetworkLocation(sewerConnection, 0.0));
-
-                        if (sewerConnection.Length > 0)
-                        {
-                            newLocations.Add(new NetworkLocation(sewerConnection, sewerConnection.Length));
-                        }
+                            ProgressChanged?.Invoke($"Adding network discretizations points of sewer connection to model ({((double)((double)indexOf / (double)nrOfImportedFeatureElements)):P0})", indexOf, nrOfImportedFeatureElements);
+                        });
                     }
-                    catch (Exception exception)
+
+                    // add location for begin and end of the sewer connection
+                    newLocations.Add(new NetworkLocation(sewerConnection, 0.0));
+
+                    if (sewerConnection.Length > 0)
                     {
-                        listOfErrors.Add(exception.Message + Environment.NewLine);
+                        newLocations.Add(new NetworkLocation(sewerConnection, sewerConnection.Length));
                     }
-                });
-                networkDiscretization.UpdateNetworkLocations(newLocations);
+                }
+                catch (Exception exception)
+                {
+                    listOfErrors.Add(exception.Message + Environment.NewLine);
+                }
+            });
+            networkDiscretization.UpdateNetworkLocations(newLocations);
 
-                if (listOfErrors.Any())
-                    Log.ErrorFormat(
-                        $"While adding discretisation points to network discretisation we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
-            }
-            finally
-            {
-                EventSettings.BubblingEnabled = bubblingEnabled;
-            }
+            if (listOfErrors.Any())
+                Log.ErrorFormat(
+                    $"While adding discretisation points to network discretisation we encountered the following errors: {Environment.NewLine}{string.Join(Environment.NewLine, listOfErrors)}");
+            
         }
 
         private void AddSewerFeaturesToNetwork(IEnumerable<ISewerFeature> importedFeatureElements,

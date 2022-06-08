@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using BasicModelInterface;
 using DelftTools.Hydro;
 using DelftTools.Hydro.Helpers;
 using DelftTools.Shell.Core;
@@ -23,6 +24,7 @@ using DeltaShell.Dimr;
 using DeltaShell.NGHS.Common;
 using DeltaShell.NGHS.Common.IO;
 using DeltaShell.NGHS.Common.IO.LogFileReading;
+using DeltaShell.NGHS.Utils;
 using DeltaShell.Plugins.DelftModels.HydroModel.Export;
 using DeltaShell.Plugins.DelftModels.HydroModel.Properties;
 using DeltaShell.Plugins.DelftModels.HydroModel.Validation;
@@ -42,6 +44,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
         private const string HydroRegionTag = "RootHydroRegion";
         private static readonly ILog Log = LogManager.GetLogger(typeof(HydroModel));
         private readonly DimrRunHelper dimrRunHelper;
+        private DateTime cachedStopTime;
+        private TimeSpan cachedTimeStep;
 
         #region Fields and properties
 
@@ -287,12 +291,35 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
         }
 
+        [NoNotifyPropertyChange]
+        public override DateTime CurrentTime
+        {
+            get
+            {
+                return base.CurrentTime;
+            }
+            protected set
+            {
+                EventingHelper.DoWithoutEvents(() =>
+                {
+                    base.CurrentTime = value;
+                });
+
+                currentWorkflow.Activities
+                               .GetActivitiesOfType<IDimrModel>()
+                               .ForEach(m => m.CurrentTime = value);
+            }
+        }
+
         public override string ProgressText
         {
             get
             {
-                return
-                    GetProgressTextCore(Activities.GetActivitiesOfType<TimeDependentModelBase>().Average(m => m.ProgressPercentage));
+                double percentage = Activities
+                                    .GetActivitiesOfType<TimeDependentModelBase>()
+                                    .Average(m => m.ProgressPercentage);
+
+                return GetProgressTextCore(percentage);
             }
         }
 
@@ -305,7 +332,11 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             updating = true;
-            foreach (ITimeDependentModel subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.StartTime != StartTime))
+            var timeDependentModels = Activities
+                                      .GetActivitiesOfType<ITimeDependentModel>()
+                                      .Where(a => a.StartTime != StartTime)
+                                      .ToList();
+            foreach (ITimeDependentModel subModel in timeDependentModels)
             {
                 subModel.StartTime = StartTime;
             }
@@ -322,7 +353,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             updating = true;
-            foreach (ITimeDependentModel subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.StopTime != StopTime))
+            foreach (ITimeDependentModel subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.StopTime != StopTime).ToList())
             {
                 subModel.StopTime = StopTime;
             }
@@ -339,7 +370,7 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
 
             updating = true;
-            foreach (ITimeDependentModel subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.TimeStep != TimeStep))
+            foreach (ITimeDependentModel subModel in Activities.GetActivitiesOfType<ITimeDependentModel>().Where(a => a.TimeStep != TimeStep).ToList())
             {
                 subModel.TimeStep = TimeStep;
             }
@@ -381,7 +412,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                 }
             }
         }
-
+        
+        [NoNotifyPropertyChange]
         public override bool OutputIsEmpty
         {
             get
@@ -421,27 +453,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             switch (parameter.Name)
             {
                 case StartTimeName:
-                    if (timeDependentModels.Any(m => m.StartTime != StartTime))
-                    {
-                        OverrideStartTime = false;
-                    }
-
+                    OverrideStartTime = timeDependentModels.All(m => m.StartTime == StartTime);
                     StartTime = timeDependentModels.Select(m => m.StartTime).Min();
                     break;
                 case StopTimeName:
-                    if (timeDependentModels.Any(m => m.StopTime != StopTime))
-                    {
-                        OverrideStopTime = false;
-                    }
-
+                    OverrideStopTime = timeDependentModels.All(m => m.StopTime == StopTime);
                     StopTime = timeDependentModels.Select(m => m.StopTime).Max();
                     break;
                 case TimeStepName:
-                    if (timeDependentModels.Any(m => m.TimeStep != TimeStep))
-                    {
-                        OverrideTimeStep = false;
-                    }
-
+                    OverrideTimeStep = timeDependentModels.All(m => m.TimeStep == TimeStep);
                     TimeStep = timeDependentModels.Select(m => m.TimeStep).Min();
                     break;
             }
@@ -765,11 +785,14 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             {
                 try
                 {
-                    dimrApi.Update(dimrApi.TimeStep.TotalSeconds);
-                    CurrentTime = dimrApi.CurrentTime;
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>().ForEach(m => m.CurrentTime = CurrentTime);
+                    var timeStepInSeconds = cachedTimeStep.TotalSeconds;
+                    dimrApi.Update(timeStepInSeconds);
+
+                    CurrentTime = CurrentTime.AddSeconds(timeStepInSeconds);
+                    
                     OnProgressChanged();
-                    if (dimrApi.StopTime.Subtract(dimrApi.CurrentTime).TotalSeconds <= 0)
+
+                    if (cachedStopTime.Subtract(CurrentTime).TotalSeconds <= 0)
                     {
                         Status = ActivityStatus.Done;
                     }
@@ -793,13 +816,17 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             }
             protected set
             {
+                if (base.Status == value) return;
+
                 base.Status = value;
+
                 if (!DoDimrRun())
                 {
                     return;
                 }
 
-                Activities.GetActivitiesOfType<IDimrModel>().ForEach(dimrModel => dimrModel.Status = Status);
+                Activities.GetActivitiesOfType<IDimrModel>()
+                          .ForEach(dimrModel => dimrModel.Status = Status);
             }
         }
 
@@ -864,9 +891,8 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     }
 
                     CurrentTime = StartTime;
-
-                    currentWorkflow.Activities.GetActivitiesOfType<IDimrModel>()
-                                   .ForEach(m => m.CurrentTime = CurrentTime);
+                    SetTimeCaches(dimrApi);
+                    
                     OnProgressChanged();
                 }
                 catch (Exception e)
@@ -914,10 +940,19 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             return new HydroModelValidator().Validate(this);
         }
 
+        private DateTime lastProgressUpdate = DateTime.Now;
+
         protected override void OnProgressChanged()
         {
             dimrApi?.ProcessMessages();
-            base.OnProgressChanged();
+
+            var time = DateTime.Now;
+            if ((time - lastProgressUpdate).Milliseconds > 300)
+            {
+                // do not trigger to much events for progress update which the user cannot visually see.
+                lastProgressUpdate = time;
+                base.OnProgressChanged();
+            }
         }
 
         protected override void OnCancel()
@@ -964,25 +999,15 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
                     string outputDirectory = Path.Combine(validPath, dimrModel.DimrModelRelativeOutputDirectory);
                     dimrModel.ConnectOutput(outputDirectory);
                 }
-
-                var CurrentWorkflowIsDimr = CurrentWorkflow as IDimrModel;
-                if (CurrentWorkflowIsDimr != null)
-                {
-                    CurrentWorkflowIsDimr.ConnectOutput(validPath);
-                    CurrentWorkflowIsDimr.RunsInIntegratedModel = false;
-                }
-
+                
                 dimrRunHelper.ConnectDimrRunLogFile(this, WorkingDirectoryPath);
             }
             else
             {
-                if (CurrentWorkflow != null)
-                {
-                    CurrentWorkflow.Cleanup();
-                }
+                CurrentWorkflow?.Cleanup();
             }
         }
-
+        
         protected override void OnFinish()
         {
             try
@@ -1038,6 +1063,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
             dimrApi?.ProcessMessages();
             dimrApi?.Dispose();
             dimrApi = null;
+        }
+
+        private void SetTimeCaches(IBasicModelInterface api)
+        {
+            // cache times to prevent unnecessary api calls (performance improvement)
+            cachedStopTime = api.StopTime;
+            cachedTimeStep = api.TimeStep;
         }
 
         #endregion

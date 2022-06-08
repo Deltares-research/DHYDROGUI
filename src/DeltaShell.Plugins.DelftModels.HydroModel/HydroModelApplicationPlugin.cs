@@ -230,12 +230,13 @@ namespace DeltaShell.Plugins.DelftModels.HydroModel
 
         private void ActivityRunnerOnActivityStatusChanged(object sender, ActivityStatusChangedEventArgs activityStatusChangedEventArgs)
         {
-            var hydroModel = sender as HydroModel;
-            if (activityStatusChangedEventArgs.NewStatus == ActivityStatus.Initializing && hydroModel != null)
+            if (activityStatusChangedEventArgs.NewStatus != ActivityStatus.Initializing || !(sender is HydroModel))
             {
-                Log.Info($"DeltaShell version: {Application.Version}");
-                Log.Info(Application.PluginVersions);
+                return;
             }
+
+            Log.Info($"DeltaShell version: {Application.Version}");
+            Log.Info(Application.PluginVersions);
         }
 
         private static void DoWithHydroModels(Project project, string actionName, Action<HydroModel> modelAction)
