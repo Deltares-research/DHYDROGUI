@@ -404,8 +404,7 @@ namespace DeltaShell.NGHS.IO.DataObjects.Model1D
 
                 if (weir.IsGated)
                 {
-                    if (engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel ||
-                        engineParameter.QuantityType == QuantityType.GateOpeningHeight)
+                    if (engineParameter.QuantityType == QuantityType.GateLowerEdgeLevel)
                     {
                         isAllowed = true;
                     }
