@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
@@ -9,6 +10,7 @@ using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
@@ -18,69 +20,40 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
     {
         private const string structuresFilename = "structures.ini";
         private const StructureType structureType = StructureType.Culvert;
+        private readonly DateTime referenceDateTime = new DateTime(2022, 5, 5);
 
-        [Test]
-        public void Constructor_CategoryNull_ThrowsArgumentNullException()
+        private static IEnumerable<TestCaseData> ConstructorParameterNullData()
         {
-            // Setup
-            IDelftIniCategory category = null;
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
-            IBranch branch = new Channel();
+            ITimFileReader timFileReader = Substitute.For<ITimFileReader>();
+            IDelftIniCategory category = Substitute.For<IDelftIniCategory>();
+            ICrossSectionDefinition[] crossSectionDefinitions = {};
+            var branch = Substitute.For<IBranch>();
 
-            // Call
-            TestDelegate call = () => new CulvertDefinitionParser(structureType, category, crossSectionDefinitions, 
-                                                                  branch, structuresFilename);
-            
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
+            yield return new TestCaseData(null, category, crossSectionDefinitions, branch, structuresFilename, "timFileReader");
+            yield return new TestCaseData(timFileReader, null, crossSectionDefinitions, branch, structuresFilename, "category");
+            yield return new TestCaseData(timFileReader, category, null, branch, structuresFilename, "crossSectionDefinitions");
+            yield return new TestCaseData(timFileReader, category, crossSectionDefinitions, null, structuresFilename, "branch");
+            yield return new TestCaseData(timFileReader, category, crossSectionDefinitions, branch, null, "structuresFilename");
         }
-        
-        [Test]
-        public void Constructor_CrossSectionDefinitionsNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = null;
-            IBranch branch = new Channel();
 
-            // Call
-            TestDelegate call = () => new CulvertDefinitionParser(structureType, category, crossSectionDefinitions, 
-                                                                  branch, structuresFilename);
-            
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
-        }
-        
         [Test]
-        public void Constructor_BranchNull_ThrowsArgumentNullException()
+        [TestCaseSource(nameof(ConstructorParameterNullData))]
+        public void Constructor_ParameterNull_ThrowsArgumentNullException(ITimFileReader timFileReader,
+                                                                          IDelftIniCategory category,
+                                                                          ICollection<ICrossSectionDefinition> crossSectionDefinitions,
+                                                                          IBranch branch, 
+                                                                          string structuresFilePath,
+                                                                          string expectedParameterName)
         {
-            // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
-            IBranch branch = null;
-
-            // Call
-            TestDelegate call = () => new CulvertDefinitionParser(structureType, category, crossSectionDefinitions, 
-                                                                  branch, structuresFilename);
-            
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
-        }
-        
-        [Test]
-        public void Constructor_StructuresFilenameNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
-            IBranch branch = new Channel();
-
-            // Call
-            TestDelegate call = () => new CulvertDefinitionParser(structureType, category, crossSectionDefinitions, 
-                                                                  branch, null);
-            
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
+            void Call() => new CulvertDefinitionParser(timFileReader,
+                                                       structureType, 
+                                                       category, 
+                                                       crossSectionDefinitions, 
+                                                       branch, 
+                                                       structuresFilePath, 
+                                                       referenceDateTime);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParameterName));
         }
 
         [Test]
@@ -92,11 +65,57 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var branch = new Channel();
 
             // Call
-            var parser = new CulvertDefinitionParser(structureType, category, crossSectionDefinitions, 
-                                                     branch, structuresFilename);
+            var parser = new CulvertDefinitionParser(Substitute.For<ITimFileReader>(),
+                                                     structureType, 
+                                                     category, 
+                                                     crossSectionDefinitions, 
+                                                     branch, 
+                                                     structuresFilename, 
+                                                     referenceDateTime);
 
             // Assert
             Assert.That(parser, Is.InstanceOf<CrossSectionDependentStructureParserBase>());
+        }
+
+        [Test]
+        public void ParseStructure_ReadsTimStructuresCorrectly()
+        {
+            // Setup
+            const string valveOpeningHeightTimeSeries = "valve_opening.tim";
+            const string name = "NameOfStructure";
+            const string longName = "LongNameOfStructure";
+            const int chainage = 123;
+            const string allowedFlowDir = "both";
+            const string frictionType = "Chezy";
+
+            var crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
+
+            IBranch branch = new Channel() { Length = 999 };
+            
+            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            category.AddProperty(StructureRegion.Id.Key, name);
+            category.AddProperty(StructureRegion.Name.Key, longName);
+            category.AddProperty(StructureRegion.Chainage.Key, chainage);
+            category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
+            category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
+            category.AddProperty(StructureRegion.IniValveOpen.Key, valveOpeningHeightTimeSeries);
+
+            var reader = Substitute.For<ITimFileReader>();
+
+
+            var parser = new CulvertDefinitionParser(reader,
+                                                     structureType, 
+                                                     category, 
+                                                     crossSectionDefinitions, 
+                                                     branch, 
+                                                     structuresFilename, 
+                                                     referenceDateTime);
+
+            // Call
+            IStructure1D _ = parser.ParseStructure();
+
+            // Assert
+            reader.Received(1).Read(valveOpeningHeightTimeSeries, Arg.Any<TimeSeries>(), referenceDateTime);
         }
 
         [Test]
@@ -167,8 +186,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.LossCoefficient.Key, string.Join(", ", lossCoefficient));
             category.AddProperty(StructureRegion.SubType.Key, subType);
 
-            var parser = new CulvertDefinitionParser(structureType, category, crossSectionDefinitions, 
-                                                     branch, structuresFilename);
+            var parser = new CulvertDefinitionParser(Substitute.For<ITimFileReader>(),
+                                                     structureType, 
+                                                     category, 
+                                                     crossSectionDefinitions, 
+                                                     branch, 
+                                                     structuresFilename, 
+                                                     referenceDateTime);
 
             // Call
             IStructure1D parsedStructure = parser.ParseStructure();
@@ -219,8 +243,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.AllowedFlowDir.Key, allowedFlowDir);
             category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
 
-            var parser = new CulvertDefinitionParser(structureType, category, crossSectionDefinitions, 
-                                                     branch, structuresFilename);
+            var parser = new CulvertDefinitionParser(Substitute.For<ITimFileReader>(),
+                                                     structureType, 
+                                                     category, 
+                                                     crossSectionDefinitions, 
+                                                     branch, 
+                                                     structuresFilename, 
+                                                     referenceDateTime);
 
             // Call
             IStructure1D parsedStructure = parser.ParseStructure();
@@ -268,8 +297,13 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.BedFrictionType.Key, frictionType);
             category.AddProperty(StructureRegion.CsDefId.Key, crossSectionName);
 
-            var parser = new CulvertDefinitionParser(structureType, category, crossSectionDefinitions, 
-                                                     branch, structuresFilename);
+            var parser = new CulvertDefinitionParser(Substitute.For<ITimFileReader>(), 
+                                                     structureType, 
+                                                     category, 
+                                                     crossSectionDefinitions, 
+                                                     branch, 
+                                                     structuresFilename, 
+                                                     referenceDateTime);
 
             // Call
             IStructure1D parsedStructure = parser.ParseStructure();

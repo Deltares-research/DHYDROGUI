@@ -2,14 +2,21 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
+    /// <summary>
+    /// <see cref="DefinitionGeneratorStructureUniversalWeir"/> generates the <see cref="DelftIniCategory"/> corresponding with a
+    /// <see cref="Weir"/> with a <see cref="GeneralStructureWeirFormula"/> in the structures.ini file.
+    /// </summary>
     public class DefinitionGeneratorStructureGeneralStructure : DefinitionGeneratorStructure
     {
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
+            Ensure.NotNull(hydroObject, nameof(hydroObject));
+
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.GeneralStructure);
 
             var weir = hydroObject as Weir;
@@ -26,7 +33,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
             IniCategory.AddProperty(StructureRegion.Upstream1Level.Key, formula.BedLevelLeftSideOfStructure, StructureRegion.Upstream1Level.Description, StructureRegion.Upstream1Level.Format);
             IniCategory.AddProperty(StructureRegion.Upstream2Level.Key, formula.BedLevelLeftSideStructure, StructureRegion.Upstream2Level.Description, StructureRegion.Upstream2Level.Format);
-            IniCategory.AddProperty(StructureRegion.CrestLevel.Key, formula.BedLevelStructureCentre, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
+            AddCrestLevel(weir, formula);
             IniCategory.AddProperty(StructureRegion.Downstream1Level.Key, formula.BedLevelRightSideStructure, StructureRegion.Downstream1Level.Description, StructureRegion.Downstream1Level.Format);
             IniCategory.AddProperty(StructureRegion.Downstream2Level.Key, formula.BedLevelRightSideOfStructure, StructureRegion.Downstream2Level.Description, StructureRegion.Downstream2Level.Format);
 
@@ -70,6 +77,25 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
 
 
             return IniCategory;
+        }
+
+        private void AddCrestLevel(IWeir weir, GeneralStructureWeirFormula formula)
+        {
+            if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+            {
+                // Note: the generation of tim files is the responsibility of the StructureFile
+                //       not the DefinitionGeneratorStructureWeir.
+                IniCategory.AddProperty(StructureRegion.CrestLevel.Key,
+                                        StructureTimFileNameGenerator.Generate(weir, weir.CrestLevelTimeSeries), 
+                                        StructureRegion.CrestLevel.Description);
+            }
+            else
+            {
+                IniCategory.AddProperty(StructureRegion.CrestLevel.Key, 
+                                        formula.BedLevelStructureCentre, 
+                                        StructureRegion.CrestLevel.Description, 
+                                        StructureRegion.CrestLevel.Format);
+            }
         }
     }
 }

@@ -160,7 +160,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.LayerGenerators
 
             if (type == typeof(Pump))
             {
-                return l => new Pump(false);
+                return l => new Pump(true);
             }
 
             if (type == typeof(IOrifice))

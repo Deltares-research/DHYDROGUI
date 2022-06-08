@@ -1,10 +1,14 @@
-﻿using DelftTools.Hydro;
+﻿using System;
+using System.Collections.Generic;
+using DelftTools.Functions;
+using DelftTools.Hydro;
 using DelftTools.Hydro.SewerFeatures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using GeoAPI.Extensions.Networks;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
@@ -14,47 +18,36 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
     {
         private const string structuresFilename = "structures.ini";
         private const StructureType structureType = StructureType.Orifice;
+        private readonly DateTime referenceDateTime = new DateTime(2022, 5, 5);
 
-        [Test]
-        public void Constructor_CategoryNull_ThrowsArgumentNullException()
+        private static IEnumerable<TestCaseData> ConstructorArgumentNullData()
         {
-            // Setup
-            IDelftIniCategory category = null;
-            IBranch branch = new Channel();
+            var timFileReader = Substitute.For<ITimFileReader>();
+            var category = Substitute.For<IDelftIniCategory>();
+            var branch = Substitute.For<IBranch>();
 
-            // Call
-            TestDelegate call = () => new OrificeDefinitionParser(structureType, category, branch, structuresFilename);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
+            yield return new TestCaseData(null, category, branch, structuresFilename, "timFileReader");
+            yield return new TestCaseData(timFileReader, null, branch, structuresFilename, "category");
+            yield return new TestCaseData(timFileReader, category, null, structuresFilename, "branch");
+            yield return new TestCaseData(timFileReader, category, branch, null, "structuresFilename");
         }
 
         [Test]
-        public void Constructor_BranchNull_ThrowsArgumentNullException()
+        [TestCaseSource(nameof(ConstructorArgumentNullData))]
+        public void Constructor_ArgumentNull_ThrowsArgumentNullException(ITimFileReader timFileReader,
+                                                                         IDelftIniCategory category, 
+                                                                         IBranch branch, 
+                                                                         string structureFilePath, 
+                                                                         string expectedParamName)
         {
-            // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            IBranch branch = null;
-
-            // Call
-            TestDelegate call = () => new OrificeDefinitionParser(structureType, category, branch, structuresFilename);
-            
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
-        }
-
-        [Test]
-        public void Constructor_StructuresFilenameNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
-            IBranch branch = new Channel();
-
-            // Call
-            TestDelegate call = () => new OrificeDefinitionParser(structureType, category, branch, null);
-            
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
+            void Call() => new OrificeDefinitionParser(timFileReader,
+                                                       structureType, 
+                                                       category, 
+                                                       branch, 
+                                                       structureFilePath, 
+                                                       referenceDateTime);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
         [Test]
@@ -65,7 +58,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var branch = new Channel();
 
             // Call
-            var parser = new OrificeDefinitionParser(structureType, category, branch, structuresFilename);
+            var parser = new OrificeDefinitionParser(Substitute.For<ITimFileReader>(),
+                                                     structureType, 
+                                                     category, 
+                                                     branch, 
+                                                     structuresFilename, 
+                                                     referenceDateTime);
 
             // Assert
             Assert.That(parser, Is.InstanceOf<StructureParserBase>());
@@ -99,7 +97,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             category.AddProperty(StructureRegion.DefinitionType.Key, weirFormula);
             category.AddProperty(StructureRegion.UseVelocityHeight.Key, useVelocityHeight.ToString());
 
-            var parser = new OrificeDefinitionParser(structureType, category, branch, structuresFilename);
+            var parser = new OrificeDefinitionParser(Substitute.For<ITimFileReader>(),
+                                                     structureType, 
+                                                     category, 
+                                                     branch, 
+                                                     structuresFilename,
+                                                     referenceDateTime);
 
             // Call
             IStructure1D parsedStructure = parser.ParseStructure();
@@ -118,6 +121,43 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             Assert.That(orifice.CrestWidth, Is.EqualTo(crestWidth));
             Assert.That(orifice.UseVelocityHeight, Is.EqualTo(useVelocityHeight));
             Assert.That(orifice.WeirFormula, Is.TypeOf<GatedWeirFormula>());
+        }
+
+        [Test]
+        public void ParseStructure_ReadsTimStructuresCorrectly()
+        {
+            // Setup
+            const string crestLevelTimeSeriesName = "crest_level.tim";
+            const string lowerEdeLevelTimeSeriesName = "lower_edge_level.tim";
+
+            IBranch branch = new Channel() { Length = 999 };
+
+            IDelftIniCategory category = StructureParserTestHelper.CreateStructureCategory();
+            category.AddProperty(StructureRegion.Id.Key, "Orifice");
+            category.AddProperty(StructureRegion.Name.Key, "Orifice");
+            category.AddProperty(StructureRegion.CrestLevel.Key, crestLevelTimeSeriesName);
+            category.AddProperty(StructureRegion.CrestWidth.Key, 3.3);
+            category.AddProperty(StructureRegion.AllowedFlowDir.Key, "both");
+            category.AddProperty(StructureRegion.Chainage.Key, 1.1);
+            category.AddProperty(StructureRegion.DefinitionType.Key, "orifice");
+            category.AddProperty(StructureRegion.UseVelocityHeight.Key, false.ToString());
+            category.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, lowerEdeLevelTimeSeriesName);
+
+            var reader = Substitute.For<ITimFileReader>();
+
+            var parser = new OrificeDefinitionParser(reader,
+                                                     structureType, 
+                                                     category, 
+                                                     branch, 
+                                                     structuresFilename,
+                                                     referenceDateTime);
+
+            // Call
+            IStructure1D _ = parser.ParseStructure();
+
+            // Assert
+            reader.Received(1).Read(crestLevelTimeSeriesName, Arg.Any<TimeSeries>(), referenceDateTime);
+            reader.Received(1).Read(lowerEdeLevelTimeSeriesName,Arg.Any<TimeSeries>(), referenceDateTime);
         }
     }
 }

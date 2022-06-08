@@ -154,12 +154,10 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Tests.IO
             CheckIfUpdateGroupNameGivesTheDesiredResult<ObservationCrossSection2D>(groupName, expectedGroupName);
         }
 
-        private void CheckIfUpdateGroupNameGivesTheDesiredResult<T>(string groupName, string expectedGroupName) where T : IGroupableFeature
+        private void CheckIfUpdateGroupNameGivesTheDesiredResult<T>(string groupName, string expectedGroupName) where T : IGroupableFeature, new()
         {
-            var gate = mocks.Stub<T>();
+            var gate = new T();
             gate.GroupName = groupName;
-            mocks.ReplayAll();
-
             gate.UpdateGroupName(fmModel);
 
             Assert.That(gate.GroupName, Is.EqualTo(expectedGroupName));

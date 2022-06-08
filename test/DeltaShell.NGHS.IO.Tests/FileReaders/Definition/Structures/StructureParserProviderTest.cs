@@ -18,73 +18,38 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
     public class StructureParserProviderTest
     {
         private const string structuresFilename = "structures.ini";
+        private readonly DateTime referenceDateTime = new DateTime(2022, 5, 5);
 
-        [Test]
-        public void GetStructureParser_CategoryNull_ThrowsArgumentNullException()
+        private static IEnumerable<TestCaseData> GetStructureParserParameterNullData()
         {
-            // Setup
-            StructureType type = StructureType.Bridge;
-            IDelftIniCategory category = null;
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
-            IBranch branch = new Channel();
-
-            // Call
-            TestDelegate call = () => StructureParserProvider.GetStructureParser(type, category, crossSectionDefinitions,
-                                                                                 branch, structuresFilename);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
-        }
-        
-        [Test]
-        public void GetStructureParser_CrossSectionDefinitionsNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            StructureType type = StructureType.Bridge;
-            IDelftIniCategory category = new DelftIniCategory("structure");
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = null;
-            IBranch branch = new Channel();
-
-            // Call
-            TestDelegate call = () => StructureParserProvider.GetStructureParser(type, category, crossSectionDefinitions,
-                                                                                 branch, structuresFilename);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
-        }
-
-        [Test]
-        public void GetStructureParser_BranchNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            StructureType type = StructureType.Bridge;
-            IDelftIniCategory category = new DelftIniCategory("structure");
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
-            IBranch branch = null;
-
-            // Call
-            TestDelegate call = () => StructureParserProvider.GetStructureParser(type, category, crossSectionDefinitions, 
-                                                                                 branch, structuresFilename);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
-        }
-        
-        [Test]
-        public void GetStructureParser_StructuresFilenameNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            StructureType type = StructureType.Bridge;
             IDelftIniCategory category = new DelftIniCategory("structure");
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
 
-            // Call
-            TestDelegate call = () => StructureParserProvider.GetStructureParser(type, category, crossSectionDefinitions, 
-                                                                                 branch, null);
+            yield return new TestCaseData(null, crossSectionDefinitions, branch, structuresFilename, "category");
+            yield return new TestCaseData(category, null, branch, structuresFilename, "crossSectionDefinitions");
+            yield return new TestCaseData(category, crossSectionDefinitions, null, structuresFilename, "branch");
+            yield return new TestCaseData(category, crossSectionDefinitions, branch, null, "structuresFilePath");
+        }
 
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
+        [Test]
+        [TestCaseSource(nameof(GetStructureParserParameterNullData))]
+        public void GetStructureParser_ParameterNull_ThrowsArgumentNullException(
+            DelftIniCategory category,
+            ICollection<ICrossSectionDefinition> crossSectionDefinitions,
+            IBranch branch,
+            string filePath,
+            string expectedParam)
+        {
+            void Call() => StructureParserProvider.GetStructureParser(StructureType.Bridge,
+                                                                      category,
+                                                                      crossSectionDefinitions,
+                                                                      branch,
+                                                                      filePath,
+                                                                      referenceDateTime);
+
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParam));
         }
 
         [Test]
@@ -97,8 +62,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
             IBranch branch = new Channel();
 
             // Call
-            TestDelegate call = () => StructureParserProvider.GetStructureParser(unknownType, category, crossSectionDefinitions, 
-                                                                                 branch, structuresFilename);
+            TestDelegate call = () => StructureParserProvider.GetStructureParser(unknownType, 
+                                                                                 category, 
+                                                                                 crossSectionDefinitions, 
+                                                                                 branch, 
+                                                                                 structuresFilename, 
+                                                                                 referenceDateTime);
             
             // Assert
             string expectedMessage = string.Format(Resources.StructureParserProvider_No_parser_available, unknownType, Environment.NewLine);
@@ -116,8 +85,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
             IBranch branch = new Channel();
 
             // Call
-            TestDelegate call = () => StructureParserProvider.GetStructureParser(structureWithoutParser, category, crossSectionDefinitions, 
-                                                                                 branch, structuresFilename);
+            TestDelegate call = () => StructureParserProvider.GetStructureParser(structureWithoutParser, 
+                                                                                 category, 
+                                                                                 crossSectionDefinitions, 
+                                                                                 branch, 
+                                                                                 structuresFilename, 
+                                                                                 referenceDateTime);
             
             // Assert
             string expectedMessage = string.Format(Resources.StructureParserProvider_No_parser_available, structureWithoutParser, Environment.NewLine);
@@ -145,8 +118,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
             IBranch branch = new Channel();
             
             // Call
-            IStructureParser parser = StructureParserProvider.GetStructureParser(type, category, crossSectionDefinitions,
-                                                                                 branch, structuresFilename);
+            IStructureParser parser = StructureParserProvider.GetStructureParser(type, 
+                                                                                 category, 
+                                                                                 crossSectionDefinitions,
+                                                                                 branch, 
+                                                                                 structuresFilename, 
+                                                                                 referenceDateTime);
 
             // Assert
             Assert.That(parser, Is.InstanceOf(expectedType));

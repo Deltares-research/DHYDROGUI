@@ -21,7 +21,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var capacityDescription = StructureRegion.Capacity.Description;
             if (pump.CanBeTimedependent && pump.UseCapacityTimeSeries)
             {
-                var timeSeriesFileName = $"{pump.Name}_{StructureRegion.Capacity.Key}.tim";
+                var timeSeriesFileName = $"{pump.Name}_{StructureRegion.Capacity.Key}{FileSuffices.TimFile}";
                 IniCategory.AddProperty(StructureRegion.Capacity.Key, timeSeriesFileName, capacityDescription);
             }
             else

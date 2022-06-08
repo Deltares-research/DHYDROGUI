@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.TestUtils;
@@ -28,7 +29,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders
             var definitions = CrossSectionFileReader.ReadFile(crossSectionLocationFilePath,crossSectionDefinitionFilePath, network, null);
 
             // Act
-            StructureFileReader.ReadFile(structureFilePath, definitions, network);
+            StructureFileReader.ReadFile(structureFilePath, definitions, network, DateTime.Today);
 
             // Assert
             Assert.AreEqual(26, network.BranchFeatures.Count());

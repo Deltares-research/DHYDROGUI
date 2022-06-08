@@ -3,28 +3,68 @@ using DelftTools.Hydro.SewerFeatures;
 
 namespace DelftTools.Hydro.Structures
 {
+    /// <summary>
+    /// <see cref="IPump"/> defines a one-dimensional pump which can be placed on a
+    /// <see cref="GeoAPI.Extensions.Networks.IBranch"/>.
+    /// </summary>
     public interface IPump : IStructure1D, ISewerFeature
     {
-        string Name { get; set; }
-        string LongName { get; set; }
-        double Chainage { get; set; }
+        /// <summary>
+        /// Gets whether time-varying data can be used to drive the <see cref="IPump.Capacity"/>.
+        /// </summary>
+        bool CanBeTimedependent { get; }
 
         /// <summary>
-        /// Indicates if <see cref="CapacityTimeSeries"/> can be used.
+        /// Gets or sets whether the direction is positive, <c>true</c>, or negative <c>false</c>.
         /// </summary>
-        bool CanBeTimedependent { get; set; }
-
         bool DirectionIsPositive { get; set; }
+
         /// <summary>
-        /// If true, <see cref="CapacityTimeSeries"/> is used. Otherwise use <see cref="Capacity"/>.
+        /// Gets or sets if the <see cref="IPump.CapacityTimeSeries"/> is used, <c>true</c>, or
+        /// the <see cref="Capacity"/>, <c>false</c>.
         /// </summary>
+        /// 
         bool UseCapacityTimeSeries { get; set; }
+
+        /// <summary>
+        /// Gets or sets the constant capacity in [m3/s] of this <see cref="IPump"/>
+        /// </summary>
+        /// <remarks>
+        /// This should be used if <see cref="UseCapacityTimeSeries"/> is <c>false</c>
+        /// </remarks>
         double Capacity { get; set; }
+
+        /// <summary>
+        /// Gets the capacity as a function of the time.
+        /// </summary>
+        /// <remarks>
+        /// This should be used if <see cref="UseCapacityTimeSeries"/> is <c>true</c>
+        /// </remarks>
         TimeSeries CapacityTimeSeries { get; }
+
+        /// <summary>
+        /// Gets or sets the start delivery value of this <see cref="IPump"/>
+        /// </summary>
         double StartDelivery { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stop delivery value of this <see cref="IPump"/>
+        /// </summary>
         double StopDelivery { get; set; }
+
+        /// <summary>
+        /// Gets or sets the start suction value of this <see cref="IPump"/>
+        /// </summary>
         double StartSuction { get; set; }
+
+        /// <summary>
+        /// Gets or sets the stop suction value of this <see cref="IPump"/>
+        /// </summary>
         double StopSuction { get; set; }
+
+        /// <summary>
+        /// Gets or sets the control direction of this <see cref="IPump"/>
+        /// </summary>
         PumpControlDirection ControlDirection { get; set; }
 
         // Designer properties
@@ -39,7 +79,7 @@ namespace DelftTools.Hydro.Structures
         double OffsetZ { get; }
 
         /// <summary>
-        /// reduction table
+        /// Gets or sets the reduction table of this <see cref="IPump"/>
         /// </summary>
         IFunction ReductionTable { get; set; }
     }

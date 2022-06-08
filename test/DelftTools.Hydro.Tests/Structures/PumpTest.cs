@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.SteerableProperties;
 using NUnit.Framework;
 using ValidationAspects;
 
@@ -30,14 +33,14 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void UseTimeDepententPreconditionThrows()
+        public void UseTimeDependentPreconditionThrows()
         {
             var pump = (IPump) new Pump(false);
 
             // Always allow setting to false:
             pump.UseCapacityTimeSeries = false;
 
-            Assert.Throws<InvalidOperationException>(() => pump.UseCapacityTimeSeries = true);
+            Assert.Throws<NotSupportedException>(() => pump.UseCapacityTimeSeries = true);
         }
 
         [Test]
@@ -64,8 +67,10 @@ namespace DelftTools.Hydro.Tests.Structures
                                      DirectionIsPositive = false,
                                      ControlDirection = PumpControlDirection.DeliverySideControl,
                                      ReductionTable =
-                                         FunctionHelper.Get1DFunction<double, double>("reduction", "difference",
-                                                                                          "factor")
+                                         FunctionHelper.Get1DFunction<double, double>("reduction", 
+                                                                                      "difference",
+                                                                                      "factor"),
+                                     UseCapacityTimeSeries = true
                                  };
             sourcePump.CapacityTimeSeries[new DateTime(2010, 1, 2, 4, 5, 6)] = 7.8;
 
@@ -91,6 +96,22 @@ namespace DelftTools.Hydro.Tests.Structures
             {
                 Assert.AreEqual(sourcePump.CapacityTimeSeries.Components[0].Values[i], targetPump.CapacityTimeSeries.Components[0].Values[i]);
             }
+        }
+
+        [Test]
+        public void RetrieveSteerableProperties_ReturnsCapacitySteerableProperty()
+        {
+            // Setup
+            const string defaultPumpTimeSeriesName = "Capacity";
+            var pump = new Pump(true);
+            
+            // Call
+            List<SteerableProperty> steerableProperties = pump.RetrieveSteerableProperties().ToList();
+
+            // Assert
+            Assert.That(steerableProperties.Count, Is.EqualTo(1));
+            SteerableProperty property = steerableProperties.First();
+            Assert.That(property.TimeSeries.Name, Is.EqualTo(defaultPumpTimeSeriesName));
         }
     }
 }

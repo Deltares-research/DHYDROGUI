@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using DelftTools.Functions;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Helpers;
+using DelftTools.Hydro.Structures.SteerableProperties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.ComponentModel;
 using GeoAPI.Extensions.Feature;
@@ -12,26 +14,34 @@ using GeoAPI.Extensions.Networks;
 namespace DelftTools.Hydro.Structures
 {
     ///<summary>
+    /// <see cref="Culvert"/> provides the <see cref="ICulvert"/> structure which
+    /// can be placed on a branch.
     ///</summary>
     [Entity(FireOnCollectionChange=false)]
-    public class Culvert : BranchStructure, ICulvert
+    public class Culvert : BranchStructure, ICulvert, IHasSteerableProperties
     {
-        private FlowDirection flowDirection;
         private CrossSectionDefinitionZW tabulatedCrossSectionDefinition;
         private ICrossSectionDefinition crossSectionDefinition;
         private CulvertGeometryType geometryType;
         private CulvertType culvertType;
 
-        public Culvert()
-            : this("Culvert")
-        {
-        }
+        /// <summary>
+        /// Creates a new <see cref="Culvert"/> with a default name.
+        /// </summary>
+        public Culvert() : this("Culvert") { }
 
+        /// <summary>
+        /// Creates a new <see cref="Culvert"/> with the specified <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The name of the culvert.</param>
         public Culvert(string name)
         {
             base.Name = name;
             
-            GateOpeningLossCoefficientFunction = FunctionHelper.Get1DFunction<double, double>("gatereduction", "gate height opening factor", "loss efficient");
+            GateOpeningLossCoefficientFunction = 
+                FunctionHelper.Get1DFunction<double, double>("gatereduction", 
+                                                             "gate height opening factor", 
+                                                             "loss efficient");
             
             Width = 1.0;
             Height = 1.0;
@@ -40,31 +50,25 @@ namespace DelftTools.Hydro.Structures
             GeometryType = CulvertGeometryType.Round;
             CulvertType = CulvertType.Culvert;
             BendLossCoefficient = 1.0;
+
+            gateInitialOpening = new SteerableProperty(1.0, 
+                                                       "Valve Opening Height",
+                                                       "Valve Opening Height",
+                                                       "m");
         }
 
         [DisplayName("Flow direction")]
         [FeatureAttribute(Order = 16,ExportName = "FlowDir")]
-        public virtual FlowDirection FlowDirection
-        {
-            get => flowDirection;
-            set => flowDirection = value;
-        }
-        
+        public virtual FlowDirection FlowDirection { get; set; }
+
         /// <summary>
         /// Calculates the cross-section as defined at the inlet
         /// </summary>
-        public virtual CrossSectionDefinitionZW CrossSectionDefinitionAtInletAbsolute
-        {
-            get
-            {
-                return CrossSectionDefinitionForCalculation.AddLevel(InletLevel);
-            }
-        }
+        public virtual CrossSectionDefinitionZW CrossSectionDefinitionAtInletAbsolute => 
+            CrossSectionDefinitionForCalculation.AddLevel(InletLevel);
 
-        public virtual CrossSectionDefinitionZW CrossSectionDefinitionAtOutletAbsolute
-        {
-            get { return CrossSectionDefinitionForCalculation.AddLevel(OutletLevel); }
-        }
+        public virtual CrossSectionDefinitionZW CrossSectionDefinitionAtOutletAbsolute => 
+            CrossSectionDefinitionForCalculation.AddLevel(OutletLevel);
 
         /// <summary>
         /// Crosssection as used for model api. It does not include any level since these are passed separately
@@ -287,18 +291,35 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 17, ExportName = "Gated")]
         public virtual bool IsGated { get; set; }
 
+        private SteerableProperty gateInitialOpening;
+
+        public virtual bool UseGateInitialOpeningTimeSeries
+        {
+            get => gateInitialOpening.CurrentDriver == SteerablePropertyDriver.TimeSeries;
+            set => gateInitialOpening.CurrentDriver = value ? SteerablePropertyDriver.TimeSeries 
+                                                            : SteerablePropertyDriver.Constant;
+        }
+
         [DynamicReadOnly]
         [DisplayName("Gate opening")]
         [FeatureAttribute(Order = 18, ExportName = "GateOpening")]
-        public virtual double GateInitialOpening { get; set; }
+        public virtual double GateInitialOpening
+        {
+            get => gateInitialOpening.Constant; 
+            set => gateInitialOpening.Constant = value; 
+        }
+
+        public virtual TimeSeries GateInitialOpeningTimeSeries
+        {
+            get => gateInitialOpening.TimeSeries;
+            set => gateInitialOpening.TimeSeries = value;
+        }
 
         [DynamicReadOnly]
         [DisplayName("Gate lower edge")]
         [FeatureAttribute(Order = 19, ExportName = "GateLowEdge")]
-        public virtual double GateLowerEdgeLevel
-        {
-            get { return BottomLevel + GateInitialOpening; }
-        }
+        public virtual double GateLowerEdgeLevel => 
+            BottomLevel + GateInitialOpening;
 
         [DisplayName("Inlet loss coefficient")]
         [FeatureAttribute(Order = 13, ExportName = "InLossCoef")]
@@ -316,10 +337,7 @@ namespace DelftTools.Hydro.Structures
         [FeatureAttribute(Order = 12, ExportName = "OutletLvl")]
         public virtual double OutletLevel { get; set; }
 
-        public virtual double BottomLevel
-        {
-            get { return (InletLevel + OutletLevel)/2; }
-        }
+        public virtual double BottomLevel => (InletLevel + OutletLevel)/2;
 
         [DynamicReadOnly]
         [DisplayName("Bend loss coefficient")]
@@ -427,11 +445,8 @@ namespace DelftTools.Hydro.Structures
 
         public virtual bool AllowNegativeFlow
         {
-            get
-            {
-                return FlowDirection == FlowDirection.Both ||
-                       FlowDirection == FlowDirection.Negative;
-            }
+            get => FlowDirection == FlowDirection.Both ||
+                   FlowDirection == FlowDirection.Negative;
             set
             {
                 if (value != AllowNegativeFlow)
@@ -443,13 +458,8 @@ namespace DelftTools.Hydro.Structures
 
         public virtual bool AllowPositiveFlow
         {
-            get
-            {
-                {
-                    return FlowDirection == FlowDirection.Both ||
-                           FlowDirection == FlowDirection.Positive;
-                }
-            }
+            get => FlowDirection == FlowDirection.Both ||
+                   FlowDirection == FlowDirection.Positive;
             set
             {
                 if (value != AllowPositiveFlow)
@@ -461,8 +471,8 @@ namespace DelftTools.Hydro.Structures
 
         public virtual CrossSectionDefinitionZW TabulatedCrossSectionDefinition
         {
-            get { return tabulatedCrossSectionDefinition; }
-            set { tabulatedCrossSectionDefinition = value; }
+            get => tabulatedCrossSectionDefinition;
+            set => tabulatedCrossSectionDefinition = value;
         }
 
         public virtual IFunction GateOpeningLossCoefficientFunction { get; set; }
@@ -470,14 +480,17 @@ namespace DelftTools.Hydro.Structures
         public override void CopyFrom(object source)
         {
             base.CopyFrom(source);
-            Culvert sourceCulvert = (Culvert) source;
+            var sourceCulvert = (Culvert) source;
+
             CulvertType = sourceCulvert.CulvertType;
             BendLossCoefficient = sourceCulvert.BendLossCoefficient;
             Diameter = sourceCulvert.Diameter;
             FlowDirection = sourceCulvert.FlowDirection;
             Friction = sourceCulvert.Friction;
             FrictionType = sourceCulvert.FrictionType;
-            GateInitialOpening = sourceCulvert.GateInitialOpening;
+            
+            gateInitialOpening = new SteerableProperty(sourceCulvert.gateInitialOpening);
+
             GateOpeningLossCoefficientFunction = (IFunction)sourceCulvert.GateOpeningLossCoefficientFunction.Clone();
             GeometryType = sourceCulvert.GeometryType;
             Height = sourceCulvert.Height;
@@ -534,26 +547,26 @@ namespace DelftTools.Hydro.Structures
         public static Culvert CreateDefault()
         {
             var culvert = new Culvert
-                              {
-                                  InletLevel = -5.0,
-                                  OutletLevel = -5.0,
-                                  Width = 1.0,
-                                  Height = 1.0,
-                                  Length = 10.0,
-                                  InletLossCoefficient = 0.1,
-                                  OutletLossCoefficient = 0.1,
-                                  BendLossCoefficient = 1.0,
-                                  ArcHeight = 0.25,
-                                  Diameter = 4.0, 
-                                  Radius = 0.5,
-                                  Radius1 = 0.8,
-                                  Radius2 = 0.2,
-                                  Radius3 = 0,
-                                  Angle = 28,
-                                  Angle1 = 0,
-                                  Friction = 45.0,
-                                  FrictionDataType = Hydro.Friction.Chezy
-                              };
+            {
+                InletLevel = -5.0,
+                OutletLevel = -5.0,
+                Width = 1.0,
+                Height = 1.0,
+                Length = 10.0,
+                InletLossCoefficient = 0.1,
+                OutletLossCoefficient = 0.1,
+                BendLossCoefficient = 1.0,
+                ArcHeight = 0.25,
+                Diameter = 4.0, 
+                Radius = 0.5,
+                Radius1 = 0.8,
+                Radius2 = 0.2,
+                Radius3 = 0,
+                Angle = 28,
+                Angle1 = 0,
+                Friction = 45.0,
+                FrictionDataType = Hydro.Friction.Chezy
+            };
 
             culvert.TabulatedCrossSectionDefinition.SetAsRectangle(0, 2, 2);
             SetDefaultGateOpeningFunction(culvert.GateOpeningLossCoefficientFunction);
@@ -562,7 +575,7 @@ namespace DelftTools.Hydro.Structures
 
         public static Culvert CreateDefault(IBranch branch)
         {
-            var culvert = CreateDefault();
+            Culvert culvert = CreateDefault();
             AddStructureToNetwork(culvert,branch);
             return culvert;
         }
@@ -627,6 +640,11 @@ namespace DelftTools.Hydro.Structures
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public virtual IEnumerable<SteerableProperty> RetrieveSteerableProperties()
+        {
+            yield return gateInitialOpening;
         }
     }
 }

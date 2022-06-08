@@ -16,7 +16,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
     public class WeirPropertiesRow : IDisposable, INotifyPropertyChange, IFeatureRowObject
     {
         private FormulaEnum? formula;
-        private static readonly GatedWeirFormula StGatedWeirFormula = new GatedWeirFormula();
+        private static readonly GatedWeirFormula StGatedWeirFormula = new GatedWeirFormula(true);
         private static readonly PierWeirFormula StPierWeirFormula = new PierWeirFormula();
         private static readonly RiverWeirFormula StRiverWeirFormula = new RiverWeirFormula();
         private static readonly SimpleWeirFormula StSimpleWeirFormula = new SimpleWeirFormula();
@@ -456,7 +456,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms
             {
                 if (setToWeir)
                 {
-                    Weir.WeirFormula = new GatedWeirFormula();
+                    Weir.WeirFormula = new GatedWeirFormula(true);
                 }
                 GatedWeirFormula = (GatedWeirFormula)Weir.WeirFormula;
             }

@@ -10,6 +10,7 @@ using DelftTools.Functions;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Threading;
+using DeltaShell.Plugins.CommonTools.Gui.Forms.Charting;
 using DeltaShell.Plugins.CommonTools.Gui.Forms.Functions;
 using DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView.WeirFormulaViews;
 using log4net;
@@ -80,7 +81,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void SetConstants()
         {
-            var gatedWeirFormula = new GatedWeirFormula();
+            var gatedWeirFormula = new GatedWeirFormula(true);
             var generalStructureWeirFormula = new GeneralStructureWeirFormula();
 
             useMaxFlowNegPropertyName = nameof(gatedWeirFormula.UseMaxFlowNeg);
@@ -531,7 +532,11 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
 
         private void OpenCrestLevelTimeSeriesButton_Click(object sender, EventArgs e)
         {
-            var editFunctionDialog = new EditFunctionDialog { Text = "Time dependent crest level for Weir" };
+            var editFunctionDialog = new EditFunctionDialog
+            {
+                Text = "Time dependent crest level for Weir",
+                ChartViewOption = ChartViewOptions.AllSeries,
+            };
             var dialogData = (TimeSeries)data.CrestLevelTimeSeries.Clone();
             editFunctionDialog.ColumnNames = new[] { "Date time", String.Format("Crest level [{0}]", CrestLevelUnitLabel.Text) };
             editFunctionDialog.Data = dialogData;
@@ -606,6 +611,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 {
                     Text = "Time dependent lower edge level for Weir",
                     ColumnNames = new[] {"Date time", String.Format("Lower edge level [{0}]", LowerEdgeLevelLabel.Text)},
+                    ChartViewOption = ChartViewOptions.AllSeries,
                     Data = dialogData
                 };
 
@@ -635,6 +641,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
                 {
                     Text = "Time dependent gate opening for Weir",
                     ColumnNames = new[] {"Date time", String.Format("Gate opening [{0}]", GateOpeningUnitLabel.Text)},
+                    ChartViewOption = ChartViewOptions.AllSeries,
                     Data = dialogData
                 };
 

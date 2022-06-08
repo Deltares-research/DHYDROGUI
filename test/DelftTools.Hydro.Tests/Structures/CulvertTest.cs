@@ -1,6 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.SteerableProperties;
 using DelftTools.TestUtils;
 using NUnit.Framework;
 
@@ -198,6 +201,22 @@ namespace DelftTools.Hydro.Tests.Structures
             Assert.AreEqual(sourceCulvert.GroundLayerThickness, targetCulvert.GroundLayerThickness);
             Assert.AreEqual(sourceCulvert.GroundLayerRoughness, targetCulvert.GroundLayerRoughness);
             Assert.AreNotEqual(sourceCulvert.Name, targetCulvert.Name);
+        }
+
+        [Test]
+        public void RetrieveSteerableProperties_ReturnsValveOpeningHeightSteerableProperty()
+        {
+            // Setup
+            const string defaultCulvertTimeSeriesName = "Valve Opening Height";
+            var culvert = new Culvert();
+            
+            // Call
+            List<SteerableProperty> steerableProperties = culvert.RetrieveSteerableProperties().ToList();
+
+            // Assert
+            Assert.That(steerableProperties.Count, Is.EqualTo(1));
+            SteerableProperty property = steerableProperties.First();
+            Assert.That(property.TimeSeries.Name, Is.EqualTo(defaultCulvertTimeSeriesName));
         }
     }
 }

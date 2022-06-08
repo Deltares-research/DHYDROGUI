@@ -66,7 +66,12 @@
                             </GroupBox.Header>
                             <GroupBox.Content>
                                 <StackPanel IsEnabled="{Binding ElementName=checkBoxGate, Path=IsChecked}">
-                                    <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GateInitialGateOpening" Label="Initial gate opening" Unit="m" Value="{Binding GateInitialGateOpening, Mode=TwoWay}"/>
+                                    <structureFeatureView:LabeledTimeSeriesControl x:Name="GateInitialOpening" 
+                                                                                   Label="Initial gate opening" 
+                                                                                   Unit="m" 
+                                                                                   Value="{Binding GateInitialGateOpening}"
+                                                                                   TimeSeries="{Binding GateInitialOpeningTimeSeries}"
+                                                                                   IsTimeSeries="{Binding UseGateInitialOpeningTimeSeries}" />
                                     <structureFeatureView:SingleTextBoxWithLabelAndUnitControl x:Name="GateLowEdgeLevel" Label="Low edge level" Unit="m" Value="{Binding GateLowEdgeLevel}" IsEnabled="False"/>
                                     <Button Name="GateDialog" Click="GateDialog_OnClick" Margin="50,5,50,5">Define height opening coefficients</Button>
                                 </StackPanel>

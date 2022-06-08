@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using DelftTools.Functions;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections.DataSets;
 using DelftTools.Hydro.Structures;
@@ -257,9 +258,18 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.StructureFeatureView
         
         public double GateInitialGateOpening
         {
-            get { return culvert.GateInitialOpening; }
-            set { culvert.GateInitialOpening = value; }
+            get => culvert.GateInitialOpening;
+            set => culvert.GateInitialOpening = value;
         }
+
+        public bool UseGateInitialOpeningTimeSeries
+        {
+            get => culvert.UseGateInitialOpeningTimeSeries;
+            set => culvert.UseGateInitialOpeningTimeSeries = value;
+        }
+
+        public TimeSeries GateInitialOpeningTimeSeries => 
+            culvert.GateInitialOpeningTimeSeries;
 
         public double GateLowEdgeLevel
         {

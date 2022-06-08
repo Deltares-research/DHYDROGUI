@@ -65,7 +65,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
                 {
                     name += i;
                 }
-                var pump = new Pump(name);
+                var pump = new Pump(name, true);
 
                 var row = sobekPump.CapacityTable.Rows[i - 1];
 

@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.CrossSections.StandardShapes;
 using DelftTools.Hydro.Structures;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.Common.Utils;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
 using GeoAPI.Extensions.Networks;
+using log4net;
 
 namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
 {
@@ -19,26 +22,42 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
     /// </summary>
     public class CulvertDefinitionParser : CrossSectionDependentStructureParserBase
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CulvertDefinitionParser));
+
         private const string invertedSiphonTypeName = "invertedSiphon";
+        private readonly ITimFileReader timFileReader;
+        private readonly string structuresFilePath;
+        private readonly DateTime referenceDateTime;
 
         /// <summary>
         /// Initializes a new instance of <see cref="CulvertDefinitionParser"/>.
         /// </summary>
+        /// <param name="timFileReader">The tim file reader</param>
         /// <param name="structureType">The structure type.</param>
         /// <param name="category">The <see cref="IDelftIniCategory"/> to parse a structure from.</param>
         /// <param name="crossSectionDefinitions">A collection of cross-section definitions.</param>
         /// <param name="branch">The branch to import the bridge on.</param>
-        /// <param name="structuresFilename">The structures filename.</param>
+        /// <param name="structuresFilePath">The path to the structures file.</param>
+        /// <param name="referenceDateTime">The reference time date.</param>
         /// <exception cref="ArgumentNullException">When any argument is <c>null</c>.</exception>
         /// <exception cref="InvalidEnumArgumentException">
         /// Thrown when an invalid <paramref name="structureType"/> is provided.
         /// </exception>
-        public CulvertDefinitionParser(StructureType structureType,
+        public CulvertDefinitionParser(ITimFileReader timFileReader,
+                                       StructureType structureType,
                                        IDelftIniCategory category,
                                        ICollection<ICrossSectionDefinition> crossSectionDefinitions,
                                        IBranch branch,
-                                       string structuresFilename) 
-            : base(structureType, category, crossSectionDefinitions, branch, structuresFilename) { }
+                                       string structuresFilePath,
+                                       DateTime referenceDateTime)
+            : base(structureType, category, crossSectionDefinitions, branch, Path.GetFileName(structuresFilePath))
+        {
+            Ensure.NotNull(timFileReader, nameof(timFileReader));
+
+            this.timFileReader = timFileReader;
+            this.structuresFilePath = structuresFilePath;
+            this.referenceDateTime = referenceDateTime;
+        }
 
         protected override IStructure1D Parse()
         {
@@ -68,7 +87,7 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
                 FrictionDataType = (Friction)Enum.Parse(typeof(Friction), Category.ReadProperty<string>(StructureRegion.BedFrictionType.Key), true),
                 Friction = Category.ReadProperty<double>(StructureRegion.BedFriction.Key)
             };
-            culvert.GateInitialOpening = Category.ReadProperty<double>(StructureRegion.IniValveOpen.Key, !culvert.IsGated);
+            SetGateInitialOpening(culvert);
 
             SetCulvertDimensionsBasedOnProfile(culvert, definition);
             var numLossCoeff = Category.ReadProperty<int>(StructureRegion.LossCoeffCount.Key, true);
@@ -87,7 +106,43 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers
 
             return culvert;
         }
-        
+
+        private void SetGateInitialOpening(ICulvert culvert)
+        {
+            var gateInitialOpeningValue = Category.ReadProperty<string>(StructureRegion.IniValveOpen.Key, !culvert.IsGated, defaultValue: null);
+
+            if (gateInitialOpeningValue == null)
+            {
+                return;
+            }
+
+            if (gateInitialOpeningValue.EndsWith(FileSuffices.TimFile))
+            {
+                ReadGateInitialOpeningTimeSeries(culvert, gateInitialOpeningValue);
+            }
+            else
+            { 
+                culvert.GateInitialOpening = 
+                    Category.ReadProperty<double>(StructureRegion.IniValveOpen.Key, !culvert.IsGated);
+            }
+        }
+
+        private void ReadGateInitialOpeningTimeSeries(ICulvert culvert, string relativeGateInitialOpeningPath)
+        {
+            string filePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, relativeGateInitialOpeningPath);
+            culvert.UseGateInitialOpeningTimeSeries = true;
+
+            try
+            {
+                timFileReader.Read(filePath, culvert.GateInitialOpeningTimeSeries, referenceDateTime);
+            }
+            catch (FileReadingException e)
+            {
+                log.WarnFormat("Could not read the time series at {0} using default Valve Opening Height instead: {1}", filePath, e.Message);
+                culvert.UseGateInitialOpeningTimeSeries = false;
+            }
+        }
+
         private static CulvertGeometryType GetGeometryType(CrossSectionStandardShapeType? standardCrossSectionDefinition)
         {
             switch (standardCrossSectionDefinition)

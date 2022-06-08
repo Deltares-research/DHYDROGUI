@@ -1,5 +1,5 @@
-﻿using System;
-using DelftTools.Functions;
+﻿using DelftTools.Functions;
+using DelftTools.Hydro.Structures.SteerableProperties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Data;
 
@@ -11,66 +11,76 @@ namespace DelftTools.Hydro.Structures.WeirFormula
     [Entity(FireOnCollectionChange=false)]
     public class GatedWeirFormula : Unique<long>, IGatedWeirFormula
     {
-        private bool canBeTimedependent;
-        private bool useLowerEdgeLevelTimeSeries;
         public GatedWeirFormula() : this(false) { }
 
         public GatedWeirFormula(bool canBeTimeDependent)
         {
             GateOpening = 1.0;
-            LowerEdgeLevel = 11.0;
             GateHeight = 0.0;
             ContractionCoefficient = 0.63;
             LateralContraction = 1.0;
             CanBeTimedependent = canBeTimeDependent;
             UseVelocityHeight = true;
+
+            LowerEdgeLevelProperty = ConstructLowerEdgeLevelSteerableProperty();
+        }
+
+        private SteerableProperty ConstructLowerEdgeLevelSteerableProperty()
+        {
+            const double defaultValue = 11.0;
+            return CanBeTimedependent 
+                       ? new SteerableProperty(defaultValue, 
+                                               "Gate opening", 
+                                               "Gate opening", 
+                                               "m AD")
+                       : new SteerableProperty(defaultValue);
         }
 
         /// <summary>
         /// Indicates if time dependent parameters can be used.
         /// </summary>
-        public virtual bool CanBeTimedependent
-        {
-            get { return canBeTimedependent; }
-            protected set
-            {
-                canBeTimedependent = value;
+        public virtual bool CanBeTimedependent { get; protected set; }
 
-                OnCanBeTimeDependentSet();
-            }
+        /// <summary>
+        /// When true, use <see cref="LowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
+        /// </summary>
+        public virtual bool UseLowerEdgeLevelTimeSeries
+        {
+            get => LowerEdgeLevelProperty.CurrentDriver == SteerablePropertyDriver.TimeSeries;
+            set => LowerEdgeLevelProperty.CurrentDriver = 
+                       value ? SteerablePropertyDriver.TimeSeries
+                             : SteerablePropertyDriver.Constant;
         }
 
-        [EditAction]
-        private void OnCanBeTimeDependentSet()
+        /// <summary>
+        /// LowerEdgeLevel
+        /// </summary>
+        public virtual double LowerEdgeLevel
         {
-            if (canBeTimedependent)
-            {
-                // For Performance: initialize lazy
-                if (LowerEdgeLevelTimeSeries == null)
-                    LowerEdgeLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Gate opening", "Gate opening", "m AD");
-            }
-            else
-            {
-                UseLowerEdgeLevelTimeSeries = false;
-                LowerEdgeLevelTimeSeries = null;
-            }
+            get => LowerEdgeLevelProperty.Constant; 
+            set => LowerEdgeLevelProperty.Constant = value;
         }
 
-        public virtual string Name
+        /// <summary>
+        /// Time dependent Lower edge level
+        /// </summary>
+        public virtual TimeSeries LowerEdgeLevelTimeSeries
         {
-            get { return "Gated weir (Orifice)"; }
+            get => LowerEdgeLevelProperty.TimeSeries; 
+            protected set => LowerEdgeLevelProperty.TimeSeries = value;
         }
 
-        public virtual bool IsRectangle
-        {
-            get { return true; }
-        }
+        /// <summary>
+        /// The <see cref="SteerableProperty"/> describing the lower edge level.
+        /// </summary>
+        public virtual SteerableProperty LowerEdgeLevelProperty { get; set; }
 
-        public virtual bool HasFlowDirection
-        {
-            get { return true; }
-        }
-        
+        public virtual string Name => "Gated weir (Orifice)";
+
+        public virtual bool IsRectangle => true;
+
+        public virtual bool HasFlowDirection => true;
+
         /// <summary>
         /// Contraction coefficient μ
         /// </summary>
@@ -82,20 +92,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         public virtual double LateralContraction { get; set; }
 
         /// <summary>
-        /// When true, use <see cref="LowerEdgeLevelTimeSeries"/>, else use <see cref="GateOpening"/>.
-        /// </summary>
-        public virtual bool UseLowerEdgeLevelTimeSeries
-        {
-            get { return useLowerEdgeLevelTimeSeries; }
-            set
-            {
-                if (!canBeTimedependent && value)
-                    throw new InvalidOperationException("Cannot use time series for gate opening when time varying data is not allowed.");
-                useLowerEdgeLevelTimeSeries = value;
-            }
-        }
-
-        /// <summary>
         /// Gate opening (openlevel)
         /// </summary>
         public virtual double GateOpening { get; set; }
@@ -104,16 +100,6 @@ namespace DelftTools.Hydro.Structures.WeirFormula
         /// GateHeight
         /// </summary>
         public virtual double GateHeight { get; set; }
-
-        /// <summary>
-        /// LowerEdgeLevel
-        /// </summary>
-        public virtual double LowerEdgeLevel { get; set; }
-
-        /// <summary>
-        /// Time dependent Lower edge level
-        /// </summary>
-        public virtual TimeSeries LowerEdgeLevelTimeSeries { get; protected set; }
 
         /// <summary>
         /// Limitation flow direction (limitflowpos)
@@ -139,24 +125,20 @@ namespace DelftTools.Hydro.Structures.WeirFormula
 
         public virtual object Clone()
         {
-            var gatedWeirFormula = new GatedWeirFormula(CanBeTimedependent)
-                {
-                    ContractionCoefficient = ContractionCoefficient, 
-                    GateOpening = GateOpening, 
-                    LateralContraction = LateralContraction, 
-                    MaxFlowNeg = MaxFlowNeg, 
-                    MaxFlowPos = MaxFlowPos, 
-                    UseMaxFlowNeg = UseMaxFlowNeg, 
-                    UseMaxFlowPos = UseMaxFlowPos,
-                    UseVelocityHeight = UseVelocityHeight,
-                    GateHeight = GateHeight,
-                    LowerEdgeLevel = LowerEdgeLevel
-            };
-            if (gatedWeirFormula.CanBeTimedependent)
+            var gatedWeirFormula = new GatedWeirFormula(CanBeTimedependent) 
             {
-                gatedWeirFormula.UseLowerEdgeLevelTimeSeries = UseLowerEdgeLevelTimeSeries;
-                gatedWeirFormula.LowerEdgeLevelTimeSeries = (TimeSeries)LowerEdgeLevelTimeSeries.Clone(true);
-            }
+                ContractionCoefficient = ContractionCoefficient, 
+                GateOpening = GateOpening, 
+                LateralContraction = LateralContraction, 
+                MaxFlowNeg = MaxFlowNeg, 
+                MaxFlowPos = MaxFlowPos, 
+                UseMaxFlowNeg = UseMaxFlowNeg, 
+                UseMaxFlowPos = UseMaxFlowPos,
+                UseVelocityHeight = UseVelocityHeight,
+                GateHeight = GateHeight,
+            };
+
+            gatedWeirFormula.LowerEdgeLevelProperty = new SteerableProperty(LowerEdgeLevelProperty);
             return gatedWeirFormula;
         }
     }

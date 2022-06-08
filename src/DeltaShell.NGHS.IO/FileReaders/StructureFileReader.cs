@@ -18,7 +18,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
     public static class StructureFileReader
     {
         private static readonly ILog log = LogManager.GetLogger(typeof(StructureFileReader));
-        public static void ReadFile(string structureFilename, ICrossSectionDefinition[] crossSectionDefinitions, IHydroNetwork network)
+        
+        public static void ReadFile(string structureFilename, 
+                                    ICrossSectionDefinition[] crossSectionDefinitions, 
+                                    IHydroNetwork network,
+                                    DateTime referenceDateTime)
         {
             var fileReadingExceptions = new List<FileReadingException>();
 
@@ -26,8 +30,12 @@ namespace DeltaShell.NGHS.IO.FileReaders
             if (structuresCategories.Count == 0)
                 throw new FileReadingException($"Could not read file {structureFilename} properly, it seems empty");
 
-            var structures = GetAllStructuresFromCategories(structuresCategories, crossSectionDefinitions, network, 
-                                                            Path.GetFileName(structureFilename), fileReadingExceptions);
+            IList<IStructure1D> structures = GetAllStructuresFromCategories(structuresCategories, 
+                                                                            crossSectionDefinitions, 
+                                                                            network, 
+                                                                            structureFilename, 
+                                                                            fileReadingExceptions,
+                                                                            referenceDateTime);
             if (fileReadingExceptions.Count > 0)
             {
                 //Do not throw because we want to add the successful structures to the model
@@ -94,9 +102,12 @@ namespace DeltaShell.NGHS.IO.FileReaders
             return structuresCategories;
         }
 
-        private static IList<IStructure1D> GetAllStructuresFromCategories(IList<DelftIniCategory> structuresCategories,
-            IList<ICrossSectionDefinition> crossSectionDefinitions, IHydroNetwork network, string structuresFilename,
-            IList<FileReadingException> fileReadingExceptions)
+        private static IList<IStructure1D> GetAllStructuresFromCategories(IList<DelftIniCategory> structuresCategories, 
+                                                                          IList<ICrossSectionDefinition> crossSectionDefinitions, 
+                                                                          IHydroNetwork network, 
+                                                                          string structuresFilePath, 
+                                                                          IList<FileReadingException> fileReadingExceptions,
+                                                                          DateTime referenceDateTime)
         {
             IList<IStructure1D> structure1Ds = new List<IStructure1D>();
             var branchLookup = network.Branches.Where(b => !string.IsNullOrEmpty(b.Name)).ToDictionary(b => b.Name);
@@ -113,8 +124,11 @@ namespace DeltaShell.NGHS.IO.FileReaders
                     }
 
                     var type = structureDefinitionCategory.ReadProperty<string>(StructureRegion.DefinitionType.Key);
-                    var structure1D = structureDefinitionCategory.ReadStructure(crossSectionDefinitions, branch, 
-                                                                                type, structuresFilename);
+                    var structure1D = structureDefinitionCategory.ReadStructure(crossSectionDefinitions, 
+                                                                                branch, 
+                                                                                type, 
+                                                                                structuresFilePath, 
+                                                                                referenceDateTime);
                     if (structure1D == null)
                     {
                         continue;

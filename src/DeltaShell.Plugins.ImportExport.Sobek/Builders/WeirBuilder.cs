@@ -112,7 +112,7 @@ namespace DeltaShell.Plugins.ImportExport.Sobek.Builders
 
         private static IWeirFormula GetGatedWeirFormula(SobekOrifice sobekOrifice)
         {
-            var formula = new GatedWeirFormula();
+            var formula = new GatedWeirFormula(true);
             formula.GateOpening = sobekOrifice.GateHeight - sobekOrifice.CrestLevel;
 
             formula.ContractionCoefficient = sobekOrifice.ContractionCoefficient * sobekOrifice.LateralContractionCoefficient;

@@ -26,7 +26,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (gate.UseSillLevelTimeSeries)
             {
-                var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateCrestLevel.Key}.tim";
+                var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateCrestLevel.Key}{FileSuffices.TimFile}";
                 IniCategory.AddProperty(StructureRegion.GateCrestLevel.Key, timeSeriesFileName, StructureRegion.GateCrestLevel.Description);
             }
             else
@@ -39,7 +39,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (gate.UseLowerEdgeLevelTimeSeries)
             {
-                var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateLowerEdgeLevel.Key}.tim";
+                var timeSeriesFileName = $"{gate.Name}_{StructureRegion.GateLowerEdgeLevel.Key}{FileSuffices.TimFile}";
                 IniCategory.AddProperty(StructureRegion.GateLowerEdgeLevel.Key, timeSeriesFileName, StructureRegion.GateLowerEdgeLevel.Description);
             }
             else

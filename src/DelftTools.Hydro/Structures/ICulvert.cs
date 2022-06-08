@@ -3,7 +3,9 @@ using DelftTools.Hydro.CrossSections;
 
 namespace DelftTools.Hydro.Structures
 {
-    public interface ICulvert : IStructureWithCrossSectionDefinition, IFrictionData, IGroundLayer
+    public interface ICulvert : IStructureWithCrossSectionDefinition, 
+                                IFrictionData, 
+                                IGroundLayer
     {
         //repeat members for binding in FPAT :(
         string Name { get; set; }
@@ -85,7 +87,23 @@ namespace DelftTools.Hydro.Structures
         CulvertFrictionType FrictionType { get; set; }
         
         bool IsGated { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether to use <see cref="GateInitialOpeningTimeSeries"/>, <c>true</c>, or
+        /// <see cref="GateInitialOpening"/>, <c>false</c>.
+        /// </summary>
+        bool UseGateInitialOpeningTimeSeries { get; set; }
+
+        /// <summary>
+        /// Gets or sets the constant gate initial opening in [m].
+        /// </summary>
         double GateInitialOpening { get; set; }
+
+        /// <summary>
+        /// Gets the gate initial opening <see cref="TimeSeries"/> in [m].
+        /// </summary>
+        TimeSeries GateInitialOpeningTimeSeries { get; }
+
         /// <summary>
         /// Bedlevel + GateOpening
         /// </summary>

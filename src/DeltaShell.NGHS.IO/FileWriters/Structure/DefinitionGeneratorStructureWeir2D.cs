@@ -27,7 +27,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
         {
             if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
             {
-                var timeSeriesFileName = $"{weir.Name}_{KnownStructureProperties.CrestLevel}.tim";
+                var timeSeriesFileName = $"{weir.Name}_{KnownStructureProperties.CrestLevel}{FileSuffices.TimFile}";
                 IniCategory.AddProperty(StructureRegion.CrestLevel.Key, timeSeriesFileName, StructureRegion.CrestLevel.Description);
             }
             else

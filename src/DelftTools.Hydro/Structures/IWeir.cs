@@ -15,19 +15,19 @@ namespace DelftTools.Hydro.Structures
         UserDefined
     }
 
+    /// <summary>
+    /// <see cref="IWeir"/> defines a one-dimensional weir/structure
+    /// which can be placed on a <see cref="GeoAPI.Extensions.Networks.IBranch"/>.
+    /// </summary>
     public interface IWeir : IStructure1D, ISewerFeature
     {
-        string Name { get; set; }
-        string LongName { get; set; }
-        double Chainage { get; set; }
-
         /// <summary>
         /// Indicates if time dependent parameters can be used.
         /// </summary>
         bool CanBeTimedependent { get; }
-        
+
         /// <summary>
-        /// Formule for sobek
+        /// Formula for sobek
         /// </summary>
         IWeirFormula WeirFormula { get; set; }
 
@@ -76,7 +76,7 @@ namespace DelftTools.Hydro.Structures
         CrestShape CrestShape { get; set; }
 
         FlowDirection FlowDirection { get; set; }
-        
+
         /// <summary>
         /// Determines whether controls should let the user set the crest level. 
         /// </summary>

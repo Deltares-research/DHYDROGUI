@@ -69,7 +69,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var userDefinedBreachSettings = leveeBreachSettings as UserDefinedBreachSettings;
             if (userDefinedBreachSettings != null)
             {
-                var timeSeriesFileName = $"{leveeBreach.Name}.tim";
+                var timeSeriesFileName = $"{leveeBreach.Name}{FileSuffices.TimFile}";
                 IniCategory.AddProperty(StructureRegion.TimeFileName.Key, timeSeriesFileName);
             }
 

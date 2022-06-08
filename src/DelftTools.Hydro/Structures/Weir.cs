@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures.SteerableProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
@@ -10,62 +12,58 @@ using GeoAPI.Extensions.Feature;
 
 namespace DelftTools.Hydro.Structures
 {
+    /// <summary>
+    /// <see cref="Weir"/> defines the weir structure which can be placed on branches.
+    /// </summary>
     [Entity(FireOnCollectionChange=false)]
-    public class Weir : BranchStructure, IWeir
+    public class Weir : BranchStructure, IWeir, IHasSteerableProperties
     {
-        private double crestLevel;
         private double crestWidth;
-        private bool canBeTimedependent;
-        private bool useCrestLevelTimeSeries;
         
-        public Weir() : this(false)
-        {
-        }
+        /// <summary>
+        /// Creates a new <see cref="Weir"/> without time-varying data and a default name.
+        /// </summary>
+        public Weir() : this(false) { }
 
+        /// <summary>
+        /// Creates a new <see cref="Weir"/> with a default name.
+        /// </summary>
+        /// <param name="allowTimeVaryingData">Whether to allow time-varying data.</param>
         public Weir(bool allowTimeVaryingData) :this("Weir", allowTimeVaryingData) { }
 
+        /// <summary>
+        /// Creates a new <see cref="Weir"/>.
+        /// </summary>
+        /// <param name="name">The name of the weir.</param>
+        /// <param name="allowTimeVaryingData">Whether to allow time-varying data</param>
         public Weir(string name, bool allowTimeVaryingData = false)
         {
             // todo: move initialization to demo model only
             WeirFormula = new SimpleWeirFormula
-                {
-                    CorrectionCoefficient = 1.0
-                };
+            {
+                CorrectionCoefficient = 1.0
+            };
+
+            CanBeTimedependent = allowTimeVaryingData;
+            crestLevel = ConstructCrestLevelSteerableProperty();
+
             Name = name;
             CrestWidth = 5;
-            CrestLevel = 1;
             OffsetY = 0;
             FlowDirection = FlowDirection.Both;
             CrestShape = CrestShape.Sharp;
-            CanBeTimedependent = allowTimeVaryingData;
             UseVelocityHeight = true;
         }
 
-        public virtual bool CanBeTimedependent
+        private SteerableProperty ConstructCrestLevelSteerableProperty()
         {
-            get { return canBeTimedependent; }
-            protected set
-            {
-                canBeTimedependent = value;
-                OnCanBeTimeDependentSet();
-            }
-        }
-
-        [EditAction]
-        private void OnCanBeTimeDependentSet()
-        {
-            if (canBeTimedependent)
-            {
-                // For performance: initialize lazy
-                if (CrestLevelTimeSeries == null)
-                    CrestLevelTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Crest level", "Crest level", "m AD");
-            }
-            else
-            {
-                UseCrestLevelTimeSeries = false;
-
-                CrestLevelTimeSeries = null;
-            }
+            const double defaultValue = 1.0;
+            return CanBeTimedependent
+                       ? new SteerableProperty(defaultValue,
+                                               "Crest level",
+                                               "Crest level",
+                                               "m AD") 
+                       : new SteerableProperty(defaultValue);
         }
 
         [FeatureAttribute(Order = 6)]
@@ -74,15 +72,15 @@ namespace DelftTools.Hydro.Structures
         {
             get
             {
-                if (WeirFormula is GeneralStructureWeirFormula)
+                switch (WeirFormula)
                 {
-                    return (WeirFormula as GeneralStructureWeirFormula).WidthStructureCentre;
+                    case GeneralStructureWeirFormula generalStructureWeirFormula:
+                        return generalStructureWeirFormula.WidthStructureCentre;
+                    case FreeFormWeirFormula freeFormWeirFormula:
+                        return freeFormWeirFormula.CrestWidth;
+                    default:
+                        return crestWidth;
                 }
-                if (WeirFormula is FreeFormWeirFormula)
-                {
-                    return (WeirFormula as FreeFormWeirFormula).CrestWidth;
-                }
-                return crestWidth;
             }
             set
             {
@@ -91,17 +89,16 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
+        public virtual bool CanBeTimedependent { get; protected set; }
+
         public virtual bool UseCrestLevelTimeSeries
         {
-            get { return useCrestLevelTimeSeries; }
-            set
-            {
-                if (!canBeTimedependent && value)
-                    throw new InvalidOperationException("Cannot use time series for crest level when time varying data is not allowed.");
-
-                useCrestLevelTimeSeries = value;
-            }
+            get => crestLevel.CurrentDriver == SteerablePropertyDriver.TimeSeries;
+            set => crestLevel.CurrentDriver = value ? SteerablePropertyDriver.TimeSeries : SteerablePropertyDriver.Constant;
         }
+
+        // Should be immutable, however due to the CopyFrom behaviour it cannot be.
+        private SteerableProperty crestLevel;
 
         [FeatureAttribute(Order = 7)]
         [DisplayName("Crest level")]
@@ -109,47 +106,51 @@ namespace DelftTools.Hydro.Structures
         {
             get
             {
-                if (WeirFormula is GeneralStructureWeirFormula)
+                switch (WeirFormula)
                 {
-                    return (WeirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre;
+                    case GeneralStructureWeirFormula generalStructureWeirFormula:
+                        return generalStructureWeirFormula.BedLevelStructureCentre;
+                    case FreeFormWeirFormula freeFormWeirFormula:
+                        return freeFormWeirFormula.CrestLevel;
+                    default:
+                        return crestLevel.Constant;
                 }
-                if (WeirFormula is FreeFormWeirFormula)
-                {
-                    return (WeirFormula as FreeFormWeirFormula).CrestLevel;
-                }
-                return crestLevel;
             }
             set
             {
-                if (WeirFormula is FreeFormWeirFormula)
+                if (WeirFormula is FreeFormWeirFormula freeFormWeirFormula)
                 {
-                    (WeirFormula as FreeFormWeirFormula).CrestLevel = value;
+                    freeFormWeirFormula.CrestLevel = value;
                 }
                 else
                 {
-                    crestLevel = value;
+                    crestLevel.Constant = value;
                 }
                 OnCrestLevelChanged();
             }
         }
 
-        public virtual TimeSeries CrestLevelTimeSeries { get; protected set; }
+        public virtual TimeSeries CrestLevelTimeSeries
+        {
+            get => crestLevel.TimeSeries;
+            protected set => crestLevel.TimeSeries = value;
+        }
 
         [EditAction]
         private void OnCrestLevelChanged()
         {
-            if (WeirFormula is GeneralStructureWeirFormula)
+            if (WeirFormula is GeneralStructureWeirFormula generalStructureWeirFormula)
             {
-                (WeirFormula as GeneralStructureWeirFormula).BedLevelStructureCentre = crestLevel;
+                generalStructureWeirFormula.BedLevelStructureCentre = crestLevel.Constant;
             }
         }
 
         [EditAction]
         private void OnCrestWidthChanged()
         {
-            if (WeirFormula is GeneralStructureWeirFormula)
+            if (WeirFormula is GeneralStructureWeirFormula generalStructureWeirFormula)
             {
-                (WeirFormula as GeneralStructureWeirFormula).WidthStructureCentre = crestWidth;
+                generalStructureWeirFormula.WidthStructureCentre = crestWidth;
             }
         }
 
@@ -158,26 +159,11 @@ namespace DelftTools.Hydro.Structures
         [ReadOnly(true)]
         [DisplayName("Formula")]
         [FeatureAttribute(Order = 5)]
-        public virtual string FormulaName
-        {
-            get { return WeirFormula.Name; }
-        }
-        
-        /// <summary>
-        /// Secondary property : Gated or Not
-        /// </summary>
-        public virtual bool IsGated
-        {
-            get { return WeirFormula is IGatedWeirFormula; }
-        }
+        public virtual string FormulaName => WeirFormula.Name;
 
-        /// <summary>
-        /// Secondary property : Rectangle/FreeForm
-        /// </summary>
-        public virtual bool IsRectangle
-        {
-            get { return WeirFormula.IsRectangle; }
-        }
+        public virtual bool IsGated => WeirFormula is IGatedWeirFormula;
+
+        public virtual bool IsRectangle => WeirFormula.IsRectangle;
 
         public virtual bool AllowNegativeFlow
         {
@@ -230,9 +216,6 @@ namespace DelftTools.Hydro.Structures
             }
         }
 
-        /// <summary>
-        /// Shape along the branch
-        /// </summary>
         public virtual CrestShape CrestShape { get; set; }
 
         [DisplayName("Flow direction")]
@@ -246,17 +229,11 @@ namespace DelftTools.Hydro.Structures
             // first copy weir formula, because get/set crest width/level depend on the type of formula
             WeirFormula = (IWeirFormula)copyFrom.WeirFormula.Clone();
             CrestWidth = copyFrom.CrestWidth;
-            CrestLevel = copyFrom.CrestLevel;
+            crestLevel = new SteerableProperty(copyFrom.crestLevel);
             CrestShape = copyFrom.CrestShape;
             FlowDirection = copyFrom.FlowDirection;
             Attributes = (IFeatureAttributeCollection)copyFrom.Attributes.Clone();
             CanBeTimedependent = copyFrom.CanBeTimedependent;
-
-            if (!copyFrom.CanBeTimedependent) return;
-
-            // Set time varying properties:
-            UseCrestLevelTimeSeries = copyFrom.UseCrestLevelTimeSeries;
-            CrestLevelTimeSeries = (TimeSeries)copyFrom.CrestLevelTimeSeries.Clone(true);
         }
 
         private static FlowDirection GetPossibleFlowDirection(bool allowPositiveFlow, bool allowNegativeFlow)
@@ -266,26 +243,33 @@ namespace DelftTools.Hydro.Structures
                        : (allowNegativeFlow ? FlowDirection.Negative : FlowDirection.None);
         }
 
-        public virtual bool SpecifyCrestLevelOnWeir
-        {
-            get { return true; }//used to be disabled for GeneralStructureWeirFormula
-        }
-        public virtual bool SpecifyCrestWidthOnWeir
-        {
-            get { return !(WeirFormula is FreeFormWeirFormula); }//used to be disabled for GeneralStructureWeirFormula
-        }
+        public virtual bool SpecifyCrestLevelOnWeir => 
+            true; //used to be disabled for GeneralStructureWeirFormula
+
+        public virtual bool SpecifyCrestWidthOnWeir => 
+            !(WeirFormula is FreeFormWeirFormula); //used to be disabled for GeneralStructureWeirFormula
 
         public virtual bool UseVelocityHeight { get; set; }
 
         public override StructureType GetStructureType()
         {
-            if (WeirFormula is FreeFormWeirFormula) return StructureType.UniversalWeir;
-            if (WeirFormula is GatedWeirFormula) return StructureType.Orifice;
-            if (WeirFormula is PierWeirFormula) return StructureType.AdvancedWeir;
-            if (WeirFormula is RiverWeirFormula) return StructureType.RiverWeir;
-            if (WeirFormula is SimpleWeirFormula) return StructureType.Weir;
-            if (WeirFormula is GeneralStructureWeirFormula) return StructureType.GeneralStructure;
-            return StructureType.Unknown;
+            switch (WeirFormula)
+            {
+                case FreeFormWeirFormula _:
+                    return StructureType.UniversalWeir;
+                case GatedWeirFormula _:
+                    return StructureType.Orifice;
+                case PierWeirFormula _:
+                    return StructureType.AdvancedWeir;
+                case RiverWeirFormula _:
+                    return StructureType.RiverWeir;
+                case SimpleWeirFormula _:
+                    return StructureType.Weir;
+                case GeneralStructureWeirFormula _:
+                    return StructureType.GeneralStructure;
+                default:
+                    return StructureType.Unknown;
+            }
         }
 
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
@@ -332,9 +316,11 @@ namespace DelftTools.Hydro.Structures
 
         protected virtual void CopyPropertyValuesToExistingWeir(IWeir weir)
         {
+            // No-op
         }
 
-        private ISewerConnection GetNewSewerConnectionWithWeirToNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
+        private ISewerConnection GetNewSewerConnectionWithWeirToNetwork(IHydroNetwork hydroNetwork, 
+                                                                        SewerImporterHelper helper)
         {
             CopyPropertyValuesToExistingWeir(this);
 
@@ -350,8 +336,16 @@ namespace DelftTools.Hydro.Structures
             return sewerConnection;
         }
 
-        protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection, IHydroNetwork hydroNetwork, SewerImporterHelper helper)
+        protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection, 
+                                                            IHydroNetwork hydroNetwork, 
+                                                            SewerImporterHelper helper)
         {
+            // No-op
+        }
+
+        public virtual IEnumerable<SteerableProperty> RetrieveSteerableProperties()
+        {
+            yield return crestLevel;
         }
     }
 }

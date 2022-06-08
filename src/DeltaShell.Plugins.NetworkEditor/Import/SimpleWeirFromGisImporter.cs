@@ -114,7 +114,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         {
             var weir = AddOrUpdateBranchFeatureFromNetwork<IWeir>(feature, columnNameName, branch =>
             {
-                var branchFeature = new Weir(false);
+                var branchFeature = new Weir(true);
                 BranchStructure.AddStructureToNetwork(branchFeature, branch);
                 return branchFeature;
             });

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using DelftTools.Hydro.Structures;
+using DelftTools.Hydro.Structures.SteerableProperties;
 using DelftTools.Hydro.Structures.WeirFormula;
 using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
@@ -24,7 +27,7 @@ namespace DelftTools.Hydro.Tests.Structures
         }
 
         [Test]
-        public void DefautlTimeDependentWeir()
+        public void DefaultTimeDependentWeir()
         {
             IWeir weir = new Weir(true);
 
@@ -43,7 +46,7 @@ namespace DelftTools.Hydro.Tests.Structures
             // Setting to false should not cause problems:
             weir.UseCrestLevelTimeSeries = false;
 
-            Assert.Throws<InvalidOperationException>(() => weir.UseCrestLevelTimeSeries = true);
+            Assert.Throws<NotSupportedException>(() => weir.UseCrestLevelTimeSeries = true);
         }
 
         [Test]
@@ -235,12 +238,27 @@ namespace DelftTools.Hydro.Tests.Structures
         public void SimpleWeirPolylineWidthTest()
         {
             var weir = new Weir()
-                {
-                    WeirFormula = new SimpleWeirFormula(),
-                    Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(4, 3),})
-                };
+            {
+                WeirFormula = new SimpleWeirFormula(),
+                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(4, 3),})
+            };
 
             Assert.AreEqual(5,weir.CrestWidth);
+        }
+
+        [Test]
+        public void RetrieveSteerableProperties_ReturnsCrestLevelSteerableProperty()
+        {
+            // Setup
+            var weir = new Weir(true);
+            
+            // Call
+            List<SteerableProperty> steerableProperties = weir.RetrieveSteerableProperties().ToList();
+
+            // Assert
+            Assert.That(steerableProperties.Count, Is.EqualTo(1));
+            SteerableProperty property = steerableProperties.First();
+            Assert.That(property.TimeSeries.Name, Is.EqualTo("Crest level"));
         }
     }
 }

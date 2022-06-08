@@ -2,15 +2,22 @@
 using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
+    /// <summary>
+    /// <see cref="DefinitionGeneratorStructureUniversalWeir"/> generates the <see cref="DelftIniCategory"/> corresponding with a
+    /// <see cref="Weir"/> with a <see cref="FreeFormWeirFormula"/> in the structures.ini file.
+    /// </summary>
     public class DefinitionGeneratorStructureUniversalWeir : DefinitionGeneratorStructure
     {
         
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
+            Ensure.NotNull(hydroObject, nameof(hydroObject));
+
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.UniversalWeir);
 
             var weir = hydroObject as Weir;
@@ -19,14 +26,38 @@ namespace DeltaShell.NGHS.IO.FileWriters.Structure
             var formula = weir.WeirFormula as FreeFormWeirFormula;
             if (formula == null) return IniCategory;
       
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, weir.FlowDirection.ToString().ToLower(), StructureRegion.AllowedFlowDir.Description);
-            IniCategory.AddProperty(StructureRegion.LevelsCount.Key, formula.Y.ToList().Count, StructureRegion.LevelsCount.Description);
-            IniCategory.AddProperty(StructureRegion.YValues.Key, formula.Y, StructureRegion.YValues.Description, StructureRegion.YValues.Format);
-            IniCategory.AddProperty(StructureRegion.ZValues.Key, formula.Z, StructureRegion.ZValues.Description, StructureRegion.ZValues.Format);
-            IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
-            IniCategory.AddProperty(StructureRegion.DischargeCoeff.Key, formula.DischargeCoefficient, StructureRegion.DischargeCoeff.Description, StructureRegion.DischargeCoeff.Format);
+            AddAllowedFlowDir(weir);
+            AddLevelsCount(formula);
+            AddYValues(formula);
+            AddZValues(formula);
+            AddCrestLevel(weir);
+            AddDischargeCoeff(formula);
             
             return IniCategory;
         }
+
+        private void AddDischargeCoeff(FreeFormWeirFormula formula) =>
+            IniCategory.AddProperty(StructureRegion.DischargeCoeff, formula.DischargeCoefficient);
+
+        private void AddCrestLevel(IWeir weir)
+        {
+            if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries) 
+                IniCategory.AddProperty(StructureRegion.CrestLevel, 
+                                         StructureTimFileNameGenerator.Generate(weir, weir.CrestLevelTimeSeries));
+            else 
+                IniCategory.AddProperty(StructureRegion.CrestLevel, weir.CrestLevel);
+        }
+
+        private void AddZValues(FreeFormWeirFormula formula) => 
+            IniCategory.AddProperty(StructureRegion.ZValues, formula.Z);
+
+        private void AddYValues(FreeFormWeirFormula formula) => 
+            IniCategory.AddProperty(StructureRegion.YValues, formula.Y);
+
+        private void AddLevelsCount(FreeFormWeirFormula formula) => 
+            IniCategory.AddProperty(StructureRegion.LevelsCount, formula.Y.ToList().Count);
+
+        private void AddAllowedFlowDir(IWeir weir) => 
+            IniCategory.AddProperty(StructureRegion.AllowedFlowDir, weir.FlowDirection.ToString().ToLower());
     }
 }

@@ -154,7 +154,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.ModelSchema
             }
 
             var fileName = Path.GetFileName(valueAsString);
-            if (FileUtils.IsValidFileName(fileName) && Path.GetExtension(fileName) == ".tim") // ... or a timeseries
+            if (FileUtils.IsValidFileName(fileName) && Path.GetExtension(fileName) == FileSuffices.TimFile) // ... or a timeseries
             {
                 steerableValue.TimeSeriesFilename = valueAsString;
                 steerableValue.Mode = SteerableMode.TimeSeries;

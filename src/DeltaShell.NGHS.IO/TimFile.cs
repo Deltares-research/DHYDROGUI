@@ -10,9 +10,10 @@ using log4net;
 
 namespace DeltaShell.NGHS.IO
 {
-    public class TimFile : FMSuiteFileBase
+    public class TimFile : FMSuiteFileBase, ITimFileReader
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(TimFile));
+
         // if modelStartTime is null, we write absolute time values. 
         public void Write(string timFilePath, IFunction timeSeries, DateTime? modelReferenceDate, IEnumerable<string> commentLines = null)
         {

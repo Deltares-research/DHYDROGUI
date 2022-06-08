@@ -145,7 +145,7 @@ namespace DelftTools.Hydro.Structures
         public static ISewerConnection CreateWeirConnection(IManhole manhole)
         {
             ISewerConnection sewerConnection = CreateNewInternalConnection(manhole);
-            sewerConnection.AddStructureToBranch(new Weir());
+            sewerConnection.AddStructureToBranch(new Weir(true));
             return sewerConnection;
         }
 
@@ -165,7 +165,7 @@ namespace DelftTools.Hydro.Structures
 
         private static Pump CreateNewPump()
         {
-            return new Pump
+            return new Pump(true)
             {
                 StartSuction = 0.5,
                 StopSuction = -0.5,

@@ -24,14 +24,14 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static readonly ILog Log = LogManager.GetLogger(typeof(FeatureFile1D2DReader));
 
         public static void Read1D2DFeatures(string targetMduFilePath,
-            WaterFlowFMModelDefinition modelDefinition,
-            IHydroNetwork network,
-            IEventedList<RoughnessSection> roughnessSections,
-            IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions,
-            IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
+                                            WaterFlowFMModelDefinition modelDefinition,
+                                            IHydroNetwork network,
+                                            IEventedList<RoughnessSection> roughnessSections,
+                                            IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions,
+                                            IEventedList<ChannelInitialConditionDefinition> channelInitialConditionDefinitions)
         {
             ReadRoutesFile(targetMduFilePath, network);
-            var definitions = ReadCrossSectionFiles(targetMduFilePath, modelDefinition, network, channelFrictionDefinitions);
+            ICrossSectionDefinition[] definitions = ReadCrossSectionFiles(targetMduFilePath, modelDefinition, network, channelFrictionDefinitions);
             ReadStructuresFiles(targetMduFilePath, modelDefinition, network, definitions);
             ReadObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             ReadRoughnessFiles(targetMduFilePath, modelDefinition, network, roughnessSections, channelFrictionDefinitions);
@@ -92,11 +92,13 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
         private static void ReadStructuresFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition,
             IHydroNetwork network, ICrossSectionDefinition[] crossSectionDefinitions)
         {
-            var structureFile = modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
+            string structureFile = modelDefinition.GetModelProperty(KnownProperties.StructuresFile).GetValueAsString();
+            var referenceDateTime = (DateTime) modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+
             structureFile = IoHelper.GetFilePathToLocationInSameDirectory(targetMduFilePath, structureFile);
             if (!File.Exists(structureFile)) return;
 
-            StructureFileReader.ReadFile(structureFile, crossSectionDefinitions, network);
+            StructureFileReader.ReadFile(structureFile, crossSectionDefinitions, network, referenceDateTime);
         }
 
         private static void ReadRoughnessFiles(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network, IEventedList<RoughnessSection> roughnessSections, IEventedList<ChannelFrictionDefinition> channelFrictionDefinitions)

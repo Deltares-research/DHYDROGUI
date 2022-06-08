@@ -428,7 +428,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Gui.Forms.HydroRegionTreeView
             var channel = treeView.SelectedNode.Tag as IChannel;
             if (channel != null)
             {
-                var branchFeature = new Weir();
+                var branchFeature = new Weir(true);
                 BranchStructure.AddStructureToNetwork(branchFeature, channel);
             }
         }

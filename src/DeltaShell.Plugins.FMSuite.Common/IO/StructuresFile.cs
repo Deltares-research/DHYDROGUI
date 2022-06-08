@@ -359,7 +359,7 @@ namespace DeltaShell.Plugins.FMSuite.Common.IO
 
         private string ConstructTimeFilePath(IStructure structure, string propertyName)
         {
-            var filePath = String.Format("{0}_{1}.tim", structure.Name, propertyName);
+            string filePath = string.Format("{0}_{1}" + FileSuffices.TimFile, structure.Name, propertyName);
             if (TimFolder != null)
             {
                 filePath = Path.Combine(TimFolder, filePath);

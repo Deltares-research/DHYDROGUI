@@ -22,7 +22,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
         /// <param name="crossSectionDefinitions">A collection of cross-section definitions.</param>
         /// <param name="branch">The branch to import the structure to.</param>
         /// <param name="type">The type of the structure.</param>
-        /// <param name="structuresFilename">The structures filename.</param>
+        /// <param name="structuresFilePath">The structures file path.</param>
+        /// <param name="referenceDateTime">The reference date of the model being loaded.</param>
         /// <returns>The parsed structure.</returns>
         /// <exception cref="ArgumentNullException">Thrown when any argument is <c>null</c>.</exception>
         /// <exception cref="FileReadingException">Thrown when an unknown structure type is provided.</exception>
@@ -30,13 +31,14 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                                                  ICollection<ICrossSectionDefinition> crossSectionDefinitions, 
                                                  IBranch branch, 
                                                  string type,
-                                                 string structuresFilename)
+                                                 string structuresFilePath,
+                                                 DateTime referenceDateTime)
         {
             Ensure.NotNull(category, nameof(category));
             Ensure.NotNull(crossSectionDefinitions, nameof(crossSectionDefinitions));
             Ensure.NotNull(branch, nameof(branch));
             Ensure.NotNull(type, nameof(type));
-            Ensure.NotNull(structuresFilename, nameof(structuresFilename));
+            Ensure.NotNull(structuresFilePath, nameof(structuresFilePath));
             
             if (!Enum.TryParse(type, true, out StructureType structureType))
             {
@@ -54,7 +56,8 @@ namespace DeltaShell.NGHS.IO.FileReaders.Definition.Structures
                                                                                           category, 
                                                                                           crossSectionDefinitions, 
                                                                                           branch,
-                                                                                          structuresFilename);
+                                                                                          structuresFilePath,
+                                                                                          referenceDateTime);
             IStructure1D structure = structureParser.ParseStructure();
 
             return structure;

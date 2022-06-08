@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
@@ -15,85 +16,40 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
     public class StructureDefinitionParserTest
     {
         private const string structuresFilename = "structures.ini";
+        private readonly DateTime referenceDateTime = new DateTime(2022, 5, 5);
 
-        [Test]
-        public void ReadStructure_CategoryNull_ThrowsArgumentNullException()
+        private static IEnumerable<TestCaseData> ReadStructureParameterNullData()
         {
-            // Setup
-            IDelftIniCategory category = null;
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
-            IBranch branch = new Channel();
-            string type = "bridge";
-
-            // Call
-            TestDelegate call = () => category.ReadStructure(crossSectionDefinitions, branch, type, structuresFilename);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
-        }
-        
-        [Test]
-        public void ReadStructure_CrossSectionDefinitionsNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            IDelftIniCategory category = new DelftIniCategory("structure");
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = null;
-            IBranch branch = new Channel();
-            string type = "bridge";
-
-            // Call
-            TestDelegate call = () => category.ReadStructure(crossSectionDefinitions, branch, type, structuresFilename);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
-        }
-        
-        [Test]
-        public void ReadStructure_BranchNull_ThrowsArgumentNullException()
-        {
-            // Setup
-            IDelftIniCategory category = new DelftIniCategory("structure");
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
-            IBranch branch = null;
-            string type = "bridge";
-
-            // Call
-            TestDelegate call = () => category.ReadStructure(crossSectionDefinitions, branch, type, structuresFilename);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
-        }
-        
-        [Test]
-        public void ReadStructure_TypeNull_ThrowsArgumentNullException()
-        {
-            // Setup
             IDelftIniCategory category = new DelftIniCategory("structure");
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
-            string type = null;
+            const string type = "bridge";
 
-            // Call
-            TestDelegate call = () => category.ReadStructure(crossSectionDefinitions, branch, type, structuresFilename);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
+            yield return new TestCaseData(null, crossSectionDefinitions, branch, type, structuresFilename, "category");
+            yield return new TestCaseData(category, null, branch, type, structuresFilename, "crossSectionDefinitions");
+            yield return new TestCaseData(category, crossSectionDefinitions, null, type, structuresFilename, "branch");
+            yield return new TestCaseData(category, crossSectionDefinitions, branch, null, structuresFilename, "type");
+            yield return new TestCaseData(category, crossSectionDefinitions, branch, type, null, "structuresFilePath");
         }
-        
+
         [Test]
-        public void ReadStructure_FilenameNull_ThrowsArgumentNullException()
+        [TestCaseSource(nameof(ReadStructureParameterNullData))]
+        public void ReadStructure_ParameterNull_ThrowsArgumentNullException(
+            IDelftIniCategory category,
+            ICollection<ICrossSectionDefinition> crossSectionDefinitions,
+            IBranch branch,
+            string type,
+            string structuresFilePath,
+            string expectedName)
         {
-            // Setup
-            IDelftIniCategory category = new DelftIniCategory("structure");
-            ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
-            IBranch branch = new Channel();
-            string type = "bridge";
+            void Call() => category.ReadStructure(crossSectionDefinitions, 
+                                                  branch, 
+                                                  type, 
+                                                  structuresFilePath, 
+                                                  referenceDateTime);
 
-            // Call
-            TestDelegate call = () => category.ReadStructure(crossSectionDefinitions, branch, type, null);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedName));
         }
 
         [Test]
@@ -103,14 +59,18 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures
             IDelftIniCategory category = new DelftIniCategory("structure");
             ICollection<ICrossSectionDefinition> crossSectionDefinitions = new Collection<ICrossSectionDefinition>();
             IBranch branch = new Channel();
-            string type = "UnknownStructureType";
+            const string type = "UnknownStructureType";
 
             // Call
-            TestDelegate call = () => category.ReadStructure(crossSectionDefinitions, branch, type, structuresFilename);
+            void Call() => category.ReadStructure(crossSectionDefinitions, 
+                                                  branch, 
+                                                  type, 
+                                                  structuresFilename, 
+                                                  referenceDateTime);
 
             // Assert
             string expectedMessage = string.Format(Resources.StructureDefinitionParser_Could_not_parse_structure_type, type);
-            Assert.That(call, Throws.Exception
+            Assert.That(Call, Throws.Exception
                                     .TypeOf<FileReadingException>()
                                     .With.Message.EqualTo(expectedMessage));
         }

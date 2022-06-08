@@ -1,34 +1,69 @@
 ﻿using DelftTools.Hydro;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
+using DelftTools.Utils.Guards;
 using DeltaShell.NGHS.IO.Helpers;
 
 namespace DeltaShell.NGHS.IO.FileWriters.Structure
 {
-    public class DefinitionGeneratorStructureWeir : DefinitionGeneratorStructure
+    /// <summary>
+    /// <see cref="DefinitionGeneratorStructureWeir"/> generates the <see cref="DelftIniCategory"/> corresponding with a
+    /// <see cref="Weir"/> in the structures.ini file.
+    /// </summary>
+    public sealed class DefinitionGeneratorStructureWeir : DefinitionGeneratorStructure
     {
         public override DelftIniCategory CreateStructureRegion(IHydroObject hydroObject)
         {
+            Ensure.NotNull(hydroObject, nameof(hydroObject));
+
             AddCommonRegionElements(hydroObject, StructureRegion.StructureTypeName.Weir);
 
-            var weir = hydroObject as Weir;
-            if (weir == null) return IniCategory;
-
-            var formula = weir.WeirFormula as SimpleWeirFormula;
-            if (formula == null) return IniCategory;
-
-            IniCategory.AddProperty(StructureRegion.AllowedFlowDir.Key, weir.FlowDirection.ToString().ToLower(), StructureRegion.AllowedFlowDir.Description);
-
-            IniCategory.AddProperty(StructureRegion.CrestLevel.Key, weir.CrestLevel, StructureRegion.CrestLevel.Description, StructureRegion.CrestLevel.Format);
-            if (weir.CrestWidth > 0)
+            if (!(hydroObject is IWeir weir) || !(weir.WeirFormula is SimpleWeirFormula formula))
             {
-                IniCategory.AddProperty(StructureRegion.CrestWidth.Key, weir.CrestWidth,StructureRegion.CrestWidth.Description, StructureRegion.CrestWidth.Format);
+                return IniCategory;
             }
 
-            IniCategory.AddProperty(StructureRegion.CorrectionCoeff.Key, formula.CorrectionCoefficient, StructureRegion.CorrectionCoeff.Description, StructureRegion.CorrectionCoeff.Format);
-            IniCategory.AddProperty(StructureRegion.UseVelocityHeight.Key, weir.UseVelocityHeight.ToString().ToLower());
+            AddAllowedFlowDir(weir);
+            AddCrestLevel(weir);
+            AddCrestWidth(weir);
+            AddCorrectionCoeff(formula);
+            AddUseVelocityHeight(weir);
 
             return IniCategory;
         }
+
+        private void AddAllowedFlowDir(IWeir weir) =>
+            IniCategory.AddProperty(StructureRegion.AllowedFlowDir, weir.FlowDirection.ToString().ToLower());
+
+        private void AddCrestLevel(IWeir weir)
+        {
+            if (weir.CanBeTimedependent && weir.UseCrestLevelTimeSeries)
+            {
+                // Note: the generation of tim files is the responsibility of the StructureFile
+                //       not the DefinitionGeneratorStructureWeir.
+                IniCategory.AddProperty(StructureRegion.CrestLevel, 
+                                         StructureTimFileNameGenerator.Generate(weir, weir.CrestLevelTimeSeries));
+            }
+            else
+            {
+                IniCategory.AddProperty(StructureRegion.CrestLevel, weir.CrestLevel);
+            }
+        }
+
+        private void AddCrestWidth(IWeir weir)
+        {
+            if (weir.CrestWidth > 0)
+            {
+                IniCategory.AddProperty(StructureRegion.CrestWidth, weir.CrestWidth);
+            }
+        }
+
+        private void AddCorrectionCoeff(SimpleWeirFormula formula) =>
+            IniCategory.AddProperty(StructureRegion.CorrectionCoeff,
+                                    formula.CorrectionCoefficient);
+
+        private void AddUseVelocityHeight(IWeir weir) =>
+            IniCategory.AddProperty(StructureRegion.UseVelocityHeight, 
+                                    weir.UseVelocityHeight.ToString().ToLower());
     }
 }

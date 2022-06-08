@@ -120,7 +120,7 @@ namespace DeltaShell.Plugins.NetworkEditor.Import
         {
             var pump = AddOrUpdateBranchFeatureFromNetwork(feature, columnNameName, branch =>
             {
-                var branchFeature = new Pump(false);
+                var branchFeature = new Pump(true);
                 BranchStructure.AddStructureToNetwork(branchFeature, branch);
                 return branchFeature;
             });

@@ -1,382 +1,117 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using DelftTools.Hydro;
-using DelftTools.Hydro.Structures;
-using DelftTools.Hydro.Structures.KnownStructureProperties;
-using DelftTools.Hydro.Structures.LeveeBreachFormula;
-using DelftTools.Hydro.Structures.WeirFormula;
-using DelftTools.Utils.IO;
+using DelftTools.TestUtils;
+using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
-using DeltaShell.Plugins.FMSuite.FlowFM;
-using DeltaShell.Plugins.FMSuite.FlowFM.IO;
-using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
+using DeltaShell.NGHS.IO.Helpers;
+using DeltaShell.NGHS.IO.TestUtils;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters.Structures
 {
     [TestFixture]
-    public class StructuresFileWriterTest
+    [Category(TestCategory.DataAccess)]
+    public class StructuresFileWriterTest : TemporaryDirectoryBaseFixture
     {
-        #region Write Pump
+        private static readonly Random random = new Random();
 
-        [Test]
-        public void GivenFmModelWithPump_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
+        private static IEnumerable<TestCaseData> WriteFileData()
         {
-            var testFolder = FileUtils.CreateTempDirectory();
-            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
-            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
-
-            var pumpName = "myPump";
-
-            var timFileName = pumpName + ".tim";
-            var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
-
-            var pump2D = new Pump2D(pumpName)
+            DelftIniCategory GenerateCategory(int index)
             {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(2, 2), new Coordinate(10, -2)})
-            };
-            var area = new HydroArea();
-            area.Pumps.Add(pump2D);
+                var result = new DelftIniCategory("Structure");
+                result.AddProperty("a", random.NextDouble(), $"comment {index * 3 + 0}");
+                result.AddProperty("b", random.Next(), $"comment {index * 3 + 1}");
+                result.AddProperty("c", random.Next().ToString("X"), $"comment {index * 3 + 2}");
 
-            try
-            {
-                var fmModel = new WaterFlowFMModel {Area = area, MduFilePath = mduFilePath};
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
-                
-                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsFalse(File.Exists(timFilePath),
-                    $"Time series file has been written to location {timFilePath}, while the pump does not have a time series for the capacity");
+                return result;
             }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
-            }
+
+            DelftIniCategory[] noCategories = {};
+            yield return new TestCaseData((IList<DelftIniCategory>)noCategories).SetName("No Categories");
+
+            DelftIniCategory[] someCategories = 
+                Enumerable.Range(0, 5).Select(GenerateCategory).ToArray();
+            yield return new TestCaseData((IList<DelftIniCategory>)someCategories).SetName("Multiple Categories");
         }
 
         [Test]
-        public void GivenFmModelWithPumpThatHasATimeSeriesForCapacity_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
+        [TestCaseSource(nameof(WriteFileData))]
+        public void WriteFile_ExpectedResult(IList<DelftIniCategory> categories)
         {
-            var testFolder = FileUtils.CreateTempDirectory();
-            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
-            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+            // Setup
+            DateTime referenceTime = DateTime.Today;
+            string filePath = Path.Combine(TempDir.Path, "structures.ini");
 
-            var pumpName = "myPump";
-           
-            var timFileName = $"{pumpName}_{StructureRegion.Capacity.Key}.tim";
-            
-            var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
+            bool isCalled = false;
+            IHydroRegion[] hydroRegions = {};
 
-            var pump2D = new Pump2D(pumpName)
+            IEnumerable<DelftIniCategory> CreateStructureCategories(IEnumerable<IHydroRegion> regions,
+                                                                    DateTime refTime)
             {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(2, 2), new Coordinate(10, -2)}),
-                CanBeTimedependent = true,
-                UseCapacityTimeSeries = true,
-                CapacityTimeSeries =
-                {
-                    [new DateTime(2013, 1, 2, 3, 4, 0)] = 2.1,
-                    [new DateTime(2013, 7, 8, 9, 10, 0)] = 3.34
-                }
-            };
+                Assert.That(regions, Is.EqualTo(hydroRegions));
+                Assert.That(refTime, Is.EqualTo(referenceTime));
 
-            var fmModel = new WaterFlowFMModel
-            {
-                ReferenceTime = new DateTime(2013, 1, 2),
-                MduFilePath = mduFilePath
-            };
-            fmModel.Area.Pumps.Add(pump2D);
-
-            try
-            {
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
-
-                Assert.That(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                
-                Assert.That(File.Exists(timFilePath), $"Time series file has not been written to location {timFilePath}");
+                isCalled = true;
+                return categories;
             }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
-            }
+
+            // Call
+            StructureFileWriter.WriteFile(filePath, 
+                                          hydroRegions, 
+                                          referenceTime, 
+                                          CreateStructureCategories);
+
+            // Assert
+            Assert.That(isCalled, Is.True);
+            Assert.That(File.Exists(filePath), Is.True);
+
+            IList<DelftIniCategory> result = 
+                new DelftIniReader().ReadDelftIniFile(filePath);
+
+            IList<DelftIniCategory> expectedCategories = 
+                GetExpectedCategories(categories);
+
+            Assert.That(result.Count, Is.EqualTo(expectedCategories.Count));
+
+            IEnumerable<(DelftIniCategory, DelftIniCategory)> resultCategories = result.Zip(expectedCategories, (c1, c2) => (c1, c2));
+            foreach ((DelftIniCategory resultCat, DelftIniCategory expectedCat) in resultCategories)
+                AssertSameCategory(resultCat, expectedCat);
         }
 
-        #endregion
-
-        #region Write Weir
-
-        [Test]
-        public void GivenFmModelWithWeir_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
+        private static void AssertSameCategory(IDelftIniCategory resultCat, IDelftIniCategory expectedCat)
         {
-            var testFolder = FileUtils.CreateTempDirectory();
-            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
-            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
+            Assert.That(resultCat.Name, Is.EqualTo(expectedCat.Name));
+            Assert.That(resultCat.Properties.Count, Is.EqualTo(expectedCat.Properties.Count));
 
-            var weirName = "myWeir";
-
-            var timFileName = weirName + "_crest_level.tim";
-            var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
-
-            var weir2D = new Weir2D(weirName)
-            {
-                Geometry = new LineString(new[] {new Coordinate(0, 0), new Coordinate(2, 2), new Coordinate(10, -2)})
-            };
-            var fmModel = new WaterFlowFMModel
-            {
-                MduFilePath = mduFilePath,
-                ReferenceTime = DateTime.Now
-            };
-            fmModel.Area.Weirs.Add(weir2D);
-
-            try
-            {
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
-                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsFalse(File.Exists(timFilePath),
-                    $"Time series file has been written to location {timFilePath}, while the weir does not have a time series for the capacity");
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
-            }
+            IEnumerable<(DelftIniProperty, DelftIniProperty)> resultProps = resultCat.Properties.Zip(expectedCat.Properties, (p1, p2) => (p1, p2));
+            foreach ((DelftIniProperty resProp, DelftIniProperty expectedProp) in resultProps)
+                AssertSameProperty(resProp, expectedProp);
         }
 
-        [Test]
-        public void GivenFmModelWithWeirThatHasATimeSeriesForCapacity_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
+        private static void AssertSameProperty(IDelftIniProperty resProp, 
+                                               IDelftIniProperty expectedProp)
         {
-            var testFolder = FileUtils.CreateTempDirectory();
-            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
-            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
-
-            var weirName = "myWeir";
-
-            var timFileName = weirName + "_crest_level.tim";
-            var timFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timFileName);
-
-            var weir2D = new Weir2D(weirName, true)
-            {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
-                CrestWidth = 2.58,
-                WeirFormula = new SimpleWeirFormula { CorrectionCoefficient = 0.34 },
-                UseCrestLevelTimeSeries = true
-            };
-
-            var fmModel = new WaterFlowFMModel
-            {
-                MduFilePath = mduFilePath,
-                ReferenceTime = DateTime.Now
-            };
-            fmModel.Area.Weirs.Add(weir2D);
-
-            try
-            {
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
-                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(timFilePath), $"Time series file has not been written to location {timFilePath}");
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
-            }
+            Assert.That(resProp.Name, Is.EqualTo(expectedProp.Name));
+            Assert.That(resProp.Value, Is.EqualTo(expectedProp.Value));
         }
 
-        #endregion
-
-        #region Write General Structure
-
-        [Test]
-        public void GivenFmModelWithGeneralStructure_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
+        private static IList<DelftIniCategory> GetExpectedCategories(
+            IEnumerable<DelftIniCategory> providedCategories)
         {
-            var testFolder = FileUtils.CreateTempDirectory();
-            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
-            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
-
-            var generalStructureName = "myGeneralStructure";
-
-            var generalStructure2D = new Weir2D(generalStructureName)
+            List<DelftIniCategory> result = new List<DelftIniCategory>()
             {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2), new Coordinate(10, -2) }),
-                WeirFormula = new GeneralStructureWeirFormula()
+                GeneralRegionGenerator.GenerateGeneralRegion(
+                    GeneralRegion.StructureDefinitionsMajorVersion,
+                    GeneralRegion.StructureDefinitionsMinorVersion,
+                    GeneralRegion.FileTypeName.StructureDefinition)
             };
-            var fmModel = new WaterFlowFMModel
-            {
-                MduFilePath = mduFilePath,
-                ReferenceTime = DateTime.Now
-            };
-            fmModel.Area.Weirs.Add(generalStructure2D);
 
-            try
-            {
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
-                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
-            }
+            result.AddRange(providedCategories);
+            return result;
         }
-
-        #endregion
-
-        #region Write Gate
-
-        [Test]
-        public void GivenFmModelWithGateThatHasSillLevelTimeSeries_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
-        {
-            var testFolder = FileUtils.CreateTempDirectory();
-            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
-            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
-            
-            var gateName = "myGate";
-
-            var timeSeriesFileName = $"{gateName}_{KnownStructureProperties.GateCrestLevel}.tim";
-            var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
-
-            var fmModel = new WaterFlowFMModel
-            {
-                MduFilePath = mduFilePath
-            };
-            var gate2D = new Gate2D(gateName)
-            {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
-                UseSillLevelTimeSeries = true
-            };
-            fmModel.Area.Gates.Add(gate2D);
-
-            try
-            {
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
-                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(timeSeriesFilePath), $"Time series file has not been written to location {timeSeriesFilePath}");
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
-            }
-        }
-
-        [Test]
-        public void GivenFmModelWithGateThatHasLowerEdgeLevelTimeSeries_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
-        {
-            var testFolder = FileUtils.CreateTempDirectory();
-            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
-            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
-
-            var gateName = "myGate";
-
-            var timeSeriesFileName = $"{gateName}_{KnownStructureProperties.GateLowerEdgeLevel}.tim";
-            var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
-
-            var fmModel = new WaterFlowFMModel
-            {
-                MduFilePath = mduFilePath
-            };
-            var gate2D = new Gate2D(gateName)
-            {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
-                UseLowerEdgeLevelTimeSeries = true
-            };
-            fmModel.Area.Gates.Add(gate2D);
-
-            try
-            {
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
-                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(timeSeriesFilePath), $"Time series file has not been written to location {timeSeriesFilePath}");
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
-            }
-        }
-
-        [Test]
-        public void GivenFmModelWithGateThatHasOpeningWidthTimeSeries_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
-        {
-            var testFolder = FileUtils.CreateTempDirectory();
-            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
-            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
-
-            var gateName = "myGate";
-
-            var timeSeriesFileName = $"{gateName}_{KnownStructureProperties.GateOpeningWidth}.tim";
-            var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
-
-            var fmModel = new WaterFlowFMModel
-            {
-                MduFilePath = mduFilePath
-            };
-            var gate2D = new Gate2D(gateName)
-            {
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
-                UseOpeningWidthTimeSeries = true
-            };
-            fmModel.Area.Gates.Add(gate2D);
-
-            try
-            {
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
-                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(timeSeriesFilePath), $"Time series file has not been written to location {timeSeriesFilePath}");
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
-            }
-        }
-
-        #endregion
-
-        #region Write Levee Breach
-
-        [Test]
-        public void GivenFmModelWithLeveeBreachThatHasUserDefinedFormula_WhenWritingStructures_ThenTheCorrectFilesAreWritten()
-        {
-            var testFolder = FileUtils.CreateTempDirectory();
-            var structuresFilePath = Path.Combine(testFolder, "structures.ini");
-            var mduFilePath = Path.Combine(testFolder, "FlowFM.mdu");
-
-            var leveeBreachName = "myBreach";
-
-            var timeSeriesFileName = $"{leveeBreachName}.tim";
-            var timeSeriesFilePath = NGHSFileBase.GetOtherFilePathInSameDirectory(structuresFilePath, timeSeriesFileName);
-
-            var referenceTime = new DateTime(2018, 8, 25);
-            var fmModel = new WaterFlowFMModel
-            {
-                MduFilePath = mduFilePath,
-                ReferenceTime = referenceTime
-            };
-            var leveeBreach = new LeveeBreach
-            {
-                Name = leveeBreachName,
-                Geometry = new LineString(new[] { new Coordinate(0, 0), new Coordinate(2, 2) }),
-                LeveeBreachFormula = LeveeBreachGrowthFormula.UserDefinedBreach
-            };
-            leveeBreach.SetBaseLeveeBreachSettings(referenceTime.AddHours(2.0), true);
-            var settings = leveeBreach.GetActiveLeveeBreachSettings() as UserDefinedBreachSettings;
-            settings.ManualBreachGrowthSettings.Add(new BreachGrowthSetting
-            {
-                Width = 2.0,
-                Height = 3.0,
-                TimeSpan = new TimeSpan(0, 1, 0, 0)
-            });
-
-            fmModel.Area.LeveeBreaches.Add(leveeBreach);
-
-            try
-            {
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion>() { fmModel.Network, fmModel.Area }, fmModel.ReferenceTime, string.IsNullOrEmpty(fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath)?.GetValueAsString()) ? fmModel.MduFilePath : fmModel.ModelDefinition.GetModelProperty(GuiProperties.TargetMduPath).GetValueAsString(), StructureFile.Generate2DStructureCategoriesFromFmModel);
-                Assert.IsTrue(File.Exists(structuresFilePath), $"Structures file has not been written to location {structuresFilePath}");
-                Assert.IsTrue(File.Exists(timeSeriesFilePath), $"Time series file has not been written to location {timeSeriesFilePath}");
-            }
-            finally
-            {
-                FileUtils.DeleteIfExists(Path.GetDirectoryName(structuresFilePath));
-            }
-        }
-
-        #endregion
     }
 }

@@ -183,10 +183,20 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
                     FileCategoryName = GuiProperties.GUIonly,
                     DataType = typeof(string)
                 };
+
                 var targetMduFilePathProperty = new WaterFlowFMProperty(targetMduFilePathPropertyDefinition, targetMduFilePath);
 
                 modelDefinition.AddProperty(targetMduFilePathProperty);
-                StructureFileWriter.WriteFile(structuresFilePath, new List<IHydroRegion> {network, area}, (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value, targetMduFilePath, StructureFile.Generate2DStructureCategoriesFromFmModel);
+
+                IHydroRegion[] regions = { network, area };
+                var referenceTime = (DateTime)modelDefinition.GetModelProperty(KnownProperties.RefDate).Value;
+                
+                StructureFileWriter.WriteFile(structuresFilePath, 
+                                              regions, 
+                                              referenceTime,
+                                              StructureFile.GenerateStructureCategoriesFromFmModel);
+                StructureFile.WriteStructureTimFiles(regions, targetMduFilePath, referenceTime);
+
                 modelDefinition.Properties.Remove(targetMduFilePathProperty);
             }
             else

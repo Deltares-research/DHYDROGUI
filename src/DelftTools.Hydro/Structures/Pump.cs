@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using DelftTools.Functions;
 using DelftTools.Hydro.SewerFeatures;
+using DelftTools.Hydro.Structures.SteerableProperties;
 using DelftTools.Utils.Aop;
 using DelftTools.Utils.Collections;
 using GeoAPI.Extensions.Feature;
@@ -10,25 +12,33 @@ using GeoAPI.Extensions.Feature;
 namespace DelftTools.Hydro.Structures
 {
     ///<summary>
-    /// Implements a 1d pump.
+    /// <see cref="Pump"/> Implements a 1D pump.
     /// Both the Sobek Pump (type 9) and River Pump (type 3) are implemented by this class.
     /// todo: add support for reduction table = combine with implementation triggers
     ///</summary>
     [Entity(FireOnCollectionChange=false)]
     [TypeConverter(typeof(ExpandableObjectConverter))]
-    public class Pump : BranchStructure, IPump
+    public class Pump : BranchStructure, IPump, IHasSteerableProperties
     {
-        private bool canBeTimedependent;
-        private bool useCapacityTimeSeries;
-
+        /// <summary>
+        /// Creates a new <see cref="Pump"/> without time-varying data and with a default name.
+        /// </summary>
         public Pump() : this("Pump") {}
 
+        /// <summary>
+        /// Creates a new <see cref="Pump"/> with a default name.
+        /// </summary>
+        /// <param name="canBeTimeDependent">Whether time-varying data is allowed.</param>
         public Pump(bool canBeTimeDependent) :this("Pump", canBeTimeDependent) {}
 
+        /// <summary>
+        /// Creates a new <see cref="Pump"/> with the given name.
+        /// </summary>
+        /// <param name="name">The name of the new pump</param>
+        /// <param name="canBeTimeDependent">Whether time-varying data is allowed.</param>
         public Pump(string name, bool canBeTimeDependent = false)
         {
             Name = name;
-            Capacity = 1.0;
             StartDelivery = 0;
             StopDelivery = 0;
             StartSuction = 3.0;
@@ -38,52 +48,45 @@ namespace DelftTools.Hydro.Structures
             ReductionTable = FunctionHelper.Get1DFunction<double, double>("reduction", "difference", "factor");
 
             CanBeTimedependent = canBeTimeDependent;
+            capacity = ConstructCapacitySteerableProperty();
         }
 
-        public virtual bool CanBeTimedependent
+        private SteerableProperty ConstructCapacitySteerableProperty()
         {
-            get { return canBeTimedependent; }
-            set
-            {
-                canBeTimedependent = value;
-                OnCanBeTimeDependentSet();
-            }
+            const double defaultValue = 1.0;
+            return CanBeTimedependent
+                       ? new SteerableProperty(defaultValue,
+                                               "Capacity",
+                                               "Capacity",
+                                               "m3/s")
+                       : new SteerableProperty(defaultValue);
         }
 
-        [EditAction]
-        private void OnCanBeTimeDependentSet()
-        {
-            if (canBeTimedependent)
-            {
-                if (CapacityTimeSeries == null)
-                    CapacityTimeSeries = HydroTimeSeriesFactory.CreateTimeSeries("Capacity", "Capacity", "TODO");
-            }
-            else
-            {
-                UseCapacityTimeSeries = false;
-                CapacityTimeSeries = null;
-            }
-        }
+        private SteerableProperty capacity;
+
+        public virtual bool CanBeTimedependent { get; protected set; }
 
         [DisplayName("Positive direction")]
         [FeatureAttribute(Order = 5, ExportName = "PosDir")]
         public virtual bool DirectionIsPositive { get; set; }
 
         [FeatureAttribute(Order = 6)]
-        public virtual double Capacity { get; set; }
+        public virtual double Capacity
+        {
+            get => capacity.Constant; 
+            set => capacity.Constant = value;
+        }
 
         public virtual bool UseCapacityTimeSeries
         {
-            get { return useCapacityTimeSeries; }
-            set
-            {
-                if(!canBeTimedependent && value)
-                    throw new InvalidOperationException("Cannot use time series for capacity when time varying data is not allowed.");
-                useCapacityTimeSeries = value;
-            }
+            get => capacity.CurrentDriver == SteerablePropertyDriver.TimeSeries;
+            set => capacity.CurrentDriver = value ? SteerablePropertyDriver.TimeSeries : SteerablePropertyDriver.Constant;
         }
 
-        public virtual TimeSeries CapacityTimeSeries { get; protected set; }
+        public virtual TimeSeries CapacityTimeSeries { 
+            get => capacity.TimeSeries; 
+            protected set => capacity.TimeSeries = value;
+        }
 
         [DisplayName("Start delivery")]
         [FeatureAttribute(Order = 7, ExportName = "OnDelivery")]
@@ -138,7 +141,10 @@ namespace DelftTools.Hydro.Structures
             var pump = (Pump) source;
 
             Attributes = (IFeatureAttributeCollection) pump.Attributes.Clone();
-            Capacity = pump.Capacity;
+
+            CanBeTimedependent = pump.CanBeTimedependent;
+            capacity = new SteerableProperty(pump.capacity);
+
             StopDelivery = pump.StopDelivery;
             StartDelivery = pump.StartDelivery;
             StartSuction = pump.StartSuction;
@@ -146,18 +152,9 @@ namespace DelftTools.Hydro.Structures
             ControlDirection = pump.ControlDirection;
             ReductionTable = (IFunction) pump.ReductionTable.Clone(true);
             DirectionIsPositive = pump.DirectionIsPositive;
-
-            CanBeTimedependent = pump.CanBeTimedependent;
-            if (!pump.CanBeTimedependent) return;
-
-            UseCapacityTimeSeries = pump.UseCapacityTimeSeries;
-            CapacityTimeSeries = (TimeSeries)pump.CapacityTimeSeries.Clone(true);
         }
 
-        public override StructureType GetStructureType()
-        {
-            return StructureType.Pump;
-        }
+        public override StructureType GetStructureType() => StructureType.Pump;
 
         public virtual void AddToHydroNetwork(IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
@@ -221,6 +218,11 @@ namespace DelftTools.Hydro.Structures
 
         protected virtual void SetSewerConnectionProperties(ISewerConnection sewerConnection, IHydroNetwork hydroNetwork, SewerImporterHelper helper)
         {
+        }
+
+        public virtual IEnumerable<SteerableProperty> RetrieveSteerableProperties()
+        {
+            yield return capacity;
         }
     }
 }

@@ -20,6 +20,7 @@
     <property name="GroundLayerThickness"/>
     <property name="GroundLayerRoughness"/>
     <property name="IsGated"/>
+    <property name="UseGateInitialOpeningTimeSeries"/>
     <property name="GateInitialOpening"/>
     <property name="InletLevel"/>
     <property name="OutletLevel"/>

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using DelftTools.Hydro.Structures;
 using DelftTools.Hydro.Structures.WeirFormula;
 using DeltaShell.NGHS.IO.FileReaders.Definition.Structures.Parsers;
 using DeltaShell.NGHS.IO.FileWriters.Structure;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.Properties;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
@@ -12,32 +14,29 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
     [TestFixture]
     public class WeirFormulaParserTest
     {
-        [Test]
-        public void ReadFormulaFromDefinition_CategoryNull_ThrowsArgumentNullException()
+        private const string structuresFilePath = "structures.ini";
+        private readonly DateTime referenceDateTime = new DateTime(2022, 5, 5);
+
+        private static IEnumerable<TestCaseData> ReadFormulaFromDefinitionArgumentNullData()
         {
-            // Setup
-            IDelftIniCategory category = null;
+            var category = Substitute.For<IDelftIniCategory>();
             var weir = new Weir();
 
-            // Call
-            TestDelegate call = () => WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
+            yield return new TestCaseData(null, weir, structuresFilePath, "category");
+            yield return new TestCaseData(category, null, structuresFilePath, "weir");
+            yield return new TestCaseData(category, weir, null, "structuresFilePath");
         }
-        
+
         [Test]
-        public void ReadFormulaFromDefinition_WeirNull_ThrowsArgumentNullException()
+        [TestCaseSource(nameof(ReadFormulaFromDefinitionArgumentNullData))]
+        public void ReadFormulaFromDefinition_ArgumentNull_ThrowsArgumentNullException(IDelftIniCategory category,
+                                                                                       Weir weir,
+                                                                                       string localStructuresFilePath,
+                                                                                       string expectedParamName)
         {
-            // Setup
-            var category = StructureParserTestHelper.CreateStructureCategory();
-            Weir weir = null;
-
-            // Call
-            TestDelegate call = () => WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
-
-            // Assert
-            Assert.That(call, Throws.ArgumentNullException);
+            void Call() => WeirFormulaParser.ReadFormulaFromDefinition(category, weir, localStructuresFilePath, referenceDateTime);
+            var exception = Assert.Throws<ArgumentNullException>(Call);
+            Assert.That(exception.ParamName, Is.EqualTo(expectedParamName));
         }
 
         [Test]
@@ -52,11 +51,14 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var weir = new Weir();
 
             // Call
-            TestDelegate call = () => WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
+            void Call() => WeirFormulaParser.ReadFormulaFromDefinition(category, 
+                                                                       weir, 
+                                                                       structuresFilePath, 
+                                                                       referenceDateTime);
 
             // Assert
             string expectedMessage = string.Format(Resources.WeirFormulaParser_Unknow_formula_type, unknownFormulaType);
-            Assert.That(call, Throws.Exception.TypeOf<InvalidOperationException>()
+            Assert.That(Call, Throws.Exception.TypeOf<InvalidOperationException>()
                                     .With.Message.EqualTo(expectedMessage));
         }
         
@@ -74,7 +76,7 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var weir = new Weir();
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, weir, structuresFilePath, referenceDateTime);
 
             // Assert
             Assert.That(parsedWeirFormula, Is.TypeOf<SimpleWeirFormula>());
@@ -103,7 +105,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var weir = new Weir() { CrestLevel = crestLevel };
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+                                                                                         weir, 
+                                                                                         structuresFilePath, 
+                                                                                         referenceDateTime);
 
             // Assert
             Assert.That(parsedWeirFormula, Is.TypeOf<FreeFormWeirFormula>());
@@ -145,7 +150,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var weir = new Weir();
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+                                                                                         weir,
+                                                                                         structuresFilePath,
+                                                                                         referenceDateTime);
 
             // Assert
             Assert.That(parsedWeirFormula, Is.TypeOf<PierWeirFormula>());
@@ -188,7 +196,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var weir = new Weir() { CrestLevel = crestLevel };
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+                                                                                         weir, 
+                                                                                         structuresFilePath, 
+                                                                                         referenceDateTime);
 
             // Assert
             Assert.That(parsedWeirFormula, Is.TypeOf<GatedWeirFormula>());
@@ -268,7 +279,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var weir = new Weir();
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+                                                                                         weir, 
+                                                                                         structuresFilePath, 
+                                                                                         referenceDateTime);
 
             // Assert
             Assert.That(parsedWeirFormula, Is.TypeOf<GeneralStructureWeirFormula>());
@@ -319,7 +333,10 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var weir = new Weir();
 
             // Call
-            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
+            IWeirFormula parsedWeirFormula = WeirFormulaParser.ReadFormulaFromDefinition(category, 
+                                                                                         weir, 
+                                                                                         structuresFilePath, 
+                                                                                         referenceDateTime);
 
             // Assert
             Assert.That(parsedWeirFormula, Is.TypeOf<GeneralStructureWeirFormula>());
@@ -342,12 +359,12 @@ namespace DeltaShell.NGHS.IO.Tests.FileReaders.Definition.Structures.Parsers
             var weir = new Weir();
 
             // Call
-            TestDelegate call = () => WeirFormulaParser.ReadFormulaFromDefinition(category, weir);
+            void Call() => WeirFormulaParser.ReadFormulaFromDefinition(category, weir, structuresFilePath, referenceDateTime);
 
             // Assert
             string expectedMessage = string.Format(Resources.WeirFormulaParser_Could_not_parse_horizontal_gate_opening,
                                                    unknownGateOpeningDirection);
-            Assert.That(call, Throws.ArgumentException.With.Message.EqualTo(expectedMessage));
+            Assert.That(Call, Throws.ArgumentException.With.Message.EqualTo(expectedMessage));
         }
     }
 }
