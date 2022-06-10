@@ -87,6 +87,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	  </Compile>
+	</ItemGroup>
+
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="del $(OutDir)\GeoAPI*.*" />
 	  <Exec Command="del $(OutDir)\NetTopologySuite*.*" />

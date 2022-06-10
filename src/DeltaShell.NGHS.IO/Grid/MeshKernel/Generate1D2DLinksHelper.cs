@@ -195,7 +195,7 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
             return lstNewLinks;
         }
 
-        private static bool IsOnOutletCompartment(INetworkLocation discretisationPoint, SewerConnection sewerConnection)
+        private static bool IsOnOutletCompartment(IBranchFeature discretisationPoint, ISewerConnection sewerConnection)
         {
             if (discretisationPoint.Chainage == 0)
             {
@@ -210,19 +210,10 @@ namespace DeltaShell.NGHS.IO.Grid.MeshKernel
             return false;
         }
 
-        private static bool IsExcludedNode(HashSet<INode> nodesToExclude, INetworkLocation discretisationPoint)
+        private static bool IsExcludedNode(HashSet<INode> nodesToExclude, IBranchFeature discretisationPoint)
         {
-            if (discretisationPoint.Chainage == 0)
-            {
-                return nodesToExclude.Contains(discretisationPoint.Branch.Source);
-            }
-            
-            if (discretisationPoint.IsOnEndOfBranch())
-            {
-                return nodesToExclude.Contains(discretisationPoint.Branch.Target);
-            }
-
-            return false;
+            return discretisationPoint.TryGetNode(out INode node) 
+                   && nodesToExclude.Contains(node);
         }
 
         private static IPolygon GetSelectAllArea(IReadOnlyCollection<IPoint> points)

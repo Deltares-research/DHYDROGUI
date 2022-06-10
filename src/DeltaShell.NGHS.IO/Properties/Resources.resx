@@ -435,4 +435,16 @@
   <data name="NGHSFileBase_File_could_not_be_found" xml:space="preserve">
     <value>File {0} could not be found.</value>
   </data>
+  <data name="RetentionCategoryParser_TrySetBranchChainage_Could_not_find_node_with_nodeId__0__for_retention__1_" xml:space="preserve">
+	  <value>Could not find node with nodeId {0} (retention {1}, line number {2})</value>
+  </data>
+  <data name="RetentionCategoryParser_TrySetBranchChainage_Could_not_find_a_branch_for_node_with_nodeId__0___retention__1__" xml:space="preserve">
+	  <value>Could not find a branch for node with nodeId {0} (retention {1}, line number {2})</value>
+  </data>
+  <data name="RetentionCategoryParser_TrySetBranchChainage_Could_not_find_branch_for_branch_id___0____retention__1__" xml:space="preserve">
+	  <value>Could not find branch for branch id "{0}" (retention {1}, line number {2})</value>
+  </data>
+  <data name="RetentionFileWriter_GenerateSpatialDataDefinition_Retention_does_not_have_a_valid_Branch_property" xml:space="preserve">
+	  <value>Retention does not have a valid Branch property</value>
+  </data>
 </root>

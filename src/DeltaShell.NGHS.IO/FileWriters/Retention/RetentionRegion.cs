@@ -5,6 +5,7 @@ namespace DeltaShell.NGHS.IO.FileWriters.Retention
     public static class RetentionRegion
     {
         public const string Header = "Retention";
+        public const string StorageNodeHeader = "StorageNode";
         public static readonly ConfigurationSetting Id = new ConfigurationSetting(key: "id", description: "Unique network id");
         public static readonly ConfigurationSetting Name = new ConfigurationSetting(key: "name", description: "Given name in the user interface");
         

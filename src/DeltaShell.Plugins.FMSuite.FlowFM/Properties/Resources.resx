@@ -499,4 +499,7 @@ File import of structures file '{1}' has failed.</value>
   <data name="LateralSourceImporter_Could_Not_Find_Suitable_Target_For__0_" xml:space="preserve">
     <value>Could not find suitable target for: {0}</value>
   </data>
+  <data name="FeatureFile1D2DReader_ReadRetentionsFile_Could_not_read_file__0__properly__it_seems_empty" xml:space="preserve">
+	  <value>Could not read file {0} properly, it seems empty</value>
+  </data>
 </root>

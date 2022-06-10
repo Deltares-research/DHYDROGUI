@@ -47,13 +47,13 @@ namespace DeltaShell.NGHS.IO.FileWriters.Network
         private static DelftIniCategory GenerateRetentionStorageNode(IRetention retention)
         {
             var category = RetentionFileWriter.GenerateSpatialDataDefinition(retention);
-            TypeUtils.SetPrivatePropertyValue(category, "Name","StorageNode");
+            TypeUtils.SetPrivatePropertyValue(category, "Name", RetentionRegion.StorageNodeHeader);
             return category;
         }
 
         private static DelftIniCategory CreateCompartmentIniCategory(ICompartment compartment)
         {
-            var iniCategory = new DelftIniCategory("StorageNode");
+            var iniCategory = new DelftIniCategory(RetentionRegion.StorageNodeHeader);
             iniCategory.AddProperty(RetentionRegion.Id, compartment.Name);
             iniCategory.AddProperty(RetentionRegion.Name, compartment.Name);
             iniCategory.AddProperty(RetentionRegion.NodeId, compartment.Name);

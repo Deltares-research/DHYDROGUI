@@ -9,6 +9,8 @@ using DeltaShell.NGHS.IO.FileWriters.General;
 using DeltaShell.NGHS.IO.FileWriters.Retention;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.IO.TestUtils;
+using GeoAPI.Extensions.Networks;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace DeltaShell.NGHS.IO.Tests.FileWriters
@@ -16,18 +18,6 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
     [TestFixture]
     public class RetentionFileWriterTests
     {
-
-        [SetUp]
-        public void SetUp()
-        {
-            
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-        }
-        
         [Test]
         public void TestRetentionFileWriter()
         {
@@ -280,6 +270,51 @@ namespace DeltaShell.NGHS.IO.Tests.FileWriters
         }
 
 
+        [Test]
+        [TestCase(0, true, true)]
+        [TestCase(100, true, false)]
+        [TestCase(100 - 1e-12, true, false)]
+        [TestCase(50, false, false)]
+        public void GivenRetentionFileWriter_WritingARetentionOnANode_ShouldAddNodeId(double chainage, bool expectedNodeId, bool expectSourceNodeId)
+        {
+            //Arrange
+            var branch = Substitute.For<IBranch>();
+            var sourceNode = Substitute.For<INode>();
+            var targetNode = Substitute.For<INode>();
 
+            branch.Length.Returns(100);
+            branch.Name.Returns("Branch1");
+            branch.Source.Returns(sourceNode);
+            branch.Target.Returns(targetNode);
+
+            sourceNode.Name.Returns("Node1");
+            targetNode.Name.Returns("Node2");
+
+            var retention = new Retention
+            {
+                Branch = branch,
+                Chainage = chainage
+            };
+
+            // Act
+            var category = RetentionFileWriter.GenerateSpatialDataDefinition(retention);
+
+            // Assert
+            var nodeIdProperty = category.GetProperty(RetentionRegion.NodeId.Key);
+            Assert.AreEqual(expectedNodeId, nodeIdProperty != null, $"NodeId tag should {(expectedNodeId ? "" : "not ")}be added");
+
+            if (expectedNodeId)
+            {
+                Assert.NotNull(nodeIdProperty);
+                var expectedNodeName = expectSourceNodeId ? sourceNode.Name : targetNode.Name;
+                Assert.AreEqual(expectedNodeName, nodeIdProperty.Value, $"Expected nodeId value to be {expectedNodeName} instead of {nodeIdProperty.Value}");
+            }
+
+            var branchProperty = category.GetProperty(RetentionRegion.BranchId.Key);
+            Assert.AreEqual(expectedNodeId, branchProperty == null, $"Branch property should {(expectedNodeId ? "not " : "")}be added (because there is a NodeId)");
+
+            var chainageProperty = category.GetProperty(RetentionRegion.Chainage.Key);
+            Assert.AreEqual(expectedNodeId, chainageProperty == null, $"Chainage property should {(expectedNodeId ? "not " : "")}be added (because there is a NodeId)");
+        }
     }
 }

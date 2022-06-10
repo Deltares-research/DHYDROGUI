@@ -247,6 +247,16 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not read file {0} properly, it seems empty.
+        /// </summary>
+        public static string FeatureFile1D2DReader_ReadRetentionsFile_Could_not_read_file__0__properly__it_seems_empty {
+            get {
+                return ResourceManager.GetString("FeatureFile1D2DReader_ReadRetentionsFile_Could_not_read_file__0__properly__it_see" +
+                        "ms_empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File import failed: {0}.
         /// </summary>
         public static string File_import_failed___0_ {

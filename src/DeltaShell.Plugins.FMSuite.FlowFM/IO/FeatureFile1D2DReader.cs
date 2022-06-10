@@ -6,6 +6,7 @@ using DelftTools.Hydro;
 using DelftTools.Hydro.CrossSections;
 using DelftTools.Hydro.Roughness;
 using DelftTools.Utils.Collections.Generic;
+using DeltaShell.NGHS.IO;
 using DeltaShell.NGHS.IO.DataObjects.Friction;
 using DeltaShell.NGHS.IO.DataObjects.InitialConditions;
 using DeltaShell.NGHS.IO.FileReaders;
@@ -15,7 +16,9 @@ using DeltaShell.NGHS.IO.FileWriters.Network;
 using DeltaShell.NGHS.IO.Helpers;
 using DeltaShell.NGHS.Utils.Extensions;
 using DeltaShell.Plugins.FMSuite.FlowFM.ModelDefinition;
+using DeltaShell.Plugins.FMSuite.FlowFM.Properties;
 using log4net;
+using ValidationAspects;
 
 namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 {
@@ -35,19 +38,38 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
             ReadStructuresFiles(targetMduFilePath, modelDefinition, network, definitions);
             ReadObservationPointsFiles(targetMduFilePath, modelDefinition, network);
             ReadRoughnessFiles(targetMduFilePath, modelDefinition, network, roughnessSections, channelFrictionDefinitions);
-            ReadRetentionsFile(targetMduFilePath, modelDefinition, network);
+
+            var retentions= ReadRetentionsFromFile(targetMduFilePath, modelDefinition, network);
+            foreach (IRetention retention in retentions)
+            {
+                retention.Branch.BranchFeatures.Add(retention);
+            }
+
             ReadInitialConditionFiles(targetMduFilePath, modelDefinition, network, channelInitialConditionDefinitions);
         }
 
-        private static void ReadRetentionsFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
+        private static IEnumerable<IRetention> ReadRetentionsFromFile(string targetMduFilePath, WaterFlowFMModelDefinition modelDefinition, IHydroNetwork network)
         {
             string netFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, modelDefinition.GetModelProperty(KnownProperties.NetFile));
-            if (!File.Exists(netFilePath)) return;
+            if (!File.Exists(netFilePath))
+            {
+                return Enumerable.Empty<IRetention>();
+            }
+
             string storageNodeFilePath = MduFileHelper.GetSubfilePath(targetMduFilePath, modelDefinition.GetModelProperty(KnownProperties.StorageNodeFile));
+            if (!File.Exists(storageNodeFilePath))
+            {
+                return Enumerable.Empty<IRetention>();
+            }
 
-            if (File.Exists(storageNodeFilePath))
-                RetentionFileReader.ReadFile(storageNodeFilePath, network);
+            var categories = new DelftIniReader().ReadDelftIniFile(storageNodeFilePath);
+            if (categories.Count == 0)
+            {
+                Log.Warn(string.Format(Resources.FeatureFile1D2DReader_ReadRetentionsFile_Could_not_read_file__0__properly__it_seems_empty, storageNodeFilePath));
+                return Enumerable.Empty<IRetention>();
+            }
 
+            return RetentionCategoryParser.ParseCategories(categories, network);
         }
 
         private static ICrossSectionDefinition[] ReadCrossSectionFiles(
@@ -108,7 +130,7 @@ namespace DeltaShell.Plugins.FMSuite.FlowFM.IO
 
             var roughnessFileNames = modelDefinition.GetModelProperty(KnownProperties.FrictFile).GetValueAsString()?.Split(';');
             if (roughnessFileNames == null || roughnessFileNames.Length == 0) return;
-            var frictionFileName = Properties.Resources.Roughness_Main_Channels_Filename;
+            var frictionFileName = Resources.Roughness_Main_Channels_Filename;
 
             // read lanes
             foreach (var roughnessFileName in roughnessFileNames)

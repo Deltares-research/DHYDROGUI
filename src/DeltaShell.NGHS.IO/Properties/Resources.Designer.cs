@@ -19,7 +19,7 @@ namespace DeltaShell.NGHS.IO.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -256,6 +256,46 @@ namespace DeltaShell.NGHS.IO.Properties {
         public static string RemoteUGridApi_RequiredNetCDFVersion {
             get {
                 return ResourceManager.GetString("RemoteUGridApi_RequiredNetCDFVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find a branch for node with nodeId {0} (retention {1}, line number {2}).
+        /// </summary>
+        public static string RetentionCategoryParser_TrySetBranchChainage_Could_not_find_a_branch_for_node_with_nodeId__0___retention__1__ {
+            get {
+                return ResourceManager.GetString("RetentionCategoryParser_TrySetBranchChainage_Could_not_find_a_branch_for_node_wit" +
+                        "h_nodeId__0___retention__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find branch for branch id &quot;{0}&quot; (retention {1}, line number {2}).
+        /// </summary>
+        public static string RetentionCategoryParser_TrySetBranchChainage_Could_not_find_branch_for_branch_id___0____retention__1__ {
+            get {
+                return ResourceManager.GetString("RetentionCategoryParser_TrySetBranchChainage_Could_not_find_branch_for_branch_id_" +
+                        "__0____retention__1__", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find node with nodeId {0} (retention {1}, line number {2}).
+        /// </summary>
+        public static string RetentionCategoryParser_TrySetBranchChainage_Could_not_find_node_with_nodeId__0__for_retention__1_ {
+            get {
+                return ResourceManager.GetString("RetentionCategoryParser_TrySetBranchChainage_Could_not_find_node_with_nodeId__0__" +
+                        "for_retention__1_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retention does not have a valid Branch property.
+        /// </summary>
+        public static string RetentionFileWriter_GenerateSpatialDataDefinition_Retention_does_not_have_a_valid_Branch_property {
+            get {
+                return ResourceManager.GetString("RetentionFileWriter_GenerateSpatialDataDefinition_Retention_does_not_have_a_valid" +
+                        "_Branch_property", resourceCulture);
             }
         }
         
