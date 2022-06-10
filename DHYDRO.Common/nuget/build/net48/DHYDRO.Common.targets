@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="DHYDROCommonPostBuild" AfterTargets="Build">
+    <ItemGroup>
+      <_FilesToCopy Include="$(MSBuildThisFileDirectory)..\..\lib\net48\*"/>
+    </ItemGroup>
+    
+    <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(SolutionDir)bin\$(Configuration)\DeltaShell" SkipUnchangedFiles="true"/>
+  </Target>
+  
+  <Target Name="DHYDROCommonClean" AfterTargets="Clean">
+    <ItemGroup>
+      <_OriginalFiles Include="$(MSBuildThisFileDirectory)..\..\lib\net48\*"/>
+      <_FilesToClean Include="$(SolutionDir)bin\$(Configuration)\**\%(_OriginalFiles.FileName)%(_OriginalFiles.Extension)"/>
+    </ItemGroup>
+    
+    <Delete Files="@(_FilesToClean)"/>
+  </Target>
+  
+</Project>
